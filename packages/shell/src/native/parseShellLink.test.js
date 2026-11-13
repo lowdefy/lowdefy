@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import parseShellLink from './parseShellLink.js';
 
 test('parseShellLink reads a shortcut link and the share extension link', () => {

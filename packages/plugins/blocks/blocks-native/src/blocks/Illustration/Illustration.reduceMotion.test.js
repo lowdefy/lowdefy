@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { AccessibilityInfo, Animated } from 'react-native';
 import { waitFor } from '@testing-library/react-native';
 
@@ -45,12 +45,12 @@ const pageConfig = page([
 ]);
 
 test('with Reduce Motion on, an Illustration stops its clocks and holds the start of each animation', async () => {
-  jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(true);
+  vi.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(true);
   const loop = Animated.loop;
   const stops = [];
-  const spy = jest.spyOn(Animated, 'loop').mockImplementation((animation, config) => {
+  const spy = vi.spyOn(Animated, 'loop').mockImplementation((animation, config) => {
     const running = loop(animation, config);
-    const stop = jest.fn(() => running.stop());
+    const stop = vi.fn(() => running.stop());
     stops.push(stop);
     return { ...running, stop };
   });

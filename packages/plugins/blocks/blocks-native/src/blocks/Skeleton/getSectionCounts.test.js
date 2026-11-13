@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSectionCounts from './getSectionCounts.js';
 
 test('getSectionCounts draws one section of count rows', () => {

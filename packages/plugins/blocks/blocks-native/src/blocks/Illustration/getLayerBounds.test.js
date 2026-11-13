@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getLayerBounds from './getLayerBounds.js';
 
 const VIEW_BOX = [0, 0, 100, 80];

@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { Animated } from 'react-native';
 
 import createShimmerClock from './createShimmerClock.js';
 
 test('createShimmerClock runs one loop while any placeholder holds it', () => {
-  const start = jest.fn();
-  const stop = jest.fn();
-  const loop = jest.spyOn(Animated, 'loop').mockReturnValue({ start, stop });
+  const start = vi.fn();
+  const stop = vi.fn();
+  const loop = vi.spyOn(Animated, 'loop').mockReturnValue({ start, stop });
   const clock = createShimmerClock({ duration: 1200 });
   expect(clock.isRunning()).toBe(false);
   clock.acquire();
@@ -39,8 +39,8 @@ test('createShimmerClock runs one loop while any placeholder holds it', () => {
 });
 
 test('createShimmerClock starts again after it stopped, and ignores an extra release', () => {
-  const start = jest.fn();
-  const loop = jest.spyOn(Animated, 'loop').mockReturnValue({ start, stop: jest.fn() });
+  const start = vi.fn();
+  const loop = vi.spyOn(Animated, 'loop').mockReturnValue({ start, stop: vi.fn() });
   const clock = createShimmerClock({ duration: 1200 });
   clock.release();
   expect(clock.isRunning()).toBe(false);

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { afterEach, expect, test, vi } from 'vitest';
 import { waitFor } from '@testing-library/react-native';
 import { get, serializer } from '@lowdefy/helpers';
 
@@ -77,7 +77,7 @@ function createLowdefy() {
           context.state[key] = value;
         },
       },
-      update: jest.fn(),
+      update: vi.fn(),
     },
   };
   return {
@@ -101,15 +101,15 @@ function createLowdefy() {
 }
 
 function setup({ device, stream = createStream(), streamFetch, pollEvents = [] } = {}) {
-  const fetch = jest.fn(async (url) => {
+  const fetch = vi.fn(async (url) => {
     if (url.includes('transport=poll')) {
       return { ok: true, json: async () => ({ tabId: 'phone', events: pollEvents.splice(0) }) };
     }
     return { ok: true, json: async () => ({ ok: true }) };
   });
-  const onReload = jest.fn(async () => undefined);
-  const onStep = jest.fn(async ({ step }) => ({ ok: true, ran: step }));
-  const onInject = jest.fn(({ injection }) => ({ ok: true, kind: injection.kind, pending: 1 }));
+  const onReload = vi.fn(async () => undefined);
+  const onStep = vi.fn(async ({ step }) => ({ ok: true, ran: step }));
+  const onInject = vi.fn(({ injection }) => ({ ok: true, kind: injection.kind, pending: 1 }));
   const client = createDevTabClient({
     apiBase,
     device,
@@ -119,7 +119,7 @@ function setup({ device, stream = createStream(), streamFetch, pollEvents = [] }
     onReload,
     onStep,
     pollInterval: 10,
-    streamFetch: streamFetch ?? jest.fn(async () => ({ ok: true, body: stream.body })),
+    streamFetch: streamFetch ?? vi.fn(async () => ({ ok: true, body: stream.body })),
   });
   client.start();
   return { client, fetch, onInject, onReload, onStep, stream };
@@ -154,7 +154,7 @@ test('the shell registers as a tab on the reload stream and posts the page it sh
 
 test('the stream is opened on /api/reload with the dev client marker', async () => {
   const stream = createStream();
-  const streamFetch = jest.fn(async () => ({ ok: true, body: stream.body }));
+  const streamFetch = vi.fn(async () => ({ ok: true, body: stream.body }));
   running = setup({ stream, streamFetch });
   await waitFor(() => expect(streamFetch).toHaveBeenCalled());
   const [url, init] = streamFetch.mock.calls[0];
@@ -164,7 +164,7 @@ test('the stream is opened on /api/reload with the dev client marker', async () 
 
 test('the stream names the phone platform and app id for the device tools', async () => {
   const stream = createStream();
-  const streamFetch = jest.fn(async () => ({ ok: true, body: stream.body }));
+  const streamFetch = vi.fn(async () => ({ ok: true, body: stream.body }));
   running = setup({ device: { platform: 'ios', app: 'com.lowdefy.dev' }, stream, streamFetch });
   await waitFor(() => expect(streamFetch).toHaveBeenCalled());
   expect(streamFetch.mock.calls[0][0]).toBe(
@@ -304,7 +304,7 @@ test('without a readable stream the shell polls every interval, as a passive cal
   ];
   running = setup({
     pollEvents,
-    streamFetch: jest.fn(async () => ({ ok: true, body: null })),
+    streamFetch: vi.fn(async () => ({ ok: true, body: null })),
   });
   await waitFor(() => expect(running.onReload).toHaveBeenCalledTimes(1));
   await waitFor(() => expect(posts(running.fetch, '/page')).toHaveLength(1));

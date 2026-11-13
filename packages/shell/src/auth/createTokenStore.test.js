@@ -14,16 +14,15 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { beforeEach, expect, test, vi } from 'vitest';
+import * as SecureStore from 'expo-secure-store';
 
 import createMemoryStore from '../host/createMemoryStore.js';
 import createTokenStore from './createTokenStore.js';
 
-jest.mock('expo-secure-store', () =>
-  jest.requireActual('../test/createFakeSecureStore.js').default()
+vi.mock('expo-secure-store', async () =>
+  (await import('../test/createFakeSecureStore.js')).default()
 );
-
-const SecureStore = jest.requireMock('expo-secure-store');
 
 const KEY = 'lowdefy-session-token.field';
 
@@ -102,7 +101,7 @@ test('a change of unlock mode moves the token, leaving no copy behind', async ()
 
 test('set and clear tell subscribers; clear removes every copy of the token', async () => {
   const { kv, store } = create();
-  const listener = jest.fn();
+  const listener = vi.fn();
   store.subscribe(listener);
   await store.set('token-1');
   expect(listener).toHaveBeenLastCalledWith('token-1');

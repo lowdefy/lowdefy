@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import React from 'react';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
 import PartialSpans from './PartialSpans.js';
@@ -30,7 +31,7 @@ async function spansOf({ partial, selection, text }) {
   );
   return screen.getByTestId('input').children.map((span) => ({
     text: span.children.join(''),
-    color: span.props.style?.color,
+    color: StyleSheet.flatten(span.props.style)?.color,
   }));
 }
 

@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { afterEach, expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { Pressable, Text, TextInput as RNTextInput, View } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { createNativeGlobals, LowdefyPage } from '@lowdefy/client-native';
@@ -156,21 +156,21 @@ const rootConfig = {
 const apiBase = 'http://192.168.1.20:3000';
 
 async function renderTicket() {
-  const fetch = jest.fn();
+  const fetch = vi.fn();
   const host = {
     fetch,
     globals: createNativeGlobals({
-      assign: jest.fn(),
+      assign: vi.fn(),
       fetch,
       getPath: () => '/ticket?from=list',
       origin: apiBase,
     }),
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
-    router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
+    onBuildChanged: vi.fn(),
+    onCallerChanged: vi.fn(),
+    router: { back: vi.fn(), push: vi.fn(), replace: vi.fn() },
     sessionStorage: createMemoryStore(),
     storage: createMemoryStore(),
-    WebSocket: jest.fn(),
+    WebSocket: vi.fn(),
     websocketUrl: (apiPath) => apiPath,
   };
   const lowdefy = {};
@@ -190,7 +190,7 @@ async function renderTicket() {
 
 function startRecorder(lowdefy) {
   const posts = [];
-  const fetch = jest.fn(async (url, init) => {
+  const fetch = vi.fn(async (url, init) => {
     posts.push({ url, body: JSON.parse(init.body) });
     return { ok: true, status: 204 };
   });
@@ -289,7 +289,7 @@ test('the session is kept in the device store, so a new recorder carries it on',
   const again = createNativeRecorder({
     apiBase,
     device: 'android',
-    fetch: jest.fn(async () => ({ ok: true })),
+    fetch: vi.fn(async () => ({ ok: true })),
     getBuild: () => null,
     getLowdefy: () => lowdefy,
     kv: running.kv,

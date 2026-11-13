@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createNativeGlobals from './createNativeGlobals.js';
 import createScreenGlobals from './createScreenGlobals.js';
@@ -23,12 +23,12 @@ test('screen globals read their own route and keep the app window and services',
   const app = { path: '/m-designs' };
   const globals = {
     ...createNativeGlobals({
-      assign: jest.fn(),
-      fetch: jest.fn(),
+      assign: vi.fn(),
+      fetch: vi.fn(),
       getPath: () => app.path,
       origin: 'https://app.lowdefy.test',
     }),
-    storage: { get: jest.fn() },
+    storage: { get: vi.fn() },
   };
   const screen = createScreenGlobals({
     globals,

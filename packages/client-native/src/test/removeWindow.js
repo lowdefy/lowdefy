@@ -17,4 +17,8 @@
 // React Native points window at the global object, which has no location or document. The
 // renderer and the engine must reach the platform only through the host globals, so the tests run
 // with no window at all: a stray window read fails instead of quietly reading undefined.
+// React Native's AppContainer (which Modal renders) reads window's React DevTools hook as it
+// loads, so it is loaded first.
+import 'react-native/Libraries/ReactNative/AppContainer';
+
 delete global.window;

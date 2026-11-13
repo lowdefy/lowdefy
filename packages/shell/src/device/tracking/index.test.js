@@ -14,33 +14,39 @@
   limitations under the License.
 */
 
-const mockTasks = {};
-const mockValues = new Map();
-const mockApp = { triggerAppEvent: jest.fn() };
+import { beforeEach, expect, test, vi } from 'vitest';
 
-jest.mock('expo-task-manager', () => ({
+import callEndpoint from '../../native/callEndpoint.js';
+import createNetworkError from '../../test/createNetworkError.js';
+import './index.js';
+
+// index.js defines its tasks as it loads, before the test's own top-level code runs.
+const { mockApp, mockTasks, mockValues } = vi.hoisted(() => ({
+  mockApp: { triggerAppEvent: vi.fn() },
+  mockTasks: {},
+  mockValues: new Map(),
+}));
+
+vi.mock('expo-task-manager', () => ({
   defineTask: (name, task) => {
     mockTasks[name] = task;
   },
 }));
-jest.mock('expo-location', () => ({
+vi.mock('expo-location', () => ({
   Accuracy: {},
   GeofencingEventType: { Enter: 1, Exit: 2 },
 }));
-jest.mock('../../host/createDeviceStore.js', () => () => ({
-  get: (key) => mockValues.get(key) ?? null,
-  set: (key, value) => mockValues.set(key, value),
+vi.mock('../../host/createDeviceStore.js', () => ({
+  default: () => ({
+    get: (key) => mockValues.get(key) ?? null,
+    set: (key, value) => mockValues.set(key, value),
+  }),
 }));
-jest.mock('../../native/currentApp.js', () => ({
+vi.mock('../../native/currentApp.js', () => ({
   getCurrentApp: async () => mockApp,
   peekCurrentApp: () => mockApp,
 }));
-jest.mock('../../native/callEndpoint.js', () => jest.fn());
-
-const callEndpoint = require('../../native/callEndpoint.js');
-const createNetworkError = require('../../test/createNetworkError.js').default;
-
-require('./index.js');
+vi.mock('../../native/callEndpoint.js', () => ({ default: vi.fn() }));
 
 function refusal(status) {
   return Object.assign(new Error(`answered ${status}`), { status });
@@ -74,7 +80,7 @@ test('a post the server refuses is dropped, so it does not hold up the backlog',
     JSON.stringify([{ endpointId: 'trip', payload: { bad: true } }])
   );
   callEndpoint.mockRejectedValueOnce(refusal(400)).mockResolvedValueOnce(null);
-  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
   await mockTasks['lowdefy-location-tracking']({ data: { locations } });
   expect(backlog()).toEqual([]);
   expect(callEndpoint).toHaveBeenCalledTimes(2);
@@ -85,7 +91,7 @@ test('a post the server refuses is dropped, so it does not hold up the backlog',
 
 test('a post refused for a lost session stays for the next wake', async () => {
   callEndpoint.mockRejectedValueOnce(refusal(401));
-  const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
   await mockTasks['lowdefy-location-tracking']({ data: { locations } });
   expect(backlog()).toHaveLength(1);
   consoleError.mockRestore();

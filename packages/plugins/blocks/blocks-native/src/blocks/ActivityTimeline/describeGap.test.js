@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import describeGap from './describeGap.js';
 import summariseEvents from './summariseEvents.js';
 

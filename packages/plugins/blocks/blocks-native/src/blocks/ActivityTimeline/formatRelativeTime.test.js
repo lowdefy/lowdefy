@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import formatRelativeTime from './formatRelativeTime.js';
 
 const now = new Date(2026, 9, 18, 12, 0, 0).getTime();

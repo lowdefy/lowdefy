@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getListItemParts from './getListItemParts.js';
 
 test('getListItemParts draws a status glyph before an avatar or icon', () => {

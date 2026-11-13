@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getOptionLabel from './getOptionLabel.js';
 
 test('getOptionLabel shows a primitive option as text', () => {

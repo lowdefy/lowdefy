@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import React from 'react';
 import { AccessibilityInfo, StyleSheet, Text } from 'react-native';
-import { jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { translate as translateMessage } from '@lowdefy/helpers';
 
@@ -35,7 +35,7 @@ function translate(key) {
   return translateMessage({ key });
 }
 
-async function renderRow({ level = 0, onCancel = jest.fn() } = {}) {
+async function renderRow({ level = 0, onCancel = vi.fn() } = {}) {
   const view = await render(
     <ListeningRow
       colors={colors}
@@ -58,19 +58,20 @@ test('ListeningRow shows a cancel cross, the level meter and Listening', async (
 });
 
 test('ListeningRow announces Listening once, when it appears', async () => {
+  const announce = vi.spyOn(AccessibilityInfo, 'announceForAccessibility');
   const { rerender } = await renderRow();
-  expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledWith('Listening');
+  expect(announce).toHaveBeenCalledWith('Listening');
   await rerender(
     <ListeningRow
       colors={colors}
       components={components}
       level={0.8}
-      onCancel={jest.fn()}
+      onCancel={vi.fn()}
       testID="dictation"
       translate={translate}
     />
   );
-  expect(AccessibilityInfo.announceForAccessibility).toHaveBeenCalledTimes(1);
+  expect(announce).toHaveBeenCalledTimes(1);
 });
 
 test('ListeningRow draws eight red bars that follow the level', async () => {
@@ -88,7 +89,7 @@ test('ListeningRow draws eight red bars that follow the level', async () => {
       colors={colors}
       components={components}
       level={1}
-      onCancel={jest.fn()}
+      onCancel={vi.fn()}
       testID="dictation"
       translate={translate}
     />

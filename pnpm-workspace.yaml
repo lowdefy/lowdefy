@@ -99,3 +99,6 @@ packageExtensions:
 
 patchedDependencies:
   buffer-equal-constant-time@1.0.1: patches/buffer-equal-constant-time@1.0.1.patch
+  # React Native tests: the native side reports what React Native's Jest preset did, so Animated
+  # runs real animations (code-docs/testing.md, "React Native tests").
+  vitest-native@0.14.1: patches/vitest-native@0.14.1.patch

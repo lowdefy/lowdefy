@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import formatNumber from './formatNumber.js';
 import normalizeNumber from './normalizeNumber.js';
 import parseNumberText from './parseNumberText.js';

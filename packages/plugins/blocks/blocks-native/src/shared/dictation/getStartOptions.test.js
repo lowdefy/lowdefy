@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getStartOptions from './getStartOptions.js';
 
 test('getStartOptions dictates on the device only, as text entry, with partial words and the level', () => {

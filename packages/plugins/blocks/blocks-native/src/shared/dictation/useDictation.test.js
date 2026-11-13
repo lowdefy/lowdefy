@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { AppState, Platform } from 'react-native';
 import { act, renderHook } from '@testing-library/react-native';
 
@@ -40,7 +40,7 @@ async function emit(name, event) {
 }
 
 async function renderDictation(props = {}) {
-  const onFinal = jest.fn();
+  const onFinal = vi.fn();
   const hook = await renderHook((hookProps) => useDictation(hookProps), {
     initialProps: { hints: ['Sam Taylor', 'Ana'], onFinal, ...props },
   });
@@ -60,7 +60,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('useDictation is available where the phone recognises speech on the device', async () => {
@@ -90,7 +90,7 @@ test('useDictation is unavailable on Android without the language model of the p
   const os = Platform.OS;
   Platform.OS = 'android';
   setSpeechRecognition({ installedLocales: ['af-ZA'] });
-  const resolvedOptions = jest
+  const resolvedOptions = vi
     .spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions')
     .mockReturnValue({ locale: 'en-ZA' });
   try {
@@ -106,7 +106,7 @@ test('useDictation dictates on Android in an installed locale of the phone langu
   const os = Platform.OS;
   Platform.OS = 'android';
   setSpeechRecognition({ installedLocales: ['af-ZA', 'en-US'] });
-  const resolvedOptions = jest
+  const resolvedOptions = vi
     .spyOn(Intl.DateTimeFormat.prototype, 'resolvedOptions')
     .mockReturnValue({ locale: 'en-ZA' });
   try {
@@ -246,7 +246,7 @@ test('useDictation finish resolves once the final result is committed', async ()
 });
 
 test('useDictation finish resolves after 1.5 s when no final result comes', async () => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   const { result } = await renderDictation();
   await startListening(result);
   let finished = false;
@@ -256,11 +256,11 @@ test('useDictation finish resolves after 1.5 s when no final result comes', asyn
     });
   });
   await act(async () => {
-    jest.advanceTimersByTime(1400);
+    vi.advanceTimersByTime(1400);
   });
   expect(finished).toBe(false);
   await act(async () => {
-    jest.advanceTimersByTime(100);
+    vi.advanceTimersByTime(100);
   });
   expect(finished).toBe(true);
   await emit('end');
@@ -275,19 +275,19 @@ test('useDictation finish resolves at once when idle', async () => {
 });
 
 test('useDictation stops after 20 s without words', async () => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   const { result } = await renderDictation();
   await startListening(result);
   await act(async () => {
-    jest.advanceTimersByTime(15000);
+    vi.advanceTimersByTime(15000);
   });
   await emit('result', partialResult('check'));
   await act(async () => {
-    jest.advanceTimersByTime(15000);
+    vi.advanceTimersByTime(15000);
   });
   expect(speech.stop).not.toHaveBeenCalled();
   await act(async () => {
-    jest.advanceTimersByTime(5000);
+    vi.advanceTimersByTime(5000);
   });
   expect(speech.stop).toHaveBeenCalledTimes(1);
   expect(result.current.status).toBe('stopping');
@@ -295,9 +295,10 @@ test('useDictation stops after 20 s without words', async () => {
 });
 
 test('useDictation stops when the app goes to the background', async () => {
+  const addEventListener = vi.spyOn(AppState, 'addEventListener');
   const { result } = await renderDictation();
   await startListening(result);
-  const [, onChange] = AppState.addEventListener.mock.calls.at(-1);
+  const [, onChange] = addEventListener.mock.calls.at(-1);
   await act(async () => onChange('inactive'));
   expect(speech.stop).not.toHaveBeenCalled();
   await act(async () => onChange('background'));
@@ -306,6 +307,7 @@ test('useDictation stops when the app goes to the background', async () => {
 });
 
 test('useDictation keeps a session the Android permission prompt sends to the background', async () => {
+  const addEventListener = vi.spyOn(AppState, 'addEventListener');
   let grant;
   speech.requestPermissionsAsync.mockReturnValue(
     new Promise((resolve) => {
@@ -317,7 +319,7 @@ test('useDictation keeps a session the Android permission prompt sends to the ba
   await act(async () => {
     started = result.current.start();
   });
-  const [, onChange] = AppState.addEventListener.mock.calls.at(-1);
+  const [, onChange] = addEventListener.mock.calls.at(-1);
   await act(async () => onChange('background'));
   await act(async () => onChange('active'));
   await act(async () => {

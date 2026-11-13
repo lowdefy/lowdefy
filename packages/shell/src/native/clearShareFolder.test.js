@@ -14,12 +14,14 @@
   limitations under the License.
 */
 
+import { beforeEach, expect, test, vi } from 'vitest';
+
 import clearShareFolder from './clearShareFolder.js';
 
 let mockExists = true;
 const mockDeleted = [];
 
-jest.mock('expo-file-system', () => ({
+vi.mock('expo-file-system', () => ({
   Directory: class {
     constructor(parent, name) {
       this.uri = `${parent}/${name}`;

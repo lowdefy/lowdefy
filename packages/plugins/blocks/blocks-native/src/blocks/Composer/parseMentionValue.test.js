@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import createMentionPattern from './createMentionPattern.js';
 import parseMentionValue from './parseMentionValue.js';
 import { toDisplay, toValue } from './segmentText.js';

@@ -14,23 +14,23 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
+import * as Clipboard from 'expo-clipboard';
 
 import createShellHost from './createShellHost.js';
 
-jest.mock('expo-clipboard', () => ({ setStringAsync: jest.fn(async () => true) }));
-jest.mock('./createDeviceStore.js', () => () => ({}));
-jest.mock('./networkStatus.js', () => ({ subscribe: () => () => undefined }));
+vi.mock('expo-clipboard', () => ({ setStringAsync: vi.fn(async () => true) }));
+vi.mock('./createDeviceStore.js', () => ({ default: () => ({}) }));
+vi.mock('./networkStatus.js', () => ({ default: { subscribe: () => () => undefined } }));
 
 // Copy link and the other CopyToClipboard actions reach the phone's clipboard through the host.
 test('the host clipboard copies through expo-clipboard', async () => {
-  const Clipboard = jest.requireMock('expo-clipboard');
   const session = {
     apiBase: 'https://field.example.com',
     getCurrentInstanceId: () => null,
     getCurrentPath: () => '/',
   };
-  const host = createShellHost({ fetch: jest.fn(), router: {}, session, tokenStore: {} });
+  const host = createShellHost({ fetch: vi.fn(), router: {}, session, tokenStore: {} });
   await host.globals.clipboard.setString('https://field.example.com/tasks/12');
   expect(Clipboard.setStringAsync.mock.calls).toEqual([['https://field.example.com/tasks/12']]);
 });

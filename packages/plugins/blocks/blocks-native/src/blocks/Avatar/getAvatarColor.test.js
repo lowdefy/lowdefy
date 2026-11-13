@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import getAvatarColor from './getAvatarColor.js';
 import theme from '../../test/theme.json';
@@ -67,7 +67,7 @@ test('getAvatarColor gives a name the same hue whatever the device locale', () =
   const expected = getAvatarColor({ isDark: false, name, tokens: light });
   expect(getAvatarColor({ isDark: false, name: 'igor ivanov', tokens: light })).toEqual(expected);
   // A Turkish locale lower-cases "I" to a dotless "ı".
-  const turkish = jest
+  const turkish = vi
     .spyOn(String.prototype, 'toLocaleLowerCase')
     .mockImplementation(function toTurkishLowerCase() {
       return this.replace(/I/g, 'ı').toLowerCase();

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getInitialScreenOptions from './getInitialScreenOptions.js';
 
 test('getInitialScreenOptions reads the bar a Screen config gives before it renders', () => {

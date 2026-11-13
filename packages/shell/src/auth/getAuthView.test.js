@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getAuthView from './getAuthView.js';
 import shouldLock from './shouldLock.js';
 

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-// A stand-in for @expo/ui's SwiftUI modifiers, which reach the ExpoUI native module Jest does not
+// A stand-in for @expo/ui's SwiftUI modifiers, which reach the ExpoUI native module a test does not
 // have: each modifier is its name and params, so a test reads what a block asked SwiftUI for.
 function font(params) {
   return { $type: 'font', ...params };

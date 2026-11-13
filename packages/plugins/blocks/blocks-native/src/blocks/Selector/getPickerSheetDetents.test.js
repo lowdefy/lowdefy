@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getPickerSheetDetents from './getPickerSheetDetents.js';
 
 const windowHeight = 844;

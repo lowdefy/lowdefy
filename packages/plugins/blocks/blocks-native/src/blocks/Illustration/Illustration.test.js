@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { Animated, processColor } from 'react-native';
 import { act } from '@testing-library/react-native';
 
@@ -145,7 +145,7 @@ test('Illustration with a position sits absolutely at its offsets, taking no roo
 });
 
 test('Illustration runs its animations on the native driver, one clock per duration, delay and loop', async () => {
-  const timing = jest.spyOn(Animated, 'timing');
+  const timing = vi.spyOn(Animated, 'timing');
   await renderPage({
     pageConfig: page([
       art({
@@ -174,7 +174,7 @@ test('Illustration draws each drawn layer only over the part of the drawing it d
 });
 
 test('Illustration runs no animations while its screen is not the one shown', async () => {
-  const timing = jest.spyOn(Animated, 'timing');
+  const timing = vi.spyOn(Animated, 'timing');
   await renderPage({ focused: false, pageConfig: page([art({ animations: ANIMATIONS })]) });
   await screen.findByTestId('art_bird', HIDDEN);
   expect(timing.mock.calls.filter(([, config]) => config.duration === 4000)).toHaveLength(0);

@@ -201,9 +201,8 @@ the same session watch, so a 401 ends the session.
 
 ## Tests
 
-Jest runs with the `@react-native/jest-preset` (babel-jest and React Native's mocks) and
-`@testing-library/react-native`, not the repository's ESM swc setup. `src/test/removeWindow.js`
-deletes React Native's `window` alias, so a stray `window` read fails. Test blocks and a small
-build-shaped page helper live in `src/test/`; `@lowdefy/build` does not load under the preset.
-`intl-messageformat` and `@formatjs/*` ship ES modules and static class blocks, so the Jest config
-transforms them, and Babel adds the static class block plugin.
+Tests run on vitest with vitest-native and `@testing-library/react-native` (see
+[React Native tests](../testing.md#react-native-tests)). `src/test/removeWindow.js` deletes React
+Native's `window` alias, so a stray `window` read fails; React Native's AppContainer, which reads
+`window` as it loads, is loaded first. Test blocks and a small build-shaped page helper live in
+`src/test/`; `@lowdefy/build` does not load in the React Native test environment.

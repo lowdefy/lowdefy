@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getIllustrationBox from './getIllustrationBox.js';
 
 test('getIllustrationBox fills a box of the viewBox aspect ratio', () => {

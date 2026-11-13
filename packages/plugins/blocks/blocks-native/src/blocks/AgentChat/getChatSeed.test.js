@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getChatSeed from './getChatSeed.js';
 
 test('getChatSeed keeps the parts a new chat starts with', () => {

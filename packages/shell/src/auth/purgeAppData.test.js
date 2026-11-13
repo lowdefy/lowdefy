@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import { Image } from 'expo-image';
 import { installDevice } from '@lowdefy/blocks-native/device';
 
@@ -31,17 +32,17 @@ function memoryKv(entries) {
 function purge(kv) {
   return purgeAppData({
     appId: 'app',
-    cacheStore: { removeApp: jest.fn() },
+    cacheStore: { removeApp: vi.fn() },
     kv,
-    queueStore: { removeApp: jest.fn() },
+    queueStore: { removeApp: vi.fn() },
     slug: null,
-    tokenStore: { clear: jest.fn() },
+    tokenStore: { clear: vi.fn() },
   });
 }
 
 test('a sign-out stops tracking and geofencing, drops the backlog and clears notifications', async () => {
-  const tracking = { stopTracking: jest.fn(), stopGeofencing: jest.fn() };
-  const notifications = { cancel: jest.fn(), setBadgeCount: jest.fn() };
+  const tracking = { stopTracking: vi.fn(), stopGeofencing: vi.fn() };
+  const notifications = { cancel: vi.fn(), setBadgeCount: vi.fn() };
   const removeDevice = installDevice({ notifications, tracking });
   const kv = memoryKv({
     'lowdefy-shell:tracking': '{}',
@@ -58,8 +59,8 @@ test('a sign-out stops tracking and geofencing, drops the backlog and clears not
 });
 
 test('a sign-out clears the images expo-image cached in memory and on disk', async () => {
-  const clearMemoryCache = jest.spyOn(Image, 'clearMemoryCache');
-  const clearDiskCache = jest.spyOn(Image, 'clearDiskCache');
+  const clearMemoryCache = vi.spyOn(Image, 'clearMemoryCache');
+  const clearDiskCache = vi.spyOn(Image, 'clearDiskCache');
   await purge(memoryKv({}));
   expect(clearMemoryCache).toHaveBeenCalled();
   expect(clearDiskCache).toHaveBeenCalled();
@@ -68,7 +69,7 @@ test('a sign-out clears the images expo-image cached in memory and on disk', asy
 });
 
 test('an image cache that fails to clear does not fail the sign-out', async () => {
-  const clearDiskCache = jest
+  const clearDiskCache = vi
     .spyOn(Image, 'clearDiskCache')
     .mockRejectedValue(new Error('disk cache busy'));
   const kv = memoryKv({ 'lowdefy-shell:tracking-backlog': '[]' });
@@ -85,16 +86,16 @@ test('a sign-out on a shell without tracking or notifications still purges', asy
 
 test('a feature that fails to stop does not stop the purge', async () => {
   const tracking = {
-    stopTracking: jest.fn().mockRejectedValue(new Error('denied')),
-    stopGeofencing: jest.fn(),
+    stopTracking: vi.fn().mockRejectedValue(new Error('denied')),
+    stopGeofencing: vi.fn(),
   };
   const removeDevice = installDevice({ tracking });
-  const tokenStore = { clear: jest.fn() };
+  const tokenStore = { clear: vi.fn() };
   await purgeAppData({
     appId: 'app',
-    cacheStore: { removeApp: jest.fn() },
+    cacheStore: { removeApp: vi.fn() },
     kv: memoryKv({}),
-    queueStore: { removeApp: jest.fn() },
+    queueStore: { removeApp: vi.fn() },
     slug: null,
     tokenStore,
   });

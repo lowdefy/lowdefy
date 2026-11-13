@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 
 import createAppSession from '../session/createAppSession.js';
@@ -57,9 +57,9 @@ async function renderPageScreen({
   });
   await session.start();
   const storage = createMemoryStore();
-  const clipboard = { setString: jest.fn(async () => undefined) };
+  const clipboard = { setString: vi.fn(async () => undefined) };
   const globals = createShellGlobals({
-    assign: jest.fn(),
+    assign: vi.fn(),
     clipboard,
     fetch: server.fetch,
     getInstanceId: session.getCurrentInstanceId,
@@ -71,14 +71,14 @@ async function renderPageScreen({
     authTransport: 'bearer',
     fetch: server.fetch,
     globals,
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
-    router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
+    onBuildChanged: vi.fn(),
+    onCallerChanged: vi.fn(),
+    router: { back: vi.fn(), push: vi.fn(), replace: vi.fn() },
     sessionStorage: createMemoryStore(),
     storage,
     streamFetch: server.fetch,
-    tokenStore: { get: () => null, set: jest.fn(), clear: jest.fn() },
-    WebSocket: jest.fn(),
+    tokenStore: { get: () => null, set: vi.fn(), clear: vi.fn() },
+    WebSocket: vi.fn(),
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),
   };
   const locale = createShellLocale({

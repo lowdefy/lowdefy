@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import createMemoryStore from '../host/createMemoryStore.js';
 import GetLocalStorage from './GetLocalStorage.js';
 import RemoveLocalStorage from './RemoveLocalStorage.js';

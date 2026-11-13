@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { RequestError, UserError } from '@lowdefy/errors';
 
 import createNetworkError from '../test/createNetworkError.js';
@@ -27,7 +27,7 @@ function createSession(handleError) {
 let consoleError;
 
 beforeEach(() => {
-  consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+  consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 afterEach(() => {
@@ -35,7 +35,7 @@ afterEach(() => {
 });
 
 test('a fault goes to the core handleError once a page has made one', () => {
-  const handleError = jest.fn(async () => {});
+  const handleError = vi.fn(async () => {});
   const error = new RequestError('Something went wrong.');
   reportShellError({ error, session: createSession(handleError) });
   expect(handleError).toHaveBeenCalledWith(error);
@@ -55,7 +55,7 @@ test('a fault goes to the device console when no app is open', () => {
 });
 
 test('no network and expected outcomes are not reported', () => {
-  const handleError = jest.fn(async () => {});
+  const handleError = vi.fn(async () => {});
   const session = createSession(handleError);
   reportShellError({ error: createNetworkError(), session });
   reportShellError({ error: new UserError('Camera permission was denied.'), session });

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import createImageSource from './createImageSource.js';
 
 function createLowdefy({ apiBase = 'https://app.test', authTransport = 'bearer', token = 'tok' }) {

@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
-// A stand-in for expo-speech-recognition, whose recogniser is a native module Jest does not have.
+// A stand-in for expo-speech-recognition, whose recogniser is a native module a test does not have.
 // A test sets what the phone supports and answers with setSpeechRecognition, then drives the
 // session with emitSpeechEvent: results, volume, errors and the end. abort() ends the session at
 // once, as the native module does: an "aborted" error, then the end.
@@ -27,21 +27,21 @@ function emitSpeechEvent(name, event = null) {
 }
 
 const ExpoSpeechRecognitionModule = {
-  abort: jest.fn(() => {
+  abort: vi.fn(() => {
     emitSpeechEvent('error', { error: 'aborted', message: 'Speech recognition aborted.' });
     emitSpeechEvent('end');
   }),
-  addListener: jest.fn((name, listener) => {
+  addListener: vi.fn((name, listener) => {
     if (!listeners.has(name)) listeners.set(name, new Set());
     listeners.get(name).add(listener);
     return { remove: () => listeners.get(name).delete(listener) };
   }),
-  getSupportedLocales: jest.fn(),
-  isRecognitionAvailable: jest.fn(),
-  requestPermissionsAsync: jest.fn(),
-  start: jest.fn(),
-  stop: jest.fn(),
-  supportsOnDeviceRecognition: jest.fn(),
+  getSupportedLocales: vi.fn(),
+  isRecognitionAvailable: vi.fn(),
+  requestPermissionsAsync: vi.fn(),
+  start: vi.fn(),
+  stop: vi.fn(),
+  supportsOnDeviceRecognition: vi.fn(),
 };
 
 function setSpeechRecognition({

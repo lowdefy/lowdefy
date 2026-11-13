@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import placeDictation from './placeDictation.js';
 
 const sam = { kind: 'mention', id: 'u1', name: 'Sam Taylor', sees: true };

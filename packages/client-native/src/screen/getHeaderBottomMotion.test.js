@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { Animated } from 'react-native';
 
 import getHeaderBottomMotion from './getHeaderBottomMotion.js';

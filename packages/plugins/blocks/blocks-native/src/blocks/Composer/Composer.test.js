@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { Linking } from 'react-native';
 import { act, fireEvent, screen, within } from '@testing-library/react-native';
 
@@ -195,12 +195,12 @@ test('a Composer asks for record links after [[ and writes the picked key', asyn
       mirrorKey: 'comment',
     }),
   });
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   await type(await screen.findByTestId('comment_input'), 'See [[acm');
   await act(async () => {
-    jest.advanceTimersByTime(250);
+    vi.advanceTimersByTime(250);
   });
-  jest.useRealTimers();
+  vi.useRealTimers();
   expect(screen.getByText('acm')).toBeTruthy();
   await act(async () => {
     fireEvent.press(screen.getByLabelText('Link ACME-12 Fix the rail'));
@@ -232,17 +232,17 @@ describe('spoken mentions', () => {
   }
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   test('dictated addressing becomes a mention once the text is still', async () => {
     await renderPage({ pageConfig: composerPage() });
     const input = await screen.findByTestId('comment_input');
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     await type(input, 'For Falcon, please check the build');
     expect(screen.getAllByText('For Falcon, please check the build')).toHaveLength(2);
     await act(async () => {
-      jest.advanceTimersByTime(900);
+      vi.advanceTimersByTime(900);
     });
     expect(screen.getByText('[[user:u2]] please check the build')).toBeTruthy();
     expect(screen.getByText('@Falcon Agent')).toBeTruthy();
@@ -251,18 +251,18 @@ describe('spoken mentions', () => {
   test('more dictated text holds the conversion back until it stops', async () => {
     await renderPage({ pageConfig: composerPage() });
     const input = await screen.findByTestId('comment_input');
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     await type(input, 'for Sam ');
     await act(async () => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
     await type(input, 'for Sam can you look');
     await act(async () => {
-      jest.advanceTimersByTime(500);
+      vi.advanceTimersByTime(500);
     });
     expect(screen.getAllByText('for Sam can you look')).toHaveLength(2);
     await act(async () => {
-      jest.advanceTimersByTime(400);
+      vi.advanceTimersByTime(400);
     });
     expect(screen.getByText('[[user:u1]] can you look')).toBeTruthy();
   });
@@ -359,7 +359,7 @@ describe('dictation', () => {
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   test('the mic sits in the field and starts with the mention labels as hints', async () => {
@@ -440,7 +440,7 @@ describe('dictation', () => {
 
   test('a mention converts as the final words commit, without waiting for the still-timer', async () => {
     await renderComposer();
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     await dictate('Merged. For Falcon, please check the build');
     expect(screen.getByText('Merged. [[user:u2]] please check the build')).toBeTruthy();
   });
@@ -514,12 +514,12 @@ describe('dictation', () => {
     await type(input, 'Looks good.');
     await pressMic();
     await emit('result', partial('ship it'));
-    jest.useFakeTimers();
+    vi.useFakeTimers();
     await act(async () => {
       fireEvent.press(screen.getByTestId('composer_send'));
     });
     await act(async () => {
-      jest.advanceTimersByTime(1500);
+      vi.advanceTimersByTime(1500);
     });
     expect(screen.getByText('Looks good.')).toBeTruthy();
     expect(speech.abort).toHaveBeenCalledTimes(1);
@@ -538,6 +538,7 @@ describe('dictation', () => {
   });
 
   test('a refused microphone shows the denied warning with Settings, until the field is emptied', async () => {
+    const openSettings = vi.spyOn(Linking, 'openSettings');
     setSpeechRecognition({ granted: false });
     const input = await renderComposer();
     await pressMic();
@@ -545,7 +546,7 @@ describe('dictation', () => {
     await act(async () => {
       fireEvent.press(screen.getByTestId('comment_dictation_warning_settings'));
     });
-    expect(Linking.openSettings).toHaveBeenCalledTimes(1);
+    expect(openSettings).toHaveBeenCalledTimes(1);
     await type(input, 'a');
     expect(screen.getByText('Microphone access is off.')).toBeTruthy();
     await type(input, '', 0);
@@ -561,14 +562,14 @@ describe('dictation', () => {
     try {
       setSpeechRecognition({ available: false });
       await renderComposer();
-      jest.useFakeTimers();
+      vi.useFakeTimers();
       await pressMic();
       await act(async () => {
-        jest.advanceTimersByTime(600);
+        vi.advanceTimersByTime(600);
       });
       expect(screen.getByTestId('composer_partial').props.children).toBe('for Sam can');
       await act(async () => {
-        jest.advanceTimersByTime(300);
+        vi.advanceTimersByTime(300);
       });
       expect(screen.queryByTestId('comment_listening')).toBeNull();
       expect(screen.getByText('[[user:u1]] can you look')).toBeTruthy();

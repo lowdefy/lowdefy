@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import toNfcRecord from './toNfcRecord.js';
 
 const Ndef = {

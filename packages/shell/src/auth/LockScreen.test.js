@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import LockScreen from './LockScreen.js';
 
 test('the lock screen asks to unlock at once, and again on Unlock', async () => {
-  const auth = { unlock: jest.fn(async () => false), signOut: jest.fn() };
+  const auth = { unlock: vi.fn(async () => false), signOut: vi.fn() };
   await render(<LockScreen appName="Field" auth={auth} />);
   expect(screen.getByText('Field')).toBeTruthy();
   expect(auth.unlock).toHaveBeenCalledTimes(1);
@@ -30,7 +30,7 @@ test('the lock screen asks to unlock at once, and again on Unlock', async () => 
 });
 
 test('Sign in again signs out', async () => {
-  const auth = { unlock: jest.fn(async () => false), signOut: jest.fn() };
+  const auth = { unlock: vi.fn(async () => false), signOut: vi.fn() };
   await render(<LockScreen appName="Field" auth={auth} />);
   await fireEvent.press(screen.getByTestId('lock-sign-in-again'));
   expect(auth.signOut).toHaveBeenCalledTimes(1);

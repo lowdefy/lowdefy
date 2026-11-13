@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { act, screen } from '@testing-library/react-native';
 
 import getShownPage from './getShownPage.js';
@@ -23,24 +23,26 @@ import renderPageScreen from '../../test/renderPageScreen.js';
 import { createRoot } from '../../test/fixtures.js';
 
 // The native stack's header height, which a Screen's headerBottom pins under on iOS.
-jest.mock('expo-router/native-stack', () => ({ useAnimatedHeaderHeight: () => 0 }));
-jest.mock('react-native-safe-area-context', () => ({
+vi.mock('expo-router/native-stack', () => ({ useAnimatedHeaderHeight: () => 0 }));
+vi.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 34, left: 0 }),
 }));
 
-jest.mock('expo-router', () => ({
-  DarkTheme: { fonts: {} },
-  DefaultTheme: { fonts: {} },
-  ThemeProvider: ({ children }) => children,
-  router: { back: jest.fn(), canGoBack: () => false },
-  useFocusEffect: (effect) => {
-    const { useEffect: useReactEffect } = jest.requireActual('react');
-    useReactEffect(effect, [effect]);
-  },
-  useIsFocused: () => true,
-  useNavigation: () => ({ setOptions: jest.fn() }),
-  useRoute: () => ({ key: 'route-1' }),
-}));
+vi.mock('expo-router', async () => {
+  const { useEffect: useReactEffect } = await import('react');
+  return {
+    DarkTheme: { fonts: {} },
+    DefaultTheme: { fonts: {} },
+    ThemeProvider: ({ children }) => children,
+    router: { back: vi.fn(), canGoBack: () => false },
+    useFocusEffect: (effect) => {
+      useReactEffect(effect, [effect]);
+    },
+    useIsFocused: () => true,
+    useNavigation: () => ({ setOptions: vi.fn() }),
+    useRoute: () => ({ key: 'route-1' }),
+  };
+});
 
 function todayPage(greeting) {
   return {

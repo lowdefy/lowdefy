@@ -17,7 +17,7 @@
 import React from 'react';
 import { View } from 'react-native';
 
-// A stand-in for expo-image's Image, whose view needs a native module Jest does not have. It keeps
+// A stand-in for expo-image's Image, whose view needs a native module a test does not have. It keeps
 // its props, so a test reads the source and fires the load and error events:
 // fireEvent(image, 'load', { cacheType: 'none' }) or fireEvent(image, 'error', { error: '' }).
 function Image({ cachePolicy, contentFit, onError, onLoad, recyclingKey, source, style, testID }) {

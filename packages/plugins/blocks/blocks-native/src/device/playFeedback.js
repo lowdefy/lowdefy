@@ -19,7 +19,7 @@ import getDeviceFeature from './getDeviceFeature.js';
 
 /**
  * The light haptic a native control plays when it changes (a toggle, a pick, a full swipe). Every
- * shell carries haptics; under Jest, or where the shell installed none, the control is silent.
+ * shell carries haptics; in tests, or where the shell installed none, the control is silent.
  * Never awaited: feedback must not hold up the change.
  *
  * @param {'selection'|'light'|'medium'|'heavy'|'success'|'warning'|'error'} type

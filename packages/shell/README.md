@@ -365,7 +365,7 @@ session` lists and prints phone sessions as it does browser ones.
 ## Checks
 
 ```bash
-pnpm --filter=@lowdefy/shell test         # Jest, and the hello fixture build
+pnpm --filter=@lowdefy/shell test         # vitest, then the node:test suites (the hello fixture build)
 pnpm --filter=@lowdefy/shell export:ios     # Metro and Hermes bundle, no simulator needed
 pnpm --filter=@lowdefy/shell export:android
 pnpm --filter=@lowdefy/shell check:release-bundle   # each release profile links only its modules

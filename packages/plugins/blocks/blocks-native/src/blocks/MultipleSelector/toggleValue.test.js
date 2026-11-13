@@ -13,6 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { expect, test } from 'vitest';
+
 import { isSameValues, toggleValue } from './toggleValue.js';
 
 test('toggleValue adds a value at the end, or takes it out', () => {

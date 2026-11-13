@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSwipeDirection from './getSwipeDirection.js';
 
 test('getSwipeDirection takes a drag across more than 40pt as a swipe that way', () => {

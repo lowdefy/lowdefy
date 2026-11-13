@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getNavigationTheme from './getNavigationTheme.js';
 
 const tokens = {

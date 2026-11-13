@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import { act, fireEvent } from '@testing-library/react-native';
-import { ScrollView } from 'react-native';
+import ScrollViewCommands from 'react-native/Libraries/Components/ScrollView/ScrollViewCommands';
 
 import { ios, page, press, record, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
@@ -116,6 +117,8 @@ test('a disabled strip ignores presses', async () => {
 });
 
 test('the strip scrolls the selected chip into view once it is laid out', async () => {
+  // ScrollView's scrollTo sends the native scrollTo command: (view, x, y, animated).
+  const scrollTo = vi.spyOn(ScrollViewCommands, 'scrollTo');
   await renderPage({ pageConfig: spacesPage(spaces, selectAcme) });
   const scroll = await screen.findByTestId('space_scroll');
   // The selected chip ends past the strip's view: once the strip, its content and the chip are
@@ -126,13 +129,13 @@ test('the strip scrolls the selected chip into view once it is laid out', async 
   await act(async () => {
     fireEvent(scroll, 'contentSizeChange', 600, 32);
   });
-  expect(ScrollView.prototype.scrollTo).not.toHaveBeenCalled();
+  expect(scrollTo).not.toHaveBeenCalled();
   await act(async () => {
     fireEvent(screen.getByTestId('space_ACME').parent, 'layout', {
       nativeEvent: { layout: { x: 300, y: 0, width: 100, height: 32 } },
     });
   });
-  expect(ScrollView.prototype.scrollTo).toHaveBeenCalledWith({ animated: false, x: 224, y: 0 });
+  expect(scrollTo).toHaveBeenCalledWith(expect.anything(), 224, 0, false);
   // Picking another chip scrolls to it with animation.
   await act(async () => {
     fireEvent(screen.getByTestId('space_GRW').parent, 'layout', {
@@ -140,7 +143,7 @@ test('the strip scrolls the selected chip into view once it is laid out', async 
     });
   });
   await press(screen.getByTestId('space_GRW'));
-  expect(ScrollView.prototype.scrollTo).toHaveBeenLastCalledWith({ animated: true, x: 334, y: 0 });
+  expect(scrollTo).toHaveBeenLastCalledWith(expect.anything(), 334, 0, true);
 });
 
 test("in a Screen's headerBottom the strip cancels the screen inset to run edge to edge", async () => {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createFakeNetwork, { OFFLINE, ONLINE } from '../test/createFakeNetwork.js';
 import createNetworkStatus from './createNetworkStatus.js';
@@ -25,7 +25,7 @@ const settle = () => new Promise((resolve) => setTimeout(resolve, 0));
 test('the phone going offline and back is heard by subscribers, once per change', async () => {
   const network = createFakeNetwork();
   const status = createNetworkStatus({ network });
-  const listener = jest.fn();
+  const listener = vi.fn();
   status.subscribe(listener);
   await settle();
   expect(status.isOnline()).toBe(true);
@@ -38,7 +38,7 @@ test('the phone going offline and back is heard by subscribers, once per change'
 
 test('the first read of the phone network sets the state', async () => {
   const status = createNetworkStatus({ network: createFakeNetwork({ state: OFFLINE }) });
-  const listener = jest.fn();
+  const listener = vi.fn();
   status.subscribe(listener);
   expect(status.isOnline()).toBe(true);
   await settle();
@@ -58,7 +58,7 @@ test('a change heard before the first read answers wins over that read', async (
 
 test('injected offline takes the shell offline while the phone is online, until it is lifted', async () => {
   const status = createNetworkStatus({ network: createFakeNetwork() });
-  const listener = jest.fn();
+  const listener = vi.fn();
   status.subscribe(listener);
   await settle();
   status.setInjectedOffline(true);

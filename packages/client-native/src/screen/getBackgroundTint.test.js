@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getBackgroundTint from './getBackgroundTint.js';
 
 const tokens = { colorPrimary: '#6366f1', 'blue-6': '#1677ff' };

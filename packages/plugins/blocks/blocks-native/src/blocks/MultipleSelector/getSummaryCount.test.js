@@ -13,6 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { expect, test } from 'vitest';
+
 import getSummaryCount from './getSummaryCount.js';
 
 test('getSummaryCount counts the labels that end within the first line', () => {

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { StyleSheet } from 'react-native';
 
 import { ios, page, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';

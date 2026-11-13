@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createDevShellConfig from '../connection/createDevShellConfig.js';
 import createDeviceInjections from './createDeviceInjections.js';
@@ -28,7 +28,7 @@ function setup({ pair = null } = {}) {
   const injections = createDeviceInjections({
     networkStatus: createNetworkStatus({ network: createFakeNetwork() }),
   });
-  const fetch = jest.fn(async () => ({ ok: true }));
+  const fetch = vi.fn(async () => ({ ok: true }));
   const devShell = createDevShellConfig({
     fetch: createOfflineFetch({ fetch, isOffline: injections.isOffline }),
     server: { url: 'http://192.168.1.20:3000', host: '192.168.1.20:3000', pair },
@@ -57,7 +57,7 @@ test("offline, the app's every fetch fails as React Native's fetch fails with no
 test('offline, the dev-tab client still reaches the dev server, so an agent can go back online', async () => {
   const { devShell, injections } = setup({ pair: 'token' });
   injections.inject({ kind: 'network', value: 'offline' });
-  const tabFetch = jest.fn(async () => ({ ok: true }));
+  const tabFetch = vi.fn(async () => ({ ok: true }));
   await devShell.transport.wrapFetch(tabFetch)('http://192.168.1.20:3000/api/dev-inspect', {
     method: 'POST',
   });

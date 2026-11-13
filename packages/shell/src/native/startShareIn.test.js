@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { beforeEach, expect, test, vi } from 'vitest';
 import { Linking } from 'react-native';
 import * as Sharing from 'expo-sharing';
 
@@ -26,21 +27,23 @@ import startShareIn from './startShareIn.js';
 // The order the share folder, expo-sharing's payloads and the copies were touched in.
 const mockSteps = [];
 
-jest.mock('./openPath.js', () => jest.fn());
-jest.mock('../host/reportShellError.js', () => jest.fn());
-jest.mock('./clearShareFolder.js', () => jest.fn(() => mockSteps.push('clear share folder')));
-jest.mock('./copySharedFiles.js', () =>
-  jest.fn(async ({ files }) => {
+vi.mock('./openPath.js', () => ({ default: vi.fn() }));
+vi.mock('../host/reportShellError.js', () => ({ default: vi.fn() }));
+vi.mock('./clearShareFolder.js', () => ({
+  default: vi.fn(() => mockSteps.push('clear share folder')),
+}));
+vi.mock('./copySharedFiles.js', () => ({
+  default: vi.fn(async ({ files }) => {
     mockSteps.push('copy');
     return files.map((file, index) => ({
       ...file,
       uri: `file:///cache/lowdefy-share/${index}/${file.name}`,
     }));
-  })
-);
-jest.mock('expo-sharing', () => ({
-  getResolvedSharedPayloadsAsync: jest.fn(),
-  clearSharedPayloads: jest.fn(() => mockSteps.push('clear expo-sharing')),
+  }),
+}));
+vi.mock('expo-sharing', () => ({
+  getResolvedSharedPayloadsAsync: vi.fn(),
+  clearSharedPayloads: vi.fn(() => mockSteps.push('clear expo-sharing')),
 }));
 
 const flush = () => new Promise((resolve) => setTimeout(resolve, 0));
@@ -60,13 +63,13 @@ function createApp() {
   return {
     ready: Promise.resolve(),
     session: { getState: () => ({ root }) },
-    triggerAppEvent: jest.fn(),
+    triggerAppEvent: vi.fn(),
   };
 }
 
 beforeEach(() => {
   mockSteps.length = 0;
-  jest.spyOn(Linking, 'getInitialURL').mockResolvedValue(null);
+  vi.spyOn(Linking, 'getInitialURL').mockResolvedValue(null);
 });
 
 test('startShareIn empties the share folder when the app opens', () => {
@@ -113,7 +116,7 @@ test('expo-sharing is cleared when a shared file cannot be copied, and the share
   const error = new Error('No file at the shared uri.');
   copySharedFiles.mockRejectedValueOnce(error);
   Sharing.getResolvedSharedPayloadsAsync.mockResolvedValue([report]);
-  jest.spyOn(Linking, 'getInitialURL').mockResolvedValue('field://expo-sharing');
+  vi.spyOn(Linking, 'getInitialURL').mockResolvedValue('field://expo-sharing');
   const app = createApp();
   startShareIn({ app });
   await flush();

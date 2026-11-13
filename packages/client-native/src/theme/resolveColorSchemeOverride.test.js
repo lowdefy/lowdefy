@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import resolveColorSchemeOverride from './resolveColorSchemeOverride.js';
 
 test('resolveColorSchemeOverride takes a mode fixed by config over the preference', () => {

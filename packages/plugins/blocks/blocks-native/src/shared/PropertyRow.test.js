@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { StyleSheet } from 'react-native';
 
 import { ios, page, renderPage, screen, styleOf } from '../test/renderPage.js';
@@ -43,7 +44,8 @@ test('Selector, NumberInput, TextInput and DateSelector rows line up in one list
   expect(rows[0]).toMatchObject({ minHeight: 44, paddingHorizontal: 16, paddingVertical: 10 });
   const titles = ['Status', 'Quantity', 'Name', 'Due'].map(titleStyle);
   titles.forEach((title) => expect(title).toEqual(titles[0]));
-  expect(titles[0]).toEqual({ color: ios.light.colorLabel, fontSize: 17 });
+  // overflow is React Native's Text default.
+  expect(titles[0]).toEqual({ color: ios.light.colorLabel, fontSize: 17, overflow: 'hidden' });
   expect(styleOf(screen.getByText('Select item')).color).toBe(ios.light.colorSecondaryLabel);
   expect(styleOf(screen.getByText('Not set')).color).toBe(ios.light.colorSecondaryLabel);
 });

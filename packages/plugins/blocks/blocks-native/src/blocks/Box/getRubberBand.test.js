@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getRubberBand from './getRubberBand.js';
 
 test('getRubberBand follows the drag at about half speed at first', () => {

@@ -14,31 +14,31 @@
   limitations under the License.
 */
 
+import { afterEach, expect, test, vi } from 'vitest';
 import React from 'react';
 import { act, render, screen } from '@testing-library/react-native';
 
 import createDeviceInjections from '../dev/inject/createDeviceInjections.js';
 import NoConnectionBanner from './NoConnectionBanner.js';
 import { OFFLINE, ONLINE } from '../test/createFakeNetwork.js';
+// The shell's own online state, which the banner reads.
+import networkStatus from '../host/networkStatus.js';
 
 // The phone's network, set by the tests through expo-network's listener.
 const mockNetwork = {
   listeners: new Set(),
   state: { isConnected: true, isInternetReachable: true },
 };
-jest.mock('expo-network', () => ({
+vi.mock('expo-network', () => ({
   addNetworkStateListener(listener) {
     mockNetwork.listeners.add(listener);
     return { remove: () => mockNetwork.listeners.delete(listener) };
   },
   getNetworkStateAsync: async () => mockNetwork.state,
 }));
-jest.mock('react-native-safe-area-context', () => ({
+vi.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
 }));
-
-// The shell's own online state, which the banner reads.
-const networkStatus = jest.requireActual('../host/networkStatus.js').default;
 
 function changeNetwork(state) {
   mockNetwork.state = state;

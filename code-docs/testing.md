@@ -46,6 +46,34 @@ Never pass `--` before vitest arguments, and never call `pnpm vitest` or `npx vi
 Packages import each other from `dist/`, so run `pnpm build` after changing more than one
 package.
 
+### React Native tests
+
+`@lowdefy/client-native`, `@lowdefy/blocks-native` and `@lowdefy/shell` test with
+[vitest-native](https://github.com/danfry1/vitest-native)'s native engine: React Native's own
+JavaScript, Flow stripped with `@react-native/babel-preset`, over a mocked native side, with
+`@testing-library/react-native`. The real `react-native-svg` runs (`presets: { svg: false }`), and
+each package's `src/test/resetColorScheme.js` puts the device in light mode before each test,
+since a page's ThemeProvider sets the app's colour scheme. Native-only Expo modules (`@expo/ui`,
+`expo-image`, the shell's device features) are aliased to stand-ins in `src/test/`.
+
+`patches/vitest-native@0.14.1.patch` makes the native side report what React Native's Jest preset
+reported: `isDisableAnimations: false`, so `Animated` runs real animations, not `AnimatedMock`
+(which ends each one as it starts), and a native-driven animation ends a frame after it starts,
+not inside `start()`. A vitest-native update carries the patch over.
+
+What runs is React Native, not the Jest preset's mocks:
+
+- `Text` adds `overflow: 'hidden'` to its style, and passes an array: flatten a style
+  (`StyleSheet.flatten`) before reading it.
+- Component methods are real: spy on what a test checks (`vi.spyOn(TextInput.prototype,
+  'focus')`, `vi.spyOn(Linking, 'openSettings')`). ScrollView's `scrollTo` is per instance, so a
+  test spies on the native command it sends (`ScrollViewCommands.scrollTo`).
+- `ActivityIndicator` draws its style on a View around the native indicator.
+- An iOS `Modal` stays mounted until the native side dismisses it, which never happens in a test.
+- `vi.mock` reaches imports, not a `require()` (a lazily required module, a test's own
+  `require`): import what a test mocks. A factory gives the module's exports, so a default
+  export is `{ default: ... }`.
+
 ## Dependency check
 
 `pnpm test` starts with `pnpm test:dependencies` (one to three seconds). It parses every source
