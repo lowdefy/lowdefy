@@ -15,6 +15,7 @@
 */
 
 import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import devServer from '@hono/vite-dev-server';
@@ -22,6 +23,7 @@ import { WebSocketServer } from 'ws';
 import watchOwner from '@lowdefy/node-utils/watchOwner.js';
 
 import createDevServerExclude from './lib/vite/createDevServerExclude.js';
+import createDevServerFsAllow from './lib/vite/createDevServerFsAllow.js';
 import keepIdleConnectionsOpen from './lib/vite/keepIdleConnectionsOpen.js';
 
 const devServerEntry = './src/app.js';
@@ -80,9 +82,10 @@ function lowdefyWebSocket() {
 // production build bundles both, so blocks read module state the client never
 // filled (the HTML enhancements it registers in @lowdefy/block-utils). The
 // server's copies are the ones its client and blocks were released with.
-const lowdefyDependencies = Object.keys(
-  JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8')).dependencies ?? {}
-).filter((name) => name.startsWith('@lowdefy/'));
+const packageJson = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
+const lowdefyDependencies = Object.keys(packageJson.dependencies ?? {}).filter((name) =>
+  name.startsWith('@lowdefy/')
+);
 
 // The client runs in development, whatever NODE_ENV the dev server was started with.
 function createNodeEnvDefine({ mode }) {
@@ -141,6 +144,12 @@ export default defineConfig(({ mode }) => ({
     ],
   },
   server: {
+    fs: {
+      allow: createDevServerFsAllow({
+        dependencies: packageJson.dependencies,
+        root: fileURLToPath(new URL('.', import.meta.url)),
+      }),
+    },
     watch: {
       // Tailwind scan inputs are rewritten by JIT page builds, and Vite
       // full-reloads the browser on any watched .html change — killing
