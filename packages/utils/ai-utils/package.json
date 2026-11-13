@@ -27,7 +27,7 @@
     "@lowdefy/helpers": "7.2.0",
     "@lowdefy/node-utils": "7.2.0",
     "ai": "7.0.116",
-    "glob": "13.0.6",
+    "glob": "14.0.5",
     "undici": "7.30.1"
   },
   "devDependencies": {
