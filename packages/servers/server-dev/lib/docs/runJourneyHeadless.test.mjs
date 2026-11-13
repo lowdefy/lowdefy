@@ -25,6 +25,12 @@ vi.doMock('./dataSets/resolveJourneyDataSet.js', () => ({ default: mockResolveJo
 vi.doMock('./readDevAuthMode.js', () => ({
   default: () => ({ authConfigured: false, mockUserActive: false }),
 }));
+const mockBuildPageIfNeeded = vi.fn(async () => ({}));
+vi.doMock('../server/jitPageBuilder.js', () => ({ default: mockBuildPageIfNeeded }));
+vi.doMock('./readBuildArtifact.js', () => ({
+  default: ({ name }) =>
+    name === 'routes.json' ? [{ pageId: 'form' }, { pageId: 'other' }] : null,
+}));
 vi.doMock('./collectExercised.js', () => ({
   default: async ({ snapshots, observed }) => ({ snapshots, events: observed.events }),
 }));
@@ -116,6 +122,7 @@ test('runJourneyHeadless runs on the dev host and answers in the browser runner 
         },
       ],
     },
+    calls: [],
     headless: true,
   });
 });
@@ -152,4 +159,20 @@ test('runJourneyHeadless answers a failure, and a browser-only step the runner r
     browserOnly: { index: 0, step: { click: 'save' }, reason: 'DownloadFile needs the browser.' },
     steps: [{ index: 0, status: 'browser-only' }],
   });
+});
+
+test('runJourneyHeadless builds the pages the journey names before it runs, as the page route would', async () => {
+  mockBuildPageIfNeeded.mockClear();
+  mockRunHeadlessJourney.mockResolvedValue({ pageId: 'form', passed: true, steps: [], state: {} });
+  await runJourneyHeadless({
+    origin,
+    pageId: 'form',
+    steps: [
+      { request: { pageId: 'other', requestId: 'load' } },
+      { expect: { status: 200 } },
+      { goto: 'missing' },
+    ],
+    readConfigFile,
+  });
+  expect(mockBuildPageIfNeeded.mock.calls.map(([args]) => args.pageId)).toEqual(['form', 'other']);
 });

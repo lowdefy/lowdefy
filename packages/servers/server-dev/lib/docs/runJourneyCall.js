@@ -15,7 +15,7 @@
 */
 
 import { decodeErrorBody } from '@lowdefy/client-core';
-import { type } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 // The route a call or request step posts to and how its answer is named, with the body the
 // client's createCallAPI and createCallRequest send.
@@ -59,6 +59,16 @@ function readAnswerError({ body, status, text }) {
   return `${status} ${text}`.trim();
 }
 
+// The error of a 200 answer whose routine failed (a :reject or :throw answers success: false
+// with the routine's error), or null for one that succeeded.
+function readRoutineError(body) {
+  if (!type.isObject(body) || body.success !== false) {
+    return null;
+  }
+  const { error } = serializer.deserialize(body);
+  return error?.message ?? null;
+}
+
 // Runs a call or request step: posts the payload as it is given, through the browser context of
 // who the step calls as (journey.actors.callerFor), so the call carries that actor's session,
 // data set and recording cookies, as the page's own calls do. A refusal or an error is the
@@ -79,7 +89,9 @@ async function runJourneyCall({ journey, step, timeout }) {
   journey.lastAnswer = {
     description,
     status,
-    error: response.ok() ? null : readAnswerError({ body: answerBody, status, text }),
+    error: response.ok()
+      ? readRoutineError(answerBody)
+      : readAnswerError({ body: answerBody, status, text }),
   };
   return journey.lastAnswer;
 }

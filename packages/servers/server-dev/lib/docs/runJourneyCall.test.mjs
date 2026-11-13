@@ -146,3 +146,19 @@ test('describePageNeed allows a page-less journey of call steps only', () => {
     'requires a "pageId" string: step 1 (goto) needs a page. Received undefined.'
   );
 });
+
+test('runJourneyCall reads the error of a routine that failed with a 200 answer', async () => {
+  const { journey } = createJourney({
+    body: { success: false, error: { '~e': { name: 'Error', message: 'Ticket not found.' } } },
+  });
+  const answer = await runJourneyCall({
+    journey,
+    step: { call: { endpoint: 'tickets-add-comment' } },
+    timeout: 5000,
+  });
+  expect(answer).toEqual({
+    description: 'endpoint "tickets-add-comment"',
+    status: 200,
+    error: 'Ticket not found.',
+  });
+});

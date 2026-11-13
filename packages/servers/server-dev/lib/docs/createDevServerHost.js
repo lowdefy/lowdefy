@@ -31,6 +31,7 @@ import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import buildPageIfNeeded from '../server/jitPageBuilder.js';
 import createInProcessRequest from './createInProcessRequest.js';
+import readBuildArtifact from './readBuildArtifact.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
@@ -278,10 +279,17 @@ async function createDevServerHost({
   }
 
   let clientPlugins = null;
+  // A build artifact by its path in the dev build, read fresh as the docs routes read it. Pages are
+  // built on demand: runJourneyHeadless builds the ones a journey's steps name before it runs.
+  function readArtifact(name) {
+    return readBuildArtifact({ name, deserialize: true });
+  }
+
   return createHeadlessHost({
     call,
     // The data session belongs to the journey run, which closes it (runJourneyHeadless).
     close: async () => {},
+    dataSetName: dataSet?.name ?? null,
     dataSession: session ?? null,
     errorSink: createErrorSink(),
     findDocuments,
@@ -289,6 +297,7 @@ async function createDevServerHost({
       clientPlugins = clientPlugins ?? loadClientPlugins({ buildDirectory });
       return clientPlugins;
     },
+    readArtifact,
     readPageConfig,
     resolveUser,
     rootConfig,

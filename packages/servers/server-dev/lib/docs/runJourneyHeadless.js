@@ -32,18 +32,37 @@ import createNetworkCounter from './createNetworkCounter.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
 import describePageNeed from './describePageNeed.js';
 import journeyRunRecording from './journeyRunRecording.js';
+import listStepPageIds from './listStepPageIds.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readDevAuthMode from './readDevAuthMode.js';
 import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
 import selectFinalState from './selectFinalState.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
+import buildPageIfNeeded from '../server/jitPageBuilder.js';
 import createLogger from '../server/log/createLogger.js';
 
 const logger = createLogger();
 
 function defaultReadConfigFile(name) {
   return readBuildArtifact({ name, deserialize: true });
+}
+
+// The requests and endpoint calls a headless journey made, as JSON: who made each, what it called
+// and the payload it sent, which a browser run does not record (variants replay them).
+function toCallRecord(call) {
+  return JSON.parse(
+    JSON.stringify({
+      actor: call.actor,
+      kind: call.kind,
+      pageId: call.pageId,
+      requestId: call.requestId,
+      endpointId: call.endpointId,
+      payload: call.payload,
+      status: call.status,
+      success: call.success,
+    })
+  );
 }
 
 // The events a headless journey completed, as a browser journey's observer reports them.
@@ -61,7 +80,8 @@ function toObservedEvent(payload) {
 // runJourney's headless twin: runs a journey on the dev server with no browser, through
 // @lowdefy/journey-headless on createDevServerHost, so it takes no browser slot. Its pages and
 // calls run in this process on the journey's data session, with the run's mutant applied, and it
-// answers in runJourney's shape ({ pageId, passed, steps, state, failure?, exercised, data? }).
+// answers in runJourney's shape ({ pageId, passed, steps, state, failure?, exercised, data? }),
+// with the calls it made and their payloads (calls).
 // A journey whose steps need a browser answers { pageId, browserOnly: { index, step, reason },
 // steps: [] }, before any data is loaded; one that reaches an action only a browser can carry out
 // answers browserOnly for that step. Refusals ({ error, refused }) are runJourney's.
@@ -138,6 +158,19 @@ async function runJourneyHeadless({
     }
     loadMs = Date.now() - loadStart;
   }
+  // The step checks read the pages' built artifacts; a page the route table does not know is left
+  // to those checks, which name it.
+  const routes = readBuildArtifact({ name: 'routes.json' }) ?? [];
+  const knownPageIds = new Set(routes.map((route) => route.pageId));
+  for (const stepPageId of listStepPageIds({ pageId, steps })) {
+    if (knownPageIds.has(stepPageId)) {
+      await buildPageIfNeeded({
+        pageId: stepPageId,
+        buildDirectory: path.join(process.cwd(), 'build'),
+        configDirectory,
+      });
+    }
+  }
   const counter = createNetworkCounter({ origin, basePath: '' });
   const observations = createJourneyObservations();
   try {
@@ -178,6 +211,7 @@ async function runJourneyHeadless({
         readConfigFile,
         requestSchemas: await readConfigFile('plugins/requestSchemas.json'),
       }),
+      calls: (ran.calls ?? []).map(toCallRecord),
       headless: true,
     };
     if (!type.isUndefined(ran.failure)) {
