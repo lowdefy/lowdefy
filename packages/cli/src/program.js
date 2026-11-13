@@ -698,7 +698,7 @@ program
   .addOption(
     new Option(
       '--headless',
-      'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. Needs --build for now.'
+      'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. On the dev server, or on the production build with --build.'
     )
   )
   .addOption(

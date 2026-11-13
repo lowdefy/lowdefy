@@ -35,8 +35,11 @@ function describeHttpError(error) {
 // failed step — into the same result shape the reporter prints. `recordRun`
 // (a trace id) asks the dev server to record this journey into that test
 // run's trace; an older server ignores the field and records nothing. A harden
-// run passes the config `mutant` to apply to this run's browsers.
-async function runJourney({ context, item, url, recordRun, mutant }) {
+// run passes the config `mutant` to apply to this run's browsers. `headless`
+// asks the dev server to run the journey with no browser; a journey that needs
+// one answers `browserOnly` ({ index, step, reason }), neither passed nor
+// failed.
+async function runJourney({ context, item, url, recordRun, mutant, headless = false }) {
   const { filePath, journey } = item;
   const refused = checkJourneyItem({ item });
   if (!type.isUndefined(refused)) {
@@ -57,6 +60,9 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
       timeout: journey.timeout,
       mutant,
     };
+    if (headless) {
+      body.headless = true;
+    }
     if (!type.isNone(recordRun)) {
       body.recording = {
         run: recordRun,
@@ -87,6 +93,16 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
   const result = response.data ?? {};
   if (!type.isNone(result.error)) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
+  }
+  if (!type.isNone(result.browserOnly)) {
+    return {
+      name,
+      filePath,
+      passed: false,
+      stepCount,
+      durationMs,
+      browserOnly: result.browserOnly,
+    };
   }
   // The data set the server loaded and its warnings (colliding connections, size advice).
   const dataSet = { data: result.data, warnings: result.warnings };

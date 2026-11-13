@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-// Whether `lowdefy test` runs headless, from --headless and --build: { headless } or { error }.
-// --headless runs on a production build (--build) until the dev server can host a headless run.
+// How `lowdefy test` runs, from --headless and --build: { headless, build } or { error }.
+// --headless alone runs the headless journeys on the dev server; with --build, on the production
+// build in this process.
 function readHeadlessMode({ options }) {
   const headless = options.headless === true;
   const build = options.build === true;
@@ -25,13 +26,7 @@ function readHeadlessMode({ options }) {
         '--build runs the headless journeys on the production build: pass --headless with it, as in "lowdefy test --headless --build".',
     };
   }
-  if (headless && !build) {
-    return {
-      error:
-        'lowdefy test --headless needs a running dev server to host it, which is not supported yet. Run "lowdefy build", then "lowdefy test --headless --build" to run the headless journeys on the production build.',
-    };
-  }
-  return { headless };
+  return { headless, build };
 }
 
 export default readHeadlessMode;

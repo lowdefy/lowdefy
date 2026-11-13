@@ -23,6 +23,7 @@ import lowdefyConfig from '../../../lib/build/config.js';
 import { openMutantRun } from '../../../lib/server/mutants/mutantRuns.js';
 import parseUserParam from './parseUserParam.js';
 import runJourney from '../../../lib/docs/runJourney.js';
+import runJourneyHeadless from '../../../lib/docs/runJourneyHeadless.js';
 import validateJourneyTimeout from '../../../lib/docs/validateJourneyTimeout.js';
 import validateMutantParam from '../../../lib/server/mutants/validateMutantParam.js';
 import validateRecordingParam from '../../../lib/docs/validateRecordingParam.js';
@@ -119,6 +120,16 @@ async function docsJourneyHandler(c) {
   if (userError) {
     return c.json({ error: userError }, 400);
   }
+  if (!type.isNone(body.headless) && !type.isBoolean(body.headless)) {
+    return c.json(
+      {
+        error: `The "headless" param must be true or false. Received ${JSON.stringify(
+          body.headless
+        )}.`,
+      },
+      400
+    );
+  }
   const recordingError = validateRecordingParam(body.recording);
   if (recordingError) {
     return c.json({ error: recordingError }, 400);
@@ -162,7 +173,9 @@ async function docsJourneyHandler(c) {
       });
   let result;
   try {
-    result = await runJourney({
+    // headless: true runs the journey with no browser, on the client engine in this process.
+    const run = body.headless === true ? runJourneyHeadless : runJourney;
+    result = await run({
       origin,
       pageId,
       pathParams,

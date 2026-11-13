@@ -21,6 +21,10 @@ const mockRunJourney = vi.fn();
 vi.doMock('../../../lib/docs/runJourney.js', () => ({
   default: mockRunJourney,
 }));
+const mockRunJourneyHeadless = vi.fn();
+vi.doMock('../../../lib/docs/runJourneyHeadless.js', () => ({
+  default: mockRunJourneyHeadless,
+}));
 vi.doMock('../../../lib/build/config.js', () => ({
   default: { basePath: '/app' },
 }));
@@ -424,4 +428,36 @@ test('docsJourneyHandler returns 400 for a journey with no pageId and a step tha
     'POST /lowdefy-docs/journey requires a "pageId" string: step 1 (click) needs a page. Received undefined. E.g. {"pageId": "home", "steps": [{"click": "submit"}]}.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler runs a headless journey with no browser runner, and answers its browserOnly', async () => {
+  mockRunJourneyHeadless.mockResolvedValue({
+    pageId: 'form',
+    browserOnly: {
+      index: 0,
+      step: { screenshot: true },
+      reason: 'step "screenshot" needs a browser',
+    },
+    steps: [],
+  });
+  const c = createContext({ pageId: 'form', steps: [{ screenshot: true }], headless: true });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  expect(mockRunJourneyHeadless).toHaveBeenCalledWith(
+    expect.objectContaining({ origin: 'http://localhost:3227', pageId: 'form', by: 'test' })
+  );
+  expect(result.status).toBe(200);
+  expect(result.data.browserOnly.index).toBe(0);
+});
+
+test('docsJourneyHandler returns 400 when headless is not a boolean', async () => {
+  const c = createContext({ pageId: 'form', steps: [{ click: 'a' }], headless: 'yes' });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toBe('The "headless" param must be true or false. Received "yes".');
+  expect(mockRunJourneyHeadless).not.toHaveBeenCalled();
 });
