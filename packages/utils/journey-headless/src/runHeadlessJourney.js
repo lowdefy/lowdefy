@@ -21,6 +21,8 @@ import {
   findStepNeedingPage,
   getStepKey,
   INTERACTION_STEP_KEYS,
+  isClaimedLater,
+  isExpectErrorStep,
   normaliseJourneySteps,
   toAppErrorFailure,
   validateJourneySteps,
@@ -34,28 +36,6 @@ import runHeadlessStep from './runHeadlessStep.js';
 import toJsonValue from './toJsonValue.js';
 import toStepFailure from './toStepFailure.js';
 import usesSearchStage from './usesSearchStage.js';
-
-function isExpectError(step) {
-  return getStepKey(step ?? {}) === 'expect' && getStepKey(step.expect) === 'error';
-}
-
-// Whether the step at `index` has app errors an expect.error after it claims, as the browser
-// runner decides it: an interaction directly followed by one, or a call or request followed by
-// one among the expect steps that read its answer.
-function isClaimedLater({ index, steps }) {
-  const key = getStepKey(steps[index]);
-  if (INTERACTION_STEP_KEYS.includes(key)) {
-    return isExpectError(steps[index + 1]);
-  }
-  if (!CALL_STEP_KEYS.includes(key)) {
-    return false;
-  }
-  for (let next = index + 1; next < steps.length; next += 1) {
-    if (getStepKey(steps[next]) !== 'expect') return false;
-    if (isExpectError(steps[next])) return true;
-  }
-  return false;
-}
 
 // A call or request names its caller by a data set user's name, "none" or a user object. A name
 // that is not in the data set fails the journey before any call, with the data set's users.
@@ -219,7 +199,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     }
     results.push({ index, step, status: stepFailure ? 'failed' : 'ok', durationMs });
     const findings = await windows.take({ pageId: actor.page?.pageId ?? null });
-    if (isExpectError(step) && type.isUndefined(stepFailure)) {
+    if (isExpectErrorStep(step) && type.isUndefined(stepFailure)) {
       failure = claimExpectedErrors({ step, index, held, findings });
       held = null;
       if (!type.isUndefined(failure)) {

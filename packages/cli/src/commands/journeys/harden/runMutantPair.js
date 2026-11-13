@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import fetchBuildId from '../../test/fetchBuildId.js';
 import findOnPathCopy from './findOnPathCopy.js';
 import runJourney from '../../test/runJourney.js';
@@ -27,7 +29,8 @@ import toVerdict from './toVerdict.js';
 // has new keys, and the node is found by its pointer. A 409 stale, or a build id
 // that changed during the run, discards the verdict: the run may have mutated
 // another node. A runner error is retried once. A journey whose baseline ran
-// headless runs its pairs headless too.
+// headless runs its pairs headless too, unless the mutant steers it into an action only a
+// browser carries out: the pair then runs in the browser, as the baseline would.
 async function runMutantPair({ pair, url, buildId }) {
   const { mutant, baseline } = pair;
   const target = findOnPathCopy({ mutant, exercised: baseline.exercised }) ?? mutant;
@@ -41,13 +44,13 @@ async function runMutantPair({ pair, url, buildId }) {
     operator: mutant.operator,
   };
   let outcome;
+  let headless = baseline.headless === true;
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const result = await runJourney({
-      item: baseline.item,
-      url,
-      mutant: body,
-      headless: baseline.headless === true,
-    });
+    let result = await runJourney({ item: baseline.item, url, mutant: body, headless });
+    if (!type.isUndefined(result.browserOnly)) {
+      headless = false;
+      result = await runJourney({ item: baseline.item, url, mutant: body });
+    }
     if (result.stale === true || (await fetchBuildId({ url })) !== buildId) {
       return { buildChanged: true };
     }

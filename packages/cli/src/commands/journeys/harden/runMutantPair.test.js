@@ -118,3 +118,19 @@ test('runMutantPair runs on the kept copy when the journey reached no copy', asy
     key: 'k_home',
   });
 });
+
+test('runMutantPair runs a headless pair the runner finds needs a browser in the browser', async () => {
+  runJourney.mockResolvedValueOnce({
+    browserOnly: { index: 0, step: { click: 'a' }, reason: 'DownloadFile needs the browser.' },
+  });
+  const outcome = await runMutantPair({
+    pair: {
+      mutant: footer,
+      baseline: { ...baseline({ tickets: ['footer'] }), headless: true },
+    },
+    url: 'http://localhost:3999',
+    buildId: 'build-1',
+  });
+  expect(runJourney.mock.calls.map(([args]) => args.headless)).toEqual([true, undefined]);
+  expect(outcome.verdict).toBe('survived');
+});

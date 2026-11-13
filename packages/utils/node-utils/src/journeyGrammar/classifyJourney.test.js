@@ -25,8 +25,9 @@ function classify(steps) {
 test('classifyJourney calls a journey of block-id steps and engine checks headless', () => {
   expect(
     classify([
-      { fill: { blockId: 'name_input', value: 'Ada' } },
       { select: { blockId: 'kind', value: 'Item' } },
+      { fill: { blockId: 'name_input', value: 'Ada' } },
+      { expect: { state: { path: 'name_input', equals: 'Ada' } } },
       { press: 'Enter' },
       { click: 'save_button' },
       { click: { blockId: 'save_button' } },
@@ -69,6 +70,20 @@ test.each([
   ],
 ])('classifyJourney names a %s step as needing the browser', (_, step, reason) => {
   expect(classify([{ click: 'a' }, step])).toEqual({ headless: false, index: 1, step, reason });
+});
+
+test.each([
+  ['a click', [{ fill: { blockId: 'name_input', value: 'Ada' } }, { click: 'save_button' }]],
+  ['a select', [{ select: { blockId: 'kind', value: 'Item' } }]],
+  ['no step', []],
+])('classifyJourney names press Enter after %s as needing the browser', (_, before) => {
+  const step = { press: 'Enter' };
+  expect(classify([...before, step])).toEqual({
+    headless: false,
+    index: before.length,
+    step,
+    reason: 'press "Enter" needs a browser unless a fill comes straight before it',
+  });
 });
 
 test.each(['text', 'containing', 'row', 'column', 'nth'])(

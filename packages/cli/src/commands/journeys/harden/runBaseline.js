@@ -20,11 +20,16 @@ import { classifyJourney, relativePosixPath } from '@lowdefy/node-utils';
 import createProgress from './createProgress.js';
 import readsMail from './readsMail.js';
 import runJourney from '../../test/runJourney.js';
+import validateJourney from '../../test/validateJourney.js';
 
-// Whether a journey can run headless: its steps need no browser (classifyJourney). A file that
-// did not parse has no journey to classify, and runs in the browser, which reports it.
+// Whether a journey can run headless: its steps need no browser (classifyJourney), which reads
+// only valid steps. A file that did not parse, or a journey that is not valid, runs in the
+// browser, which reports it.
 function canRunHeadless(item) {
-  return type.isObject(item.journey) && classifyJourney({ journey: item.journey }).headless;
+  if (!type.isObject(item.journey) || !validateJourney({ journey: item.journey }).valid) {
+    return false;
+  }
+  return classifyJourney({ journey: item.journey }).headless;
 }
 
 // Runs every selected journey once, unmutated, as `lowdefy test` does. A

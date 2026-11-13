@@ -58,14 +58,36 @@ function findDomTargetKey(target) {
   return DOM_TARGET_KEYS.find((key) => Object.hasOwn(target, key));
 }
 
+// Steps that leave the focus where it is: a press goes to the element the step before them
+// focused.
+const FOCUS_KEEPING_STEP_KEYS = ['expect', 'wait'];
+
+// The key of the last step before `index` that can move the focus, or undefined when there is
+// none.
+function findFocusStepKey({ steps, index }) {
+  for (let before = index - 1; before >= 0; before -= 1) {
+    const key = getStepKey(steps[before]);
+    if (!FOCUS_KEEPING_STEP_KEYS.includes(key)) {
+      return key;
+    }
+  }
+  return undefined;
+}
+
 // Why a step needs a browser, or undefined when a headless run can take it.
-function needsBrowser(step) {
+function needsBrowser({ steps, index }) {
+  const step = steps[index];
   const key = getStepKey(step);
   if (!HEADLESS_STEP_KEYS.includes(key)) {
     return `step "${key}" needs a browser`;
   }
   if (key === 'press' && step.press !== 'Enter') {
     return `press "${step.press}" needs a browser; a headless run presses only Enter`;
+  }
+  // A browser presses Enter on whatever has the focus; a headless run presses it on the input
+  // filled last, which has the focus only when the fill is the step before it.
+  if (key === 'press' && findFocusStepKey({ steps, index }) !== 'fill') {
+    return 'press "Enter" needs a browser unless a fill comes straight before it';
   }
   if (TARGET_STEP_KEYS.includes(key)) {
     const target = step[key];
@@ -104,7 +126,7 @@ function needsBrowser(step) {
 function classifyJourney({ journey }) {
   const steps = normaliseJourneySteps({ steps: journey.steps ?? [] });
   for (let index = 0; index < steps.length; index += 1) {
-    const reason = needsBrowser(steps[index]);
+    const reason = needsBrowser({ steps, index });
     if (!type.isUndefined(reason)) {
       return { headless: false, index, step: journey.steps[index], reason };
     }

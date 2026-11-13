@@ -36,6 +36,8 @@ import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 
+const NOT_FOUND_PATH = '404';
+
 function createErrorSink() {
   const errors = [];
   return {
@@ -198,6 +200,11 @@ async function createDevServerHost({
     }
     counter.recordCall({ url: `${origin}/api/page/${matchedPath}`, method: 'GET' });
     const page = await getPageConfig(context, { path: matchedPath, urlQuery: urlQuery ?? {} });
+    // The page route sends a page that does not exist, and one the caller may not open, to the
+    // not-found page, as the browser and the build host do, so neither reveals which it was.
+    if (['not_found', 'unauthorized'].includes(page.status) && matchedPath !== NOT_FOUND_PATH) {
+      return readPageConfig({ path: NOT_FOUND_PATH, urlQuery: {}, user: pageUser });
+    }
     if (page.status !== 'ok') {
       throw new Error(
         `Page "${pageId ?? matchedPath}" did not open: the page route answered "${page.status}".`

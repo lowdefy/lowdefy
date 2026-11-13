@@ -90,3 +90,20 @@ test('runBaseline runs every journey in the browser without headless', async () 
   await runBaseline({ items: [headless], url: 'http://localhost:3300', configDirectory: '/app' });
   expect(mockRunJourney.mock.calls[0][0].headless).toBe(false);
 });
+
+test('runBaseline runs a journey whose steps are not valid in the browser, which reports it', async () => {
+  const invalid = item('steps not valid', [null, { expect: null }]);
+  mockRunJourney.mockImplementationOnce(async () => ({
+    name: 'steps not valid',
+    passed: false,
+    message: 'Step 0 is not valid.',
+  }));
+  const { failed } = await runBaseline({
+    items: [invalid],
+    url: 'http://localhost:3300',
+    configDirectory: '/app',
+    headless: true,
+  });
+  expect(mockRunJourney.mock.calls[0][0].headless).toBe(false);
+  expect(failed.map(({ name }) => name)).toEqual(['steps not valid']);
+});

@@ -20,7 +20,8 @@ import {
   CALL_STEP_KEYS,
   claimExpectedErrors,
   getStepKey,
-  INTERACTION_STEP_KEYS,
+  isClaimedLater,
+  isExpectErrorStep,
   isAppErrorFinding,
   toAppErrorFailure,
 } from '@lowdefy/node-utils';
@@ -37,33 +38,11 @@ import waitForClientErrorReports from './waitForClientErrorReports.js';
 import watchJourneyContext from './watchJourneyContext.js';
 import withAppErrors from './withAppErrors.js';
 
-function isExpectError(step) {
-  return getStepKey(step ?? {}) === 'expect' && getStepKey(step.expect) === 'error';
-}
-
-// Whether the step at `index` has app errors an expect.error after it claims: an interaction
-// directly followed by one, or a call or request followed by one among the expect steps that
-// read its answer.
-function isClaimedLater({ steps, index }) {
-  const key = getStepKey(steps[index]);
-  if (INTERACTION_STEP_KEYS.includes(key)) {
-    return isExpectError(steps[index + 1]);
-  }
-  if (!CALL_STEP_KEYS.includes(key)) {
-    return false;
-  }
-  for (let next = index + 1; next < steps.length; next += 1) {
-    if (getStepKey(steps[next]) !== 'expect') return false;
-    if (isExpectError(steps[next])) return true;
-  }
-  return false;
-}
-
 // Steps that cannot cause an error a page reports later, so their window
 // closes without waiting for client error reports in flight. An expect.error
 // waits, so a late report of the interaction before it can be claimed.
 function isQuietStep(step) {
-  return ['expect', 'wait', 'screenshot'].includes(getStepKey(step)) && !isExpectError(step);
+  return ['expect', 'wait', 'screenshot'].includes(getStepKey(step)) && !isExpectErrorStep(step);
 }
 
 // Watches a journey run for app errors and judges each step's window with the
@@ -199,7 +178,7 @@ function createJourneyAppErrors({ origin, basePath, recording, configDirectory }
     const step = steps[index];
     const result = results[index];
     const findings = await closeWindow({ journey, step, result });
-    if (isExpectError(step) && type.isUndefined(failure)) {
+    if (isExpectErrorStep(step) && type.isUndefined(failure)) {
       const claim = claimExpectedErrors({ step, index, held, findings });
       held = null;
       if (!type.isUndefined(claim)) {

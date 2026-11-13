@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import POPUP_BLOCK_TYPES from './POPUP_BLOCK_TYPES.js';
 
 // Whether a person would see a block, as far as the engine can tell without rendering: the block
@@ -21,7 +23,7 @@ import POPUP_BLOCK_TYPES from './POPUP_BLOCK_TYPES.js';
 // among them is open. openBlocks holds the ids of the open ones; parents is collectBlockParents'.
 function isBlockShown({ block, openBlocks, parents }) {
   let current = block;
-  while (current !== null && current !== undefined) {
+  while (!type.isNone(current)) {
     if (current.eval?.visible === false) {
       return false;
     }

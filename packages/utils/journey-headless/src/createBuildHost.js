@@ -34,9 +34,19 @@ const NOT_FOUND_PATH = '404';
 // is opened as by default: a user of the data set by name, a user object, or "none".
 async function createBuildHost({ configDirectory, data, secrets, serverDirectory, user }) {
   const app = await openTestApp({ configDirectory, secrets, serverDirectory });
-  const session = await app.openSession({ data });
-  const calls = headlessCalls(session);
-  const rootConfig = await calls.readRootConfig({ user });
+  let session;
+  let calls;
+  let rootConfig;
+  // The caller closes only a host it got back, so an app whose session or root config is refused
+  // (an unknown data set or user) is closed here.
+  try {
+    session = await app.openSession({ data });
+    calls = headlessCalls(session);
+    rootConfig = await calls.readRootConfig({ user });
+  } catch (error) {
+    await app.close();
+    throw error;
+  }
   let clientPlugins = null;
 
   async function readPageConfig({ pageId, path, pathParams, urlQuery, user: pageUser }) {

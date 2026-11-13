@@ -114,6 +114,8 @@ import findActionErrors from './journeyInvariants/findActionErrors.js';
 import findErrorEntries from './journeyInvariants/findErrorEntries.js';
 import findingKey from './journeyInvariants/findingKey.js';
 import isAppErrorFinding from './journeyInvariants/isAppErrorFinding.js';
+import isClaimedLater from './journeyInvariants/isClaimedLater.js';
+import isExpectErrorStep from './journeyInvariants/isExpectErrorStep.js';
 import JOURNEY_FINDING_SEVERITY from './journeyInvariants/JOURNEY_FINDING_SEVERITY.js';
 import keyFindings from './journeyInvariants/keyFindings.js';
 import toAppErrorFailure from './journeyInvariants/toAppErrorFailure.js';
@@ -126,6 +128,8 @@ export {
   findErrorEntries,
   findingKey,
   isAppErrorFinding,
+  isClaimedLater,
+  isExpectErrorStep,
   JOURNEY_FINDING_SEVERITY,
   keyFindings,
   toAppErrorFailure,
