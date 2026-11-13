@@ -107,9 +107,15 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(agentsMd).toContain(
     'call the request or endpoint on the dev server with `lowdefy_run_request` or `lowdefy_run_endpoint`, passing `user` and `data`'
   );
-  expect(agentsMd).toContain('Never check these through a journey.');
   expect(agentsMd).toContain(
-    'Where the app has endpoint tests (`tests/endpoints/`, Node tests on `@lowdefy/test-utils`): add or update one for such a change, and run them once, before you call the change done.'
+    'The regression test for such a change is a journey (`tests/journeys/`) that needs no browser'
+  );
+  expect(agentsMd).toContain('A write journey ends with `expect: { db }` on what was stored.');
+  expect(agentsMd).toContain(
+    'Where the app has endpoint tests (`tests/endpoints/`, Node tests on `@lowdefy/test-utils`): they hold what a journey cannot say'
+  );
+  expect(agentsMd).toContain(
+    'Add or update one for such a change, and run them once, before you call the change done.'
   );
   expect(agentsMd).toContain('every config edit needs a build first');
   expect(agentsMd).toContain(

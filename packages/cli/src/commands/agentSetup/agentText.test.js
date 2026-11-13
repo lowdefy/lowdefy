@@ -58,18 +58,17 @@ test('there are five journey skills', () => {
   ]);
 });
 
-test.each(journeySkills)(
-  '$name proves logic, permissions and writes below a journey',
-  ({ text }) => {
-    expect(text).toContain(testLevel());
-    expect(text).toContain('## What is not a journey');
-    expect(text).toContain(
-      'Call the request or endpoint with `lowdefy_run_request` or `lowdefy_run_endpoint`, passing\n  `user` and `data`.'
-    );
-    expect(text).toContain('add or update one, and run them once before you call the work done');
-    expect(text).toContain('Say in the pull request when that snapshot changed, and why.');
-  }
-);
+test.each(journeySkills)('$name gives each kind of check one home', ({ text }) => {
+  expect(text).toContain(testLevel());
+  expect(text).toContain('## Where each check lives');
+  expect(text).toContain('A write journey ends with\n  `expect: { db }` on what was stored');
+  expect(text).toContain('a journey with\n  no `pageId` and `call` or `request` steps');
+  expect(text).toContain(
+    'call the request or endpoint with `lowdefy_run_request` or\n  `lowdefy_run_endpoint`, passing `user` and `data`.'
+  );
+  expect(text).toContain('an endpoint test (`tests/endpoints/`), never a journey per case');
+  expect(text).toContain('Say in the pull request when that snapshot changed, and why.');
+});
 
 test('journeys-autopilot leaves who can open which page to an access table snapshot', () => {
   const autopilot = skills.find((skill) => skill.name === 'journeys-autopilot').render();
@@ -79,27 +78,16 @@ test('journeys-autopilot leaves who can open which page to an access table snaps
   expect(autopilot).toContain('name a changed access table snapshot in the pull request');
 });
 
-test('journeys-autopilot asserts what a write stored in an endpoint test where the app has them, else in the journey', () => {
+test('journeys-autopilot writes one journey per write, asserting what it stored', () => {
   const autopilot = skills.find((skill) => skill.name === 'journeys-autopilot').render();
-  expect(autopilot).not.toContain('A write ends by asserting the stored result');
   expect(autopilot).toContain(
-    'When it has endpoint tests (`tests/endpoints/`, see What is not a journey): a\n   journey for what only a browser shows (the control is there, the role can use it, the page shows\n   the result) and an endpoint test for what the write stored.'
+    'A `write` item is one journey: the\n   role uses the control and the journey asserts what it stored'
   );
   expect(autopilot).toContain(
-    'When it has none: one journey, which\n   also asserts the stored result.'
+    '- A write ends with `expect: { db: { collection, match } }` on the document it stored'
   );
-  expect(autopilot).toContain(
-    "each one's journey and, where the app has endpoint tests, the endpoint\ntest for what it stored"
-  );
-  expect(autopilot).toContain(
-    '- A write, where the app has endpoint tests (`tests/endpoints/`): the journey proves only what a\n  browser shows.'
-  );
-  expect(autopilot).toContain(
-    '- A write, where the app has no endpoint tests: the journey ends by asserting the stored result,'
-  );
-  expect(autopilot).toContain(
-    'A `write` item with an endpoint test is `covered` only when its journey and that test both\npass'
-  );
+  expect(autopilot).not.toContain('endpoint_test');
+  expect(autopilot).not.toContain('an endpoint test for what the write stored');
 });
 
 test('the testing rules are the same text for every CLI version, and name no server', () => {

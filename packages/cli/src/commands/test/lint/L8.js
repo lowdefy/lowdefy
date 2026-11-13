@@ -65,8 +65,8 @@ function replaceTarget(step) {
 // L8: a journey that runs only in the browser, and only because some of its targets read the page
 // (text, containing or nth) on a block they already name by blockId, could run headless, the fast
 // level, if those targets named the block alone. Each such step is reported with the blockId to
-// use. A check of what the person sees (expect: { text }) is never reported: a write journey keeps
-// covering what the browser shows.
+// use. A check of what the person sees (expect: { text }) is never reported: a journey adds one
+// only when what the page shows is the point, and then it is meant to run in the browser.
 function L8({ journey }) {
   if (classifyJourney({ journey }).headless) {
     return [];
