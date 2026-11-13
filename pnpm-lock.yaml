@@ -3259,12 +3259,9 @@ importers:
       '@playwright/test':
         specifier: 1.65.0
         version: 1.65.0
-      js-yaml:
-        specifier: 5.5.0
-        version: 5.5.0
-      prompts:
-        specifier: 2.4.2
-        version: 2.4.2
+      yaml:
+        specifier: 2.9.1
+        version: 2.9.1
     devDependencies:
       '@swc/cli':
         specifier: 0.8.2
