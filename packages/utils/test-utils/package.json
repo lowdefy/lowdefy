@@ -1,0 +1,51 @@
+{
+  "name": "@lowdefy/test-utils",
+  "version": "7.2.0",
+  "license": "Apache-2.0",
+  "description": "Lowdefy test utilities: run a built app's access gate, endpoints and requests in a Node test",
+  "homepage": "https://lowdefy.com",
+  "keywords": [
+    "lowdefy",
+    "testing"
+  ],
+  "bugs": {
+    "url": "https://github.com/lowdefy/lowdefy/issues"
+  },
+  "contributors": [
+    {
+      "name": "Machiel van der Walt",
+      "url": "https://github.com/machielvdw"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lowdefy/lowdefy.git"
+  },
+  "type": "module",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "swc src --out-dir dist --config-file ../../../.swcrc --cli-config-file ../../../.swc-cli.json",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "pnpm build",
+    "test": "vitest run",
+    "test:fixture": "vitest run --config vitest.fixture.config.js"
+  },
+  "dependencies": {
+    "@lowdefy/helpers": "7.2.0",
+    "@lowdefy/node-utils": "7.2.0"
+  },
+  "devDependencies": {
+    "@lowdefy/server": "7.2.0",
+    "@swc/cli": "0.8.1",
+    "@swc/core": "1.15.32",
+    "vitest": "4.1.12"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

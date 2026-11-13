@@ -3782,6 +3782,28 @@ importers:
         specifier: 28.1.3
         version: 28.1.3(@types/node@24.13.3)
 
+  packages/utils/test-utils:
+    dependencies:
+      '@lowdefy/helpers':
+        specifier: 7.2.0
+        version: link:../helpers
+      '@lowdefy/node-utils':
+        specifier: 7.2.0
+        version: link:../node-utils
+    devDependencies:
+      '@lowdefy/server':
+        specifier: 7.2.0
+        version: link:../../servers/server
+      '@swc/cli':
+        specifier: 0.8.1
+        version: 0.8.1(@swc/core@1.15.32)
+      '@swc/core':
+        specifier: 1.15.32
+        version: 1.15.32
+      vitest:
+        specifier: 4.1.12
+        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(jsdom@19.0.0)(vite@8.1.6(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.43.1)(yaml@2.9.0))
+
   packages/utils/vite-yaml-plugin:
     dependencies:
       yaml:

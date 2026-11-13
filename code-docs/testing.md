@@ -167,6 +167,57 @@ the complete path, before every release (see [CI](#ci)). Run it when
 changing the journey runner, journey cookies or mutants. Which page, data set and test covers
 which journey feature is listed under "Fixture app" in `code-docs/architecture/journeys.md`.
 
+## Endpoint test harness
+
+`@lowdefy/test-utils` (`packages/utils/test-utils`) opens a production build of an app in the
+test's own process. Its tests are in two suites, both run after `pnpm build`:
+
+```bash
+pnpm --filter=@lowdefy/test-utils test           # unit tests, a few seconds, part of `pnpm test`
+pnpm --filter=@lowdefy/test-utils test:fixture   # the same harness over real builds of three apps
+```
+
+| Suite          | Files                            | Needs                                    | Covers                                                                                                                                                                |
+| -------------- | -------------------------------- | ---------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `test`         | `src/**/*.test.js`               | `pnpm build`; no app build, no install   | the access table's outcomes (`allow`, `deny`, `enrol_required`, `InternalApi`), key order, 200 pages by 20 users, and `openTestApp`'s refusals                        |
+| `test:fixture` | `test/fixtureApps/**/*.test.mjs` | `pnpm build`, three app builds, installs | the table over real build artifacts (every route and endpoint, module ids, tenant auth), a `server-e2e` install, and an app's own `node --test` snapshot of the table |
+
+**`test`** writes its own build. `test/writeTestBuild.mjs` writes a config directory and a
+server directory to a temporary folder: `routes.json`, `api/*.json`, `auth.json`, `appMeta.json`
+and `refMap.json` under `build/`, the data sets under `tests/data/`, and a `node_modules` that
+links to `packages/servers/server/node_modules`, so `@lowdefy/api`, `helpers` and `errors` load
+from this workspace's built packages as they would from a built server's install. A test names
+only the auth config, routes, endpoints and users it is about. Add a test here when a hand-written
+artifact can show the behaviour: a gate outcome, a refusal, an ordering.
+
+**`test:fixture`** is kept out of `test`, and so out of the root `pnpm test`, because its global
+setup (`test/fixtureApps/globalSetup.mjs`, named in `vitest.fixture.config.js`) builds three apps
+once per run, one at a time, with `node scripts/build.mjs --skip-build --no-client-build`, each
+into a server copy of its own, so `_server/prod` and `_server/dev` are left alone. A build
+installs and takes about 10 seconds:
+
+| App                          | Server copy                                | What the suite reads from it                       |
+| ---------------------------- | ------------------------------------------ | -------------------------------------------------- |
+| `apps/journey-fixture`       | `_server/test-utils-journey-fixture`       | public pages, an endpoint gated to a role          |
+| `apps/auth-reference-tenant` | `_server/test-utils-auth-reference-tenant` | pages protected by default, a page gated to a role |
+| `apps/auth-reference`        | `_server/test-utils-auth-reference`        | a required second factor and its enrolment page    |
+
+Each app has a `tests/data/roles.yaml` data set whose users the access table tests check as. A
+test that needs to change a build or its config copies both to a temporary directory with
+`test/fixtureApps/copyFixtureApp.mjs`, which links the built server's `node_modules` instead of
+copying it. `--no-client-build` leaves out the Vite build, as `lowdefy build --no-client-build`
+does: the harness reads only `build/` and the server's `node_modules`. Add a test here only when
+it needs what a real build writes or a real install holds.
+
+Run `test` for any change to the package. Run `test:fixture` as well when the change touches what
+the harness reads from a build or how it loads the server's packages (`openTestApp`, the access
+table, `importServerModule`), the gate it asks (`createInjectedApiContext` and `authorizeOutcome`
+in `@lowdefy/api`), the build artifacts it reads (`routes.json`, `api/*.json`, `auth.json`,
+`appMeta.json`, `refMap.json`), `scripts/build.mjs`, or the three apps' auth config and
+`roles.yaml` data sets. The three suites named `test:fixture` use different server copies, so
+this one can run beside the journey fixture suites. CI runs it on the complete path, before every
+release (see [CI](#ci)).
+
 ## An app from another repository
 
 To run an app that lives in another repository (Pelican, a modules-mongodb demo app) on this
@@ -347,8 +398,9 @@ dependency check and every package's tests, not stopping at the first failing pa
 ubuntu with Node 24 and 26 (Lowdefy servers are deployed on Linux, so CI runs no Windows
 jobs); `pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
 `@lowdefy/server-dev` and `lowdefy`, which must pass tests, not skip them for want of
-Chromium); and every block e2e suite (`test-block-e2e.yml`). No coverage is collected: jest's
-coverage and its Codecov upload were dropped with the move to vitest.
+Chromium) and, in the same job, the endpoint test harness's fixture suite (`test:fixture` in
+`@lowdefy/test-utils`); and every block e2e suite (`test-block-e2e.yml`). No coverage is
+collected: jest's coverage and its Codecov upload were dropped with the move to vitest.
 
 A release runs the complete path twice: on the Release pull request from `develop` into `main`
 (every push), and on the publish push. `release.yaml` decides from the pushed commit's
@@ -376,7 +428,8 @@ commands in the pull request body:
 | any package                                    | `pnpm build` (more than one package), then each changed package's tests and its dependents' (`pnpm --filter=...<package> test`) |
 | several packages, root config, the lockfile    | `pnpm test` (the dependency check and every package)                                                                            |
 | `connection-mongodb`, tenancy, auth adapters   | `pnpm test:mongodb`                                                                                                             |
-| the journey runner, journey cookies or mutants | both `test:fixture` suites                                                                                                      |
+| the journey runner, journey cookies or mutants | the journey `test:fixture` suites (`@lowdefy/server-dev`, `lowdefy`)                                                            |
+| `test-utils`, the gate, the build it reads     | `pnpm --filter=@lowdefy/test-utils test`, and its `test:fixture` (see [Endpoint test harness](#endpoint-test-harness))          |
 | blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                            |
 
 The developer may add the `ci` or `ci-full` label to run them again in CI.
