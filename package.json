@@ -60,7 +60,7 @@
     "release:trusted-publishers": "node scripts/ensure-trusted-publishers.mjs"
   },
   "devDependencies": {
-    "@changesets/cli": "2.30.0",
+    "@changesets/cli": "3.0.3",
     "@eslint/js": "10.0.1",
     "eslint": "10.14.0",
     "eslint-plugin-playwright": "2.12.2",

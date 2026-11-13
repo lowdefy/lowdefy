@@ -21,12 +21,12 @@
  *
  * Asserts that every publishable workspace package is live on npm at the
  * version in its local package.json. This is the source of truth for whether a
- * release succeeded — not the exit code of `changeset publish`, which treats an
- * already-published version as an error and so cannot tell "already done" apart
- * from "genuinely failed".
+ * release succeeded — not the exit code of `changeset publish`, which exits
+ * non-zero when any one package fails (after publishing the rest) and so cannot
+ * say which packages are missing.
  *
  * - All packages present at their local version -> exit 0 (release complete,
- *   even on a rerun where publish re-attempted and rejected existing versions).
+ *   including a rerun, where publish skips the versions already on npm).
  * - Any package missing its version -> exit 1 (a real failure: a missing trusted
  *   publisher, a network error, etc. — rerun after fixing to recover).
  *
