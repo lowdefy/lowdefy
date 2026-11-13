@@ -54,8 +54,7 @@
   },
   "dependencies": {
     "@lowdefy/block-utils": "7.2.0",
-    "@lowdefy/helpers": "7.2.0",
-    "dompurify": "3.4.17"
+    "@lowdefy/helpers": "7.2.0"
   },
   "peerDependencies": {
     "react": "^19",

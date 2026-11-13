@@ -135,9 +135,6 @@ importers:
       '@lowdefy/node-utils':
         specifier: 7.2.0
         version: link:../utils/node-utils
-      '@lowdefy/nunjucks':
-        specifier: 7.2.0
-        version: link:../utils/nunjucks
       '@lowdefy/operators':
         specifier: 7.2.0
         version: link:../operators
@@ -156,9 +153,6 @@ importers:
       mongodb-connection-string-url:
         specifier: ^7.0.2
         version: 7.0.2
-      nodemailer:
-        specifier: 10.5.0
-        version: 10.5.0
     devDependencies:
       '@lowdefy/connection-mongodb':
         specifier: 7.2.0
@@ -229,9 +223,6 @@ importers:
       acorn:
         specifier: 8.19.0
         version: 8.19.0
-      ajv:
-        specifier: 8.20.0
-        version: 8.20.0
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1080,9 +1071,6 @@ importers:
       '@lowdefy/helpers':
         specifier: 7.2.0
         version: link:../../../utils/helpers
-      dompurify:
-        specifier: 3.4.17
-        version: 3.4.17
     devDependencies:
       '@lowdefy/block-dev-e2e':
         specifier: 7.2.0
@@ -1522,9 +1510,6 @@ importers:
       '@lowdefy/helpers':
         specifier: 7.2.0
         version: link:../../../utils/helpers
-      '@lowdefy/nunjucks':
-        specifier: 7.2.0
-        version: link:../../../utils/nunjucks
       '@tanstack/react-table':
         specifier: 9.3.1
         version: 9.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -1876,9 +1861,6 @@ importers:
       mongodb:
         specifier: 7.8.0
         version: 7.8.0
-      saslprep:
-        specifier: 1.0.3
-        version: 1.0.3
     devDependencies:
       '@lowdefy/ajv':
         specifier: 7.2.0
@@ -2133,9 +2115,6 @@ importers:
 
   packages/plugins/operators/operators-diff:
     dependencies:
-      '@lowdefy/helpers':
-        specifier: 7.2.0
-        version: link:../../../utils/helpers
       '@lowdefy/operators':
         specifier: 7.2.0
         version: link:../../../operators
@@ -2167,9 +2146,6 @@ importers:
       '@lowdefy/operators':
         specifier: 7.2.0
         version: link:../../../operators
-      intl-messageformat:
-        specifier: 12.1.5
-        version: 12.1.5
     devDependencies:
       '@lowdefy/node-utils':
         specifier: 7.2.0
@@ -2307,9 +2283,6 @@ importers:
       '@lowdefy/block-utils':
         specifier: 7.2.0
         version: link:../../../utils/block-utils
-      '@lowdefy/blocks-antd':
-        specifier: 7.2.0
-        version: link:../../blocks/blocks-antd
       '@lowdefy/blocks-files':
         specifier: 7.2.0
         version: link:../../blocks/blocks-files
@@ -2827,9 +2800,6 @@ importers:
       hono:
         specifier: 4.13.18
         version: 4.13.18
-      html-to-image:
-        specifier: 1.11.13
-        version: 1.11.13
       mongodb:
         specifier: 7.8.0
         version: 7.8.0
@@ -2866,9 +2836,6 @@ importers:
       tailwindcss:
         specifier: 4.3.5
         version: 4.3.5
-      tinykeys:
-        specifier: 4.0.1
-        version: 4.0.1
       vite:
         specifier: 8.3.8
         version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)
@@ -10828,9 +10795,6 @@ packages:
       '@types/react':
         optional: true
 
-  html-to-image@1.11.13:
-    resolution: {integrity: sha512-cuOPoI7WApyhBElTTb9oqsawRvZ0rHhaHwghRLlTuffoD1B2aDemlCruLeZrUIIdvG7gs9xeELEPm6PhuASqrg==}
-
   html-to-text@10.0.1:
     resolution: {integrity: sha512-GiVhRI1BatGARSCmlXWNCjDT0cWrwBWoeduLoV0WSKAgaV/wa+hUWy5LiQLUs4UwiUrE52ZCMfBGiKD87TDPrg==}
     engines: {node: '>=20.19.0'}
@@ -13500,10 +13464,6 @@ packages:
     resolution: {integrity: sha512-4lyHX0ZU0AZKwjgZ1InxZAa3PNpyEb8rOQ+Zss1ReYmhNzW0Q+h1zE5nvniXN0HaAWZaZE1zgVNEirb0R7LmNg==}
     engines: {node: '>=18.18'}
     hasBin: true
-
-  saslprep@1.0.3:
-    resolution: {integrity: sha512-/MY/PEMbk2SuY5sScONwhUDsV2p77Znkb/q3nSVstq/yQzYJOH/Azh29p9oJLsl3LnQwSvZDKagDGBsBwSooag==}
-    engines: {node: '>=6'}
 
   sax@1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
@@ -22839,8 +22799,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.2.38
 
-  html-to-image@1.11.13: {}
-
   html-to-text@10.0.1:
     dependencies:
       '@selderee/plugin-htmlparser2': 0.12.0(selderee@0.12.0)
@@ -26254,10 +26212,6 @@ snapshots:
   safer-buffer@2.1.2: {}
 
   sandbox-cli-detector@0.2.0: {}
-
-  saslprep@1.0.3:
-    dependencies:
-      sparse-bitfield: 3.0.3
 
   sax@1.2.4: {}
 
