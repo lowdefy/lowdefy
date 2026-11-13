@@ -16,9 +16,15 @@
 
 import typeFormats from './typeFormats.js';
 
-// The BarcodeDetector formats to ask for: one per code type, every type when none is set.
+// Only zxing reads these, so no browser's own detector does: asking for one always takes the
+// ponyfill. The default leaves them out, which is also the native QRScanner's list of types.
+const zxingOnlyTypes = new Set(['databar', 'databar_expanded', 'maxicode']);
+
+// The BarcodeDetector formats to ask for: one per code type, and with no types set, every type
+// but the zxing-only ones.
 function toDetectorFormats({ types }) {
-  const requested = types ?? Object.keys(typeFormats);
+  const requested =
+    types ?? Object.keys(typeFormats).filter((codeType) => !zxingOnlyTypes.has(codeType));
   return requested.map((codeType) => typeFormats[codeType][0]);
 }
 

@@ -72,7 +72,7 @@ export default {
           ],
         },
         description:
-          'Code types to read; all by default. databar, databar_expanded and maxicode are read on web only. Asking only for the types you need makes reading faster.',
+          'Code types to read. By default, every type the browser reads; databar, databar_expanded and maxicode (web only) are read only when listed. Asking only for the types you need makes reading faster.',
       },
       continuous: {
         type: 'boolean',
@@ -97,6 +97,7 @@ export default {
       },
       fps: {
         type: 'number',
+        exclusiveMinimum: 0,
         default: 10,
         description: 'Camera frames read per second.',
       },

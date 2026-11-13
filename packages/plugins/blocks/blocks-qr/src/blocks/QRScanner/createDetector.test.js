@@ -25,6 +25,21 @@ class PonyfillDetector {
 
 vi.doMock('./loadPonyfill.js', () => ({ default: async () => PonyfillDetector }));
 
+// The formats Chrome on macOS reads (Apple's Vision framework): no codabar or upc_a.
+const MACOS_FORMATS = [
+  'aztec',
+  'code_128',
+  'code_39',
+  'code_93',
+  'data_matrix',
+  'ean_13',
+  'ean_8',
+  'itf',
+  'pdf417',
+  'qr_code',
+  'upc_e',
+];
+
 function createNativeDetector(supported) {
   return class NativeDetector {
     static async getSupportedFormats() {
@@ -37,20 +52,20 @@ function createNativeDetector(supported) {
   };
 }
 
-test('createDetector uses the native detector when it reads every requested format', async () => {
+test('createDetector uses the native detector when it reads every requested type', async () => {
   const { default: createDetector } = await import('./createDetector.js');
   const detector = await createDetector({
-    formats: ['qr_code', 'ean_13'],
-    nativeDetector: createNativeDetector(['qr_code', 'ean_13', 'code_128']),
+    types: ['qr', 'ean13'],
+    nativeDetector: createNativeDetector(MACOS_FORMATS),
   });
   expect(detector).toMatchObject({ kind: 'native', options: { formats: ['qr_code', 'ean_13'] } });
 });
 
-test('createDetector uses the ponyfill when the native detector lacks a requested format', async () => {
+test('createDetector uses the ponyfill when the native detector lacks a requested type', async () => {
   const { default: createDetector } = await import('./createDetector.js');
   const detector = await createDetector({
-    formats: ['qr_code', 'codabar'],
-    nativeDetector: createNativeDetector(['qr_code']),
+    types: ['qr', 'codabar'],
+    nativeDetector: createNativeDetector(MACOS_FORMATS),
   });
   expect(detector).toMatchObject({
     kind: 'ponyfill',
@@ -58,8 +73,23 @@ test('createDetector uses the ponyfill when the native detector lacks a requeste
   });
 });
 
+test('createDetector uses the native detector with the default types it reads when types is not set', async () => {
+  const { default: createDetector } = await import('./createDetector.js');
+  const detector = await createDetector({ nativeDetector: createNativeDetector(MACOS_FORMATS) });
+  expect(detector.kind).toBe('native');
+  expect(detector.options.formats.toSorted()).toEqual(MACOS_FORMATS.toSorted());
+});
+
+test('createDetector uses the ponyfill when the native detector reads no format', async () => {
+  const { default: createDetector } = await import('./createDetector.js');
+  const detector = await createDetector({ nativeDetector: createNativeDetector([]) });
+  expect(detector.kind).toBe('ponyfill');
+  expect(detector.options.formats).toContain('codabar');
+  expect(detector.options.formats).not.toContain('databar');
+});
+
 test('createDetector uses the ponyfill when the browser has no BarcodeDetector', async () => {
   const { default: createDetector } = await import('./createDetector.js');
-  const detector = await createDetector({ formats: ['qr_code'], nativeDetector: undefined });
-  expect(detector.kind).toBe('ponyfill');
+  const detector = await createDetector({ types: ['qr'], nativeDetector: undefined });
+  expect(detector).toMatchObject({ kind: 'ponyfill', options: { formats: ['qr_code'] } });
 });

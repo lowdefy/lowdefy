@@ -14,15 +14,25 @@
   limitations under the License.
 */
 
-import loadPonyfill from './loadPonyfill.js';
+import { type } from '@lowdefy/helpers';
 
-// The browser's own BarcodeDetector when it reads every requested format (Chrome on Android,
-// macOS and ChromeOS), else the zxing ponyfill. macOS lacks codabar and upc_a, so asking for
-// either there takes the ponyfill.
-async function createDetector({ formats, nativeDetector = globalThis.BarcodeDetector }) {
+import loadPonyfill from './loadPonyfill.js';
+import toDetectorFormats from './toDetectorFormats.js';
+
+// The browser's own BarcodeDetector (Chrome on Android, macOS and ChromeOS), else the zxing
+// ponyfill. With no types set, the browser's detector reads the default types it supports, so
+// the default never downloads the ponyfill where the browser has a detector (macOS lacks codabar
+// and upc_a). With types set, it is used only when it reads all of them. A detector that supports
+// none of them (an Android phone without Google Play services) counts as none.
+async function createDetector({ types, nativeDetector = globalThis.BarcodeDetector }) {
+  const formats = toDetectorFormats({ types });
   if (nativeDetector) {
     const supported = await nativeDetector.getSupportedFormats();
-    if (formats.every((format) => supported.includes(format))) {
+    const nativeFormats = formats.filter((format) => supported.includes(format));
+    if (type.isNone(types) && nativeFormats.length > 0) {
+      return new nativeDetector({ formats: nativeFormats });
+    }
+    if (!type.isNone(types) && formats.every((format) => supported.includes(format))) {
       return new nativeDetector({ formats });
     }
   }

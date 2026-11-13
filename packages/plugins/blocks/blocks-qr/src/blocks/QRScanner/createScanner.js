@@ -20,7 +20,6 @@ import createDetector from './createDetector.js';
 import getCameraError from './getCameraError.js';
 import getCropRegion from './getCropRegion.js';
 import openCamera from './openCamera.js';
-import toDetectorFormats from './toDetectorFormats.js';
 import toScanType from './toScanType.js';
 
 // HTMLMediaElement.HAVE_CURRENT_DATA: the video has a frame to read.
@@ -132,9 +131,7 @@ function createScanner({ getProperties, getVideo, onError, onPlaying, onRead }) 
     session = current;
     const properties = getProperties();
     try {
-      const detector = await createDetector({
-        formats: toDetectorFormats({ types: properties.types }),
-      });
+      const detector = await createDetector({ types: properties.types });
       if (current.stopped) {
         return;
       }

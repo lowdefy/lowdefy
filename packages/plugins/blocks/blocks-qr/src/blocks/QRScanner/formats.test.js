@@ -20,8 +20,14 @@ import toDetectorFormats from './toDetectorFormats.js';
 import toScanType from './toScanType.js';
 import typeFormats from './typeFormats.js';
 
-test('toDetectorFormats asks for every code type when types is not set', () => {
-  expect(toDetectorFormats({})).toEqual(Object.values(typeFormats).map((formats) => formats[0]));
+test('toDetectorFormats asks for every code type but the zxing-only ones when types is not set', () => {
+  const formats = toDetectorFormats({});
+  expect(formats).toHaveLength(Object.keys(typeFormats).length - 3);
+  expect(formats).toContain('qr_code');
+  expect(formats).toContain('codabar');
+  expect(formats).not.toContain('databar');
+  expect(formats).not.toContain('databar_expanded');
+  expect(formats).not.toContain('maxi_code');
 });
 
 test('toDetectorFormats maps the block types to BarcodeDetector formats', () => {

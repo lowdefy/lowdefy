@@ -15,7 +15,7 @@ When a code is read, the block value is set to `{ data, type }`, for example
 
 ### Properties
 
-- `types: string[]`: Code types to read; all by default. One of `qr`, `ean13`, `ean8`, `code128`, `code39`, `code93`, `upc_a`, `upc_e`, `pdf417`, `datamatrix`, `aztec`, `itf14`, `codabar`, and on web only `databar`, `databar_expanded`, `maxicode`.
+- `types: string[]`: Code types to read. By default, every type the browser reads; `databar`, `databar_expanded` and `maxicode` are read only when listed. One of `qr`, `ean13`, `ean8`, `code128`, `code39`, `code93`, `upc_a`, `upc_e`, `pdf417`, `datamatrix`, `aztec`, `itf14`, `codabar`, and on web only `databar`, `databar_expanded`, `maxicode`.
 - `continuous: boolean`: Keep scanning after a read: each code fires `onScan` once, and again after 2 seconds. Otherwise the scanner stops after its first read until its `reset` method is called. Default `false`.
 - `inactiveByDefault: boolean`: Do not open the camera when the block mounts; call `start` instead. Default `false`.
 - `facingMode: 'environment' | 'user'`: The camera to use. Default `environment` (back).
