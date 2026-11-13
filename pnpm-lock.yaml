@@ -3127,8 +3127,8 @@ importers:
         specifier: 7.0.169
         version: 7.0.169(zod@4.6.7)
       glob:
-        specifier: 14.0.4
-        version: 14.0.4
+        specifier: 14.0.5
+        version: 14.0.5
       undici:
         specifier: 8.12.4
         version: 8.12.4
@@ -10447,6 +10447,10 @@ packages:
 
   glob@14.0.4:
     resolution: {integrity: sha512-mMiwNKoJZ4HAIRVJxotO6LsNRReA30gQwP9E2/p94tfLv+jygCNpKDjhhSL6OLY6LE371EZm5EAf7RpYuUqlsw==}
+    engines: {node: 18 || 20 || >=22}
+
+  glob@14.0.5:
+    resolution: {integrity: sha512-nbKW5Sl53DEM5PkmZ5Jwfeyss1ohuqcgOBjOarSjz1fp8W4ss4EOOvKADQRbApD6JmVBX+HkpZYfBez4wXbeQQ==}
     engines: {node: 18 || 20 || >=22}
 
   glob@7.2.3:
@@ -22302,6 +22306,12 @@ snapshots:
       path-scurry: 2.0.2
 
   glob@14.0.4:
+    dependencies:
+      minimatch: 11.0.8
+      minipass: 7.1.3
+      path-scurry: 3.0.0
+
+  glob@14.0.5:
     dependencies:
       minimatch: 11.0.8
       minipass: 7.1.3
