@@ -100,8 +100,8 @@ function createChannelRegistry() {
     channels.delete(channel.key);
   }
 
-  function handleResolverError({ channel, error, startedAt }) {
-    if (channel.abortController?.signal.aborted) {
+  function handleResolverError({ channel, error, run }) {
+    if (run.abortController.signal.aborted) {
       // Errors thrown while winding down are expected (closed cursors, etc).
       channel.logger.debug(
         { event: 'ws_source_stopped_error_ignored', websocketId: channel.websocketId },
@@ -109,11 +109,15 @@ function createChannelRegistry() {
       );
       return;
     }
+    // Anything the failed run left behind can no longer publish or report it is ready.
+    run.abortController.abort();
     const wrapped = wrapSourceError({ channel, error });
     channel.logger.debug({ err: wrapped }, wrapped.message);
 
-    // A run that stayed healthy resets the backoff window.
-    if (Date.now() - startedAt > HEALTHY_RESET_MS) {
+    // A run that stayed ready this long was healthy, and resets the backoff. Time
+    // spent starting does not count: a source waiting on an unreachable database
+    // can take a minute to fail.
+    if (run.readyAt !== null && Date.now() - run.readyAt > HEALTHY_RESET_MS) {
       channel.retryCount = 0;
     }
     const delay = Math.min(RETRY_BASE_MS * 2 ** channel.retryCount, RETRY_CAP_MS);
@@ -154,14 +158,18 @@ function createChannelRegistry() {
   function startResolver(channel) {
     const abortController = new AbortController();
     channel.abortController = abortController;
-    const startedAt = Date.now();
+    const run = { abortController, readyAt: null };
 
     // A source calls ready once it is listening, and a publish shows it is. The
     // source heard nothing while it was down, so after an outage each subscriber
     // gets a subscribed frame for its subscribe, which fires the page's
     // onSubscribe for it to fetch what it missed.
     function ready() {
-      if (abortController.signal.aborted || !channel.failing) {
+      if (abortController.signal.aborted) {
+        return;
+      }
+      run.readyAt ??= Date.now();
+      if (!channel.failing) {
         return;
       }
       channel.failing = false;
@@ -202,7 +210,7 @@ function createChannelRegistry() {
           tenant: channel.tenant ?? null,
         })
       )
-      .catch((error) => handleResolverError({ channel, error, startedAt }));
+      .catch((error) => handleResolverError({ channel, error, run }));
   }
 
   async function subscribe(context, { websocketId, payload, requestId, subscriber }) {

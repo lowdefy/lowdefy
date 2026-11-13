@@ -639,6 +639,96 @@ test('a subscriber that left during an outage is not told the source is back', a
   expect(sentFrames(leaving).map((frame) => frame.type)).toEqual(['error']);
 });
 
+function failAfter(ms, { ready: callReady = false } = {}) {
+  return ({ ready }) =>
+    new Promise((resolve, reject) => {
+      if (callReady) ready();
+      setTimeout(() => reject(new Error('source failed')), ms);
+    });
+}
+
+test('a run that takes over a minute to fail without being ready does not reset the backoff', async () => {
+  useFakeTimers();
+  const resolver = vi
+    .fn()
+    .mockImplementationOnce(failAfter(61000))
+    .mockImplementationOnce(failAfter(61000))
+    .mockImplementation(() => new Promise(() => {}));
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+
+  await registry.subscribe(context, {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber: createSubscriber('a'),
+  });
+  await flushMicrotasks();
+  await advanceTimers(61000);
+  await advanceTimers(1000);
+  await advanceTimers(61000);
+
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ retryCount: 1, retryInMs: 2000 }),
+    expect.any(String)
+  );
+});
+
+test('a run that stayed ready for over a minute resets the backoff', async () => {
+  useFakeTimers();
+  const resolver = vi
+    .fn()
+    .mockRejectedValueOnce(new Error('source failed'))
+    .mockImplementationOnce(failAfter(61000, { ready: true }))
+    .mockImplementation(() => new Promise(() => {}));
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+
+  await registry.subscribe(context, {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber: createSubscriber('a'),
+  });
+  await flushMicrotasks();
+  await advanceTimers(1000);
+  await advanceTimers(61000);
+  expect(resolver).toHaveBeenCalledTimes(2);
+  await advanceTimers(999);
+  expect(resolver).toHaveBeenCalledTimes(2);
+  await advanceTimers(1);
+  expect(resolver).toHaveBeenCalledTimes(3);
+});
+
+test('a failed run that calls ready after it failed does not end the outage', async () => {
+  useFakeTimers();
+  let lateReady;
+  const resolver = vi
+    .fn()
+    .mockImplementationOnce(({ ready }) => {
+      lateReady = ready;
+      return Promise.reject(new Error('source failed'));
+    })
+    .mockImplementation(() => new Promise(() => {}));
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const subscriber = createSubscriber('a');
+
+  await registry.subscribe(createTestContext(), {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber,
+  });
+  await flushMicrotasks();
+  lateReady();
+
+  expect(sentFrames(subscriber).map((frame) => frame.type)).toEqual(['error']);
+  expect([...registry.channels.values()][0].failing).toBe(true);
+});
+
 test('publish rejects with ConfigError when resolver meta.publish is not true', async () => {
   const resolver = createPendingResolver();
   resolver.meta = { publish: false };
