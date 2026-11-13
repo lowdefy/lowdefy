@@ -262,6 +262,7 @@ test('journeysVariants writes the data-set kinds from data set files, byte for b
     'member-opens-a-ticket-empty.yaml',
     'member-opens-a-ticket-role-1.yaml',
     'member-opens-a-ticket-role-2.yaml',
+    'member-opens-a-ticket-role-3.yaml',
     'member-opens-a-ticket-tenant.yaml',
   ]);
   expect(logs.info).toContain('SKIPPED  volume: data set "big-org" has no user "member"');
@@ -302,6 +303,22 @@ test('journeysVariants writes the data-set kinds from data set files, byte for b
       'steps:',
       '  - expect: { url: { contains: /404 } }',
       '  - expect: { hidden: tickets_grid }',
+      '',
+    ].join('\n')
+  );
+  // The page-less form: the refused user calls the page's requests the journey called.
+  expect(read('member-opens-a-ticket-role-3.yaml')).toEqual(
+    [
+      'name: "member opens a ticket — role: requests refused to guest"',
+      'user: guest',
+      'data: tickets',
+      'variant:',
+      '  of: member opens a ticket',
+      '  kind: role',
+      '  detail: requests refused to guest',
+      'steps:',
+      '  - request: { pageId: tickets, requestId: save, payload: {} }',
+      '  - expect: { status: 403 }',
       '',
     ].join('\n')
   );

@@ -28,8 +28,10 @@ import parseRepeat from './parseRepeat.js';
 import parseTestSelection from './parseTestSelection.js';
 import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
+import readHeadlessMode from './readHeadlessMode.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
+import runHeadlessTests from './runHeadlessTests.js';
 import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
 import selectTier from './selectTier.js';
@@ -50,6 +52,11 @@ async function test({ context }) {
   const { repeat, error: repeatError } = parseRepeat(context.options.repeat);
   if (repeatError) {
     refuse({ context, message: repeatError });
+    return;
+  }
+  const { headless, error: headlessError } = readHeadlessMode({ options: context.options });
+  if (headlessError) {
+    refuse({ context, message: headlessError });
     return;
   }
   const tier = parseTier(context.options.tier);
@@ -124,6 +131,24 @@ async function test({ context }) {
   tiered.skipped.forEach((skipped) => context.logger.info(formatSkippedJourney({ skipped })));
   if (tiered.selected.length === 0) {
     context.logger.info(summariseResults({ results: [], skipped: tiered.skipped.length }).text);
+    context.sendTelemetry();
+    return;
+  }
+
+  if (headless) {
+    const ran = await runHeadlessTests({
+      context,
+      selected: tiered.selected,
+      skipped: tiered.skipped.length,
+      repeat,
+    });
+    if (!type.isUndefined(ran.refused)) {
+      refuse({ context, message: ran.refused });
+      return;
+    }
+    if (ran.failed > 0) {
+      process.exitCode = 1;
+    }
     context.sendTelemetry();
     return;
   }

@@ -1,4 +1,4 @@
-An **endpoint test** runs your app's built API endpoints and page requests in a Node test, as a named user, on an in-memory MongoDB, and reads the database back. It needs a build of the app and nothing else: no server, no browser and no port. Use it to prove logic, calculations, permissions and what a request writes. [Config tests](/config-tests) keep what only a browser shows.
+An **endpoint test** runs your app's built API endpoints and page requests in a Node test, as a named user, on an in-memory MongoDB, and reads the database back. It needs a build of the app and nothing else: no server, no browser and no port. Use it for what a [journey](/config-tests) cannot say: table-driven cases, computed expected values, fixtures built in code, stubbed services, race tests and cron or internal routines. A single call and its result, such as a role refused or a write stored, is a journey that needs no browser.
 
 ```js
 // tests/endpoints/activity.test.mjs
@@ -59,9 +59,11 @@ users:
 
 | Check                                                                     | Test                                                                  |
 | ------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Logic, calculations, permissions, what an endpoint or request writes      | An endpoint test                                                      |
+| A page's logic and state, what a control writes                           | A [journey](/config-tests) that targets blocks by `blockId`, headless |
+| What a page would never send: another tenant's ids, wrong types           | A journey with no `pageId`, using `call` or `request` steps           |
+| Table-driven cases, stubbed services, races, cron and internal routines   | An endpoint test                                                      |
 | Who can reach which page and endpoint                                     | [The access table](#the-access-table), one snapshot for the whole app |
-| What a page shows, how it reacts, paths across pages, sign-up and sign-in | A [journey](/config-tests)                                            |
+| What a page shows, how it reacts, paths across pages, sign-up and sign-in | A [journey](/config-tests) in the browser                             |
 | Custom browser code against a production build                            | [e2e testing](/e2e-introduction)                                      |
 
 ## Setting up

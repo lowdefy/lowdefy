@@ -19,11 +19,12 @@ import { jest } from '@jest/globals';
 import { Pressable, Text, View } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { createNativeGlobals, LowdefyPage } from '@lowdefy/client-native';
+import { createStepRunner } from '@lowdefy/client-core';
 import { SetState } from '@lowdefy/actions-core/actions';
 import { _state } from '@lowdefy/operators-js/operators/client';
 
 import createMemoryStore from '../../host/createMemoryStore.js';
-import createStepRunner from './createStepRunner.js';
+import getShownPageContext from '../tab/getShownPageContext.js';
 
 // Stand-ins for native blocks: a container, a button, a text input and a selector.
 function Box({ content }) {
@@ -166,7 +167,13 @@ async function renderForm() {
   );
   await screen.findByText('Save');
   const capture = jest.fn(async () => 'iVBORw0KGgo=');
-  const runner = createStepRunner({ capture, getLowdefy: () => lowdefy, timeout: 300 });
+  const runner = createStepRunner({
+    capture,
+    getLowdefy: () => lowdefy,
+    getPageContext: getShownPageContext,
+    hostName: 'phone',
+    timeout: 300,
+  });
   const state = () => lowdefy.contexts['page:form'].state;
   async function run(step) {
     let result;

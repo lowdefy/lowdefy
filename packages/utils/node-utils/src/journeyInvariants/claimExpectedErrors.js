@@ -31,6 +31,9 @@ function matches({ finding, text }) {
 // it (held) and of its own window whose message contains its text. Returns
 // the failure, or undefined when the claim passes: the expect step fails when
 // no error matches, and the interaction fails on any error left unclaimed.
+// After a call or request (held.answered) the step has already read the
+// answer's error, which an expected outcome (a refusal, a UserError) carries
+// with no app error at all, so finding none to claim is no failure there.
 //
 // An action-error is the trace's account of the action that failed, and the
 // trace is value-free: its message names the action and the error class, never
@@ -45,6 +48,11 @@ function claimExpectedErrors({ step, index, held, findings }) {
     matched.length === 0
       ? []
       : seen.filter((finding) => matches({ finding, text }) || finding.kind === 'action-error');
+  if (claimed.length === 0 && held?.answered === true) {
+    return seen.length === 0
+      ? undefined
+      : toAppErrorFailure({ findings: seen, index: held.index, step: held.step });
+  }
   if (claimed.length === 0) {
     const actual = describeErrors(seen);
     return {

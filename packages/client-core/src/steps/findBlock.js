@@ -16,13 +16,11 @@
 
 import { type } from '@lowdefy/helpers';
 
-import findPageContext from '../tab/findPageContext.js';
-import getShownPage from '../tab/getShownPage.js';
 import waitUntil from './waitUntil.js';
 
 // A step's target: a block id, or `{ blockId }`. The browser's grid, text and nth targets read the
-// DOM, which a phone does not have.
-function readBlockId(target) {
+// DOM, which a phone or a headless run does not have.
+function readBlockId({ hostName, target }) {
   if (type.isString(target)) {
     return target;
   }
@@ -30,7 +28,9 @@ function readBlockId(target) {
     const others = Object.keys(target).filter((key) => !['blockId', 'value'].includes(key));
     if (others.length > 0) {
       throw new Error(
-        `A step on a phone targets a block by blockId only. Received ${JSON.stringify(target)}.`
+        `A step on a ${hostName} targets a block by blockId only. Received ${JSON.stringify(
+          target
+        )}.`
       );
     }
     return target.blockId;
@@ -41,18 +41,17 @@ function readBlockId(target) {
 }
 
 /**
- * The block a step acts on, on the page the shell shows: `{ block, context, page }`. Its view is
- * the one with the block id as testID (client-native BlockLayout), so a step needs no screen
- * position. Waits up to `timeout` ms for the page to render the block and show it.
+ * The block a step acts on, on the page the host shows: `{ block, context, page }`. The block is
+ * found by id in the page context's slots, so a step needs no screen position. Waits up to
+ * `timeout` ms for the page to build the block and show it.
  */
-async function findBlock({ lowdefy, target, timeout }) {
-  const blockId = readBlockId(target);
+async function findBlock({ getPageContext, hostName, lowdefy, target, timeout }) {
+  const blockId = readBlockId({ hostName, target });
   let lastError = null;
   const found = await waitUntil({
     timeout,
     check: () => {
-      const page = getShownPage(lowdefy);
-      const { context, error } = findPageContext({ lowdefy, page });
+      const { context, error, page } = getPageContext({ lowdefy });
       if (error) {
         lastError = error;
         return undefined;

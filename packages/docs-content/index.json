@@ -3126,7 +3126,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "e9fce9fe187d41567391a1286d961dab53d89f9041100df15099872536c36d3e"
+      "hash": "6ea7d0743e7482c13eec24e901a9939553b1455a67fb197340c59a13e33833d5"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3214,7 +3214,7 @@
       "files": [
         "deployment/vercel.yaml"
       ],
-      "hash": "0202d3eb1b1999b6f6723051cd91970e90ddc654c4b2ff972463a3dc7ad4908c"
+      "hash": "a3d55236b70520fe05204231204e92c0e192e2d0588f9fc8a40c1711c5fc776c"
     },
     "deployment/deployment-environments": {
       "files": [
@@ -3367,7 +3367,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "55681b714f89ff02ed73296d211dc10902f77acef1e6af115fe107fae0775311"
+      "hash": "6ea3cb350409e3d1d9083235746ac3b5748d882ad12b4bf684ac8f06dde250e9"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3381,7 +3381,7 @@
         "testing/endpoint-tests.md",
         "testing/endpoint-tests.yaml"
       ],
-      "hash": "5af82c430b98441b9bcde6d1d2d4e170e81a89dce76dd08c1dd32f2784b7b286"
+      "hash": "248c911e200766f1696ced09373a456cbae3e68eab448bfe92d84d3d918a6e03"
     },
     "testing/explore-pull-request": {
       "files": [

@@ -291,7 +291,7 @@ const devToolDefinitions = {
       steps: z
         .array(z.record(z.string(), z.any()))
         .describe(
-          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect. lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. On a phone (device) only click, fill, select, press, wait, screenshot and expect state run.'
+          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request. lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. On a phone (device) only click, fill, select, press, wait, screenshot and expect state run.'
         ),
       device: deviceSchema.describe('A phone to run on instead, by tab id.'),
       user: z

@@ -18,10 +18,11 @@ import { useEffect } from 'react';
 import { Platform } from 'react-native';
 import { fetch as expoFetch } from 'expo/fetch';
 import { captureRef } from 'react-native-view-shot';
+import { createStepRunner } from '@lowdefy/client-core';
 
 import createDevTabClient from './createDevTabClient.js';
 import createNativeRecorder from '../recorder/createNativeRecorder.js';
-import createStepRunner from '../steps/createStepRunner.js';
+import getShownPageContext from './getShownPageContext.js';
 import reloadApp from './reloadApp.js';
 import withShellHeader from '../../host/withShellHeader.js';
 import { useShell } from '../../ShellContext.js';
@@ -55,6 +56,8 @@ function DevTabClient({ injections, kv, logs, onApp, rootRef }) {
     const runner = createStepRunner({
       capture: () => captureRef(rootRef, { format: 'png', result: 'base64' }),
       getLowdefy,
+      getPageContext: getShownPageContext,
+      hostName: 'phone',
     });
     const fetch = withHeaders(globalThis.fetch);
     const recorder = createNativeRecorder({

@@ -52,6 +52,17 @@ vi.doMock('./acquireJourneyRunSlots.js', () => ({
   default: mockAcquireJourneyRunSlots,
 }));
 
+// The headless run's harness and runner, loaded only by --headless --build.
+const mockOpenTestApp = vi.fn();
+vi.doMock('@lowdefy/test-utils', () => ({ openTestApp: mockOpenTestApp }));
+const mockCreateBuildHost = vi.fn();
+const mockRunHeadlessJourney = vi.fn();
+const mockHostClose = vi.fn();
+vi.doMock('@lowdefy/journey-headless', () => ({
+  createBuildHost: mockCreateBuildHost,
+  runHeadlessJourney: mockRunHeadlessJourney,
+}));
+
 let configDirectory;
 let context;
 let logs;
@@ -97,6 +108,13 @@ beforeEach(() => {
   mockAcquireJourneyRunSlots.mockResolvedValue({ release: mockReleaseSlots });
   mockPost.mockResolvedValue({ data: { passed: true, steps: [] } });
   mockGet.mockResolvedValue({ data: { buildId: 'build-1' } });
+  mockOpenTestApp.mockReset();
+  mockOpenTestApp.mockResolvedValue({ close: vi.fn() });
+  mockHostClose.mockReset();
+  mockCreateBuildHost.mockReset();
+  mockCreateBuildHost.mockResolvedValue({ close: mockHostClose });
+  mockRunHeadlessJourney.mockReset();
+  mockRunHeadlessJourney.mockResolvedValue({ pageId: 'form', passed: true, steps: [] });
 });
 
 afterEach(() => {
@@ -1060,4 +1078,118 @@ test('test frees the journey run slots when a signal stops the run', async () =>
     exit.mockRestore();
     once.mockRestore();
   }
+});
+
+test('test --headless without --build, and --build without --headless, are refused before anything runs', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.options = { ...context.options, headless: true };
+  await test({ context });
+  expect(logs.error).toEqual([
+    'lowdefy test --headless needs a running dev server to host it, which is not supported yet. Run "lowdefy build", then "lowdefy test --headless --build" to run the headless journeys on the production build.',
+  ]);
+  expect(process.exitCode).toBe(1);
+  logs.error.splice(0);
+  context.options = { port: 3000, build: true };
+  await test({ context });
+  expect(logs.error[0]).toMatch(/^--build runs the headless journeys on the production build/);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+});
+
+function headlessContext() {
+  context.directories.server = path.join(configDirectory, '.lowdefy', 'server');
+  context.options = { ...context.options, headless: true, build: true };
+}
+
+test('test --headless --build runs headless journeys on the build with no server or slots, and lists the browser-only ones', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile(
+    'b.yaml',
+    journeyYaml({
+      name: 'reads the title',
+      steps: '  - click: submit\n  - expect: { text: { blockId: title, contains: Saved } }\n',
+    })
+  );
+  headlessContext();
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(mockOpenTestApp).toHaveBeenCalledWith({
+    configDirectory,
+    serverDirectory: context.directories.server,
+  });
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(1);
+  expect(mockCreateBuildHost).toHaveBeenCalledWith({
+    configDirectory,
+    data: undefined,
+    serverDirectory: context.directories.server,
+    user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] },
+  });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledWith(
+    expect.objectContaining({ stepTimeout: 5000, configDirectory })
+  );
+  expect(mockHostClose).toHaveBeenCalledTimes(1);
+  expect(logs.info).toEqual([
+    expect.stringMatching(/^PASS {2}clicks submit {2}\(1 steps, \d+ms\)$/),
+    'BROWSER-ONLY  reads the title  step 1 (expect: { text }): expect "text" reads the page in a browser',
+    '1 passed, 0 failed of 1 journeys, 1 browser-only not run',
+  ]);
+  expect(process.exitCode).toBeUndefined();
+  const written = JSON.parse(
+    fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8')
+  );
+  expect(written.journeys['tests/journeys/a.yaml#clicks submit']).toEqual({ passed: true });
+  expect(written.journeys['tests/journeys/b.yaml#reads the title'].browserOnly.index).toBe(1);
+  expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
+});
+
+test('test --headless --build is refused with the harness message when the build cannot be read', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  headlessContext();
+  mockOpenTestApp.mockRejectedValue(new Error('No Lowdefy build found at "x".'));
+  await test({ context });
+  expect(logs.error).toEqual(['No Lowdefy build found at "x".']);
+  expect(mockCreateBuildHost).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build fails on a failed journey and does not repeat one the runner calls browser-only', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'downloads a file' }));
+  headlessContext();
+  context.options.repeat = '2';
+  mockRunHeadlessJourney.mockImplementation(async ({ journey }) => {
+    if (journey.name === 'downloads a file') {
+      return {
+        pageId: 'form',
+        steps: [],
+        browserOnly: {
+          index: 0,
+          step: { click: 'submit' },
+          reason: 'DownloadFile needs the browser.',
+        },
+      };
+    }
+    return {
+      pageId: 'form',
+      passed: false,
+      steps: [],
+      failure: { index: 0, step: { click: 'submit' }, message: 'Block "submit" is not visible.' },
+    };
+  });
+  await test({ context });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(3);
+  expect(logs.info).toContain(
+    'BROWSER-ONLY  downloads a file  step 0 (click "submit"): DownloadFile needs the browser.'
+  );
+  expect(logs.error[0]).toMatch(/^FAIL {3}clicks submit/);
+  expect(logs.error[logs.error.length - 1]).toBe(
+    '0 passed, 1 failed of 1 journeys, 1 browser-only not run'
+  );
+  expect(process.exitCode).toBe(1);
 });

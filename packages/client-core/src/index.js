@@ -23,13 +23,16 @@ export { default as createPasswordRedactor } from './recorder/createPasswordReda
 export { default as createPkceChallenge } from './auth/createPkceChallenge.js';
 export { default as createRecordBatcher } from './recorder/createRecordBatcher.js';
 export { default as createRecordingSession } from './recorder/createRecordingSession.js';
+export { default as createStepRunner } from './steps/createStepRunner.js';
 export { createUrl, serializeQuery } from './url.js';
 export { default as decodeErrorBody } from './decodeErrorBody.js';
 export { default as getActiveLocale } from './getActiveLocale.js';
 export { default as getAuthorizationHeaders } from './auth/getAuthorizationHeaders.js';
 export { default as getContextKey } from './getContextKey.js';
+export { default as isContextSettled } from './steps/isContextSettled.js';
 export { default as recordCallerStamp } from './recordCallerStamp.js';
 export { default as sendRecords } from './recorder/sendRecords.js';
 export { default as shouldReloadForBuild } from './shouldReloadForBuild.js';
 export { default as shouldReloadForCaller } from './shouldReloadForCaller.js';
 export { default as updateLowdefyPage } from './updateLowdefyPage.js';
+export { default as waitForSettle } from './steps/waitForSettle.js';

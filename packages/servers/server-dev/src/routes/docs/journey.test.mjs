@@ -124,7 +124,7 @@ test('docsJourneyHandler returns 400 naming an unknown step', async () => {
 
   expect(result.status).toBe(400);
   expect(result.data.error).toEqual(
-    'Step 0: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
@@ -397,5 +397,31 @@ test('docsJourneyHandler returns 400 for a malformed recording', async () => {
     );
     expect(result.status).toBe(400);
   }
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler runs a journey with no pageId whose steps only call the server', async () => {
+  const steps = [{ call: { endpoint: 'orders-cancel' } }, { expect: { status: 403 } }];
+  const c = createContext({ steps, user: 'member', data: 'roles' });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(200);
+  expect(mockRunJourney).toHaveBeenCalledWith(
+    expect.objectContaining({ pageId: undefined, steps, user: 'member', data: 'roles' })
+  );
+});
+
+test('docsJourneyHandler returns 400 for a journey with no pageId and a step that needs a page', async () => {
+  const c = createContext({
+    steps: [{ call: { endpoint: 'orders-cancel' } }, { click: 'cancel_button' }],
+  });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toBe(
+    'POST /lowdefy-docs/journey requires a "pageId" string: step 1 (click) needs a page. Received undefined. E.g. {"pageId": "home", "steps": [{"click": "submit"}]}.'
+  );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });

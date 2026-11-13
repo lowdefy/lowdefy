@@ -39,6 +39,10 @@ function describeStep({ step, index }) {
       return `step ${index} (goto "${type.isString(step.goto) ? step.goto : step.goto?.pageId}")`;
     case 'press':
       return `step ${index} (press "${step.press}")`;
+    case 'call':
+      return `step ${index} (call "${step.call.endpoint}")`;
+    case 'request':
+      return `step ${index} (request "${step.request.requestId}" on "${step.request.pageId}")`;
     default:
       return `step ${index} (${key}${targetLabel(step[key])})`;
   }

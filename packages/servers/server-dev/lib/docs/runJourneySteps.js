@@ -21,12 +21,15 @@ import {
   getShortcutModifier,
   getState,
 } from '@lowdefy/e2e-utils/runtime';
-import { getStepKey } from '@lowdefy/node-utils';
+import { CALL_STEP_KEYS, getStepKey } from '@lowdefy/node-utils';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
 import checkClickRails from './rails/checkClickRails.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
+import expectAnswerError from './expectAnswerError.js';
+import expectAnswerStatus from './expectAnswerStatus.js';
+import expectJourneyDb from './expectJourneyDb.js';
 import { buildPageUrl } from './getBrowser.js';
 import hasNoEffect from './observe/hasNoEffect.js';
 import isDeepEqual from './isDeepEqual.js';
@@ -36,6 +39,7 @@ import nextJourneySequence from './nextJourneySequence.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
+import runJourneyCall from './runJourneyCall.js';
 import shownTextSelector from './shownTextSelector.js';
 
 // Playwright colours its call log with ANSI escapes; the result is read by an
@@ -1111,13 +1115,24 @@ async function runExpect({ journey, page, step, timeout }) {
       await expectTitle({ page, params, timeout });
       return;
     case 'error':
-      // Claimed when the step's window closes (see observe/claimExpectedErrors).
+      // After a call or request, the answer's error. App errors are claimed when the step's
+      // window closes (see observe/claimExpectedErrors).
+      if (!type.isUndefined(journey.lastAnswer)) {
+        expectAnswerError({ journey, text: params });
+      }
       return;
     case 'effect':
       expectEffect({ journey });
       return;
-    default:
+    case 'status':
+      expectAnswerStatus({ journey, status: params });
       return;
+    case 'db':
+      await expectJourneyDb({ journey, params, timeout });
+      return;
+    default:
+      // The grammar admits nothing else; an expectation it gains is not passed unchecked.
+      throw new Error(`The browser journey runner has no expect "${key}".`);
   }
 }
 
@@ -1200,8 +1215,13 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
     case 'expect':
       await runExpect({ journey, page, step, timeout });
       return;
-    default:
+    case 'call':
+    case 'request':
+      await runJourneyCall({ journey, step, timeout });
       return;
+    default:
+      // The grammar admits nothing else; a step it gains is not passed unchecked.
+      throw new Error(`The browser journey runner has no step "${getStepKey(step)}".`);
   }
 }
 
@@ -1249,6 +1269,10 @@ async function runJourneySteps({ journey, steps }) {
       continue;
     }
     const started = Date.now();
+    // A call's answer is read only by the expect steps straight after it.
+    if (!['expect', ...CALL_STEP_KEYS].includes(getStepKey(step))) {
+      journey.lastAnswer = undefined;
+    }
     if (REQUEST_WINDOW_STEPS.includes(getStepKey(step))) {
       requestWindowStart = nextJourneySequence();
     }
