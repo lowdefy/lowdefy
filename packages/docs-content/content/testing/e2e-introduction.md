@@ -24,7 +24,7 @@ The e2e server build exposes internal state on `window.lowdefy`, so your tests c
 
 ## Prerequisites
 
-- **Node.js 24+**
+- **Node.js 26+**
 - A working Lowdefy app (your app must build successfully)
 - **Playwright** (installed automatically during setup)
 

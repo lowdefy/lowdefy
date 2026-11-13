@@ -3188,7 +3188,7 @@
       "files": [
         "deployment/docker.yaml"
       ],
-      "hash": "74ea138e9fd6fe09eb35e1d7373a1c24c4af140eaa4060aa7134d7b858fc3e00"
+      "hash": "9b3f02eb94012b5f149126452166e2835677eb2857e0f09804df38fada9e479b"
     },
     "deployment/node-server": {
       "files": [
@@ -3200,7 +3200,7 @@
       "files": [
         "deployment/vercel.yaml"
       ],
-      "hash": "42dcf611ce291c27117b550a9050dc09c7f2a9e096c872efacd54499955a0bc0"
+      "hash": "ab3fd25824d19f6be2a4a7e55018de0b945c207a74045230a77bbc83cbf610d8"
     },
     "deployment/deployment-environments": {
       "files": [
@@ -3373,7 +3373,7 @@
       "files": [
         "testing/e2e-introduction.yaml"
       ],
-      "hash": "14cc649fd717fb7ee20fbcf4394ee6253cec24960042ab3ce27165ba938a1864"
+      "hash": "4d490055b0153e2278d13fae8029966bc7b313c0cb17155411bcbf19ca252150"
     },
     "testing/e2e-getting-started": {
       "files": [
@@ -4237,7 +4237,7 @@
         "blocks/display/Paragraph.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "7ec210290540b08cc11b16663dd2841be4936f2cfd2b63d5f8b324db65c6fa02"
+      "hash": "bda6f57adc036f61076ed63f0cef50f2d3e9beffd178c1ad516bfc711dd6605e"
     },
     "display-blocks/pollingtimer": {
       "files": [

@@ -344,7 +344,7 @@ A new push to a pull request cancels its run in progress.
 
 **Complete path** (`.github/workflows/test-complete.yml`): the unit tests (`pnpm build`, the
 dependency check and every package's tests, not stopping at the first failing package) on
-ubuntu with Node 24 and 26 (Lowdefy servers are deployed on Linux, so CI runs no Windows
+ubuntu with Node 26 (Lowdefy servers are deployed on Linux, so CI runs no Windows
 jobs); `pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
 `@lowdefy/server-dev` and `lowdefy`, which must pass tests, not skip them for want of
 Chromium); and every block e2e suite (`test-block-e2e.yml`). No coverage is collected: jest's
