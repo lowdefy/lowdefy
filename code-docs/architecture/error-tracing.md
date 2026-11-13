@@ -798,9 +798,17 @@ Both modes run `@sentry/node` (Sentry 11 removed `@sentry/node-core` and its lig
 - **Hono integration left out.** Sentry 11's `Hono` integration (a default even without tracing) prepends middleware that names the root span and calls `captureException` with `handled: false` for every error reaching `onError`, untagged, and adds a `middleware.hono` span per middleware. Lowdefy captures from its error handler with its own tags (`captureSentryError`), so `initSentry` filters the integration out of the defaults and the Sentry middleware names the root span itself. Each error is captured once.
 - **Serverless** also turns `sendClientReports` off. A function stays billed until the flush after each response settles, and with client reports on every flush posted one, so every request waited on an upload. The Vercel entry starts its flush once the response closes, which is when the request's root span ends and its spans are queued, so a flush waits only on what that request queued: a captured error, or a sampled request's spans. Sentry 11 also registers a flush of its own on Vercel (`setupVercelKeepAlive`, when `VERCEL` is set); the two overlap.
 
-TODO(LDF-929): new measurements
+**Cold-start cost.** Measured by importing a small app's Vercel function entry (`api/index.js`, one page and two API endpoints, built with `lowdefy vercel-output`) in a fresh Node process, 84 runs per configuration. Each figure is the median of per-round differences from the same import with no Sentry, in import time and resident memory:
 
-Importing a small app's Vercel function entry locally (median of 11 to 21 cold imports), light mode added about 80 ms and 4 MB of resident memory over no Sentry, where `@sentry/node` without tracing still added about 270 ms and 110 MB, most of it from its loader hooks.
+| Configuration                                                                         | Time   | Memory |
+| ------------------------------------------------------------------------------------- | ------ | ------ |
+| Sentry 10.78, light mode (`@sentry/node-core/light`)                                  | 62 ms  | 16 MB  |
+| Sentry 10.78, `@sentry/node` with tracing                                             | 400 ms | 117 MB |
+| Sentry 11.12, tracing off                                                             | 180 ms | 24 MB  |
+| Sentry 11.12, tracing off, `enableRuntimeChannelInjection: false` (Lowdefy on Vercel) | 145 ms | 24 MB  |
+| Sentry 11.12, tracing on                                                              | 177 ms | 24 MB  |
+
+The machine was loaded while measuring, so differences under about 40 ms are rough. In that app the module hooks wrapped only Hono, whose Sentry integration Lowdefy leaves out.
 
 ### Error Context
 

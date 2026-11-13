@@ -49,9 +49,10 @@ async function initSentryServer({ serverless = false } = {}) {
 
   // Sentry installs module hooks that let its library integrations (Hono, mongodb, pg and
   // others) see those libraries load; they only make spans. On a serverless function they cost
-  // ~35 ms per cold start (measured on Vercel, Sentry 11.12) and wrap only Hono, whose
-  // integration Lowdefy leaves out, so they are off there, tracing or not. The Http integration,
-  // which traces requests and reports errors with their request, needs no hooks.
+  // ~35 ms per cold start (Sentry 11.12, measured locally by importing the Vercel function entry)
+  // and wrap only Hono, whose integration Lowdefy leaves out, so they are off there, tracing or
+  // not. The Http integration, which traces requests and reports errors with their request, needs
+  // no hooks.
   const enableRuntimeChannelInjection = !serverless;
 
   const Sentry = await import('@sentry/node');
