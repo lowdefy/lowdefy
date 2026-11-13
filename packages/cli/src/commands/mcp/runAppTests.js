@@ -18,6 +18,7 @@ import { createTraceId, type } from '@lowdefy/helpers';
 import { relativePosixPath } from '@lowdefy/node-utils';
 
 import getDirectories from '../../utils/getDirectories.js';
+import formatBrowserOnly from '../test/formatBrowserOnly.js';
 import formatNoTestsMatched from '../test/formatNoTestsMatched.js';
 import formatSkippedJourney from '../test/formatSkippedJourney.js';
 import parseRepeat from '../test/parseRepeat.js';
@@ -32,6 +33,8 @@ import summariseResults from '../test/summariseResults.js';
 import writeExercised from '../test/writeExercised.js';
 import writeTestRun from '../test/writeTestRun.js';
 import fetchBuildId from '../test/fetchBuildId.js';
+import headlessDevSuite from '../test/headlessDevSuite.js';
+import writeHeadlessRun from '../test/writeHeadlessRun.js';
 
 // Runs the app's tests (every journey under tests/journeys outside "_"
 // folders, or the journey files and globs `paths` names relative to the app
@@ -42,6 +45,8 @@ import fetchBuildId from '../test/fetchBuildId.js';
 // skipped `deprecated: true` journey is a result marked skipped. Always the
 // default directory: journeys an app keeps elsewhere (--journeys-directory)
 // may need a server set up for them, which the running dev server is not.
+// `headless` runs the journeys with no browser on the dev server: one that
+// needs a browser is a result marked browserOnly, neither passed nor failed.
 async function runAppTests({
   configDirectory,
   url,
@@ -51,6 +56,7 @@ async function runAppTests({
   repeat: repeatValue,
   tier: tierValue,
   usageWindow: usageWindowValue,
+  headless = false,
 }) {
   const context = { directories: getDirectories({ configDirectory, options: {} }) };
   const { repeat, error: repeatError } = parseRepeat(repeatValue);
@@ -100,20 +106,29 @@ async function runAppTests({
     return { summary: tiered.refused, results: [] };
   }
   // One run id per tool call; only a full-suite run records (see runRepeated).
-  const recording = {
-    run: createTraceId(),
-    paths: files,
-    filter: selection.filters,
-    tags: selection.tags,
-    tier,
-  };
+  // A headless run records no traces.
+  const recording = headless
+    ? undefined
+    : {
+        run: createTraceId(),
+        paths: files,
+        filter: selection.filters,
+        tags: selection.tags,
+        tier,
+      };
   const runs = [];
+  const browserOnly = [];
   for (const { suite, item, usage } of tiered.selected) {
+    const runSuite = headless ? headlessDevSuite({ suite }) : suite;
     const result = {
-      ...(await runRepeated({ suite, context, item, url, repeat, recording })),
+      ...(await runRepeated({ suite: runSuite, context, item, url, repeat, recording })),
       usage,
     };
-    runs.push({ suite, result });
+    if (!type.isUndefined(result.browserOnly)) {
+      browserOnly.push(result);
+      continue;
+    }
+    runs.push({ suite: runSuite, result });
   }
   const results = runs.map(({ result }) => result);
   writeExercised({
@@ -122,9 +137,16 @@ async function runAppTests({
     buildId: await fetchBuildId({ url }),
   });
   writeTestRun({ directories: context.directories, results });
+  if (headless) {
+    writeHeadlessRun({ directories: context.directories, results, browserOnly, mode: 'dev' });
+  }
   const seen = new Set();
   return {
-    summary: summariseResults({ results, skipped: tiered.skipped.length }).text,
+    summary: summariseResults({
+      results,
+      skipped: tiered.skipped.length,
+      browserOnly: browserOnly.length,
+    }).text,
     results: [
       ...runs.map(({ suite, result }) => {
         const { journey, newestPassed, recorded, ...rest } = result;
@@ -134,6 +156,12 @@ async function runAppTests({
           report: suite.format({ result, seen }).join('\n'),
         };
       }),
+      ...browserOnly.map((result) => ({
+        name: result.name,
+        filePath: relativePosixPath({ from: configDirectory, to: result.filePath }),
+        browserOnly: result.browserOnly,
+        report: formatBrowserOnly({ result }),
+      })),
       ...tiered.skipped.map((skipped) => ({
         name: skipped.name,
         filePath: relativePosixPath({ from: configDirectory, to: skipped.filePath }),

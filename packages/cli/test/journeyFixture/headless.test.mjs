@@ -142,3 +142,34 @@ test('--headless --build on a build older than the config exits non-zero with th
     fs.utimesSync(refMap, atime, mtime);
   }
 });
+
+const fixtureUrl = process.env.LOWDEFY_JOURNEY_FIXTURE_URL;
+const devServerTest = fixtureUrl === undefined ? test.skip : test;
+
+devServerTest(
+  '--headless runs the headless journey on the dev server and lists the browser journey',
+  async () => {
+    const { code, output } = await runCli([
+      'test',
+      '--headless',
+      '--config-directory',
+      process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY,
+      '--url',
+      fixtureUrl,
+      browserJourney,
+      headlessJourney,
+    ]);
+    expect(output).toMatch(
+      /PASS {2}saves an item headless and sees it in state {2}\(5 steps, \d+ms\)/
+    );
+    expect(output).toContain(
+      'BROWSER-ONLY  saves an item and sees the message  step 3 (expect: { text }): expect "text" reads the page in a browser'
+    );
+    expect(output).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+    expect(code).toBe(0);
+    const written = JSON.parse(
+      fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json'), 'utf8')
+    );
+    expect(written.mode).toBe('dev');
+  }
+);

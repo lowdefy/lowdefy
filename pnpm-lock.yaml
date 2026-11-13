@@ -2862,6 +2862,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 7.2.0
         version: link:../../utils/helpers
+      '@lowdefy/journey-headless':
+        specifier: 7.2.0
+        version: link:../../utils/journey-headless
       '@lowdefy/layout':
         specifier: 7.2.0
         version: link:../../layout

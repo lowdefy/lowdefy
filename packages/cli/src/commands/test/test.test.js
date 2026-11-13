@@ -1080,21 +1080,61 @@ test('test frees the journey run slots when a signal stops the run', async () =>
   }
 });
 
-test('test --headless without --build, and --build without --headless, are refused before anything runs', async () => {
+test('test --build without --headless is refused before anything runs', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
-  context.options = { ...context.options, headless: true };
-  await test({ context });
-  expect(logs.error).toEqual([
-    'lowdefy test --headless needs a running dev server to host it, which is not supported yet. Run "lowdefy build", then "lowdefy test --headless --build" to run the headless journeys on the production build.',
-  ]);
-  expect(process.exitCode).toBe(1);
-  logs.error.splice(0);
   context.options = { port: 3000, build: true };
   await test({ context });
   expect(logs.error[0]).toMatch(/^--build runs the headless journeys on the production build/);
+  expect(process.exitCode).toBe(1);
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockOpenTestApp).not.toHaveBeenCalled();
+});
+
+test('test --headless posts each journey headless to the dev server, takes no slots and lists browser-only ones', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'reads the title' }));
+  context.options = { ...context.options, headless: true };
+  // a.yaml is posted first and passes; b.yaml answers browser-only.
+  mockPost
+    .mockResolvedValueOnce({
+      data: { pageId: 'form', passed: true, steps: [], exercised: { pages: ['form'] } },
+    })
+    .mockResolvedValueOnce({
+      data: {
+        pageId: 'form',
+        browserOnly: {
+          index: 0,
+          step: { click: 'submit' },
+          reason: 'DownloadFile needs the browser.',
+        },
+        steps: [],
+      },
+    });
+  await test({ context });
+  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(mockStartDevServer).toHaveBeenCalledWith({ context });
+  expect(mockPost).toHaveBeenCalledTimes(2);
+  expect(mockPost.mock.calls.every(([, body]) => body.headless === true)).toBe(true);
+  expect(mockPost.mock.calls.every(([, body]) => body.recording === undefined)).toBe(true);
+  expect(logs.info).toContain(
+    'BROWSER-ONLY  reads the title  step 0 (click "submit"): DownloadFile needs the browser.'
+  );
+  expect(logs.info[logs.info.length - 1]).toBe(
+    '1 passed, 0 failed of 1 journeys, 1 browser-only not run'
+  );
+  expect(process.exitCode).toBeUndefined();
+  const written = JSON.parse(
+    fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8')
+  );
+  expect(written.mode).toBe('dev');
+  expect(written.journeys['tests/journeys/b.yaml#reads the title'].browserOnly.index).toBe(0);
+  expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
+  const exercised = JSON.parse(
+    fs.readFileSync(path.join(context.directories.test, 'exercised.json'), 'utf8')
+  );
+  expect(Object.keys(exercised.journeys)).toEqual(['tests/journeys/a.yaml#clicks submit']);
 });
 
 function headlessContext() {

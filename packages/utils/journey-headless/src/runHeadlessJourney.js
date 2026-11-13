@@ -104,9 +104,11 @@ const REQUEST_WINDOW_STEP_KEYS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
  * journey with no pageId opens no page, and every step must run without one (call, request, as,
  * wait ms, and expect error, status, calls on an endpoint or a named page, db). A call or request
  * naming a caller the data set does not have is refused before any call.
- * stepTimeout bounds each step's wait for a block or a check to hold.
+ * stepTimeout bounds each step's wait for a block or a check to hold. onTrace, when given, also
+ * takes every completed event's trace payload, as a host that records what a journey exercised
+ * reads it.
  */
-async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout = 5000 }) {
+async function runHeadlessJourney({ configDirectory, host, journey, onTrace, stepTimeout = 5000 }) {
   const { pageId, pathParams, urlQuery, user } = journey;
   const { error: stepsError } = validateJourneySteps({ steps: journey.steps ?? [] });
   if (!type.isUndefined(stepsError)) {
@@ -140,7 +142,10 @@ async function runHeadlessJourney({ configDirectory, host, journey, stepTimeout 
   });
   const actors = createHeadlessActors({
     host,
-    onTrace: windows.onTrace,
+    onTrace: (payload) => {
+      windows.onTrace(payload);
+      onTrace?.(payload);
+    },
     plugins: await host.loadClientPlugins(),
     start: { pageId, pathParams, urlQuery },
     stepTimeout,
