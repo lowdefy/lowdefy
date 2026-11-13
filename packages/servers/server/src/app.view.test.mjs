@@ -364,6 +364,25 @@ test('a page, which no static file answers, allows no origin', async () => {
   expect(corsHeaders(res)).toEqual([]);
 });
 
+test('a view session is refused on the page routes, which embed the caller', async () => {
+  const app = createApp();
+  const viewRes = await app.request('/home', { headers: { 'x-test-view-session': 'true' } });
+  expect(viewRes.status).toEqual(403);
+  expect(await viewRes.json()).toEqual({
+    name: 'AuthorizationError',
+    message: 'A view session cannot call this route.',
+  });
+  const browserRes = await app.request('/home');
+  expect(browserRes.status).toEqual(200);
+});
+
+test('a view session still reads the static files', async () => {
+  const res = await createApp().request('/icon.svg', {
+    headers: { 'x-test-view-session': 'true' },
+  });
+  expect(res.status).toEqual(200);
+});
+
 test('an app without a view sends no Access-Control-Allow-Origin on its files', async () => {
   mcpJson.views.configured = false;
   const app = createApp();

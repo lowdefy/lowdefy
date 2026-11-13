@@ -237,6 +237,9 @@ function createApp({ serveStaticAssets = true, clientAddressHeader } = {}) {
   }
 
   app.use('/*', apiContext({ clientAddressHeader }));
+  // A page embeds its caller and root config, and a view shows its pages through
+  // the /api routes, so a view session is refused on the page routes as well.
+  app.use('/*', refuseViewSession());
   // Registered after the static middleware, which answers a file without calling next().
   app.use('/*', noStoreMiddleware);
   mountPageRoutes({ app, basePath, renderPage });

@@ -20,8 +20,8 @@ import { type } from '@lowdefy/helpers';
 // (context.viewSession, set by resolveAuthentication). It carries the person's
 // roles, so it is refused on every /api route that has not opted in with
 // admitViewSession: a route added later is closed to views until it is listed
-// in viewRoutes. Registered on /api/* after apiContext, which resolves the
-// caller, and before every route handler.
+// in viewRoutes. Registered on /api/* and on the page routes, each after the
+// apiContext that resolves the caller and before every route handler.
 //
 // /api/auth resolves no caller here (BetterAuth reads the session itself), so
 // a view session is refused there inside the auth engine.
