@@ -21,9 +21,9 @@ jobs:
       matrix:
         node: [24, 26]
     steps:
-      - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node }}
           cache: 'pnpm'
@@ -50,16 +50,16 @@ jobs:
       # Where mongodb-memory-server keeps the mongod binaries (cached below).
       MONGOMS_DOWNLOAD_DIR: /home/runner/.cache/mongodb-binaries
     steps:
-      - uses: actions/checkout@v5
-      - uses: pnpm/action-setup@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: 26
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm --filter=@lowdefy/server-dev exec playwright-core install --with-deps chromium
-      - uses: actions/cache@v5
+      - uses: actions/cache@v6
         with:
           path: /home/runner/.cache/mongodb-binaries
           key: mongodb-binaries-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
@@ -76,7 +76,7 @@ jobs:
         run: |
           pnpm --filter=lowdefy test:fixture --reporter=default --reporter=json --outputFile.json="$RUNNER_TEMP/fixture-cli.json"
           node scripts/ci-check-tests-ran.mjs "$RUNNER_TEMP/fixture-cli.json"
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: journey-fixture-dev-server-log

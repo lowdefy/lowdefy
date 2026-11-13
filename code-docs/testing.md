@@ -322,7 +322,7 @@ The labels are a click in the pull request's sidebar. GitHub offers "Run workflo
 workflow on the default branch (`main`); `gh workflow run ci.yml --ref <branch> -f full=true`
 runs it on any branch once `ci.yml` is there.
 
-**Fast path** (`.github/workflows/test-fast.yml`): one job on ubuntu with Node 24.
+**Fast path** (`.github/workflows/test-fast.yml`): one job on ubuntu with Node 26.
 
 1. `scripts/ci-scope.mjs` diffs the pull request against its base branch (the first parent
    of its merge commit). A changed file outside `packages/` (the lockfile, the root
