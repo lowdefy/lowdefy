@@ -52,12 +52,10 @@
   "scripts": {
     "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files",
     "clean": "rm -rf dist",
-    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "test": "vitest run"
   },
   "dependencies": {
     "@lowdefy/block-utils": "7.2.0",
-    "@lowdefy/blocks-antd": "7.2.0",
     "@lowdefy/blocks-files": "7.2.0",
     "@lowdefy/errors": "7.2.0",
     "@lowdefy/helpers": "7.2.0",
@@ -77,11 +75,7 @@
     "@lowdefy/vite-yaml-plugin": "7.2.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
-    "@testing-library/dom": "10.4.2",
-    "@testing-library/react": "16.3.3",
-    "@testing-library/user-event": "14.6.9",
     "antd": "6.7.0",
-    "copyfiles": "2.4.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "vitest": "5.1.0"

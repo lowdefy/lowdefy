@@ -69,7 +69,6 @@
     "globals": "17.14.0",
     "mongodb": "7.8.0",
     "mongodb-memory-server": "11.3.0",
-    "node-gyp": "13.1.0",
     "prettier": "3.10.0",
     "turbo": "2.11.10"
   },

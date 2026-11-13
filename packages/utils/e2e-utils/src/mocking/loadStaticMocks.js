@@ -15,11 +15,11 @@
 */
 
 import fs from 'fs';
-import { CORE_SCHEMA, loadAll, mergeTag, timestampTag } from 'js-yaml';
+import YAML from 'yaml';
 
-// js-yaml 5 loads YAML 1.2 without merge keys and timestamps. Mock files were written for js-yaml
-// 4, which merged `<<` keys and loaded unquoted dates as Date objects, so both are added back.
-const MOCKS_SCHEMA = CORE_SCHEMA.withTags(mergeTag, timestampTag);
+// Mock files were written for js-yaml 4, which merged `<<` keys and loaded unquoted dates as Date
+// objects. The yaml package's default YAML 1.2 core schema does neither, so both are turned on.
+const MOCKS_OPTIONS = { merge: true, customTags: ['timestamp'] };
 
 function loadStaticMocks(mocksFile) {
   if (!mocksFile || !fs.existsSync(mocksFile)) {
@@ -27,15 +27,19 @@ function loadStaticMocks(mocksFile) {
   }
 
   const content = fs.readFileSync(mocksFile, 'utf8');
-  // loadAll, because js-yaml 5's load throws on a file with no document. An empty mocks file, or
-  // one with only comments, declares no mocks.
-  const documents = loadAll(content, { schema: MOCKS_SCHEMA });
+  // parseAllDocuments, to name the mocks file when it has more than one document. An empty mocks
+  // file, or one with only comments, has none and declares no mocks.
+  const documents = YAML.parseAllDocuments(content, MOCKS_OPTIONS);
   if (documents.length > 1) {
     throw new Error(
       `Mocks file "${mocksFile}" has ${documents.length} YAML documents. Put all mocks in one document.`
     );
   }
-  const [parsed] = documents;
+  const [document] = documents;
+  if (document?.errors.length > 0) {
+    throw document.errors[0];
+  }
+  const parsed = document?.toJS();
 
   return {
     requests: parsed?.requests ?? [],

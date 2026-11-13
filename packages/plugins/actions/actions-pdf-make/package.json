@@ -47,7 +47,6 @@
     "pdfmake": "0.3.14"
   },
   "devDependencies": {
-    "@lowdefy/node-utils": "7.2.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
     "vitest": "5.1.0"

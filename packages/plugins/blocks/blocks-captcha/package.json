@@ -37,9 +37,8 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files --ignore \"**/*.snap\" --ignore \"**/*.yaml\"",
     "clean": "rm -rf dist",
-    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
@@ -52,7 +51,6 @@
   "devDependencies": {
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
-    "copyfiles": "2.4.1",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },

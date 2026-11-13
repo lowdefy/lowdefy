@@ -114,3 +114,7 @@ test('loadStaticMocks throws when the mocks file has more than one YAML document
     'Mocks file "/app/e2e/mocks.yaml" has 2 YAML documents. Put all mocks in one document.'
   );
 });
+
+test('loadStaticMocks throws on a mocks file with invalid YAML', async () => {
+  await expect(loadMocks('requests:\n  - requestId: [fetch_data\n')).rejects.toThrow();
+});

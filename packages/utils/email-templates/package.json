@@ -32,7 +32,6 @@
     "react-dom": "^19"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "7.2.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
     "react": "19.3.1",

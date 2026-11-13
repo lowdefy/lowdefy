@@ -47,9 +47,8 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files --ignore \"**/*.snap\"",
     "clean": "rm -rf dist",
-    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.snap\"",
     "e2e": "playwright test --config e2e/playwright.config.js",
     "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
     "prepublishOnly": "pnpm build",
@@ -76,7 +75,6 @@
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
     "antd": "6.7.0",
-    "copyfiles": "2.4.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "vitest": "5.1.0"

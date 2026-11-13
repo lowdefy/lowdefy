@@ -55,8 +55,7 @@
     "@lowdefy/helpers": "7.2.0",
     "better-auth": "1.7.20",
     "change-case": "5.4.4",
-    "mongodb": "7.8.0",
-    "saslprep": "1.0.3"
+    "mongodb": "7.8.0"
   },
   "devDependencies": {
     "@lowdefy/ajv": "7.2.0",
