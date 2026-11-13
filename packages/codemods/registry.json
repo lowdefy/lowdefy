@@ -3,7 +3,7 @@
     {
       "version": "8.0.0",
       "from": ">=7.0.0 <8.0.0",
-      "description": "The react-icons icon set (@lowdefy/icons-react-icons) and the _jsonata operator (@lowdefy/operators-jsonata) are removed",
+      "description": "The react-icons icon set (@lowdefy/icons-react-icons) and the _jsonata operator (@lowdefy/operators-jsonata) are removed; the web QRScanner reads codes with BarcodeDetector and takes the native QRScanner config",
       "codemods": [
         {
           "id": "remove-react-icons-set",
@@ -14,6 +14,11 @@
           "id": "remove-jsonata",
           "description": "Rewrite every _jsonata operator (object, positional and _jsonata.evaluate forms, on client and server) to _js with equivalent JavaScript, passing on and bindings through args, keeping JSONata's single-match and empty-match results where the consumer cannot be told, remove @lowdefy/operators-jsonata from plugins and package.json, and report expressions it cannot translate confidently, behaviour changes and expressions read from data.",
           "path": "v8-0-0/02-remove-jsonata.md"
+        },
+        {
+          "id": "qrscanner-barcode-detector",
+          "description": "Rewrite each web QRScanner for Lowdefy 8: formatsToSupport to types with the new names, remove disableFlip, add continuous: true where onScan expects repeated reads, rewrite reads of the value (decodedText, result.text, result.format.formatName) to data and type, and report dropped formats (UPC_EAN_EXTENSION), whole values sent outside the app and the wasm-unsafe-eval CSP requirement.",
+          "path": "v8-0-0/03-qrscanner-barcode-detector.md"
         }
       ]
     },
