@@ -13,15 +13,18 @@ develop merged into main", "Release 7.x: other push to main" or "Release 7.x: ru
 [CI](./testing.md#ci) for where the complete test path runs):
 
 1. With changesets pending (the Release merge from `develop`), the `version` job runs
-   `changesets/action`, which opens or updates the "Publish new release" pull request
+   `changesets/action@v2`, which opens or updates the "Publish new release" pull request
    (`pnpm release:version`). Nothing is tested or published, and the run summary links the
    pull request. The only build is of the shell's dependencies (`--filter=@lowdefy/shell^...`):
    the shell's type manifest is rewritten after the version bump, and its generator imports
-   each plugin package's built `./types` export.
+   each plugin package's built `./types` export. `changeset version` exits with code 1 when
+   no changesets are pending, which is why the `mode` job, not the action, decides whether
+   this path runs.
 2. Once that pull request is merged there are no changesets left. The `test` job runs the
    complete path, and only when it passes the `publish` job publishes
-   (`pnpm release:publish`, which is `changeset publish`). Its exit code is ignored, since it
-   fails on versions that already exist, which is what a re-run sees.
+   (`pnpm release:publish`, which is `changeset publish`). Its exit code is ignored: it exits
+   non-zero when any one package fails, after publishing the rest, and skips versions already
+   on npm, which is what a re-run sees.
 3. `scripts/verify-published.mjs` is the real gate: every publishable package (every
    non-private workspace package, minus the `ignore` list in `.changeset/config.json`) must be
    on npm at its local version. A missing one fails the job; fix the cause and re-run it.
@@ -68,13 +71,27 @@ this on all six packages new in that release.
 1. `scripts/pull-before-release.mjs` refuses uncommitted changes and fast-forwards the branch.
 2. `npm whoami || npm login`.
 3. `pnpm release:version-experimental` versions every package as
-   `0.0.0-experimental-<timestamp>` and builds.
+   `0.0.0-experimental-<timestamp>` and builds. With no changesets pending, `changeset version`
+   exits with code 1 and the command stops here, before anything is published: add a
+   changeset first.
 4. `pnpm release:publish-experimental` publishes them with the person's npm login.
 5. `git checkout -- .` and `git clean` drop the snapshot versions, even when step 4 failed
    partway. The command then exits with step 4's result.
 
 It does not touch trusted publishers. A trusted publisher created here would usually expire
 before the next release from CI uses it, which is how 7.2.0 broke.
+
+## Changesets config
+
+`.changeset/config.json` sets `privatePackages: { "version": true, "tag": false }`. Changesets
+v3 stops versioning private packages by default, which would leave `lowdefy-vscode` (in the
+`fixed` group), `@lowdefy/website`, `@lowdefy/vite-yaml-plugin` and the journey fixture's
+plugin at their old versions. This keeps them in every version bump, as v2 did, without
+publishing or tagging them.
+
+Changesets v3 writes "No changes in this release." under a version a package received only
+from the `fixed` group, and writes dependency bullets unindented. `scripts/release-notes.mjs`
+skips both, so neither reaches the GitHub release notes.
 
 ## Trusted publishers
 
