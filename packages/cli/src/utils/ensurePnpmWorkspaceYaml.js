@@ -39,11 +39,11 @@ import readParentWorkspace from './readParentWorkspace.js';
 // - allowBuilds is read by pnpm >=10.29 and pnpm 11.
 // mongodb-memory-server only downloads a MongoDB binary in its postinstall;
 // mongodb-memory-server-core downloads it when it first starts one, so it is
-// skipped. better-sqlite3 ships its
-// binaries in the package and sets gypfile: false, but pnpm before 11.28 still
-// gives it a node-gyp rebuild install script for its binding.gyp, which fails
-// where node-gyp or Python is missing, so it is skipped. Ignoring them, not
-// leaving them out, keeps pnpm 11 from failing and pnpm 10 from warning.
+// skipped. better-sqlite3 ships its binaries in the package and sets
+// gypfile: false, but pnpm before 11.28 still gives it a node-gyp rebuild
+// install script for its binding.gyp, which fails where node-gyp or Python is
+// missing, so it is skipped. Ignoring them, not leaving them out, keeps pnpm 11
+// from failing and pnpm 10 from warning.
 const pnpmWorkspaceYaml = `packages:
   - '.'
 onlyBuiltDependencies:
