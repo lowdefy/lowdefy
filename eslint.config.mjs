@@ -257,12 +257,10 @@ export default [
   {
     files: [
       'packages/client-native/**/*.test.js',
-      'packages/layout-native/**/*.test.js',
       'packages/plugins/blocks/blocks-native/**/*.test.js',
       'packages/shell/fixtures/**/*.test.js',
       'packages/shell/src/**/*.test.js',
       'packages/shell/src/test/**',
-      'packages/utils/style-native/**/*.test.js',
       '**/__mocks__/**',
     ],
     languageOptions: { globals: { ...globals.jest, ...globals.node } },
