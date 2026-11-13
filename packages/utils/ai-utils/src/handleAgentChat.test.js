@@ -2522,7 +2522,7 @@ test('generateTitle sends at most the first 1200 characters of the reply', async
   expect(prompt).not.toContain('TAIL');
 });
 
-test('generateTitle passes the agent providerOptions to the title call', async () => {
+test('generateTitle passes the agent gateway providerOptions to the title call', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
   mockGenerateText.mockClear();
@@ -2548,7 +2548,66 @@ test('generateTitle passes the agent providerOptions to the title call', async (
   expect(mockGenerateText.mock.calls[0][0].providerOptions).toEqual({
     gateway: { zeroDataRetention: true, only: ['anthropic'] },
   });
-  expect(lastAgentConfig.providerOptions).toBe(mockGenerateText.mock.calls[0][0].providerOptions);
+});
+
+test('generateTitle passes the agent gateway options but not its thinking settings', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+  const providerOptions = {
+    anthropic: { thinking: { type: 'adaptive' }, effort: 'medium' },
+    openai: { reasoningEffort: 'high' },
+    gateway: { zeroDataRetention: true, only: ['anthropic'] },
+  };
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: { model: 'anthropic/claude-sonnet-4.5', generateTitle: true, providerOptions },
+      },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
+
+  expect(lastAgentConfig.providerOptions).toEqual(providerOptions);
+  expect(mockGenerateText.mock.calls[0][0].providerOptions).toEqual({
+    gateway: { zeroDataRetention: true, only: ['anthropic'] },
+  });
+});
+
+test('generateTitle passes no providerOptions when the agent sets only provider settings', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: {
+          model: 'claude-sonnet-4-5',
+          generateTitle: true,
+          providerOptions: { anthropic: { thinking: { type: 'adaptive' } } },
+        },
+      },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
+
+  expect(mockGenerateText.mock.calls[0][0].providerOptions).toBeUndefined();
 });
 
 test('generateTitle passes the agent timeout to the title call', async () => {

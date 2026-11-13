@@ -86,6 +86,15 @@ function getFirstMessageText({ messages, role }) {
     .join('\n');
 }
 
+// The title call takes only the agent's AI Gateway options: its routing and retention (zero data
+// retention, `only`, `order`, fallback models, BYOK). The provider keys hold generation
+// settings such as Anthropic thinking or OpenAI reasoning effort, and a reasoning model spends
+// the title's 20-token cap on reasoning and returns no title.
+function getTitleProviderOptions(providerOptions) {
+  if (providerOptions?.gateway === undefined) return undefined;
+  return { gateway: providerOptions.gateway };
+}
+
 async function handleAgentChat({ connection, properties, context }) {
   // Headless run-to-completion mode (CallAgent routine step) — dispatched here
   // so provider agent plugins delegate unchanged in both modes.
@@ -150,7 +159,7 @@ async function handleAgentChat({ connection, properties, context }) {
           const { text, finishReason } = await generateText({
             model,
             maxOutputTokens: 20,
-            providerOptions: agent.properties.providerOptions,
+            providerOptions: getTitleProviderOptions(agent.properties.providerOptions),
             prompt: buildChatTitlePrompt({ firstUserText, replyText }),
             ...timeoutConfig,
           });
@@ -256,8 +265,7 @@ async function handleAgentChat({ connection, properties, context }) {
       }
       // Title the conversation from its first exchange once the reply is complete, while the
       // stream is still open, so the data-chat-title part reaches the block and fires its
-      // onTitleGenerated event. The title call carries the agent's providerOptions, so it is
-      // routed and retained like the agent's own calls (zero data retention, `only`).
+      // onTitleGenerated event.
       if (titleEnabled && isFirstTurn) {
         await writeChatTitle({
           firstUserText: getFirstMessageText({ messages, role: 'user' }),
