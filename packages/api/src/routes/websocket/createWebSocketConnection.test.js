@@ -128,6 +128,7 @@ test.each([
     expect(registry.subscribe).toHaveBeenCalledWith(context, {
       websocketId: 'ticker',
       payload: { room: 1 },
+      requestId: extra.requestId,
       subscriber: connection.subscriber,
     });
     expect(sentFrames(send)).toEqual([ack]);
