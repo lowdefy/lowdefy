@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import createScanFilter from './createScanFilter.js';
 
 test('a single-scan filter keeps only the first read', () => {

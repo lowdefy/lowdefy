@@ -16,7 +16,9 @@
 
 import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 
-const locator = (page, blockId) => page.locator(`#${escapeId(blockId)}`);
+function locator(page, blockId) {
+  return page.locator(`#${escapeId(blockId)}`);
+}
 
 export default createBlockHelper({
   locator,

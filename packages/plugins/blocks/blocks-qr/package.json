@@ -50,11 +50,14 @@
     "clean": "rm -rf dist",
     "e2e": "playwright test --config e2e/playwright.config.js",
     "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm build",
+    "test": "vitest run"
   },
   "dependencies": {
     "@lowdefy/block-utils": "7.2.0",
-    "html5-qrcode": "2.3.8"
+    "@lowdefy/helpers": "7.2.0",
+    "barcode-detector": "3.2.3",
+    "zxing-wasm": "3.1.6"
   },
   "peerDependencies": {
     "react": "^19",
@@ -67,7 +70,8 @@
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
     "react": "19.3.1",
-    "react-dom": "19.3.1"
+    "react-dom": "19.3.1",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"
