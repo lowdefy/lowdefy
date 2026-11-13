@@ -180,6 +180,20 @@ test('a broadcast error frame passes its message to the subscription onError han
   expect(handlers.onError).toHaveBeenCalledWith('WebSocket: Something went wrong.');
 });
 
+// The server sends the feed's subscribed frame again when its source is back after an
+// outage, so the page's onSubscribe fires and it can fetch what it missed.
+test('a subscribed frame for a feed already subscribed calls onConnected again', async () => {
+  const { client, open, receive } = createTestClient();
+  const handlers = createHandlers();
+  const promise = client.subscribe({ handlers, payload: {}, websocketId: 'chat' });
+  open();
+  receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
+  await promise;
+  receive({ type: 'error', websocketId: 'chat', message: 'Something went wrong.' });
+  receive({ type: 'subscribed', websocketId: 'chat', requestId: 's1' });
+  expect(handlers.onConnected).toHaveBeenCalledTimes(2);
+});
+
 test('an error frame without an error payload rejects with its message', async () => {
   const { client, open, receive } = createTestClient();
   const promise = client.publish({ payload: { a: 1 }, websocketId: 'chat' });

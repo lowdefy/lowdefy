@@ -80,7 +80,32 @@ _ref:
                           _event: messages # array of message payloads in this batch
                 ```
 
-                `onSubscribe` fires when the server acknowledges the subscription (including after an automatic reconnect). `onError` fires with `_event: message` when the channel errors.
+                `onSubscribe` fires when the server acknowledges the subscription, again after an automatic reconnect, and again when the channel's source is back after an outage. `onError` fires with `_event: message` when the channel errors.
+
+                ## When the Source Fails
+
+                A channel's source can fail while pages are subscribed, for example when the database is unreachable. The page stays subscribed and the server restarts the source for as long as anyone is subscribed: 1 second after the failure, then doubling up to once a minute.
+
+                - During the outage, each failed start sends the page an error: `onError` fires and `_websocket: <id>.error` holds the message. No messages arrive, and the source misses whatever changes in the meantime.
+                - When the source is listening again, `onSubscribe` fires, `error` returns to `null` and messages flow again.
+
+                So a page that refetches in `onSubscribe` as well as in `onMessage` also catches up after an outage and after a reconnect:
+
+                ```yaml
+                subscriptions:
+                  - websocketId: order_updates
+                    events:
+                      onSubscribe:
+                        - id: refetch
+                          type: Request
+                          params: get_orders
+                      onMessage:
+                        - id: refetch
+                          type: Request
+                          params: get_orders
+                ```
+
+                The server reports the outage's first failure as an error, to the log and Sentry, and each further failed restart as a warning.
 
                 ## Reading Channel State with `_websocket`
 
