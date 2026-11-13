@@ -2550,13 +2550,15 @@ test('generateTitle passes the agent gateway providerOptions to the title call',
   });
 });
 
-test('generateTitle passes the agent gateway options but not its thinking settings', async () => {
+test('generateTitle keeps the agent provider settings but takes off thinking and reasoning', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
   mockGenerateText.mockClear();
+  const safetySettings = [{ category: 'HARM_CATEGORY_DANGEROUS_CONTENT', threshold: 'BLOCK_NONE' }];
   const providerOptions = {
-    anthropic: { thinking: { type: 'adaptive' }, effort: 'medium' },
-    openai: { reasoningEffort: 'high' },
+    anthropic: { thinking: { type: 'adaptive' }, effort: 'medium', sendReasoning: false },
+    openai: { reasoningEffort: 'high', reasoningSummary: 'auto', store: false },
+    google: { thinkingConfig: { thinkingBudget: 2048 }, safetySettings },
     gateway: { zeroDataRetention: true, only: ['anthropic'] },
   };
 
@@ -2577,37 +2579,15 @@ test('generateTitle passes the agent gateway options but not its thinking settin
   await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
 
   expect(lastAgentConfig.providerOptions).toEqual(providerOptions);
-  expect(mockGenerateText.mock.calls[0][0].providerOptions).toEqual({
+  const titleCall = mockGenerateText.mock.calls[0][0];
+  expect(titleCall.providerOptions).toEqual({
+    anthropic: { sendReasoning: false },
+    openai: { store: false },
+    google: { safetySettings },
     gateway: { zeroDataRetention: true, only: ['anthropic'] },
   });
-});
-
-test('generateTitle passes no providerOptions when the agent sets only provider settings', async () => {
-  mockTool.mockImplementation((def) => def);
-  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
-  mockGenerateText.mockClear();
-
-  const { default: handleAgentChat } = await import('./handleAgentChat.js');
-
-  await handleAgentChat({
-    connection: { provider: vi.fn().mockReturnValue({}) },
-    properties: {
-      agent: {
-        tools: [],
-        properties: {
-          model: 'claude-sonnet-4-5',
-          generateTitle: true,
-          providerOptions: { anthropic: { thinking: { type: 'adaptive' } } },
-        },
-      },
-      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
-    },
-    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
-  });
-
-  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
-
-  expect(mockGenerateText.mock.calls[0][0].providerOptions).toBeUndefined();
+  expect(titleCall.reasoning).toBe('none');
+  expect(titleCall.maxOutputTokens).toBe(1024);
 });
 
 test('generateTitle passes the agent timeout to the title call', async () => {
@@ -2629,6 +2609,34 @@ test('generateTitle passes the agent timeout to the title call', async () => {
   await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
 
   expect(mockGenerateText.mock.calls[0][0].timeout).toBe(30000);
+});
+
+test('generateTitle passes only the total and step limits of a streaming timeout', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        properties: {
+          model: 'gpt-4o',
+          generateTitle: true,
+          timeout: { totalMs: 60000, chunkMs: 15000 },
+        },
+      },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
+
+  expect(mockGenerateText.mock.calls[0][0].timeout).toEqual({ totalMs: 60000 });
 });
 
 test('generateTitle logs a warning and writes no title when the model returns no text', async () => {
@@ -2683,7 +2691,7 @@ test('generateTitle passes no providerOptions when the agent sets none', async (
   expect(mockGenerateText.mock.calls[0][0].providerOptions).toBeUndefined();
 });
 
-test('generateTitle does not run when the conversation already has an assistant message', async () => {
+test('generateTitle does not run once the user has sent a second message', async () => {
   mockTool.mockImplementation((def) => def);
   mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
   mockGenerateText.mockClear();
@@ -2745,6 +2753,199 @@ test('generateTitle failure is non-fatal and does not break the stream', async (
   );
 
   mockGenerateText.mockResolvedValue({ text: 'Generated Title' });
+});
+
+test('generateTitle does not run when the agent turn fails in the stream', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+  mockCreateAgentUIStream.mockImplementationOnce(async (opts) => {
+    opts.onEnd({ messages: [...opts.uiMessages, MOCK_ASSISTANT_MESSAGE] });
+    return createMockReadableStream([{ type: 'error', errorText: 'Something went wrong.' }]);
+  });
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
+
+  expect(mockGenerateText).not.toHaveBeenCalled();
+});
+
+test('generateTitle does not run when the agent stream throws', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+  mockCreateAgentUIStream.mockRejectedValueOnce(new Error('provider timeout'));
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: {
+      logger: testLogger,
+      callEndpoint: vi.fn(),
+      getEndpointConfig: vi.fn(),
+      wireErrorMessage: () => 'Something went wrong.',
+    },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({
+    writer: { write: vi.fn(), onError: () => 'Something went wrong.' },
+  });
+
+  expect(mockGenerateText).not.toHaveBeenCalled();
+});
+
+test('generateTitle waits for a first reply that ends on a tool approval', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+  mockCreateAgentUIStream.mockImplementationOnce(async (opts) => {
+    opts.onEnd({
+      messages: [
+        ...opts.uiMessages,
+        {
+          id: 'assistant-1',
+          role: 'assistant',
+          parts: [
+            {
+              type: 'tool-sendInvoice',
+              toolCallId: 'call-1',
+              state: 'approval-requested',
+              input: { invoiceId: 'INV-7' },
+              approval: { id: 'approval-1' },
+            },
+          ],
+        },
+      ],
+    });
+    return createMockReadableStream();
+  });
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Explain this' }] }],
+    },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
+
+  expect(mockGenerateText).not.toHaveBeenCalled();
+});
+
+test('generateTitle titles the first reply once it continues after a tool approval', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+  const toolPart = {
+    type: 'tool-sendInvoice',
+    toolCallId: 'call-1',
+    input: { invoiceId: 'INV-7' },
+    approval: { id: 'approval-1', approved: true },
+  };
+  mockCreateAgentUIStream.mockImplementationOnce(async (opts) => {
+    opts.onEnd({
+      messages: [
+        opts.uiMessages[0],
+        {
+          id: 'assistant-1',
+          role: 'assistant',
+          parts: [
+            { ...toolPart, state: 'output-available', output: { sent: true } },
+            { type: 'text', text: 'Invoice INV-7 is overdue and has been sent again.' },
+          ],
+        },
+      ],
+    });
+    return createMockReadableStream();
+  });
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: { tools: [], properties: { model: 'gpt-4o', generateTitle: true } },
+      messages: [
+        { role: 'user', parts: [{ type: 'text', text: 'Explain this' }] },
+        {
+          id: 'assistant-1',
+          role: 'assistant',
+          parts: [{ ...toolPart, state: 'approval-responded' }],
+        },
+      ],
+    },
+    context: { logger: testLogger, callEndpoint: vi.fn(), getEndpointConfig: vi.fn() },
+  });
+
+  await mockCreateUIMessageStream._lastExecute({ writer: { write: vi.fn() } });
+
+  expect(mockGenerateText).toHaveBeenCalledTimes(1);
+  const { prompt } = mockGenerateText.mock.calls[0][0];
+  expect(prompt).toContain("User's opening message:\nExplain this");
+  expect(prompt).toContain("Assistant's reply:\nInvoice INV-7 is overdue and has been sent again.");
+});
+
+test('generateTitle runs alongside the onFinish hooks and is written before the stream closes', async () => {
+  mockTool.mockImplementation((def) => def);
+  mockJsonSchema.mockReturnValue(MOCK_SCHEMA);
+  mockGenerateText.mockClear();
+  mockCreateAgentUIStream.mockImplementation(defaultCreateAgentUIStream);
+  // The title call only settles once a hook has run, so a title awaited before the hooks
+  // would never finish.
+  let resolveTitle;
+  mockGenerateText.mockImplementationOnce(
+    () =>
+      new Promise((resolve) => {
+        resolveTitle = resolve;
+      })
+  );
+  const callEndpoint = vi.fn(async () => {
+    resolveTitle({ text: 'Generated Title' });
+    return { response: {} };
+  });
+
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['save-conversation'] },
+        properties: { model: 'gpt-4o', generateTitle: true },
+      },
+      messages: [{ role: 'user', parts: [{ type: 'text', text: 'Hello' }] }],
+    },
+    context: { logger: testLogger, callEndpoint, getEndpointConfig: vi.fn() },
+  });
+
+  const localWriter = { write: vi.fn() };
+  await mockCreateUIMessageStream._lastExecute({ writer: localWriter });
+
+  expect(callEndpoint).toHaveBeenCalledTimes(1);
+  expect(localWriter.write).toHaveBeenCalledWith({
+    type: 'data-chat-title',
+    data: { title: 'Generated Title' },
+  });
 });
 
 test('messages without parts are dropped before the agent runs', async () => {

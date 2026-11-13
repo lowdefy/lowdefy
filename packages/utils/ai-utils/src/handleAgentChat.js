@@ -30,6 +30,7 @@ import { serializer } from '@lowdefy/helpers';
 
 import agentErrorForLog, { agentLogIds, stackFramesForLog } from './agentErrorForLog.js';
 import buildChatTitlePrompt from './buildChatTitlePrompt.js';
+import buildTitleCallSettings from './buildTitleCallSettings.js';
 import createToolLoopAgent from './createToolLoopAgent.js';
 import createUsageAccumulator from './createUsageAccumulator.js';
 import handleAgentGenerate from './handleAgentGenerate.js';
@@ -75,24 +76,20 @@ function createClientErrorText(context) {
   };
 }
 
-// Concatenate the text parts of the first message with this role — the first
-// exchange generateTitle titles the conversation from.
-function getFirstMessageText({ messages, role }) {
-  const message = messages.find((msg) => msg.role === role);
-  if (!message) return '';
-  return (message.parts ?? [])
+// The text parts of a message, which generateTitle titles the conversation from.
+function getMessageText(message) {
+  return (message?.parts ?? [])
     .filter((part) => part.type === 'text')
     .map((part) => part.text)
     .join('\n');
 }
 
-// The title call takes only the agent's AI Gateway options: its routing and retention (zero data
-// retention, `only`, `order`, fallback models, BYOK). The provider keys hold generation
-// settings such as Anthropic thinking or OpenAI reasoning effort, and a reasoning model spends
-// the title's 20-token cap on reasoning and returns no title.
-function getTitleProviderOptions(providerOptions) {
-  if (providerOptions?.gateway === undefined) return undefined;
-  return { gateway: providerOptions.gateway };
+// A reply that ends on a tool call waiting for the user's approval, or for the client to run
+// it, is not finished: the next request continues the same assistant message.
+function isWaitingOnClient(message) {
+  return (message?.parts ?? []).some(
+    (part) => part.state === 'approval-requested' || part.state === 'input-available'
+  );
 }
 
 async function handleAgentChat({ connection, properties, context }) {
@@ -118,7 +115,9 @@ async function handleAgentChat({ connection, properties, context }) {
   const pruneConfig = agent.properties.prune;
 
   const titleEnabled = agent.properties.generateTitle === true;
-  const isFirstTurn = !messages.some((msg) => msg.role === 'assistant');
+  // The first exchange is every request until the user sends a second message: a reply that
+  // waits on a tool approval or a client tool is continued by a request with no new user message.
+  const isFirstExchange = messages.filter((msg) => msg.role === 'user').length === 1;
 
   const clientErrorText = createClientErrorText(context);
 
@@ -136,6 +135,7 @@ async function handleAgentChat({ connection, properties, context }) {
       // assistant reply) to the stream-level onEnd. Capture it so onFinish
       // hooks persist the complete conversation, not just the request input.
       let capturedMessages;
+      let turnFailed = false;
 
       function collectStep(stepResult) {
         usageAccumulator.add(stepResult);
@@ -158,14 +158,15 @@ async function handleAgentChat({ connection, properties, context }) {
         try {
           const { text, finishReason } = await generateText({
             model,
-            maxOutputTokens: 20,
-            providerOptions: getTitleProviderOptions(agent.properties.providerOptions),
             prompt: buildChatTitlePrompt({ firstUserText, replyText }),
-            ...timeoutConfig,
+            ...buildTitleCallSettings({
+              providerOptions: agent.properties.providerOptions,
+              timeout: timeoutConfig.timeout,
+            }),
           });
           const title = text.trim();
           if (!title) {
-            // A reasoning model can spend the whole token cap before writing any text.
+            // A model that can't turn reasoning off can spend the token cap before any text.
             context.logger.warn({ ...logIds, finishReason }, 'generateTitle returned no text.');
             return;
           }
@@ -247,6 +248,8 @@ async function handleAgentChat({ connection, properties, context }) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
+          // An error the agent stream handles itself arrives as a chunk, not a throw.
+          if (value.type === 'error' || value.type === 'abort') turnFailed = true;
           writer.write(value);
         }
       } catch (error) {
@@ -261,18 +264,18 @@ async function handleAgentChat({ connection, properties, context }) {
           { ...logIds, stack: stackFramesForLog(error) },
           'Agent stream failed: stack.'
         );
+        turnFailed = true;
         writer.write({ type: 'error', errorText: writer.onError(error) });
       }
-      // Title the conversation from its first exchange once the reply is complete, while the
-      // stream is still open, so the data-chat-title part reaches the block and fires its
-      // onTitleGenerated event.
-      if (titleEnabled && isFirstTurn) {
-        await writeChatTitle({
-          firstUserText: getFirstMessageText({ messages, role: 'user' }),
-          replyText: getFirstMessageText({
-            messages: capturedMessages ?? [],
-            role: 'assistant',
-          }),
+      // Title the conversation from its first exchange once the reply is complete. A failed
+      // turn gets no title, so a slow or failing model isn't waited on twice; its retry is still
+      // the first exchange and is titled then. The title call runs alongside the onFinish hooks.
+      const replyMessage = (capturedMessages ?? []).findLast((msg) => msg.role === 'assistant');
+      let titlePromise;
+      if (titleEnabled && isFirstExchange && !turnFailed && !isWaitingOnClient(replyMessage)) {
+        titlePromise = writeChatTitle({
+          firstUserText: getMessageText(messages.find((msg) => msg.role === 'user')),
+          replyText: getMessageText(replyMessage),
         });
       }
       // Call onFinish hooks — awaited so dataParts can be written to stream.
@@ -306,6 +309,9 @@ async function handleAgentChat({ connection, properties, context }) {
           }
         }
       }
+      // Before the stream closes, so the data-chat-title part reaches the block and fires its
+      // onTitleGenerated event.
+      await titlePromise;
 
       if (hasMcpClients) {
         await Promise.all(mcpClients.map(({ client }) => client.close().catch(() => {})));
