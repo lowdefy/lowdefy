@@ -94,16 +94,16 @@ ldf.mock.request('id', { response }); // Inline mocking
 
 ### Core (`src/core/`)
 
-| File              | Purpose                                                               |
-| ----------------- | --------------------------------------------------------------------- |
-| `navigation.js`   | `goto()`, `waitForPage()` - navigation with Lowdefy ready detection   |
-| `requests.js`     | Request state access, `toFinish()`, `toHavePayload()` assertions      |
-| `state.js`        | State access via `page.evaluate()` into `window.lowdefy`              |
-| `url.js`          | URL and query parameter assertions                                    |
-| `validation.js`   | Block validation state access                                         |
-| `locators.js`     | Common locator patterns                                               |
-| `verifyServer.js` | Checks the server on a port is this app's e2e build (`globalSetup`)   |
-| `userCookie.js`   | Set/clear `lowdefy_e2e_user` cookie via `browserContext.addCookies()` |
+| File              | Purpose                                                                |
+| ----------------- | ---------------------------------------------------------------------- |
+| `navigation.js`   | `goto()`, `waitForPage()` - navigation, ready once the page onInit ran |
+| `requests.js`     | Request state access, `toFinish()`, `toHavePayload()` assertions       |
+| `state.js`        | State access via `page.evaluate()` into `window.lowdefy`               |
+| `url.js`          | URL and query parameter assertions                                     |
+| `validation.js`   | Block validation state access                                          |
+| `locators.js`     | Common locator patterns                                                |
+| `verifyServer.js` | Checks the server on a port is this app's e2e build (`globalSetup`)    |
+| `userCookie.js`   | Set/clear `lowdefy_e2e_user` cookie via `browserContext.addCookies()`  |
 
 ### Proxy (`src/proxy/`)
 
