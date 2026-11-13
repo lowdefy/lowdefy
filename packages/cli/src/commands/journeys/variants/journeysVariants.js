@@ -194,7 +194,18 @@ function reportFile({ context, file }) {
 }
 
 // A variant of a journey that needs no browser is replayed headless when it needs none either,
-// and so is a page-less variant (the call forms); the rest replay in the browser.
+// and so is a page-less variant (the call forms); the rest replay in the browser. One the runner
+// finds needs a browser after all (an action only a browser carries out) replays in the browser.
+function replayRun({ headless }) {
+  return async (params) => {
+    if (!headless) {
+      return runJourney(params);
+    }
+    const result = await runJourney({ ...params, headless: true });
+    return type.isUndefined(result.browserOnly) ? result : runJourney(params);
+  };
+}
+
 async function replay({ context, written, url, sourceHeadless }) {
   for (const file of written) {
     const relative = relativePosixPath({ from: context.directories.config, to: file.path });
@@ -211,7 +222,7 @@ async function replay({ context, written, url, sourceHeadless }) {
       type.isObject(variantItem.journey) &&
       isHeadless(variantItem.journey) &&
       (sourceHeadless || type.isUndefined(variantItem.journey.pageId));
-    const suite = { run: (params) => runJourney({ ...params, headless }) };
+    const suite = { run: replayRun({ headless }) };
     for (const item of expandPersonas({ item: variantItem })) {
       const result = await runRepeated({ suite, context, item, url, repeat: REPLAYS });
       const log = result.passed ? context.logger.info : context.logger.error;

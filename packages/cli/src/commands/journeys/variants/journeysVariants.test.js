@@ -431,6 +431,41 @@ test('journeysVariants replays a granted role variant, whose comment is no place
   expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*granted to admin/));
 });
 
+test('journeysVariants replays a headless variant the runner finds needs a browser in the browser', async () => {
+  writeDataSet(
+    'tickets',
+    [
+      'users:',
+      '  member: { id: u_1, roles: [member] }',
+      '  admin: { id: u_2, roles: [admin] }',
+      '',
+    ].join('\n')
+  );
+  fs.writeFileSync(
+    journeysPath('tickets.yaml'),
+    JSON.stringify({ ...journey, data: 'tickets', user: 'member' })
+  );
+  mockPost.mockImplementation(async (target, body) =>
+    body.headless === true
+      ? { data: { browserOnly: { index: 1, step: { click: 'save' }, reason: 'needs one' } } }
+      : { data: { passed: true, steps: [], exercised } }
+  );
+  await variants({ kinds: 'role' });
+  const bodies = mockPost.mock.calls.map(([, body]) => [body.user, body.headless === true]);
+  // The baseline, then each of the granted variant's three replays tries headless and runs in
+  // the browser.
+  expect(bodies).toEqual([
+    ['member', false],
+    ['admin', true],
+    ['admin', false],
+    ['admin', true],
+    ['admin', false],
+    ['admin', true],
+    ['admin', false],
+  ]);
+  expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*granted to admin/));
+});
+
 test('journeysVariants exits 75 without measuring or writing when no journey run slot frees', async () => {
   mockAcquireJourneyRunSlots.mockRejectedValue(
     Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' })
