@@ -142,8 +142,6 @@ export default [
       'app/',
       'modules/',
       'docs/superpowers/',
-      // The VS Code extension is being removed (LDF-961).
-      'packages/ides/',
     ],
   },
   js.configs.recommended,

@@ -82,12 +82,11 @@ Server-read artifacts (`config.json`, `auth.json`, `plugins/connections.js`, `pl
 
 ### Dev-Only Routes
 
-| Route                | Purpose                                  |
-| -------------------- | ---------------------------------------- |
-| `/api/reload`        | SSE for hot reload                       |
-| `/api/ping`          | Health check                             |
-| `/api/root`          | Root config fetch                        |
-| `/api/dev-tools`     | Dev tooling metadata (config directory)  |
+| Route         | Purpose            |
+| ------------- | ------------------ |
+| `/api/reload` | SSE for hot reload |
+| `/api/ping`   | Health check       |
+| `/api/root`   | Root config fetch  |
 
 ## Page Routes
 

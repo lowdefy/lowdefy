@@ -3,7 +3,6 @@ packages:
   - packages/plugins/**
   - packages/servers/*
   - packages/utils/*
-  - packages/ides/*
   # The journey fixture app's local plugin, linked into its dev server as workspace:*.
   - apps/journey-fixture/plugins/*
 
@@ -15,13 +14,11 @@ onlyBuiltDependencies:
 # better-sqlite3 ships its binaries in the package and sets gypfile: false, but pnpm before
 # 11.28 still gives it a node-gyp rebuild install script, which fails without node-gyp.
 # The others' scripts are not needed here: @parcel/watcher installs its prebuilt binary as an
-# optional dependency, @vscode/vsce-sign's binary only signs and verifies (vsce package does
-# not call it), core-js and es5-ext only print a message, and mongodb-memory-server-core
+# optional dependency, core-js and es5-ext only print a message, and mongodb-memory-server-core
 # downloads MongoDB when it first starts one. pnpm 11 fails an install on a build script
 # that is neither allowed nor ignored.
 ignoredBuiltDependencies:
   - '@parcel/watcher'
-  - '@vscode/vsce-sign'
   - better-sqlite3
   - core-js
   - es5-ext
@@ -32,7 +29,6 @@ allowBuilds:
   '@parcel/watcher': false
   '@sentry/cli': true
   '@swc/core': true
-  '@vscode/vsce-sign': false
   better-sqlite3: false
   core-js: false
   es5-ext: false
@@ -81,7 +77,6 @@ overrides:
   proxy-addr@>=2 <2.0.8: ^2.0.8
   qs@>=6 <6.16.0: ^6.16.0
   source-map-js@>=1 <1.2.2: ^1.2.2
-  underscore@>=1 <1.13.8: ^1.13.8
   undici@>=7 <7.30.1: ^7.30.1
   word-wrap@>=1 <1.2.4: ^1.2.4
   zod@>=4 <4.6.6: ^4.6.6

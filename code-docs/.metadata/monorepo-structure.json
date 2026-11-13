@@ -7,8 +7,7 @@
     "packages/*",
     "packages/plugins/**",
     "packages/servers/*",
-    "packages/utils/*",
-    "packages/ides/*"
+    "packages/utils/*"
   ],
   "packages": {
     "core": [

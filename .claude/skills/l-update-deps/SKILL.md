@@ -62,7 +62,6 @@ Major:
 
 **Deprecated:**
 - deep-diff 1.0.2 (operators-diff)
-- vsce 2.15.0 (lowdefy-vscode)
 ```
 
 Then say: "Which package do you want to update?"
