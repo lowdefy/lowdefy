@@ -73,7 +73,7 @@ _ref:
                 memory: 2048 # MB — omit to use the Vercel default
             ```
 
-            - **`maxDuration`** — the hard cap on function execution time, in seconds. Defaults to `60`. Your plan's limits apply; Vercel rejects an over-limit value at deploy time.
+            - **`maxDuration`** — the hard cap on function execution time, in seconds. Defaults to `60`. Your plan's limits apply; Vercel rejects an over-limit value at deploy time. It also bounds each websocket connection: the server closes it 5 seconds before the limit and the client reconnects.
             - **`memory`** — function memory in MB. Omit to use the Vercel default.
 
             Each build writes these into the generated `.vercel/output/functions/api.func/.vc-config.json`. The output is regenerated on every deploy, so there is nothing to edit by hand — and because the deployment is prebuilt (Build Output API), `functions` settings in `vercel.json` or the dashboard's function defaults do not apply; `lowdefy.yaml` is the single source of truth.
