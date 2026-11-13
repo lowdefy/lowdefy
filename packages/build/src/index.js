@@ -79,6 +79,7 @@ import copyAgentFileSystems from './build/copyAgentFileSystems.js';
 import copyPublicFolder from './build/copyPublicFolder.js';
 import testSchema from './build/testSchema.js';
 import updateServerPackageJson from './build/full/updateServerPackageJson.js';
+import validateAgentTimeout from './build/validateAgentTimeout.js';
 import validateCallAgentSteps from './build/validateCallAgentSteps.js';
 import validateConfig from './build/validateConfig.js';
 import validateDeprecatedStyles from './build/validateDeprecatedStyles.js';
@@ -209,6 +210,7 @@ async function build(options) {
       context,
     });
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
+    tryBuildStep(validateAgentTimeout, 'validateAgentTimeout', { components, context });
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
     // After buildWebsockets: the policy allows the page's websocket when the app has websockets.
