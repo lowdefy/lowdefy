@@ -106,6 +106,7 @@ import buildMobilePageIndexShallow from './buildMobilePageIndexShallow.js';
 import buildShallowPages from './buildShallowPages.js';
 import collectPageContent from '../collectPageContent.js';
 import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
+import releaseMergedModuleEntities from './releaseMergedModuleEntities.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
@@ -156,6 +157,8 @@ async function shallowBuild(options) {
     buildModules({ components, context });
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
+    // After collectSkeletonSourceFiles, the last reader of a manifest's pages.
+    releaseMergedModuleEntities({ context });
 
     // Phase 3.5: Constant-fold static runtime operators, mirroring the full
     // build (index.js). Without this, content preserved at skeleton — inline

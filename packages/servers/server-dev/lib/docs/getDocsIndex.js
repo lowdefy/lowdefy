@@ -78,8 +78,8 @@ function componentsKey({ components }) {
   return components.map((item) => (type.isObject(item) ? [item.id, item.description] : item));
 }
 
-// modules.json also holds what a config edit changes (resolved var values,
-// page bodies), so only the parts the docs read are compared.
+// modules.json also holds what a config edit changes (resolved var values),
+// so only the parts the docs read are compared.
 function readModules() {
   const stat = statKey(path.join(process.cwd(), 'build', 'modules.json'));
   if (stat === modulesStat) {

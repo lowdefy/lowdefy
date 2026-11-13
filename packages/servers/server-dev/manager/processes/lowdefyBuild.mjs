@@ -90,7 +90,13 @@ function lowdefyBuild({ directories, logger, options }) {
   let previousBuild = Promise.resolve();
   return (buildOptions) => {
     const nextBuild = previousBuild.then(() => build(buildOptions));
-    previousBuild = nextBuild.catch(() => {});
+    // Settles when the build does, without its result. The queue lives as long
+    // as the manager, so a promise that resolved to the result kept the whole
+    // config the last build resolved in memory.
+    previousBuild = nextBuild.then(
+      () => {},
+      () => {}
+    );
     return nextBuild;
   };
 }
