@@ -39,9 +39,8 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../.swcrc --cli-config-file ../../../.swc-cli.json && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../../.swcrc --cli-config-file ../../../.swc-cli.json --copy-files",
     "clean": "rm -rf dist",
-    "copyfiles": "copyfiles -u 1 \"./src/init/templates/*\" dist",
     "prepublishOnly": "pnpm build",
     "test": "vitest run"
   },
@@ -62,7 +61,6 @@
   "devDependencies": {
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
-    "copyfiles": "2.4.1",
     "vitest": "5.1.0"
   },
   "publishConfig": {

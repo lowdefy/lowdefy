@@ -520,9 +520,6 @@ importers:
       '@testing-library/react':
         specifier: 16.3.3
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       jest-serializer-html:
         specifier: 7.1.0
         version: 7.1.0
@@ -776,9 +773,6 @@ importers:
       '@testing-library/react':
         specifier: 16.3.3
         version: 16.3.3(@testing-library/dom@10.4.2)(@types/react-dom@18.2.7)(@types/react@18.2.38)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       jest-serializer-html:
         specifier: 7.1.0
         version: 7.1.0
@@ -919,9 +913,6 @@ importers:
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -980,9 +971,6 @@ importers:
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1032,9 +1020,6 @@ importers:
       '@swc/core':
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1066,9 +1051,6 @@ importers:
       '@swc/core':
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1088,9 +1070,6 @@ importers:
       '@swc/core':
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1140,9 +1119,6 @@ importers:
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1177,9 +1153,6 @@ importers:
       '@swc/core':
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1217,9 +1190,6 @@ importers:
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1260,9 +1230,6 @@ importers:
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1294,9 +1261,6 @@ importers:
       '@swc/core':
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1343,9 +1307,6 @@ importers:
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1465,9 +1426,6 @@ importers:
       '@swc/core':
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1517,9 +1475,6 @@ importers:
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -1608,9 +1563,6 @@ importers:
       '@swc/core':
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
@@ -2259,9 +2211,6 @@ importers:
       antd:
         specifier: 6.7.0
         version: 6.7.0(date-fns@2.29.3)(luxon@3.7.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -3283,9 +3232,6 @@ importers:
       '@testing-library/user-event':
         specifier: 14.6.9
         version: 14.6.9(@testing-library/dom@10.4.2)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       jest-serializer-html:
         specifier: 7.1.0
         version: 7.1.0
@@ -3326,9 +3272,6 @@ importers:
       '@swc/core':
         specifier: 1.16.22
         version: 1.16.22(@swc/helpers@0.5.23)
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -3450,9 +3393,6 @@ importers:
       ajv:
         specifier: 8.20.0
         version: 8.20.0
-      copyfiles:
-        specifier: 2.4.1
-        version: 2.4.1
       vitest:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
@@ -8931,9 +8871,6 @@ packages:
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
 
-  cliui@7.0.4:
-    resolution: {integrity: sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==}
-
   cliui@8.0.1:
     resolution: {integrity: sha512-BSeNnyus75C4//NQ9gQt1/csTXyo/8Sb+afLAkzAptFuMsod9HFokGNudZpi/oQV73hnVK+sR+5PVRMd+Dr7YQ==}
     engines: {node: '>=12'}
@@ -9099,10 +9036,6 @@ packages:
   cookie@0.7.2:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
-
-  copyfiles@2.4.1:
-    resolution: {integrity: sha512-fereAvAvxDrQDOXybk3Qu3dPbOoKoysFMWtkY3mv5BsL8//OSZVL5DCLYqgRfY5cWirgRzlC+WSrxp6Bo3eNZg==}
-    hasBin: true
 
   core-js-compat@3.50.0:
     resolution: {integrity: sha512-XGpFGbMLHwSt74YLTKho7Ib242qi6O8MSX+sRokV4oz7iKXvQWGYZthjIhjRGMxjzVkAubBO512dKGYcefmX3Q==}
@@ -11015,9 +10948,6 @@ packages:
     resolution: {integrity: sha512-e6rvdUCiQCAuumZslxRJWR/Doq4VpPR82kqclvcS0efgt430SlGIk05vdCN58+VrzgtIcfNODjozVielycD4Sw==}
     engines: {node: '>=16'}
 
-  isarray@0.0.1:
-    resolution: {integrity: sha512-D2S+3GLxWH+uhrNEcoh/fnmYeP8E8/zHl644d/jdA0g2uyXvy3sb0qxotE+ne0LtccHknQzWwZEzhak7oJ0COQ==}
-
   isarray@1.0.0:
     resolution: {integrity: sha512-VLghIWNM6ELQzo7zwmcg0NmTVyWKYjvIeM83yjp0wRDTmUnrM678fQbcKBo6n2CJEF0szoG//ytg+TKla89ALQ==}
 
@@ -12075,11 +12005,6 @@ packages:
     resolution: {integrity: sha512-KZxYo1BUkWD2TVFLr0MQoM8vUUigWD3LlD83a/75BqC+4qE0Hb1Vo5v1FgcfaNXvfXzr+5EhQ6ing/CaBijTlw==}
     engines: {node: '>= 18'}
 
-  mkdirp@1.0.4:
-    resolution: {integrity: sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   mlly@1.8.2:
     resolution: {integrity: sha512-d+ObxMQFmbt10sretNDytwt85VrbkhhUA/JBGm1MPaWJ65Cl4wOgLaB1NYvJSZ0Ef03MMEU/0xpPMXUIQ29UfA==}
 
@@ -12294,9 +12219,6 @@ packages:
     resolution: {integrity: sha512-jakjZi93UtB3jHMWsXL68FXSAosbLfY0In5gtKq3niLSkrWznrVBzXFNOEMJUfc9+Ke7SHWoAZsiMkNP3vq6Jw==}
     engines: {node: '>=10'}
     hasBin: true
-
-  noms@0.0.0:
-    resolution: {integrity: sha512-lNDU9VJaOPxUmXcLb+HQFeUgQQPtMI24Gt6hgfuMHRJgMRHMF/qZ4HJD3GDru4sSw9IQl2jPjAYnQrdIeLbwow==}
 
   nopt@8.1.0:
     resolution: {integrity: sha512-ieGu42u/Qsa4TFktmaKEwM6MQH0pOWnaB3htzh0JRtx84+Mebc0cbZYN5bC+6WTZ4+77xrL9Pn5m7CV6VIkV7A==}
@@ -13164,9 +13086,6 @@ packages:
     resolution: {integrity: sha512-rSOKNYUmaxy0om1BNjMN4ezNT6VKK+2xF4GBhc81mkH7L60i6dp8qPYrkndNLT3QPphoII3maL9PVC9XmhHwVQ==}
     engines: {node: '>=0.8'}
 
-  readable-stream@1.0.34:
-    resolution: {integrity: sha512-ok1qVCJuRkNmvebYikljxJA/UEsKwLl2nI1OmaqAu4/UE+h0wKCHok4XkL/gvi39OacXvw59RJUOFUkDib2rHg==}
-
   readable-stream@2.3.7:
     resolution: {integrity: sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==}
 
@@ -13660,9 +13579,6 @@ packages:
     resolution: {integrity: sha512-ZbmZM0JCihQN91dWnxoipT2KOEyHqEyfRXUyjuRhW8b/xnqPDoq4gWEVApTVa9db2wN8mmoikgFBbjh71+cGeQ==}
     engines: {node: '>=20'}
 
-  string_decoder@0.10.31:
-    resolution: {integrity: sha512-ev2QzSzWPYmy9GuqfIVildA4OdcGLeFZQrq5ys6RtiuF+RQQiZWr8TZNyAcuVXyQRYfEO+MsoB/1BuQVhOJuoQ==}
-
   string_decoder@1.1.1:
     resolution: {integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==}
 
@@ -13927,9 +13843,6 @@ packages:
     resolution: {integrity: sha512-nt6AMGKW1p/70DF/hGBdJB57B8Tspmbp5gfJ8ilhLnt7kkr2ye7hzD6NVG8GGErk2HWF34igrL2CXmNIkzKqKw==}
     engines: {node: '>=18'}
 
-  through2@2.0.5:
-    resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
-
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
 
@@ -14183,10 +14096,6 @@ packages:
 
   unrs-resolver@1.13.0:
     resolution: {integrity: sha512-mcPQo9Vm6kXd84d/WqMiYBi2CcA57QHBX/ev5PoUEb8b2oQzUvJ6xYsfseQblnCncgnVmCZGWiFwK7KkS5JZJA==}
-
-  untildify@4.0.0:
-    resolution: {integrity: sha512-KK8xQ1mkzZeg9inewmFVDNkg3l5LUhoq9kN6iWYB/CC9YMG8HA+c1Q8HwDe6dEX7kErrEVNVBO3fWsVq5iDgtw==}
-    engines: {node: '>=8'}
 
   update-browserslist-db@1.3.4:
     resolution: {integrity: sha512-t8wonIOdQyOjtPd2VktlBu6QjTVTks6v8bSi7kd0r2Vll8TK1JYDZtRRdbmCHOAMphkZgrzK+L+vXK4pyZ8t4A==}
@@ -14579,10 +14488,6 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  yargs-parser@20.2.9:
-    resolution: {integrity: sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==}
-    engines: {node: '>=10'}
-
   yargs-parser@21.1.1:
     resolution: {integrity: sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==}
     engines: {node: '>=12'}
@@ -14590,10 +14495,6 @@ packages:
   yargs-parser@22.0.0:
     resolution: {integrity: sha512-rwu/ClNdSMpkSrUb+d6BRsSkLUq1fmfsY6TOpYzTwvwkg1/NRG85KBy3kq++A8LKQwX6lsu+aWad+2khvuXrqw==}
     engines: {node: ^20.19.0 || ^22.12.0 || >=23}
-
-  yargs@16.2.0:
-    resolution: {integrity: sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==}
-    engines: {node: '>=10'}
 
   yargs@17.7.3:
     resolution: {integrity: sha512-GZtjxm/J/4TSxuL3FNYjCmLktBTnIw/rVmKSIyKeYAZpmJB2ig9VauCC5xsa82GNKVKDAqpOn3KVzNt0zmrU0g==}
@@ -20697,12 +20598,6 @@ snapshots:
 
   client-only@0.0.1: {}
 
-  cliui@7.0.4:
-    dependencies:
-      string-width: 4.2.3
-      strip-ansi: 6.0.1
-      wrap-ansi: 7.0.0
-
   cliui@8.0.1:
     dependencies:
       string-width: 4.2.3
@@ -20836,16 +20731,6 @@ snapshots:
   cookie-signature@1.2.2: {}
 
   cookie@0.7.2: {}
-
-  copyfiles@2.4.1:
-    dependencies:
-      glob: 7.2.3
-      minimatch: 3.1.5
-      mkdirp: 1.0.4
-      noms: 0.0.0
-      through2: 2.0.5
-      untildify: 4.0.0
-      yargs: 16.2.0
 
   core-js-compat@3.50.0:
     dependencies:
@@ -22957,8 +22842,6 @@ snapshots:
     dependencies:
       is-inside-container: 1.0.0
 
-  isarray@0.0.1: {}
-
   isarray@1.0.0: {}
 
   isexe@2.0.0: {}
@@ -24665,8 +24548,6 @@ snapshots:
     dependencies:
       minipass: 7.1.3
 
-  mkdirp@1.0.4: {}
-
   mlly@1.8.2:
     dependencies:
       acorn: 8.19.0
@@ -24879,11 +24760,6 @@ snapshots:
       supports-color: 5.5.0
       touch: 3.1.1
       undefsafe: 2.0.5
-
-  noms@0.0.0:
-    dependencies:
-      inherits: 2.0.4
-      readable-stream: 1.0.34
 
   nopt@8.1.0:
     dependencies:
@@ -25813,13 +25689,6 @@ snapshots:
     dependencies:
       mute-stream: 0.0.8
 
-  readable-stream@1.0.34:
-    dependencies:
-      core-util-is: 1.0.3
-      inherits: 2.0.4
-      isarray: 0.0.1
-      string_decoder: 0.10.31
-
   readable-stream@2.3.7:
     dependencies:
       core-util-is: 1.0.3
@@ -26427,8 +26296,6 @@ snapshots:
       get-east-asian-width: 1.6.0
       strip-ansi: 7.2.0
 
-  string_decoder@0.10.31: {}
-
   string_decoder@1.1.1:
     dependencies:
       safe-buffer: 5.1.2
@@ -26744,11 +26611,6 @@ snapshots:
 
   throttleit@2.1.0: {}
 
-  through2@2.0.5:
-    dependencies:
-      readable-stream: 2.3.7
-      xtend: 4.0.2
-
   through@2.3.8: {}
 
   tildify@2.0.0: {}
@@ -27019,8 +26881,6 @@ snapshots:
       '@unrs/resolver-binding-win32-arm64-msvc': 1.13.0
       '@unrs/resolver-binding-win32-ia32-msvc': 1.13.0
       '@unrs/resolver-binding-win32-x64-msvc': 1.13.0
-
-  untildify@4.0.0: {}
 
   update-browserslist-db@1.3.4(browserslist@4.29.5):
     dependencies:
@@ -27448,21 +27308,9 @@ snapshots:
 
   yaml@2.9.1: {}
 
-  yargs-parser@20.2.9: {}
-
   yargs-parser@21.1.1: {}
 
   yargs-parser@22.0.0: {}
-
-  yargs@16.2.0:
-    dependencies:
-      cliui: 7.0.4
-      escalade: 3.2.0
-      get-caller-file: 2.0.5
-      require-directory: 2.1.1
-      string-width: 4.2.3
-      y18n: 5.0.8
-      yargs-parser: 20.2.9
 
   yargs@17.7.3:
     dependencies:
