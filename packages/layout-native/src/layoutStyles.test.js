@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import layoutStyles from './layoutStyles.js';
 
 test('layoutStyles lays a block out full width in a wrapping row by default', () => {

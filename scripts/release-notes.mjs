@@ -171,6 +171,8 @@ function hasRealChanges(content) {
     if (trimmed.startsWith('Updated dependencies')) continue;
     // Skip lines that are just "@lowdefy/package@version"
     if (trimmed.match(/^@?[\w/-]+@\d+\.\d+\.\d+$/)) continue;
+    // Changesets v3 writes this under a version a package got only from the fixed group
+    if (trimmed === 'No changes in this release.') continue;
     // Anything else is a real change
     return true;
   }
@@ -281,7 +283,7 @@ function parseChangesetEntries(content) {
       continue;
     }
     // Skip package@version lines (dependency list items)
-    if (line.match(/^\s+- @?[\w/-]+@\d+\.\d+\.\d+$/)) continue;
+    if (line.match(/^\s*- @?[\w/-]+@\d+\.\d+\.\d+$/)) continue;
 
     // New changeset entry: `- {hash}: {description}`
     const entryMatch = line.match(/^- ([a-f0-9]{7,}): (.+)/);
@@ -446,7 +448,7 @@ function stripDependencyLines(content) {
     .split('\n')
     .filter((line) => {
       if (line.match(/^- Updated dependencies/)) return false;
-      if (line.match(/^\s+- @?[\w/-]+@\d+\.\d+\.\d+$/)) return false;
+      if (line.match(/^\s*- @?[\w/-]+@\d+\.\d+\.\d+$/)) return false;
       return true;
     })
     .join('\n');

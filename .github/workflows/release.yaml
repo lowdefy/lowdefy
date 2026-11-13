@@ -78,22 +78,22 @@ jobs:
 
       - run: pnpm i --frozen-lockfile
 
+      # v2 of the action needs Changesets CLI v3 (v1 is for CLI v2). It authenticates with
+      # the workflow's GITHUB_TOKEN by default and pushes the release commit through the
+      # GitHub API. With no publish-script it never publishes, tags or creates releases.
       - name: Create Release Pull Request
         id: changesets
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          version: pnpm release:version
-          createGithubReleases: false
-          commit: 'chore: Publish new release'
-          title: 'Publish new release'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          version-script: pnpm release:version
+          commit-message: 'chore: Publish new release'
+          pr-title: 'Publish new release'
 
       - name: Summary
-        if: steps.changesets.outputs.pullRequestNumber
+        if: steps.changesets.outputs.pr-number
         run: |
           echo "Nothing was published. This push opened or updated the release pull request:" >> "$GITHUB_STEP_SUMMARY"
-          echo "${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.changesets.outputs.pullRequestNumber }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.changesets.outputs.pr-number }}" >> "$GITHUB_STEP_SUMMARY"
 
   # The complete path (test-complete.yml): the full OS and Node matrix and the slow
   # suites. Runs only on a publish push; the Release PR from develop into main runs it
@@ -127,9 +127,9 @@ jobs:
       - name: Upgrade npm for OIDC trusted publishing
         run: npm install -g npm@latest
 
-      # Attempt the publish, but do not trust its exit code: `changeset publish` fails on
-      # versions that already exist, which is a success condition on a re-run. The verify
-      # step below is the real gate.
+      # Attempt the publish, but do not trust its exit code: `changeset publish` exits non-zero
+      # when any one package fails, after publishing the rest, and skips versions already on
+      # npm, which is what a re-run sees. The verify step below is the real gate.
       - name: Publish to npm
         run: pnpm release:publish || true
         env:

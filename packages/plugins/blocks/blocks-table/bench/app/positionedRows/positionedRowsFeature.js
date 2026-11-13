@@ -14,8 +14,14 @@
   limitations under the License.
 */
 
-function devToolsHandler(c) {
-  return c.json({ directories: { config: process.env.LOWDEFY_DIRECTORY_CONFIG } });
-}
+import usePositionedRows from './usePositionedRows.js';
 
-export default devToolsHandler;
+// The benchmark's comparison row window (strategy `positioned`), with TanStack Virtual. BenchTable
+// passes it to the Table as `rowWindowFeature`; it lives here so TanStack Virtual stays a
+// devDependency of the published block.
+const positionedRowsFeature = {
+  name: 'positionedRows',
+  useGridFeature: usePositionedRows,
+};
+
+export default positionedRowsFeature;

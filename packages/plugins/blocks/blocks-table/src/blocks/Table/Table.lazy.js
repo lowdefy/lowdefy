@@ -26,7 +26,7 @@ function Table(props) {
   const features = useFeatureSet({
     content: props.content,
     properties: props.properties,
-    rowWindowStrategy: props.rowWindowStrategy,
+    rowWindowFeature: props.rowWindowFeature,
   });
   return React.createElement(TableRoot, { ...props, features, key: features.signature });
 }

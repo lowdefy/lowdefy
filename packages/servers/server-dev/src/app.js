@@ -32,7 +32,6 @@ import cronHandler from './routes/cron.js';
 import detachedHandler from './routes/detached.js';
 import devInspectHandler from './routes/devInspect.js';
 import devRecordingHandler from './routes/devRecording.js';
-import devToolsHandler from './routes/devTools.js';
 import endpointsHandler from './routes/endpoints.js';
 import getAuth from '../lib/server/auth/getAuth.js';
 import getStrategies from '../lib/server/auth/getStrategies.js';
@@ -117,9 +116,6 @@ function createApp() {
   // No api context: SSE/health routes had no apiWrapper before.
   app.get('/api/reload', reloadHandler);
   app.get('/api/ping', pingAndWarmUpDocs);
-  // Dev tools, refused from other machines (localDevToolsOnly).
-  app.use('/api/dev-tools', localDevToolsOnly());
-  app.get('/api/dev-tools', devToolsHandler);
 
   const mockUser = getMockUser();
   if (authJson.configured === true && !mockUser) {

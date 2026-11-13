@@ -128,7 +128,7 @@ The groups are lists of globs at the top of `eslint.config.mjs`:
 | Shared (engine, operators, helpers, servers' `lib/`, anything not listed)             | browser and Node's ES module globals            |
 | CommonJS (`*.cjs`, the shell's root files and `native/`)                              | Node with `require`, `module`, `__dirname`      |
 | Vitest tests (`*.test.*`, `test/`, `tests/`, `test-utils/`, `__mocks__/`)             | browser and Node; vitest functions are imported |
-| Jest tests (the five React Native packages)                                           | Jest and Node                                   |
+| Jest tests (shell, client-native, blocks-native)                                      | Jest and Node                                   |
 | Playwright e2e (`e2e/`, `*.e2e.spec.js`, e2e-utils, the table bench)                  | browser and Node (`page.evaluate` callbacks)    |
 
 Browser code may read `process.env.NODE_ENV`, which Vite replaces at build time; any other

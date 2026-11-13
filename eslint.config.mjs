@@ -142,8 +142,6 @@ export default [
       'app/',
       'modules/',
       'docs/superpowers/',
-      // The VS Code extension is being removed (LDF-961).
-      'packages/ides/',
     ],
   },
   js.configs.recommended,
@@ -257,12 +255,10 @@ export default [
   {
     files: [
       'packages/client-native/**/*.test.js',
-      'packages/layout-native/**/*.test.js',
       'packages/plugins/blocks/blocks-native/**/*.test.js',
       'packages/shell/fixtures/**/*.test.js',
       'packages/shell/src/**/*.test.js',
       'packages/shell/src/test/**',
-      'packages/utils/style-native/**/*.test.js',
       '**/__mocks__/**',
     ],
     languageOptions: { globals: { ...globals.jest, ...globals.node } },
