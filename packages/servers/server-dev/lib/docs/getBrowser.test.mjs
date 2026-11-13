@@ -21,6 +21,8 @@ import path from 'path';
 import { Hono } from 'hono';
 import { vi, afterAll, afterEach, expect, test } from 'vitest';
 
+import getHeadlessUser from '../server/auth/getHeadlessUser.js';
+
 const mockLaunch = vi.fn();
 vi.doMock('playwright-core', () => ({
   chromium: { launch: mockLaunch },
@@ -82,9 +84,15 @@ function createBrowser() {
   };
 }
 
+// Reads the cookie back through the dev server's own reader, so these tests
+// also check that what the headless browser writes passes signature checks.
 function decodeCallerCookie(addCookies) {
   const [[[cookie]]] = addCookies.mock.calls;
-  return JSON.parse(Buffer.from(cookie.value, 'base64').toString());
+  expect(cookie.httpOnly).toBe(true);
+  const cookieHeader = `${cookie.name}=${cookie.value}`;
+  return getHeadlessUser({
+    req: { header: (name) => (name === 'cookie' ? cookieHeader : undefined) },
+  });
 }
 
 function decodeUserCookie(addCookies) {
