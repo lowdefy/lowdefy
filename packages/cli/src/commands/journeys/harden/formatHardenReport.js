@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import anchorGroup from './anchorGroup.js';
 import formatDuration from './formatDuration.js';
 
@@ -40,7 +42,15 @@ function plural({ count, word }) {
 // each with the journeys that passed anyway; then unapplied mutants with
 // their misses, a defect in harden rather than a gap in the journeys; then
 // each journey's score; then the summary line.
-function formatHardenReport({ score, baselines, sampled, notExercised, rebuilds, durationMs }) {
+function formatHardenReport({
+  score,
+  baselines,
+  headlessPairs = null,
+  sampled,
+  notExercised,
+  rebuilds,
+  durationMs,
+}) {
   const names = new Map(baselines.map(({ key, name }) => [key, name]));
   const lines = [];
   const survivors = score.mutants.filter(({ status }) => status === 'survived');
@@ -82,6 +92,10 @@ function formatHardenReport({ score, baselines, sampled, notExercised, rebuilds,
   ];
   if (count('changed') > 0) {
     parts.push(`${count('changed')} changed during run`);
+  }
+  // A --headless run says how many pairs ran without a browser.
+  if (!type.isNull(headlessPairs)) {
+    parts.push(`${headlessPairs.headless} pairs headless, ${headlessPairs.browser} in the browser`);
   }
   parts.push(plural({ count: rebuilds, word: 'rebuild' }), formatDuration(durationMs));
   lines.push(parts.join(' · '));

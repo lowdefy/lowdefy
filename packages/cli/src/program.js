@@ -358,6 +358,12 @@ journeys
   .addOption(new Option('--mutant <id>', 'Run only this mutant, against the journeys on its path.'))
   .addOption(new Option('--list', 'List the sampled mutants and the time estimate, run nothing.'))
   .addOption(new Option('--json', 'Print the report as JSON.'))
+  .addOption(
+    new Option(
+      '--headless',
+      'Run each journey that needs no browser, and its mutant pairs, headless on the dev server; the rest run in the browser.'
+    )
+  )
   .addOption(options.port)
   .addOption(options.refResolver)
   .addOption(

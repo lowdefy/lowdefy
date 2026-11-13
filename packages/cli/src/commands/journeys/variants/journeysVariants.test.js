@@ -92,6 +92,8 @@ beforeEach(() => {
   context = {
     directories: {
       config: configDirectory,
+      build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
       journeys: journeysPath(),
       test: path.join(configDirectory, '.lowdefy', 'test'),
     },
@@ -138,6 +140,7 @@ test('journeysVariants --no-run measures the journey once, writes the variants a
   expect(logs.info.filter((line) => line.startsWith('SKIPPED'))).toEqual([
     'SKIPPED  role: the journey declares no data: set',
     'SKIPPED  role: the journey declares no data: set',
+    'SKIPPED  tenant: the journey declares no data: set',
     'SKIPPED  tenant: the journey declares no data: set',
     'SKIPPED  empty: pass --empty-data <data set> to write it',
     'SKIPPED  volume: pass --volume-data <data set> to write it',

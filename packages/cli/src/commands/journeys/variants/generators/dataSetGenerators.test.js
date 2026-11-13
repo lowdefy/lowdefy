@@ -18,6 +18,7 @@ import empty from './empty.js';
 import roleGranted from './roleGranted.js';
 import roleRefused from './roleRefused.js';
 import tenant from './tenant.js';
+import tenantCalls from './tenantCalls.js';
 import volume from './volume.js';
 import { expect, test } from 'vitest';
 
@@ -254,4 +255,115 @@ test('empty and volume are skipped without their flag or when the set lacks the 
   expect(
     empty({ journey: { ...journey, user: { roles: ['member'] } }, dataSet, emptyDataSet })
   ).toEqual({ skipped: "the journey's user is not a data set user name" });
+});
+
+test('roleRefused writes neither form when the app keeps an access table snapshot', () => {
+  const pageConfigsMemberOnly = [
+    { blockId: 'tickets', auth: { public: false, roles: ['member'] } },
+  ];
+  expect(
+    roleRefused({
+      journey,
+      dataSet,
+      pageConfigs: pageConfigsMemberOnly,
+      exercised: { requests: [{ pageId: 'tickets', requestId: 'get_tickets', write: false }] },
+      accessSnapshot: 'tests/endpoints/access.test.mjs.snapshot',
+    })
+  ).toEqual({
+    skipped:
+      'the access table snapshot (tests/endpoints/access.test.mjs.snapshot) already answers who reaches page "tickets"',
+  });
+});
+
+const closeTicket = {
+  ...journey,
+  steps: [{ click: 'close_button' }, { wait: { request: 'close_ticket' } }],
+};
+
+const closeExercised = {
+  requests: [
+    { pageId: 'tickets', requestId: 'close_ticket', write: true },
+    { pageId: 'tickets', requestId: 'get_tickets', write: false },
+  ],
+  endpoints: [{ endpointId: 'notify', write: true }],
+};
+
+const closeCalls = [
+  {
+    actor: 'main',
+    kind: 'request',
+    pageId: 'tickets',
+    requestId: 'get_tickets',
+    payload: { id: 't2' },
+  },
+  {
+    actor: 'main',
+    kind: 'request',
+    pageId: 'tickets',
+    requestId: 'close_ticket',
+    payload: { ticket: { id: 't2' }, status: 'closed' },
+  },
+  { actor: 'main', kind: 'endpoint', endpointId: 'notify', payload: { message: 'closed' } },
+];
+
+test('tenantCalls sends each write the page sent as an outsider and checks the named row is unchanged', () => {
+  expect(
+    tenantCalls({
+      journey: closeTicket,
+      dataSet,
+      exercised: closeExercised,
+      calls: closeCalls,
+      collections: { tickets: 'tickets' },
+    })
+  ).toEqual([
+    {
+      kind: 'tenant',
+      detail: 'writes sent as outsider of org_b',
+      overrides: {
+        user: 'outsider',
+        pageId: undefined,
+        pathParams: undefined,
+        urlQuery: undefined,
+      },
+      steps: [
+        {
+          request: {
+            pageId: 'tickets',
+            requestId: 'close_ticket',
+            payload: { ticket: { id: 't2' }, status: 'closed' },
+          },
+        },
+        {
+          expect: {
+            db: {
+              collection: 'tickets',
+              connectionId: 'tickets',
+              match: { _id: 't2' },
+              equals: [
+                { _id: 't2', organizationId: 'org_a', title: 'Broken chair', status: 'open' },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  ]);
+});
+
+test('tenantCalls is skipped without a headless run, or when no write names an insider row', () => {
+  expect(
+    tenantCalls({ journey: closeTicket, dataSet, exercised: closeExercised, collections: {} })
+  ).toEqual({
+    skipped:
+      'the call form replays the payloads a headless run records, and this journey needs a browser',
+  });
+  expect(
+    tenantCalls({
+      journey: closeTicket,
+      dataSet,
+      exercised: closeExercised,
+      calls: closeCalls.slice(2),
+      collections: { tickets: 'tickets' },
+    })
+  ).toEqual({ skipped: 'no write the journey sent names a org_a fixture row' });
 });

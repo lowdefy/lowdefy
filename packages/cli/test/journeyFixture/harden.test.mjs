@@ -241,3 +241,57 @@ fixtureTest(
     }
   }
 );
+
+function verdictsOf({ report, file }) {
+  return Object.fromEntries(
+    report.mutants
+      .map((mutant) => [mutant.describe, mutant.ranBy.find((run) => run.file === file)?.verdict])
+      .filter(([, verdict]) => verdict !== undefined)
+  );
+}
+
+fixtureTest(
+  'harden --headless gives a headless journey the verdicts a browser run gives it, and runs save.yaml in the browser',
+  async () => {
+    const journeys = path.join(configDirectory, 'tests', 'journeys');
+    const headlessFile = 'tests/journeys/_headless/save.yaml';
+    const args = [
+      'journeys',
+      'harden',
+      '--config-directory',
+      configDirectory,
+      '--url',
+      fixtureUrl,
+      '--operators',
+      'drop-action',
+      '--json',
+      '--log-level',
+      'error',
+    ];
+    const browserRun = await runCli([...args, path.join(journeys, '_headless', 'save.yaml')]);
+    expect(browserRun.code).toBe(0);
+    const headlessRun = await runCli([
+      ...args,
+      '--headless',
+      path.join(journeys, '_headless', 'save.yaml'),
+      path.join(journeys, 'save.yaml'),
+    ]);
+    expect(headlessRun.stderr).toBe('');
+    expect(headlessRun.code).toBe(0);
+    const browserReport = JSON.parse(browserRun.stdout);
+    const headlessReport = JSON.parse(headlessRun.stdout);
+    const browserVerdicts = verdictsOf({ report: browserReport, file: headlessFile });
+    expect(Object.values(browserVerdicts)).toContain('killed');
+    expect(verdictsOf({ report: headlessReport, file: headlessFile })).toEqual(browserVerdicts);
+    expect(headlessReport.journeys.map(({ file }) => file).sort()).toEqual([
+      'tests/journeys/_headless/save.yaml',
+      'tests/journeys/save.yaml',
+    ]);
+    // save.yaml checks text, so its pairs ran in the browser; the headless journey's ran headless.
+    expect(headlessReport.pairs).toEqual({
+      headless: Object.keys(verdictsOf({ report: headlessReport, file: headlessFile })).length,
+      browser: Object.keys(verdictsOf({ report: headlessReport, file: 'tests/journeys/save.yaml' }))
+        .length,
+    });
+  }
+);

@@ -15,14 +15,16 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { relativePosixPath } from '@lowdefy/node-utils';
+import { classifyJourney, relativePosixPath } from '@lowdefy/node-utils';
 
 import discoverJourneys from '../../test/discoverJourneys.js';
 import expandPersonas from '../../test/expandPersonas.js';
 import fetchBuildId from '../../test/fetchBuildId.js';
 import fetchVariantInputs from './fetchVariantInputs.js';
+import findAccessTableSnapshot from './findAccessTableSnapshot.js';
 import formatJourneyResult from '../../test/formatJourneyResult.js';
 import generators, { KINDS } from './generators/index.js';
+import readConnectionCollections from './readConnectionCollections.js';
 import readExercised from '../../test/readExercised.js';
 import readVariantDataSets from './readVariantDataSets.js';
 import resolveJourneyPaths from '../../test/resolveJourneyPaths.js';
@@ -96,10 +98,24 @@ function selectJourney({ context }) {
   return { item };
 }
 
+function isHeadless(journey) {
+  return classifyJourney({ journey }).headless;
+}
+
 // The journey's newest measured path, or a fresh baseline run's. A journey
-// with a list of users is measured by its first user's persona run.
-async function readOrMeasure({ context, item: journeyItem, url }) {
+// with a list of users is measured by its first user's persona run. When the
+// tenant call form can use them (`withCalls`: the tenant kind, a data set and
+// a journey that needs no browser), the journey is run afresh, headless: that
+// run records the calls its pages made with their payloads (calls). One the
+// runner then finds needs a browser is read as below.
+async function readOrMeasure({ context, item: journeyItem, url, withCalls }) {
   const [item] = expandPersonas({ item: journeyItem });
+  if (withCalls && isHeadless(item.journey)) {
+    const headless = await runJourney({ item, url, headless: true });
+    if (type.isUndefined(headless.browserOnly)) {
+      return recordMeasured({ context, item, url, result: headless });
+    }
+  }
   const entry = readExercised({
     directories: context.directories,
     file: relativePosixPath({ from: context.directories.config, to: item.filePath }),
@@ -108,7 +124,12 @@ async function readOrMeasure({ context, item: journeyItem, url }) {
   if (!type.isNone(entry)) {
     return { exercised: entry.exercised };
   }
-  const result = await runJourney({ item, url });
+  return recordMeasured({ context, item, url, result: await runJourney({ item, url }) });
+}
+
+// A fresh baseline run: refused when it failed, else kept in exercised.json and returned with
+// the calls it recorded (a headless run's).
+async function recordMeasured({ context, item, url, result }) {
   if (!result.passed) {
     return { error: `The journey fails (${result.message}): replay it with lowdefy test first.` };
   }
@@ -117,7 +138,7 @@ async function readOrMeasure({ context, item: journeyItem, url }) {
     results: [{ ...result, journey: item.journey, newestPassed: true }],
     buildId: await fetchBuildId({ url }),
   });
-  return { exercised: result.exercised };
+  return { exercised: result.exercised, calls: result.calls };
 }
 
 // Runs each kind's generators. A generator returns its variants, or
@@ -172,8 +193,9 @@ function reportFile({ context, file }) {
   }
 }
 
-async function replay({ context, written, url }) {
-  const suite = { run: runJourney };
+// A variant of a journey that needs no browser is replayed headless when it needs none either,
+// and so is a page-less variant (the call forms); the rest replay in the browser.
+async function replay({ context, written, url, sourceHeadless }) {
   for (const file of written) {
     const relative = relativePosixPath({ from: context.directories.config, to: file.path });
     if (file.placeholder) {
@@ -185,6 +207,11 @@ async function replay({ context, written, url }) {
     // A variant of a journey with a list of users keeps the list, so it
     // replays once per user.
     const [variantItem] = discoverJourneys({ context, paths: [file.path] });
+    const headless =
+      type.isObject(variantItem.journey) &&
+      isHeadless(variantItem.journey) &&
+      (sourceHeadless || type.isUndefined(variantItem.journey.pageId));
+    const suite = { run: (params) => runJourney({ ...params, headless }) };
     for (const item of expandPersonas({ item: variantItem })) {
       const result = await runRepeated({ suite, context, item, url, repeat: REPLAYS });
       const log = result.passed ? context.logger.info : context.logger.error;
@@ -231,7 +258,12 @@ async function journeysVariants({ context }) {
     throw error;
   }
   try {
-    const measured = await readOrMeasure({ context, item, url: server.url });
+    const measured = await readOrMeasure({
+      context,
+      item,
+      url: server.url,
+      withCalls: kinds.includes('tenant') && !type.isNone(item.journey.data),
+    });
     if (measured.error) {
       refuse({ context, message: measured.error });
       return;
@@ -246,7 +278,13 @@ async function journeysVariants({ context }) {
       kinds,
       journey: item.journey,
       exercised: measured.exercised,
-      inputs: { ...inputs, ...dataSets },
+      inputs: {
+        ...inputs,
+        ...dataSets,
+        accessSnapshot: findAccessTableSnapshot({ configDirectory: context.directories.config }),
+        calls: measured.calls,
+        collections: readConnectionCollections({ context }),
+      },
     });
     const files = writeVariantFiles({
       directories: context.directories,
@@ -258,7 +296,12 @@ async function journeysVariants({ context }) {
     files.forEach((file) => reportFile({ context, file }));
     if (context.options.run !== false) {
       const candidates = files.filter(({ status }) => status === 'written' || status === 'kept');
-      await replay({ context, written: candidates, url: server.url });
+      await replay({
+        context,
+        written: candidates,
+        url: server.url,
+        sourceHeadless: isHeadless(item.journey),
+      });
     }
   } finally {
     try {

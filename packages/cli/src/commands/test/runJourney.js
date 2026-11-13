@@ -117,6 +117,10 @@ async function runJourney({ context, item, url, recordRun, mutant, headless = fa
       exercised: result.exercised,
       mutant: result.mutant,
     };
+    // A headless run records the calls its pages made, with their payloads.
+    if (!type.isNone(result.calls)) {
+      passed.calls = result.calls;
+    }
     // Evidence is read from the file for the PASS line; it is never sent to
     // the dev server.
     if (!type.isNone(journey.evidence)) {

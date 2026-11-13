@@ -46,8 +46,15 @@ function refusedCalls({ exercised, journey, name }) {
 // the first block the journey targets. The /404 check comes first, because
 // expect.hidden alone also passes on a page that never loaded. With a
 // measured run, the requests of the page it called are refused to that user
-// too (refusedCalls).
-function roleRefused({ journey, dataSet, exercised, pageConfigs }) {
+// too (refusedCalls). Neither form is written when the app keeps an access
+// table snapshot (role-refused-calls-without-snapshot): the snapshot already
+// answers who reaches the page, and its requests share the page's gate.
+function roleRefused({ journey, dataSet, exercised, pageConfigs, accessSnapshot }) {
+  if (!type.isNone(accessSnapshot)) {
+    return {
+      skipped: `the access table snapshot (${accessSnapshot}) already answers who reaches page "${journey.pageId}"`,
+    };
+  }
   if (type.isNone(dataSet)) {
     return { skipped: 'the journey declares no data: set' };
   }

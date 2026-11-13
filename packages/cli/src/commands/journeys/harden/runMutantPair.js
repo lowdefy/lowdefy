@@ -26,7 +26,8 @@ import toVerdict from './toVerdict.js';
 // node's hash go with its key: a page the dev server rebuilt since the listing
 // has new keys, and the node is found by its pointer. A 409 stale, or a build id
 // that changed during the run, discards the verdict: the run may have mutated
-// another node. A runner error is retried once.
+// another node. A runner error is retried once. A journey whose baseline ran
+// headless runs its pairs headless too.
 async function runMutantPair({ pair, url, buildId }) {
   const { mutant, baseline } = pair;
   const target = findOnPathCopy({ mutant, exercised: baseline.exercised }) ?? mutant;
@@ -41,7 +42,12 @@ async function runMutantPair({ pair, url, buildId }) {
   };
   let outcome;
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const result = await runJourney({ item: baseline.item, url, mutant: body });
+    const result = await runJourney({
+      item: baseline.item,
+      url,
+      mutant: body,
+      headless: baseline.headless === true,
+    });
     if (result.stale === true || (await fetchBuildId({ url })) !== buildId) {
       return { buildChanged: true };
     }
