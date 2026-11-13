@@ -8,7 +8,6 @@ packages:
   - apps/journey-fixture/plugins/*
 
 onlyBuiltDependencies:
-  - '@sentry/cli'
   - '@swc/core'
   - esbuild
 
@@ -30,7 +29,6 @@ ignoredBuiltDependencies:
 # allowBuilds replaces onlyBuiltDependencies in pnpm >=10.29 and pnpm 11.
 allowBuilds:
   '@parcel/watcher': false
-  '@sentry/cli': true
   '@swc/core': true
   '@vscode/vsce-sign': false
   better-sqlite3: false

@@ -37,11 +37,9 @@ import readParentWorkspace from './readParentWorkspace.js';
 // - onlyBuiltDependencies and ignoredBuiltDependencies are read by early
 //   pnpm 10 versions.
 // - allowBuilds is read by pnpm >=10.29 and pnpm 11.
-// @sentry/cli (through @sentry/vite-plugin) gets its binary from a platform
-// optional dependency; its postinstall only downloads the binary when that
-// dependency is missing, so it is skipped. mongodb-memory-server only downloads
-// a MongoDB binary in its postinstall; mongodb-memory-server-core downloads it
-// when it first starts one, so it is skipped too. better-sqlite3 ships its
+// mongodb-memory-server only downloads a MongoDB binary in its postinstall;
+// mongodb-memory-server-core downloads it when it first starts one, so it is
+// skipped. better-sqlite3 ships its
 // binaries in the package and sets gypfile: false, but pnpm before 11.28 still
 // gives it a node-gyp rebuild install script for its binding.gyp, which fails
 // where node-gyp or Python is missing, so it is skipped. Ignoring them, not
@@ -51,12 +49,10 @@ const pnpmWorkspaceYaml = `packages:
 onlyBuiltDependencies:
   - sharp
 ignoredBuiltDependencies:
-  - '@sentry/cli'
   - better-sqlite3
   - mongodb-memory-server
 allowBuilds:
   sharp: true
-  '@sentry/cli': false
   better-sqlite3: false
   mongodb-memory-server: false
 `;

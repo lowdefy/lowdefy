@@ -31,7 +31,6 @@ const YAML = createRequire(path.join(REPO_ROOT, 'packages/cli/package.json'))('y
 // starts one. better-sqlite3 ships its binaries in the package; the build pnpm
 // gives it for its binding.gyp fails where node-gyp is not installed.
 const serverAllowBuilds = {
-  '@sentry/cli': true,
   '@swc/core': true,
   'better-sqlite3': false,
   esbuild: true,
