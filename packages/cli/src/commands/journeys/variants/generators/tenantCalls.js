@@ -44,9 +44,11 @@ function listWrites(exercised) {
 
 // The insider's fixture document a payload names: the first document of the insider's
 // organization, in a connection whose collection the build names, with a string _id and a
-// top-level field equal to one of the payload's strings.
+// top-level field equal to one of the payload's strings. The organization id itself names no
+// row: every insider row holds it.
 function findNamedDocument({ collections, dataSet, organizationId, payload }) {
   const values = new Set(stringLeaves(payload));
+  values.delete(organizationId);
   for (const [connectionId, documents] of Object.entries(dataSet.fixtures)) {
     if (!type.isString(collections[connectionId])) continue;
     const document = documents.find(

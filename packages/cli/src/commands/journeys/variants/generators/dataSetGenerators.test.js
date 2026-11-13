@@ -365,6 +365,25 @@ test('tenantCalls sends each write the page sent as an outsider and checks the n
   ]);
 });
 
+test('tenantCalls finds the row a payload names, not the first row of the organization it sends', () => {
+  const [variant] = tenantCalls({
+    journey: closeTicket,
+    dataSet,
+    exercised: closeExercised,
+    calls: [
+      {
+        actor: 'main',
+        kind: 'request',
+        pageId: 'tickets',
+        requestId: 'close_ticket',
+        payload: { organizationId: 'org_a', ticket: { id: 't2' } },
+      },
+    ],
+    collections: { tickets: 'tickets' },
+  });
+  expect(variant.steps[1].expect.db.match).toEqual({ _id: 't2' });
+});
+
 test('tenantCalls is skipped without a headless run, or when no write names an insider row', () => {
   expect(
     tenantCalls({ journey: closeTicket, dataSet, exercised: closeExercised, collections: {} })
