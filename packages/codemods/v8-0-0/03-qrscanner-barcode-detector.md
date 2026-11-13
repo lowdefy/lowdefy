@@ -9,15 +9,15 @@ matches the native (mobile app) `QRScanner`, so one page config reads codes on w
 
 What changed:
 
-| Lowdefy 7                                                                 | Lowdefy 8                                                                                                                                                                    |
-| ------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `formatsToSupport: [QR_CODE, EAN_13]`                                     | `types: [qr, ean13]` (see the table below)                                                                                                                                   |
-| `disableFlip`                                                             | Removed. zxing reads mirrored codes on its own.                                                                                                                              |
-| Value `{ decodedText, result: { text, format: { formatName } } }`         | Value `{ data, type }`, for example `{ data: 'ABC-123', type: 'qr' }`                                                                                                        |
-| `onScan` had no event data                                                | `onScan` event is `{ data, type }`, the same object as the value                                                                                                             |
-| `onScan` fired on **every frame** a code was in view, many times a second | Fires **once**, then the scanner keeps no more reads until its `reset` method is called. `continuous: true` fires once per code, and again for the same code after 2 seconds |
-| A camera that could not start failed silently                             | The block shows the reason and fires `onError` with `{ error: { name, message } }`                                                                                           |
-| `fps` default 2                                                           | `fps` default 10                                                                                                                                                             |
+| Lowdefy 7                                                                 | Lowdefy 8                                                                                                                                                                               |
+| ------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `formatsToSupport: [QR_CODE, EAN_13]`                                     | `types: [qr, ean13]` (see the table below)                                                                                                                                              |
+| `disableFlip`                                                             | Removed. zxing reads mirrored codes on its own.                                                                                                                                         |
+| Value `{ decodedText, result: { text, format: { formatName } } }`         | Value `{ data, type }`, for example `{ data: 'ABC-123', type: 'qr' }`                                                                                                                   |
+| `onScan` had no event data                                                | `onScan` event is `{ data, type }`, the same object as the value                                                                                                                        |
+| `onScan` fired on **every frame** a code was in view, many times a second | Fires **once**, then the scanner keeps no more reads until its `reset` or `start` method is called. `continuous: true` fires once per code, and again for the same code after 2 seconds |
+| A camera that could not start failed silently                             | The block shows the reason and fires `onError` with `{ error: { name, message } }`                                                                                                      |
+| `fps` default 2                                                           | `fps` default 10                                                                                                                                                                        |
 
 `formatsToSupport` **never took effect** in Lowdefy 7: the block passed it where html5-qrcode
 ignored it, so every scanner read every format. Renaming or dropping its values changes nothing an
@@ -30,28 +30,29 @@ pages that use the scanned value break without an error.
 
 ## Format Names
 
-| `formatsToSupport` (Lowdefy 7) | `types` (Lowdefy 8)                                    |
-| ------------------------------ | ------------------------------------------------------ |
-| `QR_CODE`                      | `qr`                                                   |
-| `AZTEC`                        | `aztec`                                                |
-| `CODABAR`                      | `codabar`                                              |
-| `CODE_39`                      | `code39`                                               |
-| `CODE_93`                      | `code93`                                               |
-| `CODE_128`                     | `code128`                                              |
-| `DATA_MATRIX`                  | `datamatrix`                                           |
-| `ITF`                          | `itf14`                                                |
-| `EAN_13`                       | `ean13`                                                |
-| `EAN_8`                        | `ean8`                                                 |
-| `PDF_417`                      | `pdf417`                                               |
-| `UPC_A`                        | `upc_a`                                                |
-| `UPC_E`                        | `upc_e`                                                |
-| `MAXICODE`                     | `maxicode`                                             |
-| `RSS_14`                       | `databar`                                              |
-| `RSS_EXPANDED`                 | `databar_expanded`                                     |
-| `UPC_EAN_EXTENSION`            | **None.** Drop it and report it; add-ons are not read. |
+| `formatsToSupport` / `formatName` (Lowdefy 7) | `format.format` (Lowdefy 7) | `types` (Lowdefy 8)                                    |
+| --------------------------------------------- | --------------------------- | ------------------------------------------------------ |
+| `QR_CODE`                                     | 0                           | `qr`                                                   |
+| `AZTEC`                                       | 1                           | `aztec`                                                |
+| `CODABAR`                                     | 2                           | `codabar`                                              |
+| `CODE_39`                                     | 3                           | `code39`                                               |
+| `CODE_93`                                     | 4                           | `code93`                                               |
+| `CODE_128`                                    | 5                           | `code128`                                              |
+| `DATA_MATRIX`                                 | 6                           | `datamatrix`                                           |
+| `MAXICODE`                                    | 7                           | `maxicode`                                             |
+| `ITF`                                         | 8                           | `itf14`                                                |
+| `EAN_13`                                      | 9                           | `ean13`                                                |
+| `EAN_8`                                       | 10                          | `ean8`                                                 |
+| `PDF_417`                                     | 11                          | `pdf417`                                               |
+| `RSS_14`                                      | 12                          | `databar`                                              |
+| `RSS_EXPANDED`                                | 13                          | `databar_expanded`                                     |
+| `UPC_A`                                       | 14                          | `upc_a`                                                |
+| `UPC_E`                                       | 15                          | `upc_e`                                                |
+| `UPC_EAN_EXTENSION`                           | 16                          | **None.** Drop it and report it; add-ons are not read. |
 
-The same names are the values of `type` in the scanned value, so `formatName` comparisons map with
-this table too (`formatName == 'QR_CODE'` becomes `type == 'qr'`).
+The same names are the values of `type` in the scanned value, so `formatName` and `format.format`
+comparisons map with this table too (`formatName == 'QR_CODE'` and `format.format == 0` both become
+`type == 'qr'`).
 
 ## What to Do
 
@@ -80,10 +81,10 @@ and `{ data, type }`. Leave it unchanged; this step is only for web pages.
   `UPC_EAN_EXTENSION` and report it. If the list is empty afterwards, remove `types` (all types).
 - Remove `disableFlip`.
 - Add `continuous: true` unless the block's `onScan` stops the scanner (a `CallMethod` of the
-  block's own `stop` method, or one that hides or unmounts it). Lowdefy 7 never stopped on its
-  own, so `continuous: true` keeps a scanner that reads code after code working. With it each code
-  fires once instead of on every frame, so `onScan` actions that guarded against repeats (a
-  "last scanned" check) still work and can be simplified. Report each block you left single-scan.
+  block's own `stop` method, or one that hides or unmounts it; its later `start` reads again).
+  Lowdefy 7 never stopped on its own, so `continuous: true` keeps a scanner that reads code after
+  code working. With it each code fires once instead of on every frame, so `onScan` actions that
+  guarded against repeats (a "last scanned" check) still work and can be simplified. Report each block you left single-scan.
 - Keep `fps`, `qrbox`, `aspectRatio`, `facingMode` and `inactiveByDefault` as they are.
 
 ```yaml
