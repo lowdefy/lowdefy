@@ -43,11 +43,18 @@ const homePage = path.join(
 );
 
 // Posts the journey headless until `until` holds for its result, for a page edit the dev server
-// rebuilds on its next read.
+// rebuilds on its next read. It posts past postJourney's parity check: the check runs the journey
+// on a production build of the fixture, which refuses a page edited after it was built.
 async function postHeadlessUntil({ body, until }) {
   const deadline = Date.now() + 60000;
   for (;;) {
-    const result = await postJourney({ ...body, headless: true });
+    const { status, body: result } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { user: 'none', ...body, headless: true },
+    });
+    if (status !== 200) {
+      throw new Error(`Journey route answered ${status}: ${JSON.stringify(result)}`);
+    }
     if (until(result) || Date.now() > deadline) return result;
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
