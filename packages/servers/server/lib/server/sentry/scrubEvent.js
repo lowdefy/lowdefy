@@ -26,14 +26,17 @@ function returnUnchanged(value) {
 // runs, so the event hook still reaches their strings. Breadcrumbs reach
 // beforeBreadcrumb un-normalized - a console breadcrumb holds the logged arguments
 // as they are - so the walk must be cycle-safe, which mapPlainValues is.
-// An event also carries its request's credential scrub (the Sentry middleware puts it on the
+// An error event carries its request's credential scrub (the Sentry middleware puts it on the
 // request's isolation scope), which reaches the credentials that request marked when the event
-// is sent after the request's scope has ended, as a transaction is.
-function scrubEvent(value) {
-  const scrubRequestCredentials =
-    value?.sdkProcessingMetadata?.scrubRequestCredentials ?? returnUnchanged;
+// is sent after the request's credential scope has ended. A streamed span carries no scope data,
+// so scrubSpan passes the scrub its request held instead.
+function scrubEvent(value, { scrubRequestCredentials } = {}) {
+  const scrubCredentials =
+    scrubRequestCredentials ??
+    value?.sdkProcessingMetadata?.scrubRequestCredentials ??
+    returnUnchanged;
   return mapPlainValues(value, (item) =>
-    type.isString(item) ? scrubRequestCredentials(scrubSecrets(item)) : item
+    type.isString(item) ? scrubCredentials(scrubSecrets(item)) : item
   );
 }
 

@@ -23,6 +23,10 @@ import * as RealSentry from '@sentry/node';
 import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
 const secret = 'planted/secret+value=1';
+const sessionCookie = 'planted-session-cookie-0001';
+const plainCookie = 'planted-plain-cookie-0001';
+const password = 'planted-user-password';
+const clientIp = '203.0.113.79';
 
 const envelopes = [];
 function createStubTransport() {
@@ -38,7 +42,7 @@ function createStubTransport() {
 const httpIntegrations = [];
 
 // The real SDK with its network transport swapped for memory, so each test reads the exact
-// event Sentry would send, after the hooks initSentry installs.
+// events and spans Sentry would send, after the hooks initSentry installs.
 vi.doMock('@sentry/node', () => ({
   ...RealSentry,
   init: (options) => RealSentry.init({ ...options, transport: createStubTransport }),
@@ -57,7 +61,11 @@ process.env.LOWDEFY_SECRET_API_KEY = secret;
 
 const { default: initSentryServer } = await import('./initSentry.js');
 const { default: sentrySdk } = await import('./sentrySdk.js');
+const { default: sentryDataCollection } = await import('./sentryDataCollection.js');
+const { default: spanCredentialScrubs } = await import('./spanCredentialScrubs.js');
+const { default: captureSentryError } = await import('./captureSentryError.js');
 const { default: sentryMiddleware } = await import('../../../src/middleware/sentry.js');
+const { default: createErrorHandler } = await import('../../../src/middleware/errorHandler.js');
 
 const sentry = await initSentryServer();
 const client = RealSentry.getClient();
@@ -69,10 +77,29 @@ function sentEvents() {
   );
 }
 
-function sentTransactions() {
+function sentSpans() {
   return envelopes.flatMap(([, items]) =>
-    items.filter(([header]) => header.type === 'transaction').map(([, payload]) => payload)
+    items.filter(([header]) => header.type === 'span').flatMap(([, payload]) => payload.items)
   );
+}
+
+function attribute(span, key) {
+  return span.attributes?.[key]?.value;
+}
+
+// The upstream test server runs in this process, and the test's own requests to the app are
+// outgoing requests, so both are traced too, each as a segment of its own. Only the app's
+// request spans, and the spans in their segments, count.
+function serverSpans(spans) {
+  return spans.filter(
+    (span) =>
+      attribute(span, 'sentry.op') === 'http.server' &&
+      attribute(span, 'url.path').startsWith('/api/')
+  );
+}
+
+function segmentSpans(spans, root) {
+  return spans.filter((span) => attribute(span, 'sentry.segment.id') === root.span_id);
 }
 
 function listen(server) {
@@ -83,6 +110,78 @@ function listen(server) {
     }
     server.once('listening', () => resolve(server.address().port));
   });
+}
+
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function startUpstream() {
+  const upstream = http.createServer((req, res) => res.end('{}'));
+  upstream.listen(0, '127.0.0.1');
+  return { upstream, upstreamPort: await listen(upstream) };
+}
+
+function closeServer(server) {
+  return new Promise((resolve) => server.close(resolve));
+}
+
+// The middlewares the production app runs first, in its order, then a request context whose
+// handleError captures with Lowdefy's tags, as createHandleError does, and the app's error handler.
+function createTestApp({ upstreamPort, markedKey }) {
+  const app = new Hono();
+  app.use('*', (c, next) => runInCredentialScope(next));
+  app.use('*', sentryMiddleware());
+  app.use('*', (c, next) => {
+    c.set('lowdefyContext', {
+      rid: 'req-1',
+      handleError: async (error) =>
+        captureSentryError({ error, context: { rid: 'req-1', pageId: 'page-1' } }),
+    });
+    return next();
+  });
+  app.post('/api/endpoints/:endpointId', async (c) => {
+    const body = await c.req.json();
+    markCredential(markedKey);
+    // Sentry filters query parameters with sensitive names such as `key` itself, so the
+    // credential goes in one it does not, to test that Lowdefy's scrub by value reaches it.
+    await (await fetch(`http://127.0.0.1:${upstreamPort}/v1/apps?app=${markedKey}`)).text();
+    // Work the request leaves running ends after the response, outside the credential scope.
+    const late = sentry.startInactiveSpan({
+      name: 'late work',
+      attributes: { detail: `used ${markedKey}` },
+    });
+    setTimeout(() => late.end(), 30);
+    if (body.fail) {
+      throw new Error(`Endpoint failed for ${markedKey}`);
+    }
+    return c.json({ ok: true });
+  });
+  app.onError(createErrorHandler({ logger: { error: vi.fn(), warn: vi.fn() } }));
+  return app;
+}
+
+function postEndpoint({ port, markedKey, fail = false, headers = {} }) {
+  return fetch(`http://127.0.0.1:${port}/api/endpoints/create-app?ref=${markedKey}`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      cookie: `lowdefy.session_token=${sessionCookie}; theme=${plainCookie}`,
+      'x-forwarded-for': clientIp,
+      ...headers,
+    },
+    body: JSON.stringify({ email: 'user@example.com', password, fail }),
+  }).then((response) => response.text());
+}
+
+function expectNoPrivateData(sent, markedKey) {
+  const text = JSON.stringify(sent);
+  expect(text).not.toContain(markedKey);
+  expect(text).not.toContain(secret);
+  expect(text).not.toContain(sessionCookie);
+  expect(text).not.toContain(plainCookie);
+  expect(text).not.toContain(password);
+  expect(text).not.toContain(clientIp);
 }
 
 beforeEach(() => {
@@ -99,17 +198,42 @@ test('initSentry initializes Sentry when SENTRY_DSN is set and makes its SDK the
   expect(sentrySdk.current).toBe(sentry);
 });
 
-test('initSentry traces requests and keeps client reports on a long-running server', () => {
+test('initSentry streams spans and keeps client reports and module hooks on a long-running server', () => {
   expect(options.tracesSampleRate).toBe(1);
+  expect(options.traceLifecycle).toBe('stream');
   expect(options.sendClientReports).toBe(true);
+  expect(options.enableRuntimeChannelInjection).toBe(true);
+  expect(options.beforeSendTransaction).toBeUndefined();
 });
 
-test('initSentry installs exactly one Http integration, the one that attaches no request bodies', () => {
+test('initSentry pins what Sentry collects and keeps stack traces off captured messages', () => {
+  expect(options.dataCollection).toBe(sentryDataCollection);
+  expect(client.getDataCollectionOptions()).toMatchObject({
+    userInfo: false,
+    cookies: false,
+    httpHeaders: {
+      request: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+      response: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+    },
+    httpBodies: [],
+    urlQueryParams: { deny: ['forwarded', '-ip', 'remote-', 'via', '-user'] },
+    genAI: { inputs: false, outputs: false },
+    mcp: { inputs: false, outputs: false },
+    databaseQueryData: false,
+    queues: false,
+    stackFrameVariables: false,
+    frameContextLines: 7,
+  });
+  expect(options.attachStacktrace).toBe(false);
+});
+
+test('initSentry installs exactly one Http integration, the one that attaches no request bodies, and no Hono integration', () => {
   expect(httpIntegrations).toHaveLength(1);
   const installedHttp = options.integrations.filter(({ name }) => name === 'Http');
   expect(installedHttp).toHaveLength(1);
   expect(installedHttp[0]).toBe(httpIntegrations[0]);
   expect(client.getIntegrationByName('Http')).toBe(httpIntegrations[0]);
+  expect(client.getIntegrationByName('Hono')).toBeUndefined();
 });
 
 test('beforeSend replaces a planted secret in an exception value, a cause-chain exception value and extra', () => {
@@ -186,138 +310,179 @@ test('beforeBreadcrumb replaces a planted secret in a breadcrumb URL', () => {
   });
 });
 
-function createFetchSpan() {
+function createStreamedFetchSpan() {
   return {
-    span_id: 'b'.repeat(16),
     trace_id: 'c'.repeat(32),
+    span_id: 'b'.repeat(16),
     parent_span_id: 'd'.repeat(16),
-    op: 'http.client',
-    description: `GET https://api.example.com/v1/items?api_key=${secret}`,
-    origin: 'auto.http.otel.node_fetch',
+    name: 'GET',
     start_timestamp: 1700000000,
-    timestamp: 1700000001,
+    end_timestamp: 1700000001,
     status: 'ok',
-    data: {
+    is_segment: false,
+    attributes: {
       'sentry.op': 'http.client',
-      'http.method': 'GET',
-      url: `https://api.example.com/v1/items?api_key=${secret}`,
-      'http.url': `https://api.example.com/v1/items?api_key=${secret}`,
+      'http.request.method': 'GET',
+      'url.full': `https://api.example.com/v1/items?api_key=${secret}`,
       'http.query': `?api_key=${secret}`,
       'http.response.status_code': 200,
     },
+    links: [],
   };
 }
 
-test('beforeSendSpan replaces a planted secret in a fetch span http.url and http.query', () => {
-  const scrubbed = options.beforeSendSpan(createFetchSpan());
+test('beforeSendSpan replaces a planted secret in a streamed fetch span url.full and http.query', () => {
+  const scrubbed = options.beforeSendSpan(createStreamedFetchSpan());
   expect(JSON.stringify(scrubbed)).not.toContain(secret);
-  expect(scrubbed.data['http.url']).toEqual('https://api.example.com/v1/items?api_key=[REDACTED]');
-  expect(scrubbed.data['http.query']).toEqual('?api_key=[REDACTED]');
-  expect(scrubbed.data['http.response.status_code']).toEqual(200);
-});
-
-test('beforeSendTransaction replaces a planted secret in a fetch span http.url and http.query', () => {
-  const transaction = {
-    type: 'transaction',
-    transaction: 'POST /api/endpoints/fetch-items',
-    start_timestamp: 1700000000,
-    timestamp: 1700000002,
-    contexts: {
-      trace: { span_id: 'd'.repeat(16), trace_id: 'c'.repeat(32), op: 'http.server' },
-    },
-    spans: [createFetchSpan()],
-  };
-  const scrubbed = options.beforeSendTransaction(transaction, {});
-  expect(JSON.stringify(scrubbed)).not.toContain(secret);
-  expect(scrubbed.spans[0].data['http.url']).toEqual(
+  expect(scrubbed.attributes['url.full']).toEqual(
     'https://api.example.com/v1/items?api_key=[REDACTED]'
   );
-  expect(scrubbed.spans[0].data['http.query']).toEqual('?api_key=[REDACTED]');
-  expect(scrubbed.contexts).toEqual(transaction.contexts);
+  expect(scrubbed.attributes['http.query']).toEqual('?api_key=[REDACTED]');
+  expect(scrubbed.attributes['http.response.status_code']).toEqual(200);
 });
 
-test('an error event captured during a request with a JSON body carries no request data', async () => {
-  const server = http.createServer((req, res) => {
-    const chunks = [];
-    req.on('data', (chunk) => chunks.push(chunk));
-    req.on('end', () => {
-      RealSentry.captureException(new Error('Endpoint failed.'));
-      res.end('{}');
-    });
+test('beforeSendSpan returns the span stripped of its data, and does not throw, when the scrub fails', () => {
+  const span = createStreamedFetchSpan();
+  spanCredentialScrubs.set(span.span_id, () => {
+    throw new Error('scrub failed');
   });
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-  const { port } = server.address();
+  const scrubbed = options.beforeSendSpan(span);
+  expect(JSON.stringify(scrubbed)).not.toContain(secret);
+  expect(scrubbed).toEqual({
+    trace_id: span.trace_id,
+    span_id: span.span_id,
+    parent_span_id: span.parent_span_id,
+    name: '[REDACTED]',
+    start_timestamp: span.start_timestamp,
+    end_timestamp: span.end_timestamp,
+    status: 'ok',
+    is_segment: false,
+    attributes: { 'lowdefy.scrub_failed': true },
+  });
+  expect(spanCredentialScrubs.size).toBe(0);
+});
+
+test('a request streams one http.server span named by its route, and no cookie, body, address or marked credential reaches any of its spans', async () => {
+  const markedKey = 'runtime-made-app-key-0001';
+  const { upstream, upstreamPort } = await startUpstream();
+  const server = serve({
+    fetch: createTestApp({ upstreamPort, markedKey }).fetch,
+    port: 0,
+    hostname: '127.0.0.1',
+  });
+  const port = await listen(server);
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/endpoints/sign-in`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ email: 'user@example.com', password: 'planted-user-password' }),
-    });
-    await response.text();
+    await postEndpoint({ port, markedKey });
+    // The late span ends after the response, so after the request's credential scope.
+    await wait(100);
   } finally {
-    await new Promise((resolve) => server.close(resolve));
+    await closeServer(server);
+    await closeServer(upstream);
+  }
+  await RealSentry.flush();
+  const spans = sentSpans();
+  const roots = serverSpans(spans);
+  expect(roots).toHaveLength(1);
+  const [root] = roots;
+  const trace = segmentSpans(spans, root);
+  expect(root.name).toEqual('POST /api/endpoints/:endpointId');
+  expect(attribute(root, 'http.route')).toEqual('/api/endpoints/:endpointId');
+  expect(attribute(root, 'url.full')).toMatch(/\/api\/endpoints\/create-app\?ref=\[REDACTED\]$/);
+  trace.forEach((span) => {
+    expect(attribute(span, 'sentry.segment.name')).toEqual('POST /api/endpoints/:endpointId');
+  });
+  const clientSpan = trace.find((span) => attribute(span, 'sentry.op') === 'http.client');
+  expect(attribute(clientSpan, 'url.full')).toEqual(
+    `http://127.0.0.1:${upstreamPort}/v1/apps?app=[REDACTED]`
+  );
+  const lateSpan = trace.find(({ name }) => name === 'late work');
+  expect(attribute(lateSpan, 'detail')).toEqual('used [REDACTED]');
+  expect(lateSpan.end_timestamp).toBeGreaterThan(root.end_timestamp);
+  expectNoPrivateData(trace, markedKey);
+  expect(sentEvents()).toEqual([]);
+  expect(spanCredentialScrubs.size).toBe(0);
+});
+
+test('an error thrown in a route is captured once, with Lowdefy tags, and carries no cookie, body, address or marked credential', async () => {
+  const markedKey = 'runtime-made-app-key-0002';
+  const { upstream, upstreamPort } = await startUpstream();
+  const server = serve({
+    fetch: createTestApp({ upstreamPort, markedKey }).fetch,
+    port: 0,
+    hostname: '127.0.0.1',
+  });
+  const port = await listen(server);
+  try {
+    await postEndpoint({ port, markedKey, fail: true });
+    await wait(100);
+  } finally {
+    await closeServer(server);
+    await closeServer(upstream);
   }
   await RealSentry.flush();
   const events = sentEvents();
   expect(events).toHaveLength(1);
-  expect(events[0].request.url).toMatch(/\/api\/endpoints\/sign-in$/);
-  expect(events[0].request.data).toBeUndefined();
-  expect(JSON.stringify(events[0])).not.toContain('planted-user-password');
+  const [event] = events;
+  expect(event.exception.values[0].value).toEqual('Endpoint failed for [REDACTED]');
+  expect(event.exception.values[0].mechanism.handled).toBe(true);
+  expect(event.tags).toMatchObject({ requestId: 'req-1', pageId: 'page-1' });
+  expect(event.request.url).toMatch(/\/api\/endpoints\/create-app\?ref=\[REDACTED\]$/);
+  expect(event.request.data).toBeUndefined();
+  expect(event.request.cookies).toBeUndefined();
+  expect(event.user?.ip_address).toBeUndefined();
+  expectNoPrivateData(event, markedKey);
+  const spans = sentSpans();
+  const roots = serverSpans(spans);
+  expect(roots).toHaveLength(1);
+  expect(attribute(roots[0], 'http.response.status_code')).toBe(500);
+  expectNoPrivateData(segmentSpans(spans, roots[0]), markedKey);
+  expect(spanCredentialScrubs.size).toBe(0);
 });
 
-test('a transaction sent after the response is scrubbed of the credentials its request marked', async () => {
-  const markedKey = 'runtime-made-app-key-0001';
-  const upstream = http.createServer((req, res) => res.end('{}'));
-  upstream.listen(0, '127.0.0.1');
-  const upstreamPort = await listen(upstream);
-
-  // The two middlewares the production app runs first, in its order.
-  const app = new Hono();
-  app.use('*', (c, next) => runInCredentialScope(next));
-  app.use('*', sentryMiddleware());
-  app.post('/api/endpoints/create-app', async (c) => {
-    markCredential(markedKey);
-    // Sentry filters query parameters with sensitive names such as `key` itself, so the
-    // credential goes in one it does not, to test that Lowdefy's scrub by value reaches it.
-    const upstreamResponse = await fetch(
-      `http://127.0.0.1:${upstreamPort}/v1/apps?app=${markedKey}`
+// The Vercel function entry (lowdefy vercel-output) reads the body itself and calls app.fetch
+// from a plain Node HTTP server, instead of @hono/node-server's request listener.
+test('a request through the Vercel function listener streams one http.server span named by its route, scrubbed', async () => {
+  const markedKey = 'runtime-made-app-key-0003';
+  const { upstream, upstreamPort } = await startUpstream();
+  const app = createTestApp({ upstreamPort, markedKey });
+  const server = http.createServer(async (req, res) => {
+    const chunks = [];
+    for await (const chunk of req) chunks.push(chunk);
+    const response = await app.fetch(
+      new Request(`http://${req.headers.host}${req.url}`, {
+        method: req.method,
+        headers: req.headers,
+        body: Buffer.concat(chunks),
+      })
     );
-    await upstreamResponse.text();
-    return c.json({ ok: true });
+    res.statusCode = response.status;
+    response.headers.forEach((value, key) => res.appendHeader(key, value));
+    res.end(Buffer.from(await response.arrayBuffer()));
   });
-  // @hono/node-server writes the response after the middleware chain has returned, so the
-  // request's root span ends, and its transaction is sent, outside the credential scope.
-  const server = serve({ fetch: app.fetch, port: 0, hostname: '127.0.0.1' });
+  server.listen(0, '127.0.0.1');
   const port = await listen(server);
   try {
-    const response = await fetch(`http://127.0.0.1:${port}/api/endpoints/create-app`, {
-      method: 'POST',
-    });
-    await response.text();
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await postEndpoint({ port, markedKey });
+    await wait(100);
   } finally {
-    await new Promise((resolve) => server.close(resolve));
-    await new Promise((resolve) => upstream.close(resolve));
+    await closeServer(server);
+    await closeServer(upstream);
   }
   await RealSentry.flush();
-  const transaction = sentTransactions().find(
-    ({ transaction: name }) => name === 'POST /api/endpoints/create-app'
-  );
-  expect(transaction).toBeDefined();
-  const clientSpan = transaction.spans.find(({ op }) => op === 'http.client');
-  expect(clientSpan.data['url.full']).toEqual(
-    `http://127.0.0.1:${upstreamPort}/v1/apps?app=[REDACTED]`
-  );
-  expect(clientSpan.data['http.query']).toEqual('app=[REDACTED]');
-  expect(JSON.stringify(transaction)).not.toContain(markedKey);
+  const spans = sentSpans();
+  const roots = serverSpans(spans);
+  expect(roots).toHaveLength(1);
+  expect(roots[0].name).toEqual('POST /api/endpoints/:endpointId');
+  const trace = segmentSpans(spans, roots[0]);
+  expect(trace.some((span) => attribute(span, 'sentry.op') === 'http.client')).toBe(true);
+  expectNoPrivateData(trace, markedKey);
+  expect(spanCredentialScrubs.size).toBe(0);
 });
 
-test('concurrent requests each scrub their transaction with their own marked credentials', async () => {
+test('concurrent requests each scrub their spans with their own marked credentials', async () => {
   const keyA = 'runtime-made-app-key-aaaa';
   const keyB = 'runtime-made-app-key-bbbb';
-  const upstream = http.createServer((req, res) => res.end('{}'));
-  upstream.listen(0, '127.0.0.1');
-  const upstreamPort = await listen(upstream);
+  const { upstream, upstreamPort } = await startUpstream();
 
   let markedB;
   const bMarked = new Promise((resolve) => {
@@ -344,24 +509,86 @@ test('concurrent requests each scrub their transaction with their own marked cre
   const port = await listen(server);
   try {
     const first = fetch(`http://127.0.0.1:${port}/api/endpoints/first`, { method: 'POST' });
-    await new Promise((resolve) => setTimeout(resolve, 20));
+    await wait(20);
     const second = fetch(`http://127.0.0.1:${port}/api/endpoints/second`, { method: 'POST' });
     await Promise.all([(await first).text(), (await second).text()]);
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    await wait(50);
   } finally {
-    await new Promise((resolve) => server.close(resolve));
-    await new Promise((resolve) => upstream.close(resolve));
+    await closeServer(server);
+    await closeServer(upstream);
   }
   await RealSentry.flush();
-  const transactions = sentTransactions();
-  const firstTransaction = transactions.find(
-    ({ transaction: name }) => name === 'POST /api/endpoints/first'
+  const spans = serverSpans(sentSpans()).flatMap((root) => segmentSpans(sentSpans(), root));
+  const clientUrls = spans
+    .filter((span) => attribute(span, 'sentry.op') === 'http.client')
+    .map((span) => attribute(span, 'url.full'));
+  expect(clientUrls).toEqual(
+    expect.arrayContaining([
+      `http://127.0.0.1:${upstreamPort}/v1/first?app=[REDACTED]`,
+      `http://127.0.0.1:${upstreamPort}/v1/second?app=[REDACTED]`,
+    ])
   );
-  const secondTransaction = transactions.find(
-    ({ transaction: name }) => name === 'POST /api/endpoints/second'
-  );
-  expect(JSON.stringify(firstTransaction)).toContain('/v1/first?app=[REDACTED]');
-  expect(JSON.stringify(secondTransaction)).toContain('/v1/second?app=[REDACTED]');
-  expect(JSON.stringify([firstTransaction, secondTransaction])).not.toContain(keyA);
-  expect(JSON.stringify([firstTransaction, secondTransaction])).not.toContain(keyB);
+  expect(
+    serverSpans(spans)
+      .map(({ name }) => name)
+      .sort()
+  ).toEqual(['POST /api/endpoints/first', 'POST /api/endpoints/second']);
+  expect(JSON.stringify(spans)).not.toContain(keyA);
+  expect(JSON.stringify(spans)).not.toContain(keyB);
+  expect(spanCredentialScrubs.size).toBe(0);
+});
+
+test('a request whose incoming trace is not sampled sends no spans and leaves no scrub behind', async () => {
+  const markedKey = 'runtime-made-app-key-0004';
+  const { upstream, upstreamPort } = await startUpstream();
+  const server = serve({
+    fetch: createTestApp({ upstreamPort, markedKey }).fetch,
+    port: 0,
+    hostname: '127.0.0.1',
+  });
+  const port = await listen(server);
+  try {
+    await postEndpoint({
+      port,
+      markedKey,
+      headers: { 'sentry-trace': `${'e'.repeat(32)}-${'f'.repeat(16)}-0` },
+    });
+    await wait(100);
+  } finally {
+    await closeServer(server);
+    await closeServer(upstream);
+  }
+  await RealSentry.flush();
+  // Only the test's own outgoing request to the app is sent, as a segment of its own.
+  const spans = sentSpans();
+  expect(spans.map((span) => [attribute(span, 'sentry.op'), span.is_segment])).toEqual([
+    ['http.client', true],
+  ]);
+  expect(spanCredentialScrubs.size).toBe(0);
+});
+
+test('the scrub of an unsampled span is held while it ends and removed once it has ended', () => {
+  const scrubRequestCredentials = (value) => value;
+  const heldAtSpanEnd = [];
+  // Added after initSentry's own hook, so it runs after the scrub has been recorded.
+  const removeHook = client.on('spanEnd', (span) => {
+    heldAtSpanEnd.push(spanCredentialScrubs.get(span.spanContext().spanId));
+  });
+  try {
+    RealSentry.withIsolationScope((isolationScope) => {
+      isolationScope.setSDKProcessingMetadata({ scrubRequestCredentials });
+      RealSentry.continueTrace(
+        { sentryTrace: `${'1'.repeat(32)}-${'2'.repeat(16)}-0`, baggage: undefined },
+        () => {
+          RealSentry.startSpan({ name: 'unsampled work' }, (span) => {
+            expect(span.spanContext().traceFlags).toBe(0);
+          });
+        }
+      );
+    });
+  } finally {
+    removeHook();
+  }
+  expect(heldAtSpanEnd).toEqual([scrubRequestCredentials]);
+  expect(spanCredentialScrubs.size).toBe(0);
 });
