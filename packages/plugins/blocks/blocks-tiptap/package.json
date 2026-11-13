@@ -57,6 +57,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@floating-ui/dom": "1.8.0",
     "@lowdefy/block-utils": "7.2.0",
     "@lowdefy/blocks-antd": "7.2.0",
     "@lowdefy/blocks-files": "7.2.0",
@@ -74,7 +75,6 @@
     "@tiptap/react": "3.33.1",
     "@tiptap/starter-kit": "3.33.1",
     "@tiptap/suggestion": "3.33.1",
-    "tippy.js": "6.3.7",
     "turndown": "7.2.5"
   },
   "peerDependencies": {

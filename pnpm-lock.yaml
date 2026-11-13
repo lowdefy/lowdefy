@@ -1490,6 +1490,9 @@ importers:
 
   packages/plugins/blocks/blocks-tiptap:
     dependencies:
+      '@floating-ui/dom':
+        specifier: 1.8.0
+        version: 1.8.0
       '@lowdefy/block-utils':
         specifier: 7.2.0
         version: link:../../../utils/block-utils
@@ -1541,9 +1544,6 @@ importers:
       '@tiptap/suggestion':
         specifier: 3.33.1
         version: 3.33.1(@floating-ui/dom@1.8.0)(@tiptap/core@3.33.1(@tiptap/pm@3.33.1))(@tiptap/pm@3.33.1)
-      tippy.js:
-        specifier: 6.3.7
-        version: 6.3.7
       turndown:
         specifier: 7.2.5
         version: 7.2.5
@@ -5935,9 +5935,6 @@ packages:
     resolution: {integrity: sha512-iGURLGuKDLakSEl7Pgfv8h7f+XLT+V861Wfhz0zlEl5nyFuKUopdkFBPKqTllTUp06aOwPuH8iuUEb3yp3MpbQ==}
     engines: {node: '>=20'}
     hasBin: true
-
-  '@popperjs/core@2.11.8':
-    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
   '@posthog/browser-common@0.10.8':
     resolution: {integrity: sha512-TQmqLVNFoKaL4dDV5Q8AScX2dIwdq8By2cj2KU1hMGe88tn7Usbf3U/hv5okhobEojntqJeslPIRBrG79Su+vg==}
@@ -13870,9 +13867,6 @@ packages:
     resolution: {integrity: sha512-rClxhLQl+I5UMB5Ny7sfnZqDNa51u7h7h4gJV2UWslwADHEw75IuVPCnWrpO/otM7jHrHpwcZdRHd+//SiI55A==}
     engines: {node: '>=22'}
 
-  tippy.js@6.3.7:
-    resolution: {integrity: sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==}
-
   tldts-core@7.4.22:
     resolution: {integrity: sha512-NRyhrlvJcTwvoRibE0dEZvp6C5RwV4RxpsX1zbkI1k7Fk2pzIhmQ+MvswJEd5KKl3VRFRMDTipXse/ejh/ld/w==}
 
@@ -17487,8 +17481,6 @@ snapshots:
   '@playwright/test@1.65.0':
     dependencies:
       playwright: 1.65.0
-
-  '@popperjs/core@2.11.8': {}
 
   '@posthog/browser-common@0.10.8(preact-render-to-string@6.5.11)':
     dependencies:
@@ -26628,10 +26620,6 @@ snapshots:
       picomatch: 4.0.7
 
   tinykeys@4.0.1: {}
-
-  tippy.js@6.3.7:
-    dependencies:
-      '@popperjs/core': 2.11.8
 
   tldts-core@7.4.22: {}
 
