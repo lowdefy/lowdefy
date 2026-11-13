@@ -400,6 +400,7 @@ test('lowdefy_run_tests offers tier and usageWindow and passes them through to t
   const runTests = tools.find((tool) => tool.name === 'lowdefy_run_tests');
   expect(runTests.inputSchema.properties.tier.enum).toEqual(['common', 'wide', 'edge', 'full']);
   expect(runTests.inputSchema.properties.usageWindow.pattern).toBe('^[1-9][0-9]*m$');
+  expect(runTests.inputSchema.properties.headless.type).toBe('boolean');
   expect(runTests.description).toContain('run tier "common" first');
   const result = await client.callTool({
     name: 'lowdefy_run_tests',

@@ -461,12 +461,18 @@ importers:
       '@lowdefy/helpers':
         specifier: 7.2.0
         version: link:../utils/helpers
+      '@lowdefy/journey-headless':
+        specifier: 7.2.0
+        version: link:../utils/journey-headless
       '@lowdefy/logger':
         specifier: 7.2.0
         version: link:../utils/logger
       '@lowdefy/node-utils':
         specifier: 7.2.0
         version: link:../utils/node-utils
+      '@lowdefy/test-utils':
+        specifier: 7.2.0
+        version: link:../utils/test-utils
       '@modelcontextprotocol/sdk':
         specifier: 1.32.2
         version: 1.32.2(zod@4.6.7)
@@ -2856,6 +2862,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 7.2.0
         version: link:../../utils/helpers
+      '@lowdefy/journey-headless':
+        specifier: 7.2.0
+        version: link:../../utils/journey-headless
       '@lowdefy/layout':
         specifier: 7.2.0
         version: link:../../layout
@@ -2989,6 +2998,9 @@ importers:
         specifier: 4.6.7
         version: 4.6.7
     devDependencies:
+      '@lowdefy/journey-headless':
+        specifier: 7.2.0
+        version: link:../../utils/journey-headless
       jsdom:
         specifier: 19.0.0
         version: 19.0.0
@@ -3671,6 +3683,40 @@ importers:
       vitest:
         specifier: 4.1.12
         version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(jsdom@19.0.0)(vite@8.1.6(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.43.1)(yaml@2.9.0))
+
+  packages/utils/journey-headless:
+    dependencies:
+      '@lowdefy/client-core':
+        specifier: 7.2.0
+        version: link:../../client-core
+      '@lowdefy/engine':
+        specifier: 7.2.0
+        version: link:../../engine
+      '@lowdefy/errors':
+        specifier: 7.2.0
+        version: link:../errors
+      '@lowdefy/helpers':
+        specifier: 7.2.0
+        version: link:../helpers
+      '@lowdefy/node-utils':
+        specifier: 7.2.0
+        version: link:../node-utils
+      '@lowdefy/test-utils':
+        specifier: 7.2.0
+        version: link:../test-utils
+    devDependencies:
+      '@swc/cli':
+        specifier: 0.8.1
+        version: 0.8.1(@swc/core@1.15.32)
+      '@swc/core':
+        specifier: 1.15.32
+        version: 1.15.32
+      vitest:
+        specifier: 4.1.12
+        version: 4.1.12(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(jsdom@19.0.0)(vite@8.1.6(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.43.1)(yaml@2.9.0))
+      yaml:
+        specifier: 2.9.0
+        version: 2.9.0
 
   packages/utils/logger:
     dependencies:

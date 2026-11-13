@@ -80,7 +80,9 @@ import writeFileIfChanged from './writeFileIfChanged.js';
 import compileSegments from './journeyCompiler/compileSegments.js';
 import countTextTokens from './journeyEvidence/countTextTokens.js';
 import normaliseClickText from './journeyText/normaliseClickText.js';
+import classifyJourney from './journeyGrammar/classifyJourney.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import findStepNeedingPage from './journeyGrammar/findStepNeedingPage.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
 import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
@@ -98,6 +100,7 @@ import formatSessionReport from './sessionLog/formatSessionReport.js';
 import summariseSessions from './sessionLog/summariseSessions.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
+  CALL_STEP_KEYS,
   getStepKey,
   INTERACTION_STEP_KEYS,
   STEP_KEYS,
@@ -106,9 +109,30 @@ import validateJourneySteps, {
 import validateJourneyTags, { JOURNEY_TAG_PATTERN } from './journeyGrammar/validateJourneyTags.js';
 import validateJourneyUser from './journeyGrammar/validateJourneyUser.js';
 import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
+import claimExpectedErrors from './journeyInvariants/claimExpectedErrors.js';
+import findActionErrors from './journeyInvariants/findActionErrors.js';
+import findErrorEntries from './journeyInvariants/findErrorEntries.js';
+import findingKey from './journeyInvariants/findingKey.js';
+import isAppErrorFinding from './journeyInvariants/isAppErrorFinding.js';
+import isClaimedLater from './journeyInvariants/isClaimedLater.js';
+import isExpectErrorStep from './journeyInvariants/isExpectErrorStep.js';
+import JOURNEY_FINDING_SEVERITY from './journeyInvariants/JOURNEY_FINDING_SEVERITY.js';
+import keyFindings from './journeyInvariants/keyFindings.js';
+import toAppErrorFailure from './journeyInvariants/toAppErrorFailure.js';
 
 export {
   acquireMachineSlot,
+  claimExpectedErrors,
+  classifyJourney,
+  findActionErrors,
+  findErrorEntries,
+  findingKey,
+  isAppErrorFinding,
+  isClaimedLater,
+  isExpectErrorStep,
+  JOURNEY_FINDING_SEVERITY,
+  keyFindings,
+  toAppErrorFailure,
   bindCredentialScrub,
   bootIosSimulator,
   buildSessionReport,
@@ -134,6 +158,7 @@ export {
   findAvailablePort,
   findPlaceholderStep,
   findPnpmWorkspaceRoot,
+  findStepNeedingPage,
   formatSessionLog,
   formatSessionReport,
   findWorkspacePackages,
@@ -193,6 +218,7 @@ export {
   writeFileAtomic,
   watchOwner,
   writeFileIfChanged,
+  CALL_STEP_KEYS,
   getStepKey,
   INTERACTION_STEP_KEYS,
   JOURNEY_STEP_SCHEMAS,

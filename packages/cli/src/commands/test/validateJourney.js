@@ -17,11 +17,13 @@
 import { validate } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
 import {
+  findStepNeedingPage,
   validateJourneySteps,
   validateJourneyTags,
   validateJourneyUser,
 } from '@lowdefy/node-utils';
 
+import describeStep from './lint/describeStep.js';
 import journeySchema from './journeySchema.js';
 
 // ajv cannot compare two fields, so the one cross-field rule of the evidence
@@ -30,6 +32,17 @@ function checkMutationCounts({ evidence }) {
   const mutation = evidence?.mutation;
   if (type.isNone(mutation) || mutation.killed <= mutation.total) return undefined;
   return `Journey "evidence.mutation.killed" (${mutation.killed}) should not be more than "evidence.mutation.total" (${mutation.total}).`;
+}
+
+// A journey opens its pageId before its first step; one with no pageId opens
+// no page, so each of its steps must run without one.
+function checkPageId({ journey }) {
+  if (!type.isUndefined(journey.pageId)) return undefined;
+  const found = findStepNeedingPage({ steps: journey.steps });
+  if (type.isUndefined(found)) return undefined;
+  return `Journey should have required property "pageId": ${describeStep(
+    found
+  )} needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.`;
 }
 
 function validateJourney({ journey }) {
@@ -57,6 +70,10 @@ function validateJourney({ journey }) {
   const { error } = validateJourneySteps({ steps: journey.steps });
   if (!type.isUndefined(error)) {
     return { valid: false, message: error };
+  }
+  const pageIdError = checkPageId({ journey });
+  if (!type.isUndefined(pageIdError)) {
+    return { valid: false, message: pageIdError };
   }
   return { valid: true };
 }

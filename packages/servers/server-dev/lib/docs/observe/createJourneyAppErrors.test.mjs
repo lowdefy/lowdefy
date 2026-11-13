@@ -397,3 +397,53 @@ test('a failed fetch with no aborted request still fails a goto step', async () 
   });
   expect(findings.map((finding) => finding.kind)).toEqual(['client-error']);
 });
+
+const callSteps = [
+  { call: { endpoint: 'orders-cancel' } },
+  { expect: { status: 500 } },
+  { expect: { error: 'duplicate key' } },
+];
+
+test('an expect.error after a call claims the app error the call caused, past the expects between', async () => {
+  const { results, failure } = await judgeSteps({
+    steps: callSteps,
+    during: (index) => {
+      if (index === 0) recordRunError(serverEntry({ message: 'E11000 duplicate key error' }));
+    },
+  });
+  expect(failure).toBeUndefined();
+  expect(results.map((result) => result.status)).toEqual(['ok', 'ok', 'ok']);
+});
+
+test('an expect.error after a call passes with no app error, since it read the answer', async () => {
+  const { failure } = await judgeSteps({ steps: callSteps });
+  expect(failure).toBeUndefined();
+});
+
+test('an app error a call caused that its expect.error does not claim fails the call', async () => {
+  const { results, failure } = await judgeSteps({
+    steps: callSteps,
+    during: (index) => {
+      if (index === 0) recordRunError(serverEntry({ message: 'Connection lost' }));
+    },
+  });
+  expect(failure).toEqual(
+    expect.objectContaining({
+      index: 0,
+      step: { call: { endpoint: 'orders-cancel' } },
+      kind: 'app-error',
+      actual: ['server-error: Connection lost'],
+    })
+  );
+  expect(results.map((result) => result.status)).toEqual(['failed', 'ok', 'ok']);
+});
+
+test('an app error a call caused with no expect.error after it fails the call', async () => {
+  const { failure } = await judgeSteps({
+    steps: [{ call: { endpoint: 'orders-cancel' } }, { expect: { status: 500 } }],
+    during: (index) => {
+      if (index === 0) recordRunError(serverEntry({ message: 'Connection lost' }));
+    },
+  });
+  expect(failure).toEqual(expect.objectContaining({ index: 0, kind: 'app-error' }));
+});

@@ -21,6 +21,7 @@ import negative from './negative.js';
 import roleGranted from './roleGranted.js';
 import roleRefused from './roleRefused.js';
 import tenant from './tenant.js';
+import tenantCalls from './tenantCalls.js';
 import volume from './volume.js';
 
 // The variant kinds, in the order they are written, each with its generators.
@@ -30,7 +31,7 @@ const KINDS = ['role', 'tenant', 'empty', 'volume', 'negative', 'interrupt', 'do
 
 const generators = {
   role: [roleGranted, roleRefused],
-  tenant: [tenant],
+  tenant: [tenant, tenantCalls],
   empty: [empty],
   volume: [volume],
   negative: [negative],

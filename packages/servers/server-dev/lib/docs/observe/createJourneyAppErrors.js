@@ -16,9 +16,15 @@
 
 import path from 'node:path';
 import { type } from '@lowdefy/helpers';
-import { getStepKey, INTERACTION_STEP_KEYS } from '@lowdefy/node-utils';
-
-import claimExpectedErrors from './claimExpectedErrors.js';
+import {
+  CALL_STEP_KEYS,
+  claimExpectedErrors,
+  getStepKey,
+  isClaimedLater,
+  isExpectErrorStep,
+  isAppErrorFinding,
+  toAppErrorFailure,
+} from '@lowdefy/node-utils';
 
 import evaluateInvariants from './evaluateInvariants.js';
 import installStepObserver from './installStepObserver.js';
@@ -26,28 +32,17 @@ import readStepObserver from './readStepObserver.js';
 import resolveConfigKeySource from './resolveConfigKeySource.js';
 import takeJourneyEvents from './takeJourneyEvents.js';
 import { takeRunErrors } from '../runErrorBuffers.js';
-import toAppErrorFailure from './toAppErrorFailure.js';
 import TRANSIENT_SELECTOR from './TRANSIENT_SELECTOR.js';
 import usesSearchStage from './usesSearchStage.js';
 import waitForClientErrorReports from './waitForClientErrorReports.js';
 import watchJourneyContext from './watchJourneyContext.js';
 import withAppErrors from './withAppErrors.js';
 
-function isExpectError(step) {
-  return getStepKey(step ?? {}) === 'expect' && getStepKey(step.expect) === 'error';
-}
-
 // Steps that cannot cause an error a page reports later, so their window
 // closes without waiting for client error reports in flight. An expect.error
 // waits, so a late report of the interaction before it can be claimed.
 function isQuietStep(step) {
-  return ['expect', 'wait', 'screenshot'].includes(getStepKey(step)) && !isExpectError(step);
-}
-
-// What fails a journey: an app error. A dead click is only a warning; a
-// journey asserts it with expect.effect.
-function isAppError(finding) {
-  return finding.severity === 'error' || finding.kind === 'environment';
+  return ['expect', 'wait', 'screenshot'].includes(getStepKey(step)) && !isExpectErrorStep(step);
 }
 
 // Watches a journey run for app errors and judges each step's window with the
@@ -106,7 +101,7 @@ function createJourneyAppErrors({ origin, basePath, recording, configDirectory }
       resolveSource: (configKey) =>
         resolveConfigKeySource({ buildDirectory, configDirectory, configKey }),
     });
-    return findings.filter(isAppError);
+    return findings.filter(isAppErrorFinding);
   }
 
   // A page mid-navigation, or one that has crashed, has nothing to report.
@@ -183,7 +178,7 @@ function createJourneyAppErrors({ origin, basePath, recording, configDirectory }
     const step = steps[index];
     const result = results[index];
     const findings = await closeWindow({ journey, step, result });
-    if (isExpectError(step) && type.isUndefined(failure)) {
+    if (isExpectErrorStep(step) && type.isUndefined(failure)) {
       const claim = claimExpectedErrors({ step, index, held, findings });
       held = null;
       if (!type.isUndefined(claim)) {
@@ -191,12 +186,8 @@ function createJourneyAppErrors({ origin, basePath, recording, configDirectory }
       }
       return claim;
     }
-    if (
-      type.isUndefined(failure) &&
-      INTERACTION_STEP_KEYS.includes(getStepKey(step)) &&
-      isExpectError(steps[index + 1])
-    ) {
-      held = { index, step, findings };
+    if (type.isUndefined(failure) && isClaimedLater({ steps, index })) {
+      held = { index, step, findings, answered: CALL_STEP_KEYS.includes(getStepKey(step)) };
       return undefined;
     }
     if (findings.length === 0) {

@@ -36,6 +36,13 @@ const JOURNEY_STEP_EXAMPLES = {
   wait: [{ wait: { request: 'get_orders' } }, { wait: { state: 'orders' } }, { wait: { ms: 500 } }],
   screenshot: [{ screenshot: 'after_save' }],
   expect: [{ expect: { visible: 'save_button' } }, { expect: { url: { contains: '/orders' } } }],
+  call: [
+    { call: { endpoint: 'orders-cancel', payload: { order_id: 'ORD-1' } } },
+    { call: { endpoint: 'orders-cancel', payload: { order_id: 'ORD-2' }, as: 'other_customer' } },
+  ],
+  request: [
+    { request: { pageId: 'orders', requestId: 'get_order', payload: { order_id: 'ORD-1' } } },
+  ],
   'expect.state': [{ expect: { state: { path: 'order.status', equals: 'Open' } } }],
   'expect.visible': [{ expect: { visible: 'save_button' } }],
   'expect.hidden': [{ expect: { hidden: 'error_alert' } }],
@@ -45,9 +52,20 @@ const JOURNEY_STEP_EXAMPLES = {
   'expect.calls': [
     { expect: { calls: { request: 'save_order', count: 1 } } },
     { expect: { calls: { endpoint: 'orders-sync', count: 1 } } },
+    { expect: { calls: { request: 'save_order', payload: { status: 'Open' } } } },
+    { expect: { calls: { endpoint: 'orders-sync', response: { synced: true } } } },
   ],
   'expect.error': [{ expect: { error: 'is required' } }],
   'expect.effect': [{ expect: { effect: true } }],
+  'expect.status': [{ expect: { status: 403 } }],
+  'expect.db': [
+    { expect: { db: { collection: 'orders', match: { status: 'Cancelled' }, count: 0 } } },
+    {
+      expect: {
+        db: { collection: 'orders', match: { _id: 'ORD-1' }, equals: [{ status: 'Open' }] },
+      },
+    },
+  ],
 };
 
 export default JOURNEY_STEP_EXAMPLES;

@@ -11,23 +11,28 @@ are what a Lowdefy app's own tests use; this repository has suites that prove ea
 | Level            | Proves                                                                    | Runs on                                               | Cost                                         | Suites here that cover it                                                    |
 | ---------------- | ------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
 | Journey          | what a page shows, how it reacts, paths across pages, sign-up and sign-in | a dev server and a real Chromium                      | seconds to tens of seconds a journey         | [Journey fixture app](#journey-fixture-app), [Auth journeys](#auth-journeys) |
-| Endpoint test    | logic, calculations, permissions, what an endpoint or request writes      | a production build, in the test's process, a `mongod` | a build, then 2 to 3 seconds a test file     | [Endpoint test harness](#endpoint-test-harness)                              |
+| Headless journey | a page's logic and state, what it writes, what a page would never send    | a production build, in the CLI's process, no browser  | a build, then no browser time                | [Journey fixture app](#journey-fixture-app)                                  |
+| Endpoint test    | table-driven logic, stubbed services, races, cron and internal routines   | a production build, in the test's process, a `mongod` | a build, then 2 to 3 seconds a test file     | [Endpoint test harness](#endpoint-test-harness)                              |
 | The access table | who can reach which page and endpoint, as one committed snapshot          | a production build, in the test's process             | a build, then milliseconds for the whole app | [Endpoint test harness](#endpoint-test-harness)                              |
 | Unit test        | one function of a package or plugin                                       | vitest, no app                                        | milliseconds                                 | [Unit tests](#unit-tests)                                                    |
 
-- **A journey is the most expensive check.** Never prove logic, a calculation, a permission or a
-  write through one, and never write a journey per role over every page: that table is the access
-  table's.
-- **Endpoint tests and the access table read a build**, so a config edit needs a build first. While
-  editing an app, call the endpoint on the dev server (`lowdefy_run_endpoint` or
-  `lowdefy_run_request` with `user` and `data`), and run the endpoint tests once before calling the
-  change done.
+- **Each check has one home.** A page's logic, state and writes are a journey that targets blocks by
+  `blockId` and asserts with `expect.state`, `expect.calls` or `expect: { db }`, so it runs headless
+  (`lowdefy test --headless --build`); a write journey ends with `expect: { db }`. What a page would
+  never send is a page-less journey with `call` or `request`. Endpoint tests hold only what YAML
+  cannot say. A browser journey, the most expensive check, is for what a page shows. Never write a
+  journey per role over every page: that table is the access table's.
+- **Headless journeys on a build, endpoint tests and the access table read a build**, so a config
+  edit needs a build first. While editing an app, call the endpoint on the dev server
+  (`lowdefy_run_endpoint` or `lowdefy_run_request` with `user` and `data`), and run the tests once
+  before calling the change done.
 - **The access table proves nothing until its snapshot is committed.** A changed snapshot is named
   in the pull request.
 - Block behaviour is covered by e2e specs, not by any of these ([Block tests](#block-tests)).
 
 `lowdefy agent-setup` writes the same rules into an app's `AGENTS.md`
-(`packages/cli/src/commands/agentSetup/testingRules.js`), and the user docs for the two levels
+(`packages/cli/src/commands/agentSetup/testingRules.js`) and each journey skill
+(`skills/testLevel.js`), and the user docs for the two levels
 `@lowdefy/test-utils` adds are `packages/docs/testing/endpoint-tests.md`. The package is described
 in [utils/test-utils.md](./utils/test-utils.md).
 
@@ -201,6 +206,26 @@ The dev server log is `apps/journey-fixture/.lowdefy/fixture-dev-server.log`. CI
 the complete path, before every release (see [CI](#ci)). Run it when
 changing the journey runner, journey cookies or mutants. Which page, data set and test covers
 which journey feature is listed under "Fixture app" in `code-docs/architecture/journeys.md`.
+
+### Headless parity
+
+The server-dev fixture suite also checks every journey it posts that `classifyJourney` calls
+headless gives the same result headless (`test/journeyFixture/checkParity.mjs`): its global setup
+builds the fixture into `_server/parity-journey-fixture`, and each check runs the journey with
+`@lowdefy/journey-headless` on that build. A difference fails the test;
+`LOWDEFY_JOURNEY_PARITY=report` records differences without failing, `=off` turns the check off.
+Each check is recorded in `apps/journey-fixture/.lowdefy/parity/<pid>.jsonl` (same, browser-only,
+browser-only at run time, needs a server host, mutant or different).
+
+The headless runner's own suites run over production builds of the fixture, no browser needed:
+
+```bash
+pnpm --filter=@lowdefy/journey-headless test           # unit tests
+pnpm --filter=@lowdefy/journey-headless test:fixture   # the runner over _server/test-utils-journey-fixture
+```
+
+Its fixture suite shares `_server/test-utils-journey-fixture` with `@lowdefy/test-utils`'
+fixture suite and the CLI's `headless.test.mjs`, so do not run them at once in one worktree.
 
 ## Endpoint test harness
 

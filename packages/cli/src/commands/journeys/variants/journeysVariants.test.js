@@ -92,6 +92,8 @@ beforeEach(() => {
   context = {
     directories: {
       config: configDirectory,
+      build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
       journeys: journeysPath(),
       test: path.join(configDirectory, '.lowdefy', 'test'),
     },
@@ -138,6 +140,7 @@ test('journeysVariants --no-run measures the journey once, writes the variants a
   expect(logs.info.filter((line) => line.startsWith('SKIPPED'))).toEqual([
     'SKIPPED  role: the journey declares no data: set',
     'SKIPPED  role: the journey declares no data: set',
+    'SKIPPED  tenant: the journey declares no data: set',
     'SKIPPED  tenant: the journey declares no data: set',
     'SKIPPED  empty: pass --empty-data <data set> to write it',
     'SKIPPED  volume: pass --volume-data <data set> to write it',
@@ -262,6 +265,7 @@ test('journeysVariants writes the data-set kinds from data set files, byte for b
     'member-opens-a-ticket-empty.yaml',
     'member-opens-a-ticket-role-1.yaml',
     'member-opens-a-ticket-role-2.yaml',
+    'member-opens-a-ticket-role-3.yaml',
     'member-opens-a-ticket-tenant.yaml',
   ]);
   expect(logs.info).toContain('SKIPPED  volume: data set "big-org" has no user "member"');
@@ -302,6 +306,22 @@ test('journeysVariants writes the data-set kinds from data set files, byte for b
       'steps:',
       '  - expect: { url: { contains: /404 } }',
       '  - expect: { hidden: tickets_grid }',
+      '',
+    ].join('\n')
+  );
+  // The page-less form: the refused user calls the page's requests the journey called.
+  expect(read('member-opens-a-ticket-role-3.yaml')).toEqual(
+    [
+      'name: "member opens a ticket — role: requests refused to guest"',
+      'user: guest',
+      'data: tickets',
+      'variant:',
+      '  of: member opens a ticket',
+      '  kind: role',
+      '  detail: requests refused to guest',
+      'steps:',
+      '  - request: { pageId: tickets, requestId: save, payload: {} }',
+      '  - expect: { status: 403 }',
       '',
     ].join('\n')
   );
@@ -408,6 +428,41 @@ test('journeysVariants replays a granted role variant, whose comment is no place
   // One baseline run as member, then the granted variant three times as admin.
   expect(bodies.map((body) => body.user)).toEqual(['member', 'admin', 'admin', 'admin']);
   expect(logs.warn.filter((line) => line.startsWith('NOT RUN'))).toEqual([]);
+  expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*granted to admin/));
+});
+
+test('journeysVariants replays a headless variant the runner finds needs a browser in the browser', async () => {
+  writeDataSet(
+    'tickets',
+    [
+      'users:',
+      '  member: { id: u_1, roles: [member] }',
+      '  admin: { id: u_2, roles: [admin] }',
+      '',
+    ].join('\n')
+  );
+  fs.writeFileSync(
+    journeysPath('tickets.yaml'),
+    JSON.stringify({ ...journey, data: 'tickets', user: 'member' })
+  );
+  mockPost.mockImplementation(async (target, body) =>
+    body.headless === true
+      ? { data: { browserOnly: { index: 1, step: { click: 'save' }, reason: 'needs one' } } }
+      : { data: { passed: true, steps: [], exercised } }
+  );
+  await variants({ kinds: 'role' });
+  const bodies = mockPost.mock.calls.map(([, body]) => [body.user, body.headless === true]);
+  // The baseline, then each of the granted variant's three replays tries headless and runs in
+  // the browser.
+  expect(bodies).toEqual([
+    ['member', false],
+    ['admin', true],
+    ['admin', false],
+    ['admin', true],
+    ['admin', false],
+    ['admin', true],
+    ['admin', false],
+  ]);
   expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*granted to admin/));
 });
 

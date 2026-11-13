@@ -25,7 +25,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./assert": "./dist/assert/index.js",
-    "./dataSets": "./dist/dataSets/index.js"
+    "./dataSets": "./dist/dataSets/index.js",
+    "./headless": "./dist/headless/index.js"
   },
   "files": [
     "dist/*"

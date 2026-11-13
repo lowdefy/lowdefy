@@ -16,10 +16,9 @@
 
 import axios from 'axios';
 import { type } from '@lowdefy/helpers';
-import { findPlaceholderStep } from '@lowdefy/node-utils';
 
+import checkJourneyItem from './checkJourneyItem.js';
 import recordingJourneyName from './recordingJourneyName.js';
-import validateJourney from './validateJourney.js';
 
 function describeHttpError(error) {
   if (type.isNone(error.response)) {
@@ -36,44 +35,18 @@ function describeHttpError(error) {
 // failed step — into the same result shape the reporter prints. `recordRun`
 // (a trace id) asks the dev server to record this journey into that test
 // run's trace; an older server ignores the field and records nothing. A harden
-// run passes the config `mutant` to apply to this run's browsers.
-async function runJourney({ context, item, url, recordRun, mutant }) {
+// run passes the config `mutant` to apply to this run's browsers. `headless`
+// asks the dev server to run the journey with no browser; a journey that needs
+// one answers `browserOnly` ({ index, step, reason }), neither passed nor
+// failed.
+async function runJourney({ context, item, url, recordRun, mutant, headless = false }) {
   const { filePath, journey } = item;
-  const name = journey?.name ?? filePath;
-  if (!type.isNone(item.error)) {
-    return {
-      name,
-      filePath,
-      passed: false,
-      refused: true,
-      stepCount: 0,
-      durationMs: 0,
-      message: item.error,
-    };
+  const refused = checkJourneyItem({ item });
+  if (!type.isUndefined(refused)) {
+    return refused;
   }
-  // A persona run is named `<name> [<user>]`; the name limit applies to the
-  // name as authored, which expandPersonas validated, never to the run name.
-  const validation = validateJourney({
-    journey: type.isNone(item.personaOf) ? journey : { ...journey, name: item.personaOf.name },
-  });
-  if (!validation.valid) {
-    return {
-      name,
-      filePath,
-      passed: false,
-      refused: true,
-      stepCount: 0,
-      durationMs: 0,
-      message: `Invalid journey file: ${validation.message}`,
-    };
-  }
+  const name = journey.name;
   const stepCount = journey.steps.length;
-  // The dev server refuses a placeholder too; checking here reports it without
-  // the round trip.
-  const { error: placeholderError } = findPlaceholderStep({ steps: journey.steps });
-  if (!type.isUndefined(placeholderError)) {
-    return { name, filePath, passed: false, stepCount, durationMs: 0, message: placeholderError };
-  }
   const start = Date.now();
   let response;
   try {
@@ -87,6 +60,9 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
       timeout: journey.timeout,
       mutant,
     };
+    if (headless) {
+      body.headless = true;
+    }
     if (!type.isNone(recordRun)) {
       body.recording = {
         run: recordRun,
@@ -118,6 +94,16 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
   if (!type.isNone(result.error)) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }
+  if (!type.isNone(result.browserOnly)) {
+    return {
+      name,
+      filePath,
+      passed: false,
+      stepCount,
+      durationMs,
+      browserOnly: result.browserOnly,
+    };
+  }
   // The data set the server loaded and its warnings (colliding connections, size advice).
   const dataSet = { data: result.data, warnings: result.warnings };
   if (result.passed === true) {
@@ -131,6 +117,10 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
       exercised: result.exercised,
       mutant: result.mutant,
     };
+    // A headless run records the calls its pages made, with their payloads.
+    if (!type.isNone(result.calls)) {
+      passed.calls = result.calls;
+    }
     // Evidence is read from the file for the PASS line; it is never sent to
     // the dev server.
     if (!type.isNone(journey.evidence)) {
