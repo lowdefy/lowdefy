@@ -86,13 +86,30 @@ test.describe('QRScanner reading codes', () => {
   });
 });
 
-test.describe('QRScanner without a camera', () => {
-  test('shows the error and fires onError', async ({ page }) => {
+// A browser with a camera (Chromium's fake one) whose fake permission prompt refuses it, as a
+// person who blocks the camera does. The test runner's own browser is not used: headless
+// Chromium (Playwright 1.65) without the fake prompt rejects every camera request with
+// NotSupportedError, whatever the permission.
+test.describe('QRScanner with camera permission denied', () => {
+  let deniedBrowser;
+
+  test.beforeAll(async () => {
+    deniedBrowser = await chromium.launch({
+      args: ['--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream=deny'],
+    });
+  });
+
+  test.afterAll(async () => {
+    await deniedBrowser.close();
+  });
+
+  test('shows the error and fires onError', async ({ baseURL }) => {
+    const page = await deniedBrowser.newPage({ baseURL });
     await navigateToTestPage(page, 'qrscanner-scan');
-    await expect(getBlock(page, 'qrscanner_scan').getByRole('alert')).toBeVisible();
-    await expect(getBlock(page, 'error_event_text')).toHaveText(
-      /error: (NotAllowedError|NotFoundError)/
+    await expect(getBlock(page, 'qrscanner_scan').getByRole('alert')).toHaveText(
+      'Camera permission was denied.'
     );
+    await expect(getBlock(page, 'error_event_text')).toHaveText('error: NotAllowedError');
     await expect(getBlock(page, 'scan_value')).toHaveText('value:  ');
   });
 });
