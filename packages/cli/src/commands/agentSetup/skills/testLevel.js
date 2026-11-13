@@ -14,22 +14,26 @@
   limitations under the License.
 */
 
-// What a journeys skill says about the checks that are not a journey's. The
-// skills write journeys, so each says where logic, permissions and writes are
-// proved instead, in the words of "Testing a change" in AGENTS.md
-// (testingRules.js).
+// Where a journeys skill sends each kind of check. The skills write journeys,
+// so each says which checks a journey takes and which go elsewhere, in the
+// words of "Testing a change" in AGENTS.md (testingRules.js).
 function testLevel() {
-  return `## What is not a journey
+  return `## Where each check lives
 
-A journey proves what only a browser shows: what a page shows, how it reacts and paths across pages.
-Logic, calculations, permissions and what a request or endpoint writes are proved one level down,
-never by adding a journey:
+Each check has one home, so it is never written twice:
 
-- Call the request or endpoint with \`lowdefy_run_request\` or \`lowdefy_run_endpoint\`, passing
-  \`user\` and \`data\`.
-- Where the app has endpoint tests (\`tests/endpoints/\`), the regression test for such a check is an
-  endpoint test: add or update one, and run them once before you call the work done. "Testing a
-  change" in AGENTS.md has the command.
+- A page's logic, state and what it writes: one journey that targets blocks by \`blockId\` and
+  asserts with \`expect.state\`, \`expect.calls\` or \`expect: { db }\`. Such a journey needs no
+  browser: \`lowdefy test --headless --build\` runs it on a build. A write journey ends with
+  \`expect: { db }\` on what was stored; add \`expect.text\` only when what the page shows is the
+  point.
+- What a page would never send (another tenant's ids, wrong types, a refused role): a journey with
+  no \`pageId\` and \`call\` or \`request\` steps.
+- While you edit, call the request or endpoint with \`lowdefy_run_request\` or
+  \`lowdefy_run_endpoint\`, passing \`user\` and \`data\`.
+- Table-driven cases, computed expected values, fixtures built in code, stubbed services, race tests
+  and cron or internal routines: an endpoint test (\`tests/endpoints/\`), never a journey per case.
+  "Testing a change" in AGENTS.md has the command.
 - Where the app keeps an access table snapshot (an endpoint test that calls \`accessMatrix\`), it is
   the check of who can reach which page and endpoint: write no journey per role and page for it.
   Say in the pull request when that snapshot changed, and why.`;

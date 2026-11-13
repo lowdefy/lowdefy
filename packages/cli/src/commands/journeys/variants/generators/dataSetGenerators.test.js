@@ -173,6 +173,21 @@ test('roleRefused also writes a page-less variant calling the page requests the 
   });
 });
 
+test('roleRefused is skipped when the app keeps an access table snapshot', () => {
+  const pageConfigsMemberOnly = [{ auth: { public: false, roles: ['member'] } }];
+  expect(
+    roleRefused({
+      journey,
+      dataSet,
+      pageConfigs: pageConfigsMemberOnly,
+      accessSnapshotTest: 'tests/endpoints/access.test.mjs',
+    })
+  ).toEqual({
+    skipped:
+      'the app keeps an access table snapshot (tests/endpoints/access.test.mjs calls accessMatrix), which is the check of who reaches this page',
+  });
+});
+
 test('roleRefused is skipped without auth.roles or when every user holds a page role', () => {
   expect(roleRefused({ journey, dataSet, pageConfigs: [{ auth: { public: false } }] })).toEqual({
     skipped: 'page "tickets" has no auth.roles',
@@ -267,11 +282,11 @@ test('roleRefused writes neither form when the app keeps an access table snapsho
       dataSet,
       pageConfigs: pageConfigsMemberOnly,
       exercised: { requests: [{ pageId: 'tickets', requestId: 'get_tickets', write: false }] },
-      accessSnapshot: 'tests/endpoints/access.test.mjs.snapshot',
+      accessSnapshotTest: 'tests/endpoints/access.test.mjs',
     })
   ).toEqual({
     skipped:
-      'the access table snapshot (tests/endpoints/access.test.mjs.snapshot) already answers who reaches page "tickets"',
+      'the app keeps an access table snapshot (tests/endpoints/access.test.mjs calls accessMatrix), which is the check of who reaches this page',
   });
 });
 

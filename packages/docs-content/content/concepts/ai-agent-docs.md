@@ -265,11 +265,11 @@ Scheduled and detached-only endpoints are `InternalApi` by design, so a plain ru
 
 This is dev-only — enable it when you're comfortable with the agent writing to your dev data.
 
-Calling an endpoint or request directly is the way to check logic, calculations, permissions and what it writes while editing: pass `user` and `data` to act as a [data set](/journey-data-sets) user on a database of its own. To keep such a check as a regression test, write an [endpoint test](/endpoint-tests), which runs the built endpoint in a Node test with no dev server.
+Calling an endpoint or request directly is the way to check logic, calculations, permissions and what it writes while editing: pass `user` and `data` to act as a [data set](/journey-data-sets) user on a database of its own. To keep such a check as a regression test, write a journey that needs no browser: driven from the page, or with no `pageId` and a `call` or `request` step for what a page would never send. An [endpoint test](/endpoint-tests) holds what a journey cannot say, such as table-driven cases and stubbed services.
 
 ## Journeys — verify behaviour, not just layout
 
-A journey is for what only a browser shows: what a page shows, how it reacts and paths across pages. It drives a real browser, so it is the most expensive check an agent has. Logic, permissions and what a request or endpoint writes are checked with `lowdefy_run_request` and `lowdefy_run_endpoint` above.
+A journey in the browser is the most expensive check an agent has, so keep `expect.text` for what only a browser shows: what a page shows, how it reacts and paths across pages. While editing, logic, permissions and what a request or endpoint writes are checked with `lowdefy_run_request` and `lowdefy_run_endpoint` above; their regression test is a journey that targets blocks by `blockId` and checks state, calls and the database, which needs no browser.
 
 A screenshot shows what rendered; it cannot tell the agent whether the form submits, the modal opens or the filter works. `lowdefy_run_journey` (or `POST /lowdefy-docs/journey`) opens a page headless and drives it through a declarative list of steps — a tiny Playwright — then reports what happened as data. Blocks are addressed by their `blockId`, through the same `#bl-<blockId>` DOM contract `@lowdefy/e2e-utils` uses, so a journey reads like the config it tests:
 
