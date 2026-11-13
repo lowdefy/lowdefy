@@ -168,8 +168,20 @@ function createViewHost({ bridge, router, window }) {
     // session as subprotocols, read for every connect. renew asks for a new
     // session first: the websocket client sets it when the last connection
     // may have been refused for an ended one.
-    websocketProtocols: async ({ renew } = {}) =>
-      getViewSocketProtocols({ token: await session.getToken({ renew }) }),
+    //
+    // An ended view signs no handshake, so the websocket client opens no
+    // socket after end has closed them: not for a reconnect already waiting,
+    // and not for one whose session was being minted as the view ended.
+    websocketProtocols: async ({ renew } = {}) => {
+      if (ended) {
+        throw new Error('The view has ended.');
+      }
+      const token = await session.getToken({ renew });
+      if (ended) {
+        throw new Error('The view has ended.');
+      }
+      return getViewSocketProtocols({ token });
+    },
     // apiBase carries the app's origin, so the path does too.
     websocketUrl: (path) => path.replace(/^http/, 'ws'),
   };

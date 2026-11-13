@@ -230,6 +230,20 @@ test('createViewHost signs a websocket handshake with the session as subprotocol
   );
 });
 
+test('createViewHost signs no websocket handshake once the view has ended', async () => {
+  const { host, view } = setup();
+  host.view.end({ message: 'Ended.' });
+  await expect(host.websocketProtocols({ renew: false })).rejects.toThrow('The view has ended.');
+  expect(view.host.callServerTool).not.toHaveBeenCalled();
+});
+
+test('createViewHost signs no websocket handshake when the view ends while its session is minted', async () => {
+  const { host } = setup();
+  const signing = host.websocketProtocols({ renew: false });
+  host.view.end({ message: 'Ended.' });
+  await expect(signing).rejects.toThrow('The view has ended.');
+});
+
 test('createViewHost window.open asks the host to open the link and never opens in the frame', () => {
   const { fakeWindow, host, view } = setup();
   const handle = host.globals.window.open('/base/runs?state=open', '_blank');
