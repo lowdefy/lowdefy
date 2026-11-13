@@ -91,7 +91,7 @@ server-dev/
 │   │   └── errorHandler.js   # app.onError — serialized error contract
 │   ├── routes/               # reload, ping, jitPage, root, request,
 │   │                         # endpoints, auth, agent,
-│   │                         # clientError, usage, devTools
+│   │                         # clientError, usage
 │   └── lib/                  # getPathSegments, safeScriptJson, serveBuildJs
 ├── client/                   # Vite client entry (served as modules with HMR)
 │   ├── main.jsx              # CSS imports, router, HMR-stable React root
@@ -913,7 +913,7 @@ function reloadClients({ directories }) {
 
 The Hono app is mounted into Vite via `@hono/vite-dev-server`. There is no compression in dev (parity with the old `compress: false`, and SSE must stay unbuffered). Mounting order matters:
 
-1. **Context-free routes first**: `/api/reload`, `/api/ping`, `/api/dev-tools` — these had no `apiWrapper` before and need no request context.
+1. **Context-free routes first**: `/api/reload` and `/api/ping` — these had no `apiWrapper` before and need no request context.
 2. **`initAuthConfig`** (app-wide) — only when `authJson.configured === true`.
 3. **`apiContext()`** on `/api/*`, then `/api/auth/*` (Auth.js handler), `/api/root`, `/api/page/*`, `/api/request/*`, `/api/endpoints/*`, `/api/client-error`, `/api/usage`, `/api/agent/*` (with a 10mb `bodyLimit`).
 4. **`serveStatic({ root: './public' })`** for user public assets (icons, images).

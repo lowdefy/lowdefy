@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import flexChildStyle from './flexChildStyle.js';
 
 test('flexChildStyle adds the column gap to a size in points', () => {
