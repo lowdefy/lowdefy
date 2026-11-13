@@ -562,17 +562,28 @@ test('a backgroundTint cross-fades to a new colour', async () => {
   const { view } = renderScreen({ page: tintPage });
   await view;
   await waitFor(400);
-  await act(async () => {
-    fireEvent.press(screen.getByText('Next'));
-  });
-  // The new tint fades in over the old one as it fades out.
-  const incoming = await screen.findByTestId('screen_tint_1');
-  expect(tintColors(incoming)[0]).toBe(processColor('rgba(22, 119, 255, 0.35)'));
-  expect(screen.getByTestId('screen_tint_0')).toBeTruthy();
-  // Faded out after 250ms, the old tint is gone.
-  await waitFor(400);
-  expect(screen.queryByTestId('screen_tint_0')).toBeNull();
-  expect(screen.getByTestId('screen_tint_1')).toBeTruthy();
+  // The fade runs on fake timers. React Native's Jest preset ends a native-driver animation 16ms
+  // after it starts, so on real timers a slow runner can remove the old tint before the test
+  // sees both.
+  jest.useFakeTimers();
+  try {
+    await act(async () => {
+      fireEvent.press(screen.getByText('Next'));
+    });
+    // The new tint fades in over the old one as it fades out.
+    const incoming = screen.getByTestId('screen_tint_1');
+    expect(tintColors(incoming)[0]).toBe(processColor('rgba(22, 119, 255, 0.35)'));
+    expect(screen.getByTestId('screen_tint_0')).toBeTruthy();
+    // Once the fade ends, the old tint is gone. A sync act does not apply the update the fade's
+    // end makes; an async one does.
+    await act(async () => {
+      jest.advanceTimersByTime(400);
+    });
+    expect(screen.queryByTestId('screen_tint_0')).toBeNull();
+    expect(screen.getByTestId('screen_tint_1')).toBeTruthy();
+  } finally {
+    jest.useRealTimers();
+  }
 });
 
 test('a backgroundTint draws colorDark at 45% in dark mode', async () => {
