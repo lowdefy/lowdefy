@@ -18,12 +18,17 @@ import { expect, test, vi } from 'vitest';
 
 import openCamera from './openCamera.js';
 
-function createMediaDevices({ torch }) {
+function createMediaDevices({ torch, torchError }) {
   const track = {
-    applyConstraints: vi.fn(async () => {}),
+    applyConstraints: vi.fn(async () => {
+      if (torchError) {
+        throw torchError;
+      }
+    }),
     getCapabilities: () => (torch ? { torch: true } : {}),
+    stop: vi.fn(),
   };
-  const stream = { getVideoTracks: () => [track] };
+  const stream = { getTracks: () => [track], getVideoTracks: () => [track] };
   return {
     mediaDevices: { getUserMedia: vi.fn(async () => stream) },
     stream,
@@ -58,6 +63,13 @@ test('openCamera turns the torch on only where the camera has one', async () => 
   const withoutTorch = createMediaDevices({ torch: false });
   await openCamera({ aspectRatio: 1, mediaDevices: withoutTorch.mediaDevices, torch: true });
   expect(withoutTorch.track.applyConstraints).not.toHaveBeenCalled();
+});
+
+test('openCamera releases the camera when turning the torch on fails', async () => {
+  const torchError = new Error('Torch failed.');
+  const { mediaDevices, track } = createMediaDevices({ torch: true, torchError });
+  await expect(openCamera({ aspectRatio: 1, mediaDevices, torch: true })).rejects.toBe(torchError);
+  expect(track.stop).toHaveBeenCalled();
 });
 
 test('openCamera throws a SecurityError when the page cannot use the camera', async () => {

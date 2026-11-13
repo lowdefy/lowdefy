@@ -89,10 +89,13 @@ function createScanner({ getProperties, getVideo, onError, onPlaying, onRead }) 
     onPlaying(false);
   }
 
+  // An error from a session that was already stopped is not reported: stopping it is what
+  // aborts its video.play() or leaves its last read without a frame.
   function fail(current, error) {
-    if (session === current) {
-      stop();
+    if (current.stopped) {
+      return;
     }
+    stop();
     onError(getCameraError({ error }));
   }
 
@@ -132,6 +135,9 @@ function createScanner({ getProperties, getVideo, onError, onPlaying, onRead }) 
       const detector = await createDetector({
         formats: toDetectorFormats({ types: properties.types }),
       });
+      if (current.stopped) {
+        return;
+      }
       const stream = await openCamera({
         aspectRatio: properties.aspectRatio,
         deviceId: properties.deviceId,
@@ -147,6 +153,9 @@ function createScanner({ getProperties, getVideo, onError, onPlaying, onRead }) 
       const video = getVideo();
       video.srcObject = stream;
       await video.play();
+      if (current.stopped) {
+        return;
+      }
       onPlaying(true);
       readFrames({ current, detector, properties });
     } catch (error) {

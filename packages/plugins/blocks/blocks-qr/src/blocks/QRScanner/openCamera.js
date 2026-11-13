@@ -30,7 +30,13 @@ async function openCamera({ aspectRatio, deviceId, facingMode, mediaDevices, tor
     // Torch is a camera capability, not a browser one: most phones' back cameras have it,
     // iPhones in Safari and front cameras do not, and asking without it rejects.
     if (track.getCapabilities?.().torch) {
-      await track.applyConstraints({ advanced: [{ torch: true }] });
+      try {
+        await track.applyConstraints({ advanced: [{ torch: true }] });
+      } catch (error) {
+        // The scanner only learns of the stream once this returns, so release it here.
+        stream.getTracks().forEach((cameraTrack) => cameraTrack.stop());
+        throw error;
+      }
     }
   }
   return stream;
