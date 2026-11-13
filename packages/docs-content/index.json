@@ -3176,7 +3176,7 @@
         "version.yaml",
         "websockets/introduction.yaml"
       ],
-      "hash": "949ab851163dc40decd06e30ad974087dea1115f91ab6791104a2c010b5a6197"
+      "hash": "10531b9d224483afbf1c824329c34538dea1ebfa9870ebe031c1996977603616"
     },
     "websockets/websocket-subscriptions": {
       "files": [
@@ -3190,7 +3190,7 @@
         "version.yaml",
         "websockets/publish.yaml"
       ],
-      "hash": "e399a5176ea0fe3db88dd1ca3425279b4687b193e27308f8159acb6da65c3720"
+      "hash": "e01f81f52a3bff3493e3f31b2a43fc9e9cb93a13bb3821e5befe9666100ec1fe"
     },
     "deployment/docker": {
       "files": [
@@ -3208,7 +3208,7 @@
       "files": [
         "deployment/vercel.yaml"
       ],
-      "hash": "42dcf611ce291c27117b550a9050dc09c7f2a9e096c872efacd54499955a0bc0"
+      "hash": "0202d3eb1b1999b6f6723051cd91970e90ddc654c4b2ff972463a3dc7ad4908c"
     },
     "deployment/deployment-environments": {
       "files": [
