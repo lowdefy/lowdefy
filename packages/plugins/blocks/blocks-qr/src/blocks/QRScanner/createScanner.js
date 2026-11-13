@@ -26,6 +26,15 @@ import toScanType from './toScanType.js';
 // HTMLMediaElement.HAVE_CURRENT_DATA: the video has a frame to read.
 const HAVE_CURRENT_DATA = 2;
 
+// A frame can be read once the video has one, and, with a qrbox, once the video is drawn: qrbox is
+// in screen pixels, so the crop needs the drawn width, which is 0 until the block shows the video.
+function isFrameReady({ canvas, video }) {
+  if (video.readyState < HAVE_CURRENT_DATA) {
+    return false;
+  }
+  return canvas === null || video.clientWidth > 0;
+}
+
 function getFrame({ canvas, qrbox, video }) {
   if (canvas === null) {
     return video;
@@ -91,7 +100,7 @@ function createScanner({ getProperties, getVideo, onError, onPlaying, onRead }) 
     const canvas = type.isNone(properties.qrbox) ? null : document.createElement('canvas');
     async function read() {
       const video = getVideo();
-      if (video.readyState >= HAVE_CURRENT_DATA) {
+      if (isFrameReady({ canvas, video })) {
         const codes = await detector.detect(getFrame({ canvas, qrbox: properties.qrbox, video }));
         if (current.stopped) {
           return;

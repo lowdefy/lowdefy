@@ -1,0 +1,77 @@
+# Copyright 2020-2026 Lowdefy, Inc
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# A scanner that starts on load. QRScannerScan.e2e.spec.js points Chromium's fake camera at a
+# video of a QR code, or opens the page with no camera to test onError.
+id: qrscanner-scan
+type: Box
+
+blocks:
+  - id: qrscanner_scan
+    type: QRScanner
+    # As wide as the fake camera's 320px frame, so the 200px qrbox covers its 168px code.
+    style:
+      .element:
+        width: 320
+    properties:
+      types:
+        - qr
+      qrbox: 200
+    events:
+      onScan:
+        - id: set_scan_event
+          type: SetState
+          params:
+            scan_event:
+              _event: true
+      onError:
+        - id: set_error_event
+          type: SetState
+          params:
+            error_event:
+              _event: error
+
+  - id: scan_value
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - 'value: '
+          - _if_none:
+              - _state: qrscanner_scan.data
+              - ''
+          - ' '
+          - _if_none:
+              - _state: qrscanner_scan.type
+              - ''
+
+  - id: scan_event_text
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - 'event: '
+          - _if_none:
+              - _state: scan_event.data
+              - ''
+
+  - id: error_event_text
+    type: Html
+    properties:
+      html:
+        _string.concat:
+          - 'error: '
+          - _if_none:
+              - _state: error_event.name
+              - ''
