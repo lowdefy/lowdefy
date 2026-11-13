@@ -103,7 +103,6 @@ test('the shell registers the client operators of every default operator package
     ['_cron', 'cron'],
     ['_dayjs', 'dayjs'],
     ['_diff', 'diff'],
-    ['_jsonata', 'jsonata'],
     ['_mql', 'mql'],
     ['_nunjucks', 'nunjucks'],
     ['_uuid', 'uuid'],

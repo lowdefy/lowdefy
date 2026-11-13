@@ -489,7 +489,7 @@ Each built-in semantic name draws a Lucide icon:
 | `arrow-up` | ArrowUp | `location` | MapPin |
 | `attach` | Paperclip | `lock` | Lock |
 | `bell` | Bell | `login` | LogIn |
-| `bold` | Bold | `logout` | LogOut |
+| `bold` | LetterB | `logout` | LogOut |
 | `bot` | Bot | `mail` | Mail |
 | `calendar` | Calendar | `menu` | Menu |
 | `camera` | Camera | `message` | MessageSquare |
@@ -523,7 +523,7 @@ Each built-in semantic name draws a Lucide icon:
 | `highlight` | Highlighter | `user` | User |
 | `history` | RotateCcwClock | `users` | Users |
 | `home` | House | `view` | Eye |
-| `icon-missing` | CircleAlert | `warning` | TriangleAlert |
+| `icon-missing` | CircleExclamationPoint | `warning` | TriangleExclamationPoint |
 | `image` | Image |  |  |
 
 Ant Design icon names also work and map to the same icons: `check-circle` (CircleCheck), `clock-circle` (Clock), `close-circle` (CircleX), `down` (ChevronDown), `ellipsis` (Ellipsis), `environment` (MapPin), `file-text` (FileText), `info-circle` (Info), `left` (ChevronLeft), `plus` (Plus), `printer` (Printer), `reload` (RefreshCw), `right` (ChevronRight), `setting` (Settings), `up` (ChevronUp).

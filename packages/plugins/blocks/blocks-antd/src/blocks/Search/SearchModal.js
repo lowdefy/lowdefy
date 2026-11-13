@@ -204,7 +204,6 @@ function SearchModal({
     if (!open || !query) return;
     setResults(searchIndex.search(query));
     setResultsQuery(query);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchIndex.version]);
 
   useEffect(() => {

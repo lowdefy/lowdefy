@@ -218,4 +218,58 @@ test.describe('Button Block', () => {
     await page.waitForTimeout(500);
     await expect(display).not.toHaveText('hidden:fired');
   });
+
+  test('fires a modifier shortcut while typing in a text input', async ({ page }) => {
+    const mod = await getShortcutModifier(page);
+    const input = getBlock(page, 'button_shortcut_typing_input').locator('input');
+    await input.click();
+    await input.pressSequentially('abc');
+    await page.keyboard.press(`${mod}+u`);
+    await expect(getBlock(page, 'button_shortcut_counted_display')).toHaveText('counted:1');
+    await expect(input).toBeFocused();
+  });
+
+  test('does not fire a plain-key shortcut while typing in a text input', async ({ page }) => {
+    const input = getBlock(page, 'button_shortcut_typing_input').locator('input');
+    await input.click();
+    await input.pressSequentially('quick gb');
+    await expect(input).toHaveValue('quick gb');
+    await page.waitForTimeout(500);
+    await expect(getBlock(page, 'button_shortcut_plain_display')).toHaveText('plain:0');
+    await expect(getBlock(page, 'button_shortcut_sequence_display')).toHaveText('');
+  });
+
+  test('fires a plain-key shortcut outside form fields', async ({ page }) => {
+    const display = getBlock(page, 'button_shortcut_plain_display');
+    // Wait for the page to render, so its shortcuts are bound before the key is pressed.
+    await expect(display).toHaveText('plain:0');
+    await page.keyboard.press('q');
+    await expect(display).toHaveText('plain:1');
+  });
+
+  test('fires a held shortcut once, not on every key repeat', async ({ page }) => {
+    const mod = await getShortcutModifier(page);
+    const display = getBlock(page, 'button_shortcut_counted_display');
+    // Wait for the page to render, so its shortcuts are bound before the keys are pressed.
+    await expect(display).toHaveText('counted:0');
+    await page.keyboard.down(mod);
+    // Playwright sends the second and later keydowns of a held key with repeat set.
+    await page.keyboard.down('u');
+    await page.keyboard.down('u');
+    await page.keyboard.down('u');
+    await page.keyboard.up('u');
+    await page.keyboard.up(mod);
+    await expect(display).toHaveText('counted:1');
+    await page.waitForTimeout(500);
+    await expect(display).toHaveText('counted:1');
+  });
+
+  test('fires a key sequence shortcut when its keys are pressed in order', async ({ page }) => {
+    const display = getBlock(page, 'button_shortcut_sequence_display');
+    await expect(display).toBeAttached();
+    await page.keyboard.press('g');
+    await expect(display).toHaveText('');
+    await page.keyboard.press('b');
+    await expect(display).toHaveText('sequence:fired');
+  });
 });

@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-// eslint-disable-next-line no-unused-vars
 import { vi, beforeEach, describe, expect, test } from 'vitest';
 import createBrowserLogger from './createBrowserLogger.js';
 

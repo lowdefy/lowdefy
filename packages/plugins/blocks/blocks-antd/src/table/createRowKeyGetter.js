@@ -25,7 +25,7 @@ function createRowKeyGetter({ rowKey } = {}) {
   const generated = new WeakMap();
   let counter = 0;
   return function getRowKey(row) {
-    const key = type.isString(rowKey) ? get(row, rowKey) : row?._id ?? row?.id;
+    const key = type.isString(rowKey) ? get(row, rowKey) : (row?._id ?? row?.id);
     if (!type.isNone(key)) return type.isObject(key) ? JSON.stringify(key) : key;
     let fallback = generated.get(row);
     if (type.isUndefined(fallback)) {

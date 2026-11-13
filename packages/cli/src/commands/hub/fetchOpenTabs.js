@@ -16,6 +16,8 @@
 
 import { devPassiveHeader } from '@lowdefy/node-utils';
 
+import httpFetch from '../../utils/httpFetch.js';
+
 // A dev server that stopped answering must not hold up the reaper.
 const OPEN_TABS_TIMEOUT_MS = 5000;
 
@@ -24,9 +26,10 @@ const OPEN_TABS_TIMEOUT_MS = 5000;
 async function fetchOpenTabs({ url, timeoutMs = OPEN_TABS_TIMEOUT_MS }) {
   try {
     // Passive: asking whether a server is in use must not count as using it.
-    const response = await fetch(`${url}/api/dev-inspect`, {
+    const response = await httpFetch({
+      url: `${url}/api/dev-inspect`,
       headers: { [devPassiveHeader]: '1' },
-      signal: AbortSignal.timeout(timeoutMs),
+      timeoutMs,
     });
     const { tabs } = await response.json();
     return tabs.length;

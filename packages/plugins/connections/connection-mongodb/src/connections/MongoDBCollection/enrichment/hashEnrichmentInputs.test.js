@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-/* global BigInt */
 import { readFile } from 'node:fs/promises';
 import { Binary, Decimal128, Long, ObjectId } from 'mongodb';
 import { serializer } from '@lowdefy/helpers';

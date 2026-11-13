@@ -27,7 +27,7 @@ function getItemKey({ index, sectionKey, value }) {
 }
 
 function getHeaderSection({ count, header, showCount }) {
-  const config = type.isString(header) ? { title: header } : header ?? {};
+  const config = type.isString(header) ? { title: header } : (header ?? {});
   return {
     key: '',
     title: config.title,

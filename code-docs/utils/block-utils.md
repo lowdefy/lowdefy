@@ -139,7 +139,7 @@ The returned component has `.meta`, `.displayName` (`'LazyBlock'`) and `.preload
 - A queued call rejects when its method was never registered (with `CallMethod`'s own missing-method text), when the load fails, or when the block unmounts first. Nothing waits forever.
 - A method the implementation registers but `meta.methods` does not declare is registered directly (it cannot be called before load) and logs a warning once in development.
 
-**Loading.** `createLazyLoader` memoizes a successful load only: on failure the promise and the `React.lazy` component are dropped, so the next mount retries. The load error is thrown to the block's `ErrorBoundary`. Once the module has loaded, new mounts render it directly rather than through `React.lazy`, which would suspend once more in React 18.
+**Loading.** `createLazyLoader` memoizes a successful load only: on failure the promise and the `React.lazy` component are dropped, so the next mount retries. The load error is thrown to the block's `ErrorBoundary`. Once the module has loaded, new mounts render it directly rather than through `React.lazy`, which would suspend once more even though its promise has resolved.
 
 **Readiness.** Each mounted block that is still waiting counts towards `getLazyBlockLoadsInFlight()`, mirrored on `window.__lowdefyLazyLoads` (set only once a lazy block has mounted). The dev server's `isPageReady` (screenshots and journeys) waits for it to reach zero. A `preload()` with nothing mounted is not counted.
 
@@ -227,8 +227,7 @@ import { blockSchema } from '@lowdefy/block-utils';
 
 ## Dependencies
 
-- React 18.2.0
-- React-DOM 18.2.0
+- `react` and `react-dom` `^19` (peer dependencies, provided by the server)
 - `dompurify` (3.2.4)
 - `@lowdefy/helpers` (4.7.0)
 - `clsx` (2.1.1)

@@ -35,13 +35,12 @@ function validateIconTheme({ iconsConfig, icons, context }) {
     const installed = Object.keys(icons.sets)
       .map((setId) => `"${setId}"`)
       .join(', ');
-    collectExceptions(
-      context,
-      new ConfigError(
-        `App "theme.icons.set" is "${icons.defaultSet}", but no installed plugin declares that icon set. Installed icon sets: ${installed}.`,
-        { configKey }
-      )
-    );
+    let message = `App "theme.icons.set" is "${icons.defaultSet}", but no installed plugin declares that icon set. Installed icon sets: ${installed}.`;
+    if (icons.defaultSet === 'react-icons') {
+      message +=
+        ' The react-icons icon set (@lowdefy/icons-react-icons) was removed in Lowdefy 8. Remove theme.icons.set and use semantic or Lucide icon names. Run `lowdefy upgrade` to do this automatically.';
+    }
+    collectExceptions(context, new ConfigError(message, { configKey }));
   }
 
   const aliases = iconsConfig.aliases ?? {};

@@ -53,7 +53,6 @@ const defaultPackages = [
   '@lowdefy/operators-cron',
   '@lowdefy/operators-diff',
   '@lowdefy/operators-js',
-  '@lowdefy/operators-jsonata',
   '@lowdefy/operators-dayjs',
   '@lowdefy/operators-mql',
   '@lowdefy/operators-nunjucks',

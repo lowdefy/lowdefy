@@ -54,7 +54,7 @@ function getCommentView({ comment, first, user, members }) {
     at: comment.at,
     edited: !type.isNone(comment.edited_at),
     deleted,
-    body: deleted ? '' : comment.body ?? '',
+    body: deleted ? '' : (comment.body ?? ''),
     mentions: comment.mentions ?? [],
     reactions: (comment.reactions ?? [])
       .filter((reaction) => type.isObject(reaction) && type.isString(reaction.emoji))

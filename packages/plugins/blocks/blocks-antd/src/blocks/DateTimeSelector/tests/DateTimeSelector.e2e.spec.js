@@ -112,7 +112,7 @@ test.describe('DateTimeSelector Block', () => {
     await page.locator('.ant-picker-cell-in-view').first().click();
 
     // In antd v6, showTime pickers require clicking OK to confirm and trigger onChange
-    const okButton = page.locator('.ant-picker-ok button:visible');
+    const okButton = page.locator('.ant-picker-ok:visible');
     if (await okButton.isVisible()) {
       await okButton.click();
     }

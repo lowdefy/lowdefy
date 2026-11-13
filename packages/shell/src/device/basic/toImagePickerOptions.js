@@ -34,7 +34,7 @@ function toImagePickerOptions({
     exif: false,
     mediaTypes: mediaTypes.map((mediaType) => MEDIA_TYPES[mediaType]),
     quality,
-    selectionLimit: multiple ? maxCount ?? 0 : 1,
+    selectionLimit: multiple ? (maxCount ?? 0) : 1,
   };
 }
 

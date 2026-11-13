@@ -267,7 +267,7 @@ function AgentChat({
   // into the page (and the server still generating) for a conversation no longer shown.
   // A cleanup keyed only on the id closes over the previous render's `stop`, which is
   // the old instance's. stop() on an idle chat is a no-op.
-  useEffect(() => () => stop(), [effectiveConversationId]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => () => stop(), [effectiveConversationId]);
 
   // Sync external messages when provided — undefined means "not provided" (no sync),
   // null means "clear messages", array means "load these messages".
@@ -716,7 +716,7 @@ function AgentChat({
       style={{
         display: 'flex',
         flexDirection: 'column',
-        height: display === 'drawer' ? '100%' : properties.height ?? 'calc(100dvh - 170px)',
+        height: display === 'drawer' ? '100%' : (properties.height ?? 'calc(100dvh - 170px)'),
         maxWidth: properties.maxWidth ?? 800,
         margin: '0 auto',
         width: '100%',

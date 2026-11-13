@@ -330,6 +330,38 @@ blocks:
           then: Filter changed
           else: ''
 
+  # The date filter's model in the onFilterChanged event. Since AG Grid 36 a date column that is not
+  # a dateTime column gives date-only values (2024-01-15, was 2024-01-15 00:00:00).
+  - id: aggridlowdefy_date_filter
+    type: AgGridLowdefy
+    properties:
+      height: 250
+      columnDefs:
+        - headerName: Joined
+          field: joined
+          cellDataType: dateString
+          filter: agDateColumnFilter
+      rowData:
+        - joined: '2024-01-15'
+        - joined: '2024-03-02'
+    events:
+      onFilterChanged:
+        - id: set_date_filter
+          type: SetState
+          params:
+            aggridlowdefy_date_filter_from:
+              _event: filter.joined.dateFrom
+
+  - id: aggridlowdefy_date_filter_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'dateFrom='
+          - _if_none:
+              - _state: aggridlowdefy_date_filter_from
+              - none
+
   # ============================================
   # BUILT-IN CELL RENDERERS — cell.type
   # ============================================

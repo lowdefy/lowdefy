@@ -1,6 +1,6 @@
 ---
 name: l-update-deps
-description: Update a single dependency by reading its full changelog and assessing impact. Safe updates are applied directly, major updates are flagged for design review. Use when updating packages.
+description: Update a dependency (or, in batch mode, a list of them) by reading its full changelog and assessing impact. Safe updates are applied directly; majors and migrations are flagged for review or written up as tasks. Use when updating packages.
 argument-hint: '[package-name]'
 ---
 
@@ -169,14 +169,33 @@ pnpm update {package}@{version} -r
 pnpm install
 ```
 
-This ensures the lockfile is updated. Then run tests for all affected lowdefy packages:
+Check `pnpm-workspace.yaml` first: an entry under `overrides` for the package (or `packageExtensions`, `patchedDependencies`) can pin it or a transitive copy. Move a pin with the update, or remove it when the update makes it unnecessary (`pnpm why {package} -r` shows every copy in the tree).
+
+`pnpm update` keeps the range prefix already in each `package.json`. Lowdefy pins exact versions in most packages; keep whatever style the package already uses.
+
+Packages import each other's `dist/`, so when the update touches a package other packages depend on, run `pnpm build` from the repo root first. Then run the tests of every Lowdefy package that depends on it (vitest; no `--` separator and no coverage flags):
 
 ```bash
-pnpm --filter=@lowdefy/{dependent1} --filter=@lowdefy/{dependent2} test --no-coverage
+pnpm --filter=@lowdefy/{dependent1} --filter=@lowdefy/{dependent2} test
 ```
 
-If tests pass, the update is good. If tests fail, investigate and fix.
+Always run `pnpm test:dependencies` too. Some suites need more than unit tests: `pnpm test:mongodb` for the MongoDB driver and connection, the block e2e suites (`code-docs/testing.md`) for a block library's rendering, `pnpm --filter=@lowdefy/shell test` for Expo and React Native. For ESLint, an ESLint plugin, `globals` or Prettier, run `pnpm lint` (it must run without crashing; compare the error counts by rule with the run before the update, `code-docs/linting.md`), `pnpm test:lint-rules` and `pnpm format:check`. The website (`packages/website`) also keeps its own `package-lock.json`: update it there with `npm install --package-lock-only`. If tests fail, investigate and fix; a failure that needs real migration work is a "needs a task" outcome (see Batch mode).
 
-### 6. Commit
+### 6. Changeset and commit
 
-Once the update is applied and tests pass, run `/l-commit` to commit the changes.
+Add a changeset in `.changeset/` naming every published package whose `dependencies` (not `devDependencies`) changed, as a `patch`, titled `fix(deps): Update {package} to {version}`, with a sentence on what the update brings or fixes for Lowdefy users. Dev-only updates need no changeset.
+
+Commit with a Conventional Commit message: `fix(deps): Update {package} to {version}` for production dependencies, `chore(deps): ...` for dev-only ones. Commit the lockfile with it.
+
+## Batch mode (agents)
+
+When an orchestrator hands an agent a list of packages instead of a person choosing one:
+
+- Skip step 1's listing and do not ask which package; work through the list. Group packages released together (a scoped family such as `@tiptap/*`, `@aws-sdk/*`, `expo-*`) into one update and one commit.
+- Decide step 2's outcomes yourself instead of asking:
+  - Patch or minor: apply.
+  - Dev-only major: apply when the migration is small and tests pass.
+  - Production major: apply only when Lowdefy's code needs at most a small mechanical change and nothing a Lowdefy app author or end user sees changes (config, rendered output, operator results, request results, supported Node/React versions).
+  - Anything else (a real migration, a behaviour change users see, a trade-off someone should weigh, a deprecated package needing a replacement, or a failure you could not fix): leave the version alone and write a task on the run's Pelican design with `write_task` (type `chore`, state `backlog`, label `dependencies`). The task says the package and versions, what changes in the release notes that matters, which Lowdefy files are affected, what has to change and the open choices. Someone who was not there must be able to pick it up.
+- A minor or patch whose notes describe a feature Lowdefy could expose is noted in the agent's report, not built.
+- Report back: what was updated (one line per package or family, with versions), commits, tests run and their result, tasks written (key and title), overrides added or removed, and anything left undone.

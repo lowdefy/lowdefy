@@ -17,6 +17,7 @@
 import knex from 'knex';
 import { ConfigError } from '@lowdefy/errors';
 
+import encryptMssqlByDefault from './encryptMssqlByDefault.js';
 import normalizeConnectionPort from './normalizeConnectionPort.js';
 
 function createKnex(connection) {
@@ -32,6 +33,9 @@ function createKnex(connection) {
   }
   if (connection.client === 'sqlite') {
     return normalizeConnectionPort(knex({ ...connection, client: 'better-sqlite3' }));
+  }
+  if (connection.client === 'mssql') {
+    return normalizeConnectionPort(encryptMssqlByDefault(knex(connection)));
   }
   return normalizeConnectionPort(knex(connection));
 }

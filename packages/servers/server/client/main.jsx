@@ -51,7 +51,6 @@ async function render() {
       return;
     }
     // Render anyway: missing blocks surface through the full-page ErrorBoundary.
-    // eslint-disable-next-line no-console
     console.error(error);
   }
   root.render(<App config={config} />);

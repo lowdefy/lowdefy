@@ -91,7 +91,7 @@ const DateTimeSelector = ({
               }
               autoFocus={properties.autoFocus}
               variant={
-                properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+                properties.bordered === false ? 'borderless' : (properties.variant ?? undefined)
               }
               className={classNames.element}
               classNames={{ popup: { root: classNames.popup } }}

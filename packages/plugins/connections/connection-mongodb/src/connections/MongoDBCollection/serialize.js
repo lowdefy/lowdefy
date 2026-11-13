@@ -21,7 +21,6 @@ function replacer(_, value) {
   if (type.isObject(value)) {
     Object.keys(value).forEach((key) => {
       if (value[key] instanceof ObjectId) {
-        // eslint-disable-next-line no-param-reassign
         value[key] = { _oid: value[key].toHexString() };
       }
     });

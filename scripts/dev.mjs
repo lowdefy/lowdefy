@@ -99,9 +99,8 @@ if (!skipBuild) {
 // Dynamic import: @lowdefy/logger is a workspace package whose dist/ is built by
 // pnpm build:turbo above. The repo root can't resolve it by package name, so we
 // import directly from the dist path.
-const { createCliLogger, createStdOutLineHandler } = await import(
-  '../packages/utils/logger/dist/cli/index.js'
-);
+const { createCliLogger, createStdOutLineHandler } =
+  await import('../packages/utils/logger/dist/cli/index.js');
 
 const logger = createCliLogger({ logLevel });
 const context = { logger };

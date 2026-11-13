@@ -99,7 +99,7 @@ function createContext(lines) {
         return { id: 'connection:test', type: 'TestConnection', connectionId: 'test' };
       }
       const match = path.match(/^api\/(.+)\.json$/);
-      return match ? endpointConfigs[match[1]] ?? null : null;
+      return match ? (endpointConfigs[match[1]] ?? null) : null;
     }),
     secrets: { SUPPORT_ROOT: rootSecret },
     user: { id: 'user_1' },

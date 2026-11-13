@@ -75,7 +75,7 @@ function userMessageIds(messages) {
 function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
   const threadsConfig = properties.threads;
   const threadsKey = JSON.stringify(threadsConfig ?? null);
-  const endpoints = useMemo(() => getThreadEndpoints(threadsConfig), [threadsKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  const endpoints = useMemo(() => getThreadEndpoints(threadsConfig), [threadsKey]);
   const managed = endpoints !== null;
   const scope = type.isString(threadsConfig?.scope) ? threadsConfig.scope : null;
   const canResume = managed && threadsConfig.resume !== false && endpoints.getActiveThread !== null;
@@ -96,7 +96,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
   // is saved to its own.
   const streamThreadRef = useRef(null);
 
-  const conversationId = managed ? thread.id : properties.conversationId ?? thread.id;
+  const conversationId = managed ? thread.id : (properties.conversationId ?? thread.id);
 
   useEffect(() => {
     methods.registerEvent({
@@ -171,7 +171,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
     return () => {
       current = false;
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const saveThread = useCallback(
     async ({ id, messages, tag, title }) => {
@@ -212,7 +212,7 @@ function useChatThreads({ messagesRef, methods, onThreadLoaded, properties }) {
     ({ conversationId: requestId, messages, trigger }) => {
       if (!managed) return;
       const current = threadRef.current;
-      const tag = current.id === requestId ? current.seed?.tag ?? null : null;
+      const tag = current.id === requestId ? (current.seed?.tag ?? null) : null;
       streamThreadRef.current = { id: requestId, tag };
       const last = messages[messages.length - 1];
       if (trigger !== 'submit-message' || last?.role !== 'user') return;

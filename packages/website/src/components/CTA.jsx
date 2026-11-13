@@ -5,7 +5,7 @@ import { ArrowRightOutlined, GithubOutlined } from '@ant-design/icons';
 
 export default function CTA() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary-500 to-primary-700">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-linear-to-br/srgb from-primary-500 to-primary-700">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Ready to build faster?</h2>
         <p className="text-lg text-primary-100 mb-8 max-w-2xl mx-auto">

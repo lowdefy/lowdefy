@@ -43,13 +43,13 @@
     "@lowdefy/nunjucks": "7.2.0",
     "ajv": "8.20.0",
     "ajv-errors": "3.0.0",
-    "ajv-formats": "2.1.1",
+    "ajv-formats": "3.0.1",
     "ajv-keywords": "5.1.0"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "vitest": "4.1.12"
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"

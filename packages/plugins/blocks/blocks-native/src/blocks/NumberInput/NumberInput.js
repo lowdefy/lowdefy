@@ -58,7 +58,6 @@ function NumberInput({
       setText(formatNumber({ decimalSeparator, precision, value }));
     }
     // Only a new value from outside resets the text; typing keeps it.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
   const disabled = loading === true || properties.disabled === true;
   const { box, text: textStyle } = getInputBoxStyle({

@@ -1,0 +1,25 @@
+# H8: Removed Operator (_jsonata)
+# ===============================
+# Tests that _jsonata, removed in Lowdefy 8 with @lowdefy/operators-jsonata,
+# gets the unknown-operator warning at its config location (the key that holds
+# it), in dev and prod.
+# An unknown operator is a warning, not an error, so the build still succeeds
+# and the object is left as data at runtime.
+#
+# Expected warning:
+#   [Config Warning] Operator type "_jsonata" was used but is not defined.
+
+lowdefy: local
+
+pages:
+  - id: home
+    type: Box
+    blocks:
+      - id: jsonataBlock
+        type: Paragraph
+        properties:
+          content:
+            _jsonata:
+              expr: '$sum(values)'
+              data:
+                values: [1, 2]

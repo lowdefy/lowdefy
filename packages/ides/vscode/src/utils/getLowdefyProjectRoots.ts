@@ -15,7 +15,6 @@
 */
 
 import * as vscode from 'vscode';
-import fetch from 'node-fetch';
 
 export default async function getLowdefyProjectRoots(
   context: vscode.ExtensionContext
@@ -30,7 +29,7 @@ export default async function getLowdefyProjectRoots(
       `Lowdefy development server not running at ${url}, please start the development server or check the port in the extension settings.`
     );
   }
-  const devServerContext = await response.json();
+  const devServerContext = (await response.json()) as { directories?: { config?: string } };
 
   await Promise.all([
     context.workspaceState.update('activeAppRoot', devServerContext?.directories?.config),

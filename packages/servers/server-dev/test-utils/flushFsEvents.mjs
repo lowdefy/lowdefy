@@ -29,9 +29,11 @@ import chokidar from 'chokidar';
 // test, and after a watcher under test is ready, before the first edit. On
 // Linux it costs a few milliseconds.
 //
-// chokidar 4 watches with fs.watch. On macOS, Node runs one FSEvents stream for
-// all of a process's fs.watch watchers and restarts it whenever one is added
-// or closed, and a write made while it restarts is never reported. So the probe
+// chokidar 6 watches with fs.watch (recursive on macOS). On macOS, Node runs one
+// FSEvents stream for all of a process's fs.watch watchers and restarts it
+// whenever one is added or closed, and a write made while it restarts is never
+// reported. chokidar 6 shares a directory's handle between watchers, but a
+// watcher of a directory nothing else watches still adds one. So the probe
 // watcher is started once and kept for the rest of the test file: a flush that
 // started and closed a watcher of its own would lose the test's next write. Its
 // probe is written again until it is seen, since the first write can land in a

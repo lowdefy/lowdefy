@@ -19,9 +19,8 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 
-const { default: compareProcessStartTimes } = await import(
-  '@lowdefy/node-utils/compareProcessStartTimes.js'
-);
+const { default: compareProcessStartTimes } =
+  await import('@lowdefy/node-utils/compareProcessStartTimes.js');
 const { default: isProcessStartTime } = await import('@lowdefy/node-utils/isProcessStartTime.js');
 
 // pid -> start time (epoch milliseconds) of the processes "running" in each test.

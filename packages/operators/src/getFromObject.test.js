@@ -17,7 +17,6 @@
 import { vi, expect, test } from 'vitest';
 
 import getFromObject from './getFromObject.js';
-// eslint-disable-next-line no-unused-vars
 
 const location = 'location';
 const operator = '_operator';

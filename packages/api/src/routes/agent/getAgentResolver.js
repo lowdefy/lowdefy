@@ -29,10 +29,7 @@ function getAgentResolver({ agents, i18n, logger }, { agentConfig }) {
       }),
       { configKey: agentConfig['~k'] }
     );
-    logger.debug(
-      { params: { id: agentConfig.agentId, type: agentConfig.type }, err },
-      err.message
-    );
+    logger.debug({ params: { id: agentConfig.agentId, type: agentConfig.type }, err }, err.message);
     throw err;
   }
 

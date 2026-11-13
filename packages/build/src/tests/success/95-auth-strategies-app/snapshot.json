@@ -424,7 +424,7 @@
     "user": "User",
     "users": "Users",
     "view": "Eye",
-    "warning": "TriangleAlert",
+    "warning": "TriangleExclamationPoint",
     "check-circle": "CircleCheck",
     "clock-circle": "Clock",
     "close-circle": "CircleX",
@@ -455,11 +455,11 @@
     "camera": "Camera",
     "bot": "Bot",
     "unchanged": "CirclePause",
-    "bold": "Bold",
+    "bold": "LetterB",
     "italic": "Italic",
     "strikethrough": "Strikethrough",
     "highlight": "Highlighter",
-    "icon-missing": "CircleAlert"
+    "icon-missing": "CircleExclamationPoint"
   },
   "iconImports.json": [
     "FileSearch",
@@ -1730,7 +1730,7 @@
   "plugins/agents.js": "export default {\n  };",
   "plugins/auth/adapters.js": "export default {\n  };",
   "plugins/auth/providers.js": "export default {\n  };",
-  "plugins/auth/strategies.js": "import { apiKey as apiKey } from '@lowdefy/plugin-next-auth/auth/strategies';\nimport { jwt as jwt } from '@lowdefy/plugin-next-auth/auth/strategies';\nexport default {\n  apiKey,\n  jwt,\n  };",
+  "plugins/auth/strategies.js": "import { apiKey as apiKey } from '@lowdefy/plugin-better-auth/auth/strategies';\nimport { jwt as jwt } from '@lowdefy/plugin-better-auth/auth/strategies';\nexport default {\n  apiKey,\n  jwt,\n  };",
   "plugins/blockMetas.json": {
     "Box": {
       "category": "container",
@@ -7402,13 +7402,13 @@
       "strategies": {
         "apiKey": {
           "originalTypeName": "apiKey",
-          "package": "@lowdefy/plugin-next-auth",
+          "package": "@lowdefy/plugin-better-auth",
           "count": 1,
           "~k": "3q"
         },
         "jwt": {
           "originalTypeName": "jwt",
-          "package": "@lowdefy/plugin-next-auth",
+          "package": "@lowdefy/plugin-better-auth",
           "count": 2,
           "~k": "3r"
         },

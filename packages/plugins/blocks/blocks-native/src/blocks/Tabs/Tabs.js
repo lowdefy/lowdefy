@@ -116,7 +116,8 @@ function Tabs({ blockId, components, content, methods, properties, styles = {} }
   const fontSize = getTitleFontSize({ size, tokens });
   const itemPadding = convertStyle({ padding: getItemPadding({ card, size, tokens }) }).style;
   const gutter =
-    properties.tabBarGutter ?? (card ? tokens.cardGutter ?? 2 : tokens.horizontalItemGutter ?? 24);
+    properties.tabBarGutter ??
+    (card ? (tokens.cardGutter ?? 2) : (tokens.horizontalItemGutter ?? 24));
   const selectedColor = tokens.itemSelectedColor ?? (card ? tokens.colorLabel : tokens.colorTint);
   const bottom = properties.tabPlacement === 'bottom';
   const extra = properties.extraAreaKey ? content[properties.extraAreaKey] : undefined;

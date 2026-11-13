@@ -173,7 +173,7 @@ function ChatComposer({
     dictation.discard();
     setText(fill.text);
     if (fill.text !== '') inputRef.current?.focus();
-  }, [fillNonce]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fillNonce]);
 
   // Words still being heard count, so send can stop the mic and send them.
   const empty = text.trim() === '' && (!dictation.listening || dictation.partial.trim() === '');

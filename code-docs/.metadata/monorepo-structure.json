@@ -45,7 +45,6 @@
         "@lowdefy/operators-change-case",
         "@lowdefy/operators-diff",
         "@lowdefy/operators-js",
-        "@lowdefy/operators-jsonata",
         "@lowdefy/operators-dayjs",
         "@lowdefy/operators-mql",
         "@lowdefy/operators-nunjucks",
@@ -63,7 +62,6 @@
     "servers": ["@lowdefy/server", "@lowdefy/server-dev"],
     "utils": [
       "@lowdefy/ajv",
-      "@lowdefy/block-dev",
       "@lowdefy/block-utils",
       "@lowdefy/helpers",
       "@lowdefy/node-utils",

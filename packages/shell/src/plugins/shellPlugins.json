@@ -7,7 +7,6 @@
   { "category": "operators", "package": "@lowdefy/operators-cron" },
   { "category": "operators", "package": "@lowdefy/operators-dayjs" },
   { "category": "operators", "package": "@lowdefy/operators-diff" },
-  { "category": "operators", "package": "@lowdefy/operators-jsonata" },
   { "category": "operators", "package": "@lowdefy/operators-mql" },
   { "category": "operators", "package": "@lowdefy/operators-nunjucks" },
   { "category": "operators", "package": "@lowdefy/operators-uuid" },

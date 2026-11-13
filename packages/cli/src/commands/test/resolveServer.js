@@ -15,10 +15,10 @@
 */
 
 import path from 'path';
-import axios from 'axios';
 import { type } from '@lowdefy/helpers';
 import { readDevInstance } from '@lowdefy/node-utils';
 
+import httpFetch from '../../utils/httpFetch.js';
 import startDevServer from './startDevServer.js';
 
 const STARTING_TIMEOUT_MS = 5 * 60 * 1000;
@@ -45,8 +45,8 @@ function sleep(ms) {
 
 async function answersPing(url) {
   try {
-    await axios.get(`${url}/api/ping`, { timeout: PING_TIMEOUT_MS });
-    return true;
+    const response = await httpFetch({ url: `${url}/api/ping`, timeoutMs: PING_TIMEOUT_MS });
+    return response.ok;
   } catch {
     return false;
   }

@@ -39,7 +39,7 @@ async function resolveOrg({ connection, signal }) {
   const teams = type.isArray(orgs.body) ? orgs.body : [];
   const team = type.isString(connection.org)
     ? teams.find((item) => item.slug === connection.org)
-    : teams.find((item) => item.active === true) ?? (teams.length === 1 ? teams[0] : undefined);
+    : (teams.find((item) => item.active === true) ?? (teams.length === 1 ? teams[0] : undefined));
   if (type.isUndefined(team)) {
     throw new Error(
       type.isString(connection.org)

@@ -39,9 +39,11 @@ _ref:
             ### Redis
 
             #### Properties
-            - `connection: object | string `: __Required__ - Connection object or string to pass to the [`redis client`](https://github.com/redis/node-redis) redis client.
+            - `connection: object | string `: __Required__ - Connection object or connection string to pass to the [`redis client`](https://github.com/redis/node-redis).
 
-            The connection object accepts will be passed to the redis client verbatim, so check out the [configuration instructions](https://github.com/redis/node-redis/blob/master/docs/client-configuration.md).
+            The connection object is passed to the redis client (node-redis 6) as is, so see its [configuration options](https://github.com/redis/node-redis/blob/master/docs/client-configuration.md). Each request opens its own connection and closes it when the command completes. Lowdefy sets `socket.reconnectStrategy` to `false`, so a request fails straight away when Redis cannot be reached instead of waiting while the client retries. Set `socket.reconnectStrategy` to a number of milliseconds to retry instead.
+
+            The client talks to Redis with the RESP3 protocol, which needs Redis 6 or later. For an older Redis server, or to get the reply shapes the RESP2 protocol gives, set `RESP: 2` in the connection object.
 
             #### Examples
 
@@ -84,7 +86,7 @@ _ref:
             ```
             Environment variables:
             ```
-            LOWDEFY_SECRET_REDIS_CONNECTION_STRING = redis://user:password@redis:server.com:5000/4'
+            LOWDEFY_SECRET_REDIS_CONNECTION_STRING = redis://user:password@redis.server.com:5000/4
             ```
       - id: markdown_requests
         type: MarkdownWithCode
@@ -99,9 +101,11 @@ _ref:
 
             #### Properties
 
-            - `command: string`: **Required** - Redis command to be executed, accepts all of the [out-of-the-box Redis commands](https://redis.io/commands).
-            - `parameters: array`: An array of parameters to be passed to the redis command.
-            - `modifiers: object`: The redis modififers to be passed to the redis command.
+            - `command: string`: **Required** - Redis command to be executed, accepts all of the [out-of-the-box Redis commands](https://redis.io/commands). The command is the name of the node-redis client method, in any case. For most commands that is the Redis command name, but some variants have their own method, for example `ZRANGE_WITHSCORES` for `ZRANGE` with `WITHSCORES`, or `GEORADIUS_STORE` for `GEORADIUS` with `STORE`.
+            - `parameters: array`: An array of parameters to be passed to the redis command, in the order the node-redis client method takes them.
+            - `modifiers: object`: The options object to be passed to the redis command after the parameters. Its keys are upper-cased, so `nx: true` is sent as `NX: true`. For options whose node-redis names are not upper case, like `condition` or `expiration` on `SET`, pass the options object as the last item of `parameters` instead.
+
+            Replies are returned as the node-redis client returns them. For example `HGETALL` returns an object and `ZRANGE_WITHSCORES` returns an array of `{ value, score }` objects.
 
             #### Examples
 
@@ -141,6 +145,22 @@ _ref:
               parameters:
                 - key
                 - value
-              modififers:
+              modifiers:
                 nx: true
+            ```
+
+            ###### Setting a key-value pair that expires after 60 seconds:
+
+            ```yaml
+            id: redisRequest
+            type: Redis
+            connectionId: redis
+            properties:
+              command: set
+              parameters:
+                - key
+                - value
+                - expiration:
+                    type: EX
+                    value: 60
             ```

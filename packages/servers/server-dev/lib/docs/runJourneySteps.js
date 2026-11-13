@@ -175,7 +175,8 @@ function describeTarget(target) {
 
 // The element the target's scope keys name: the block wrapper, narrowed to a
 // grid row (the row as displayed: ag-grid's `.ag-row[row-index]`, rendered once
-// per pinned/centre column container, or a Table's `.lf-table-row[data-row-index]`)
+// per pinned/centre column container before AG Grid 36, or a Table's
+// `.lf-table-row[data-row-index]`)
 // and to a cell (ag-grid's `.ag-cell[col-id]` or a Table's
 // `.lf-table-gridcell[data-col-key]`: the column's field, colId or key). Undefined for a page-wide `text` target,
 // which has no scope narrower than the page.
@@ -954,8 +955,8 @@ async function expectCalls({ journey, page, params }) {
 }
 
 // Waits for the target to be in the page, then reads the text of every element
-// it matches. A grid row is rendered once per column container (pinned left,
-// centre, pinned right), so a row target legitimately matches more than one
+// it matches. Before AG Grid 36 a grid row was rendered once per column container
+// (pinned left, centre, pinned right), so a row target could match more than one
 // element; joining them reads the whole row.
 async function readTargetText({ page, target, timeout }) {
   // A block's text includes its Modal or Drawer portal's (see resolveMatchScope).

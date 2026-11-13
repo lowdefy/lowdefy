@@ -22,7 +22,6 @@ import postHogState from './postHogState.js';
 function warnUninitialized({ action }) {
   if (postHogState.warnedUninitialized) return;
   postHogState.warnedUninitialized = true;
-  // eslint-disable-next-line no-console
   console.warn(
     `${action} ran before PostHogInit, so it did nothing. Run PostHogInit in the page onInit event, with "enabled: false" where analytics should be off.`
   );

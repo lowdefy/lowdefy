@@ -49,48 +49,48 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../../../.swcrc --cli-config-file ../../../../.swc-cli.json --copy-files --ignore \"**/*.snap\"",
     "clean": "rm -rf dist",
-    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.snap\"",
     "e2e": "playwright test --config e2e/playwright.config.js",
     "e2e:ui": "playwright test --config e2e/playwright.config.js --ui",
     "prepublishOnly": "pnpm build",
     "test": "vitest run"
   },
   "dependencies": {
+    "@floating-ui/dom": "1.8.0",
     "@lowdefy/block-utils": "7.2.0",
     "@lowdefy/blocks-antd": "7.2.0",
     "@lowdefy/blocks-files": "7.2.0",
     "@lowdefy/helpers": "7.2.0",
-    "@tiptap/core": "3.31.3",
-    "@tiptap/extension-bubble-menu": "3.31.3",
-    "@tiptap/extension-file-handler": "3.31.3",
-    "@tiptap/extension-highlight": "3.31.3",
-    "@tiptap/extension-image": "3.31.3",
-    "@tiptap/extension-link": "3.31.3",
-    "@tiptap/extension-mention": "3.31.3",
-    "@tiptap/extension-table": "3.31.3",
-    "@tiptap/extensions": "3.31.3",
-    "@tiptap/pm": "3.31.3",
-    "@tiptap/react": "3.31.3",
-    "@tiptap/starter-kit": "3.31.3",
-    "@tiptap/suggestion": "3.31.3",
-    "tippy.js": "6.3.7",
-    "turndown": "7.2.0"
+    "@tiptap/core": "3.33.1",
+    "@tiptap/extension-bubble-menu": "3.33.1",
+    "@tiptap/extension-file-handler": "3.33.1",
+    "@tiptap/extension-highlight": "3.33.1",
+    "@tiptap/extension-image": "3.33.1",
+    "@tiptap/extension-link": "3.33.1",
+    "@tiptap/extension-mention": "3.33.1",
+    "@tiptap/extension-table": "3.33.1",
+    "@tiptap/extensions": "3.33.1",
+    "@tiptap/pm": "3.33.1",
+    "@tiptap/react": "3.33.1",
+    "@tiptap/starter-kit": "3.33.1",
+    "@tiptap/suggestion": "3.33.1",
+    "turndown": "7.2.5"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
+    "react": "^19",
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@lowdefy/block-dev-e2e": "7.2.0",
     "@lowdefy/e2e-utils": "7.2.0",
     "@playwright/test": "1.65.0",
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "copyfiles": "2.4.1",
-    "jsdom": "19.0.0",
-    "vitest": "4.1.12"
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "jsdom": "31.0.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"

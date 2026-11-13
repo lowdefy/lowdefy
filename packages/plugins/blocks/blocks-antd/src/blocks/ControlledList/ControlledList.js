@@ -16,7 +16,7 @@
 
 import React, { useContext, useEffect, useLayoutEffect } from 'react';
 import { ConfigProvider, Empty, Typography } from 'antd';
-import classnames from 'classnames';
+import { clsx } from 'clsx';
 import { cn, withBlockDefaults } from '@lowdefy/block-utils';
 import { get } from '@lowdefy/helpers';
 
@@ -138,7 +138,7 @@ const ControlledListBlock = ({
   return (
     <div
       id={blockId}
-      className={classnames(
+      className={clsx(
         'ant-list',
         sizeClassNames[properties.size ?? componentSize],
         'ant-list-split',

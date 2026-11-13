@@ -147,8 +147,8 @@ Use `createCheckDuplicateId` utility: `createCheckDuplicateId({ message: 'Duplic
 ## Code Style
 
 - **ES Modules** with `.js` extension in all imports
-- **Prettier**: 100 char width, single quotes, 2-space tabs, ES5 trailing commas
-- **ESLint**: `no-nested-ternary: warn`, `no-console: warn`
+- **Prettier**: 100 char width, single quotes, 2-space tabs, ES5 trailing commas. It runs on its own, not through ESLint: `pnpm format` writes, `pnpm format:check` checks. The repo is Prettier clean; keep it so.
+- **ESLint**: run `pnpm exec eslint <files you changed>` (add `--fix` for the fixable rules) and fix what it reports; `pnpm lint` checks the whole repo. Every rule is an error, there are no warnings, and the messages say what to write instead. The repo is not lint clean yet and CI does not run it. To silence a rule for one line, give the reason: `// eslint-disable-next-line <rule> -- <why>`. Rules, globals per runtime and the local rules: `code-docs/linting.md`.
 - **Import order**: External packages → `@lowdefy/*` packages → Local imports (with `.js`)
 
 ### Required License Header

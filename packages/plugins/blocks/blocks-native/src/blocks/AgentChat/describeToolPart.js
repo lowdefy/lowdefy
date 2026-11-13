@@ -99,8 +99,8 @@ function describeToolPart({ config, part, translate }) {
     return description;
   }
   const mode = type.isObject(config?.toolResultDisplay)
-    ? config.toolResultDisplay[tool.toolName] ?? config.toolResultDisplay.default ?? 'summary'
-    : config?.toolResultDisplay ?? 'summary';
+    ? (config.toolResultDisplay[tool.toolName] ?? config.toolResultDisplay.default ?? 'summary')
+    : (config?.toolResultDisplay ?? 'summary');
   if (mode === 'none') {
     return description;
   }

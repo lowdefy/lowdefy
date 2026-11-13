@@ -41,7 +41,7 @@ function createLazyLoader({ load }) {
     return loadPromise;
   }
 
-  // Returns the component to render and the promise it waits on. React 18
+  // Returns the component to render and the promise it waits on. React
   // suspends a lazy component on its first render even when its promise has
   // already resolved, so a loaded module is rendered directly.
   function getImplementation() {

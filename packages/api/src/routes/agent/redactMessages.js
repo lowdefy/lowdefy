@@ -33,7 +33,7 @@ function buildPatterns({ redact, configKey }) {
     });
   }
   return redact.patterns.map((entry, index) => {
-    const { name, pattern, flags } = type.isString(entry) ? { pattern: entry } : entry ?? {};
+    const { name, pattern, flags } = type.isString(entry) ? { pattern: entry } : (entry ?? {});
     const location = `redact.patterns[${index}]`;
     if (!type.isString(pattern)) {
       throw new ConfigError(`Agent "${location}.pattern" should be a string.`, {

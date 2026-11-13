@@ -52,26 +52,24 @@ function ThinkingBubbleContent({ bubbleId, config }) {
   return <ThinkingIndicator label={label} />;
 }
 
-const MessageList = React.forwardRef(function MessageList(
-  {
-    Icon,
-    messages,
-    isStreaming,
-    config,
-    welcome,
-    onWelcomePromptFill,
-    addToolApprovalResponse,
-    onFeedback,
-    onLinkClick,
-    Link,
-    feedbackValues,
-    onRegenerate,
-    onDelete,
-    onEditMessage,
-    translate,
-  },
-  ref
-) {
+function MessageList({
+  Icon,
+  messages,
+  isStreaming,
+  config,
+  welcome,
+  onWelcomePromptFill,
+  addToolApprovalResponse,
+  onFeedback,
+  onLinkClick,
+  Link,
+  feedbackValues,
+  onRegenerate,
+  onDelete,
+  onEditMessage,
+  ref,
+  translate,
+}) {
   // Build a lookup map for message parts.
   // Bubble.List's contentRender callback only receives (content, info) where info.key is the
   // item key — it does not receive the full message object with its parts array. This map
@@ -260,6 +258,6 @@ const MessageList = React.forwardRef(function MessageList(
       style={{ height: '100%' }}
     />
   );
-});
+}
 
 export default MessageList;

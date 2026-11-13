@@ -1359,7 +1359,6 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.urlQuery` | object | - | Link: query params. Each value is a row-data path. |
 | `columnDefs.$.cell.pathParams` | object | - | Link: values for the page path's placeholders. Each value is a row-data path. |
 | `columnDefs.$.cell.labelField` | string | - | Link: row-data path for the visible label (falls back to cell value). |
-| `columnDefs.$.cell.format` | string | - | Number: `number` (default), `currency`, `percent`, or `compact` (K/M/B). Date: dayjs format string (default `YYYY-MM-DD HH:mm`). |
 | `columnDefs.$.cell.relative` | boolean | - | Date: render as relative time (e.g. "3 hours ago"). |
 | `columnDefs.$.cell.trueLabel` | string | - | Boolean: label when truthy. |
 | `columnDefs.$.cell.falseLabel` | string | - | Boolean: label when falsy. |
@@ -1369,6 +1368,7 @@ Migrate the column-level checkbox flags in the same edit — `checkboxSelection`
 | `columnDefs.$.cell.colors` | array | - | Progress: colour per bucket (length = thresholds.length + 1). |
 | `columnDefs.$.cell.suffix` | string | - | Number/Progress: literal suffix appended after the formatted value. Default `%` for progress. |
 | `columnDefs.$.cell.nullLabel` | string | - | Progress: label when value is null. Default `None`. |
+| `columnDefs.$.cell.format` | string | - | Number: `number` (default), `currency`, `percent`, or `compact` (K/M/B). Date: dayjs format string (default `YYYY-MM-DD HH:mm`). |
 | `columnDefs.$.cell.locale` | string | - | Number: BCP 47 locale for `Intl.NumberFormat` (e.g. `en-US`, `de-DE`). Defaults to browser. |
 | `columnDefs.$.cell.currency` | string | - | Number: ISO 4217 currency code when `format: currency`. Default `USD`. |
 | `columnDefs.$.cell.currencyDisplay` | string | - | Number: currency display style when `format: currency`. Enum: `symbol`, `narrowSymbol`, `code`, `name`. |

@@ -25,7 +25,8 @@ import createLookupPublicAddress from './createLookupPublicAddress.js';
 // returns.
 function createConnectPublic({ createNotPublicError }) {
   const lookupPublicAddress = createLookupPublicAddress({ createNotPublicError });
-  const connect = buildConnector({ lookup: lookupPublicAddress });
+  // undici 8 offers HTTP/2 by default. These downloads stay on HTTP/1.1, as they were on undici 7.
+  const connect = buildConnector({ allowH2: false, lookup: lookupPublicAddress });
 
   return function connectPublic(options, callback) {
     if (isIP(options.hostname) === 0) {

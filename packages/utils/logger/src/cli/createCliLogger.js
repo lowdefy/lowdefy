@@ -17,6 +17,8 @@
 import ora from 'ora';
 import { errorToDisplayString } from '@lowdefy/errors';
 
+import pickRandomSpinner from './pickRandomSpinner.js';
+
 const reset = '\x1b[0m';
 const colors = {
   red: (text) => `\x1b[31m${text}${reset}`,
@@ -67,7 +69,7 @@ function colorize(text, color, level) {
 
 function createOraPrint({ logLevel }) {
   const spinner = ora({
-    spinner: 'random',
+    spinner: pickRandomSpinner(),
     prefixText: () => colors.gray(getTime()),
     color: 'blue',
   });

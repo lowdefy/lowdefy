@@ -96,7 +96,7 @@ function SelectorCell(params) {
     const opt = options[labelProps.value];
     const color = type.isPrimitive(opt) ? undefined : opt?.color;
     if (type.isNone(color)) return labelProps.label;
-    const textColor = isSolid ? getContrastTextColor(color) ?? '#fff' : color;
+    const textColor = isSolid ? (getContrastTextColor(color) ?? '#fff') : color;
     return <span style={{ color: textColor }}>{labelProps.label}</span>;
   }
 

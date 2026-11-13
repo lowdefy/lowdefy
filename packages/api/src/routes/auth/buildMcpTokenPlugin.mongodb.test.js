@@ -36,9 +36,8 @@ const { betterAuth } = await import('better-auth');
 const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/adapters');
 const { default: buildMcpTokenPlugin } = await import('./buildMcpTokenPlugin.js');
 const { default: ensureMcpTokenIndexes } = await import('./ensureMcpTokenIndexes.js');
-const { default: buildOrganizationPlugin } = await import(
-  './organizations/buildOrganizationPlugin.js'
-);
+const { default: buildOrganizationPlugin } =
+  await import('./organizations/buildOrganizationPlugin.js');
 const { default: resolveAuthentication } = await import('../../context/resolveAuthentication.js');
 
 let client;

@@ -15,8 +15,9 @@
 */
 
 import path from 'path';
-import axios from 'axios';
 import { readFile } from '@lowdefy/node-utils';
+
+import httpFetch from './httpFetch.js';
 
 async function getTypes({ directories }) {
   return JSON.parse(await readFile(path.join(directories.build, 'types.json')));
@@ -32,20 +33,21 @@ function getSendTelemetry({ appId, cliVersion, command, directories, lowdefyVers
       types = await getTypes({ directories });
     }
     try {
-      await axios.request({
-        method: 'post',
+      await httpFetch({
         url: 'https://api.lowdefy.net/v4/telemetry/cli',
+        method: 'POST',
         headers: {
+          'Content-Type': 'application/json',
           'User-Agent': `Lowdefy CLI v${cliVersion}`,
         },
-        data: {
+        body: JSON.stringify({
           ...data,
           app_id: appId,
           cli_version: cliVersion,
           command,
           lowdefy_version: lowdefyVersion,
           types,
-        },
+        }),
       });
     } catch (error) {
       // pass

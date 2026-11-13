@@ -11,7 +11,7 @@ Shared utility packages used throughout Lowdefy.
 | `@lowdefy/logger`           | Logging utilities (node, dev, cli, browser) | Universal |
 | `@lowdefy/ajv`              | JSON Schema validation                      | Universal |
 | `@lowdefy/block-utils`      | Block runtime utilities                     | Browser   |
-| `@lowdefy/block-dev`        | Block testing utilities                     | Node.js   |
+| `@lowdefy/block-dev-e2e`    | Playwright e2e testing for block plugins    | Node.js   |
 | `@lowdefy/e2e-utils`        | Playwright e2e testing for apps             | Node.js   |
 | `@lowdefy/nunjucks`         | Template engine wrapper                     | Universal |
 | `@lowdefy/email-templates`  | React Email rendering + safe interpolation  | Node.js   |
@@ -22,7 +22,7 @@ Shared utility packages used throughout Lowdefy.
 ```
 helpers (no deps)
     ↓
-node-utils, block-utils, nunjucks, block-dev, logger
+node-utils, block-utils, nunjucks, logger
     ↓
 ajv (depends on nunjucks)
 
@@ -87,12 +87,9 @@ if (!result.valid) {
 
 ```javascript
 import { ErrorBoundary, cn } from '@lowdefy/block-utils';
-import { mockBlock, runBlockSchemaTests } from '@lowdefy/block-dev';
-
-// Test blocks
-const block = mockBlock({ meta, schema });
-runBlockSchemaTests({ examples, schema });
 ```
+
+Blocks are tested in a browser with Playwright through `@lowdefy/block-dev-e2e`, not with unit tests. See [testing.md](../testing.md).
 
 ### Templates
 
@@ -118,7 +115,7 @@ All packages are at version 4.4.0 and follow the monorepo versioning.
 - [node-utils.md](./node-utils.md) - Node.js utilities
 - [ajv.md](./ajv.md) - Schema validation
 - [block-utils.md](./block-utils.md) - Block runtime utilities
-- [block-dev.md](./block-dev.md) - Block testing
+- [testing.md](../testing.md) - Block e2e testing with `@lowdefy/block-dev-e2e`
 - [e2e-utils.md](./e2e-utils.md) - Playwright e2e testing
 - [nunjucks.md](./nunjucks.md) - Template engine
 - [vite-yaml-plugin.md](./vite-yaml-plugin.md) - YAML imports in vitest

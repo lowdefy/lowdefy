@@ -57,8 +57,8 @@ function Alert({ blockId, components, content, methods, properties, styles = {} 
   const iconColor = properties.theme?.colorIcon ?? typeColor;
   const padding = convertStyle({
     padding: hasDescription
-      ? tokens.withDescriptionPadding ?? '14px 16px'
-      : tokens.defaultPadding ?? '12px 14px',
+      ? (tokens.withDescriptionPadding ?? '14px 16px')
+      : (tokens.defaultPadding ?? '12px 14px'),
   }).style;
   const outlined = properties.variant === 'outlined' && !banner;
   const close = async () => {
@@ -90,7 +90,7 @@ function Alert({ blockId, components, content, methods, properties, styles = {} 
             element: [
               {
                 color: iconColor,
-                fontSize: hasDescription ? tokens.withDescriptionIconSize ?? 22 : 20,
+                fontSize: hasDescription ? (tokens.withDescriptionIconSize ?? 22) : 20,
                 marginTop: 1,
               },
               styles.icon,

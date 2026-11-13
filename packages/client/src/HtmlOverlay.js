@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import React, { forwardRef, useEffect, useId, useImperativeHandle, useRef } from 'react';
+import React, { useEffect, useId, useImperativeHandle, useRef } from 'react';
 import { Popconfirm, Popover, Tooltip } from 'antd';
 
 // The target lives in HTML React does not own, so antd cannot wrap it. antd's
 // trigger resolves its anchor from the child's ref, so a child that renders
 // nothing and hands back the target element anchors the popup on the target
 // itself, and the trigger follows its scrolling and resizing.
-const TargetAnchor = forwardRef(function TargetAnchor({ target }, ref) {
+function TargetAnchor({ ref, target }) {
   useImperativeHandle(ref, () => target, [target]);
   return null;
-});
+}
 
 // Open popovers and confirms, newest last. Escape and outside clicks close only
 // the newest, so a confirm opened inside a popover closes before the popover,

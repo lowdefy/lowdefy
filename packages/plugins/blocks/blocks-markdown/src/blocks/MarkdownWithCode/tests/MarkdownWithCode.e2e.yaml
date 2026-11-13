@@ -33,3 +33,15 @@ blocks:
     type: MarkdownWithCode
     properties:
       content: 'Use `console.log` for debugging'
+
+  - id: markdownwithcode_mixed
+    type: MarkdownWithCode
+    properties:
+      content: |
+        Call `run()` first.
+
+        ```
+        plain fence
+        ```
+
+            indented block

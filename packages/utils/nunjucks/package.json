@@ -40,17 +40,16 @@
   },
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
-    "dayjs": "1.11.20"
+    "dayjs": "1.11.23"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "clean-webpack-plugin": "4.0.0",
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
     "nunjucks": "3.2.4",
-    "swc-loader": "0.2.3",
-    "vitest": "4.1.12",
-    "webpack": "5.104.1",
-    "webpack-cli": "5.1.4"
+    "swc-loader": "0.2.7",
+    "vitest": "5.1.0",
+    "webpack": "5.112.2",
+    "webpack-cli": "7.3.1"
   },
   "publishConfig": {
     "access": "public"

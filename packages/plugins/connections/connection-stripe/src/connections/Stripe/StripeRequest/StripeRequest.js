@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { get } from '@lowdefy/helpers';
 import Stripe from 'stripe';
+
+import getStripeMethod from './getStripeMethod.js';
 import schema from './schema.js';
 
 async function StripeRequest({ request, connection }) {
@@ -36,13 +37,7 @@ async function StripeRequest({ request, connection }) {
     args = args[key];
   } while (args && !Array.isArray(args));
 
-  const resource = get(stripe, path.slice(0, -1).join('.'));
-  const method = get(stripe, path.join('.'));
-
-  if (!resource || !method || typeof method !== 'function') {
-    throw new Error(`Invalid Stripe method ${path.join('.')}`);
-  }
-
+  const { method, resource } = getStripeMethod({ stripe, path });
   return method.call(resource, ...(args || []));
 }
 

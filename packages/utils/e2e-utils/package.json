@@ -39,17 +39,15 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../../.swcrc --cli-config-file ../../../.swc-cli.json && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../../.swcrc --cli-config-file ../../../.swc-cli.json --copy-files",
     "clean": "rm -rf dist",
-    "copyfiles": "copyfiles -u 1 \"./src/init/templates/*\" dist",
     "prepublishOnly": "pnpm build",
     "test": "vitest run"
   },
   "dependencies": {
     "@lowdefy/helpers": "7.2.0",
     "@lowdefy/node-utils": "7.2.0",
-    "js-yaml": "4.3.2",
-    "prompts": "2.4.2"
+    "yaml": "2.9.1"
   },
   "peerDependencies": {
     "@playwright/test": "1.65.0"
@@ -60,10 +58,9 @@
     }
   },
   "devDependencies": {
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "copyfiles": "2.4.1",
-    "vitest": "4.1.12"
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"

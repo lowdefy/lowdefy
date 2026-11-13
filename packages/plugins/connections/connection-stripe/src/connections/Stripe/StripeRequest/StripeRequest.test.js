@@ -21,19 +21,21 @@ const connection = {
   secretKey: 'foo',
 };
 
+// Shaped like the real client: resources are own properties, methods sit on the resource's prototype.
 vi.doMock('stripe', () => {
-  return {
-    default: function () {
-      return {
-        customers: {
-          list(...args) {
-            return args;
-          },
-          missing: 42,
-        },
-      };
-    },
-  };
+  class CustomerResource {
+    missing = 42;
+
+    list(...args) {
+      return args;
+    }
+  }
+  class Stripe {
+    constructor() {
+      this.customers = new CustomerResource();
+    }
+  }
+  return { default: Stripe };
 });
 
 test('resource missing', async () => {
@@ -234,7 +236,7 @@ test('valid request for missing resource method', async () => {
   );
 });
 
-test('valid request for missing resource method', async () => {
+test('valid request for resource property that is not a method', async () => {
   const StripeRequest = (await import('./StripeRequest.js')).default;
   const request = {
     customers: {

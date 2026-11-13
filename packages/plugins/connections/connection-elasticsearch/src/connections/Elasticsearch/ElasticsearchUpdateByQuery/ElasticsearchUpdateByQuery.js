@@ -19,15 +19,17 @@ import schema from './schema.js';
 
 async function ElasticsearchUpdateByQuery({ request, connection }) {
   const client = new Client(connection);
-
-  const { body: response } = await client.updateByQuery({
-    ...request,
-    index: request.index || connection.index,
-  });
-
-  return {
-    response,
-  };
+  try {
+    const response = await client.updateByQuery({
+      ...request,
+      index: request.index || connection.index,
+    });
+    return {
+      response,
+    };
+  } finally {
+    await client.close();
+  }
 }
 
 ElasticsearchUpdateByQuery.schema = schema;

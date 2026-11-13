@@ -31,7 +31,7 @@ function controlsWithText(roots, text) {
 }
 
 // The roots the target's scope keys name: the block wrapper, narrowed to every grid row with the
-// row index (ag-grid renders a row once per pinned and centre container) and to the cells with
+// row index (before AG Grid 36 a row was rendered once per pinned and centre container) and to the cells with
 // the column id inside them. Null for a page-wide target.
 function resolveScope({ document, target }) {
   if (type.isNone(target.block_id)) {

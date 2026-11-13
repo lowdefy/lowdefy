@@ -15,19 +15,19 @@
 */
 
 import fs from 'fs';
-import fsExtra from 'fs-extra';
 import path from 'path';
 import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import installIfPackageJsonChanged from './installIfPackageJsonChanged.js';
 
 const baseDir = path.resolve(process.cwd(), 'test/installIfPackageJsonChanged');
 
-beforeEach(async () => {
-  await new Promise((resolve) => fsExtra.emptyDir(baseDir, resolve));
+beforeEach(() => {
+  fs.rmSync(baseDir, { recursive: true, force: true });
+  fs.mkdirSync(baseDir, { recursive: true });
 });
 
-afterAll(async () => {
-  await new Promise((resolve) => fsExtra.emptyDir(baseDir, resolve));
+afterAll(() => {
+  fs.rmSync(baseDir, { recursive: true, force: true });
 });
 
 test('installIfPackageJsonChanged installs on first run and writes the hash', async () => {

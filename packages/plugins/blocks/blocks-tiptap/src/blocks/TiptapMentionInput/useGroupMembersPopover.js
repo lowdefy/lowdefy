@@ -16,7 +16,8 @@
 
 import { useEffect, useRef } from 'react';
 import { type } from '@lowdefy/helpers';
-import tippy from 'tippy.js';
+
+import mountGroupPopover from './mountGroupPopover.js';
 
 function buildPopoverContent({ chip, group, groupMembers, char }) {
   const members = groupMembers[group] ?? [];
@@ -69,18 +70,22 @@ function useGroupMembersPopover({ editor, properties }) {
   const mentionsRef = useRef(properties.mentions);
   mentionsRef.current = properties.mentions;
 
-  const popoverRef = useRef(null);
+  const unmountPopoverRef = useRef(null);
   const activeChipRef = useRef(null);
 
   useEffect(() => {
     if (!editor || editor.isDestroyed) return undefined;
     const dom = editor.view.dom;
 
-    const hide = () => {
-      if (popoverRef.current) {
-        popoverRef.current.destroy();
-        popoverRef.current = null;
+    const removePopover = () => {
+      if (unmountPopoverRef.current) {
+        unmountPopoverRef.current();
+        unmountPopoverRef.current = null;
       }
+    };
+
+    const hide = () => {
+      removePopover();
       activeChipRef.current = null;
     };
 
@@ -100,15 +105,7 @@ function useGroupMembersPopover({ editor, properties }) {
 
       const char = mentionsRef.current?.char ?? '@';
       const content = buildPopoverContent({ chip, group, groupMembers, char });
-      const instance = tippy(chip, {
-        content,
-        trigger: 'manual',
-        appendTo: () => document.body,
-        placement: 'top-start',
-        interactive: false,
-      });
-      instance.show();
-      popoverRef.current = instance;
+      unmountPopoverRef.current = mountGroupPopover({ chip, content });
       activeChipRef.current = chip;
     };
 
@@ -120,11 +117,15 @@ function useGroupMembersPopover({ editor, properties }) {
 
     dom.addEventListener('mouseover', handleMouseOver);
     dom.addEventListener('mouseout', handleMouseOut);
+    // A press anywhere removes the popover. The chip stays active, so the popover shows again only
+    // once the pointer has left the chip and come back.
+    document.addEventListener('mousedown', removePopover, true);
     editor.on('update', hide);
 
     return () => {
       dom.removeEventListener('mouseover', handleMouseOver);
       dom.removeEventListener('mouseout', handleMouseOut);
+      document.removeEventListener('mousedown', removePopover, true);
       editor.off('update', hide);
       hide();
     };

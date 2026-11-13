@@ -34,30 +34,26 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "swc src --out-dir dist --config-file ../../.swcrc --cli-config-file ../../.swc-cli.json && pnpm copyfiles",
+    "build": "swc src --out-dir dist --config-file ../../.swcrc --cli-config-file ../../.swc-cli.json --copy-files --ignore \"**/*.snap\" --ignore \"**/*.yaml\"",
     "clean": "rm -rf dist",
-    "copyfiles": "copyfiles -u 1 \"./src/**/*\" dist -e \"./src/**/*.js\" -e \"./src/**/*.yaml\" -e \"./src/**/*.snap\"",
     "prepublishOnly": "pnpm build",
     "test": "vitest run"
   },
   "dependencies": {
     "@lowdefy/block-utils": "7.2.0",
     "@lowdefy/helpers": "7.2.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
-    "@lowdefy/block-dev": "7.2.0",
     "@lowdefy/vite-yaml-plugin": "7.2.0",
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "@testing-library/dom": "8.19.1",
-    "@testing-library/react": "13.4.0",
-    "@testing-library/user-event": "14.6.1",
-    "copyfiles": "2.4.1",
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
     "jest-serializer-html": "7.1.0",
-    "jsdom": "19.0.0",
-    "vitest": "4.1.12"
+    "jsdom": "31.0.0",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"

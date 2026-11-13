@@ -184,7 +184,7 @@ test('buildIconImports collects an error for an unresolvable name at an icon pos
   const names = buildIconImports({ blocks: [], components, context });
   expect(context.errors.map((error) => error.message)).toEqual([
     expect.stringMatching(
-      /^Icon "AiOutlineDelete" is a react-icons name\. Lowdefy 7 uses Lucide icons\. Use "delete" \(or "Trash"\)\./
+      /^Icon "AiOutlineDelete" is a react-icons name\. Lowdefy uses Lucide icons\. Use "delete" \(or "Trash"\)\./
     ),
   ]);
   expect(names).not.toContain('AiOutlineDelete');

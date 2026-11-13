@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable no-global-assign */
 import media from './media.js';
 import { expect, test } from 'vitest';
 

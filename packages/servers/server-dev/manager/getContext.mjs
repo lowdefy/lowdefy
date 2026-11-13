@@ -76,9 +76,11 @@ async function getContext() {
       skipPluginChecks: env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS === 'true',
       strictPort: env.LOWDEFY_SERVER_DEV_STRICT_PORT === 'true',
       watch:
-        argv.watch ?? env.LOWDEFY_SERVER_DEV_WATCH ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH) : [],
+        (argv.watch ?? env.LOWDEFY_SERVER_DEV_WATCH)
+          ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH)
+          : [],
       watchIgnore:
-        argv.watchIgnore ?? env.LOWDEFY_SERVER_DEV_WATCH_IGNORE
+        (argv.watchIgnore ?? env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           ? JSON.parse(env.LOWDEFY_SERVER_DEV_WATCH_IGNORE)
           : [],
     },

@@ -17,7 +17,8 @@
 import React, { useEffect, useRef } from 'react';
 import { withBlockDefaults } from '@lowdefy/block-utils';
 
-const TURNSTILE_SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+const TURNSTILE_SCRIPT_SRC =
+  'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
 
 let turnstileScriptPromise;
 

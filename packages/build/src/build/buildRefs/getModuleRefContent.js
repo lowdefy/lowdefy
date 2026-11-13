@@ -99,10 +99,9 @@ async function getModuleRefContent({ context, refDef, referencedFrom, walkCtx, c
   const content = exportType === 'component' ? entry.component : entry.links;
 
   if (!content) {
-    throw new ConfigError(
-      `The ${exportType} "${exportName}" in module "${entryId}" is empty.`,
-      { configKey }
-    );
+    throw new ConfigError(`The ${exportType} "${exportName}" in module "${entryId}" is empty.`, {
+      configKey,
+    });
   }
 
   // Component bodies live in the deferred-record registry — the manifest holds

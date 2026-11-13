@@ -35,12 +35,16 @@ function withNativePath(ignore) {
   return (filePath, ...rest) => ignore(path.normalize(filePath), ...rest);
 }
 
+// watchFiles are single files watched from the start beside watchPaths. They
+// are passed to chokidar as they are, never read as globs, so a file name with
+// glob characters ([id].yaml) is still watched as that file.
 function setupWatcher({
   callback,
   context,
   watchDotfiles = false,
   ignorePaths = [],
   watchPaths,
+  watchFiles = [],
   delay = 500,
   onBusy,
 }) {
@@ -58,7 +62,7 @@ function setupWatcher({
     if (globIgnores.length > 0) {
       ignored.push(createGlobIgnore(globIgnores));
     }
-    const configWatcher = chokidar.watch(globWatch.watchPaths, {
+    const configWatcher = chokidar.watch([...globWatch.watchPaths, ...watchFiles], {
       ignored: ignored.map(withNativePath),
       persistent: true,
       ignoreInitial: true,

@@ -162,13 +162,146 @@ test('valid connection schema, multiple nodes', () => {
   expect(validate({ schema, data: connection })).toEqual({ valid: true });
 });
 
-test('properties node and nodes are missing', () => {
+test('valid connection schema, Elastic Cloud', () => {
+  const connection = {
+    cloud: {
+      id: 'name:bG9jYWxob3N0JGFiY2QkZWZnaA==',
+    },
+    auth: {
+      username: 'elastic',
+      password: 'changeme',
+    },
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('valid connection schema, client 9 options', () => {
+  const connection = {
+    node: {
+      url: 'https://localhost:9200',
+      tls: {
+        rejectUnauthorized: true,
+      },
+      agent: {
+        connections: 10,
+      },
+    },
+    tls: {
+      ca: 'certificate',
+    },
+    caFingerprint: 'AA:BB',
+    auth: {
+      bearer: 'token',
+    },
+    agent: {
+      keepAliveTimeout: 1000,
+      connections: 100,
+    },
+    compression: true,
+    requestTimeout: 30000,
+    disablePrototypePoisoningProtection: false,
+    serverMode: 'stack',
+  };
+  expect(validate({ schema, data: connection })).toEqual({ valid: true });
+});
+
+test('properties node, nodes and cloud are missing', () => {
   const connection = {
     index: 'foo',
   };
   expect(() => validate({ schema, data: connection })).toThrow(
-    'Elasticsearch connection should have required property "node" or "nodes".'
+    'Elasticsearch connection should have exactly one of the properties "node", "nodes" or "cloud".'
   );
+});
+
+test('property ssl is rejected with the new name', () => {
+  const connection = {
+    node: 'https://foo',
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'was renamed to "tls" in Lowdefy 8 (Elasticsearch client 9). Move these options to "tls"'
+  );
+});
+
+test('node property ssl is rejected with the new name', () => {
+  const connection = {
+    node: {
+      url: 'https://foo',
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
+  };
+  const { valid, errors } = validate({ schema, data: connection, returnErrors: true });
+  expect(valid).toBe(false);
+  expect(errors.map((error) => error.message)).toContain(
+    'was renamed to "tls" in Lowdefy 8 (Elasticsearch client 9). Move these node options to "tls"'
+  );
+});
+
+test('cloud username and password are rejected', () => {
+  const connection = {
+    cloud: {
+      id: 'name:bG9jYWxob3N0JGFiY2QkZWZnaA==',
+      username: 'elastic',
+      password: 'changeme',
+    },
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'Set "auth.username" on the connection instead'
+  );
+});
+
+test('property suggestCompression is rejected', () => {
+  const connection = {
+    node: 'https://foo',
+    suggestCompression: true,
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'was removed in Lowdefy 8 (Elasticsearch client 9). Set "compression: true"'
+  );
+});
+
+test('property proxy is rejected', () => {
+  const connection = {
+    node: 'https://foo',
+    proxy: 'http://localhost:8080',
+  };
+  expect(() => validate({ schema, data: connection })).toThrow('is not supported.');
+});
+
+test('property agent with http.Agent options is rejected', () => {
+  const connection = {
+    node: 'https://foo',
+    agent: {
+      keepAlive: true,
+      maxSockets: 10,
+    },
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'takes undici connection pool options'
+  );
+});
+
+test('property agent false is rejected', () => {
+  const connection = {
+    node: 'https://foo',
+    agent: false,
+  };
+  expect(() => validate({ schema, data: connection })).toThrow(
+    'should be an object of undici connection pool options'
+  );
+});
+
+test('property compression gzip is rejected', () => {
+  const connection = {
+    node: 'https://foo',
+    compression: 'gzip',
+  };
+  expect(() => validate({ schema, data: connection })).toThrow('must be boolean');
 });
 
 test('property maxRetries is lower than 0', () => {
