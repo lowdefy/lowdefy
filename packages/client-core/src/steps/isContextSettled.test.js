@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { expect, test } from '@jest/globals';
+import { expect, test } from 'vitest';
 
 import isContextSettled from './isContextSettled.js';
 
