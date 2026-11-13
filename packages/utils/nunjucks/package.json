@@ -45,7 +45,6 @@
   "devDependencies": {
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
-    "clean-webpack-plugin": "4.0.0",
     "nunjucks": "3.2.4",
     "swc-loader": "0.2.7",
     "vitest": "5.1.0",
