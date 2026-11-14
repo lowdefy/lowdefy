@@ -146,6 +146,7 @@ test.each([
   ['_media size', { _media: 'size' }, [['read', 'media:size']]],
   ['_media key', { _media: { key: 'width' } }, [['read', 'media:width']]],
   ['_media all', { _media: true }, [['read', 'media:*']]],
+  ['_url_hash', { _url_hash: 'q' }, [['volatile', '_url_hash']]],
   ['_url_query', { _url_query: 'q' }, [['volatile', '_url_query']]],
   ['_path_params (fixed for the instance)', { _path_params: 'ticket_id' }, []],
   ['_path_params all', { _path_params: true }, []],

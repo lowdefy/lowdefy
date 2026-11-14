@@ -71,5 +71,6 @@ export { default as _path_params } from './operators/client/path_params.js';
 export { default as _request_details } from './operators/client/request_details.js';
 export { default as _request } from './operators/client/request.js';
 export { default as _theme } from './operators/client/theme.js';
+export { default as _url_hash } from './operators/client/url_hash.js';
 export { default as _url_query } from './operators/client/url_query.js';
 export { default as _websocket } from './operators/client/websocket.js';
