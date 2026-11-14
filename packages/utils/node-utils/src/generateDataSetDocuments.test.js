@@ -48,6 +48,7 @@ const invoices = {
       lines: [1, 2],
       meta: { literal: { source: 'generated' } },
       due: { '~d': '2026-12-31T00:00:00.000Z' },
+      taxRate: { _decimal: '0.15' },
     },
   },
 };
@@ -139,6 +140,7 @@ test('generateDataSetDocuments makes each kind in its range and shape', () => {
     expect(document.lines).toEqual([1, 2]);
     expect(document.meta).toEqual({ source: 'generated' });
     expect(document.due).toEqual({ '~d': '2026-12-31T00:00:00.000Z' });
+    expect(document.taxRate).toEqual({ _decimal: '0.15' });
   });
   expect(customers[0]._id).toEqual('customers_db-1');
   customers.forEach((customer) => {

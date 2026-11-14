@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import generateKinds from './generateKinds.js';
 
-const markerKeys = ['~d', '_oid'];
+const markerKeys = ['~d', '_oid', '_decimal'];
 
 // A date-only ISO string is UTC and a date-time names its offset, so a bound means the same instant
 // on every machine. Date.parse reads a date-time without an offset (or any other format) in the
@@ -115,7 +115,7 @@ function validateSequence({ options, where, fail }) {
 }
 
 // One generate field, checked and normalised to { kind, ...options } so generation reads no raw
-// YAML. A value that is not an object (or is a { "~d" } date or { _oid } ObjectId marker) is a
+// YAML. A value that is not an object (or is a { "~d" } date, { _oid } ObjectId or { _decimal } decimal marker) is a
 // literal; an object names exactly one kind.
 function validateGenerateField({ spec, where, fail }) {
   if (!type.isObject(spec)) {

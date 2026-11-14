@@ -16,8 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
-// Fixture values stay as written: dates as { '~d': ... } and ObjectIds as { _oid: '<hex>' } are
-// converted by the loader, not here. Document bodies are data, so only their top-level keys are
+// Fixture values stay as written: dates as { '~d': ... }, ObjectIds as { _oid: '<hex>' } and
+// decimals as { _decimal: '<string>' } are converted by the loader, not here. Document bodies are data, so only their top-level keys are
 // checked for operator-looking names.
 function validateDataSetFixtures({ fixtures, fail }) {
   if (type.isNone(fixtures)) return {};

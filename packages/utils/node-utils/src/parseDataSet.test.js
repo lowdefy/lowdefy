@@ -41,6 +41,7 @@ fixtures:
   tickets:
     - { _id: t-empty-title, organizationId: org_a, title: '', created: { '~d': 1700000000000 } }
     - { ref: { _oid: 64b7f0c2a1b2c3d4e5f60718 } }
+    - { amount: { _decimal: '1234.50' } }
 indexes:
   tickets:
     - { key: { organizationId: 1, number: 1 }, unique: true }
@@ -60,6 +61,7 @@ test('parseDataSet returns fixtures, users and indexes with no build present', a
     created: { '~d': 1700000000000 },
   });
   expect(dataSet.fixtures.tickets[1]).toEqual({ ref: { _oid: '64b7f0c2a1b2c3d4e5f60718' } });
+  expect(dataSet.fixtures.tickets[2]).toEqual({ amount: { _decimal: '1234.50' } });
   expect(dataSet.users).toEqual({
     owner: { id: 'u_1', roles: ['admin'], organizationId: 'org_a' },
   });
