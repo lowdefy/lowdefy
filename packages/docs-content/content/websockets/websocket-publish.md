@@ -5,7 +5,7 @@ A `Channel` websocket relays messages between clients: any subscriber can publis
 ## A Minimal Chat
 
 ```yaml
-lowdefy: 7.3.0
+lowdefy: 7.4.0
 
 websockets:
   - id: team_chat
