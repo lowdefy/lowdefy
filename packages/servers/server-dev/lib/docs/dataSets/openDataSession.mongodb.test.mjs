@@ -18,7 +18,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { vi, afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest';
-import { MongoClient, ObjectId } from 'mongodb';
+import { Decimal128, MongoClient, ObjectId } from 'mongodb';
 import { parseDataSet } from '@lowdefy/node-utils';
 
 import dataSessionRegistry from './dataSessionRegistry.js';
@@ -130,7 +130,7 @@ test('openDataSession drops expireAfterSeconds, creates a text index and lets a 
   }
 });
 
-test('openDataSession lets a later fixture replace one with the same _id and revives dates and ObjectIds', async () => {
+test('openDataSession lets a later fixture replace one with the same _id and revives dates, ObjectIds and decimals', async () => {
   const oid = new ObjectId();
   const dataSet = makeDataSet({
     collections: { tickets: 'tickets', 'tickets-archive': 'tickets' },
@@ -144,6 +144,8 @@ test('openDataSession lets a later fixture replace one with the same _id and rev
           title: 'no id',
           due: { '~d': '2026-01-02T00:00:00.000Z' },
           ref: { _oid: oid.toHexString() },
+          amount: { _decimal: '0.1' },
+          big: { _decimal: '-1234567890123456789012345678901234' },
         },
       ],
     },
@@ -155,6 +157,23 @@ test('openDataSession lets a later fixture replace one with the same _id and rev
     const noId = await tickets.findOne({ title: 'no id' });
     expect(noId.due).toEqual(new Date('2026-01-02T00:00:00.000Z'));
     expect(noId.ref).toEqual(oid);
+    expect(noId.amount).toBeInstanceOf(Decimal128);
+    expect(noId.amount.toString()).toEqual('0.1');
+    expect(noId.big.toString()).toEqual('-1234567890123456789012345678901234');
+    const [summed] = await tickets
+      .aggregate([
+        { $match: { title: 'no id' } },
+        {
+          $project: {
+            _id: 0,
+            type: { $type: '$amount' },
+            sum: { $add: ['$amount', Decimal128.fromString('0.2')] },
+          },
+        },
+      ])
+      .toArray();
+    expect(summed.type).toEqual('decimal');
+    expect(summed.sum.toString()).toEqual('0.3');
     expect(await tickets.countDocuments()).toBe(2);
   } finally {
     await close();

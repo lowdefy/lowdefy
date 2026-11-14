@@ -14,19 +14,32 @@
   limitations under the License.
 */
 
-import { ObjectId } from 'mongodb';
+import { Decimal128, ObjectId } from 'mongodb';
 import { serializer, type } from '@lowdefy/helpers';
 
 function reviver(_, value) {
-  if (type.isObject(value) && type.isString(value._oid)) {
+  if (!type.isObject(value)) {
+    return value;
+  }
+  if (type.isString(value._oid)) {
     return ObjectId.createFromHexString(value._oid);
+  }
+  if (!type.isUndefined(value._decimal)) {
+    if (!type.isString(value._decimal)) {
+      throw new Error(
+        `A fixture decimal is a string, such as { _decimal: '12.50' }. Received ${JSON.stringify(
+          value._decimal
+        )}.`
+      );
+    }
+    return Decimal128.fromString(value._decimal);
   }
   return value;
 }
 
-// A fixture document as the database stores it: `~d` markers become Dates (the serializer) and
-// { _oid: '<hex>' } becomes an ObjectId, the convention connection-mongodb's serialize.js uses for
-// request payloads.
+// A fixture document as the database stores it: `~d` markers become Dates (the serializer),
+// { _oid: '<hex>' } becomes an ObjectId and { _decimal: '<string>' } a Decimal128, the conventions
+// connection-mongodb's serialize.js uses for request payloads.
 function deserializeFixture(document) {
   return serializer.copy(document, { reviver });
 }

@@ -16,8 +16,10 @@
 
 import type from './type.js';
 
-// Keys that look like operators (single key starting with _) but are not.
-const KNOWN_NON_OPERATORS = new Set(['_id']);
+// Keys that look like operators (single key starting with _) but are not: a MongoDB document's
+// _id, and { _decimal: '<string>' }, the marker a MongoDB request carries a Decimal128 in. Without
+// _decimal here the build would warn that an operator type "_decimal" is not defined.
+const KNOWN_NON_OPERATORS = new Set(['_id', '_decimal']);
 
 // Returns the normalized operator name ('_get' for { '_get.key': ... },
 // '_state' for { __state: ... }) when the value is an operator object, else

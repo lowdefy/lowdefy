@@ -22,6 +22,67 @@ _id:
 
 Ids specified in this way will be treated as ObjectIds by MongoDB requests and mutations.
 
+##### Decimals
+
+A JavaScript number is a binary floating point value, so `0.1 + 0.2` is `0.30000000000000004`. For money, stock quantities and anything else that must add up exactly, MongoDB has the [Decimal128](https://www.mongodb.com/docs/manual/reference/bson-types/#decimal128) type: 34 significant decimal digits, summed exactly by `$sum`, `$add`, `$inc` and `$multiply`.
+
+Lowdefy carries a Decimal128 as its exact decimal string in a `_decimal` object, the same way it carries an ObjectId (in YAML):
+```yaml
+amount:
+  _decimal: '19.99'
+```
+
+A `_decimal` anywhere in a MongoDB request (a document, a filter, an update or a pipeline) is sent to MongoDB as a Decimal128, and a Decimal128 that MongoDB returns reaches the request response, an API routine's `_step`, and the page as `{ _decimal: '19.99' }`. The value is never converted to a JavaScript number on the way.
+
+- The value must be a string. Quote it in YAML: `_decimal: 19.99` is a number, and the request fails with an error rather than store a rounded value. A string with more than 34 significant digits, or one that is not a decimal, also fails.
+- `_decimal` is not an operator, but operators inside it are evaluated first, so `_decimal: { _payload: amount }` writes the string the page sent as a decimal.
+- The string comes back as MongoDB prints it. Trailing zeros are kept (`0.10` plus `0.20` is `0.30`), and very small or very large values use exponent notation (`0.0000001` reads as `1E-7`).
+- In the browser the value is the object `{ _decimal: '19.99' }`. Read the string with `_state: amount._decimal` to display it, and send the object back unchanged to write it as a decimal again. Do the arithmetic in MongoDB, not with number operators on the page: converting the string to a number brings the rounding back.
+- The connection's change log and the walled client that plugins use keep decimals as Decimal128 too.
+
+A routine that stores an exact sum and reads it back:
+```yaml
+- id: insert_line
+  type: MongoDBInsertOne
+  connectionId: ledger
+  properties:
+    doc:
+      _id: line-1
+      amount:
+        _decimal: '0.1'
+- id: add_to_line
+  type: MongoDBUpdateOne
+  connectionId: ledger
+  properties:
+    filter:
+      _id: line-1
+    update:
+      $inc:
+        amount:
+          _decimal: '0.2'
+- id: read_line
+  type: MongoDBFindOne
+  connectionId: ledger
+  properties:
+    query:
+      _id: line-1
+# _step: read_line.amount is { _decimal: '0.3' }, stored with $type "decimal".
+```
+
+A pipeline sums stored decimals exactly, and can turn a string field into a decimal with `$toDecimal`:
+```yaml
+- id: totals
+  type: MongoDBAggregation
+  connectionId: ledger
+  properties:
+    pipeline:
+      - $group:
+          _id: $account
+          total:
+            $sum: $amount
+# [{ _id: 'a', total: { _decimal: '0.3' } }]
+```
+
 
 ## Connections
 
