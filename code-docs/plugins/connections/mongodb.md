@@ -371,3 +371,13 @@ String IDs are automatically converted to ObjectIds when:
 ### Date Serialization
 
 JavaScript Date objects are preserved through serialization.
+
+### Decimal128 Serialization
+
+`serialize.js` carries a Decimal128 as `{ _decimal: '<string>' }`, beside `{ _oid }` for ObjectIds: `serialize` turns a Decimal128 in a driver response into the marker (its `toString()`), and `deserialize` turns the marker in request properties into `Decimal128.fromString`. Every stock request and the walled client pass through these two functions, so documents, filters, updates and pipelines all take the marker, and the change log (which logs the deserialized arguments and the driver's before/after documents) stores real decimals.
+
+- The marker holds a string and nothing else. A number is refused, as is a string `Decimal128.fromString` cannot hold exactly (more than 34 significant digits), so no value passes through a JavaScript double.
+- A Decimal128 is recognised by `_bsontype`, the driver's own check, so one built by a plugin's copy of `bson` serializes too.
+- `serialize` copies an object before replacing a value in it. A plugin's document handed to the walled client keeps its own ObjectIds and Decimal128s.
+- The marker is connection level, like `_oid`: `@lowdefy/helpers`' serializer and the client pass `{ _decimal }` through as plain JSON, so the browser holds a wrapped string and does no decimal arithmetic. `_decimal` must never become an operator name: the parsers leave it alone because no operator has it, and `getOperatorType` (helpers) lists it as a known non-operator so the build does not count it as a missing operator type.
+- Data set fixtures use the same marker (`deserializeFixture` in server-dev, `validateGenerateField` in node-utils).
