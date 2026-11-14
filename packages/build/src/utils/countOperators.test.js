@@ -55,6 +55,20 @@ test('countOperators', () => {
   expect(counter.getCounts()).toEqual({ _op_1: 2, _op_2: 1, _op_3: 1, _op_4: 1 });
 });
 
+test('countOperators does not count the _decimal marker, and counts an operator inside it', () => {
+  const counter = createCounter();
+  countOperators(
+    {
+      doc: {
+        amount: { _decimal: '12.50' },
+        quantity: { _decimal: { _op_1: 'quantity' } },
+      },
+    },
+    { counter }
+  );
+  expect(counter.getCounts()).toEqual({ _op_1: 1 });
+});
+
 test('countOperators does not count _id as an operator', () => {
   const counter = createCounter();
   countOperators(

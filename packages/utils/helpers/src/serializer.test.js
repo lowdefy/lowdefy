@@ -1459,3 +1459,11 @@ test('deserialize revives the auth gate errors as their own classes', () => {
 test('lowdefyErrorTypes revives every Lowdefy error name', () => {
   expect(Object.keys(lowdefyErrorTypes).sort()).toEqual([...lowdefyErrorNames].sort());
 });
+
+test('a MongoDB decimal marker passes through every serializer function unchanged', () => {
+  const value = { amount: { _decimal: '1234567890123456789012345678.901234' }, id: { _oid: 'a' } };
+  expect(serializer.serialize(value)).toEqual(value);
+  expect(serializer.deserialize(value)).toEqual(value);
+  expect(serializer.copy(value)).toEqual(value);
+  expect(serializer.deserializeFromString(serializer.serializeToString(value))).toEqual(value);
+});
