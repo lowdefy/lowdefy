@@ -108,6 +108,11 @@ const lifecycleTools = [
           description:
             'Only run the journeys in this popularity tier of the selection, ranked by recent production use: common (the most-used journeys making up half of use, the happy paths), wide (80%), edge (95%, the edge cases real users still reach) or full (every journey, the default). Journeys with no counts for their current steps run in every tier. Refused when the selection has fewer than 100 production matches in the usage window.',
         },
+        headless: {
+          type: 'boolean',
+          description:
+            'No browser, much faster. A journey that needs one is listed as browserOnly with that step.',
+        },
         usageWindow: {
           type: 'string',
           pattern: '^[1-9][0-9]*m$',

@@ -15,6 +15,7 @@
 */
 
 import appFolder from './appFolder.js';
+import testLevel from './testLevel.js';
 
 // The journeys-from-pr skill: the coding agent explores a pull request (or,
 // for a bug bash, a goal sentence) itself. It reads the scope with
@@ -50,6 +51,8 @@ in CI.
 break the invoice form with odd input". Skip steps 1 and 3; take the pages from the sentence, or
 from the pages the developer names, and go on from step 4 with the sentence as the direction for
 your goals.
+
+${testLevel()}
 
 ## 1. The pull request
 

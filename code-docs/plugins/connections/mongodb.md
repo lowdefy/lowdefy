@@ -361,6 +361,8 @@ accepts any existing equivalent unique non-partial index, and otherwise creates
 
 MongoDB connections are pooled automatically. The connection string is used as the pool key.
 
+The clients stay open for the life of the process. A process that has to end them itself, such as a test run whose worker must exit, calls `closeClients` from `@lowdefy/connection-mongodb/clients`. It is not exported from `./connections`, where the build reads every export as a connection type.
+
 ### ObjectId Handling
 
 String IDs are automatically converted to ObjectIds when:

@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import dataSessionRegistry from './dataSessionRegistry.js';
+import { dataSessionRegistry } from '@lowdefy/test-utils/dataSets';
+
 import readDataSession from './readDataSession.js';
 import { journeyActorToken } from '../../server/auth/journeyActor.js';
 import { afterEach, expect, test } from 'vitest';

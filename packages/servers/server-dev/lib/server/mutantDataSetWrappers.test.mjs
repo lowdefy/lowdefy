@@ -15,8 +15,8 @@
 */
 
 import { serializer } from '@lowdefy/helpers';
+import { applyDataSetRedirect } from '@lowdefy/test-utils/dataSets';
 
-import applyDataSetRedirect from './applyDataSetRedirect.js';
 import createMutantReadConfigFile from './mutants/createMutantReadConfigFile.js';
 import { endpointFixture } from './mutants/test/fixtures.mjs';
 import { openMutantRun } from './mutants/mutantRuns.js';

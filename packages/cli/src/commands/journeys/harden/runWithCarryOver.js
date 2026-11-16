@@ -99,6 +99,7 @@ async function runWithCarryOver({ context, options, items, url, baselines, listi
       items: items.filter((item) => current.baselines.some((baseline) => baseline.item === item)),
       url,
       configDirectory: context.directories.config,
+      headless: options.headless,
       log: (line) => context.logger.info(line),
     });
     rerun.failed.forEach(({ name }) =>

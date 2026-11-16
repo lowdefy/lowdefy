@@ -36,6 +36,7 @@
   ],
   "exports": {
     "./auth/adapters": "./dist/auth/adapters.js",
+    "./clients": "./dist/clients.js",
     "./connections": "./dist/connections.js",
     "./types": "./dist/types.js",
     "./walled": "./dist/walled.js",

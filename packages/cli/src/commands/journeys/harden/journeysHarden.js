@@ -107,6 +107,14 @@ function listedOperators({ options, listing }) {
   return [...new Set(listing.mutants.map(({ operator }) => operator))].sort();
 }
 
+// How many of the run's pairs ran headless and how many in the browser, by the journey each
+// verdict is for.
+function countHeadlessPairs({ baselines, verdicts }) {
+  const headless = new Set(baselines.filter((baseline) => baseline.headless).map(({ key }) => key));
+  const ran = verdicts.filter(({ journey }) => headless.has(journey)).length;
+  return { headless: ran, browser: verdicts.length - ran };
+}
+
 // The run once the server is up: baseline, list, scope, sample, then either
 // print the list or run every sampled mutant against the journeys on its path
 // and report. Returns the exit code.
@@ -123,6 +131,7 @@ async function hardenOnServer({ context, options, items, url }) {
     items: narrowed.items,
     url,
     configDirectory: context.directories.config,
+    headless: options.headless,
     log: (line) => context.logger.info(line),
   });
   failed.forEach(({ file, name, message }) =>
@@ -206,14 +215,20 @@ async function hardenOnServer({ context, options, items, url }) {
       );
     }
   }
+  // A --headless run says how many pairs ran without a browser.
+  const headlessPairs = options.headless
+    ? countHeadlessPairs({ baselines: run.baselines, verdicts: run.verdicts })
+    : null;
   if (options.json) {
     // Plain stdout, so the report can be piped to a JSON reader.
-    process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    const printed = type.isNull(headlessPairs) ? report : { ...report, pairs: headlessPairs };
+    process.stdout.write(`${JSON.stringify(printed, null, 2)}\n`);
     return exitCode;
   }
   formatHardenReport({
     score,
     baselines: run.baselines,
+    headlessPairs,
     sampled,
     notExercised: scoped.notExercised,
     rebuilds: run.rebuilds,

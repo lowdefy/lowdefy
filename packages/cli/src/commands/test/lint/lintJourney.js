@@ -23,8 +23,9 @@ import L4 from './L4.js';
 import L5 from './L5.js';
 import L6 from './L6.js';
 import L7 from './L7.js';
+import L8 from './L8.js';
 
-const RULES = { L1, L2, L3, L4, L5, L6, L7 };
+const RULES = { L1, L2, L3, L4, L5, L6, L7, L8 };
 
 // Every problem one journey has, as { rule, severity, stepIndex?, message }.
 // `exercisedEntry` is the journey's newest measured run (readExercised), or

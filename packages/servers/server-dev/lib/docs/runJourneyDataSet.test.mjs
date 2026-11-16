@@ -33,11 +33,12 @@ vi.doMock('./dataSets/resolveJourneyDataSet.js', () => ({
   default: mockResolveJourneyDataSet,
 }));
 const mockOpenDataSession = vi.fn();
-vi.doMock('./dataSets/openDataSession.js', () => ({
-  default: mockOpenDataSession,
-}));
 const mockGetDataStore = vi.fn();
-vi.doMock('./dataSets/getDataStore.js', () => ({ default: mockGetDataStore }));
+vi.doMock('@lowdefy/test-utils/dataSets', async (importOriginal) => ({
+  ...(await importOriginal()),
+  getDataStore: mockGetDataStore,
+  openDataSession: mockOpenDataSession,
+}));
 vi.doMock('./readDevAuthMode.js', () => ({
   default: () => ({ authConfigured: true, mockUserActive: false }),
 }));
@@ -144,7 +145,7 @@ test('runJourney opens a data session, gives every actor its cookie and data set
     data: 'sample',
     user: 'owner',
   });
-  expect(mockOpenDataSession).toHaveBeenCalledWith({ dataSet });
+  expect(mockOpenDataSession).toHaveBeenCalledWith({ dataSet, logger: expect.anything() });
   expect(mockOpenPage.mock.calls.map(([options]) => [options.user, options.dataCookie])).toEqual([
     [{ id: 'u_1', roles: ['admin'] }, 'session1'],
     [dataSet.users.outsider, 'session1'],

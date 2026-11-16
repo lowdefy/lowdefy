@@ -358,6 +358,12 @@ journeys
   .addOption(new Option('--mutant <id>', 'Run only this mutant, against the journeys on its path.'))
   .addOption(new Option('--list', 'List the sampled mutants and the time estimate, run nothing.'))
   .addOption(new Option('--json', 'Print the report as JSON.'))
+  .addOption(
+    new Option(
+      '--headless',
+      'Run each journey that needs no browser, and its mutant pairs, headless on the dev server; the rest run in the browser.'
+    )
+  )
   .addOption(options.port)
   .addOption(options.refResolver)
   .addOption(
@@ -697,8 +703,21 @@ program
   )
   .addOption(
     new Option(
+      '--headless',
+      'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. On the dev server, or on the production build with --build.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--build',
+      'With --headless: run on the production build (lowdefy build) in this process, with no dev server and no browser, for CI. Pass --server-directory when the build is elsewhere.'
+    )
+  )
+  .addOption(options.serverDirectory)
+  .addOption(
+    new Option(
       '--lint',
-      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 pointless as) and run nothing.'
+      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 pointless as, L8 targets a blockId would make headless) and run nothing.'
     )
   )
   .addOption(options.logLevel)

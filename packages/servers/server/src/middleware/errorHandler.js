@@ -15,32 +15,10 @@
 */
 
 import { redactErrorResponse } from '@lowdefy/api';
-import { isExpectedError } from '@lowdefy/errors';
+import { expectedAnswers, isExpectedError } from '@lowdefy/errors';
 import { HTTPException } from 'hono/http-exception';
 
 import sentrySdk from '../../lib/server/sentry/sentrySdk.js';
-
-// The HTTP answer to each expected outcome.
-//   AuthenticationError: an unauthenticated request to a protected endpoint.
-//   AuthorizationError: an authenticated caller whose roles do not permit the resource.
-//   TwoFactorEnrolmentRequiredError: an authorized caller who has not enrolled a second factor
-//     under auth.twoFactor.required. 403, not 401 - a 401 reads to the client as a dead session
-//     and bounces the user to sign-in, which is the loop the gate exists to avoid.
-//   UserError: an API client whose payload does not match the endpoint's payloadSchema (or any
-//     other UserError raised before a routine starts). A page's CallAPI payload the schema
-//     refuses is a ConfigError instead: the page's own config built it (validatePayload). A
-//     UserError raised inside a routine never gets here - it returns 200 with success: false
-//     through buildEndpointResult.
-const expectedAnswers = {
-  AuthenticationError: { status: 401, warning: 'Unauthenticated request', text: 'Unauthorized' },
-  AuthorizationError: { status: 403, warning: 'Forbidden', text: 'Forbidden' },
-  TwoFactorEnrolmentRequiredError: {
-    status: 403,
-    warning: 'Two-factor enrolment required',
-    text: 'Two-factor enrolment required',
-  },
-  UserError: { status: 400, warning: 'Bad request', text: 'Bad Request' },
-};
 
 // Hono routes every handler error to the app-level error handler — upstream
 // middleware try/catch never sees them (compose catches per dispatch level).
@@ -51,7 +29,8 @@ function createErrorHandler({ basePath = '', logger }) {
     const path = basePath ? c.req.path.replace(basePath, '') : c.req.path;
     // An expected outcome - the system worked and said no - is one warning line and its
     // status, with no structured error log and no Sentry capture, so probing cannot flood
-    // either. isExpectedError decides which errors those are; the table only gives the answer.
+    // either. isExpectedError decides which errors those are; expectedAnswers (@lowdefy/errors)
+    // only gives the answer, the same one on every server.
     if (isExpectedError(error)) {
       // A name expectedErrorNames gains before this table does is still a refusal: a 400.
       const { status, warning, text } = expectedAnswers[error.name] ?? expectedAnswers.UserError;

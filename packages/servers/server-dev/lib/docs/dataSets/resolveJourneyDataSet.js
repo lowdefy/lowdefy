@@ -15,8 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-
-import readDataSet from './readDataSet.js';
+import { readDataSet } from '@lowdefy/test-utils/dataSets';
 
 function isUserName(user) {
   return type.isString(user) && user !== 'none';

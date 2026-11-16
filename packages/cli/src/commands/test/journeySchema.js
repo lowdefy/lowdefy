@@ -227,10 +227,12 @@ const evidenceSchema = {
 
 // The step grammar itself lives in @lowdefy/node-utils, shared with the dev
 // server's journey runner; this schema checks the file's shape and the step
-// names, and validateJourney runs the grammar over the steps.
+// names, and validateJourney runs the grammar over the steps. pageId may be
+// left out when every step runs without a page, which validateJourney checks
+// against the steps.
 const journeySchema = {
   type: 'object',
-  required: ['name', 'pageId', 'steps'],
+  required: ['name', 'steps'],
   properties: {
     name: {
       type: 'string',
@@ -252,6 +254,8 @@ const journeySchema = {
     },
     pageId: {
       type: 'string',
+      description:
+        'The page the journey opens. Left out, the journey opens no page and runs only call, request, as, wait: { ms } and expect on error, status, calls or db.',
       errorMessage: { type: 'Journey "pageId" should be a string.' },
     },
     // Must match the data set name pattern in @lowdefy/node-utils.
@@ -365,7 +369,6 @@ const journeySchema = {
     type: 'Journey should be an object.',
     required: {
       name: 'Journey should have required property "name".',
-      pageId: 'Journey should have required property "pageId".',
       steps: 'Journey should have required property "steps".',
     },
   },

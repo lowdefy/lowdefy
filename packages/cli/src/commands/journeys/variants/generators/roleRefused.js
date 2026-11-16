@@ -18,14 +18,45 @@ import { type } from '@lowdefy/helpers';
 
 import stepTarget, { targetBlockId } from '../stepTarget.js';
 
+// The call-based form: a page-less journey in which the refused user calls each request of the
+// start page the journey's measured run called, and is refused as the request's auth answers a
+// caller with other roles (403). It runs headless, so a negative request suite is generated
+// rather than written.
+function refusedCalls({ exercised, journey, name }) {
+  const requests = (exercised?.requests ?? []).filter(({ pageId }) => pageId === journey.pageId);
+  if (requests.length === 0) {
+    return [];
+  }
+  return [
+    {
+      kind: 'role',
+      detail: `requests refused to ${name}`,
+      overrides: { user: name, pageId: undefined, pathParams: undefined, urlQuery: undefined },
+      steps: requests.flatMap(({ pageId, requestId }) => [
+        { request: { pageId, requestId, payload: {} } },
+        { expect: { status: 403 } },
+      ]),
+    },
+  ];
+}
+
 // Role, refused: when the start page's built config has auth.roles and a
 // data set user holds none of them, that user opens the page, is sent to
 // /404 (the server collapses an unauthorized page to it), and does not see
 // the first block the journey targets. The /404 check comes first, because
-// expect.hidden alone also passes on a page that never loaded.
-function roleRefused({ journey, dataSet, pageConfigs }) {
+// expect.hidden alone also passes on a page that never loaded. With a
+// measured run, the requests of the page it called are refused to that user
+// too (refusedCalls). An app that keeps an access table snapshot gets
+// neither: the snapshot already answers who reaches each page, and a page's
+// requests share its gate.
+function roleRefused({ journey, dataSet, exercised, pageConfigs, accessSnapshotTest }) {
   if (type.isNone(dataSet)) {
     return { skipped: 'the journey declares no data: set' };
+  }
+  if (!type.isNone(accessSnapshotTest)) {
+    return {
+      skipped: `the app keeps an access table snapshot (${accessSnapshotTest} calls accessMatrix), which is the check of who reaches this page`,
+    };
   }
   const pageRoles = pageConfigs[0]?.auth?.roles;
   if (!type.isArray(pageRoles) || pageRoles.length === 0) {
@@ -56,6 +87,7 @@ function roleRefused({ journey, dataSet, pageConfigs }) {
       overrides: { user: name },
       steps: [{ expect: { url: { contains: '/404' } } }, { expect: { hidden: blockId } }],
     },
+    ...refusedCalls({ exercised, journey, name }),
   ];
 }
 

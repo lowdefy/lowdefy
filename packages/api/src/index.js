@@ -26,6 +26,7 @@ import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
 import createAssetLinks from './routes/mobile/createAssetLinks.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
 import createContentSecurityPolicy from './csp/createContentSecurityPolicy.js';
+import createInjectedApiContext from './context/createInjectedApiContext.js';
 import createMcpServer from './routes/mcp/createMcpServer.js';
 import createRequestSignal from './context/createRequestSignal.js';
 import createSystemContext from './context/createSystemContext.js';
@@ -82,6 +83,7 @@ export {
   createAssetLinks,
   createChannelRegistry,
   createContentSecurityPolicy,
+  createInjectedApiContext,
   createMcpServer,
   createRequestSignal,
   createSystemContext,

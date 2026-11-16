@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import toAppErrorFailure from './toAppErrorFailure.js';
+import { toAppErrorFailure } from '@lowdefy/node-utils';
 
 // The step's failure once the app errors its window held are counted. App
 // errors fail the step, leading any failure of the step's own. A step that

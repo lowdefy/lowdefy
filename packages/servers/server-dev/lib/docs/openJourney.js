@@ -20,7 +20,8 @@ import createJourneyActors from './createJourneyActors.js';
 const MAIN_ACTOR = 'main';
 
 // Opens a journey's first page as its main actor and returns the journey the
-// steps run against, with the main actor's page. `timeout` bounds each page
+// steps run against, with the main actor's page. A page-less journey (no
+// pageId) opens the main actor's context on a blank page. `timeout` bounds each page
 // open, raised to `stepTimeout` when that is longer, so one journey setting
 // raises every such wait. Closes every actor it opened when the open fails.
 async function openJourney({
@@ -72,6 +73,7 @@ async function openJourney({
     const journey = {
       actors,
       origin,
+      basePath,
       configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
       startedAt,
       openTimeout,

@@ -42,6 +42,7 @@ import runCheck from './runCheck.js';
 import runEndpoint from './runEndpoint.js';
 import runJourney from './runJourney.js';
 import runJourneyAsUsers from './runJourneyAsUsers.js';
+import runJourneyHeadless from './runJourneyHeadless.js';
 import selectExercised from './selectExercised.js';
 import runDeviceJourney from './device/runDeviceJourney.js';
 import runRequest from './runRequest.js';
@@ -376,6 +377,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       data,
       exercised,
       device,
+      headless,
     }) => {
       if (!type.isNone(device)) {
         const refused = deviceParamsError({
@@ -424,8 +426,10 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         data,
         basePath: lowdefyConfig.basePath ?? '',
       };
+      // headless: true runs the journey with no browser (runJourneyHeadless).
+      const runOne = headless === true ? runJourneyHeadless : runJourney;
       if (type.isArray(user)) {
-        const { passed, runs } = await runJourneyAsUsers({ ...params, users: user });
+        const { passed, runs } = await runJourneyAsUsers({ ...params, run: runOne, users: user });
         // Every run's screenshots follow the JSON as images, run by run in
         // the order of the runs, each named in its run.
         const summary = {
@@ -449,7 +453,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
           ],
         };
       }
-      const result = await runJourney({
+      const result = await runOne({
         ...params,
         user,
         // Each call is its own journey run, recorded apart from the suite's.
@@ -458,7 +462,8 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       if (result.error) {
         return notFoundResult(result.error);
       }
-      const { screenshots, exercised: resultExercised, ...rest } = result;
+      // A headless run takes no screenshots, and a browser-only one runs nothing.
+      const { screenshots = [], exercised: resultExercised, ...rest } = result;
       const summary = {
         ...rest,
         ...selectExercised({ exercised: resultExercised, selection: exercised }),

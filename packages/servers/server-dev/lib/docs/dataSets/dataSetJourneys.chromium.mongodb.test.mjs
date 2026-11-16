@@ -131,14 +131,10 @@ const { default: websocketHandler } = await import('../../../src/routes/websocke
 const { handleWebSocketUpgrade } = await import('../../../src/websocket/devWebSocket.js');
 const { getBrowser } = await import('../getBrowser.js');
 // The connection plugin keeps one driver client per URI for the life of the process; the suite
-// closes them so the test worker can exit. Imported by file: the package does not export it.
-const { closeClients } = await import(
-  path.join(
-    serverDevDirectory,
-    'node_modules/@lowdefy/connection-mongodb/dist/connections/MongoDBCollection/getClient.js'
-  )
-);
-const { default: getDataStore } = await import('./getDataStore.js');
+// closes them so the test worker can exit.
+const { closeClients } = await import('@lowdefy/connection-mongodb/clients');
+const { getDataStore } = await import('@lowdefy/test-utils/dataSets');
+const { default: createLogger } = await import('../../server/log/createLogger.js');
 const { default: getBuildId } = await import('../getBuildId.js');
 const { serializer } = await import('@lowdefy/helpers');
 
@@ -313,7 +309,7 @@ beforeAll(async () => {
     .collection('tickets')
     .insertOne({ _id: 'crm-real-1', organization_id: 'org_a' });
 
-  store = await getDataStore();
+  store = await getDataStore({ logger: createLogger() });
   // Every write on the data store, in order, so a test can tell which session database a detached
   // write reached and that it landed before the session dropped it.
   storeEvents = [];

@@ -14,24 +14,11 @@
   limitations under the License.
 */
 
-import { expectedErrorNames } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
-import { getStepKey } from '@lowdefy/node-utils';
+import { findActionErrors, findErrorEntries, getStepKey, keyFindings } from '@lowdefy/node-utils';
 
-import findingKey from './findingKey.js';
 import hasNoEffect from './hasNoEffect.js';
 import parseAppApiUrl from './parseAppApiUrl.js';
-import relativeSource from './relativeSource.js';
-
-const SEVERITY = {
-  'action-error': 'error',
-  'client-error': 'error',
-  'server-error': 'error',
-  'request-failed': 'error',
-  'dev-server': 'error',
-  'dead-click': 'warning',
-  environment: 'info',
-};
 
 function describeTarget(target) {
   const parts = [target.blockId ?? 'control'];
@@ -56,7 +43,9 @@ function isDeadClick({ step, result, window }) {
 }
 
 // The fixed checks that decide whether a journey step broke something, over what
-// the step's window produced for this run only:
+// the step's window produced for this run only. The checks that need no browser
+// (action, client and server errors, and how findings are keyed) are shared with
+// the headless runner from @lowdefy/node-utils; the rest read the browser:
 //   action-error    an event failed with an error that is not an expected
 //                   outcome: a failed Validate (a UserError) or an auth gate's
 //                   401 or 403 refusal is the app doing its job
@@ -106,55 +95,24 @@ async function evaluateInvariants({
   usesSearchStage,
   resolveSource,
 }) {
-  let findings = [];
-  function add({ kind, message, source = null, configKey = null }) {
-    findings.push({
-      kind,
-      severity: SEVERITY[kind],
-      message,
-      pageId,
-      source: relativeSource({ source, configDirectory }),
-      configKey,
-    });
-  }
-
-  for (const emit of window.emits) {
-    if (emit.success !== false || expectedErrorNames.has(emit.failure?.errorName)) continue;
-    const { actionId, actionType, configKey, errorName } = emit.failure ?? {};
-    add({
-      kind: 'action-error',
-      message: `${actionType ?? 'An action'} "${actionId ?? 'unknown'}" failed in ${emit.blockId}.${
-        emit.eventName
-      } with ${errorName ?? 'an error'}.`,
-      configKey: configKey ?? null,
-      source: type.isNone(configKey) ? null : await resolveSource(configKey),
-    });
-  }
+  const drafts = await findActionErrors({ emits: window.emits, resolveSource });
 
   const clientEntries = window.errors
     .filter((entry) => entry.store === 'client')
     .filter((entry) => !isCausedByGoto({ step, window, message: entry.message ?? entry.name }));
   const serverEntries = window.errors.filter((entry) => entry.store === 'server');
-  clientEntries.forEach((entry) => {
-    add({ kind: 'client-error', message: entry.message ?? entry.name, source: entry.source });
-  });
+  drafts.push(...findErrorEntries({ clientEntries, serverEntries: [] }));
   window.pageErrors
     .filter((pageError) => !isCausedByGoto({ step, window, message: pageError.message }))
     .filter((pageError) => !clientEntries.some((entry) => entry.message === pageError.message))
     .forEach((pageError) => {
-      add({ kind: 'client-error', message: `${pageError.name}: ${pageError.message}` });
+      drafts.push({ kind: 'client-error', message: `${pageError.name}: ${pageError.message}` });
     });
-  serverEntries.forEach((entry) => {
-    add({
-      kind: usesSearchStage(entry) ? 'environment' : 'server-error',
-      message: entry.message ?? entry.name,
-      source: entry.source,
-    });
-  });
+  drafts.push(...findErrorEntries({ clientEntries: [], serverEntries, usesSearchStage }));
   window.responses
     .filter((response) => !type.isNone(response.childState))
     .forEach((response) => {
-      add({
+      drafts.push({
         kind: 'dev-server',
         message: `${response.method} ${
           new URL(response.url).pathname
@@ -170,7 +128,7 @@ async function evaluateInvariants({
     .filter((response) => type.isNone(response.childState))
     .filter((response) => !isExplained({ response, serverEntries, basePath }))
     .forEach((response) => {
-      add({
+      drafts.push({
         kind: 'request-failed',
         message: `${response.method} ${new URL(response.url).pathname} answered ${
           response.status
@@ -178,29 +136,14 @@ async function evaluateInvariants({
       });
     });
   if (isDeadClick({ step, result, window })) {
-    add({
+    drafts.push({
       kind: 'dead-click',
       message: `Clicking ${describeTarget(
         step.click
       )} did nothing: no event ran, the page did not change and no request was sent.`,
     });
   }
-
-  if (findings.some((finding) => finding.kind === 'environment')) {
-    findings = findings.filter((finding) => finding.kind === 'environment');
-  }
-  // The page's own errors about a request that got no answer are only its echo.
-  if (findings.some((finding) => finding.kind === 'dev-server')) {
-    findings = findings.filter((finding) => finding.kind === 'dev-server');
-  }
-  const seen = new Set();
-  return findings
-    .map((finding) => ({ ...finding, key: findingKey(finding) }))
-    .filter((finding) => {
-      if (seen.has(finding.key)) return false;
-      seen.add(finding.key);
-      return true;
-    });
+  return keyFindings({ configDirectory, drafts, pageId });
 }
 
 export default evaluateInvariants;

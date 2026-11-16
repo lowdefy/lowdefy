@@ -18,6 +18,7 @@ import empty from './empty.js';
 import roleGranted from './roleGranted.js';
 import roleRefused from './roleRefused.js';
 import tenant from './tenant.js';
+import tenantCalls from './tenantCalls.js';
 import volume from './volume.js';
 import { expect, test } from 'vitest';
 
@@ -142,6 +143,51 @@ test('roleRefused writes the /404 redirect before the first targeted block is hi
   ]);
 });
 
+test('roleRefused also writes a page-less variant calling the page requests the journey called, refused', () => {
+  const pageConfigsMemberOnly = [{ auth: { public: false, roles: ['member'] } }];
+  const exercised = {
+    pages: ['tickets', 'ticket'],
+    requests: [
+      { pageId: 'tickets', requestId: 'list_tickets', calls: 1, write: false },
+      { pageId: 'tickets', requestId: 'close_ticket', calls: 1, write: true },
+      { pageId: 'ticket', requestId: 'get_ticket', calls: 1, write: false },
+    ],
+    endpoints: [],
+  };
+  const variants = roleRefused({
+    journey,
+    dataSet,
+    exercised,
+    pageConfigs: pageConfigsMemberOnly,
+  });
+  expect(variants[1]).toEqual({
+    kind: 'role',
+    detail: 'requests refused to admin',
+    overrides: { user: 'admin', pageId: undefined, pathParams: undefined, urlQuery: undefined },
+    steps: [
+      { request: { pageId: 'tickets', requestId: 'list_tickets', payload: {} } },
+      { expect: { status: 403 } },
+      { request: { pageId: 'tickets', requestId: 'close_ticket', payload: {} } },
+      { expect: { status: 403 } },
+    ],
+  });
+});
+
+test('roleRefused is skipped when the app keeps an access table snapshot', () => {
+  const pageConfigsMemberOnly = [{ auth: { public: false, roles: ['member'] } }];
+  expect(
+    roleRefused({
+      journey,
+      dataSet,
+      pageConfigs: pageConfigsMemberOnly,
+      accessSnapshotTest: 'tests/endpoints/access.test.mjs',
+    })
+  ).toEqual({
+    skipped:
+      'the app keeps an access table snapshot (tests/endpoints/access.test.mjs calls accessMatrix), which is the check of who reaches this page',
+  });
+});
+
 test('roleRefused is skipped without auth.roles or when every user holds a page role', () => {
   expect(roleRefused({ journey, dataSet, pageConfigs: [{ auth: { public: false } }] })).toEqual({
     skipped: 'page "tickets" has no auth.roles',
@@ -224,4 +270,134 @@ test('empty and volume are skipped without their flag or when the set lacks the 
   expect(
     empty({ journey: { ...journey, user: { roles: ['member'] } }, dataSet, emptyDataSet })
   ).toEqual({ skipped: "the journey's user is not a data set user name" });
+});
+
+test('roleRefused writes neither form when the app keeps an access table snapshot', () => {
+  const pageConfigsMemberOnly = [
+    { blockId: 'tickets', auth: { public: false, roles: ['member'] } },
+  ];
+  expect(
+    roleRefused({
+      journey,
+      dataSet,
+      pageConfigs: pageConfigsMemberOnly,
+      exercised: { requests: [{ pageId: 'tickets', requestId: 'get_tickets', write: false }] },
+      accessSnapshotTest: 'tests/endpoints/access.test.mjs',
+    })
+  ).toEqual({
+    skipped:
+      'the app keeps an access table snapshot (tests/endpoints/access.test.mjs calls accessMatrix), which is the check of who reaches this page',
+  });
+});
+
+const closeTicket = {
+  ...journey,
+  steps: [{ click: 'close_button' }, { wait: { request: 'close_ticket' } }],
+};
+
+const closeExercised = {
+  requests: [
+    { pageId: 'tickets', requestId: 'close_ticket', write: true },
+    { pageId: 'tickets', requestId: 'get_tickets', write: false },
+  ],
+  endpoints: [{ endpointId: 'notify', write: true }],
+};
+
+const closeCalls = [
+  {
+    actor: 'main',
+    kind: 'request',
+    pageId: 'tickets',
+    requestId: 'get_tickets',
+    payload: { id: 't2' },
+  },
+  {
+    actor: 'main',
+    kind: 'request',
+    pageId: 'tickets',
+    requestId: 'close_ticket',
+    payload: { ticket: { id: 't2' }, status: 'closed' },
+  },
+  { actor: 'main', kind: 'endpoint', endpointId: 'notify', payload: { message: 'closed' } },
+];
+
+test('tenantCalls sends each write the page sent as an outsider and checks the named row is unchanged', () => {
+  expect(
+    tenantCalls({
+      journey: closeTicket,
+      dataSet,
+      exercised: closeExercised,
+      calls: closeCalls,
+      collections: { tickets: 'tickets' },
+    })
+  ).toEqual([
+    {
+      kind: 'tenant',
+      detail: 'writes sent as outsider of org_b',
+      overrides: {
+        user: 'outsider',
+        pageId: undefined,
+        pathParams: undefined,
+        urlQuery: undefined,
+      },
+      steps: [
+        {
+          request: {
+            pageId: 'tickets',
+            requestId: 'close_ticket',
+            payload: { ticket: { id: 't2' }, status: 'closed' },
+          },
+        },
+        {
+          expect: {
+            db: {
+              collection: 'tickets',
+              connectionId: 'tickets',
+              match: { _id: 't2' },
+              equals: [
+                { _id: 't2', organizationId: 'org_a', title: 'Broken chair', status: 'open' },
+              ],
+            },
+          },
+        },
+      ],
+    },
+  ]);
+});
+
+test('tenantCalls finds the row a payload names, not the first row of the organization it sends', () => {
+  const [variant] = tenantCalls({
+    journey: closeTicket,
+    dataSet,
+    exercised: closeExercised,
+    calls: [
+      {
+        actor: 'main',
+        kind: 'request',
+        pageId: 'tickets',
+        requestId: 'close_ticket',
+        payload: { organizationId: 'org_a', ticket: { id: 't2' } },
+      },
+    ],
+    collections: { tickets: 'tickets' },
+  });
+  expect(variant.steps[1].expect.db.match).toEqual({ _id: 't2' });
+});
+
+test('tenantCalls is skipped without a headless run, or when no write names an insider row', () => {
+  expect(
+    tenantCalls({ journey: closeTicket, dataSet, exercised: closeExercised, collections: {} })
+  ).toEqual({
+    skipped:
+      'the call form replays the payloads a headless run records, and this journey needs a browser',
+  });
+  expect(
+    tenantCalls({
+      journey: closeTicket,
+      dataSet,
+      exercised: closeExercised,
+      calls: closeCalls.slice(2),
+      collections: { tickets: 'tickets' },
+    })
+  ).toEqual({ skipped: 'no write the journey sent names a org_a fixture row' });
 });

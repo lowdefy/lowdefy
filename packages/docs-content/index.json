@@ -470,6 +470,12 @@
       "path": "content/testing/journey-data-sets.md"
     },
     {
+      "slug": "testing/endpoint-tests",
+      "title": "Endpoint Tests",
+      "section": "Testing",
+      "path": "content/testing/endpoint-tests.md"
+    },
+    {
       "slug": "testing/explore-pull-request",
       "title": "Exploring a Pull Request",
       "section": "Testing",
@@ -3073,7 +3079,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "2d8a2b03ae7b1a4d640223f23bebea31ef5d3c052652f566aa0b68adff4933da"
+      "hash": "ed4c3452a1515c53ff08b2c4a8d363a94b4eb16df508e3419b0030045131e13b"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3112,7 +3118,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "1873730b81d22282eeec3ba15ea034117cf501c67c621a3bacf66ed89b8057cf"
+      "hash": "3d8da8c0ba786d7b528b527cdfe329d159f02f3e205686edf732e12ee1b0e275"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3353,7 +3359,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "954e1aaacaf6abe246a4574fad5dee7e54b947b48652133da667e592e678f122"
+      "hash": "95af4638e4488b5b78152920b3a8743260b8a446495785b3c5078ff437a66f51"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3361,6 +3367,13 @@
         "testing/journey-data-sets.yaml"
       ],
       "hash": "b88281aa53a6a388dff04045c3be230aec6e959d2455f13dd8338cf040963c75"
+    },
+    "testing/endpoint-tests": {
+      "files": [
+        "testing/endpoint-tests.md",
+        "testing/endpoint-tests.yaml"
+      ],
+      "hash": "248c911e200766f1696ced09373a456cbae3e68eab448bfe92d84d3d918a6e03"
     },
     "testing/explore-pull-request": {
       "files": [

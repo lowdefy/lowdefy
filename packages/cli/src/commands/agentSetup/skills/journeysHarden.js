@@ -15,6 +15,7 @@
 */
 
 import appFolder from './appFolder.js';
+import testLevel from './testLevel.js';
 
 // The journeys-harden skill: a thin workflow over the CLI that proves the
 // app's journeys are worth keeping. It replays and lints them, runs config
@@ -43,6 +44,8 @@ Two rules hold throughout:
   variant candidate in \`_candidates/\` is not yet a journey of the suite.
 - **Write no step the compiler or the variants generator did not produce**, except an assertion
   the developer approved. Never add \`wait: { ms }\`: lint L3 refuses it.
+
+${testLevel()}
 
 ## 1. Replay
 
