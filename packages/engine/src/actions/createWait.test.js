@@ -149,3 +149,38 @@ test('a new run of an event clears the mark of a run that is still waiting', asy
   await Promise.all([first, second]);
   expect(event.waitingUntil).toBe(null);
 });
+
+test('a run that waits does not mark the event while another run of it is still working', async () => {
+  const { Hold, releases } = createHold();
+  const button = await createButtonContext({
+    actions: { Hold, Wait },
+    onClick: [
+      { id: 'work', type: 'Hold' },
+      { id: 'pause', type: 'Wait', params: { ms: 60000 } },
+    ],
+  });
+  const event = button.Events.events.onClick;
+
+  vi.useFakeTimers();
+  const started = Date.now();
+  const first = button.triggerEvent({ name: 'onClick' });
+  const second = button.triggerEvent({ name: 'onClick' });
+
+  // The second run sleeps while the first is still held at its first action.
+  releases[1]();
+  await vi.advanceTimersByTimeAsync(0);
+  expect(event.loading).toBe(true);
+  expect(event.waitingUntil).toBe(null);
+
+  // Once the first run sleeps too, the event is only waiting, until the first of them wakes.
+  await vi.advanceTimersByTimeAsync(1000);
+  releases[0]();
+  await vi.advanceTimersByTimeAsync(0);
+  expect(event.waitingUntil).toBe(started + 60000);
+
+  await vi.advanceTimersByTimeAsync(61000);
+  await Promise.all([first, second]);
+  expect(event.waitingUntil).toBe(null);
+  expect(event.runs).toBe(0);
+  expect(event.waits).toEqual([]);
+});

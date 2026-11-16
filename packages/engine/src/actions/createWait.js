@@ -29,8 +29,15 @@ function createWait({ eventDescription }) {
       await wait(ms);
       return;
     }
-    eventDescription.waitingUntil = Date.now() + ms;
+    const until = Date.now() + ms;
+    eventDescription.waits.push(until);
+    // Another run of the same event may be working beside this one. The event is only waiting
+    // once every run of it sleeps, and then until the first of them wakes.
+    if (eventDescription.waits.length >= eventDescription.runs) {
+      eventDescription.waitingUntil = Math.min(...eventDescription.waits);
+    }
     await wait(ms);
+    eventDescription.waits.splice(eventDescription.waits.indexOf(until), 1);
     // Cleared even when a later run of the same event has set it since: this run is about to
     // work again, so the event is no longer only waiting.
     eventDescription.waitingUntil = null;
