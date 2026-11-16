@@ -1544,9 +1544,11 @@ test('runJourney goes back one page and settles it', async () => {
 
   expect(result.passed).toBe(true);
   expect(page.goBack).toHaveBeenCalledWith({ timeout: 5000 });
-  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), undefined, {
-    timeout: 5000,
-  });
+  expect(page.waitForFunction).toHaveBeenLastCalledWith(
+    expect.any(Function),
+    { deadline: expect.any(Number) },
+    { timeout: 5000 }
+  );
 });
 
 test('runJourney fails back on the first page instead of leaving the app', async () => {
@@ -1720,16 +1722,23 @@ test('runJourney settles the page after an interaction before the next step', as
   const page = createPage();
   openWith(page);
 
+  const started = Date.now();
   await runJourney({
     origin,
     pageId: 'form',
     steps: [{ click: 'open' }, { expect: { visible: 'modal' } }],
   });
+  const ended = Date.now();
 
   // openPage owns the readiness wait; the runner waits for lazy blocks before
   // the click picks a control, and settles once after the click.
   expect(page.waitForFunction).toHaveBeenCalledTimes(2);
-  expect(page.waitForFunction.mock.calls[1][1]).toBeUndefined();
+  // The settle tells isPageReady when it gives up (SETTLE_TIMEOUT_MS after it
+  // starts), so an event sleeping in a Wait past that is not waited for.
+  const [, argument, options] = page.waitForFunction.mock.calls[1];
+  expect(options).toEqual({ timeout: 5000 });
+  expect(argument.deadline).toBeGreaterThanOrEqual(started + 5000);
+  expect(argument.deadline).toBeLessThanOrEqual(ended + 5000);
 });
 
 test('runJourney waits for lazy blocks to load before it picks the control a click lands on', async () => {
@@ -1958,9 +1967,12 @@ test('runJourney goto loads the page and settles on the page the app shows', asy
     ['http://localhost:3227/dashboard', { waitUntil: 'load', timeout: 15000 }],
     ['http://localhost:3227/invoice', { waitUntil: 'load', timeout: 15000 }],
   ]);
-  // No argument: isPageReady settles the page the app shows, which after a
-  // redirect is the sign-in page rather than the one asked for.
-  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([undefined, undefined]);
+  // No page id in the argument: isPageReady settles the page the app shows,
+  // which after a redirect is the sign-in page rather than the one asked for.
+  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([
+    { deadline: expect.any(Number) },
+    { deadline: expect.any(Number) },
+  ]);
 });
 
 const ROUTES = { ticket: 'tickets/{space}/{ticket_id}' };

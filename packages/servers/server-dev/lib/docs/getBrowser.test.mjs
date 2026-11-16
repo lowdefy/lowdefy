@@ -264,7 +264,9 @@ test('openPage rejects an invalid user before opening a browser context', async 
 test('openPage loads the page and waits on isPageReady for the page the app shows', async () => {
   const { browser } = createBrowser();
 
+  const started = Date.now();
   const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+  const ended = Date.now();
 
   // Not networkidle: the dev reload event stream keeps the network busy for the
   // life of the page, so that wait only ever ran out its timeout.
@@ -273,10 +275,17 @@ test('openPage loads the page and waits on isPageReady for the page the app show
     waitUntil: 'load',
     timeout: 15000,
   });
-  // The page shown, so a redirect to the sign-in page settles too.
-  expect(opened.page.waitForFunction).toHaveBeenCalledWith(isPageReady, undefined, {
-    timeout: 15000,
-  });
+  // The page shown, so a redirect to the sign-in page settles too. The wait
+  // tells isPageReady when it gives up, so an event sleeping in a Wait past
+  // that is not waited for.
+  expect(opened.page.waitForFunction).toHaveBeenCalledWith(
+    isPageReady,
+    { deadline: expect.any(Number) },
+    { timeout: 15000 }
+  );
+  const { deadline } = opened.page.waitForFunction.mock.calls[0][1];
+  expect(deadline).toBeGreaterThanOrEqual(started + 15000);
+  expect(deadline).toBeLessThanOrEqual(ended + 15000);
   expect(opened.ready).toBe(true);
 });
 
