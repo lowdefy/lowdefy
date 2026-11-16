@@ -1,0 +1,32 @@
+create-deal:
+  color: "#1890ff"
+  title: Deal Created
+  icon: FilePlus
+action-approve:
+  color: "#52c41a"
+  title: Action Approved
+  icon: check-circle
+# Saved by user-account's accept page (log-member-joined).
+org-member-joined:
+  color: "#52c41a"
+  title: Joined
+  icon: UserPlus
+# Saved by user-account's Access tokens tile (create-mcp-token / revoke-mcp-token).
+org-mcp-token-created:
+  color: "#1890ff"
+  title: Token Created
+  icon: Key
+org-mcp-token-revoked:
+  color: "#ff4d4f"
+  title: Token Switched Off
+  icon: Key
+# Notification pipeline types — badges for records the notifications module's
+# dispatch pipeline writes (record.type = notification config id).
+quote-approved:
+  color: "#52c41a"
+  title: Quote Approved
+  icon: check-circle
+user-invite:
+  color: "#1890ff"
+  title: User Invited
+  icon: UserPlus

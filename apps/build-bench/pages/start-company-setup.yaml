@@ -1,0 +1,149 @@
+# Start company setup — the app-owned trigger for sales-pipeline's
+# `track-company-setup` tracker (deals-module-rework, Workstream C).
+#
+# The tracker's start_link points here with ?action_id=<tracker id>&entity_id=<deal id>.
+# The deals analogue of what companies/new's on_create_routine did in the leads
+# flow: it starts the company-setup child workflow linked to the parent tracker
+# (parent_action_id) — but on the deal's EXISTING company (looked up from the
+# deal) rather than a newly-created one. Engine-links can only carry the
+# action_id + entity_id sentinels, so the company id is resolved here, not in the
+# start_link.
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: start-company-setup
+    title: Start company setup
+    content_width: 640
+    breadcrumbs:
+      - home: true
+        icon: home
+      - label: Deals
+        pageId: deals/all
+      - label: Company setup
+    requests:
+      - id: get_deal
+        type: MongoDBAggregation
+        connectionId:
+          _module.connectionId:
+            id: deals-collection
+            module: deals
+        payload:
+          deal_id:
+            _url_query: entity_id
+        properties:
+          pipeline:
+            - $match:
+                _id:
+                  _payload: deal_id
+                removed: null
+            - $limit: 1
+            - $lookup:
+                from: companies
+                localField: company_id
+                foreignField: _id
+                as: company
+            - $addFields:
+                company:
+                  $first: $company
+    events:
+      onMount:
+        # Guard: need both the parent tracker (action_id) and the deal (entity_id).
+        - id: redirect_missing
+          type: Link
+          skip:
+            _and:
+              - _ne:
+                  - _url_query: action_id
+                  - null
+              - _ne:
+                  - _url_query: entity_id
+                  - null
+          params:
+            pageId: deals/all
+        - id: load_deal
+          type: Request
+          params: get_deal
+    blocks:
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: Start company setup
+            blocks:
+              - id: intro
+                type: Html
+                properties:
+                  html:
+                    _nunjucks:
+                      template: |
+                        <p>Start the company-setup workflow for
+                        <strong>{{ company_name }}</strong> — the customer on deal
+                        {{ deal_id }}. This kicks off billing details, account
+                        manager assignment, and the kickoff call, and the deal's
+                        Company Setup tracker follows its progress.</p>
+                      on:
+                        company_name:
+                          _if_none:
+                            - _request: get_deal.0.company.short_name
+                            - _if_none:
+                                - _request: get_deal.0.company.name
+                                - the linked company
+                        deal_id:
+                          _request: get_deal.0._id
+      - _ref:
+          module: layout
+          component: floating-actions
+          vars:
+            actions:
+              - id: cancel_button
+                type: Button
+                layout:
+                  flex: 0 1 auto
+                properties:
+                  title: Cancel
+                  type: default
+                events:
+                  onClick:
+                    - id: cancel_nav
+                      type: Link
+                      params:
+                        pageId: deals/view
+                        urlQuery:
+                          _id:
+                            _url_query: entity_id
+              - id: start_button
+                type: Button
+                layout:
+                  flex: 1 0 auto
+                style:
+                  textAlign: right
+                properties:
+                  title: Start company setup
+                  type: primary
+                  icon: check
+                events:
+                  onClick:
+                    - id: start_setup
+                      type: CallAPI
+                      messages:
+                        success: Company setup started.
+                        error: Could not start company setup.
+                      params:
+                        endpointId:
+                          _module.endpointId:
+                            id: company-setup-start
+                            module: workflows
+                        payload:
+                          entity:
+                            id:
+                              _request: get_deal.0.company_id
+                          parent_action_id:
+                            _url_query: action_id
+                    - id: go_company
+                      type: Link
+                      params:
+                        pageId: companies/view
+                        urlQuery:
+                          _id:
+                            _request: get_deal.0.company_id

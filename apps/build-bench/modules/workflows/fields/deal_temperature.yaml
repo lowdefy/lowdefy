@@ -1,0 +1,38 @@
+# Consumer-supplied form field component.
+#
+# The workflows module resolves `component:` names only against its own
+# `components/fields/` library, and a module `_ref` cannot escape its package
+# root — so an app-specific field is contributed from the *app* side: this file
+# emits a form entry, and the action `_ref`s it into its `form:` array. The ref
+# resolves in app context, so the path is app-relative and the module never
+# needs to know this file exists.
+#
+# The contract is the module's field-authoring vocabulary, not raw block keys:
+#
+#   key    — becomes the block id AND the `form_meta` key. Both matter: the id
+#            binds page state, and the form_meta key is what makes the submitted
+#            value round-trip (GetWorkflowAction allowlists the stored form_data
+#            slice by form_meta keys, so a field the metadata never saw saves
+#            but is never read back).
+#   title  — the overview/review display label. The block's own visible label is
+#            separate (`properties.title` below), because not every block type
+#            accepts a title and the module can't inject one generically.
+#
+# The form-builder resolver maps `key` → `id` and strips `key`/`title` before
+# the node reaches the page tree.
+config:
+  key:
+    _var: key
+  title:
+    _var: title
+  type: SegmentedSelector
+  properties:
+    title:
+      _var: title
+    options:
+      - label: Cold
+        value: cold
+      - label: Warm
+        value: warm
+      - label: Hot
+        value: hot

@@ -57,7 +57,9 @@ function parseYamlWithLineNumbers(content) {
   return addLineNumbers(doc.contents, createGetLineNumber(content));
 }
 
-async function parseRefContent({ content, refDef }) {
+// Synchronous, so the parse cache can look up, parse and store in one step
+// (getParsedConfigFile).
+function parseRefContent({ content, refDef }) {
   const { path, vars } = refDef;
   if (type.isString(path)) {
     let ext = getFileExtension(path);

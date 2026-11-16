@@ -1,0 +1,94 @@
+type: company-setup
+# title omitted — derives to "Company Setup" via humanizeSlug (docs/workflows/reference/authoring-grammar.md#titles).
+entity:
+  connection_id:
+    _module.connectionId: { id: companies-collection, module: { _var: ids.companies } }
+  ref_key: company_ids
+  page_id: { _build.string.concat: [{ _var: ids.companies }, /view] }
+  title: Company
+  # id_query_key omitted — defaults to _id
+  # Inline routine the module turns into the company-setup-entity-data
+  # InternalApi. The action read handlers call it server-side (payload
+  # { entity_id }); its reserved `name` key drives the breadcrumb entity crumb,
+  # and the rest is read by the entity_view slot off get_workflow_action.entity.
+  # The company _id is a string consecutive id (no ObjectId coercion), so the
+  # $match compares strings directly. Named connection is the companies module's
+  # collection (cross-module reference, like the billing-details post-hook).
+  data:
+    routine:
+      - id: load_company
+        type: MongoDBAggregation
+        connectionId:
+          _module.connectionId: { id: companies-collection, module: { _var: ids.companies } }
+        payload:
+          entity_id:
+            _payload: entity_id
+        properties:
+          pipeline:
+            - $match:
+                _id:
+                  _payload: entity_id
+                deleted:
+                  $ne: true
+      - :return:
+          name:
+            _step: load_company.0.name
+          industry:
+            _step: load_company.0.attributes.industry
+          description:
+            _step: load_company.0.description
+          primary_email:
+            _step: load_company.0.contact.primary_email
+          website:
+            _step: load_company.0.contact.website
+          # Billing email captured by the billing-details action — surfaced here
+          # so the setup context reflects that action's outcome.
+          billing_email:
+            _step: load_company.0.billing.email
+  # Entity-list breadcrumb link → the companies module's scoped list page.
+  list_page_id: { _build.string.concat: [{ _var: ids.companies }, /all] }
+  list_title: Companies
+
+# entity_view.slot — read-only detail rendered as the RHS Details section on the
+# company-setup form pages and as the middle review subject on the check page.
+# Baked into the emitted pages by makeActionPages; reads the entity fields the
+# entity.data routine returns off get_workflow_action.entity.
+entity_view:
+  slot:
+    _ref:
+      path: modules/workflows/workflow_config/company-setup/company-detail-slot.yaml
+      vars:
+        ids:
+          _var: ids
+
+display_order: 2
+
+starting_actions:
+  - type: billing-details
+    status: action-required
+  - type: assign-account-manager
+    status: action-required
+  - type: kickoff-call
+    status: blocked
+
+action_groups:
+  # title omitted — derives to "Setup" via humanizeSlug (docs/workflows/reference/authoring-grammar.md#titles).
+  - id: setup
+    icon: settings
+
+actions:
+  - _ref:
+      path: modules/workflows/workflow_config/company-setup/billing-details.yaml
+      vars:
+        ids:
+          _var: ids
+  - _ref:
+      path: modules/workflows/workflow_config/company-setup/assign-account-manager.yaml
+      vars:
+        ids:
+          _var: ids
+  - _ref:
+      path: modules/workflows/workflow_config/company-setup/kickoff-call.yaml
+      vars:
+        ids:
+          _var: ids

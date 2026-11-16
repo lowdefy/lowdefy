@@ -1,0 +1,71 @@
+{# Explore card — one clickable module tile on the demo home page.
+
+   Vars (passed via `_ref: { path: components/explore_card.yaml.njk, vars: {...} }`):
+     id          (string, required) — block-id stem; must be unique per card.
+     icon        (string, required) — react-icons name for the header icon.
+     title       (string, required) — module / section name.
+     description (string, required) — one-line summary.
+     pageId      (string, required) — Link target page id.
+     pathParams  (object, optional) — Link target path values, for a page with a path placeholder.
+     note        (string, optional) — muted footnote (e.g. "Demonstrates the Workflows module").
+#}
+id: {{ id }}_card
+type: Card
+properties:
+  hoverable: true
+events:
+  onClick:
+    - id: {{ id }}_link
+      type: Link
+      params:
+        pageId:
+          _var: pageId
+        pathParams:
+          _var:
+            key: pathParams
+            default: {}
+blocks:
+  _build.array.concat:
+    - - id: {{ id }}_header
+        type: Box
+        layout:
+          gap: 8
+          selfAlign: middle
+        blocks:
+          - id: {{ id }}_icon
+            type: Icon
+            layout:
+              flex: 0 0 auto
+            properties:
+              name:
+                _var: icon
+              size: 22
+          - id: {{ id }}_title
+            type: Title
+            layout:
+              flex: 1 1 auto
+            properties:
+              level: 5
+              content:
+                _var: title
+      - id: {{ id }}_description
+        type: Paragraph
+        properties:
+          content:
+            _var: description
+    # Optional muted footnote — only rendered when `note` is supplied.
+    - _build.if:
+        test:
+          _build.ne:
+            - _var:
+                key: note
+                default: null
+            - null
+        then:
+          - id: {{ id }}_note
+            type: Paragraph
+            properties:
+              type: secondary
+              content:
+                _var: note
+        else: []

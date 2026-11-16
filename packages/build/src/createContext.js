@@ -23,6 +23,7 @@ import createMobileTypeCounters from './utils/createMobileTypeCounters.js';
 import createReadConfigFile from './utils/readConfigFile.js';
 import createTypeCounters from './utils/createTypeCounters.js';
 import createWriteBuildArtifact from './utils/writeBuildArtifact.js';
+import mergeTypesMaps from './utils/mergeTypesMaps.js';
 import defaultMessagesMap from './defaultMessagesMap.js';
 import defaultPackages from './defaultPackages.js';
 import defaultTypesMap from './defaultTypesMap.js';
@@ -39,6 +40,7 @@ function createContext({
   skipPluginChecks = false,
   stage = 'prod',
   validateOnly = false,
+  writeCompressedMaps = false,
 }) {
   const context = {
     defaultPackageNames: new Set(defaultPackages),
@@ -70,6 +72,9 @@ function createContext({
     pluginInstallFollows,
     // Null prototype prevents pollution via attacker-controlled entry.id.
     modules: Object.create(null),
+    // Each YAML and JSON config file's parsed tree, by path, with the content it
+    // was parsed from (getParsedConfigFile). Dev page builds share it.
+    parsedConfigCache: new Map(),
     readConfigFile: createReadConfigFile({ directories }),
     refMap: {},
     refResolver,
@@ -79,6 +84,9 @@ function createContext({
     seenSourceLines: new Set(),
     stage,
     validateOnly,
+    // Set by the production server build scripts: writeMaps also writes
+    // keyMap.json.gz and refMap.json.gz, which deploy output ships.
+    writeCompressedMaps,
     pageTypeCounters: new Map(),
     // ~ignoreBuildChecks slugs that are not built-in, mapped to the ~k of each
     // node listing them. The plugin rules runner checks them once rules load.
@@ -88,7 +96,7 @@ function createContext({
     // Each plugin module imported for its schemas, by specifier. Dev page builds share it.
     pluginModuleCache: new Map(),
     typeCounters: createTypeCounters(),
-    typesMap: mergeObjects([defaultTypesMap, customTypesMap]),
+    typesMap: mergeTypesMaps({ defaultTypesMap, customTypesMap }),
     // The client types a native shell carries (defaultPackagesMobile), plus
     // the native types of the shell plugins mobile.shells[].plugins lists
     // (createPluginTypesMapMobile). Mobile pages resolve blocks, actions and

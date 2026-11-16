@@ -58,6 +58,7 @@ function testContext({ writeBuildArtifact, configDirectory, readConfigFile, logg
     },
     writeBuildArtifact: writeBuildArtifact || (() => {}),
     readConfigFile: readConfigFile || (() => {}),
+    parsedConfigCache: new Map(),
     refMap: {},
     keyMap: {},
     jsMap: {},

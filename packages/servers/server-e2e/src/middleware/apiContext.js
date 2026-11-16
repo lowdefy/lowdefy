@@ -31,6 +31,7 @@ import getUser from '../../lib/server/auth/getUser.js';
 import i18nConfig from '../../lib/build/i18n.js';
 import jsMap from '../../build/plugins/operators/serverJsMap.js';
 import logRequest from '../../lib/server/log/logRequest.js';
+import readMaps from '../../lib/server/log/readMaps.js';
 import operators from '../../build/plugins/operators/server.js';
 import scrubSecrets from '../../lib/server/scrubSecrets.js';
 import steps from '../../build/plugins/steps.js';
@@ -78,6 +79,9 @@ function apiContext() {
       websockets,
     };
     context.handleError = createHandleError({ context });
+    // logClientError resolves a client error's location through it.
+    context.readMaps = () =>
+      readMaps({ buildDirectory: context.buildDirectory, logger: context.logger });
     // Set as soon as the context can sink an error, so a fault below reaches the error
     // handler with it.
     c.set('lowdefyContext', context);

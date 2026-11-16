@@ -28,7 +28,12 @@ function buildPageClientJs({ page, context }) {
   const pageJsMap = {};
   const cleanPage = jsMapParser({ input: page, jsMap: pageJsMap, env: 'client' });
   if (page.target === 'both') {
-    jsMapParser({ input: page, jsMap: context.jsMap, env: 'client' });
+    // The page's own map holds what a second parse into the web map would
+    // add, in the same order.
+    if (!context.jsMap.client) {
+      context.jsMap.client = {};
+    }
+    Object.assign(context.jsMap.client, pageJsMap.client);
   }
   if (Object.keys(pageJsMap.client).length > 0) {
     cleanPage._jsEntries = generateClientJsModule(pageJsMap.client);

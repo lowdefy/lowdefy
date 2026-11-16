@@ -251,3 +251,10 @@ test('buildLogger turns Sentry off on both sides when the current environment sw
     environment: 'staging',
   });
 });
+
+test('buildLogger gives each build its own default sentry userFields array', () => {
+  const first = buildLogger({ components: { config: {}, logger: { sentry: {} } } });
+  const second = buildLogger({ components: { config: {}, logger: { sentry: {} } } });
+  expect(first.logger.sentry.userFields).toEqual(['id', '_id']);
+  expect(second.logger.sentry.userFields).not.toBe(first.logger.sentry.userFields);
+});

@@ -47,6 +47,11 @@ function writeServer({ config, schedules }) {
     'dist/client/icon.svg': '<svg />',
     'dist/client/.vite/manifest.json': '{}',
     'build/config.json': JSON.stringify(config),
+    'build/keyMap.json': '{"1":{"s":"root"}}',
+    'build/keyMap.json.gz': 'gzipped key map',
+    'build/refMap.json': '{"1":{"path":"lowdefy.yaml"}}',
+    'build/refMap.json.gz': 'gzipped ref map',
+    'build/pages/home/keyMap.json': 'not the root key map',
     ...(schedules ? { 'build/schedules.json': JSON.stringify(schedules) } : {}),
   };
   Object.entries(files).forEach(([file, content]) => {
@@ -69,6 +74,9 @@ async function runVercelOutput({ config, schedules }) {
   const outputDirectory = path.join(serverDirectory, '.vercel/output');
   return {
     config: JSON.parse(fs.readFileSync(path.join(outputDirectory, 'config.json'), 'utf8')),
+    // The trace base is the server directory itself: it sits in no pnpm workspace.
+    functionBuildDirectory: path.join(outputDirectory, 'functions/api.func/build'),
+    serverDirectory,
     staticDirectory: path.join(outputDirectory, 'static'),
   };
 }
@@ -114,4 +122,27 @@ test('vercelOutput does not match assets under a basePath with a regex wildcard 
   const { config } = await runVercelOutput({ config: { basePath: '/tools/v1.2' } });
   expect(new RegExp(config.routes[0].src).test('/tools/v1x2/assets/main-abc123.js')).toBe(false);
   expect(config.crons).toBeUndefined();
+});
+
+test('vercelOutput ships the gzipped error maps and leaves the plain maps out', async () => {
+  const { functionBuildDirectory, serverDirectory } = await runVercelOutput({ config: {} });
+  // The trace takes the same filter: nft traces the whole build folder.
+  const { default: copyTracedFiles } = await import('../../utils/copyTracedFiles.js');
+  const { filter } = copyTracedFiles.mock.calls.at(-1)[0];
+  expect(filter(path.join(serverDirectory, 'build', 'keyMap.json'))).toBe(false);
+  expect(filter(path.join(serverDirectory, 'build', 'refMap.json'))).toBe(false);
+  expect(filter(path.join(serverDirectory, 'build', 'keyMap.json.gz'))).toBe(true);
+  expect(filter(path.join(serverDirectory, 'src', 'index.js'))).toBe(true);
+  const files = fs
+    .readdirSync(functionBuildDirectory, { recursive: true })
+    .map((file) => file.split(path.sep).join('/'))
+    .sort();
+  expect(files).toEqual([
+    'config.json',
+    'keyMap.json.gz',
+    'pages',
+    'pages/home',
+    'pages/home/keyMap.json',
+    'refMap.json.gz',
+  ]);
 });

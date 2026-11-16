@@ -20,6 +20,7 @@ import { cleanDirectory, copyFileOrDirectory, readFile, writeFile } from '@lowde
 
 import apiHandler from './apiHandler.js';
 import copyTracedFiles from '../../utils/copyTracedFiles.js';
+import createSkipPlainMapsFilter from '../../utils/createSkipPlainMapsFilter.js';
 import findTraceBase from '../../utils/findTraceBase.js';
 
 // lowdefy.yaml `config`, as @lowdefy/build writes it to build/config.json.
@@ -110,10 +111,14 @@ async function vercelOutput({ context }) {
 
   // 2. The runtime file closure of the Hono server, traced with @vercel/nft — the app source, the
   //    build-generated plugin import files, and exactly the node_modules files they resolve to
-  //    (through pnpm's symlinks, which are preserved).
+  //    (through pnpm's symlinks, which are preserved). The server's path.join(process.cwd(),
+  //    'build') makes nft trace the whole build folder, so the trace skips the plain error maps
+  //    too: the server reads the gzipped copies.
+  const skipPlainMaps = createSkipPlainMapsFilter({ buildDirectory });
   const fileCount = await copyTracedFiles({
     base,
     entrypoints,
+    filter: skipPlainMaps,
     functionDirectory,
     logger,
     processCwd: serverDirectory,
@@ -130,7 +135,9 @@ async function vercelOutput({ context }) {
     path.join(serverDirectory, 'lib'),
     path.join(functionServerDirectory, 'lib')
   );
-  await copyFileOrDirectory(buildDirectory, path.join(functionServerDirectory, 'build'));
+  await copyFileOrDirectory(buildDirectory, path.join(functionServerDirectory, 'build'), {
+    filter: skipPlainMaps,
+  });
   await copyFileOrDirectory(
     path.join(clientDirectory, '.vite', 'manifest.json'),
     path.join(functionServerDirectory, 'dist', 'client', '.vite', 'manifest.json')

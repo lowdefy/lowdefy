@@ -46,7 +46,9 @@ test('writeBlockSchemaMap uses typesMap schemas for custom plugins', async () =>
     },
   };
   const context = {
-    typesMap: { schemas: { blocks: { CustomBlock: customSchema } } },
+    typesMap: {
+      schemas: { blocks: { CustomBlock: { package: 'custom-plugin', schema: customSchema } } },
+    },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeBlockSchemaMap({ components, context });
@@ -66,7 +68,9 @@ test('writeBlockSchemaMap typesMap schemas take priority over package schemas', 
     },
   };
   const context = {
-    typesMap: { schemas: { blocks: { Box: customSchema } } },
+    typesMap: {
+      schemas: { blocks: { Box: { package: '@lowdefy/blocks-basic', schema: customSchema } } },
+    },
     writeBuildArtifact: mockWriteBuildArtifact,
   };
   await writeBlockSchemaMap({ components, context });
@@ -188,7 +192,9 @@ test('writeBlockSchemaMap carries hazards from typesMap blockMetas for custom pl
   const hazards = [{ id: 'custom-hazard', message: 'Something surprising.', see: null }];
   const context = {
     typesMap: {
-      schemas: { blocks: { CustomBlock: { type: 'object' } } },
+      schemas: {
+        blocks: { CustomBlock: { package: 'custom-plugin', schema: { type: 'object' } } },
+      },
       blockMetas: { CustomBlock: { category: 'display', hazards } },
     },
     writeBuildArtifact: mockWriteBuildArtifact,
@@ -227,4 +233,30 @@ test('writeBlockSchemaMap reads hazards from the package meta when typesMap bloc
     'html-hardcoded-links',
     'html-inline-status-pills',
   ]);
+});
+
+test('writeBlockSchemaMap writes the schema and hazards of a default block whose package is not installed', async () => {
+  // A default package's schema and hazards ship in the types map
+  // (createDefaultTypesMap), so the maps are complete before it is installed.
+  const packageName = '@lowdefy-test/default-blocks-not-installed';
+  const components = {
+    imports: {
+      blocks: [{ package: packageName, typeName: 'Html', originalTypeName: 'Html' }],
+    },
+  };
+  const schema = { type: 'object', description: 'Html' };
+  const hazards = [{ id: 'html-hazard', message: 'A hazard.', see: null }];
+  const context = {
+    typesMap: {
+      schemas: { blocks: { Html: { package: packageName, schema, hazards } } },
+      blockMetas: { Html: { category: 'display' } },
+    },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeBlockSchemaMap({ components, context });
+  const written = Object.fromEntries(
+    mockWriteBuildArtifact.mock.calls.map(([name, content]) => [name, JSON.parse(content)])
+  );
+  expect(written['plugins/blockSchemas.json']).toEqual({ Html: schema });
+  expect(written['plugins/blockMetas.json']).toEqual({ Html: { category: 'display', hazards } });
 });

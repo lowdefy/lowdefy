@@ -162,6 +162,29 @@ test('editing a shared _ref file rebuilds every page that read it, and only thos
   app.remove();
 });
 
+// The kept context holds each config file's parsed tree; an edited file must be
+// parsed again, not served from that cache.
+test('editing a page and a shared _ref file serves their new content on the kept context', async () => {
+  const app = createApp(sharedRefPages);
+  expect(await app.request('a')).toBe('built');
+  const context = app.context();
+
+  app.edit(
+    'pages/a.yaml',
+    'id: a\ntype: Box\nproperties:\n  title: Edited page\nblocks:\n  - _ref: blocks/shared.yaml\n'
+  );
+  app.edit('blocks/shared.yaml', 'id: shared\ntype: Box\nproperties:\n  title: Edited block\n');
+  app.signalChange();
+
+  expect(await app.request('a')).toBe('built');
+  expect(app.context()).toBe(context);
+  const page = JSON.parse(fs.readFileSync(path.join(app.buildDirectory, 'pages', 'a.json')));
+  expect(page.properties.title).toBe('Edited page');
+  // The shared block's title, wherever the page artifact nests its blocks.
+  expect(JSON.stringify(page)).toContain('"title":"Edited block"');
+  app.remove();
+});
+
 test('editing a file that is not read by any built page rebuilds nothing', async () => {
   const app = createApp(sharedRefPages);
   for (const pageId of ['a', 'c']) await app.request(pageId);
