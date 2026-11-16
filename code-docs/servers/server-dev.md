@@ -358,6 +358,15 @@ context.lowdefyBuild = async () => {
 `lastBuildFailed` tells the config watcher that `skeletonSourceFiles.json` belongs to an
 older, successful build (see the build watcher below).
 
+**What the manager keeps.** `pageRegistry` and `buildContext` are all of a build the manager
+holds: `resolvePagePath` reads them when a page file changes, and the build watcher reads the
+local module roots. The build's `components` are not kept. `lowdefyBuild`'s queue promise
+settles without the build's result, so it does not hold them, and the config build takes each
+module's pages and endpoints out of its manifest (`releaseMergedModuleEntities`), so
+`buildContext.modules` does not either. Measured on a large app that uses modules (105 module
+entries, 407 pages), the two together are about 370 MB less live heap in the manager. What is
+left is mostly the key map and `unresolvedRefVars`.
+
 ### JIT Page Build Flow
 
 **File:** `lib/server/jitPageBuilder.js`
