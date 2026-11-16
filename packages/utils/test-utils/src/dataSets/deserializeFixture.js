@@ -27,7 +27,7 @@ function reviver(_, value) {
   if (!type.isUndefined(value['~dec'])) {
     if (!type.isString(value['~dec'])) {
       throw new Error(
-        `A fixture decimal is a string, such as { '~dec': '12.50' }. Received ${JSON.stringify(
+        `A decimal is a string, such as { '~dec': '12.50' }. Received ${JSON.stringify(
           value['~dec']
         )}.`
       );
@@ -39,7 +39,8 @@ function reviver(_, value) {
 
 // A fixture document as the database stores it: `~d` markers become Dates (the serializer),
 // { _oid: '<hex>' } becomes an ObjectId and { '~dec': '<string>' } a Decimal128, the conventions
-// connection-mongodb's serialize.js uses for request payloads.
+// connection-mongodb's serialize.js uses for request payloads. An expect.db `match` takes the same
+// markers (findSessionDocuments).
 function deserializeFixture(document) {
   return serializer.copy(document, { reviver });
 }

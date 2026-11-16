@@ -23,6 +23,7 @@ import { parseDataSet } from '@lowdefy/node-utils';
 
 import applyDataSetRedirect from './applyDataSetRedirect.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
+import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
 import openDataSession from './openDataSession.js';
 import readDataSet from './readDataSet.js';
@@ -170,6 +171,36 @@ test('openDataSession lets a later fixture replace one with the same _id and rev
     expect(await tickets.countDocuments()).toBe(2);
   } finally {
     await close();
+  }
+});
+
+test('findSessionDocuments matches a fixture decimal by its ~dec marker and reads it back as one', async () => {
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'find-session-decimals-'));
+  fs.mkdirSync(path.join(buildDirectory, 'connections'));
+  const dataSet = makeDataSet({
+    collections: { invoices: 'invoices' },
+    fixtures: {
+      invoices: [
+        { _id: 'i1', total: { '~dec': '0.30' } },
+        { _id: 'i2', total: { '~dec': '12.50' } },
+        { _id: 'i3', total: '0.30' },
+      ],
+    },
+  });
+  const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
+  try {
+    const documents = await findSessionDocuments({
+      buildDirectory,
+      client,
+      collection: 'invoices',
+      match: { total: { '~dec': '0.3' } },
+      session,
+    });
+    // MongoDB compares decimals by value, so '0.3' matches the stored 0.30 and not the string.
+    expect(documents).toEqual([{ _id: 'i1', total: { '~dec': '0.30' } }]);
+  } finally {
+    await close();
+    fs.rmSync(buildDirectory, { recursive: true, force: true });
   }
 });
 

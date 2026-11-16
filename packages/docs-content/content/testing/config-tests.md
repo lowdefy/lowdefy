@@ -164,6 +164,16 @@ steps:
   - expect: { db: { collection: items, match: { name: Docs item }, count: 1 } }
 ```
 
+`expect: { db }` reads documents as a MongoDB request answers with them: an ObjectId as its hex string, a date as its ISO string, and a [decimal](/_decimal) as `{ '~dec': '0.30' }`, with the string as MongoDB prints it. `match` takes the markers a [fixture](/journey-data-sets) does, `{ _oid: '<hex>' }`, `{ '~d': '<ISO date>' }` and `{ '~dec': '<decimal>' }`, so it can find a document by an ObjectId, a date or an exact decimal. MongoDB compares decimals by value, so `match: { total: { '~dec': '0.3' } }` finds a stored `0.30`:
+
+```yaml
+- expect:
+    db:
+      collection: invoices
+      match: { total: { '~dec': '0.3' } }
+      equals: [{ total: { '~dec': '0.30' } }]
+```
+
 ### App errors
 
 A journey also fails at the step that causes an app error, even when every expectation after it holds. An app error is:

@@ -17,8 +17,10 @@
 import { type } from '@lowdefy/helpers';
 
 import describeTargetKey from './describeTargetKey.js';
+import deserializeFixture from './deserializeFixture.js';
 import readConnectionArtifacts from './readConnectionArtifacts.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
+import toDocumentJson from './toDocumentJson.js';
 
 function listMongoConnectionIds({ artifacts }) {
   return Object.values(artifacts)
@@ -63,9 +65,11 @@ async function findDatabaseName({ buildDirectory, connectionId, session }) {
 }
 
 // The documents `match` finds in `collection` of a data session's database, in _id order, as
-// plain JSON values (an ObjectId as its hex string, a Date as its ISO string), so a journey's
-// expect.db compares them with the values its YAML can hold. `client` is the data store's
-// MongoDB client and `session` the data session (openDataSession's session).
+// plain JSON values (an ObjectId as its hex string, a Date as its ISO string, a Decimal128 as
+// { '~dec': '<decimal string>' }), so a journey's expect.db compares them with the values its YAML
+// can hold. `match` takes the markers a fixture does ({ _oid }, { '~d' }, { '~dec' }), so it can
+// name an ObjectId, a Date or a decimal. `client` is the data store's MongoDB client and
+// `session` the data session (openDataSession's session).
 async function findSessionDocuments({
   buildDirectory,
   client,
@@ -78,10 +82,10 @@ async function findSessionDocuments({
   const documents = await client
     .db(databaseName)
     .collection(collection)
-    .find(match)
+    .find(deserializeFixture(match))
     .sort({ _id: 1 })
     .toArray();
-  return JSON.parse(JSON.stringify(documents));
+  return toDocumentJson(documents);
 }
 
 export default findSessionDocuments;

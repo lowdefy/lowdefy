@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { Decimal128, ObjectId } from 'mongodb';
 import { afterAll, beforeAll, expect, test } from 'vitest';
 
 import describeTargetKey from './describeTargetKey.js';
@@ -112,6 +113,66 @@ test('findSessionDocuments reads the connection target database, in _id order, a
     match: { kind: 'login' },
     sort: { _id: 1 },
   });
+});
+
+test('findSessionDocuments reads a Decimal128 as the ~dec marker requests answer with, at any depth', async () => {
+  const { client } = createClient([
+    {
+      _id: ObjectId.createFromHexString('64b7f0c2a1b2c3d4e5f60718'),
+      total: Decimal128.fromString('0.30'),
+      lines: [{ quantity: Decimal128.fromString('-1E-7') }, { quantity: 2 }],
+      tags: [Decimal128.fromString('12.50')],
+    },
+  ]);
+  const documents = await findSessionDocuments({
+    buildDirectory,
+    client,
+    collection: 'orders',
+    match: {},
+    session: createSession({ targets: [shopTarget] }),
+  });
+  expect(documents).toEqual([
+    {
+      _id: '64b7f0c2a1b2c3d4e5f60718',
+      total: { '~dec': '0.30' },
+      lines: [{ quantity: { '~dec': '-1E-7' } }, { quantity: 2 }],
+      tags: [{ '~dec': '12.50' }],
+    },
+  ]);
+});
+
+test('findSessionDocuments matches with the ObjectId, Date and decimal markers a fixture takes', async () => {
+  const { asked, client } = createClient([]);
+  await findSessionDocuments({
+    buildDirectory,
+    client,
+    collection: 'orders',
+    match: {
+      _id: { _oid: '64b7f0c2a1b2c3d4e5f60718' },
+      issued: { $gte: { '~d': '2026-01-02T00:00:00.000Z' } },
+      total: { '~dec': '0.3' },
+      status: 'paid',
+    },
+    session: createSession({ targets: [shopTarget] }),
+  });
+  expect(asked.match._id).toEqual(ObjectId.createFromHexString('64b7f0c2a1b2c3d4e5f60718'));
+  expect(asked.match.issued.$gte).toEqual(new Date('2026-01-02T00:00:00.000Z'));
+  expect(asked.match.total).toBeInstanceOf(Decimal128);
+  expect(asked.match.total.toString()).toEqual('0.3');
+  expect(asked.match.status).toEqual('paid');
+});
+
+test('findSessionDocuments refuses a match decimal written as a number', async () => {
+  const { client } = createClient([]);
+  await expect(
+    findSessionDocuments({
+      buildDirectory,
+      client,
+      collection: 'orders',
+      match: { total: { '~dec': 0.3 } },
+      session: createSession({ targets: [shopTarget] }),
+    })
+  ).rejects.toThrow("A decimal is a string, such as { '~dec': '12.50' }. Received 0.3.");
 });
 
 test('findSessionDocuments reads the one database of a session without a connectionId', async () => {

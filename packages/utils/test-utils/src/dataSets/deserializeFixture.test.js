@@ -38,6 +38,6 @@ test('deserializeFixture revives dates, ObjectIds and decimals at any depth', ()
 
 test('deserializeFixture refuses a decimal written as a number', () => {
   expect(() => deserializeFixture({ total: { '~dec': 12.5 } })).toThrow(
-    "A fixture decimal is a string, such as { '~dec': '12.50' }. Received 12.5."
+    "A decimal is a string, such as { '~dec': '12.50' }. Received 12.5."
   );
 });
