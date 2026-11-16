@@ -1168,6 +1168,9 @@
             - id: _product
               type: MenuLink
               pageId: _product
+            - id: _decimal
+              type: MenuLink
+              pageId: _decimal
             - id: _divide
               type: MenuLink
               pageId: _divide

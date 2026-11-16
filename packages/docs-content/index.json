@@ -2182,6 +2182,14 @@
       "typeName": "_date"
     },
     {
+      "slug": "operators/_decimal",
+      "title": "_decimal",
+      "section": "Operators",
+      "path": "content/operators/_decimal.md",
+      "kind": "operator",
+      "typeName": "_decimal"
+    },
+    {
       "slug": "operators/_diff",
       "title": "_diff",
       "section": "Operators",
@@ -3366,7 +3374,7 @@
         "testing/journey-data-sets.md",
         "testing/journey-data-sets.yaml"
       ],
-      "hash": "b88281aa53a6a388dff04045c3be230aec6e959d2455f13dd8338cf040963c75"
+      "hash": "c89eddbb137a28b1234685104fb6030a7168665be98786d7cc4eb2a89e83d5a7"
     },
     "testing/endpoint-tests": {
       "files": [
@@ -4911,7 +4919,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "9c59a4cc32c479431602ec3ea4d3f4fe1650d001c69cea48c7d859d1b374d2ca"
+      "hash": "1e836000f854b09ae0b0c16257d295c350cc1c3c06be6c4c9e6d4c71aba5b16b"
     },
     "connections/mssql": {
       "files": [
@@ -5369,6 +5377,13 @@
         "templates/operators.yaml.njk"
       ],
       "hash": "be0c1763f3c9dc2512d53e9e57652bf6c4640d3eb54b31c74dfba99c1b80b9c9"
+    },
+    "operators/_decimal": {
+      "files": [
+        "operators/_decimal.yaml",
+        "templates/operators.yaml.njk"
+      ],
+      "hash": "ee3510d56b687fb0441cd7f9afb2db795e2b0d7bbf96992b7aa60328b5aa5271"
     },
     "operators/_diff": {
       "files": [

@@ -373,3 +373,14 @@ String IDs are automatically converted to ObjectIds when:
 ### Date Serialization
 
 JavaScript Date objects are preserved through serialization.
+
+### Decimal128 Serialization
+
+`serialize.js` carries a Decimal128 as `{ '~dec': '<string>' }`, beside `{ _oid }` for ObjectIds: `serialize` turns a Decimal128 in a driver response into the marker (its `toString()`), and `deserialize` turns the marker in request properties into `Decimal128.fromString`. Every stock request and the walled client pass through these two functions, so documents, filters, updates and pipelines all take the marker, and the change log (which logs the deserialized arguments and the driver's before/after documents) stores real decimals.
+
+- Config writes a decimal with the `_decimal` operator (`operators-js`), which returns the marker. It checks that its input is a decimal string of at most 34 significant digits, so a mistake fails at the config location. It has no BSON dependency: the connection is where the marker becomes a Decimal128.
+- The marker holds a string and nothing else. A number is refused, as is a string `Decimal128.fromString` cannot hold exactly (more than 34 significant digits), so no value passes through a JavaScript double. The connection checks again because a marker can arrive from state or a payload without going through `_decimal`.
+- A Decimal128 is recognised by `_bsontype`, the driver's own check, so one built by a plugin's copy of `bson` serializes too.
+- `serialize` copies an object before replacing a value in it. A plugin's document handed to the walled client keeps its own ObjectIds and Decimal128s.
+- The marker is connection level, like `_oid`, and has a `~` key like `~d`: `getOperatorType` already ignores `~` keys, so the build, the operator parsers, `@lowdefy/helpers`' serializer and the client pass `{ '~dec' }` through as plain JSON. The browser holds a wrapped string (`_state: amount.~dec`) and does no decimal arithmetic.
+- Data set fixtures use the same marker (`deserializeFixture` in server-dev, `validateGenerateField` in node-utils).
