@@ -14,7 +14,21 @@
   limitations under the License.
 */
 
-import { mergeObjects } from '@lowdefy/helpers';
+import { mergeObjects, type } from '@lowdefy/helpers';
+
+// The packages a types map takes its types from: every type entry names its
+// package.
+function collectPackageNames({ node, packageNames }) {
+  if (!type.isObject(node)) {
+    return packageNames;
+  }
+  if (type.isString(node.package)) {
+    packageNames.add(node.package);
+    return packageNames;
+  }
+  Object.values(node).forEach((child) => collectPackageNames({ node: child, packageNames }));
+  return packageNames;
+}
 
 // The build's types map: the default types with the app's custom types merged
 // over them. mergeObjects copies every plain object, so the default packages'
@@ -22,13 +36,34 @@ import { mergeObjects } from '@lowdefy/helpers';
 // build does not copy them, and the rebuilds of one dev server hand
 // @lowdefy/ajv the same schema objects, so its validators, cached by schema
 // object, compile once.
+//
+// The default schemas and the hasChecks flags describe the version of each
+// default package this build was generated with. An app that lists a default
+// package under plugins installs its own version, so that package's shipped
+// schemas and flag are left out, and its schemas and checks load from the
+// installed package, as a custom plugin's do.
 function mergeTypesMaps({ defaultTypesMap, customTypesMap }) {
-  const { schemas: defaultSchemas, ...defaultTypes } = defaultTypesMap;
+  const { schemas: defaultSchemas, hasChecks: defaultHasChecks, ...defaultTypes } = defaultTypesMap;
   const typesMap = mergeObjects([defaultTypes, customTypesMap]);
+  const customPackages = collectPackageNames({ node: customTypesMap, packageNames: new Set() });
+  const customHasChecks = typesMap.hasChecks ?? {};
+  typesMap.hasChecks = {};
+  for (const [packageName, hasChecks] of Object.entries(defaultHasChecks)) {
+    if (!customPackages.has(packageName)) {
+      typesMap.hasChecks[packageName] = hasChecks;
+    }
+  }
+  Object.assign(typesMap.hasChecks, customHasChecks);
   const customSchemas = typesMap.schemas ?? {};
   typesMap.schemas = { ...customSchemas };
   for (const [kind, schemas] of Object.entries(defaultSchemas)) {
-    typesMap.schemas[kind] = { ...schemas, ...customSchemas[kind] };
+    const shipped = {};
+    for (const [typeName, entry] of Object.entries(schemas)) {
+      if (!customPackages.has(entry.package)) {
+        shipped[typeName] = entry;
+      }
+    }
+    typesMap.schemas[kind] = { ...shipped, ...customSchemas[kind] };
   }
   return typesMap;
 }

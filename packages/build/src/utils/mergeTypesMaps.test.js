@@ -63,3 +63,26 @@ test('mergeTypesMaps leaves the default types map unchanged', () => {
   });
   expect(Object.keys(defaultTypesMap.blocks)).toEqual(['Button']);
 });
+
+test('mergeTypesMaps leaves out the shipped schemas and checks flag of a default package the app lists as a plugin', () => {
+  const typesMap = mergeTypesMaps({
+    defaultTypesMap: {
+      ...defaultTypesMap,
+      blocks: { ...defaultTypesMap.blocks, Box: { package: '@lowdefy/blocks-basic' } },
+      schemas: {
+        ...defaultTypesMap.schemas,
+        blocks: {
+          ...defaultTypesMap.schemas.blocks,
+          Box: { package: '@lowdefy/blocks-basic', schema: { type: 'object' } },
+        },
+      },
+      hasChecks: { '@lowdefy/blocks-antd': false, '@lowdefy/blocks-basic': false },
+    },
+    customTypesMap: {
+      blocks: { Button: { package: '@lowdefy/blocks-antd', version: '1.2.3' } },
+    },
+  });
+  expect(typesMap.blocks.Button).toEqual({ package: '@lowdefy/blocks-antd', version: '1.2.3' });
+  expect(Object.keys(typesMap.schemas.blocks)).toEqual(['Box']);
+  expect(typesMap.hasChecks).toEqual({ '@lowdefy/blocks-basic': false });
+});
