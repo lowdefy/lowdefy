@@ -21,6 +21,7 @@ export { default as _args } from './operators/shared/args.schema.js';
 export { default as _array } from './operators/shared/array.schema.js';
 export { default as _boolean } from './operators/shared/boolean.schema.js';
 export { default as _date } from './operators/shared/date.schema.js';
+export { default as _decimal } from './operators/shared/decimal.schema.js';
 export { default as _divide } from './operators/shared/divide.schema.js';
 export { default as _eq } from './operators/shared/eq.schema.js';
 export { default as _error } from './operators/shared/error.schema.js';

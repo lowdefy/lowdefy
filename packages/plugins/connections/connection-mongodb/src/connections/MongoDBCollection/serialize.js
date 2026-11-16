@@ -18,7 +18,7 @@ import { Decimal128, ObjectId } from 'mongodb';
 import { serializer, type } from '@lowdefy/helpers';
 
 // How BSON types that JSON cannot hold cross a request's properties and its response:
-// an ObjectId as { _oid: '<hex>' } and a Decimal128 as { _decimal: '<decimal string>' }.
+// an ObjectId as { _oid: '<hex>' } and a Decimal128 as { '~dec': '<decimal string>' }.
 // A decimal is only ever read from and written to a string, so no value passes through a
 // JavaScript double on the way.
 
@@ -33,7 +33,7 @@ function replaceBsonValue(value) {
     return { _oid: value.toHexString() };
   }
   if (isDecimal128(value)) {
-    return { _decimal: value.toString() };
+    return { '~dec': value.toString() };
   }
   return value;
 }
@@ -63,7 +63,7 @@ function replacer(_, value) {
 function reviveDecimal(value) {
   if (!type.isString(value)) {
     throw new Error(
-      `_decimal takes a decimal as a string, such as { _decimal: '12.50' }. Received ${JSON.stringify(
+      `~dec takes a decimal as a string, such as { '~dec': '12.50' }. Received ${JSON.stringify(
         value
       )}.`
     );
@@ -72,9 +72,7 @@ function reviveDecimal(value) {
     return Decimal128.fromString(value);
   } catch (error) {
     throw new Error(
-      `_decimal ${JSON.stringify(value)} is not a decimal MongoDB can store exactly: ${
-        error.message
-      }`,
+      `~dec ${JSON.stringify(value)} is not a decimal MongoDB can store exactly: ${error.message}`,
       { cause: error }
     );
   }
@@ -85,8 +83,8 @@ function reviver(key, value) {
     if (value._oid) {
       return ObjectId.createFromHexString(value._oid);
     }
-    if (!type.isUndefined(value._decimal)) {
-      return reviveDecimal(value._decimal);
+    if (!type.isUndefined(value['~dec'])) {
+      return reviveDecimal(value['~dec']);
     }
   }
   return value;

@@ -39,7 +39,6 @@ test('getOperatorType returns null for non-operator values', () => {
   expect(getOperatorType({ a: 1 })).toBe(null);
   expect(getOperatorType({ _state: 'key', other: 1 })).toBe(null);
   expect(getOperatorType({ _id: 'x' })).toBe(null);
-  expect(getOperatorType({ _decimal: '12.50' })).toBe(null);
   expect(getOperatorType({ _: 'too short' })).toBe(null);
   expect(getOperatorType({})).toBe(null);
   expect(getOperatorType('_state')).toBe(null);

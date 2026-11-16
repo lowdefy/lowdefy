@@ -23,8 +23,8 @@ test('deserializeFixture revives dates, ObjectIds and decimals at any depth', ()
   const document = deserializeFixture({
     _id: { _oid: '64b7f0c2a1b2c3d4e5f60718' },
     issued: { '~d': '2026-01-02T00:00:00.000Z' },
-    total: { _decimal: '1234567890123456789012345678.901234' },
-    lines: [{ quantity: { _decimal: '-0.250' } }, { quantity: { _decimal: '0' } }],
+    total: { '~dec': '1234567890123456789012345678.901234' },
+    lines: [{ quantity: { '~dec': '-0.250' } }, { quantity: { '~dec': '0' } }],
     note: 'plain',
   });
   expect(document._id).toEqual(ObjectId.createFromHexString('64b7f0c2a1b2c3d4e5f60718'));
@@ -37,7 +37,7 @@ test('deserializeFixture revives dates, ObjectIds and decimals at any depth', ()
 });
 
 test('deserializeFixture refuses a decimal written as a number', () => {
-  expect(() => deserializeFixture({ total: { _decimal: 12.5 } })).toThrow(
-    "A fixture decimal is a string, such as { _decimal: '12.50' }. Received 12.5."
+  expect(() => deserializeFixture({ total: { '~dec': 12.5 } })).toThrow(
+    "A fixture decimal is a string, such as { '~dec': '12.50' }. Received 12.5."
   );
 });

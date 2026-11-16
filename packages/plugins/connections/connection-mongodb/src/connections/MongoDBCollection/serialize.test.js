@@ -88,9 +88,9 @@ test.each(decimalStrings)('serialize and deserialize decimal %s exactly', (value
     nested: { deep: [{ amount: Decimal128.fromString(value) }] },
   });
   expect(serialized).toEqual({
-    amount: { _decimal: value },
-    array: [{ _decimal: value }],
-    nested: { deep: [{ amount: { _decimal: value } }] },
+    amount: { '~dec': value },
+    array: [{ '~dec': value }],
+    nested: { deep: [{ amount: { '~dec': value } }] },
   });
   const deserialized = deserialize(serialized);
   expect(deserialized.amount).toBeInstanceOf(Decimal128);
@@ -102,40 +102,40 @@ test.each(decimalStrings)('serialize and deserialize decimal %s exactly', (value
 
 test('serialize a decimal in the form MongoDB prints it', () => {
   expect(serialize({ amount: Decimal128.fromString('0.0000001') })).toEqual({
-    amount: { _decimal: '1E-7' },
+    amount: { '~dec': '1E-7' },
   });
-  expect(deserialize({ amount: { _decimal: '1E-7' } }).amount.toString()).toEqual('1E-7');
+  expect(deserialize({ amount: { '~dec': '1E-7' } }).amount.toString()).toEqual('1E-7');
 });
 
 test('a decimal marker survives JSON, as it crosses to the browser and back', () => {
   const serialized = serialize({ amount: Decimal128.fromString('0.3') });
   const overTheWire = JSON.parse(JSON.stringify(serialized));
-  expect(overTheWire).toEqual({ amount: { _decimal: '0.3' } });
+  expect(overTheWire).toEqual({ amount: { '~dec': '0.3' } });
   expect(deserialize(overTheWire).amount.toString()).toEqual('0.3');
 });
 
 test('serialize a Decimal128 from another copy of bson', () => {
   const foreign = { _bsontype: 'Decimal128', toString: () => '1.5' };
-  expect(serialize({ amount: foreign })).toEqual({ amount: { _decimal: '1.5' } });
+  expect(serialize({ amount: foreign })).toEqual({ amount: { '~dec': '1.5' } });
 });
 
 test('deserialize refuses a number as a decimal', () => {
-  expect(() => deserialize({ amount: { _decimal: 0.1 } })).toThrow(
-    "_decimal takes a decimal as a string, such as { _decimal: '12.50' }. Received 0.1."
+  expect(() => deserialize({ amount: { '~dec': 0.1 } })).toThrow(
+    "~dec takes a decimal as a string, such as { '~dec': '12.50' }. Received 0.1."
   );
-  expect(() => deserialize({ amount: { _decimal: null } })).toThrow(
-    "_decimal takes a decimal as a string, such as { _decimal: '12.50' }. Received null."
+  expect(() => deserialize({ amount: { '~dec': null } })).toThrow(
+    "~dec takes a decimal as a string, such as { '~dec': '12.50' }. Received null."
   );
 });
 
 test('deserialize refuses a string that is not an exact decimal', () => {
-  expect(() => deserialize({ amount: { _decimal: 'abc' } })).toThrow(
-    '_decimal "abc" is not a decimal MongoDB can store exactly'
+  expect(() => deserialize({ amount: { '~dec': 'abc' } })).toThrow(
+    '~dec "abc" is not a decimal MongoDB can store exactly'
   );
   // 35 significant digits would have to be rounded.
-  expect(() =>
-    deserialize({ amount: { _decimal: '12345678901234567890123456789012345' } })
-  ).toThrow('is not a decimal MongoDB can store exactly');
+  expect(() => deserialize({ amount: { '~dec': '12345678901234567890123456789012345' } })).toThrow(
+    'is not a decimal MongoDB can store exactly'
+  );
 });
 
 test('serialize leaves the object it was given unchanged', () => {
@@ -144,8 +144,8 @@ test('serialize leaves the object it was given unchanged', () => {
   const doc = { _id, amount, lines: [{ amount }] };
   expect(serialize(doc)).toEqual({
     _id: { _oid: '5e53d8403108c4b9fa51765d' },
-    amount: { _decimal: '1.5' },
-    lines: [{ amount: { _decimal: '1.5' } }],
+    amount: { '~dec': '1.5' },
+    lines: [{ amount: { '~dec': '1.5' } }],
   });
   expect(doc._id).toBe(_id);
   expect(doc.amount).toBe(amount);

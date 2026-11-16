@@ -181,11 +181,11 @@ test('undefined operator', () => {
   expect(res.errors).toEqual([]);
 });
 
-test('a connection marker such as _decimal or _oid is data, and operators inside it run', () => {
-  const input = { amount: { _decimal: { _test: true } }, id: { _oid: { _test: true } } };
+test('a connection marker such as ~dec or _oid is data, and operators inside it run', () => {
+  const input = { amount: { '~dec': { _test: true } }, id: { _oid: { _test: true } } };
   const parser = new ServerParser({ operators, secrets, user });
   const res = parser.parse({ args, input, location });
-  expect(res.output).toEqual({ amount: { _decimal: 'test' }, id: { _oid: 'test' } });
+  expect(res.output).toEqual({ amount: { '~dec': 'test' }, id: { _oid: 'test' } });
   expect(res.errors).toEqual([]);
 });
 

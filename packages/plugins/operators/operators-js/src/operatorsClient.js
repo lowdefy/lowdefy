@@ -20,6 +20,7 @@ export { default as _args } from './operators/shared/args.js';
 export { default as _array } from './operators/shared/array.js';
 export { default as _boolean } from './operators/shared/boolean.js';
 export { default as _date } from './operators/shared/date.js';
+export { default as _decimal } from './operators/shared/decimal.js';
 export { default as _divide } from './operators/shared/divide.js';
 export { default as _eq } from './operators/shared/eq.js';
 export { default as _function } from './operators/shared/function.js';

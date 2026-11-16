@@ -24,21 +24,21 @@ function reviver(_, value) {
   if (type.isString(value._oid)) {
     return ObjectId.createFromHexString(value._oid);
   }
-  if (!type.isUndefined(value._decimal)) {
-    if (!type.isString(value._decimal)) {
+  if (!type.isUndefined(value['~dec'])) {
+    if (!type.isString(value['~dec'])) {
       throw new Error(
-        `A fixture decimal is a string, such as { _decimal: '12.50' }. Received ${JSON.stringify(
-          value._decimal
+        `A fixture decimal is a string, such as { '~dec': '12.50' }. Received ${JSON.stringify(
+          value['~dec']
         )}.`
       );
     }
-    return Decimal128.fromString(value._decimal);
+    return Decimal128.fromString(value['~dec']);
   }
   return value;
 }
 
 // A fixture document as the database stores it: `~d` markers become Dates (the serializer),
-// { _oid: '<hex>' } becomes an ObjectId and { _decimal: '<string>' } a Decimal128, the conventions
+// { _oid: '<hex>' } becomes an ObjectId and { '~dec': '<string>' } a Decimal128, the conventions
 // connection-mongodb's serialize.js uses for request payloads.
 function deserializeFixture(document) {
   return serializer.copy(document, { reviver });

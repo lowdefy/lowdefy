@@ -30,7 +30,7 @@ import clearTestMongoDb from '../../../test/clearTestMongoDb.js';
 import findLogCollectionRecordTestMongoDb from '../../../test/findLogCollectionRecordTestMongoDb.js';
 import getTestCollection from '../../../test/getTestCollection.js';
 
-// A Decimal128 crosses a request as { _decimal: '<string>' }. These tests run the stock requests
+// A Decimal128 crosses a request as { '~dec': '<string>' }. These tests run the stock requests
 // against a real server and read the stored BSON type back with the driver, so a value that had
 // become a string or a double anywhere on the way would fail them.
 
@@ -68,16 +68,16 @@ test('0.1 plus 0.2 is 0.3 through an insert, an update and a find', async () => 
   const connection = connectionFor(collection);
   await MongoDBInsertOne({
     connection,
-    request: { doc: { _id: 'sum', amount: { _decimal: '0.1' } } },
+    request: { doc: { _id: 'sum', amount: { '~dec': '0.1' } } },
   });
   await MongoDBUpdateOne({
     connection,
-    request: { filter: { _id: 'sum' }, update: { $inc: { amount: { _decimal: '0.2' } } } },
+    request: { filter: { _id: 'sum' }, update: { $inc: { amount: { '~dec': '0.2' } } } },
   });
   const found = await MongoDBFind({ connection, request: { query: { _id: 'sum' } } });
-  expect(overTheWire(found)).toEqual([{ _id: 'sum', amount: { _decimal: '0.3' } }]);
+  expect(overTheWire(found)).toEqual([{ _id: 'sum', amount: { '~dec': '0.3' } }]);
   const one = await MongoDBFindOne({ connection, request: { query: { _id: 'sum' } } });
-  expect(overTheWire(one)).toEqual({ _id: 'sum', amount: { _decimal: '0.3' } });
+  expect(overTheWire(one)).toEqual({ _id: 'sum', amount: { '~dec': '0.3' } });
   expect(await storedTypes({ collection, field: 'amount' })).toEqual(['decimal']);
   // The same sum in doubles is 0.30000000000000004.
   expect(0.1 + 0.2).not.toEqual(0.3);
@@ -89,7 +89,7 @@ test('a read value writes back as a decimal', async () => {
   const connection = connectionFor(collection);
   await MongoDBInsertOne({
     connection,
-    request: { doc: { _id: 'first', amount: { _decimal: '19.99' } } },
+    request: { doc: { _id: 'first', amount: { '~dec': '19.99' } } },
   });
   const first = overTheWire(
     await MongoDBFindOne({ connection, request: { query: { _id: 'first' } } })
@@ -100,7 +100,7 @@ test('a read value writes back as a decimal', async () => {
   });
   const found = await MongoDBFind({
     connection,
-    request: { query: { amount: { _decimal: '19.99' } }, options: { sort: { _id: 1 } } },
+    request: { query: { amount: { '~dec': '19.99' } }, options: { sort: { _id: 1 } } },
   });
   expect(found.map((doc) => doc._id)).toEqual(['first', 'second']);
   expect(await storedTypes({ collection, field: 'amount' })).toEqual(['decimal', 'decimal']);
@@ -114,12 +114,12 @@ test('an aggregation sums stored decimals exactly', async () => {
     connection,
     request: {
       docs: [
-        { _id: 1, account: 'a', amount: { _decimal: '0.1' } },
-        { _id: 2, account: 'a', amount: { _decimal: '0.2' } },
-        { _id: 3, account: 'b', amount: { _decimal: '1234567890123456789012345678.901234' } },
-        { _id: 4, account: 'b', amount: { _decimal: '0.000001' } },
-        { _id: 5, account: 'c', amount: { _decimal: '-5.25' } },
-        { _id: 6, account: 'c', amount: { _decimal: '5.25' } },
+        { _id: 1, account: 'a', amount: { '~dec': '0.1' } },
+        { _id: 2, account: 'a', amount: { '~dec': '0.2' } },
+        { _id: 3, account: 'b', amount: { '~dec': '1234567890123456789012345678.901234' } },
+        { _id: 4, account: 'b', amount: { '~dec': '0.000001' } },
+        { _id: 5, account: 'c', amount: { '~dec': '-5.25' } },
+        { _id: 6, account: 'c', amount: { '~dec': '5.25' } },
       ],
     },
   });
@@ -133,9 +133,9 @@ test('an aggregation sums stored decimals exactly', async () => {
     },
   });
   expect(overTheWire(res)).toEqual([
-    { _id: 'a', total: { _decimal: '0.3' } },
-    { _id: 'b', total: { _decimal: '1234567890123456789012345678.901235' } },
-    { _id: 'c', total: { _decimal: '0.00' } },
+    { _id: 'a', total: { '~dec': '0.3' } },
+    { _id: 'b', total: { '~dec': '1234567890123456789012345678.901235' } },
+    { _id: 'c', total: { '~dec': '0.00' } },
   ]);
   expect(await storedTypes({ collection, field: 'amount' })).toEqual(new Array(6).fill('decimal'));
 });
@@ -146,7 +146,7 @@ test('a decimal literal in a pipeline is a decimal', async () => {
   const connection = connectionFor(collection);
   await MongoDBInsertOne({
     connection,
-    request: { doc: { _id: 'line', quantity: { _decimal: '3' }, price: { _decimal: '0.35' } } },
+    request: { doc: { _id: 'line', quantity: { '~dec': '3' }, price: { '~dec': '0.35' } } },
   });
   const res = await MongoDBAggregation({
     connection,
@@ -154,13 +154,13 @@ test('a decimal literal in a pipeline is a decimal', async () => {
       pipeline: [
         {
           $project: {
-            total: { $add: [{ $multiply: ['$quantity', '$price'] }, { _decimal: '0.05' }] },
+            total: { $add: [{ $multiply: ['$quantity', '$price'] }, { '~dec': '0.05' }] },
           },
         },
       ],
     },
   });
-  expect(overTheWire(res)).toEqual([{ _id: 'line', total: { _decimal: '1.10' } }]);
+  expect(overTheWire(res)).toEqual([{ _id: 'line', total: { '~dec': '1.10' } }]);
 });
 
 const values = [
@@ -183,14 +183,14 @@ test('negative, zero, very large and 34 digit values round trip unchanged', asyn
   const connection = connectionFor(collection);
   await MongoDBInsertMany({
     connection,
-    request: { docs: values.map((value, _id) => ({ _id, amount: { _decimal: value } })) },
+    request: { docs: values.map((value, _id) => ({ _id, amount: { '~dec': value } })) },
   });
   const found = await MongoDBFind({
     connection,
     request: { query: {}, options: { sort: { _id: 1 } } },
   });
   expect(overTheWire(found).map((doc) => doc.amount)).toEqual(
-    values.map((value) => ({ _decimal: value }))
+    values.map((value) => ({ '~dec': value }))
   );
   expect(await storedTypes({ collection, field: 'amount' })).toEqual(values.map(() => 'decimal'));
 });
@@ -203,23 +203,23 @@ test('updateMany and bulkWrite write decimals', async () => {
     connection,
     request: {
       operations: [
-        { insertOne: { document: { _id: 1, amount: { _decimal: '1.10' } } } },
-        { insertOne: { document: { _id: 2, amount: { _decimal: '2.20' } } } },
-        { updateOne: { filter: { _id: 2 }, update: { $inc: { amount: { _decimal: '0.05' } } } } },
+        { insertOne: { document: { _id: 1, amount: { '~dec': '1.10' } } } },
+        { insertOne: { document: { _id: 2, amount: { '~dec': '2.20' } } } },
+        { updateOne: { filter: { _id: 2 }, update: { $inc: { amount: { '~dec': '0.05' } } } } },
       ],
     },
   });
   await MongoDBUpdateMany({
     connection,
-    request: { filter: {}, update: { $mul: { amount: { _decimal: '2' } } } },
+    request: { filter: {}, update: { $mul: { amount: { '~dec': '2' } } } },
   });
   const found = await MongoDBFind({
     connection,
     request: { query: {}, options: { sort: { _id: 1 } } },
   });
   expect(overTheWire(found)).toEqual([
-    { _id: 1, amount: { _decimal: '2.20' } },
-    { _id: 2, amount: { _decimal: '4.50' } },
+    { _id: 1, amount: { '~dec': '2.20' } },
+    { _id: 2, amount: { '~dec': '4.50' } },
   ]);
   expect(await storedTypes({ collection, field: 'amount' })).toEqual(['decimal', 'decimal']);
 });
@@ -229,8 +229,8 @@ test('a number in the marker is refused before anything is written', async () =>
   await clearTestMongoDb({ collection });
   const connection = connectionFor(collection);
   await expect(
-    MongoDBInsertOne({ connection, request: { doc: { _id: 'bad', amount: { _decimal: 0.1 } } } })
-  ).rejects.toThrow('_decimal takes a decimal as a string');
+    MongoDBInsertOne({ connection, request: { doc: { _id: 'bad', amount: { '~dec': 0.1 } } } })
+  ).rejects.toThrow('~dec takes a decimal as a string');
   expect(await readStored({ collection, pipeline: [] })).toEqual([]);
 });
 
@@ -242,12 +242,12 @@ test('the change log keeps decimals as decimals', async () => {
   await MongoDBInsertOne({
     connection,
     requestId: 'decimal_insert',
-    request: { doc: { _id: 'logged', amount: { _decimal: '0.1' } } },
+    request: { doc: { _id: 'logged', amount: { '~dec': '0.1' } } },
   });
   await MongoDBUpdateOne({
     connection,
     requestId: 'decimal_update',
-    request: { filter: { _id: 'logged' }, update: { $inc: { amount: { _decimal: '0.2' } } } },
+    request: { filter: { _id: 'logged' }, update: { $inc: { amount: { '~dec': '0.2' } } } },
   });
   const insertRecord = await findLogCollectionRecordTestMongoDb({
     logCollection,
