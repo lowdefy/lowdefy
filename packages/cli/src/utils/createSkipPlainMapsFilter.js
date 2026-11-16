@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import fs from 'fs';
 import path from 'path';
 
 // Production builds also write keyMap.json.gz and refMap.json.gz, which the
@@ -22,8 +23,15 @@ import path from 'path';
 // output leaves them out and ships only the gzipped copies.
 const PLAIN_MAPS = ['keyMap.json', 'refMap.json'];
 
+// A copy names each file by the path it was given, and the nft trace by its real path, which
+// differs when a folder on the way to the build directory is a symlink. Both name the same maps.
 function createSkipPlainMapsFilter({ buildDirectory }) {
-  const skipped = new Set(PLAIN_MAPS.map((file) => path.join(path.resolve(buildDirectory), file)));
+  const resolved = path.resolve(buildDirectory);
+  const skipped = new Set(
+    [resolved, fs.realpathSync(resolved)].flatMap((directory) =>
+      PLAIN_MAPS.map((file) => path.join(directory, file))
+    )
+  );
   return function skipPlainMaps(src) {
     return !skipped.has(path.resolve(src));
   };

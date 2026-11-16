@@ -50,6 +50,7 @@ function listFiles(directory) {
 
 test('createSkipPlainMapsFilter skips only the plain maps at the build directory root', () => {
   const buildDirectory = path.join(root, 'build');
+  fs.mkdirSync(buildDirectory);
   const skipPlainMaps = createSkipPlainMapsFilter({ buildDirectory });
   expect(skipPlainMaps(buildDirectory)).toBe(true);
   expect(skipPlainMaps(path.join(buildDirectory, 'keyMap.json'))).toBe(false);
@@ -61,9 +62,23 @@ test('createSkipPlainMapsFilter skips only the plain maps at the build directory
 });
 
 test('createSkipPlainMapsFilter matches a build directory given as a relative path', () => {
+  fs.mkdirSync(path.join(root, 'build'));
   const buildDirectory = path.relative(process.cwd(), path.join(root, 'build'));
   const skipPlainMaps = createSkipPlainMapsFilter({ buildDirectory });
   expect(skipPlainMaps(path.join(root, 'build', 'keyMap.json'))).toBe(false);
+});
+
+test('createSkipPlainMapsFilter skips the plain maps by their real path when the build directory is behind a symlink', () => {
+  const realDirectory = fs.realpathSync(root);
+  fs.mkdirSync(path.join(realDirectory, 'store', 'build'), { recursive: true });
+  fs.symlinkSync(path.join(realDirectory, 'store'), path.join(realDirectory, 'server'));
+  const skipPlainMaps = createSkipPlainMapsFilter({
+    buildDirectory: path.join(realDirectory, 'server', 'build'),
+  });
+  expect(skipPlainMaps(path.join(realDirectory, 'server', 'build', 'keyMap.json'))).toBe(false);
+  expect(skipPlainMaps(path.join(realDirectory, 'store', 'build', 'keyMap.json'))).toBe(false);
+  expect(skipPlainMaps(path.join(realDirectory, 'store', 'build', 'refMap.json'))).toBe(false);
+  expect(skipPlainMaps(path.join(realDirectory, 'store', 'build', 'keyMap.json.gz'))).toBe(true);
 });
 
 test('copying with createSkipPlainMapsFilter leaves out the root plain maps and keeps everything else', async () => {
