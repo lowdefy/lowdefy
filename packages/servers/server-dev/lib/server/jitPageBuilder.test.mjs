@@ -220,7 +220,7 @@ test('an error a failing JIT page build throws after its keys were added resolve
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('after two config publishes only the current and previous build contexts keep jitMaps files', async () => {
+test('after a config publish the next context keeps no jitMaps files of an earlier generation', async () => {
   const { root, buildDirectory, configDirectory } = createApp({
     pages: {
       a: 'id: a\ntype: Box\n',
@@ -230,17 +230,18 @@ test('after two config publishes only the current and previous build contexts ke
   });
 
   await buildPageIfNeeded({ pageId: 'a', buildDirectory, configDirectory });
-  const [first] = listJitMaps(buildDirectory);
   publishRegistry(buildDirectory);
   await buildPageIfNeeded({ pageId: 'b', buildDirectory, configDirectory });
+  const [second] = listJitMaps(buildDirectory);
   publishRegistry(buildDirectory);
   await buildPageIfNeeded({ pageId: 'c', buildDirectory, configDirectory });
 
+  // A config publish removes the files itself (publishBuildDirectory); the
+  // context made after it keeps none of the earlier generations' either.
   const files = listJitMaps(buildDirectory);
-  expect(files).toHaveLength(2);
-  expect(files).not.toContain(first);
-  const generations = files.map((file) => Number(file.split('-')[1]));
-  expect(generations[1] - generations[0]).toBe(1);
+  expect(files).toHaveLength(1);
+  expect(files).not.toContain(second);
+  expect(Number(files[0].split('-')[1])).toBe(Number(second.split('-')[1]) + 1);
   fs.rmSync(root, { recursive: true, force: true });
 });
 

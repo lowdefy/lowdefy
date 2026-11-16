@@ -43,7 +43,12 @@ test('a page build writes its maps while its config build is the live one', asyn
   publishBuild('a1b2_');
   const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
-  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
+  skipStaleMapWrites({
+    buildDirectory,
+    context,
+    keyPrefix: 'a1b2_',
+    sharesCurrentJsMap: () => true,
+  });
 
   await context.writeBuildArtifact('keyMap.json', '{}');
   await context.writeBuildArtifact('refMap.json', '{}');
@@ -58,7 +63,12 @@ test('a page build started before a config rebuild does not replace the new maps
   publishBuild('a1b2_');
   const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
-  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
+  skipStaleMapWrites({
+    buildDirectory,
+    context,
+    keyPrefix: 'a1b2_',
+    sharesCurrentJsMap: () => true,
+  });
 
   publishBuild('c3d4_');
   await context.writeBuildArtifact('keyMap.json', '{}');
@@ -72,7 +82,12 @@ test('a page build started before a config rebuild writes no jitMaps file', asyn
   publishBuild('a1b2_');
   const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
-  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
+  skipStaleMapWrites({
+    buildDirectory,
+    context,
+    keyPrefix: 'a1b2_',
+    sharesCurrentJsMap: () => true,
+  });
 
   await context.writeBuildArtifact('jitMaps/abc123-1-1.json', '{}');
   publishBuild('c3d4_');
@@ -81,12 +96,17 @@ test('a page build started before a config rebuild writes no jitMaps file', asyn
   expect(writeBuildArtifact.mock.calls).toEqual([['jitMaps/abc123-1-1.json', '{}', undefined]]);
 });
 
-test('a page build on a context that is no longer kept does not write the JS maps', async () => {
+test('a page build on a context of an earlier generation does not write the JS maps', async () => {
   publishBuild('a1b2_');
   const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
   let kept = true;
-  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => kept });
+  skipStaleMapWrites({
+    buildDirectory,
+    context,
+    keyPrefix: 'a1b2_',
+    sharesCurrentJsMap: () => kept,
+  });
 
   await context.writeBuildArtifact('plugins/operators/serverJsMap.js', 'a');
   kept = false;
@@ -104,7 +124,12 @@ test('a page build started before a config rebuild does not write the JS maps', 
   publishBuild('a1b2_');
   const writeBuildArtifact = vi.fn();
   const context = { writeBuildArtifact };
-  skipStaleMapWrites({ buildDirectory, context, keyPrefix: 'a1b2_', isKeptContext: () => true });
+  skipStaleMapWrites({
+    buildDirectory,
+    context,
+    keyPrefix: 'a1b2_',
+    sharesCurrentJsMap: () => true,
+  });
 
   publishBuild('c3d4_');
   await context.writeBuildArtifact('plugins/operators/serverJsMap.js', 'a');
