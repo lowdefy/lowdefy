@@ -362,3 +362,27 @@ blocks:
         _if_none:
           - _state: textinput_onescape_value
           - Not fired
+
+  # Shown by a click with a value, as a field that swaps its value for the input does.
+  - id: textinput_show_click_to_edit
+    type: Button
+    properties:
+      title: Show click to edit
+    events:
+      onClick:
+        - id: show_textinput_click_to_edit
+          type: SetState
+          params:
+            textinput_click_to_edit: Old value
+            textinput_click_to_edit_shown: true
+
+  - id: textinput_click_to_edit
+    type: TextInput
+    visible:
+      _eq:
+        - _state: textinput_click_to_edit_shown
+        - true
+    properties:
+      title: Click To Edit
+      autoFocus: true
+      selectOnFocus: true

@@ -277,5 +277,14 @@ test.describe('TextInput click-to-edit', () => {
 
     await page.keyboard.press('Escape');
     await expect(display).toHaveText('Replace me');
+    await expect(input).toHaveValue('Replace me');
+  });
+
+  test('autoFocus with selectOnFocus mounts with the text selected', async ({ page }) => {
+    await getBlock(page, 'textinput_show_click_to_edit').locator('button').click();
+    const input = getInput(page, 'textinput_click_to_edit');
+    await expect(input).toHaveValue('Old value');
+    await page.keyboard.type('New');
+    await expect(input).toHaveValue('New');
   });
 });

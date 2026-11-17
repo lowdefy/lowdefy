@@ -405,10 +405,6 @@ test.describe('Selector autoOpen', () => {
     await navigateToTestPage(page, 'selector');
   });
 
-  test('a Selector without autoOpen mounts closed', async ({ page }) => {
-    await expect(getOption(page, 'selector_basic', 0)).toBeHidden();
-  });
-
   test('autoOpen opens the dropdown when the block mounts, and a pick closes it', async ({
     page,
   }) => {

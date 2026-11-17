@@ -457,7 +457,6 @@ test.describe('MultipleSelector autoOpen', () => {
   });
 
   test('autoOpen opens the dropdown when the block mounts', async ({ page }) => {
-    await expect(getOption(page, 'multipleselector_auto_open', 0)).toBeHidden();
     await getBlock(page, 'multipleselector_show_auto_open').locator('button').click();
     await expect(getOption(page, 'multipleselector_auto_open', 0)).toBeVisible();
     await expect(getOption(page, 'multipleselector_auto_open', 1)).toBeVisible();

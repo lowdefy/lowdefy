@@ -42,7 +42,7 @@ export const autoOpen = {
   type: 'boolean',
   default: false,
   description:
-    'Open the dropdown when the block mounts, for a field that shows its input only after the value is clicked. It closes as usual on a pick, a click outside or Escape.',
+    'Open the dropdown (the calendar on a date picker) and focus the block when it mounts, for a field that shows its input only after the value is clicked. It closes as usual on a pick, a click outside or Escape.',
 };
 
 export const selectOnFocus = {

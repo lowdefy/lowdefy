@@ -131,7 +131,7 @@ const MultipleSelector = ({
             <div id={`${blockId}_${elementId}_popup`} />
             <Select
               id={`${blockId}_input`}
-              autoFocus={properties.autoFocus}
+              autoFocus={properties.autoFocus || properties.autoOpen}
               defaultOpen={properties.autoOpen}
               variant={antdVariant}
               className={classNames.element}

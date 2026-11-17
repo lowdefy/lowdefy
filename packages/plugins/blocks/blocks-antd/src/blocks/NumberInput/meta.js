@@ -46,7 +46,7 @@ export default {
     },
     onEscape: {
       description: 'Trigger actions when input is focused and Escape is pressed.',
-      event: { value: 'The current input value.' },
+      event: { value: 'The current number value.' },
     },
     onFocus: 'Trigger action when number input gets focus.',
     onPressEnter: 'Trigger actions when input is focused and enter is pressed.',

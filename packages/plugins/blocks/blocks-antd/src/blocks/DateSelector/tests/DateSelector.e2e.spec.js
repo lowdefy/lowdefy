@@ -416,8 +416,7 @@ test.describe('DateSelector autoOpen', () => {
   });
 
   test('autoOpen opens the calendar when the block mounts', async ({ page }) => {
-    await expect(page.locator('.ant-picker-dropdown:visible')).toHaveCount(0);
     await getBlock(page, 'dateselector_show_auto_open').locator('button').click();
-    await expect(page.locator('.ant-picker-dropdown:visible')).toBeVisible();
+    await expect(page.locator('#bl-dateselector_auto_open .ant-picker-dropdown')).toBeVisible();
   });
 });

@@ -259,5 +259,6 @@ test.describe('NumberInput click-to-edit', () => {
 
     await page.keyboard.press('Escape');
     await expect(display).toHaveText('42');
+    await expect(input).toHaveValue('42');
   });
 });

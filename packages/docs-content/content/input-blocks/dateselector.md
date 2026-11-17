@@ -736,7 +736,7 @@ Date picker with configurable format and disabled dates.
 | --- | --- | --- | --- |
 | `allowClear` | boolean | `true` | Allow the user to clear their input. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
-| `autoOpen` | boolean | `false` | Open the dropdown when the block mounts, for a field that shows its input only after the value is clicked. It closes as usual on a pick, a click outside or Escape. |
+| `autoOpen` | boolean | `false` | Open the dropdown (the calendar on a date picker) and focus the block when it mounts, for a field that shows its input only after the value is clicked. It closes as usual on a pick, a click outside or Escape. |
 | `bordered` | boolean | `true` | Deprecated - use variant: 'borderless'. Whether or not the input has a border style. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `variant` | string | `"outlined"` | Variant style of the input. Use 'borderless' instead of bordered: false. Enum: `outlined`, `filled`, `borderless`, `underlined`. |

@@ -123,7 +123,7 @@ const Selector = ({
                   const textColor = isSolid ? (getContrastTextColor(color) ?? '#fff') : color;
                   return <span style={{ color: textColor }}>{labelProps.label}</span>;
                 }}
-                autoFocus={properties.autoFocus}
+                autoFocus={properties.autoFocus || properties.autoOpen}
                 defaultOpen={properties.autoOpen}
                 getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
                 disabled={getDisabled({ loading, properties })}
