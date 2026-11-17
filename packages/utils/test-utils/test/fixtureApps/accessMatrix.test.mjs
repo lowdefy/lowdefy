@@ -80,7 +80,6 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'generated',
     'handoff',
     'home',
-    'polling',
     'rails',
     'second',
     'selectors',
@@ -93,7 +92,6 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'walled',
   ]);
   expect(Object.keys(matrix.endpoints)).toEqual([
-    'approve_run',
     'auditor_only',
     'detached_log',
     'explode',
