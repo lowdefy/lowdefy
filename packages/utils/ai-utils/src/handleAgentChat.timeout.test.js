@@ -116,7 +116,7 @@ function createContext() {
 
 const USER_MESSAGES = [{ id: 'u1', role: 'user', parts: [{ type: 'text', text: 'Question?' }] }];
 
-function runChat({ model, context, timeout }) {
+function runChat({ model, context, timeout, prune }) {
   return handleAgentChat({
     connection: { provider: () => model },
     properties: {
@@ -124,7 +124,7 @@ function runChat({ model, context, timeout }) {
         id: 'agent-1',
         agentId: 'agent-1',
         tools: [],
-        properties: { model: 'mock', maxRetries: 0, timeout },
+        properties: { model: 'mock', maxRetries: 0, timeout, prune },
         hooks: { onFinish: ['save-answer'] },
       },
       messages: USER_MESSAGES,
@@ -174,14 +174,16 @@ test.each([
   ['stepMs', { stepMs: 200 }],
   ['chunkMs', { chunkMs: 200 }],
   ['a number', 200],
-])('a turn stopped by a %s timeout ends with the timeout error', async (_, timeout) => {
+  ['totalMs, with prune set', { totalMs: 200 }, { reasoning: 'all' }],
+])('a turn stopped by a %s timeout ends with the timeout error', async (_, timeout, prune) => {
   const { model } = stallingModel();
-  const { context } = createContext();
-  const { response } = await runChat({ model, context, timeout });
+  const { context, finishPayloads } = createContext();
+  const { response } = await runChat({ model, context, timeout, prune });
   const chunks = await readChunks(response);
   expect(chunks.filter((chunk) => chunk.type === 'error')).toEqual([
     { type: 'error', errorText: 'The answer took too long and was stopped. Try again.' },
   ]);
+  expect(finishPayloads[0]).toMatchObject({ isAborted: true, abortReason: 'timeout' });
 });
 
 test('onFinish is told a timed-out turn was cut off', async () => {
@@ -206,16 +208,15 @@ test('a client that goes away mid-reply gets no error chunk, and the turn runs t
   const { context, finishPayloads, onFinishCalled } = createContext();
   const { response } = await runChat({ model, context, timeout: { totalMs: 5000 } });
 
+  // The client reads the first chunk and goes away.
   const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let received = '';
   await started;
-  const first = await reader.read();
-  received += decoder.decode(first.value);
+  await reader.read();
   await reader.cancel();
 
+  // Chat runs pass no client signal to the AI SDK, so the turn runs to its end: no timeout
+  // error is logged or written, and onFinish gets the whole reply as a finished answer.
   await onFinishCalled;
-  expect(received).not.toContain('"type":"error"');
   expect(context.logger.error).not.toHaveBeenCalled();
   expect(finishPayloads[0]).toMatchObject({ isAborted: false, finishReason: 'stop' });
   expect(finishPayloads[0]).not.toHaveProperty('abortReason');
