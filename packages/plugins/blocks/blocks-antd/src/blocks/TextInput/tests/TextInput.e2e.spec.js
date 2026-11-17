@@ -253,3 +253,29 @@ test.describe('TextInput antd 6 features', () => {
     await expect(input).toHaveClass(/ant-input-outlined/);
   });
 });
+
+test.describe('TextInput click-to-edit', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'textinput');
+  });
+
+  test('selectOnFocus selects the text on focus, so typing replaces it', async ({ page }) => {
+    const input = getInput(page, 'textinput_select_on_focus');
+    await input.fill('Replace me');
+    await input.blur();
+    await input.focus();
+    await page.keyboard.type('New');
+    await expect(input).toHaveValue('New');
+  });
+
+  test('onEscape fires with the value on Escape, not on Enter', async ({ page }) => {
+    const input = getInput(page, 'textinput_onescape');
+    const display = getBlock(page, 'textinput_onescape_display');
+    await input.fill('Replace me');
+    await page.keyboard.press('Enter');
+    await expect(display).toHaveText('Not fired');
+
+    await page.keyboard.press('Escape');
+    await expect(display).toHaveText('Replace me');
+  });
+});

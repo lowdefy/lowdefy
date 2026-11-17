@@ -71,6 +71,7 @@ const DateSelector = ({
                 }
               }
               autoFocus={properties.autoFocus}
+              defaultOpen={properties.autoOpen}
               variant={
                 properties.bordered === false ? 'borderless' : (properties.variant ?? undefined)
               }

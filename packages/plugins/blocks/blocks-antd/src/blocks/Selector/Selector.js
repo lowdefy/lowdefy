@@ -124,6 +124,7 @@ const Selector = ({
                   return <span style={{ color: textColor }}>{labelProps.label}</span>;
                 }}
                 autoFocus={properties.autoFocus}
+                defaultOpen={properties.autoOpen}
                 getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
                 disabled={getDisabled({ loading, properties })}
                 listHeight={properties.listHeight ?? undefined}

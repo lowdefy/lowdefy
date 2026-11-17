@@ -332,3 +332,33 @@ blocks:
       title: Null Variant
       variant:
         _state: textinput_null_missing
+
+  # ============================================
+  # CLICK-TO-EDIT
+  # ============================================
+
+  - id: textinput_select_on_focus
+    type: TextInput
+    properties:
+      title: Select On Focus
+      selectOnFocus: true
+
+  - id: textinput_onescape
+    type: TextInput
+    properties:
+      title: OnEscape Test
+    events:
+      onEscape:
+        - id: set_textinput_onescape
+          type: SetState
+          params:
+            textinput_onescape_value:
+              _event: value
+
+  - id: textinput_onescape_display
+    type: Span
+    properties:
+      content:
+        _if_none:
+          - _state: textinput_onescape_value
+          - Not fired

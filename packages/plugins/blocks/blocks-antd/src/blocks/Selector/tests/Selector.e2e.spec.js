@@ -399,3 +399,26 @@ test.describe('Selector Block', () => {
     ).toHaveCSS('max-height', '256px');
   });
 });
+
+test.describe('Selector autoOpen', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'selector');
+  });
+
+  test('a Selector without autoOpen mounts closed', async ({ page }) => {
+    await expect(getOption(page, 'selector_basic', 0)).toBeHidden();
+  });
+
+  test('autoOpen opens the dropdown when the block mounts, and a pick closes it', async ({
+    page,
+  }) => {
+    await getBlock(page, 'selector_show_auto_open').locator('button').click();
+    await expect(getOption(page, 'selector_auto_open', 1)).toBeVisible();
+
+    await getOption(page, 'selector_auto_open', 1).click();
+    await expect(getSelector(page, 'selector_auto_open').locator('.ant-select-content')).toHaveText(
+      'Banana'
+    );
+    await expect(getOption(page, 'selector_auto_open', 1)).toBeHidden();
+  });
+});

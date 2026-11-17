@@ -235,3 +235,29 @@ test.describe('NumberInput antd 6 features', () => {
     await expect(input).toHaveValue('6');
   });
 });
+
+test.describe('NumberInput click-to-edit', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'numberinput');
+  });
+
+  test('selectOnFocus selects the text on focus, so typing replaces it', async ({ page }) => {
+    const input = getInput(page, 'numberinput_select_on_focus');
+    await input.fill('42');
+    await input.blur();
+    await input.focus();
+    await page.keyboard.type('7');
+    await expect(input).toHaveValue('7');
+  });
+
+  test('onEscape fires with the value on Escape, not on Enter', async ({ page }) => {
+    const input = getInput(page, 'numberinput_onescape');
+    const display = getBlock(page, 'numberinput_onescape_display');
+    await input.fill('42');
+    await page.keyboard.press('Enter');
+    await expect(display).toHaveText('Not fired');
+
+    await page.keyboard.press('Escape');
+    await expect(display).toHaveText('42');
+  });
+});
