@@ -173,10 +173,17 @@ write that state.
   matches falls through to the resolver it would have had: the sink on an external or opened
   type, the real resolver on a redirect type.
 - **Fail gates** (`session.fail({ requestId, endpoint?, pageId?, message, times? })`,
-  `addFailGate`) throw, before the resolver runs, a `ServiceError` with the message and
-  `forced: true` (`createForcedFailure`), on any connection. Once by default, `times: n` the next
-  n, `times: 'all'` every one. Each gate counts `fired`; `listUnfiredFailGates` lists the ones no
-  request reached.
+  `addFailGate`) throw, before the resolver runs, a `ServiceError` with the message, branded
+  forced (`createForcedFailure`, `@lowdefy/errors`' `markForcedFailure`), on any connection. The
+  brand is a registered, non-enumerable symbol, so an app's own error with a `forced` property is
+  never taken for one; `isForcedFailure` reads it in the error sinks and the wire projection,
+  which sends `forced: true` to the client. Once by default, `times: n` the next n,
+  `times: 'all'` every one. Each gate counts `fired`; `listUnfiredFailGates` lists the ones no
+  request reached, `session.unfiredFailGates()` for a test, and `describeFailGate` names one.
+- **Journey stubs** are checked against the app before they are set (`checkJourneyStubTargets`,
+  over `checkStubTarget`, the check `session.stub` runs): an answer stub on a connection or
+  request type the app does not have would never answer, so the journey is refused, naming the
+  stub.
 - **Pause gates** (`session.pauseBefore(stepId)`, `addPauseGate`) hold request steps only.
   `createGatedResolver` wraps every request resolver: the first routine to reach a request an
   open gate matches stops with its request built and not yet sent, and the gate records
@@ -191,7 +198,16 @@ write that state.
 
 `session.reset()` releases held routines, waits for background work, empties every collection and
 loads the data set again (`reloadDataSession`), and empties `sunk` and the fail gates. Collections and indexes are
-kept, which is what makes it several times cheaper than a new session. Stubs stay.
+kept, which is what makes it several times cheaper than a new session. Stubs stay. A fail gate that
+never fired fails the test that set it, as it fails a journey: `reset()` resets the session first,
+then throws naming each one.
+
+`session.webhook` answers `{ status, body, contentType, faults }`. The journey hosts' webhook
+(`callWebhook`, server-dev's `createDevServerHost`) also answers `rid`, the call's request id: a
+webhook routine that failed answers 500 with a fixed body and no request id, so a journey's
+`expect.error` reads a forced failure's message by this one. In a browser run the dev server's
+endpoints route names it in an `x-lowdefy-journey-request-id` header, only for a call on a
+journey's data session.
 
 `app.close()` ends the sessions, closes the MongoDB plugin's driver clients (`closeClients` from
 `@lowdefy/connection-mongodb/clients`, loaded from the server's install) and this app's client on
