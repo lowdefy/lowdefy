@@ -18,6 +18,7 @@ import createBuildHost from './createBuildHost.js';
 import createHeadlessHost from './createHeadlessHost.js';
 import loadClientPlugins from './loadClientPlugins.js';
 import openHeadlessPage from './openHeadlessPage.js';
+import readWebhookError from './readWebhookError.js';
 import runHeadlessJourney from './runHeadlessJourney.js';
 
 export {
@@ -25,5 +26,6 @@ export {
   createHeadlessHost,
   loadClientPlugins,
   openHeadlessPage,
+  readWebhookError,
   runHeadlessJourney,
 };

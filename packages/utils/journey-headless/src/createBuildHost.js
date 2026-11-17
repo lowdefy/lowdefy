@@ -102,7 +102,10 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
     readPageConfig,
     resolveUser: (pageUser) => calls.resolveUser(pageUser ?? user),
     rootConfig,
+    system: ({ endpointId, payload }) => calls.system({ endpointId, payload }),
     userNames: calls.userNames,
+    webhook: ({ endpointId, headers, query, rawBody }) =>
+      calls.webhook({ endpointId, headers, query, rawBody }),
   });
 }
 

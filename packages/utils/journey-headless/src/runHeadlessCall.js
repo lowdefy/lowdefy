@@ -18,6 +18,15 @@ import { type } from '@lowdefy/helpers';
 
 import readAnswerError from './readAnswerError.js';
 
+// The answer of the call the caller makes: a call `as: system` runs the endpoint as the system does
+// (host.system), anything else as the caller's user (host.call).
+function callAs({ call, caller, host, payload }) {
+  if (caller.system === true) {
+    return host.system({ endpointId: call.endpointId, payload });
+  }
+  return host.call({ ...call, payload, user: caller.user });
+}
+
 // Runs a call or request step: the payload as it is given goes to the host's in-process call, as
 // the browser runner posts it to the route, as the step's `as` (actors.callerFor) or the current
 // actor. A refusal or an error is the answer, not a failure of the step: expect.status and
@@ -31,7 +40,7 @@ async function runHeadlessCall({ actors, host, step }) {
   const call = isCall
     ? { endpointId: params.endpoint, kind: 'endpoint' }
     : { kind: 'request', pageId: params.pageId, requestId: params.requestId };
-  const answer = await host.call({ ...call, payload, user: caller.user });
+  const answer = await callAs({ call, caller, host, payload });
   answer.faults.forEach((fault) => host.errorSink.add({ call, error: fault, source: 'server' }));
   caller.calls.push({
     ...call,

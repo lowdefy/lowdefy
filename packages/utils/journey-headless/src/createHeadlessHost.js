@@ -33,6 +33,13 @@ import { type } from '@lowdefy/helpers';
  *   { actions, operators, jsMap, blockMetas }. No block components.
  * @property {(args: HostCall) => Promise<HostAnswer>} call Runs a page request or an endpoint as
  *   the server does, in process.
+ * @property {(args: { endpointId: string, payload: * }) => Promise<HostAnswer>} system Runs an
+ *   endpoint as a cron or detached run does, in process: runDetachedEndpoint with a system
+ *   principal, so there is no user and an InternalApi endpoint is callable. A `call` step
+ *   `as: system` makes it.
+ * @property {(args: { endpointId: string, rawBody: string, query?: Object, headers?: Object }) =>
+ *   Promise<WebhookAnswer>} webhook Posts to a webhook endpoint as its sender does, in process:
+ *   runWebhookEndpoint, as the endpoints route runs it, so its verify gate runs against rawBody.
  * @property {Object|null} dataSession The data session the calls run on
  *   (@lowdefy/test-utils/dataSets), which holds its stubs, fail gates, pause gates and sunk
  *   requests; null for a journey with no data set on a host that runs it on none. A hold step
@@ -77,6 +84,14 @@ import { type } from '@lowdefy/helpers';
  */
 
 /**
+ * @typedef {Object} WebhookAnswer As the endpoints route answers a webhook.
+ * @property {number} status The HTTP status the sender receives.
+ * @property {*} body The JSON the route sends, or the text of a text/plain answer.
+ * @property {string} contentType "application/json" or "text/plain".
+ * @property {Array} faults The errors the server would log at error level.
+ */
+
+/**
  * @typedef {Object} ErrorSink
  * @property {Array<{ source: string, error: * }>} errors
  * @property {(entry: { source: string, error: * }) => void} add
@@ -94,7 +109,9 @@ const HOST_KEYS = [
   'readPageConfig',
   'resolveUser',
   'rootConfig',
+  'system',
   'userNames',
+  'webhook',
 ];
 
 // Checks a host against the shape above, so a host that misses a part fails where it is made,

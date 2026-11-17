@@ -39,13 +39,14 @@ import toJsonValue from './toJsonValue.js';
 import toStepFailure from './toStepFailure.js';
 import usesSearchStage from './usesSearchStage.js';
 
-// A call or request names its caller by a data set user's name, "none" or a user object. A name
-// that is not in the data set fails the journey before any call, with the data set's users.
+// A call or request names its caller by a data set user's name, "none" or a user object, and a
+// call also "system". A name that is not in the data set fails the journey before any call, with
+// the data set's users.
 function findUnknownCaller({ host, steps }) {
   for (const step of steps) {
     const key = getStepKey(step);
     const as = CALL_STEP_KEYS.includes(key) ? step[key].as : undefined;
-    if (type.isString(as) && as !== 'none') {
+    if (type.isString(as) && as !== 'none' && as !== 'system') {
       try {
         host.resolveUser(as);
       } catch (error) {
@@ -88,8 +89,9 @@ const REQUEST_WINDOW_STEP_KEYS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
  *
  * journey: { pageId?, pathParams?, urlQuery?, user?, steps }; user defaults to the host's. A
  * journey with no pageId opens no page, and every step must run without one (call, request, as,
- * hold, release, wait ms, and expect error, status, calls on an endpoint or a named page, db). A
- * call or request naming a caller the data set does not have is refused before any call.
+ * hold, release, webhook, wait ms, and expect error, status, calls on an endpoint or a named page,
+ * db). A call or request naming a caller the data set does not have is refused before any call; a
+ * call `as: system` runs the endpoint as the system (host.system).
  * stepTimeout bounds each step's wait for a block or a check to hold. onTrace, when given, also
  * takes every completed event's trace payload, as a host that records what a journey exercised
  * reads it.
@@ -143,8 +145,8 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
   let browserOnly;
   // The app errors of an interaction or call an expect.error step follows, for that step to claim.
   let held = null;
-  // The answer of the last call, request or release step, which only the expect steps after it
-  // read.
+  // The answer of the last call, request, release or webhook step, which only the expect steps
+  // after it read.
   let answer;
   // Each actor's call count when the current wait.request window opened.
   let since = new Map();
