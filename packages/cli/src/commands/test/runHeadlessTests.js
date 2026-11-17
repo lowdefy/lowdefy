@@ -23,19 +23,19 @@ import runRepeated from './runRepeated.js';
 import summariseResults from './summariseResults.js';
 import writeHeadlessRun from './writeHeadlessRun.js';
 
-const headlessSuite = {
-  name: 'journeys',
-  run: runJourneyHeadless,
-  format: formatJourneyResult,
-};
-
 // `lowdefy test --headless --build`: runs the selected journeys that need no browser on the app's
 // production build, in this process, with no dev server and no browser, so it takes no browser
-// or journey run slot. Each journey gets a fresh session of its data set on the run's one data
-// store. Journeys that need a browser are listed as browser-only, with the first step that does,
-// and are neither passed nor failed. The run's access step (runAccessStep) has checked the build
-// once before this runs. Returns { failed } once the run is reported.
-async function runHeadlessTests({ context, selected, skipped, repeat }) {
+// or journey run slot. `app` is the run's one test app (openBuildApp), which checked the build
+// and served the access step; every journey, and every repeat of one, runs on it, each on a
+// fresh session of its data set, and the caller closes it. Journeys that need a browser are
+// listed as browser-only, with the first step that does, and are neither passed nor failed.
+// Returns { failed } once the run is reported.
+async function runHeadlessTests({ app, context, selected, skipped, repeat }) {
+  const headlessSuite = {
+    name: 'journeys',
+    run: ({ item }) => runJourneyHeadless({ app, context, item }),
+    format: formatJourneyResult,
+  };
   const results = [];
   const browserOnly = [];
   const seen = new Set();

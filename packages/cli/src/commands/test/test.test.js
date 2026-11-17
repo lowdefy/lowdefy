@@ -1182,11 +1182,11 @@ test('test --headless --build runs headless journeys on the build with no server
     configDirectory,
     serverDirectory: context.directories.server,
   });
+  const app = await mockOpenTestApp.mock.results[0].value;
   expect(mockCreateBuildHost).toHaveBeenCalledTimes(1);
   expect(mockCreateBuildHost).toHaveBeenCalledWith({
-    configDirectory,
+    app,
     data: undefined,
-    serverDirectory: context.directories.server,
     user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] },
   });
   expect(mockRunHeadlessJourney).toHaveBeenCalledWith(
@@ -1253,6 +1253,93 @@ test('test --headless --build fails on a failed journey and does not repeat one 
     '0 passed, 1 failed of 1 journeys, 1 browser-only not run'
   );
   expect(process.exitCode).toBe(1);
+});
+
+// One test app per run: the access step and every journey, and every repeat of one, use the app
+// openTestApp opened, each journey on a host (a fresh data session) of its own.
+function openOneApp() {
+  const app = { accessMatrix: vi.fn(), close: vi.fn() };
+  mockOpenTestApp.mockResolvedValue(app);
+  return app;
+}
+
+test('test --headless --build opens the build once and gives each journey a host of its own on it', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile(
+    'b.yaml',
+    `name: saves as a member\npageId: form\ndata: harden\nuser: member\nsteps:\n  - click: submit\n`
+  );
+  writeJourneyFile('c.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  const app = openOneApp();
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(3);
+  expect(mockCreateBuildHost.mock.calls.every(([{ app: given }]) => given === app)).toBe(true);
+  expect(mockCreateBuildHost.mock.calls.map(([{ data, user }]) => ({ data, user }))).toEqual([
+    { data: undefined, user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] } },
+    { data: 'harden', user: 'member' },
+    { data: undefined, user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] } },
+  ]);
+  expect(mockHostClose).toHaveBeenCalledTimes(3);
+  expect(app.close).toHaveBeenCalledTimes(1);
+  expect(logs.info[logs.info.length - 1]).toBe('3 passed, 0 failed of 3 journeys');
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless --build refuses a journey whose data set is unknown and runs the others on the same app', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile(
+    'b.yaml',
+    `name: reads a missing data set\npageId: form\ndata: no-such-set\nsteps:\n  - click: submit\n`
+  );
+  writeJourneyFile('c.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  const app = openOneApp();
+  mockCreateBuildHost.mockImplementation(async ({ data }) => {
+    if (data === 'no-such-set') {
+      throw new Error('Data set "no-such-set" not found in tests/data.');
+    }
+    return { close: mockHostClose };
+  });
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(3);
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(2);
+  expect(logs.error.some((line) => line.includes('reads a missing data set'))).toBe(true);
+  expect(logs.error.some((line) => line.includes('Data set "no-such-set" not found'))).toBe(true);
+  expect(logs.error[logs.error.length - 1]).toBe('2 passed, 1 failed of 3 journeys');
+  expect(app.close).toHaveBeenCalledTimes(1);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build closes the app once when a journey throws', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  const app = openOneApp();
+  mockRunHeadlessJourney.mockRejectedValueOnce(new Error('The runner broke.'));
+  await expect(test({ context })).rejects.toThrow('The runner broke.');
+  expect(mockHostClose).toHaveBeenCalledTimes(1);
+  expect(app.close).toHaveBeenCalledTimes(1);
+});
+
+test('test --headless --build --repeat runs every repeat on the one app', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  context.options.repeat = '3';
+  const app = openOneApp();
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(6);
+  expect(mockCreateBuildHost.mock.calls.every(([{ app: given }]) => given === app)).toBe(true);
+  expect(mockHostClose).toHaveBeenCalledTimes(6);
+  expect(app.close).toHaveBeenCalledTimes(1);
 });
 
 // The build's access table as the harness handle's accessMatrix answers it.

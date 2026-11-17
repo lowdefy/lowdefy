@@ -24,12 +24,13 @@ import readHeadlessUser from './readHeadlessUser.js';
 const DEFAULT_STEP_TIMEOUT = 5000;
 
 // Runs one discovered journey headless on the app's production build, in this process: its pages
-// on the client engine in Node and its calls in process, on a fresh session of its data set
-// (@lowdefy/journey-headless' build host). Answers in the result shape runJourney gives the
-// reporter. A journey that needs a browser (classifyJourney, or an action the runner reaches
-// that only a browser can carry out) answers `browserOnly` ({ index, step, reason }) and is
-// neither passed nor failed.
-async function runJourneyHeadless({ context, item }) {
+// on the client engine in Node and its calls in process, on a fresh session of its data set on
+// the run's one test app, `app` (@lowdefy/journey-headless' build host). An unknown data set or
+// user refuses this journey alone. Answers in the result shape runJourney gives the reporter. A
+// journey that needs a browser (classifyJourney, or an action the runner reaches that only a
+// browser can carry out) answers `browserOnly` ({ index, step, reason }) and is neither passed
+// nor failed.
+async function runJourneyHeadless({ app, context, item }) {
   const { filePath, journey } = item;
   const refused = checkJourneyItem({ item });
   if (!type.isUndefined(refused)) {
@@ -55,12 +56,7 @@ async function runJourneyHeadless({ context, item }) {
   const user = readHeadlessUser({ user: journey.user });
   let host;
   try {
-    host = await createBuildHost({
-      configDirectory: context.directories.config,
-      data: journey.data,
-      serverDirectory: context.directories.server,
-      user,
-    });
+    host = await createBuildHost({ app, data: journey.data, user });
   } catch (error) {
     // The journey's data set or user could not be opened; every repeat would fail the same way.
     return {
