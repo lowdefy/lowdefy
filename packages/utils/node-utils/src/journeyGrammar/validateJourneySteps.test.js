@@ -100,14 +100,14 @@ test('validateJourneySteps rejects steps that are not an array', () => {
 test('validateJourneySteps names the index and key of an unknown step', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a' }, { hover: 'b' }] });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release.'
   );
 });
 
 test('validateJourneySteps rejects a step with more than one key', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a', fill: { blockId: 'b' } }] });
   expect(result.error).toEqual(
-    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release.'
   );
 });
 
@@ -581,7 +581,7 @@ test('validateJourneySteps ends an expect error with examples of that expect kin
 
 test('validateJourneySteps lists the valid step names for an unknown step', () => {
   expect(validateJourneySteps({ steps: [{ browser_forward: true }] }).error).toBe(
-    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release.'
   );
 });
 
@@ -656,14 +656,14 @@ test('validateJourneySteps accepts expect.status and expect.error after a call o
 
 test('validateJourneySteps rejects an expect.status with no call or request before it', () => {
   expect(validateJourneySteps({ steps: [{ expect: { status: 403 } }] }).error).toBe(
-    'Step 0: Step "expect.status" must follow a "call" or "request" step, whose answer it reads; only expect steps may sit between them. Received it after the start of the journey.'
+    'Step 0: Step "expect.status" must follow a "call", "request" or "release" step, whose answer it reads; only expect steps may sit between them. Received it after the start of the journey.'
   );
   expect(
     validateJourneySteps({
       steps: [{ call: { endpoint: 'e' } }, { click: 'save' }, { expect: { status: 403 } }],
     }).error
   ).toBe(
-    'Step 2: Step "expect.status" must follow a "call" or "request" step, whose answer it reads; only expect steps may sit between them. Received it after a "click" step.'
+    'Step 2: Step "expect.status" must follow a "call", "request" or "release" step, whose answer it reads; only expect steps may sit between them. Received it after a "click" step.'
   );
   expect(
     validateJourneySteps({
@@ -689,6 +689,89 @@ test.each([
     'Step 1: Step "expect.status" requires an HTTP status code, a whole number from 100 to 599, e.g. 403.'
   );
   expect(result.error).toContain(message);
+});
+
+test('validateJourneySteps accepts hold and release, with expect steps reading the release', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim_run' } },
+        { call: { endpoint: 'run-approve', payload: { id: 'BR-1' } } },
+        { call: { endpoint: 'run-approve', payload: { id: 'BR-1' }, as: 'other' } },
+        { expect: { status: 200 } },
+        { release: 'claim_run' },
+        { expect: { status: 200 } },
+        { expect: { error: 'already approved' } },
+        { hold: { requestId: 'claim_run', endpoint: 'run-approve', pageId: 'runs' } },
+        { release: 'claim_run' },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed hold and release steps', () => {
+  function error(step) {
+    return validateJourneySteps({ steps: [step] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ hold: 'claim_run' })).toBe(
+    'Step 0: Step "hold" requires { requestId, endpoint?, pageId? }. Received "claim_run".'
+  );
+  expect(error({ hold: {} })).toBe(
+    'Step 0: Step "hold" requires "requestId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ hold: { requestId: 'r', endpoint: '' } })).toBe(
+    'Step 0: Step "hold" requires "endpoint" to be a non-empty string. Received "".'
+  );
+  expect(error({ hold: { requestId: 'r', pageId: 3 } })).toBe(
+    'Step 0: Step "hold" requires "pageId" to be a non-empty string. Received 3.'
+  );
+  expect(error({ hold: { requestId: 'r', times: 2 } })).toBe(
+    'Step 0: Step "hold" has unknown key "times". Keys are: requestId, endpoint, pageId.'
+  );
+  expect(error({ release: { requestId: 'r' } })).toBe(
+    'Step 0: Step "release" requires the requestId of a "hold" step before it. Received {"requestId":"r"}.'
+  );
+  expect(validateJourneySteps({ steps: [{ hold: [] }] }).error).toMatch(
+    / Example: \{"hold":\{"requestId":"claim_order"\}\}/
+  );
+});
+
+test('validateJourneySteps rejects a release that names no gate a hold before it set', () => {
+  expect(validateJourneySteps({ steps: [{ release: 'claim_run' }] }).error).toBe(
+    'Step 0: Step "release" names request "claim_run", which no "hold" step before it holds. A release lets go of the call a hold parked.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ hold: { requestId: 'other_request' } }, { release: 'claim_run' }],
+    }).error
+  ).toBe(
+    'Step 1: Step "release" names request "claim_run", which no "hold" step before it holds. A release lets go of the call a hold parked.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ release: 'claim_run' }, { hold: { requestId: 'claim_run' } }],
+    }).error
+  ).toContain('Step 0: Step "release" names request "claim_run", which no "hold"');
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim_run' } },
+        { release: 'claim_run' },
+        { release: 'claim_run' },
+      ],
+    }).error
+  ).toBe(
+    'Step 2: Step "release" names request "claim_run", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.'
+  );
+});
+
+test('validateJourneySteps rejects an expect.status after a hold, which answers nothing', () => {
+  expect(
+    validateJourneySteps({ steps: [{ hold: { requestId: 'r' } }, { expect: { status: 200 } }] })
+      .error
+  ).toBe(
+    'Step 1: Step "expect.status" must follow a "call", "request" or "release" step, whose answer it reads; only expect steps may sit between them. Received it after a "hold" step.'
+  );
 });
 
 test('validateJourneySteps accepts expect.calls with payload or response in place of count', () => {

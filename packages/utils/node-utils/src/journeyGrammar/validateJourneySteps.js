@@ -34,6 +34,8 @@ const STEP_KEYS = [
   'expect',
   'call',
   'request',
+  'hold',
+  'release',
 ];
 // The steps a person does to the page. An app error one causes can be
 // asserted by an expect.error step straight after it.
@@ -42,6 +44,9 @@ const INTERACTION_STEP_KEYS = ['click', 'open', 'fill', 'select', 'press', 'back
 // send. Their answer is read by the expect.error and expect.status steps after
 // them.
 const CALL_STEP_KEYS = ['call', 'request'];
+// The steps whose answer the expect.error and expect.status steps after them read: a call or
+// request, and a release, which answers with the call it let go.
+const ANSWER_STEP_KEYS = [...CALL_STEP_KEYS, 'release'];
 const EXPECT_KEYS = [
   'state',
   'visible',
@@ -300,6 +305,37 @@ function validateCall({ key, params }) {
     )}.`;
   }
   return validateCallUser({ key, user: params.as });
+}
+
+// hold: { requestId, endpoint?, pageId? } sets a pause gate on the next routine to reach that
+// request; endpoint and pageId narrow it when two routines share a request id.
+function validateHold(params) {
+  if (!type.isObject(params)) {
+    return `Step "hold" requires { requestId, endpoint?, pageId? }. Received ${describe(params)}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'hold',
+    params,
+    allowed: ['requestId', 'endpoint', 'pageId'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.requestId) || params.requestId === '') {
+    return `Step "hold" requires "requestId" to be a non-empty string. Received ${describe(
+      params.requestId
+    )}.`;
+  }
+  const invalid = ['endpoint', 'pageId'].find(
+    (idKey) =>
+      !type.isUndefined(params[idKey]) && (!type.isString(params[idKey]) || params[idKey] === '')
+  );
+  if (!type.isUndefined(invalid)) {
+    return `Step "hold" requires "${invalid}" to be a non-empty string. Received ${describe(
+      params[invalid]
+    )}.`;
+  }
+  return undefined;
 }
 
 // expect.status reads the HTTP status of the last call or request's answer.
@@ -645,10 +681,26 @@ function findAnsweredCall({ steps, index }) {
   for (let before = index - 1; before >= 0; before -= 1) {
     const key = getStepKey(steps[before]);
     if (key !== 'expect') {
-      return CALL_STEP_KEYS.includes(key) ? key : undefined;
+      return ANSWER_STEP_KEYS.includes(key) ? key : undefined;
     }
   }
   return undefined;
+}
+
+// A release lets go of a call a hold step before it parked, so it names the request of a hold
+// that no release before it has used.
+function validateReleasePlacement({ steps, index }) {
+  const requestId = steps[index].release;
+  const before = steps.slice(0, index);
+  const holds = before.filter((step) => step.hold?.requestId === requestId).length;
+  const releases = before.filter((step) => step.release === requestId).length;
+  if (holds > releases) {
+    return undefined;
+  }
+  if (holds === 0) {
+    return `Step "release" names request "${requestId}", which no "hold" step before it holds. A release lets go of the call a hold parked.`;
+  }
+  return `Step "release" names request "${requestId}", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.`;
 }
 
 function describePrevious(previousKey) {
@@ -661,6 +713,9 @@ function describePrevious(previousKey) {
 // expect.status only reads one.
 function validatePlacement({ steps, index }) {
   const step = steps[index];
+  if (getStepKey(step) === 'release') {
+    return validateReleasePlacement({ steps, index });
+  }
   if (getStepKey(step) !== 'expect') {
     return undefined;
   }
@@ -668,7 +723,7 @@ function validatePlacement({ steps, index }) {
   const previous = steps[index - 1];
   const previousKey = type.isUndefined(previous) ? undefined : getStepKey(previous);
   if (expectKey === 'status' && type.isUndefined(findAnsweredCall({ steps, index }))) {
-    return `Step "expect.status" must follow a "call" or "request" step, whose answer it reads; only expect steps may sit between them. Received it after ${describePrevious(
+    return `Step "expect.status" must follow a "call", "request" or "release" step, whose answer it reads; only expect steps may sit between them. Received it after ${describePrevious(
       previousKey
     )}.`;
   }
@@ -767,6 +822,15 @@ function validateStepParams({ key, params }) {
     case 'call':
     case 'request':
       return validateCall({ key, params });
+    case 'hold':
+      return validateHold(params);
+    case 'release':
+      if (!type.isString(params) || params === '') {
+        return `Step "release" requires the requestId of a "hold" step before it. Received ${describe(
+          params
+        )}.`;
+      }
+      return undefined;
     default:
       return undefined;
   }
@@ -788,5 +852,12 @@ function validateJourneySteps({ steps }) {
   return {};
 }
 
-export { CALL_STEP_KEYS, INTERACTION_STEP_KEYS, STEP_KEYS, TARGET_KEYS, getStepKey };
+export {
+  ANSWER_STEP_KEYS,
+  CALL_STEP_KEYS,
+  INTERACTION_STEP_KEYS,
+  STEP_KEYS,
+  TARGET_KEYS,
+  getStepKey,
+};
 export default validateJourneySteps;

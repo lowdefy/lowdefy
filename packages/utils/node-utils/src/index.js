@@ -102,6 +102,7 @@ import formatSessionReport from './sessionLog/formatSessionReport.js';
 import summariseSessions from './sessionLog/summariseSessions.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
+  ANSWER_STEP_KEYS,
   CALL_STEP_KEYS,
   getStepKey,
   INTERACTION_STEP_KEYS,
@@ -223,6 +224,7 @@ export {
   writeFileAtomic,
   watchOwner,
   writeFileIfChanged,
+  ANSWER_STEP_KEYS,
   CALL_STEP_KEYS,
   getStepKey,
   INTERACTION_STEP_KEYS,

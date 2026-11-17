@@ -100,6 +100,35 @@ test.each(['text', 'containing', 'row', 'column', 'nth'])(
   }
 );
 
+test('classifyJourney calls hold and release headless and marks the first as needing the runner in process', () => {
+  const steps = [
+    { call: { endpoint: 'notify', payload: {} } },
+    { hold: { requestId: 'claim_run' } },
+    { call: { endpoint: 'approve', payload: {} } },
+    { release: 'claim_run' },
+    { expect: { status: 200 } },
+  ];
+  expect(classify(steps)).toEqual({
+    headless: true,
+    inProcess: {
+      index: 1,
+      step: { hold: { requestId: 'claim_run' } },
+      reason:
+        'step "hold" needs the headless runner, which keeps a held call parked in its own process',
+    },
+  });
+});
+
+test('classifyJourney keeps inProcess on a journey that also needs the browser', () => {
+  expect(
+    classify([{ hold: { requestId: 'claim_run' } }, { click: { text: 'Save' } }])
+  ).toMatchObject({
+    headless: false,
+    index: 1,
+    inProcess: { index: 0, step: { hold: { requestId: 'claim_run' } } },
+  });
+});
+
 test('classifyJourney names a visible check by text as needing the browser', () => {
   const step = { expect: { visible: { text: 'Saved' } } };
   expect(classify([step]).reason).toBe(

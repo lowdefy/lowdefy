@@ -28,12 +28,15 @@ const ajv = new Ajv({ allErrors: true, strict: false });
 const validateSchema = ajv.compile(journeyStepSchema);
 
 // After a click, so expect.error and expect.effect are placed where they may be,
-// and expect.status after the call it reads.
+// expect.status after the call it reads, and a release after a hold of its request.
 function validatorAccepts(step) {
-  const before =
-    type.isObject(step?.expect) && Object.hasOwn(step.expect, 'status')
-      ? { call: { endpoint: 'save' } }
-      : { click: 'save' };
+  let before = { click: 'save' };
+  if (type.isObject(step?.expect) && Object.hasOwn(step.expect, 'status')) {
+    before = { call: { endpoint: 'save' } };
+  }
+  if (type.isObject(step) && type.isString(step.release)) {
+    before = { hold: { requestId: step.release } };
+  }
   return type.isUndefined(validateJourneySteps({ steps: [before, step] }).error);
 }
 
@@ -98,6 +101,9 @@ const VALID_STEPS = [
   { call: { endpoint: 'orders-cancel', as: { roles: ['admin'] } } },
   { request: { pageId: 'orders', requestId: 'get_order' } },
   { request: { pageId: 'orders', requestId: 'get_order', payload: {}, as: 'client_b' } },
+  { hold: { requestId: 'claim_run' } },
+  { hold: { requestId: 'claim_run', endpoint: 'run-approve', pageId: 'runs' } },
+  { release: 'claim_run' },
   ...Object.values(JOURNEY_STEP_EXAMPLES).flat(),
 ];
 
@@ -192,6 +198,13 @@ const INVALID_STEPS = [
   { request: { requestId: 'get_order' } },
   { request: { pageId: 'orders' } },
   { request: { pageId: 'orders', requestId: 'r', endpoint: 'e' } },
+  { hold: 'claim_run' },
+  { hold: {} },
+  { hold: { requestId: '' } },
+  { hold: { requestId: 'r', endpoint: 7 } },
+  { hold: { requestId: 'r', times: 2 } },
+  { release: '' },
+  { release: { requestId: 'r' } },
 ];
 
 test.each(VALID_STEPS.map((step) => [step]))(

@@ -29,11 +29,16 @@ const HEADLESS_STEP_KEYS = [
   'expect',
   'fill',
   'goto',
+  'hold',
   'press',
+  'release',
   'request',
   'select',
   'wait',
 ];
+// Steps only the headless runner takes: it keeps a held call parked in its own process while the
+// steps after the hold run, which a browser posting to the server cannot.
+const IN_PROCESS_STEP_KEYS = ['hold', 'release'];
 // Checks a headless run reads from the engine, the calls it recorded or the data session.
 const HEADLESS_EXPECT_KEYS = [
   'calls',
@@ -119,19 +124,38 @@ function needsBrowser({ steps, index }) {
   return undefined;
 }
 
+// The first step only the runner in process can take, as { index, step, reason }, or undefined.
+function findInProcessStep({ journey, steps }) {
+  const index = steps.findIndex((step) => IN_PROCESS_STEP_KEYS.includes(getStepKey(step)));
+  if (index === -1) {
+    return undefined;
+  }
+  return {
+    index,
+    step: journey.steps[index],
+    reason: `step "${getStepKey(
+      steps[index]
+    )}" needs the headless runner, which keeps a held call parked in its own process`,
+  };
+}
+
 // Whether a journey can run headless, read from its steps alone: { headless: true }, or
 // { headless: false, index, step, reason } for the first step that needs a browser. A step
 // may still turn out to need one at run time (an action only a browser can carry out), which the
-// headless runner reports. Runs on a journey whose steps validateJourneySteps accepted.
+// headless runner reports. A journey with a step only the runner in process takes (hold,
+// release) also carries inProcess: { index, step, reason } for the first, which a browser run
+// refuses. Runs on a journey whose steps validateJourneySteps accepted.
 function classifyJourney({ journey }) {
   const steps = normaliseJourneySteps({ steps: journey.steps ?? [] });
+  const inProcess = findInProcessStep({ journey, steps });
+  const needs = type.isUndefined(inProcess) ? {} : { inProcess };
   for (let index = 0; index < steps.length; index += 1) {
     const reason = needsBrowser({ steps, index });
     if (!type.isUndefined(reason)) {
-      return { headless: false, index, step: journey.steps[index], reason };
+      return { headless: false, index, step: journey.steps[index], reason, ...needs };
     }
   }
-  return { headless: true };
+  return { headless: true, ...needs };
 }
 
 export default classifyJourney;

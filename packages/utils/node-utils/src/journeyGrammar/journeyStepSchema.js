@@ -19,7 +19,8 @@ import JOURNEY_STEP_EXAMPLES from './journeyStepExamples.js';
 // The journey step grammar as a JSON schema, for agents to read. The grammar
 // itself is validateJourneySteps; its tests check this schema accepts and
 // refuses the same steps. Rules across steps (expect.error and expect.effect
-// directly follow an interaction, expect.status follows a call or request) and
+// directly follow an interaction, expect.status follows a call, request or
+// release, a release follows a hold of its request) and
 // a fromEmail match being a valid regular expression are checked by the
 // validator only.
 
@@ -331,6 +332,19 @@ const STEPS = {
     required: ['pageId', 'requestId'],
     additionalProperties: false,
   },
+  hold: {
+    type: 'object',
+    description:
+      'Set a pause gate: the next routine to reach request "requestId" (a request step\'s id in an endpoint routine, or a page request\'s id) stops just before it runs, once. "endpoint" or "pageId" narrow it when two routines share the id. The next call or request step that reaches it is parked and passes, and the steps after it run; expect steps after it read nothing from it. Headless only.',
+    properties: { requestId: nonEmptyString, endpoint: nonEmptyString, pageId: nonEmptyString },
+    required: ['requestId'],
+    additionalProperties: false,
+  },
+  release: {
+    ...nonEmptyString,
+    description:
+      'Let the call parked at the gate a "hold" step set on this request id go, wait for it to answer, and make its answer the one the expect steps after it read. A gate no call reached, or a call still parked when the journey ends, fails the journey. Headless only.',
+  },
 };
 
 function stepSchema(key) {
@@ -350,7 +364,7 @@ const journeyStepSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Journey step',
   description:
-    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, column, nth }; fill, select and expect.text need a blockId. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call or request step, and expect.status must; only expect steps may sit between the call and them. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.',
+    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, column, nth }; fill, select and expect.text need a blockId. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request or release step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it. A journey with no pageId runs only call, request, hold, release, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.',
   oneOf: Object.values(JOURNEY_STEP_SCHEMAS),
 };
 

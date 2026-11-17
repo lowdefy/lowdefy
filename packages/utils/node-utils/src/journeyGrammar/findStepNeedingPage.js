@@ -19,11 +19,11 @@ import { type } from '@lowdefy/helpers';
 import normaliseJourneySteps from './normaliseJourneySteps.js';
 import { getStepKey } from './validateJourneySteps.js';
 
-const PAGE_LESS_STEP_KEYS = ['call', 'request', 'as'];
+const PAGE_LESS_STEP_KEYS = ['call', 'request', 'hold', 'release', 'as'];
 const PAGE_LESS_EXPECT_KEYS = ['error', 'status', 'calls', 'db'];
 
-// Whether a step runs with no page open: a direct call, a switch of caller, a
-// fixed wait, or a check of a call's answer, the calls made or the database. A
+// Whether a step runs with no page open: a direct call, a gate on one or its
+// release, a switch of caller, a fixed wait, or a check of a call's answer, the calls made or the database. A
 // request's calls are counted on the current page unless the check names its
 // pageId, so one without a pageId needs a page.
 function runsWithoutPage(step) {

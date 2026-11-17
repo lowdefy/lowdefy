@@ -43,6 +43,11 @@ const JOURNEY_STEP_EXAMPLES = {
   request: [
     { request: { pageId: 'orders', requestId: 'get_order', payload: { order_id: 'ORD-1' } } },
   ],
+  hold: [
+    { hold: { requestId: 'claim_order' } },
+    { hold: { requestId: 'claim_order', endpoint: 'orders-approve' } },
+  ],
+  release: [{ release: 'claim_order' }],
   'expect.state': [{ expect: { state: { path: 'order.status', equals: 'Open' } } }],
   'expect.visible': [{ expect: { visible: 'save_button' } }],
   'expect.hidden': [{ expect: { hidden: 'error_alert' } }],

@@ -22,9 +22,11 @@ test('findStepNeedingPage returns undefined when every step runs without a page'
   expect(
     findStepNeedingPage({
       steps: [
+        { hold: { requestId: 'claim' } },
         { call: { endpoint: 'e' } },
         { expect: { status: 403 } },
         { expect: { error: 'x' } },
+        { release: 'claim' },
         { request: { pageId: 'p', requestId: 'r', as: 'none' } },
         { as: 'other' },
         { wait: 100 },
