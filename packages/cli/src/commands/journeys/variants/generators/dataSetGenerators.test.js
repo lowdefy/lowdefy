@@ -16,7 +16,6 @@
 
 import empty from './empty.js';
 import roleGranted from './roleGranted.js';
-import roleRefused from './roleRefused.js';
 import tenant from './tenant.js';
 import tenantCalls from './tenantCalls.js';
 import volume from './volume.js';
@@ -121,80 +120,10 @@ test('roleGranted reads the page role matrix and lists a role set no user has', 
   expect(generated.skipped).toEqual(['add a user with roles [admin, member] to the data set']);
 });
 
-test('roleGranted and roleRefused are skipped without a data set', () => {
+test('roleGranted is skipped without a data set', () => {
   const plain = { ...journey, data: undefined, user: { roles: ['member'] } };
   expect(roleGranted({ journey: plain, dataSet: null, roleMatrix: null, pageConfigs })).toEqual({
     skipped: 'the journey declares no data: set',
-  });
-  expect(roleRefused({ journey: plain, dataSet: null, pageConfigs })).toEqual({
-    skipped: 'the journey declares no data: set',
-  });
-});
-
-test('roleRefused writes the /404 redirect before the first targeted block is hidden', () => {
-  const pageConfigsMemberOnly = [{ auth: { public: false, roles: ['member'] } }];
-  expect(roleRefused({ journey, dataSet, pageConfigs: pageConfigsMemberOnly })).toEqual([
-    {
-      kind: 'role',
-      detail: 'refused to admin',
-      overrides: { user: 'admin' },
-      steps: [{ expect: { url: { contains: '/404' } } }, { expect: { hidden: 'filter_open' } }],
-    },
-  ]);
-});
-
-test('roleRefused also writes a page-less variant calling the page requests the journey called, refused', () => {
-  const pageConfigsMemberOnly = [{ auth: { public: false, roles: ['member'] } }];
-  const exercised = {
-    pages: ['tickets', 'ticket'],
-    requests: [
-      { pageId: 'tickets', requestId: 'list_tickets', calls: 1, write: false },
-      { pageId: 'tickets', requestId: 'close_ticket', calls: 1, write: true },
-      { pageId: 'ticket', requestId: 'get_ticket', calls: 1, write: false },
-    ],
-    endpoints: [],
-  };
-  const variants = roleRefused({
-    journey,
-    dataSet,
-    exercised,
-    pageConfigs: pageConfigsMemberOnly,
-  });
-  expect(variants[1]).toEqual({
-    kind: 'role',
-    detail: 'requests refused to admin',
-    overrides: { user: 'admin', pageId: undefined, pathParams: undefined, urlQuery: undefined },
-    steps: [
-      { request: { pageId: 'tickets', requestId: 'list_tickets', payload: {} } },
-      { expect: { status: 403 } },
-      { request: { pageId: 'tickets', requestId: 'close_ticket', payload: {} } },
-      { expect: { status: 403 } },
-    ],
-  });
-});
-
-test('roleRefused is skipped when the app keeps an access table snapshot', () => {
-  const pageConfigsMemberOnly = [{ auth: { public: false, roles: ['member'] } }];
-  expect(
-    roleRefused({
-      journey,
-      dataSet,
-      pageConfigs: pageConfigsMemberOnly,
-      accessSnapshotTest: 'tests/endpoints/access.test.mjs',
-    })
-  ).toEqual({
-    skipped:
-      'the app keeps an access table snapshot (tests/endpoints/access.test.mjs calls accessMatrix), which is the check of who reaches this page',
-  });
-});
-
-test('roleRefused is skipped without auth.roles or when every user holds a page role', () => {
-  expect(roleRefused({ journey, dataSet, pageConfigs: [{ auth: { public: false } }] })).toEqual({
-    skipped: 'page "tickets" has no auth.roles',
-  });
-  expect(roleRefused({ journey, dataSet, pageConfigs })).toEqual({
-    skipped:
-      'every data set user holds one of the page roles [member, admin]: add one who holds none',
   });
 });
 
@@ -270,24 +199,6 @@ test('empty and volume are skipped without their flag or when the set lacks the 
   expect(
     empty({ journey: { ...journey, user: { roles: ['member'] } }, dataSet, emptyDataSet })
   ).toEqual({ skipped: "the journey's user is not a data set user name" });
-});
-
-test('roleRefused writes neither form when the app keeps an access table snapshot', () => {
-  const pageConfigsMemberOnly = [
-    { blockId: 'tickets', auth: { public: false, roles: ['member'] } },
-  ];
-  expect(
-    roleRefused({
-      journey,
-      dataSet,
-      pageConfigs: pageConfigsMemberOnly,
-      exercised: { requests: [{ pageId: 'tickets', requestId: 'get_tickets', write: false }] },
-      accessSnapshotTest: 'tests/endpoints/access.test.mjs',
-    })
-  ).toEqual({
-    skipped:
-      'the app keeps an access table snapshot (tests/endpoints/access.test.mjs calls accessMatrix), which is the check of who reaches this page',
-  });
 });
 
 const closeTicket = {
