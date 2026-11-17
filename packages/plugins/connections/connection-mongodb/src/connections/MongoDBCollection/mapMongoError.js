@@ -100,9 +100,15 @@ function mapByCode({ code, collectionName, error, requestType }) {
  * @param {Object} options
  * @param {Object} options.connection - The resolved connection properties.
  * @param {string} options.requestType - The request type name, e.g. 'MongoDBInsertOne'.
+ * @param {AbortSignal} [options.signal] - The request's signal, for a request that passed it to
+ *   the driver.
  * @returns {Error} The mapped error, or the error unchanged when it is not a driver error.
  */
-function mapMongoError(error, { connection, requestType }) {
+function mapMongoError(error, { connection, requestType, signal }) {
+  // Stopped by the request's signal: the signal's reason, which the request layer reads as a
+  // cancellation. The driver raises an abort whose reason is named TimeoutError (the server's
+  // request timeout) as its own MongoOperationTimeoutError, which would read as a fault.
+  if (signal?.aborted === true) return signal.reason;
   // A ConfigError or other Lowdefy error the request threw itself.
   if (error.isLowdefyError === true) return error;
   // Network, DNS, TLS and server-selection failures have their own driver classes and are

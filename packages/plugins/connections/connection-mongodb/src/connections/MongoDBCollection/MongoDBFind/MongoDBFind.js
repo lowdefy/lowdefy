@@ -21,7 +21,7 @@ import { serialize, deserialize } from '../serialize.js';
 import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
-async function MongodbFind({ request, connection, tenant }) {
+async function MongodbFind({ request, connection, signal, tenant }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { query } = deserializedRequest;
@@ -31,10 +31,11 @@ async function MongodbFind({ request, connection, tenant }) {
   const { collection } = await getCollection({ connection });
   let res;
   try {
-    const cursor = await collection.find(query, options);
+    // The request's signal stops the find when nobody waits for it any more.
+    const cursor = await collection.find(query, { ...options, signal });
     res = await cursor.toArray();
   } catch (error) {
-    throw mapMongoError(error, { connection, requestType: 'MongoDBFind' });
+    throw mapMongoError(error, { connection, requestType: 'MongoDBFind', signal });
   }
   return serialize(res);
 }

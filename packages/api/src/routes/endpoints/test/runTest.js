@@ -140,10 +140,11 @@ function createTextContext({ user = { id: 'id', roles: [] } } = {}) {
 
   return context;
 }
-async function runTest({ routine, payload = {}, user }) {
+async function runTest({ routine, payload = {}, signal, user }) {
   inFlight.current = 0;
   inFlight.max = 0;
   const context = createTextContext({ user });
+  context.signal = signal;
   const routineContext = {
     steps: {},
     payload,

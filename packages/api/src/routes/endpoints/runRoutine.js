@@ -17,6 +17,8 @@
 import { isExpectedError, LowdefyInternalError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import createCancellationError from '../../context/createCancellationError.js';
+
 import handleAgentCall from './handleAgentCall.js';
 import handleAuthStep from './handleAuthStep.js';
 import handleDescribeDynamicPolicy from './handleDescribeDynamicPolicy.js';
@@ -33,6 +35,16 @@ import handleValidateSchema from './handleValidateSchema.js';
 const expectedCaughtErrorNames = new Set(['RequestError', 'ServiceError', 'UserError']);
 
 async function runRoutine(context, routineContext, { routine }) {
+  // The request this routine answers closed (the client left, or the request timed out):
+  // no later step or control runs, so a routine stopped mid-way makes no more writes. A
+  // step already running is not undone. Background, detached and scheduled runs have no
+  // signal and run to the end.
+  if (context.signal?.aborted === true) {
+    return {
+      status: 'error',
+      error: createCancellationError({ logger: context.logger, signal: context.signal }),
+    };
+  }
   try {
     if (type.isObject(routine)) {
       if (routine.id?.startsWith?.('request:')) {
