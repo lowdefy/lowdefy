@@ -32,6 +32,7 @@ function listNames(names) {
 // failure. Without a stub a request to an outside service answers null, which breaks a routine
 // that reads the answer. A stub on a connection type that does not say how it runs under a
 // data session lets that request type through, and only that one (createSessionConnections).
+// The stub is kept on the data session; a second stub for the same request type takes its place.
 function stubRequest({ connectionType, fn, requestType, testSession }) {
   checkSessionOpen({ testSession });
   if (typeof fn !== 'function') {
@@ -59,9 +60,16 @@ function stubRequest({ connectionType, fn, requestType, testSession }) {
       )}.`
     );
   }
-  const stubs = testSession.stubs.get(connectionType) ?? new Map();
-  stubs.set(requestType, fn);
-  testSession.stubs.set(connectionType, stubs);
+  const { stubs } = testSession.dataSession.session;
+  const stub = { connectionType, requestType, fn };
+  const index = stubs.findIndex(
+    (entry) => entry.connectionType === connectionType && entry.requestType === requestType
+  );
+  if (index === -1) {
+    stubs.push(stub);
+    return;
+  }
+  stubs[index] = stub;
 }
 
 export default stubRequest;

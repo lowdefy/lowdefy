@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
-// Lets go of every routine a pause gate holds and removes the gates no routine reached, so a
-// test that failed between pauseBefore and release() leaves nothing held for the next one.
-function releasePauseGates({ testSession }) {
-  testSession.held.forEach((release) => release());
-  testSession.held.clear();
-  testSession.gates.forEach((gates) => gates.forEach((gate) => gate.release()));
-  testSession.gates.clear();
+import { ServiceError } from '@lowdefy/errors';
+
+// The error a fail gate throws: a ServiceError carrying the test's message, as a real outage
+// would throw, so the routine's own error handling runs. `forced` marks it as the test's doing,
+// so a host never reports it as an app error.
+function createForcedFailure({ message }) {
+  const error = new ServiceError(message);
+  error.forced = true;
+  return error;
 }
 
-export default releasePauseGates;
+export default createForcedFailure;

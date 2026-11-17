@@ -92,8 +92,16 @@ async function openDataSession({ dataSet, logger, store: runStore }) {
     // readDataSession serves only open and closing sessions.
     state: 'loading',
     work: new Set(),
-    // Requests sunk instead of sent to an outside service (see sinkExternalConnections).
+    // Requests sunk instead of sent to an outside service (see sinkExternalConnections), and
+    // stubbed requests.
     sunk: [],
+    // Stand-in answers for outside requests, in order: the first that matches a request answers
+    // it (createStubResolver).
+    stubs: [],
+    // Requests that throw a forced failure before they run (addFailGate).
+    failGates: [],
+    // Requests a routine is held at until the test releases it (addPauseGate).
+    pauseGates: [],
   };
   dataSessionRegistry.set(id, session);
   try {

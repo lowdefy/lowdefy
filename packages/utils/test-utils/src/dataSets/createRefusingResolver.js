@@ -14,17 +14,17 @@
   limitations under the License.
 */
 
-import { createDataSetRefusal } from './dataSets/index.js';
+import createDataSetRefusal from './createDataSetRefusal.js';
 
 // The resolver of a request type with no stub, on a connection type that does not say how it
 // runs under a data session. Stubbing one request type of such a type lets its connection
 // through the gate, so every other request type of it refuses here, with the refusal the gate
 // gives a connection it does not let through.
-function createRefusingResolver({ connectionType, requestType, testSession }) {
+function createRefusingResolver({ connectionType, requestType, session }) {
   return async function refusingResolver(args) {
     throw createDataSetRefusal({
       artifact: { connectionId: args.connectionId, type: connectionType },
-      session: testSession.dataSession.session,
+      session,
       reason: `its type does not say how to redirect it, and request type "${requestType}" has no stub`,
     });
   };

@@ -19,8 +19,11 @@ import crypto from 'node:crypto';
 import { type } from '@lowdefy/helpers';
 
 import createFaultSink from './createFaultSink.js';
-import createSessionConnections from './createSessionConnections.js';
-import { applyDataSetRedirect, trackSessionWork } from './dataSets/index.js';
+import {
+  applyDataSetRedirect,
+  createSessionConnections,
+  trackSessionWork,
+} from './dataSets/index.js';
 
 // The API context of one call under a session, with the fields the production server's request
 // middleware sets (packages/servers/server/src/middleware/apiContext.js): mode prod, and the
@@ -29,7 +32,7 @@ import { applyDataSetRedirect, trackSessionWork } from './dataSets/index.js';
 // - The caller is injected, as a journey's user is. No auth engine runs, so auth steps fail,
 //   and createInjectedApiContext takes the organization policy and the gate's enforcement
 //   facts from the built auth.json, which keeps the tenant wall up.
-// - Connections go through the data session's gate and sink, as under a journey.
+// - Connections go through the data session's gate, sink, stubs and gates, as under a journey.
 // - agents is empty, the secrets are the test secrets, and there is no origin, so a detached
 //   CallApi has nowhere to send its loopback request even if CRON_SECRET were set.
 // - waitUntil tracks background work on the session, so session.settled() can wait for it.
@@ -66,7 +69,11 @@ function createCallContext({ faults, req, testSession, user }) {
   };
   context.handleError = createFaultSink({ context, faults, testApp });
   createInjectedApiContext(context, { authJson: testApp.authJson });
-  const { gate, resolvers } = createSessionConnections({ context, testSession });
+  const { gate, resolvers } = createSessionConnections({
+    connections: runtime.connections,
+    context,
+    session,
+  });
   applyDataSetRedirect({ context, session, connections: gate });
   context.connections = resolvers;
   context.dataSet = session.name;

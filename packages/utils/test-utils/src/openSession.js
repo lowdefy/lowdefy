@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import callSystemEndpoint from './callSystemEndpoint.js';
 import createSessionCaller from './createSessionCaller.js';
+import failRequest from './failRequest.js';
 import getSessionCollection from './getSessionCollection.js';
 import getSessionStore from './getSessionStore.js';
 import loadSessionRuntime from './loadSessionRuntime.js';
@@ -68,15 +69,9 @@ async function openSession({ data, testApp }) {
     connectionArtifacts,
     dataSession,
     dataSet,
-    // Pause gates no routine has reached yet, by step id (pauseBefore).
-    gates: new Map(),
-    // The release of each gate a routine is held at.
-    held: new Set(),
     named,
     runtime,
     store,
-    // Stubbed request types: connection type -> request type -> function (stubRequest).
-    stubs: new Map(),
     testApp,
   };
   testApp.sessions.add(testSession);
@@ -84,6 +79,7 @@ async function openSession({ data, testApp }) {
   const session = {
     as: (user) => createSessionCaller({ testSession, user }),
     collection: (connectionId) => getSessionCollection({ connectionId, testSession }),
+    fail: (gate) => failRequest({ gate, testSession }),
     pauseBefore: (stepId) => pauseBefore({ stepId, testSession }),
     reset: () => resetSession({ testSession }),
     seed: (connectionId, docs) => seedSession({ connectionId, docs, testSession }),

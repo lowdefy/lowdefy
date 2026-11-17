@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import releasePauseGates from './releasePauseGates.js';
+import { releasePauseGates } from './dataSets/index.js';
 
 // Ends a session when its app closes: held routines are released, background work is waited
 // for, and the session's databases are dropped (the data session's own close()).
 async function closeSession({ testSession }) {
   if (testSession.closed) return;
   testSession.closed = true;
-  releasePauseGates({ testSession });
+  releasePauseGates({ session: testSession.dataSession.session });
   await testSession.dataSession.close();
 }
 

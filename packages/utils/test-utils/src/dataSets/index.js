@@ -14,27 +14,37 @@
   limitations under the License.
 */
 
+import addFailGate from './addFailGate.js';
+import addPauseGate from './addPauseGate.js';
 import applyDataSetRedirect from './applyDataSetRedirect.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
+import createSessionConnections from './createSessionConnections.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
 import getRunDataStore from './getRunDataStore.js';
+import listUnfiredFailGates from './listUnfiredFailGates.js';
 import openDataSession from './openDataSession.js';
 import readDataSet from './readDataSet.js';
+import releasePauseGates from './releasePauseGates.js';
 import sinkExternalConnections from './sinkExternalConnections.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
 import trackSessionWork from './trackSessionWork.js';
 
 export {
+  addFailGate,
+  addPauseGate,
   applyDataSetRedirect,
   createDataSetRefusal,
+  createSessionConnections,
   dataSessionRegistry,
   findSessionDocuments,
   getDataStore,
   getRunDataStore,
+  listUnfiredFailGates,
   openDataSession,
   readDataSet,
+  releasePauseGates,
   sinkExternalConnections,
   sweepOrphanDatabases,
   trackSessionWork,
