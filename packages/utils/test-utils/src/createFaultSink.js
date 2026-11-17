@@ -20,10 +20,11 @@ import { type } from '@lowdefy/helpers';
 // logged at error level and sent to error tracking; here each one is added to the call's
 // `faults`, with its config location resolved from the build as the server's log line has it
 // (error.source, "<file>:<line>"). An expected outcome, such as a refusal or a UserError,
-// never gets here, as on a server.
+// never gets here, as on a server. A fault a :catch of the routine handled is listed too, as
+// the server logs it too, marked `caught: true` (runRoutine says so when it reports it).
 function createFaultSink({ context, faults, testApp }) {
   const { LowdefyInternalError, loadAndResolveErrorLocation } = testApp.modules.errors;
-  return async function handleError(error) {
+  return async function handleError(error, { caught } = {}) {
     // Set first, as the servers do: reaching the sink is what makes the error handled.
     error.handled = true;
     if (!(error instanceof LowdefyInternalError)) {
@@ -35,6 +36,9 @@ function createFaultSink({ context, faults, testApp }) {
         error.source = location.source;
         error.config = location.config;
       }
+    }
+    if (caught === true) {
+      error.caught = true;
     }
     faults.push(error);
   };

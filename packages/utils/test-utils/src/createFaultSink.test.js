@@ -44,6 +44,18 @@ test('createFaultSink lists the fault, marks it handled and gives it the config 
   expect(fault.config).toEqual('root.api[0:approve:Api].routine[0:load:MongoDBFindOne]');
 });
 
+test('createFaultSink marks a fault a :catch of the routine handled as caught, and lists it', async () => {
+  const faults = [];
+  const handleError = createFaultSink({ context: createContext(), faults, testApp });
+  const caught = new errors.ConfigError('Auth step "invite" requires the auth engine.');
+  const escaped = new errors.ConfigError('Connection "ledger" does not exist.');
+  await handleError(caught, { caught: true });
+  await handleError(escaped, { caught: false });
+  expect(faults).toEqual([caught, escaped]);
+  expect(caught.caught).toBe(true);
+  expect(escaped.caught).toBeUndefined();
+});
+
 test('createFaultSink lists a fault with no config key without a location', async () => {
   const faults = [];
   const handleError = createFaultSink({ context: createContext(), faults, testApp });

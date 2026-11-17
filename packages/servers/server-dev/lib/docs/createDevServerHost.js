@@ -168,13 +168,17 @@ async function createDevServerHost({
       user: toCaller(callUser),
     });
     // The faults the call logs at error level, as answerCall's faults: what a browser journey's
-    // server error entries hold for the run's invariants.
+    // server error entries hold for the run's invariants. One a :catch of the routine handled
+    // is marked `caught: true`, as createFaultSink in @lowdefy/test-utils marks it.
     const handleError = context.handleError;
-    context.handleError = async (error) => {
+    context.handleError = async (error, options) => {
       if (!isExpectedError(error)) {
+        if (options?.caught === true) {
+          error.caught = true;
+        }
         faults.push(error);
       }
-      return handleError(error);
+      return handleError(error, options);
     };
     return { context, faults };
   }

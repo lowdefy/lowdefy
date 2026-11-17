@@ -465,13 +465,15 @@ lowdefy build
 lowdefy test --headless --build
 ```
 
-`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run, and the app's real secrets are never read. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route. The results are written to `.lowdefy/test/headless-run.json`.
+`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run, and the app's real secrets are never read. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route, and neither can an auth step, since no auth engine runs: each fails as a config error. A routine that handles the failure in the `:catch` of its `:try` still passes, see below. The results are written to `.lowdefy/test/headless-run.json`.
 
 ### While you edit
 
 ```
 lowdefy test --headless
 ```
+
+A headless run does not count a server error that the routine's own `:catch` handled: the routine dealt with it and answered, so the journey is judged by the answer and by what was written. An error that no `:catch` handles fails the journey at its step, as in a browser run.
 
 Without `--build`, a headless run uses the development server, as a plain `lowdefy test` does: it starts one, or uses the one `--url` names. Pages are built on demand, so a config edit needs no rebuild, and every journey runs on its own [data set](/journey-data-sets) session. A headless run starts no browser and takes no journey run slot, so it does not wait behind browser runs on the machine. What it exercised counts in `.lowdefy/test/exercised.json` for lint and `journeys harden`; it records no traces for session logs. The results are written to `.lowdefy/test/headless-run.json`.
 

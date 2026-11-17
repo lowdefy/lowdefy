@@ -23,11 +23,14 @@ import { afterAll, beforeAll, expect, test } from 'vitest';
 import createBuildHost from '../../src/createBuildHost.js';
 import runHeadlessJourney from '../../src/runHeadlessJourney.js';
 import journeyFixture from './journeyFixture.mjs';
+import writeCaughtFaultEndpoints from './writeCaughtFaultEndpoints.mjs';
 
 // call, request, expect.status, expect.db and expect.calls payloads, headless, over a copy of the
 // journey-fixture build in which log_activity (which writes) is gated to the auditor role, as
 // @lowdefy/test-utils' session suites gate it. The fixture app has no gated endpoint that
-// writes, and its journey suites count its endpoints, so the app is left as it is.
+// writes, and its journey suites count its endpoints, so the app is left as it is. The copy also
+// holds routines that catch, or do not catch, what the build host cannot run
+// (writeCaughtFaultEndpoints).
 
 let directory;
 let host;
@@ -58,6 +61,7 @@ function copyBuildWithGatedWrite() {
   const logActivity = JSON.parse(fs.readFileSync(logActivityPath, 'utf8'));
   logActivity.auth = { public: false, roles: ['auditor'] };
   fs.writeFileSync(logActivityPath, JSON.stringify(logActivity));
+  writeCaughtFaultEndpoints({ serverDirectory });
   // Written after the config, so the copied build is as fresh as the original.
   const later = new Date(Date.now() + 1000);
   fs.utimesSync(path.join(serverDirectory, 'build', 'refMap.json'), later, later);
@@ -212,4 +216,64 @@ test('a request step calls a page request directly with the payload given', asyn
   });
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
+});
+
+const detachedMessage =
+  'CallApi with "detached: true" requires the CRON_SECRET environment variable — the /api/detached route fails closed without it.';
+const authEngineMessage =
+  'Auth step "add_member" requires the auth engine - auth is not configured (or dev.mockUser is active).';
+
+test.each([
+  ['a detached CallApi', 'caught_detached'],
+  ['an auth step', 'caught_auth'],
+])(
+  'a routine that catches %s the build host cannot run passes, judged by its answer',
+  async (_, endpoint) => {
+    const result = await runHeadlessJourney({
+      host,
+      journey: {
+        steps: [
+          { call: { endpoint } },
+          { expect: { status: 200 } },
+          { expect: { calls: { endpoint, count: 1, response: { ok: true } } } },
+        ],
+      },
+      stepTimeout: 2000,
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+  }
+);
+
+test.each([
+  ['a detached CallApi', 'notify', detachedMessage],
+  ['an auth step', 'uncaught_auth', authEngineMessage],
+])(
+  '%s no :catch handles fails the journey at its step, as a server error',
+  async (_, endpoint, message) => {
+    const result = await runHeadlessJourney({
+      host,
+      journey: {
+        steps: [
+          { call: { endpoint, as: 'auditor' } },
+          { expect: { calls: { endpoint, count: 1 } } },
+        ],
+      },
+      stepTimeout: 2000,
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure).toMatchObject({ index: 0, kind: 'app-error' });
+    expect(result.failure.errors).toEqual([
+      expect.objectContaining({ kind: 'server-error', message }),
+    ]);
+  }
+);
+
+test("a caught fault is still listed on the call's answer, marked caught", async () => {
+  const answer = await host.call({ endpointId: 'caught_detached', kind: 'endpoint', payload: {} });
+  expect(answer.status).toEqual(200);
+  expect(answer.response).toEqual({ ok: true });
+  expect(answer.faults.map(({ caught, message }) => ({ caught, message }))).toEqual([
+    { caught: true, message: detachedMessage },
+  ]);
 });
