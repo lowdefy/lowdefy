@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/test-utils",
-  "version": "7.2.0",
+  "version": "7.4.0",
   "license": "Apache-2.0",
   "description": "Lowdefy test utilities: run a built app's access gate, endpoints and requests in a Node test",
   "homepage": "https://lowdefy.com",
@@ -40,16 +40,16 @@
     "test:mongodb": "vitest run --config vitest.mongodb.config.js"
   },
   "dependencies": {
-    "@lowdefy/errors": "7.2.0",
-    "@lowdefy/helpers": "7.2.0",
-    "@lowdefy/node-utils": "7.2.0",
+    "@lowdefy/errors": "7.4.0",
+    "@lowdefy/helpers": "7.4.0",
+    "@lowdefy/node-utils": "7.4.0",
     "mongodb": "7.8.0",
     "mongodb-memory-server-core": "11.3.0"
   },
   "devDependencies": {
-    "@lowdefy/api": "7.2.0",
-    "@lowdefy/operators-js": "7.2.0",
-    "@lowdefy/server": "7.2.0",
+    "@lowdefy/api": "7.4.0",
+    "@lowdefy/operators-js": "7.4.0",
+    "@lowdefy/server": "7.4.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",
     "vitest": "5.1.0"

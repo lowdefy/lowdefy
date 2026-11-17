@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-diff",
-  "version": "7.2.0",
+  "version": "7.4.0",
   "license": "Apache-2.0",
   "description": "Lowdefy diff blocks — list, side-by-side, timeline, and git-diff views for before/after object comparisons.",
   "homepage": "https://lowdefy.com",
@@ -49,8 +49,8 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "7.2.0",
-    "@lowdefy/helpers": "7.2.0",
+    "@lowdefy/block-utils": "7.4.0",
+    "@lowdefy/helpers": "7.4.0",
     "dayjs": "1.11.23",
     "diff": "9.0.0",
     "microdiff": "1.6.0",
@@ -63,8 +63,8 @@
     "react-dom": "^19"
   },
   "devDependencies": {
-    "@lowdefy/block-dev-e2e": "7.2.0",
-    "@lowdefy/e2e-utils": "7.2.0",
+    "@lowdefy/block-dev-e2e": "7.4.0",
+    "@lowdefy/e2e-utils": "7.4.0",
     "@playwright/test": "1.65.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",

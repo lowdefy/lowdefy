@@ -126,7 +126,7 @@ function createWebSocketConnection(context, { closeSocket, headers, registry, se
           // The socket is closing; the client resubscribes on its next one.
           return;
         }
-        await registry.subscribe(context, { websocketId, payload, subscriber });
+        await registry.subscribe(context, { websocketId, payload, requestId, subscriber });
         send(JSON.stringify({ type: 'subscribed', websocketId, requestId }));
         return;
       case 'unsubscribe':

@@ -1,5 +1,51 @@
 # @lowdefy/docs-content
 
+## 7.4.0
+
+### Patch Changes
+
+- 3c88693: feat(ai-utils): Agent titles come from the first exchange and use the agent's gateway options
+
+  An agent with `generateTitle: true` made its title call without the agent's `providerOptions`. An agent set to zero data retention and pinned to one provider through the AI Gateway still sent the user's first message to the gateway on default routing and retention for the title. The title call now carries the agent's `providerOptions`, so AI Gateway routing and retention (zero data retention, `only`, `order`), OpenAI's `store` and Gemini's `safetySettings` apply to it. Thinking and reasoning settings are taken off and the call asks for no reasoning (`reasoning: 'none'`), with a 1,024-token cap for models that can't turn reasoning off. The title call also takes the agent's `timeout`, keeping its total and step limits, since a non-streaming call can't use a chunk limit.
+
+  The title is also generated from the first exchange, the user's first message and the first 1,200 characters of the assistant's first reply, instead of the first message alone. When a chat offers suggested prompts, many conversations open with the same question and all got the same title; the reply is where the subject is. The title is generated once the first reply is complete, alongside any `onFinish` hooks and before the response stream closes, so the `data-chat-title` part, and the AgentChat block's `onTitleGenerated` event, now arrive after the reply instead of alongside it. A first reply that waits on a tool approval or a client tool is titled when it completes, and a failed turn is no longer titled; its retry is.
+
+  - @lowdefy/nunjucks@7.4.0
+
+## 7.3.0
+
+### Patch Changes
+
+- ad4f4dd: fix(api,plugin-better-auth): The login's contact link is set only by accepting an invitation
+
+  `_user.contact_id` is compared in apps' author and access checks, so it is now treated as an authorization input. Accepting an invitation sets `contactId` only on a login that has none. An invitation naming a different contact than the login already holds is refused with `CONTACT_LINK_MISMATCH`, before any membership is written, and the invitation stays pending. The message carries no ids; the server logs the login, the invitation and both contact ids as an `invitation_contact_link_mismatch` warning.
+
+  **Breaking:** `UpdateUserProfile` no longer accepts `contactId`; a call that passes it fails with an unknown-property error. No auth step changes the link after the invitation sets it, and a wrong link is corrected in the data. An app that linked a login to a contact from a hook after the user was created, such as an `email.verified` match for email/password signups, can no longer do so: set the link in `user.create.before` or through an invitation. Saves of `name`, `image` and `profile` are unchanged, and self-service saves stay exempt from the org authority check.
+
+  `InviteMember` refuses an empty-string `contactId`, which accepting would otherwise set as the login's link for good.
+
+  An existing member who accepts an invitation that sets their link gets a session cookie carrying it, when the session cookie cache is on.
+
+- 023cb67: feat: A websocket can name a `check` endpoint that decides, on every subscribe and publish, whether the caller may use the channel. Use it for a channel whose payload names a record, such as the events on one ticket, where roles alone can not say whether this subscriber may see that record.
+
+  ```yaml
+  websockets:
+    - id: ticket_events
+      type: MongoDBChangeStream
+      connectionId: events
+      check:
+        endpointId: can-view-ticket # Api or InternalApi
+        payload: # optional; defaults to the subscription payload
+          ticket_id:
+            _payload: ticket_id
+  ```
+
+  The endpoint runs as the subscriber, after the `auth.websockets` role check. Only a return value of exactly `true` lets the subscription continue; any other value, an error or an endpoint the subscriber may not call refuses it with the same response as a websocket that does not exist, and an error is also logged. The check runs on the first subscribe, the resubscribe after a reconnect and a `Subscribe` with a new payload, and again once a minute while a subscription stays open, so revoking access ends a running subscription within a minute. A publish is checked too, with an empty payload, so a caller the check refuses can not publish into the channel. The check is not part of the channel identity, so subscribers who each pass still share one running source. The build fails when `check.endpointId` names no endpoint in the app.
+
+  fix: The server now deserializes a subscribe payload, as it already did a publish payload, so a Date the page sends reaches websocket `properties` and the check endpoint as a Date.
+
+  - @lowdefy/nunjucks@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

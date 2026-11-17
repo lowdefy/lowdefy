@@ -78,8 +78,9 @@ function createHarness({ changes, failWith, streams } = {}) {
   // resolver destructures collection off it.
   mockGetCollection.mockResolvedValue({ collection });
   const publish = vi.fn();
+  const ready = vi.fn();
   const abortController = new AbortController();
-  return { abortController, collection, publish, stream: queue[0] };
+  return { abortController, collection, publish, ready, stream: queue[0] };
 }
 
 beforeEach(() => {
@@ -93,7 +94,7 @@ afterEach(() => {
 test('MongoDBChangeStream publishes serialized change events', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
   const createdAt = new Date('2026-01-15T00:00:00.000Z');
-  const { abortController, collection, publish } = createHarness({
+  const { abortController, collection, publish, ready } = createHarness({
     changes: [
       { operationType: 'insert', fullDocument: { name: 'one', createdAt } },
       { operationType: 'update', fullDocument: { name: 'two' } },
@@ -105,6 +106,7 @@ test('MongoDBChangeStream publishes serialized change events', async () => {
     connection: { databaseUri: 'mongodb://test' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   });
   await run;
@@ -115,7 +117,7 @@ test('MongoDBChangeStream publishes serialized change events', async () => {
 test('MongoDBChangeStream publishes events until aborted', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
   const createdAt = new Date('2026-01-15T00:00:00.000Z');
-  const { abortController, collection, publish, stream } = createHarness({
+  const { abortController, collection, publish, ready, stream } = createHarness({
     changes: [
       { operationType: 'insert', fullDocument: { name: 'one', createdAt } },
       { operationType: 'update', fullDocument: { name: 'two' } },
@@ -125,6 +127,7 @@ test('MongoDBChangeStream publishes events until aborted', async () => {
     connection: { databaseUri: 'mongodb://test' },
     properties: { pipeline: [{ $match: { operationType: 'insert' } }] },
     publish,
+    ready,
     signal: abortController.signal,
   });
   // Give the async iterator a tick to consume the queued changes.
@@ -146,11 +149,12 @@ test('MongoDBChangeStream publishes events until aborted', async () => {
 
 test('MongoDBChangeStream passes fullDocument option through', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
-  const { abortController, collection, publish } = createHarness({ changes: [] });
+  const { abortController, collection, publish, ready } = createHarness({ changes: [] });
   const run = MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test' },
     properties: { fullDocument: 'whenAvailable' },
     publish,
+    ready,
     signal: abortController.signal,
   });
   await new Promise((resolve) => setTimeout(resolve, 10));
@@ -161,7 +165,7 @@ test('MongoDBChangeStream passes fullDocument option through', async () => {
 
 test('MongoDBChangeStream rethrows stream errors when not aborted', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
-  const { abortController, publish, stream } = createHarness({
+  const { abortController, publish, ready, stream } = createHarness({
     changes: [],
     failWith: new Error('stream broke'),
   });
@@ -170,6 +174,7 @@ test('MongoDBChangeStream rethrows stream errors when not aborted', async () => 
       connection: { databaseUri: 'mongodb://test' },
       properties: {},
       publish,
+      ready,
       signal: abortController.signal,
     })
   ).rejects.toThrow('stream broke');
@@ -193,11 +198,14 @@ test('MongoDBChangeStream resumes after the last change on a replica set electio
       { _id: { _data: 'token-2' }, operationType: 'insert', fullDocument: { name: 'two' } },
     ],
   });
-  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const { abortController, collection, publish, ready } = createHarness({
+    streams: [first, second],
+  });
   const run = MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test' },
     properties: { pipeline: [{ $match: { operationType: 'insert' } }] },
     publish,
+    ready,
     signal: abortController.signal,
   });
   // The first retry waits 0.5 s.
@@ -223,11 +231,14 @@ test('MongoDBChangeStream reopens fresh when the stream was never answered', asy
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
   const first = createFakeStream({ failWith: new MongoNetworkError('connection reset') });
   const second = createFakeStream();
-  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const { abortController, collection, publish, ready } = createHarness({
+    streams: [first, second],
+  });
   const run = MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   });
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -245,11 +256,14 @@ test('MongoDBChangeStream resumes after the post-batch token when no change was 
     onIterate: (stream) => stream.emit('resumeTokenChanged', { _data: 'post-batch-1' }),
   });
   const second = createFakeStream();
-  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const { abortController, collection, publish, ready } = createHarness({
+    streams: [first, second],
+  });
   const run = MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   });
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -261,6 +275,8 @@ test('MongoDBChangeStream resumes after the post-batch token when no change was 
     { fullDocument: 'updateLookup', resumeAfter: { _data: 'post-batch-1' } },
   ]);
   expect(publish).not.toHaveBeenCalled();
+  // The server's answer to the aggregate means the stream is listening.
+  expect(ready).toHaveBeenCalled();
 });
 
 test('MongoDBChangeStream resumes on an error labelled ResumableChangeStreamError', async () => {
@@ -269,11 +285,14 @@ test('MongoDBChangeStream resumes on an error labelled ResumableChangeStreamErro
   labelled.addErrorLabel('ResumableChangeStreamError');
   const first = createFakeStream({ failWith: labelled });
   const second = createFakeStream();
-  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const { abortController, collection, publish, ready } = createHarness({
+    streams: [first, second],
+  });
   const run = MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   });
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -286,11 +305,14 @@ test('MongoDBChangeStream resumes when the primary shuts down in a rolling resta
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
   const first = createFakeStream({ failWith: serverError(11600) });
   const second = createFakeStream();
-  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const { abortController, collection, publish, ready } = createHarness({
+    streams: [first, second],
+  });
   const run = MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   });
   await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -306,11 +328,14 @@ test('MongoDBChangeStream throws when a resume finds the history lost', async ()
     failWith: serverError(11602),
   });
   const second = createFakeStream({ failWith: serverError(286) });
-  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const { abortController, collection, publish, ready } = createHarness({
+    streams: [first, second],
+  });
   const error = await MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test', collection: 'items' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   }).catch((e) => e);
   expect(collection.watch).toHaveBeenCalledTimes(2);
@@ -320,15 +345,20 @@ test('MongoDBChangeStream throws when a resume finds the history lost', async ()
 
 test('MongoDBChangeStream does not resume a non-resumable server error', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
-  const { abortController, collection, publish } = createHarness({ failWith: serverError(13) });
+  const { abortController, collection, publish, ready } = createHarness({
+    failWith: serverError(13),
+  });
   const error = await MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test', collection: 'items' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   }).catch((e) => e);
   expect(collection.watch).toHaveBeenCalledTimes(1);
   expect(error.code).toEqual(13);
+  // The server never answered the stream, so it never listened.
+  expect(ready).not.toHaveBeenCalled();
 });
 
 test('MongoDBChangeStream gives up when the stream keeps failing for 30 s', async () => {
@@ -340,11 +370,14 @@ test('MongoDBChangeStream gives up when the stream keeps failing for 30 s', asyn
     failWith: serverError(11602),
     onIterate: () => vi.setSystemTime(31000),
   });
-  const { abortController, collection, publish } = createHarness({ streams: [first, second] });
+  const { abortController, collection, publish, ready } = createHarness({
+    streams: [first, second],
+  });
   const error = await MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test', collection: 'items' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   }).catch((e) => e);
   vi.useRealTimers();
@@ -367,13 +400,14 @@ test('MongoDBChangeStream restarts the retry window once a reopened stream is an
     },
   });
   const third = createFakeStream();
-  const { abortController, collection, publish } = createHarness({
+  const { abortController, collection, publish, ready } = createHarness({
     streams: [first, second, third],
   });
   const run = MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   });
   // Retries wait 0.5 s, then 1 s: a short run does not reset the wait.
@@ -405,13 +439,14 @@ test('MongoDBChangeStream resets the wait after a stream that ran healthy fails'
     },
   });
   const third = createFakeStream();
-  const { abortController, collection, publish } = createHarness({
+  const { abortController, collection, publish, ready } = createHarness({
     streams: [first, second, third],
   });
   const run = MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   });
   // Retries wait 0.5 s, then (with the wait reset) 0.5 s again.
@@ -424,13 +459,14 @@ test('MongoDBChangeStream resets the wait after a stream that ran healthy fails'
 
 test('MongoDBChangeStream stops waiting to retry when aborted', async () => {
   const { default: MongoDBChangeStream } = await import('./MongoDBChangeStream.js');
-  const { abortController, collection, publish } = createHarness({
+  const { abortController, collection, publish, ready } = createHarness({
     failWith: serverError(11602),
   });
   const run = MongoDBChangeStream({
     connection: { databaseUri: 'mongodb://test' },
     properties: {},
     publish,
+    ready,
     signal: abortController.signal,
   });
   await new Promise((resolve) => setTimeout(resolve, 50));

@@ -17,6 +17,7 @@
 import { createTraceId, type } from '@lowdefy/helpers';
 import { relativePosixPath } from '@lowdefy/node-utils';
 
+import compactTestResults from './compactTestResults.js';
 import getDirectories from '../../utils/getDirectories.js';
 import formatBrowserOnly from '../test/formatBrowserOnly.js';
 import formatNoTestsMatched from '../test/formatNoTestsMatched.js';
@@ -31,6 +32,7 @@ import selectTests from '../test/selectTests.js';
 import selectTier from '../test/selectTier.js';
 import summariseResults from '../test/summariseResults.js';
 import writeExercised from '../test/writeExercised.js';
+import writeTestResults from '../test/writeTestResults.js';
 import writeTestRun from '../test/writeTestRun.js';
 import fetchBuildId from '../test/fetchBuildId.js';
 import headlessDevSuite from '../test/headlessDevSuite.js';
@@ -42,11 +44,17 @@ import writeHeadlessRun from '../test/writeHeadlessRun.js';
 // that selection over `usageWindow`) against its running dev server - the
 // same selection, replay and runner as `lowdefy test` - and returns the
 // results as data: a failing journey is an answer, not a tool error, and a
-// skipped `deprecated: true` journey is a result marked skipped. Always the
+// skipped `deprecated: true` journey is a line under skipped. Always the
 // default directory: journeys an app keeps elsewhere (--journeys-directory)
 // may need a server set up for them, which the running dev server is not.
 // `headless` runs the journeys with no browser on the dev server: one that
-// needs a browser is a result marked browserOnly, neither passed nor failed.
+// needs a browser is a line under browserOnly, neither passed nor failed.
+//
+// The answer is cut to what an agent can read (compactTestResults); every
+// journey's result is in the file `resultFile` names. A journey's measured
+// path (`exercised`) is in neither: it runs to thousands of entries a journey,
+// and writeExercised keeps it in .lowdefy/test/exercised.json for the tools
+// that read it. `onProgress` is called as each journey finishes.
 async function runAppTests({
   configDirectory,
   url,
@@ -57,23 +65,24 @@ async function runAppTests({
   tier: tierValue,
   usageWindow: usageWindowValue,
   headless = false,
+  onProgress,
 }) {
   const context = { directories: getDirectories({ configDirectory, options: {} }) };
   const { repeat, error: repeatError } = parseRepeat(repeatValue);
   if (repeatError) {
-    return { summary: repeatError, results: [] };
+    return { summary: repeatError };
   }
   const tier = parseTier(tierValue);
   const usageWindow = `${parseUsageWindow(usageWindowValue)}m`;
   const selection = parseTestSelection({ filter, tags });
   if (selection.error) {
-    return { summary: selection.error, results: [] };
+    return { summary: selection.error };
   }
   let files;
   if (Array.isArray(paths) && paths.length > 0) {
     const resolved = resolveJourneyPaths({ paths, base: configDirectory, configDirectory });
     if (resolved.error) {
-      return { summary: resolved.error, results: [] };
+      return { summary: resolved.error };
     }
     files = resolved.files;
   }
@@ -90,10 +99,7 @@ async function runAppTests({
       tags: selection.tags,
       flagPrefix: '',
     });
-    return {
-      summary: noMatch ?? 'No tests found. Add journeys to tests/journeys/.',
-      results: [],
-    };
+    return { summary: noMatch ?? 'No tests found. Add journeys to tests/journeys/.' };
   }
   const tiered = await selectTier({
     context,
@@ -103,7 +109,7 @@ async function runAppTests({
     fullTierOption: 'tier "full"',
   });
   if (!type.isUndefined(tiered.refused)) {
-    return { summary: tiered.refused, results: [] };
+    return { summary: tiered.refused };
   }
   // One run id per tool call; only a full-suite run records (see runRepeated).
   // A headless run records no traces.
@@ -124,11 +130,19 @@ async function runAppTests({
       ...(await runRepeated({ suite: runSuite, context, item, url, repeat, recording })),
       usage,
     };
-    if (!type.isUndefined(result.browserOnly)) {
+    if (type.isUndefined(result.browserOnly)) {
+      runs.push({ suite: runSuite, result });
+    } else {
       browserOnly.push(result);
-      continue;
     }
-    runs.push({ suite: runSuite, result });
+    if (!type.isNone(onProgress)) {
+      await onProgress({
+        done: runs.length + browserOnly.length,
+        total: tiered.selected.length,
+        name: result.name,
+        class: type.isUndefined(result.browserOnly) ? result.class : 'BROWSER-ONLY',
+      });
+    }
   }
   const results = runs.map(({ result }) => result);
   writeExercised({
@@ -141,34 +155,42 @@ async function runAppTests({
     writeHeadlessRun({ directories: context.directories, results, browserOnly, mode: 'dev' });
   }
   const seen = new Set();
+  const journeyResults = runs.map(({ suite, result }) => {
+    const { journey, newestPassed, recorded, exercised, ...rest } = result;
+    return {
+      ...rest,
+      filePath: relativePosixPath({ from: configDirectory, to: result.filePath }),
+      report: suite.format({ result, seen }).join('\n'),
+    };
+  });
+  const skipped = tiered.skipped.map((skippedJourney) => ({
+    name: skippedJourney.name,
+    filePath: relativePosixPath({ from: configDirectory, to: skippedJourney.filePath }),
+    skipped: 'deprecated',
+    report: formatSkippedJourney({ skipped: skippedJourney }),
+  }));
+  const browserOnlyResults = browserOnly.map((result) => ({
+    name: result.name,
+    filePath: relativePosixPath({ from: configDirectory, to: result.filePath }),
+    browserOnly: result.browserOnly,
+    report: formatBrowserOnly({ result }),
+  }));
+  const summary = summariseResults({
+    results,
+    skipped: tiered.skipped.length,
+    browserOnly: browserOnly.length,
+  }).text;
+  const resultFile = writeTestResults({
+    directories: context.directories,
+    summary,
+    results: journeyResults,
+    browserOnly: browserOnlyResults,
+    skipped,
+  });
   return {
-    summary: summariseResults({
-      results,
-      skipped: tiered.skipped.length,
-      browserOnly: browserOnly.length,
-    }).text,
-    results: [
-      ...runs.map(({ suite, result }) => {
-        const { journey, newestPassed, recorded, ...rest } = result;
-        return {
-          ...rest,
-          filePath: relativePosixPath({ from: configDirectory, to: result.filePath }),
-          report: suite.format({ result, seen }).join('\n'),
-        };
-      }),
-      ...browserOnly.map((result) => ({
-        name: result.name,
-        filePath: relativePosixPath({ from: configDirectory, to: result.filePath }),
-        browserOnly: result.browserOnly,
-        report: formatBrowserOnly({ result }),
-      })),
-      ...tiered.skipped.map((skipped) => ({
-        name: skipped.name,
-        filePath: relativePosixPath({ from: configDirectory, to: skipped.filePath }),
-        skipped: 'deprecated',
-        report: formatSkippedJourney({ skipped }),
-      })),
-    ],
+    summary,
+    ...compactTestResults({ results: journeyResults, browserOnly: browserOnlyResults, skipped }),
+    resultFile,
   };
 }
 

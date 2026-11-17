@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/plugin-posthog",
-  "version": "7.2.0",
+  "version": "7.4.0",
   "license": "Apache-2.0",
   "description": "Lowdefy PostHog product analytics plugin: initialise posthog-js, capture events, identify people and groups, manage consent and read feature flags.",
   "homepage": "https://lowdefy.com",
@@ -45,12 +45,12 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@lowdefy/helpers": "7.2.0",
+    "@lowdefy/helpers": "7.4.0",
     "posthog-js": "1.447.12"
   },
   "devDependencies": {
-    "@lowdefy/block-dev-e2e": "7.2.0",
-    "@lowdefy/e2e-utils": "7.2.0",
+    "@lowdefy/block-dev-e2e": "7.4.0",
+    "@lowdefy/e2e-utils": "7.4.0",
     "@playwright/test": "1.65.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",

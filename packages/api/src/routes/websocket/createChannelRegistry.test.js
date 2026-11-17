@@ -30,7 +30,7 @@ beforeAll(async () => {
 
 function createTestContext() {
   return {
-    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn() },
+    logger: { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() },
     handleError: vi.fn(),
     user: { sub: 'user-1' },
   };
@@ -458,28 +458,275 @@ test('pending restart is skipped when all subscribers have left the channel', as
   expect(registry.channels.size).toBe(0);
 });
 
-test('channel is removed after MAX_RETRIES consecutive resolver failures', async () => {
+function readyResolver() {
+  return ({ ready }) => {
+    ready();
+    return new Promise(() => {});
+  };
+}
+
+test('a source that fails 8 times keeps its channel, is reported once and tells subscribers when it is back', async () => {
   useFakeTimers();
-  const resolver = vi.fn().mockRejectedValue(new Error('source failed'));
+  const resolver = vi.fn();
+  for (let i = 0; i < 8; i += 1) {
+    resolver.mockRejectedValueOnce(new Error('source failed'));
+  }
+  resolver.mockImplementation(readyResolver());
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+  const first = createSubscriber('a');
+  const second = createSubscriber('b');
+
+  await registry.subscribe(context, {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber: first,
+  });
+  await registry.subscribe(context, {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's4',
+    subscriber: second,
+  });
+  await flushMicrotasks();
+
+  // Backoff doubles from 1 s and stops growing at 60 s.
+  for (const delay of [1000, 2000, 4000, 8000, 16000, 32000]) {
+    await advanceTimers(delay);
+  }
+  expect(resolver).toHaveBeenCalledTimes(7);
+  await advanceTimers(59999);
+  expect(resolver).toHaveBeenCalledTimes(7);
+  await advanceTimers(1);
+  expect(resolver).toHaveBeenCalledTimes(8);
+  await advanceTimers(60000);
+  expect(resolver).toHaveBeenCalledTimes(9);
+
+  expect(registry.channels.size).toBe(1);
+  // The outage's first failure is reported; the restarts that fail after it are warnings.
+  expect(context.handleError).toHaveBeenCalledTimes(1);
+  expect(context.logger.warn).toHaveBeenCalledTimes(7);
+  expect(context.logger.warn).toHaveBeenLastCalledWith(
+    {
+      event: 'ws_source_restart_failed',
+      websocketId: 'ticker',
+      retryCount: 7,
+      retryInMs: 60000,
+    },
+    expect.any(String)
+  );
+  const error = { type: 'error', websocketId: 'ticker', message: 'Something went wrong.' };
+  expect(sentFrames(first)).toEqual([
+    ...Array(8).fill(error),
+    { type: 'subscribed', websocketId: 'ticker', requestId: 's1' },
+  ]);
+  expect(sentFrames(second)).toEqual([
+    ...Array(8).fill(error),
+    { type: 'subscribed', websocketId: 'ticker', requestId: 's4' },
+  ]);
+});
+
+test('a source that is ready on its first start sends no subscribed frame', async () => {
+  const resolver = vi.fn(readyResolver());
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const subscriber = createSubscriber('a');
+
+  await registry.subscribe(createTestContext(), {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber,
+  });
+  await flushMicrotasks();
+
+  expect(sentFrames(subscriber)).toEqual([]);
+});
+
+test('a restarted source that publishes is back before its message is sent', async () => {
+  useFakeTimers();
+  const resolver = vi
+    .fn()
+    .mockRejectedValueOnce(new Error('source failed'))
+    .mockImplementation(({ publish }) => {
+      publish({ data: { tick: 1 } });
+      return new Promise(() => {});
+    });
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const subscriber = createSubscriber('a');
+
+  await registry.subscribe(createTestContext(), {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber,
+  });
+  await flushMicrotasks();
+  await advanceTimers(1000);
+
+  expect(sentFrames(subscriber).map((frame) => frame.type)).toEqual([
+    'error',
+    'subscribed',
+    'message',
+  ]);
+});
+
+test('a source that fails again after it was back is reported again', async () => {
+  useFakeTimers();
+  const resolver = vi
+    .fn()
+    .mockRejectedValueOnce(new Error('source failed'))
+    .mockImplementationOnce(async ({ ready }) => {
+      ready();
+      throw new Error('source failed again');
+    })
+    .mockImplementation(() => new Promise(() => {}));
   mockPrepare({ resolver });
   const registry = createChannelRegistry();
   const context = createTestContext();
   const subscriber = createSubscriber('a');
 
-  await registry.subscribe(context, { websocketId: 'ticker', payload: {}, subscriber });
-  await flushMicrotasks();
-
-  // Exponential backoff: 1s, 2s, 4s, 8s, 16s for the 5 retries.
-  for (const delay of [1000, 2000, 4000, 8000, 16000]) {
-    await advanceTimers(delay);
-  }
-
-  expect(resolver).toHaveBeenCalledTimes(6);
-  expect(registry.channels.size).toBe(0);
-  expect(context.logger.error).toHaveBeenCalledWith({
-    event: 'ws_source_max_retries',
+  await registry.subscribe(context, {
     websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber,
   });
+  await flushMicrotasks();
+  await advanceTimers(1000);
+
+  expect(context.handleError).toHaveBeenCalledTimes(2);
+  expect(context.logger.warn).not.toHaveBeenCalled();
+  expect(sentFrames(subscriber).map((frame) => frame.type)).toEqual([
+    'error',
+    'subscribed',
+    'error',
+  ]);
+});
+
+test('a subscriber that left during an outage is not told the source is back', async () => {
+  useFakeTimers();
+  const resolver = vi
+    .fn()
+    .mockRejectedValueOnce(new Error('source failed'))
+    .mockImplementation(readyResolver());
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+  const staying = createSubscriber('a');
+  const leaving = createSubscriber('b');
+
+  await registry.subscribe(context, {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber: staying,
+  });
+  await registry.subscribe(context, {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's2',
+    subscriber: leaving,
+  });
+  await flushMicrotasks();
+  registry.unsubscribe({ websocketId: 'ticker', subscriber: leaving });
+  await advanceTimers(1000);
+
+  expect(sentFrames(staying).map((frame) => frame.type)).toEqual(['error', 'subscribed']);
+  expect(sentFrames(leaving).map((frame) => frame.type)).toEqual(['error']);
+});
+
+function failAfter(ms, { ready: callReady = false } = {}) {
+  return ({ ready }) =>
+    new Promise((resolve, reject) => {
+      if (callReady) ready();
+      setTimeout(() => reject(new Error('source failed')), ms);
+    });
+}
+
+test('a run that takes over a minute to fail without being ready does not reset the backoff', async () => {
+  useFakeTimers();
+  const resolver = vi
+    .fn()
+    .mockImplementationOnce(failAfter(61000))
+    .mockImplementationOnce(failAfter(61000))
+    .mockImplementation(() => new Promise(() => {}));
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+
+  await registry.subscribe(context, {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber: createSubscriber('a'),
+  });
+  await flushMicrotasks();
+  await advanceTimers(61000);
+  await advanceTimers(1000);
+  await advanceTimers(61000);
+
+  expect(context.logger.warn).toHaveBeenCalledWith(
+    expect.objectContaining({ retryCount: 1, retryInMs: 2000 }),
+    expect.any(String)
+  );
+});
+
+test('a run that stayed ready for over a minute resets the backoff', async () => {
+  useFakeTimers();
+  const resolver = vi
+    .fn()
+    .mockRejectedValueOnce(new Error('source failed'))
+    .mockImplementationOnce(failAfter(61000, { ready: true }))
+    .mockImplementation(() => new Promise(() => {}));
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const context = createTestContext();
+
+  await registry.subscribe(context, {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber: createSubscriber('a'),
+  });
+  await flushMicrotasks();
+  await advanceTimers(1000);
+  await advanceTimers(61000);
+  expect(resolver).toHaveBeenCalledTimes(2);
+  await advanceTimers(999);
+  expect(resolver).toHaveBeenCalledTimes(2);
+  await advanceTimers(1);
+  expect(resolver).toHaveBeenCalledTimes(3);
+});
+
+test('a failed run that calls ready after it failed does not end the outage', async () => {
+  useFakeTimers();
+  let lateReady;
+  const resolver = vi
+    .fn()
+    .mockImplementationOnce(({ ready }) => {
+      lateReady = ready;
+      return Promise.reject(new Error('source failed'));
+    })
+    .mockImplementation(() => new Promise(() => {}));
+  mockPrepare({ resolver });
+  const registry = createChannelRegistry();
+  const subscriber = createSubscriber('a');
+
+  await registry.subscribe(createTestContext(), {
+    websocketId: 'ticker',
+    payload: {},
+    requestId: 's1',
+    subscriber,
+  });
+  await flushMicrotasks();
+  lateReady();
+
+  expect(sentFrames(subscriber).map((frame) => frame.type)).toEqual(['error']);
+  expect([...registry.channels.values()][0].failing).toBe(true);
 });
 
 test('publish rejects with ConfigError when resolver meta.publish is not true', async () => {

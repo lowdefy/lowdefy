@@ -43,8 +43,8 @@ async function listDevTools() {
 // Every agent session pays for the shim's tool list before it does any work,
 // lifecycle tools and the added directory property included. Growing it past
 // this is a deliberate change. The phone tools (lowdefy_device and the device
-// parameters) take about 2,000 of it.
-test('the shim tools/list for a current dev server stays at most 42,500 characters', async () => {
+// parameters) take about 2,000 of it, headless journeys and tests about 500.
+test('the shim tools/list for a current dev server stays at most 43,000 characters', async () => {
   const tools = await listDevTools();
   const shim = createShim({
     cliVersion: '7.0.0',
@@ -57,7 +57,7 @@ test('the shim tools/list for a current dev server stays at most 42,500 characte
   const client = new Client({ name: 'size-test', version: '1.0.0' });
   await client.connect(clientTransport);
   const { tools: shimTools } = await client.listTools();
-  expect(JSON.stringify(shimTools).length).toBeLessThanOrEqual(42500);
+  expect(JSON.stringify(shimTools).length).toBeLessThanOrEqual(43000);
   await client.close();
   await shim.close();
 });

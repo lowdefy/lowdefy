@@ -18,7 +18,7 @@ In your `lowdefy.yaml` file, add the following:
 
 ```yaml
 name: lowdefy-project-template
-version: 7.2.0
+version: 7.4.0
 
 ################ -------- Copy from here -------- ################
 connections:

