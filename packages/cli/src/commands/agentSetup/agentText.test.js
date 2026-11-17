@@ -67,15 +67,16 @@ test.each(journeySkills)('$name gives each kind of check one home', ({ text }) =
     'call the request or endpoint with `lowdefy_run_request` or\n  `lowdefy_run_endpoint`, passing `user` and `data`.'
   );
   expect(text).toContain('an endpoint test (`tests/endpoints/`), never a journey per case');
-  expect(text).toContain('Say in the pull request when that snapshot changed, and why.');
+  expect(text).toContain('which cells changed and why.');
 });
 
-test('journeys-autopilot leaves who can open which page to an access table snapshot', () => {
+test('journeys-autopilot leaves who can open which page to the access table', () => {
   const autopilot = skills.find((skill) => skill.name === 'journeys-autopilot').render();
-  expect(autopilot).toContain(
-    'it already proves which role opens which page: write\n   `refusal` items only for what it cannot show'
-  );
-  expect(autopilot).toContain('name a changed access table snapshot in the pull request');
+  expect(autopilot).toContain('is checked by `tests/access.yaml`');
+  expect(autopilot).toContain('name each changed cell of `tests/access.yaml` in the pull request');
+  expect(autopilot).not.toContain('`refusal` item');
+  expect(autopilot).not.toContain('refusals and permissions');
+  expect(autopilot).not.toContain('accessMatrix');
 });
 
 test('journeys-autopilot writes one journey per write, asserting what it stored', () => {

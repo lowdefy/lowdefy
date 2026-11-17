@@ -121,9 +121,17 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(agentsMd).toContain(
     "`lowdefy build --no-client-build && node --test --test-concurrency=4 'tests/endpoints/**/*.test.mjs'`"
   );
+  expect(agentsMd).toContain('The check is `tests/access.yaml`.');
   expect(agentsMd).toContain(
-    'When a change alters the snapshot, update it and say in the pull request that it changed and why.'
+    '`lowdefy build --no-client-build && lowdefy test --access` once, before you call the change done'
   );
+  expect(agentsMd).toContain(
+    'commit the file, and say in the pull request which cells changed and why.'
+  );
+  expect(agentsMd).toContain(
+    'An app with auth and no `tests/access.yaml` gets one with `lowdefy build --no-client-build && lowdefy test --update-access`'
+  );
+  expect(agentsMd).not.toContain('accessMatrix');
   expect(agentsMd).toContain('`lowdefy test --config-directory <app>`');
   expect(agentsMd).not.toContain('tier: edge');
   expect(agentsMd).not.toContain('localhost:');
