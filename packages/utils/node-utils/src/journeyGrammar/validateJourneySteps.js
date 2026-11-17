@@ -60,6 +60,7 @@ const EXPECT_KEYS = [
   'effect',
   'status',
   'db',
+  'sunk',
 ];
 const WAIT_KEYS = ['ms', 'request', 'state'];
 // `from` marks where a fill, select or expect.state value came from:
@@ -449,6 +450,44 @@ function validateDb(value) {
   return undefined;
 }
 
+// expect.sunk reads the requests the journey's data session recorded instead of sending to an
+// outside service, stubbed ones included: those of `connectionType`, `requestType` and
+// `requestId` number `count`, or the last of them holds `match`; with neither, there is one.
+function validateSunk(value) {
+  if (!type.isObject(value)) {
+    return `Step "expect.sunk" requires { connectionType?, requestType?, requestId?, count?, match? }. Received ${describe(
+      value
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'expect.sunk',
+    params: value,
+    allowed: ['connectionType', 'requestType', 'requestId', 'count', 'match'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  const textKey = ['connectionType', 'requestType', 'requestId'].find(
+    (key) => !type.isUndefined(value[key]) && (!type.isString(value[key]) || value[key] === '')
+  );
+  if (!type.isUndefined(textKey)) {
+    return `Step "expect.sunk" requires "${textKey}" to be a non-empty string. Received ${describe(
+      value[textKey]
+    )}.`;
+  }
+  if (!type.isUndefined(value.count) && !isIndex(value.count)) {
+    return `Step "expect.sunk" requires "count" to be a whole number of requests, 0 or more. Received ${describe(
+      value.count
+    )}.`;
+  }
+  if (!type.isUndefined(value.match) && !type.isObject(value.match)) {
+    return `Step "expect.sunk" requires "match" to be an object of the request values to match. Received ${describe(
+      value.match
+    )}.`;
+  }
+  return undefined;
+}
+
 function validateFrom({ key, from }) {
   if (type.isUndefined(from) || FROM_VALUES.includes(from)) {
     return undefined;
@@ -645,7 +684,7 @@ function validateExpectState(value) {
 
 function validateExpect(params) {
   if (!type.isObject(params)) {
-    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }, { error }, { effect }, { status }, { db }. Received ${describe(
+    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }, { error }, { effect }, { status }, { db }, { sunk }. Received ${describe(
       params
     )}.`;
   }
@@ -707,6 +746,8 @@ function validateExpect(params) {
       return validateStatus(value);
     case 'db':
       return validateDb(value);
+    case 'sunk':
+      return validateSunk(value);
     default:
       return undefined;
   }

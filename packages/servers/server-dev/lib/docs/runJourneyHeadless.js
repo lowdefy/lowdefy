@@ -23,7 +23,7 @@ import {
   normaliseJourneySteps,
   validateJourneySteps,
 } from '@lowdefy/node-utils';
-import { getDataStore, openDataSession } from '@lowdefy/test-utils/dataSets';
+import { addJourneyStubs, getDataStore, openDataSession } from '@lowdefy/test-utils/dataSets';
 
 import collectExercised from './collectExercised.js';
 import createDevServerHost from './createDevServerHost.js';
@@ -84,7 +84,8 @@ function toObservedEvent(payload) {
 // with the calls it made and their payloads (calls).
 // A journey whose steps need a browser answers { pageId, browserOnly: { index, step, reason },
 // steps: [] }, before any data is loaded; one that reaches an action only a browser can carry out
-// answers browserOnly for that step. Refusals ({ error, refused }) are runJourney's.
+// answers browserOnly for that step. Refusals ({ error, refused }) are runJourney's. `stubs`, the
+// journey's answer stubs and fail gates (validated by the caller), are set on its data session.
 async function runJourneyHeadless({
   origin,
   pageId,
@@ -96,6 +97,7 @@ async function runJourneyHeadless({
   stepTimeout = 5000,
   mutantCookie,
   data,
+  stubs,
   recording,
   by,
   readConfigFile = defaultReadConfigFile,
@@ -156,6 +158,7 @@ async function runJourneyHeadless({
     } catch (error) {
       return { error: error.message, refused: true };
     }
+    addJourneyStubs({ session: session.session, stubs });
     loadMs = Date.now() - loadStart;
   }
   // The step checks read the pages' built artifacts; a page the route table does not know is left

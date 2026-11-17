@@ -150,7 +150,7 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
   // Which browser context sent the request: errors it causes are stamped with
   // it, so a journey run claims only its own (see createHandleError).
   context.recording = readRecordingCookie(c.req.header('cookie'));
-  context.handleError = createHandleError({ context });
+  context.handleError = createHandleError({ context, dataSession });
   // The request's own middleware takes the context as soon as it can sink an
   // error: the auth steps below can throw, and the error handler reads the
   // context back to log the fault with its request id and location.

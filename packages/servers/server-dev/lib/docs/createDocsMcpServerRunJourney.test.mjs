@@ -146,3 +146,48 @@ test('MCP lowdefy_run_journey applies exercised to every run of a user list', as
   const full = await callWith({ exercised: true }, ['admin', 'member']);
   full.runs.forEach((run) => expect(run.exercised).toEqual(fullExercised));
 });
+
+test('MCP lowdefy_run_journey passes literal stubs with a data set to the run', async () => {
+  const client = await connectClient();
+  const stubs = [
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+    { requestId: 'save_price', fail: 'Write failed on purpose', times: 2 },
+  ];
+
+  await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { steps: [{ call: { endpoint: 'price_run' } }], data: 'stubs', stubs },
+  });
+
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ data: 'stubs', stubs }));
+  await client.close();
+});
+
+test('MCP lowdefy_run_journey refuses stubs without a data set, and a bad stub, before running', async () => {
+  const client = await connectClient();
+
+  const noData = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      steps: [{ call: { endpoint: 'price_run' } }],
+      stubs: [{ requestId: 'save_price', fail: 'Down' }],
+    },
+  });
+  expect(noData.isError).toBe(true);
+  expect(noData.content[0].text).toContain(
+    '"stubs" need a data set: stubs and forced failures live on the journey\'s data session.'
+  );
+
+  const badStub = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      steps: [{ call: { endpoint: 'price_run' } }],
+      data: 'stubs',
+      stubs: [{ _ref: 'tests/shared/stubs/rates.yaml' }],
+    },
+  });
+  expect(badStub.isError).toBe(true);
+  expect(badStub.content[0].text).toContain('"stubs[0]" is a _ref.');
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  await client.close();
+});

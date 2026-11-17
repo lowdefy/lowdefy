@@ -16,16 +16,30 @@
 
 import createBuildHost from './createBuildHost.js';
 import createHeadlessHost from './createHeadlessHost.js';
+import expectAnswerError from './expectAnswerError.js';
+import expectAnswerStatus from './expectAnswerStatus.js';
+import expectDb from './expectDb.js';
+import expectSunk from './expectSunk.js';
+import findUnfiredFailGate from './findUnfiredFailGate.js';
+import HeadlessStepError from './HeadlessStepError.js';
 import loadClientPlugins from './loadClientPlugins.js';
 import openHeadlessPage from './openHeadlessPage.js';
+import readForcedError from './readForcedError.js';
 import readWebhookError from './readWebhookError.js';
 import runHeadlessJourney from './runHeadlessJourney.js';
 
 export {
   createBuildHost,
   createHeadlessHost,
+  expectAnswerError,
+  expectAnswerStatus,
+  expectDb,
+  expectSunk,
+  findUnfiredFailGate,
+  HeadlessStepError,
   loadClientPlugins,
   openHeadlessPage,
+  readForcedError,
   readWebhookError,
   runHeadlessJourney,
 };

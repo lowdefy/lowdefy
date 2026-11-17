@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { readWebhookError } from '@lowdefy/journey-headless';
+import { readForcedError, readWebhookError } from '@lowdefy/journey-headless';
 import { toWebhookBody } from '@lowdefy/node-utils';
 
 function parseJson(text) {
@@ -45,10 +45,13 @@ async function runJourneyWebhook({ journey, step, timeout }) {
     timeout,
   });
   const status = response.status();
+  const answerBody = parseJson(await response.text());
   journey.lastAnswer = {
     description: `webhook "${endpoint}"`,
     status,
-    error: readWebhookError({ body: parseJson(await response.text()), status }),
+    error:
+      readForcedError({ body: answerBody, session: journey.dataSession?.session }) ??
+      readWebhookError({ body: answerBody, status }),
   };
   return journey.lastAnswer;
 }

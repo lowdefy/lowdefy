@@ -97,7 +97,12 @@ beforeEach(() => {
   });
   mockGetBrowser.mockResolvedValue({});
   mockGetDataStore.mockResolvedValue({ client: {}, uri: 'mongodb://memory/' });
-  mockOpenDataSession.mockResolvedValue({ id: 'session1', cookie: 'session1', close });
+  mockOpenDataSession.mockResolvedValue({
+    id: 'session1',
+    cookie: 'session1',
+    session: { stubs: [], failGates: [], forced: [], sunk: [] },
+    close,
+  });
   mockResolveJourneyDataSet.mockResolvedValue({ dataSet, user: { id: 'u_1', roles: ['admin'] } });
   mockOpenPage.mockImplementation(async () => ({
     context: {

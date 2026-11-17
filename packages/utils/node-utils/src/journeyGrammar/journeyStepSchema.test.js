@@ -96,6 +96,9 @@ const VALID_STEPS = [
   { expect: { status: 403 } },
   { expect: { db: { collection: 'orders', match: {}, count: 0 } } },
   { expect: { db: { collection: 'orders', connectionId: 'db', match: {}, equals: [{}] } } },
+  { expect: { sunk: {} } },
+  { expect: { sunk: { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', count: 2 } } },
+  { expect: { sunk: { requestId: 'fetch_rate', match: { url: '/rates' } } } },
   { call: { endpoint: 'orders-cancel' } },
   { call: { endpoint: 'orders-cancel', payload: { id: 1 }, as: 'none' } },
   { call: { endpoint: 'orders-cancel', as: { roles: ['admin'] } } },
@@ -113,6 +116,10 @@ const VALID_STEPS = [
 
 const INVALID_STEPS = [
   'click submit',
+  { expect: { sunk: { requestId: '' } } },
+  { expect: { sunk: { count: -1 } } },
+  { expect: { sunk: { match: 'EUR' } } },
+  { expect: { sunk: { endpoint: 'price_run' } } },
   {},
   { hover: 'a' },
   { click: 'a', fill: { blockId: 'b', value: 'x' } },

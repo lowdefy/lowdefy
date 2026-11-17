@@ -107,6 +107,9 @@ async function openDataSession({ dataSet, logger, store: runStore }) {
     failGates: [],
     // Requests a routine is held at until the test releases it (addPauseGate).
     pauseGates: [],
+    // Forced failures that reached the server's error sink, by the call they failed
+    // (recordForcedFailure), so a check reads the message the client never sees.
+    forced: [],
   };
   dataSessionRegistry.set(id, session);
   try {

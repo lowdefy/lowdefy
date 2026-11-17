@@ -41,9 +41,9 @@ import { type } from '@lowdefy/helpers';
  *   Promise<WebhookAnswer>} webhook Posts to a webhook endpoint as its sender does, in process:
  *   runWebhookEndpoint, as the endpoints route runs it, so its verify gate runs against rawBody.
  * @property {Object|null} dataSession The data session the calls run on
- *   (@lowdefy/test-utils/dataSets), which holds its stubs, fail gates, pause gates and sunk
- *   requests; null for a journey with no data set on a host that runs it on none. A hold step
- *   sets its pause gate here.
+ *   (@lowdefy/test-utils/dataSets), which holds its stubs, fail gates, pause gates, sunk
+ *   requests and the forced failures its error sink recorded; null for a journey with no data set
+ *   on a host that runs it on none. A hold step sets its pause gate here.
  * @property {string|null} dataSetName The data set the data was loaded from, or null for none.
  * @property {(name: string) => (Object|null)} readArtifact A build artifact by its path in the
  *   build ("routes.json", "pages/home.json", "api/notify.json"), deserialized, or null when the

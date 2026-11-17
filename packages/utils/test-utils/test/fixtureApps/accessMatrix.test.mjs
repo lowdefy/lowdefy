@@ -80,6 +80,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'log_activity',
     'notify',
     'payment_events',
+    'price_run',
     'save_walled',
     'typed_order',
   ]);

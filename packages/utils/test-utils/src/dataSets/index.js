@@ -15,6 +15,7 @@
 */
 
 import addFailGate from './addFailGate.js';
+import addJourneyStubs from './addJourneyStubs.js';
 import addPauseGate from './addPauseGate.js';
 import applyDataSetRedirect from './applyDataSetRedirect.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
@@ -28,6 +29,8 @@ import listUnreachedPauseGates from './listUnreachedPauseGates.js';
 import openDataSession from './openDataSession.js';
 import raceToPauseGate from './raceToPauseGate.js';
 import readDataSet from './readDataSet.js';
+import readForcedFailure from './readForcedFailure.js';
+import recordForcedFailure from './recordForcedFailure.js';
 import releasePauseGates from './releasePauseGates.js';
 import sinkExternalConnections from './sinkExternalConnections.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
@@ -35,6 +38,7 @@ import trackSessionWork from './trackSessionWork.js';
 
 export {
   addFailGate,
+  addJourneyStubs,
   addPauseGate,
   applyDataSetRedirect,
   createDataSetRefusal,
@@ -48,6 +52,8 @@ export {
   openDataSession,
   raceToPauseGate,
   readDataSet,
+  readForcedFailure,
+  recordForcedFailure,
   releasePauseGates,
   sinkExternalConnections,
   sweepOrphanDatabases,

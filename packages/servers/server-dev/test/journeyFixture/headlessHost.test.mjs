@@ -189,7 +189,7 @@ function readHeadlessJourney(name) {
     name
   );
   const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
-  return { data: journey.data, user: journey.user, steps: journey.steps };
+  return { data: journey.data, user: journey.user, stubs: journey.stubs, steps: journey.steps };
 }
 
 // tests/journeys/_headless/race.yaml: hold parks the first approve_run call before claim_run, the
@@ -216,7 +216,9 @@ fixtureTest(
 // tests/journeys/_headless/system.yaml and webhook.yaml: the InternalApi close_runs answers only a
 // call as system, and payment_events' verify gate passes the signed bodies and refuses the wrong
 // signature (the dev server is given the test secret the signatures are computed with).
-fixtureTest.each([['system.yaml'], ['webhook.yaml']])(
+// stubs.yaml: an answer stub stands in for the rate service and fail gates fail writes once, twice
+// and every time; expect.error reads each forced message the dev server recorded.
+fixtureTest.each([['system.yaml'], ['webhook.yaml'], ['stubs.yaml']])(
   'the %s journey passes headless on the dev server',
   async (name) => {
     const journey = readHeadlessJourney(name);
@@ -230,3 +232,39 @@ fixtureTest.each([['system.yaml'], ['webhook.yaml']])(
     expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
   }
 );
+
+fixtureTest(
+  'a fail gate that never fired fails the journey headless on the dev server',
+  async () => {
+    const journey = readHeadlessJourney('stubs.yaml');
+    const steps = journey.steps.slice(0, 2);
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: {
+        ...journey,
+        stubs: [...journey.stubs, { requestId: 'insert_activity', fail: 'Never reached' }],
+        steps,
+        headless: true,
+      },
+    });
+    expect(status).toBe(200);
+    expect(body.passed).toBe(false);
+    expect(body.failure).toMatchObject({
+      index: 1,
+      message:
+        'The forced failure on request "claim_run" on endpoint "approve_run" ("Claim failed on purpose") never fired: no request the journey made matched it, so nothing tested what it fails.',
+    });
+  }
+);
+
+fixtureTest('the journey route refuses stubs with no data set', async () => {
+  const journey = readHeadlessJourney('stubs.yaml');
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: { stubs: journey.stubs, steps: journey.steps, headless: true },
+  });
+  expect(status).toBe(400);
+  expect(body.error).toBe(
+    '"stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".'
+  );
+});

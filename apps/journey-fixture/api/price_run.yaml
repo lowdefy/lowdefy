@@ -1,0 +1,28 @@
+# Prices a run from the outside rate service and writes the price. tests/journeys/_headless/
+# stubs.yaml answers fetch_rate with a stub and fails save_price once on purpose, so the first call
+# fails and the retry writes; packages/utils/journey-headless/test/fixture/stubs.test.mjs and
+# packages/servers/server-dev/test/journeyFixture/headlessHost.test.mjs run it.
+id: price_run
+type: Api
+routine:
+  - id: fetch_rate
+    type: AxiosHttp
+    connectionId: rate_service
+    properties:
+      url: /rates
+      params:
+        currency:
+          _payload: currency
+  - id: save_price
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    properties:
+      doc:
+        kind: price
+        run:
+          _payload: id
+        rate:
+          _step: fetch_rate.data.rate
+  - ':return':
+      rate:
+        _step: fetch_rate.data.rate

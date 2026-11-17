@@ -15,7 +15,7 @@
 */
 
 import { vi, beforeEach, expect, test } from 'vitest';
-import { ConfigError, LowdefyInternalError, UserError } from '@lowdefy/errors';
+import { ConfigError, LowdefyInternalError, ServiceError, UserError } from '@lowdefy/errors';
 import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
 vi.doMock('../../docs/serverErrorStore.js', () => ({
@@ -257,4 +257,20 @@ test('handleError stores a message with the credentials the request marked redac
     await handleError(new ConfigError('Upstream refused runtime-made-app-key-0001.'));
   });
   expect(serverErrorStore.push.mock.calls[0][0].message).toBe('Upstream refused [REDACTED].');
+});
+
+test('handleError records a forced failure on the data session and stores and logs no fault', async () => {
+  const context = { ...testContext(), rid: 'rid-1', logger: { error: vi.fn(), debug: vi.fn() } };
+  const dataSession = { forced: [] };
+  const handleError = createHandleError({ context, dataSession });
+  const error = new ServiceError('Write failed on purpose');
+  error.forced = true;
+
+  await handleError(error);
+
+  expect(error.handled).toBe(true);
+  expect(dataSession.forced).toEqual([{ rid: 'rid-1', message: 'Write failed on purpose' }]);
+  expect(serverErrorStore.push).not.toHaveBeenCalled();
+  expect(context.logger.error).not.toHaveBeenCalled();
+  expect(context.readConfigFile).not.toHaveBeenCalled();
 });

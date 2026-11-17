@@ -268,11 +268,12 @@ test('MCP lowdefy_screenshot_page advertises steps and urlQuery, and passes them
 
 // Every agent session pays for the tool list and the instructions before it
 // does any work, so growing either past these is a deliberate change. The
-// phone tools (lowdefy_device and the device parameters) take about 1,900 of it.
-test('MCP tools/list stays at most 25,500 characters and the instructions at most 2,500', async () => {
+// phone tools (lowdefy_device and the device parameters) take about 1,900 of it,
+// and lowdefy_run_journey's stubs about 400.
+test('MCP tools/list stays at most 26,000 characters and the instructions at most 2,500', async () => {
   const client = await connectClient();
   const { tools } = await client.listTools();
-  expect(JSON.stringify(tools).length).toBeLessThanOrEqual(25500);
+  expect(JSON.stringify(tools).length).toBeLessThanOrEqual(26000);
   expect(INSTRUCTIONS.length).toBeLessThanOrEqual(2500);
   expect(client.getInstructions()).toEqual(INSTRUCTIONS);
   await client.close();

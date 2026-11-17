@@ -53,6 +53,7 @@ import screenshotDevice from './device/screenshotDevice.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
 import searchIcons from './searchIcons.js';
+import validateJourneyStubs from './validateJourneyStubs.js';
 
 const logger = createLogger({ server: 'lowdefy-dev-mcp' });
 
@@ -375,6 +376,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       state,
       timeout,
       data,
+      stubs,
       exercised,
       device,
       headless,
@@ -382,8 +384,8 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       if (!type.isNone(device)) {
         const refused = deviceParamsError({
           tool: 'lowdefy_run_journey',
-          params: { urlQuery, user, data, exercised },
-          names: ['urlQuery', 'user', 'data', 'exercised'],
+          params: { urlQuery, user, data, stubs, exercised },
+          names: ['urlQuery', 'user', 'data', 'stubs', 'exercised'],
         });
         if (refused !== null) {
           return refused;
@@ -412,6 +414,10 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       if (userError) {
         return notFoundResult(userError);
       }
+      const stubsError = validateJourneyStubs({ data, stubs });
+      if (stubsError) {
+        return notFoundResult(stubsError);
+      }
       // One params object for both branches, so neither can drop a parameter
       // the other passes. basePath is read as the HTTP route reads it, so
       // expect.calls counts and app errors match under a basePath.
@@ -424,6 +430,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         state,
         stepTimeout: timeout,
         data,
+        stubs,
         basePath: lowdefyConfig.basePath ?? '',
       };
       // headless: true runs the journey with no browser (runJourneyHeadless).

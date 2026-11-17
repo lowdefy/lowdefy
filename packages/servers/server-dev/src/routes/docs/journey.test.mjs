@@ -184,6 +184,49 @@ test('docsJourneyHandler refuses a list of users with 400: one POST is one run',
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
+test('docsJourneyHandler passes the journey stubs to the runner with its data set', async () => {
+  const stubs = [
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+    { requestId: 'save_price', fail: 'Write failed on purpose', times: 'all' },
+  ];
+  const c = createContext({
+    steps: [{ call: { endpoint: 'price_run' } }],
+    data: 'stubs',
+    user: 'finance',
+    stubs,
+  });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(200);
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ data: 'stubs', stubs }));
+});
+
+test('docsJourneyHandler answers 400 with the message for a bad stub, or stubs with no data set', async () => {
+  const badStub = await docsJourneyHandler(
+    createContext({
+      steps: [{ call: { endpoint: 'price_run' } }],
+      data: 'stubs',
+      stubs: [{ requestId: 'save_price', fail: 'Down', times: 0 }],
+    })
+  );
+  expect(badStub.status).toBe(400);
+  expect(badStub.data.error).toBe(
+    '"stubs[0]": Journey stub "times" should be a whole number above 0 or "all". Received 0.'
+  );
+  const noData = await docsJourneyHandler(
+    createContext({
+      steps: [{ call: { endpoint: 'price_run' } }],
+      stubs: [{ requestId: 'save_price', fail: 'Down' }],
+    })
+  );
+  expect(noData.status).toBe(400);
+  expect(noData.data.error).toBe(
+    '"stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
 test('docsJourneyHandler passes user none through so the journey signs in through the app', async () => {
   const c = createContext({ pageId: 'login', steps: [{ goto: 'dashboard' }], user: 'none' });
 

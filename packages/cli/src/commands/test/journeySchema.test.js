@@ -462,7 +462,7 @@ test('journeySchema refuses a journey with no pageId at the first step that need
   ).toEqual({
     valid: false,
     message:
-      'Journey should have required property "pageId": step 2 (click "cancel_button") needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.',
+      'Journey should have required property "pageId": step 2 (click "cancel_button") needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
   });
   expect(
     validateJourney({
@@ -492,6 +492,7 @@ test('validateJourney accepts stubs, each an answer or a forced failure', () => 
     validateJourney({
       journey: {
         ...minimalJourney,
+        data: 'finance-runs',
         stubs: [
           { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { data: 'pdf' } },
           { requestId: 'update_run_lines', endpoint: 'billing-run-approve', fail: 'Write failed' },
@@ -506,6 +507,7 @@ test('validateJourney refuses a stub entry the stub grammar refuses, naming its 
     validateJourney({
       journey: {
         ...minimalJourney,
+        data: 'finance-runs',
         stubs: [
           { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: null },
           { requestId: 'save', fail: 'x', when: 'later' },
@@ -520,6 +522,18 @@ test('validateJourney refuses a stub entry the stub grammar refuses, naming its 
   expect(validateJourney({ journey: { ...minimalJourney, stubs: { fail: 'x' } } })).toEqual({
     valid: false,
     message: 'Journey "stubs" should be a list of answer and forced failure stubs.',
+  });
+});
+
+test('validateJourney refuses stubs on a journey with no data set', () => {
+  expect(
+    validateJourney({
+      journey: { ...minimalJourney, stubs: [{ requestId: 'save', fail: 'Down' }] },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey "stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".',
   });
 });
 

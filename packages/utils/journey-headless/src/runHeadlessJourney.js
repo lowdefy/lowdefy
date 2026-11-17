@@ -34,6 +34,7 @@ import createAppErrorWindows from './createAppErrorWindows.js';
 import checkStepReferences from './checkStepReferences.js';
 import createHeadlessActors from './createHeadlessActors.js';
 import createJourneyRaces from './createJourneyRaces.js';
+import findUnfiredFailGate from './findUnfiredFailGate.js';
 import runHeadlessStep from './runHeadlessStep.js';
 import toJsonValue from './toJsonValue.js';
 import toStepFailure from './toStepFailure.js';
@@ -81,6 +82,9 @@ const REQUEST_WINDOW_STEP_KEYS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
  * hold and release race two calls (createJourneyRaces): a call or request that reaches a held
  * request is parked, and a release lets it go and answers with it. A gate no call reached, or a
  * call still parked when the journey ends, fails the journey; the gates are released either way.
+ *
+ * A fail gate the journey's stubs set (on the host's data session) that no request reached fails
+ * the journey at its last step, when nothing failed before.
  *
  * A journey whose steps need a browser (classifyJourney) is not run: it answers
  * { pageId, browserOnly: { index, step, reason }, steps: [] }. One that reaches an action only a
@@ -253,6 +257,18 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
   ) {
     results[raceFailure.index].status = 'failed';
     failure = raceFailure;
+  }
+  // A journey on no data session has no fail gates.
+  if (
+    type.isUndefined(failure) &&
+    type.isUndefined(browserOnly) &&
+    steps.length > 0 &&
+    !type.isNone(host.dataSession)
+  ) {
+    failure = findUnfiredFailGate({ session: host.dataSession, steps });
+    if (!type.isUndefined(failure)) {
+      results[failure.index].status = 'failed';
+    }
   }
 
   const result = {

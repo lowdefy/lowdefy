@@ -320,6 +320,12 @@ const devToolDefinitions = {
         .describe(
           'A data set in tests/data/<name>.yaml: the journey runs on a fresh in-memory MongoDB database loaded with it, so it may write freely, and user and "as" can name its users. Format: lowdefy_get_doc testing/journey-data-sets.'
         ),
+      stubs: z
+        .array(z.record(z.string(), z.any()))
+        .optional()
+        .describe(
+          'Needs data; literal, no _ref. {connectionType, requestType, answer, requestId?, endpoint?, pageId?, match?} answers an outside request; {requestId, endpoint?, pageId?, fail, times?} fails matching requests (once, n or "all") with that message, which expect.error reads.'
+        ),
       pathParams: z
         .record(z.string(), z.string())
         .optional()

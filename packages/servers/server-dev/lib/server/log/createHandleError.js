@@ -22,6 +22,7 @@ import {
   loadAndResolveErrorLocation,
 } from '@lowdefy/errors';
 import { scrubCredentials } from '@lowdefy/node-utils';
+import { recordForcedFailure } from '@lowdefy/test-utils/dataSets';
 
 import errorRecordingStamp from '../recording/errorRecordingStamp.js';
 import serverErrorStore from '../../docs/serverErrorStore.js';
@@ -36,8 +37,18 @@ function shouldStore(error) {
   return !isExpectedError(error);
 }
 
-function createHandleError({ context }) {
+// `dataSession` is the journey data session the request runs on, if any. A forced failure (a
+// journey's fail gate) is the test's doing, not a fault: it is recorded there by the request's id
+// (recordForcedFailure), where the journey's checks read its message, and is logged at debug,
+// never stored for the agent or reported as an app error.
+function createHandleError({ context, dataSession }) {
   return async function handleError(error) {
+    if (error.forced === true) {
+      error.handled = true;
+      recordForcedFailure({ error, rid: context.rid, session: dataSession });
+      context.logger.debug({ event: 'debug_forced_failure', err: error }, error.message);
+      return;
+    }
     try {
       // Set first, not after the log call: this function is the server's error
       // sink, so reaching it is what makes the error already-logged, and the catch

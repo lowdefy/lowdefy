@@ -24,6 +24,7 @@ import { openMutantRun } from '../../../lib/server/mutants/mutantRuns.js';
 import parseUserParam from './parseUserParam.js';
 import runJourney from '../../../lib/docs/runJourney.js';
 import runJourneyHeadless from '../../../lib/docs/runJourneyHeadless.js';
+import validateJourneyStubs from '../../../lib/docs/validateJourneyStubs.js';
 import validateJourneyTimeout from '../../../lib/docs/validateJourneyTimeout.js';
 import validateMutantParam from '../../../lib/server/mutants/validateMutantParam.js';
 import validateRecordingParam from '../../../lib/docs/validateRecordingParam.js';
@@ -97,6 +98,10 @@ async function docsJourneyHandler(c) {
       },
       400
     );
+  }
+  const stubsError = validateJourneyStubs({ data: body.data, stubs: body.stubs });
+  if (stubsError) {
+    return c.json({ error: stubsError }, 400);
   }
   // One POST is one run. A journey with a list of users runs once per user:
   // lowdefy test and lowdefy_run_journey expand the list, posting or running
@@ -187,6 +192,7 @@ async function docsJourneyHandler(c) {
       basePath: lowdefyConfig.basePath ?? '',
       mutantCookie: mutantRun?.cookiePayload,
       data: body.data,
+      stubs: body.stubs,
       by: 'test',
       // Journeys posted here come from `lowdefy test` and lowdefy_run_tests.
       recording: type.isNone(body.recording)

@@ -36,7 +36,8 @@ import {
 // - agents is empty, the secrets are the test secrets, and there is no origin, so a detached
 //   CallApi has nowhere to send its loopback request even if CRON_SECRET were set.
 // - waitUntil tracks background work on the session, so session.settled() can wait for it.
-// - handleError lists faults on the call's answer; the logger is silent.
+// - handleError lists faults on the call's answer, and records a forced failure on the data
+//   session; the logger is silent.
 // `user` is the caller's user object, or null for a signed out caller.
 function createCallContext({ faults, req, testSession, user }) {
   const { runtime, testApp } = testSession;
@@ -67,7 +68,7 @@ function createCallContext({ faults, req, testSession, user }) {
     user: type.isNone(user) ? null : normalizeInjectedCaller(user),
     websockets: runtime.websockets,
   };
-  context.handleError = createFaultSink({ context, faults, testApp });
+  context.handleError = createFaultSink({ context, faults, session, testApp });
   createInjectedApiContext(context, { authJson: testApp.authJson });
   const { gate, resolvers } = createSessionConnections({
     connections: runtime.connections,

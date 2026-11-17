@@ -136,7 +136,12 @@ async function checkParity({ body, browser }) {
   });
   let headless;
   try {
-    const host = await createBuildHost({ app, data: body.data, user: body.user });
+    const host = await createBuildHost({
+      app,
+      data: body.data,
+      stubs: body.stubs,
+      user: body.user,
+    });
     try {
       headless = await runHeadlessJourney({ host, journey, stepTimeout: body.timeout ?? 5000 });
     } finally {

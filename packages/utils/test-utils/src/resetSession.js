@@ -22,9 +22,9 @@ import { releasePauseGates } from './dataSets/index.js';
 // Puts the session back to its data set between tests: every collection is emptied and the
 // data set loaded again, which is several times cheaper than a new session. What the last test
 // left running is ended first, so none of it writes into the next test's data: routines held
-// at a pause gate are released, and background work is waited for. `sunk` and the fail gates
-// are emptied, so a gate one test set never fails the next test's requests. Stubs stay: they
-// are set once for a file's tests.
+// at a pause gate are released, and background work is waited for. `sunk`, the fail gates and the
+// forced failures they recorded are emptied, so a gate one test set never fails the next test's
+// requests. Stubs stay: they are set once for a file's tests.
 async function resetSession({ testSession }) {
   checkSessionOpen({ testSession });
   const { session } = testSession.dataSession;
@@ -37,6 +37,7 @@ async function resetSession({ testSession }) {
   });
   session.sunk.length = 0;
   session.failGates.length = 0;
+  session.forced.length = 0;
 }
 
 export default resetSession;

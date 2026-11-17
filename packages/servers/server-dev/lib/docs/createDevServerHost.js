@@ -176,10 +176,11 @@ async function createDevServerHost({
       user: toCaller(callUser),
     });
     // The faults the call logs at error level, as answerCall's faults: what a browser journey's
-    // server error entries hold for the run's invariants.
+    // server error entries hold for the run's invariants. A forced failure (a fail gate's) is no
+    // fault: the dev server's handleError records it on the data session instead.
     const handleError = context.handleError;
     context.handleError = async (error) => {
-      if (!isExpectedError(error)) {
+      if (!isExpectedError(error) && error.forced !== true) {
         faults.push(error);
       }
       return handleError(error);

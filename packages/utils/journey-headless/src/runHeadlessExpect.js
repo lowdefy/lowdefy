@@ -22,6 +22,7 @@ import expectAnswerError from './expectAnswerError.js';
 import expectAnswerStatus from './expectAnswerStatus.js';
 import expectCalls from './expectCalls.js';
 import expectDb from './expectDb.js';
+import expectSunk from './expectSunk.js';
 import HeadlessStepError from './HeadlessStepError.js';
 import isBlockShown from './isBlockShown.js';
 import isDeepEqual from './isDeepEqual.js';
@@ -107,8 +108,8 @@ function checkAnswered(answer) {
 }
 
 // One expect step, with the browser runner's messages: on the current actor's page, on the answer
-// of the call or request step before it (`answer`, for status and error), or on the data's
-// database. After an interaction, expect.error is judged with the app errors
+// of the call or request step before it (`answer`, for status and error), on the data's
+// database, or on the requests the data session recorded instead of sending (sunk). After an interaction, expect.error is judged with the app errors
 // (createAppErrorWindows), so the step itself does nothing.
 async function runHeadlessExpect({ actor, answer, host, step, timeout }) {
   const kind = getStepKey(step.expect);
@@ -135,6 +136,8 @@ async function runHeadlessExpect({ actor, answer, host, step, timeout }) {
       return expectAnswerStatus({ answer, status: params });
     case 'db':
       return expectDb({ host, params, timeout });
+    case 'sunk':
+      return expectSunk({ params, session: host.dataSession, timeout });
     default:
       // The grammar admits nothing else; a check it gains is not passed unchecked.
       throw new Error(`The headless journey runner has no expect "${kind}".`);

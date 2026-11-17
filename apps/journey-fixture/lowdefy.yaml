@@ -36,6 +36,7 @@ connections:
   - _ref: connections/storage_bucket.yaml
   - _ref: connections/walled_runtime.yaml
   - _ref: connections/fixture_signature.yaml
+  - _ref: connections/rate_service.yaml
 
 # Auth exists only to gate auditor_only, so a journey can be refused by a real
 # auth gate. An API key strategy is the one auth mechanism that needs no
@@ -67,6 +68,7 @@ auth:
       - approve_run
       - close_runs
       - payment_events
+      - price_run
     roles:
       auditor:
         - auditor_only
@@ -82,6 +84,7 @@ api:
   - _ref: api/approve_run.yaml
   - _ref: api/close_runs.yaml
   - _ref: api/payment_events.yaml
+  - _ref: api/price_run.yaml
 
 pages:
   - _ref: pages/home.yaml

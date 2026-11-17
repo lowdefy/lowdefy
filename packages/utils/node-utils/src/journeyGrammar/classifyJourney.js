@@ -62,6 +62,7 @@ const HEADLESS_EXPECT_KEYS = [
   'hidden',
   'state',
   'status',
+  'sunk',
   'url',
   'visible',
 ];

@@ -44,10 +44,14 @@ function checkPageId({ journey }) {
   if (type.isUndefined(found)) return undefined;
   return `Journey should have required property "pageId": ${describeStep(
     found
-  )} needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.`;
+  )} needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.`;
 }
 
-function checkStubs({ stubs }) {
+// Stubs live on the journey's data session, so a journey with stubs names its data set.
+function checkStubs({ data, stubs }) {
+  if (!type.isUndefined(stubs) && type.isUndefined(data)) {
+    return 'Journey "stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".';
+  }
   for (const [index, stub] of (stubs ?? []).entries()) {
     const { error } = validateJourneyStub({ stub });
     if (!type.isUndefined(error)) {
@@ -89,7 +93,7 @@ function validateJourney({ journey }) {
   if (!type.isUndefined(mutationError)) {
     return { valid: false, message: mutationError };
   }
-  const stubsError = checkStubs({ stubs: journey.stubs });
+  const stubsError = checkStubs({ data: journey.data, stubs: journey.stubs });
   if (!type.isUndefined(stubsError)) {
     return { valid: false, message: stubsError };
   }

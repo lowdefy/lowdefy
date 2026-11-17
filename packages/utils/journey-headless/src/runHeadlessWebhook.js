@@ -16,6 +16,7 @@
 
 import { toWebhookBody } from '@lowdefy/node-utils';
 
+import readForcedError from './readForcedError.js';
 import readWebhookError from './readWebhookError.js';
 
 // Header names as the route reads them, lower-cased, as HTTP carries them case-insensitively.
@@ -47,7 +48,9 @@ async function runHeadlessWebhook({ host, step }) {
   );
   return {
     description: `webhook "${endpoint}"`,
-    error: readWebhookError({ body: answer.body, status: answer.status }),
+    error:
+      readForcedError({ body: answer.body, session: host.dataSession }) ??
+      readWebhookError({ body: answer.body, status: answer.status }),
     status: answer.status,
   };
 }

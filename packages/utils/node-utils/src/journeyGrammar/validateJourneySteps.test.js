@@ -777,10 +777,7 @@ test('validateJourneySteps rejects an expect.status after a hold, which answers 
 test('validateJourneySteps accepts a call as system and refuses a request as system', () => {
   expect(
     validateJourneySteps({
-      steps: [
-        { call: { endpoint: 'nightly_close', as: 'system' } },
-        { expect: { status: 200 } },
-      ],
+      steps: [{ call: { endpoint: 'nightly_close', as: 'system' } }, { expect: { status: 200 } }],
     })
   ).toEqual({});
   expect(
@@ -911,5 +908,38 @@ test('validateJourneySteps rejects malformed expect.db', () => {
   );
   expect(error('orders')).toContain(
     'Step "expect.db" requires { collection, connectionId?, match, count }'
+  );
+});
+
+test('validateJourneySteps accepts expect.sunk narrowed by connection, request type and id', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { sunk: {} } },
+        { expect: { sunk: { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', count: 0 } } },
+        { expect: { sunk: { requestId: 'fetch_rate', count: 2, match: { params: {} } } } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed expect.sunk', () => {
+  function error(sunk) {
+    return validateJourneySteps({ steps: [{ expect: { sunk } }] }).error.replace(EXAMPLES, '');
+  }
+  expect(error('AxiosHttp')).toBe(
+    'Step 0: Step "expect.sunk" requires { connectionType?, requestType?, requestId?, count?, match? }. Received "AxiosHttp".'
+  );
+  expect(error({ endpoint: 'price_run' })).toBe(
+    'Step 0: Step "expect.sunk" has unknown key "endpoint". Keys are: connectionType, requestType, requestId, count, match.'
+  );
+  expect(error({ requestType: '' })).toBe(
+    'Step 0: Step "expect.sunk" requires "requestType" to be a non-empty string. Received "".'
+  );
+  expect(error({ count: 1.5 })).toBe(
+    'Step 0: Step "expect.sunk" requires "count" to be a whole number of requests, 0 or more. Received 1.5.'
+  );
+  expect(error({ match: ['EUR'] })).toBe(
+    'Step 0: Step "expect.sunk" requires "match" to be an object of the request values to match. Received ["EUR"].'
   );
 });
