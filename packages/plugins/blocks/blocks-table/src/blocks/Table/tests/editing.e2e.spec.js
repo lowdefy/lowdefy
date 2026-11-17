@@ -520,7 +520,9 @@ test.describe('Table editing', () => {
     // Typing searches the labels, not the descriptions.
     await page.keyboard.type('budget');
     await expect(options).toHaveCount(0);
-    await page.keyboard.press('Backspace+Backspace+Backspace+Backspace+Backspace+Backspace');
+    for (let i = 0; i < 'budget'.length; i++) {
+      await page.keyboard.press('Backspace');
+    }
     await page.keyboard.type('qual');
     await expect(options).toHaveCount(1);
     await page.keyboard.press('Enter');

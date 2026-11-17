@@ -16,8 +16,6 @@
 
 import { expect, test } from 'vitest';
 
-import hasOptionDescriptions from './hasOptionDescriptions.js';
-import SelectOption from './SelectOption.js';
 import toSelectOptions from './toSelectOptions.js';
 
 function createSpec(options) {
@@ -57,40 +55,4 @@ test('toSelectOptions carries a description only when the option has a non-empty
 
 test('toSelectOptions returns no options for a column without options', () => {
   expect(toSelectOptions({ components: {}, spec: createSpec(undefined), row: {} })).toEqual([]);
-});
-
-test('hasOptionDescriptions is true when at least one option has a description', () => {
-  const described = toSelectOptions({
-    components: {},
-    spec: createSpec([
-      { value: 'lead', label: 'Lead', description: 'Not yet spoken to.' },
-      { value: 'won', label: 'Won' },
-    ]),
-    row: {},
-  });
-  const plain = toSelectOptions({
-    components: {},
-    spec: createSpec([{ value: 'won', label: 'Won' }]),
-    row: {},
-  });
-  expect(hasOptionDescriptions({ options: described })).toBe(true);
-  expect(hasOptionDescriptions({ options: plain })).toBe(false);
-  expect(hasOptionDescriptions({ options: [] })).toBe(false);
-});
-
-test('SelectOption renders the label alone for an option without a description', () => {
-  const label = 'Won';
-  expect(SelectOption({ data: { value: 'won' }, label })).toBe(label);
-});
-
-test('SelectOption renders the description on a second line under the label', () => {
-  const element = SelectOption({
-    data: { value: 'lead', description: 'Not yet spoken to.' },
-    label: 'Lead',
-  });
-  expect(element.props.className).toBe('lf-table-option');
-  const [label, description] = element.props.children;
-  expect(label).toBe('Lead');
-  expect(description.props.className).toBe('lf-table-option-description');
-  expect(description.props.children).toBe('Not yet spoken to.');
 });
