@@ -35,11 +35,14 @@ connections:
       baseURL: http://127.0.0.1:9
   - _ref: connections/storage_bucket.yaml
   - _ref: connections/walled_runtime.yaml
+  - _ref: connections/fixture_signature.yaml
 
 # Auth exists only to gate auditor_only, so a journey can be refused by a real
 # auth gate. An API key strategy is the one auth mechanism that needs no
 # database and no login method; every page and every other endpoint stays
-# public, and journeys still act as injected callers.
+# public, and journeys still act as injected callers. A webhook endpoint must be
+# listed public by name, so every endpoint but auditor_only is listed: a new
+# endpoint is added here, or it is protected.
 auth:
   secret:
     _secret: FIXTURE_AUTH_SECRET
@@ -54,6 +57,16 @@ auth:
   roles:
     - id: auditor
   api:
+    public:
+      - notify
+      - log_activity
+      - detached_log
+      - explode
+      - typed_order
+      - save_walled
+      - approve_run
+      - close_runs
+      - payment_events
     roles:
       auditor:
         - auditor_only
@@ -67,6 +80,8 @@ api:
   - _ref: api/typed_order.yaml
   - _ref: api/save_walled.yaml
   - _ref: api/approve_run.yaml
+  - _ref: api/close_runs.yaml
+  - _ref: api/payment_events.yaml
 
 pages:
   - _ref: pages/home.yaml

@@ -18,11 +18,12 @@
 // (packages/servers/server-dev/test/journeyFixture/walled.test.mjs). It holds
 // no database address: it names a walled MongoDBCollection connection and
 // reaches MongoDB only through the walled client, so it declares
-// meta.dataSet 'walled'.
+// meta.dataSet 'walled'. FixtureSignature is the webhook verifier of api/payment_events.yaml.
 export default {
-  connections: ['WalledFixture'],
+  connections: ['FixtureSignature', 'WalledFixture'],
   connectionMetas: {
+    FixtureSignature: { tenant: false },
     WalledFixture: { tenant: false },
   },
-  requests: ['WalledFixtureInsert'],
+  requests: ['VerifyFixtureSignature', 'WalledFixtureInsert'],
 };

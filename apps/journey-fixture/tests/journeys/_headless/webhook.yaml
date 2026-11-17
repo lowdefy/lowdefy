@@ -1,0 +1,35 @@
+# A signed webhook passes its verify gate and writes; a wrong signature is refused before the
+# routine runs. The signatures are the hex HMAC-SHA256 of each body as sent, under the test secret
+# test-secret-FIXTURE_WEBHOOK_SECRET (api/payment_events.yaml): the first body is an object, sent
+# as its JSON text {"id":"evt_1","type":"payment.succeeded"}, the second a string, sent as written.
+# Run headless by `lowdefy test --headless --build` and the @lowdefy/journey-headless fixture suite
+# (packages/utils/journey-headless/test/fixture/outside.test.mjs).
+- name: a signed webhook writes its event and a wrong signature is refused
+  data: outside
+  steps:
+    - webhook:
+        endpoint: payment_events
+        body: { id: evt_1, type: payment.succeeded }
+        headers:
+          x-fixture-signature: 3ecf0c67fc28daabe7cfb765671cd717ec91ab45414e200920d67266cc200039
+    - expect: { status: 200 }
+    - webhook:
+        endpoint: payment_events
+        body: '{"id": "evt_2", "type": "payment.failed"}'
+        headers:
+          x-fixture-signature: 9d7cd6b93d7afefaeb660a90f08554648ed4a8e98f63a221e1bdb605c1c8e533
+    - expect: { status: 200 }
+    - webhook:
+        endpoint: payment_events
+        body: { id: evt_3, type: payment.succeeded }
+        headers:
+          x-fixture-signature: 3ecf0c67fc28daabe7cfb765671cd717ec91ab45414e200920d67266cc200039
+    - expect: { status: 401 }
+    - expect: { error: Webhook verification failed. }
+    - expect:
+        db:
+          collection: items
+          match: { kind: payment_event }
+          equals:
+            - { _id: evt_1, type: payment.succeeded }
+            - { _id: evt_2, type: payment.failed }
