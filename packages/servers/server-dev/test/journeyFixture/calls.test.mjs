@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import path from 'node:path';
 import { expect } from 'vitest';
+import YAML from 'yaml';
 
 import { fixtureTest, postJourney, postJson } from './fixtureClient.mjs';
 
@@ -137,3 +140,22 @@ fixtureTest(
     );
   }
 );
+
+// tests/journeys/_headless/webhook.yaml in a browser run: each webhook posts through the dev
+// server's endpoints route, signed-out and on the journey's data set, so payment_events' verify
+// gate passes the signed bodies and refuses the wrong signature. postJourney runs it headless on a
+// build too and compares the two.
+fixtureTest('a webhook posts through the endpoints route, where its verify gate runs', async () => {
+  const file = path.join(
+    process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+    'tests',
+    'journeys',
+    '_headless',
+    'webhook.yaml'
+  );
+  const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
+  const result = await postJourney({ data: journey.data, steps: journey.steps });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+});

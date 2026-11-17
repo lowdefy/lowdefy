@@ -21,7 +21,7 @@ import {
   getShortcutModifier,
   getState,
 } from '@lowdefy/e2e-utils/runtime';
-import { CALL_STEP_KEYS, getStepKey } from '@lowdefy/node-utils';
+import { ANSWER_STEP_KEYS, getStepKey } from '@lowdefy/node-utils';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
 import checkClickRails from './rails/checkClickRails.js';
@@ -40,6 +40,7 @@ import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
 import runJourneyCall from './runJourneyCall.js';
+import runJourneyWebhook from './runJourneyWebhook.js';
 import shownTextSelector from './shownTextSelector.js';
 
 // Playwright colours its call log with ANSI escapes; the result is read by an
@@ -1220,6 +1221,9 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
     case 'request':
       await runJourneyCall({ journey, step, timeout });
       return;
+    case 'webhook':
+      await runJourneyWebhook({ journey, step, timeout });
+      return;
     default:
       // The grammar admits nothing else; a step it gains is not passed unchecked.
       throw new Error(`The browser journey runner has no step "${getStepKey(step)}".`);
@@ -1270,8 +1274,8 @@ async function runJourneySteps({ journey, steps }) {
       continue;
     }
     const started = Date.now();
-    // A call's answer is read only by the expect steps straight after it.
-    if (!['expect', ...CALL_STEP_KEYS].includes(getStepKey(step))) {
+    // A call's or webhook's answer is read only by the expect steps straight after it.
+    if (!['expect', ...ANSWER_STEP_KEYS].includes(getStepKey(step))) {
       journey.lastAnswer = undefined;
     }
     if (REQUEST_WINDOW_STEPS.includes(getStepKey(step))) {

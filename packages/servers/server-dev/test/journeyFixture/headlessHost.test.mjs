@@ -179,18 +179,23 @@ fixtureTest('headless must be true or false', async () => {
   expect(body.error).toBe('The "headless" param must be true or false. Received "yes".');
 });
 
-// tests/journeys/_headless/race.yaml: hold parks the first approve_run call before claim_run, the
-// other user's call claims the run, and release answers with the parked call.
-function readRaceJourney() {
+// A journey of tests/journeys/_headless, as the journey route takes it.
+function readHeadlessJourney(name) {
   const file = path.join(
     process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
     'tests',
     'journeys',
     '_headless',
-    'race.yaml'
+    name
   );
   const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
   return { data: journey.data, user: journey.user, steps: journey.steps };
+}
+
+// tests/journeys/_headless/race.yaml: hold parks the first approve_run call before claim_run, the
+// other user's call claims the run, and release answers with the parked call.
+function readRaceJourney() {
+  return readHeadlessJourney('race.yaml');
 }
 
 fixtureTest(
@@ -205,5 +210,23 @@ fixtureTest(
     expect(body.failure).toBeUndefined();
     expect(body.passed).toBe(true);
     expect(body.steps.map((step) => step.status)).toEqual(race.steps.map(() => 'ok'));
+  }
+);
+
+// tests/journeys/_headless/system.yaml and webhook.yaml: the InternalApi close_runs answers only a
+// call as system, and payment_events' verify gate passes the signed bodies and refuses the wrong
+// signature (the dev server is given the test secret the signatures are computed with).
+fixtureTest.each([['system.yaml'], ['webhook.yaml']])(
+  'the %s journey passes headless on the dev server',
+  async (name) => {
+    const journey = readHeadlessJourney(name);
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...journey, headless: true },
+    });
+    expect(status).toBe(200);
+    expect(body.failure).toBeUndefined();
+    expect(body.passed).toBe(true);
+    expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
   }
 );
