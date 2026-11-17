@@ -131,6 +131,11 @@ The answer is `{ status, success, response, error, body, faults }`:
 passes and `InternalApi` is callable. It waits for the routine and answers 200 with its result,
 where the detached route answers 202 first.
 
+`session.webhook(endpointId, { body, query, headers })` posts to an endpoint declared `webhook`
+through `runWebhookEndpoint`, as the endpoints route does, so its `verify` gate runs. `body` is sent
+as raw text: a string as written, anything else as JSON. It answers `{ status, body, contentType,
+faults }`.
+
 `session.as(user).page(path)` answers `{ status, pageId, pathParams }` from `getPageConfig` and
 leaves the page config out.
 
@@ -152,17 +157,40 @@ every other request type refusing (`createRefusingResolver`). A stub is called w
 `sunk` holds, never the connection's properties, which hold its credentials. The real resolver's
 `schema` and `meta` stay on the stub, so the request is still validated.
 
-### Pause gates
+### Stubs and gates on the data session
 
-`session.pauseBefore(stepId)` holds request steps only. `holdAtStep` wraps every request resolver:
-the first routine to reach a step with a waiting gate stops with its request built and not yet
-sent. `@lowdefy/api` has no hook before a `CallApi` or control step. One gate holds one routine,
-so a test can run a second call through the same step.
+Stubs, fail gates and pause gates are state on the data session (`session.stubs`,
+`session.failGates`, `session.pauseGates`, beside `sunk`), and one function applies them:
+`createSessionConnections` in `src/dataSets/`. Both hosts call it: `createCallContext` here and
+server-dev's `createLowdefyContext`, so a stub or a gate behaves the same on the build host, the
+dev server and in a browser run. `session.stub`, `session.fail` and `session.pauseBefore` only
+write that state.
+
+- **Stubs** are an ordered list. A test's stub is `{ connectionType, requestType, fn }`; a
+  journey's has a literal `answer`. A stub narrows by `requestId`, `endpoint`, `pageId` and
+  `match`, a partial match on the `request` field of the record `sunk` holds. The first stub
+  that matches answers (`findStub`) and the request is recorded in `sunk`. A request no stub
+  matches falls through to the resolver it would have had: the sink on an external or opened
+  type, the real resolver on a redirect type.
+- **Fail gates** (`session.fail({ requestId, endpoint?, pageId?, message, times? })`,
+  `addFailGate`) throw, before the resolver runs, a `ServiceError` with the message and
+  `forced: true` (`createForcedFailure`), on any connection. Once by default, `times: n` the next
+  n, `times: 'all'` every one. Each gate counts `fired`; `listUnfiredFailGates` lists the ones no
+  request reached.
+- **Pause gates** (`session.pauseBefore(stepId)`, `addPauseGate`) hold request steps only.
+  `createGatedResolver` wraps every request resolver: the first routine to reach a request an
+  open gate matches stops with its request built and not yet sent, and the gate records
+  `reached`. `@lowdefy/api` has no hook before a `CallApi` or control step. One gate holds one
+  routine, so a test can run a second call through the same step. `releasePauseGates` releases
+  and removes every gate. A journey's `hold` step races each later step's work against the open
+  gates (`raceToPauseGate`), so a call that reaches one is parked rather than awaited;
+  `listUnreachedPauseGates` lists the gates no request reached. Closing the data session releases
+  its pause gates.
 
 ### Reset and close
 
 `session.reset()` releases held routines, waits for background work, empties every collection and
-loads the data set again (`reloadDataSession`), and empties `sunk`. Collections and indexes are
+loads the data set again (`reloadDataSession`), and empties `sunk` and the fail gates. Collections and indexes are
 kept, which is what makes it several times cheaper than a new session. Stubs stay.
 
 `app.close()` ends the sessions, closes the MongoDB plugin's driver clients (`closeClients` from
