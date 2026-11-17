@@ -28,7 +28,8 @@ import testSessions from '../testSessions.js';
 // reads in the session's database, as the browser runner reads them (findSessionDocuments).
 // `user` takes the forms session.as() takes. buildDirectory is where the client plugins the build
 // wrote are imported from; dataSetName is the session's data set (null when it was opened with
-// none) and userNames are its users.
+// none) and userNames are its users. dataSession is the data session the calls run on, which holds
+// its stubs, gates and sunk requests (@lowdefy/test-utils/dataSets).
 function headlessCalls(session) {
   const testSession = testSessions.get(session);
   if (testSession === undefined) {
@@ -37,6 +38,7 @@ function headlessCalls(session) {
   return {
     buildDirectory: testSession.testApp.directories.build,
     dataSetName: testSession.named ? testSession.dataSet.name : null,
+    dataSession: testSession.dataSession.session,
     call: ({ body, endpointId, kind, pageId, requestId, user }) =>
       callFromPage({
         body,

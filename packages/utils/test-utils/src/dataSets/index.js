@@ -24,7 +24,9 @@ import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
 import getRunDataStore from './getRunDataStore.js';
 import listUnfiredFailGates from './listUnfiredFailGates.js';
+import listUnreachedPauseGates from './listUnreachedPauseGates.js';
 import openDataSession from './openDataSession.js';
+import raceToPauseGate from './raceToPauseGate.js';
 import readDataSet from './readDataSet.js';
 import releasePauseGates from './releasePauseGates.js';
 import sinkExternalConnections from './sinkExternalConnections.js';
@@ -42,7 +44,9 @@ export {
   getDataStore,
   getRunDataStore,
   listUnfiredFailGates,
+  listUnreachedPauseGates,
   openDataSession,
+  raceToPauseGate,
   readDataSet,
   releasePauseGates,
   sinkExternalConnections,
