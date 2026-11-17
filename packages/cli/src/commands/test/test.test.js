@@ -243,7 +243,7 @@ test('test reports a malformed journey file as a failure and still runs the othe
   expect(logs.error[2]).toEqual(
     '      Invalid journey file: Journey should have required property "steps".'
   );
-  expect(logs.info.some((line) => /^PASS  valid journey  \(1 steps, \d+ms\)$/.test(line))).toBe(
+  expect(logs.info.some((line) => /^PASS {2}valid journey {2}\(1 steps, \d+ms\)$/.test(line))).toBe(
     true
   );
   expect(logs.error[logs.error.length - 1]).toEqual('1 passed, 1 failed of 2 journeys');
