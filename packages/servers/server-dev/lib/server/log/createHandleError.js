@@ -39,13 +39,24 @@ function shouldStore(error) {
 
 // `dataSession` is the journey data session the request runs on, if any. A forced failure (a
 // journey's fail gate) is the test's doing, not a fault: it is recorded there by the request's id
-// (recordForcedFailure), where the journey's checks read its message, and is logged at debug,
-// never stored for the agent or reported as an app error.
+// (recordForcedFailure), where the journey's checks read its message, and is logged at debug. Its
+// entry goes to the journey run's error buffer marked `forced`, so the run knows the 500 it
+// answered was forced, and never counts it as an app error or shows it to the agent.
 function createHandleError({ context, dataSession }) {
   return async function handleError(error) {
     if (error.forced === true) {
       error.handled = true;
       recordForcedFailure({ error, rid: context.rid, session: dataSession });
+      serverErrorStore.push({
+        timestamp: new Date().toISOString(),
+        name: error.name,
+        message: error.message,
+        forced: true,
+        endpointId: context.endpointId ?? null,
+        requestId: context.requestId ?? null,
+        pageId: context.pageId ?? null,
+        recording: errorRecordingStamp(context.recording),
+      });
       context.logger.debug({ event: 'debug_forced_failure', err: error }, error.message);
       return;
     }

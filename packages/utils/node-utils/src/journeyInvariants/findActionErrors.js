@@ -19,13 +19,15 @@ import { type } from '@lowdefy/helpers';
 
 // The action-error findings of a step's trace emits (the engine's value-free summary of each
 // completed event): one per event that failed with an error that is not an expected outcome. A
-// failed Validate (a UserError) or an auth gate's 401 or 403 refusal is the app doing its job.
+// failed Validate (a UserError) or an auth gate's 401 or 403 refusal is the app doing its job, and
+// a failure a test's fail gate forced on the server (`forced`) is the test's doing.
 // resolveSource(configKey) gives the failed action's config location. Returns finding drafts
 // { kind, message, source, configKey } for keyFindings.
 async function findActionErrors({ emits, resolveSource }) {
   const drafts = [];
   for (const emit of emits) {
     if (emit.success !== false || expectedErrorNames.has(emit.failure?.errorName)) continue;
+    if (emit.failure?.forced === true) continue;
     const { actionId, actionType, configKey, errorName } = emit.failure ?? {};
     drafts.push({
       kind: 'action-error',

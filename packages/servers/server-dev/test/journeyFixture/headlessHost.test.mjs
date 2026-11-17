@@ -179,8 +179,9 @@ fixtureTest('headless must be true or false', async () => {
   expect(body.error).toBe('The "headless" param must be true or false. Received "yes".');
 });
 
-// A journey of tests/journeys/_headless, as the journey route takes it.
-function readHeadlessJourney(name) {
+// A journey of tests/journeys/_headless, as the journey route takes it: the file's first, or the
+// one at `index`.
+function readHeadlessJourney(name, index = 0) {
   const file = path.join(
     process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
     'tests',
@@ -188,8 +189,14 @@ function readHeadlessJourney(name) {
     '_headless',
     name
   );
-  const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
-  return { data: journey.data, user: journey.user, stubs: journey.stubs, steps: journey.steps };
+  const journey = YAML.parse(fs.readFileSync(file, 'utf8'))[index];
+  return {
+    pageId: journey.pageId,
+    data: journey.data,
+    user: journey.user,
+    stubs: journey.stubs,
+    steps: journey.steps,
+  };
 }
 
 // tests/journeys/_headless/race.yaml: hold parks the first approve_run call before claim_run, the
@@ -291,3 +298,18 @@ fixtureTest('a browser run refuses the system journey, pointing to a headless ru
     'Step 3: step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).'
   );
 });
+
+fixtureTest(
+  'a page request a click fires and a fail gate fails is no app error, headless on the dev server',
+  async () => {
+    const journey = readHeadlessJourney('stubs.yaml', 1);
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...journey, headless: true },
+    });
+    expect(status).toBe(200);
+    expect(body.failure).toBeUndefined();
+    expect(body.passed).toBe(true);
+    expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+  }
+);

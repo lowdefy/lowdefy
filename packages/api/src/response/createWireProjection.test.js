@@ -314,3 +314,12 @@ test('createWireProjection marks a projected caught UserError as a Lowdefy error
   expect(payload['~e'].message).toBe('Order rejected.');
   expect(payload['~e'].isLowdefyError).toBe(true);
 });
+
+test("createWireProjection carries a test's forced failure mark, with the generic message", () => {
+  const forced = new ServiceError('Write failed on purpose');
+  forced.forced = true;
+  const node = serialize(forced)['~e'];
+  expect(node.forced).toBe(true);
+  expect(node.message).not.toContain('on purpose');
+  expect(serialize(new ServiceError('Timed out'))['~e']).not.toHaveProperty('forced');
+});

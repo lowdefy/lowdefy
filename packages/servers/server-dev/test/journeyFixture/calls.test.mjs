@@ -187,3 +187,30 @@ fixtureTest('stubs answer and fail requests in a browser run, as headless', asyn
   expect(result.passed).toBe(true);
   expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
 });
+
+// The second journey of tests/journeys/_headless/stubs.yaml in a browser run: the Save click's
+// save_item request fails at a fail gate. The page's failed Request action, the 500 the route
+// answered and the dev server's error entry are marked forced, so none is an app error.
+fixtureTest(
+  'a page request a click fires and a fail gate fails is no app error in a browser run',
+  async () => {
+    const file = path.join(
+      process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+      'tests',
+      'journeys',
+      '_headless',
+      'stubs.yaml'
+    );
+    const journey = YAML.parse(fs.readFileSync(file, 'utf8'))[1];
+    const result = await postJourney({
+      pageId: journey.pageId,
+      data: journey.data,
+      user: journey.user,
+      stubs: journey.stubs,
+      steps: journey.steps,
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+    expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+  }
+);

@@ -259,8 +259,13 @@ test('handleError stores a message with the credentials the request marked redac
   expect(serverErrorStore.push.mock.calls[0][0].message).toBe('Upstream refused [REDACTED].');
 });
 
-test('handleError records a forced failure on the data session and stores and logs no fault', async () => {
-  const context = { ...testContext(), rid: 'rid-1', logger: { error: vi.fn(), debug: vi.fn() } };
+test('handleError records a forced failure on the data session and logs no fault, marking its run entry forced', async () => {
+  const context = {
+    ...testContext(),
+    rid: 'rid-1',
+    requestId: 'save_price',
+    logger: { error: vi.fn(), debug: vi.fn() },
+  };
   const dataSession = { forced: [] };
   const handleError = createHandleError({ context, dataSession });
   const error = new ServiceError('Write failed on purpose');
@@ -270,7 +275,14 @@ test('handleError records a forced failure on the data session and stores and lo
 
   expect(error.handled).toBe(true);
   expect(dataSession.forced).toEqual([{ rid: 'rid-1', message: 'Write failed on purpose' }]);
-  expect(serverErrorStore.push).not.toHaveBeenCalled();
+  expect(serverErrorStore.push).toHaveBeenCalledWith(
+    expect.objectContaining({
+      name: 'ServiceError',
+      message: 'Write failed on purpose',
+      forced: true,
+      requestId: 'save_price',
+    })
+  );
   expect(context.logger.error).not.toHaveBeenCalled();
   expect(context.readConfigFile).not.toHaveBeenCalled();
 });

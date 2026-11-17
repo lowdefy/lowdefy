@@ -86,6 +86,10 @@ function createWireProjection(context) {
       // /api/client-error, and the server logs and reports it a second time.
       isLowdefyError: true,
       handled: err.handled,
+      // A test's fail gate marks the failure it forces (@lowdefy/test-utils' createForcedFailure),
+      // so a journey runner knows the client's failed action came from it and is no app error.
+      // Never set outside a test data session.
+      forced: err.forced === true ? true : undefined,
     };
   };
 }

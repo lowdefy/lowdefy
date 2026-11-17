@@ -30,7 +30,7 @@ import journeyFixture from './journeyFixture.mjs';
 // service price_run asks, and fail gates that fail a write once, twice and every time, on data set
 // "stubs". Each journey runs on a host of its own on the file's one app, so on a fresh session.
 
-const [stubsJourney] = YAML.parse(
+const [stubsJourney, pageJourney] = YAML.parse(
   fs.readFileSync(
     path.join(journeyFixture.configDirectory, 'tests', 'journeys', '_headless', 'stubs.yaml'),
     'utf8'
@@ -48,9 +48,9 @@ afterAll(async () => {
   await app?.close();
 });
 
-async function run({ steps, stubs }) {
+async function run({ pageId, steps, stubs }) {
   host = await createBuildHost({ app, data: 'stubs', stubs, user: 'finance' });
-  return runHeadlessJourney({ host, journey: { steps }, stepTimeout: 2000 });
+  return runHeadlessJourney({ host, journey: { pageId, steps }, stepTimeout: 2000 });
 }
 
 afterEach(async () => {
@@ -113,4 +113,15 @@ test('expect.error after a forced failure fails on text the forced message does 
     message:
       'Expected endpoint "price_run" to answer with an error containing "Some other text" but its error was "Price write failed on purpose".',
   });
+});
+
+test('a page request a click fires and a fail gate fails is no app error', async () => {
+  const result = await run(pageJourney);
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(pageJourney.steps.map(() => 'ok'));
+  expect(host.dataSession.failGates).toMatchObject([{ requestId: 'save_item', fired: 1 }]);
+  expect(result.calls).toMatchObject([
+    { kind: 'request', requestId: 'save_item', status: 500, success: false },
+  ]);
 });

@@ -56,3 +56,19 @@
     - call: { endpoint: log_activity, payload: { source: second } }
     - expect: { error: Activity log is down }
     - expect: { db: { collection: items, match: { kind: activity }, count: 0 } }
+# A fail gate on a page's own request, fired by a click: the Save button's save_item request fails
+# on purpose. The client's failed Request action, the server's 500 and its error are the test's
+# doing, so none of them is an app error, and nothing is saved.
+- name: a forced failure of a page request a click fires is no app error
+  pageId: home
+  data: stubs
+  user: finance
+  stubs:
+    - requestId: save_item
+      pageId: home
+      fail: Save failed on purpose
+  steps:
+    - fill: { blockId: name_input, value: Forced item }
+    - click: save_button
+    - wait: { request: save_item }
+    - expect: { db: { collection: items, match: { kind: item }, count: 0 } }

@@ -242,6 +242,7 @@ test('a Validate failure carries the invalid block ids', async () => {
     actionType: 'Validate',
     configKey: payloads[0].record.error.action['~k'] ?? null,
     errorName: 'UserError',
+    forced: false,
     invalidBlocks: ['name', 'email'],
   });
 });
