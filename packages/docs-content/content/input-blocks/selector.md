@@ -1103,6 +1103,7 @@ Dropdown selector with search, clear, and custom icons.
 | --- | --- | --- | --- |
 | `allowClear` | boolean | `true` | Allow the user to clear the selected value, sets the value to null. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
+| `autoOpen` | boolean | `false` | Open the dropdown when the block mounts, for a field that shows its input only after the value is clicked. It closes as usual on a pick, a click outside or Escape. |
 | `bordered` | boolean | `true` | Whether or not the selector has a border style. Deprecated, use variant instead. |
 | `clearIcon` | string \| object | `"clear"` | Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon at far right position of the selector, shown when user is given option to clear input. |
 | `clearIcon.name` | string | - | Icon name: a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`. |

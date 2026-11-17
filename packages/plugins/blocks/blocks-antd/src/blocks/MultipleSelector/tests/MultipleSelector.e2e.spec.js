@@ -453,7 +453,7 @@ test.describe('MultipleSelector Block', () => {
 
 test.describe('MultipleSelector autoOpen', () => {
   test.beforeEach(async ({ page }) => {
-    await navigateToTestPage(page, 'multipleselector');
+    await navigateToTestPage(page, 'multiple_selector');
   });
 
   test('autoOpen opens the dropdown when the block mounts', async ({ page }) => {
