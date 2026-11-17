@@ -232,6 +232,42 @@ test('discoverJourneys fails a file whose refs make a loop, naming the loop', ()
   ]);
 });
 
+test('discoverJourneys fails a loop through a symlink with the loop message, naming the real files', () => {
+  writeConfigFile('tests/shared/a.yaml', '_ref: tests/shared/link/a.yaml\n');
+  // A folder link back to its own folder: tests/shared/link/a.yaml is tests/shared/a.yaml.
+  fs.symlinkSync('.', path.join(configDirectory, 'tests', 'shared', 'link'));
+  const filePath = writeJourneyFile(
+    'linked.yaml',
+    'name: linked\npageId: form\nsteps:\n  _ref: tests/shared/a.yaml\n'
+  );
+  expect(discoverJourneys({ context })[0]).toMatchObject({
+    filePath,
+    journey: undefined,
+    error:
+      '_ref "tests/shared/link/a.yaml" makes a loop: tests/journeys/linked.yaml -> tests/shared/a.yaml -> tests/shared/a.yaml.',
+  });
+});
+
+test('discoverJourneys reads a _ref by an absolute path or one that leaves the config root', () => {
+  const outside = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-shared-'));
+  fs.writeFileSync(path.join(outside, 'click.yaml'), 'click: submit\n');
+  writeJourneyFile(
+    'paths.yaml',
+    `name: paths\npageId: form\nsteps:\n  - _ref: ${path.join(
+      outside,
+      'click.yaml'
+    )}\n  - _ref: ../${path.basename(outside)}/click.yaml\n`
+  );
+  try {
+    expect(discoverJourneys({ context })[0].journey.steps).toEqual([
+      { click: 'submit' },
+      { click: 'submit' },
+    ]);
+  } finally {
+    fs.rmSync(outside, { recursive: true, force: true });
+  }
+});
+
 test('discoverJourneys fails a file that refers back to itself', () => {
   const filePath = writeJourneyFile(
     'self.yaml',

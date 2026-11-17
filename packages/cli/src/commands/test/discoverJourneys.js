@@ -33,7 +33,11 @@ function readJourneyFile({ filePath, configDirectory }) {
     ];
   }
   try {
-    parsed = resolveJourneyRefs({ value: parsed, configDirectory, chain: [filePath] });
+    parsed = resolveJourneyRefs({
+      value: parsed,
+      configDirectory,
+      chain: [fs.realpathSync(filePath)],
+    });
   } catch (error) {
     return [{ filePath, journeyIndex: 0, journey: undefined, error: error.message }];
   }

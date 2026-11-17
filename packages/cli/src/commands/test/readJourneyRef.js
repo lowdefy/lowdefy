@@ -46,9 +46,10 @@ function readRefPath({ refDefinition }) {
 }
 
 // The content of the file one `_ref` in a journey file names, parsed but with its own refs not
-// yet resolved. Paths are from the config root, as in the rest of the app. `chain` holds the
-// absolute paths of the journey file and every file referred to on the way here, so a file that
-// refers back to one of them is a loop.
+// yet resolved. Paths are from the config root, as in the rest of the app; absolute and ../ paths
+// are allowed, as the build's _ref allows them. `chain` holds the real paths (symlinks resolved)
+// of the journey file and every file referred to on the way here, so a file that refers back to
+// one of them, by any path, is a loop.
 function readJourneyRef({ refDefinition, configDirectory, chain }) {
   const refPath = readRefPath({ refDefinition });
   const extension = path.extname(refPath).toLowerCase();
@@ -58,21 +59,23 @@ function readJourneyRef({ refDefinition, configDirectory, chain }) {
     );
   }
   const absolutePath = path.resolve(configDirectory, refPath);
-  if (chain.includes(absolutePath)) {
-    const loop = [...chain, absolutePath].map((filePath) =>
-      path.relative(configDirectory, filePath).split(path.sep).join('/')
-    );
-    throw new Error(`_ref "${refPath}" makes a loop: ${loop.join(' -> ')}.`);
-  }
   if (!fs.existsSync(absolutePath)) {
     throw new Error(
       `_ref "${refPath}": no file at ${absolutePath}. Paths in _ref are from the config root.`
     );
   }
-  const text = fs.readFileSync(absolutePath, 'utf8');
+  const realPath = fs.realpathSync(absolutePath);
+  if (chain.includes(realPath)) {
+    const realConfigDirectory = fs.realpathSync(configDirectory);
+    const loop = [...chain, realPath].map((filePath) =>
+      path.relative(realConfigDirectory, filePath).split(path.sep).join('/')
+    );
+    throw new Error(`_ref "${refPath}" makes a loop: ${loop.join(' -> ')}.`);
+  }
+  const text = fs.readFileSync(realPath, 'utf8');
   try {
     const content = extension === '.json' ? JSON.parse(text) : YAML.parse(text);
-    return { content, absolutePath };
+    return { content, absolutePath: realPath };
   } catch (error) {
     throw new Error(`_ref "${refPath}" does not parse: ${error.message}`, { cause: error });
   }
