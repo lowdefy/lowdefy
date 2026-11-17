@@ -225,7 +225,7 @@ export default {
     generateTitle: {
       type: 'boolean',
       description:
-        'When true, generate a short conversation title on the first turn from the first user message. Emits a "data-chat-title" data part that fires the block\'s onTitleGenerated event. Off by default.',
+        'When true, generate a short conversation title from the first exchange (the first user message and the first reply), once the reply is complete. The title call uses the agent\'s providerOptions without its thinking and reasoning settings. Emits a "data-chat-title" data part that fires the block\'s onTitleGenerated event. Off by default.',
       errorMessage: {
         type: 'AISDKAgent agent property "generateTitle" should be a boolean.',
       },

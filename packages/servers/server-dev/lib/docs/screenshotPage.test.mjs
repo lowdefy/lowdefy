@@ -19,6 +19,8 @@ import os from 'os';
 import path from 'path';
 import { vi, afterAll, expect, test } from 'vitest';
 
+import { journeyActorToken } from '../server/auth/journeyActor.js';
+
 // A real screenshot needs an installed browser, which jest can't rely on, so
 // this only covers the error paths: bad input, and chromium.launch failing
 // (the "no browser installed" case). chromium.launch is mocked so the real
@@ -273,7 +275,10 @@ test("screenshotPage renders as a data set user, on the data set's own database"
       dataSet: { name: 'crm', users: { member } },
     });
     const headless = cookies.find((cookie) => cookie.name === 'lowdefy_headless_user');
-    const caller = JSON.parse(Buffer.from(headless.value, 'base64').toString());
+    expect(headless.httpOnly).toBe(true);
+    const [token, payload] = headless.value.split('.');
+    expect(token).toEqual(journeyActorToken);
+    const caller = JSON.parse(Buffer.from(payload, 'base64').toString());
     expect(caller.explicit).toBe(true);
     expect(caller.user).toMatchObject({ id: 'u_member', roles: ['member'] });
     expect(cookies.map((cookie) => cookie.name)).toContain('lowdefy_journey_data');

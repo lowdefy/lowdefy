@@ -17,8 +17,9 @@
 import { type } from '@lowdefy/helpers';
 import { getPossibleOperators } from '@lowdefy/operators';
 
-import findEmbeddedUrls from './findEmbeddedUrls.js';
-import findHtmlUrls from './findHtmlUrls.js';
+import checkHtmlTag from './checkHtmlTag.js';
+import checkKey from './checkKey.js';
+import checkTextUrls from './checkTextUrls.js';
 import isAllowedUrl from './isAllowedUrl.js';
 import isUnderState from './isUnderState.js';
 
@@ -39,7 +40,6 @@ const URL_KEY_KINDS = {
   srcSet: 'srcSet',
   url: 'url',
 };
-const HTML_TAG = /<[a-zA-Z/!]/;
 
 function joinPath(path, key) {
   return path ? `${path}.${key}` : `${key}`;
@@ -58,23 +58,6 @@ function listUrls({ value, urlKind }) {
   return [value];
 }
 
-// Which URLs a string can carry depends on how its block draws it (textKind,
-// from the block schema). A value is a URL where it is used as a link (a URL
-// key or urlKind mark, judged whole above); text and HTML a block draws are no
-// link and render no markdown, so a whole value, a markdown target or a
-// protocol-relative word in them is words. HTML can carry a style, a link or a
-// source attribute only when the policy allows tags (findHtmlUrls). A value no schema marks may be drawn as
-// markdown, a style or a link the schema does not mark, so every scan applies.
-function getUrlScans({ textKind, policy }) {
-  if (textKind === 'text') {
-    return { wholeValue: false, markdown: false, css: false };
-  }
-  if (textKind === 'html') {
-    return { wholeValue: false, markdown: false, css: policy.html === true };
-  }
-  return { wholeValue: true, markdown: true, css: true };
-}
-
 function checkString({ value, key, path, walk }) {
   const { errors, policy, routes } = walk;
   // Data is stored or sent, never drawn or followed by the content, so every
@@ -83,14 +66,7 @@ function checkString({ value, key, path, walk }) {
     return;
   }
   const textKind = walk.textKinds?.get(path) ?? null;
-  // A string drawn as escaped text shows tag syntax as written.
-  if (!policy.html && textKind !== 'text' && HTML_TAG.test(value)) {
-    errors.push({
-      path,
-      rule: 'policy.html',
-      message: `String contains HTML tag syntax. Dynamic blocks policy "${policy.id}" does not allow HTML.`,
-    });
-  }
+  checkHtmlTag({ value, path, textKind, subject: 'String', walk });
   if (key === 'pageId' && !policy.links.pages.includes(value)) {
     errors.push({
       path,
@@ -121,28 +97,7 @@ function checkString({ value, key, path, walk }) {
     return;
   }
   // A URL value was judged whole above; other strings are searched.
-  findEmbeddedUrls({ value, ...getUrlScans({ textKind, policy }) }).forEach((url) => {
-    if (!isAllowedUrl({ value: url, policy, navigation: false, schemeless: false, routes })) {
-      errors.push({
-        path,
-        rule: 'policy.urls',
-        message: `URL "${url}" is not an origin dynamic blocks policy "${policy.id}" allows.`,
-      });
-    }
-  });
-  // With tags allowed, any string a block may draw as HTML can carry a link or
-  // a source in an attribute.
-  if (policy.html === true && textKind !== 'text') {
-    findHtmlUrls({ value }).forEach(({ url, navigation }) => {
-      if (!isAllowedUrl({ value: url, policy, navigation, schemeless: false, routes })) {
-        errors.push({
-          path,
-          rule: 'policy.urls',
-          message: `HTML attribute URL "${url}" is not a page or origin dynamic blocks policy "${policy.id}" allows.`,
-        });
-      }
-    });
-  }
+  checkTextUrls({ value, path, textKind, walk });
 }
 
 // A _state read may only name a literal key under the policy's state, so
@@ -242,7 +197,9 @@ function checkValue({ value, key = null, path, walk: parentWalk }) {
   checkOperators({ value, key, path, walk });
   Object.keys(value).forEach((childKey) => {
     if (childKey.startsWith('~')) return;
-    checkValue({ value: value[childKey], key: childKey, path: joinPath(path, childKey), walk });
+    const childPath = joinPath(path, childKey);
+    checkKey({ key: childKey, path: childPath, walk });
+    checkValue({ value: value[childKey], key: childKey, path: childPath, walk });
   });
 }
 

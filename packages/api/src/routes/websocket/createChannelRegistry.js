@@ -24,8 +24,10 @@ import createWireProjection from '../../response/createWireProjection.js';
 import prepareChannel from './prepareChannel.js';
 import wrapResolverError from '../request/wrapResolverError.js';
 
-const MAX_RETRIES = 5;
+// A failed source is restarted for as long as its channel has subscribers, 1 s
+// after the first failure, doubling up to 60 s apart.
 const RETRY_BASE_MS = 1000;
+const RETRY_CAP_MS = 60 * 1000;
 const HEALTHY_RESET_MS = 60 * 1000;
 
 // One registry per server process. The unit of sharing is the evaluated
@@ -98,8 +100,8 @@ function createChannelRegistry() {
     channels.delete(channel.key);
   }
 
-  function handleResolverError({ channel, error, startedAt }) {
-    if (channel.abortController?.signal.aborted) {
+  function handleResolverError({ channel, error, run }) {
+    if (run.abortController.signal.aborted) {
       // Errors thrown while winding down are expected (closed cursors, etc).
       channel.logger.debug(
         { event: 'ws_source_stopped_error_ignored', websocketId: channel.websocketId },
@@ -107,24 +109,35 @@ function createChannelRegistry() {
       );
       return;
     }
+    // Anything the failed run left behind can no longer publish or report it is ready.
+    run.abortController.abort();
     const wrapped = wrapSourceError({ channel, error });
     channel.logger.debug({ err: wrapped }, wrapped.message);
-    channel.context.handleError(wrapped);
-    broadcastError(channel, wrapped);
 
-    // A run that stayed healthy resets the backoff window.
-    if (Date.now() - startedAt > HEALTHY_RESET_MS) {
+    // A run that stayed ready this long was healthy, and resets the backoff. Time
+    // spent starting does not count: a source waiting on an unreachable database
+    // can take a minute to fail.
+    if (run.readyAt !== null && Date.now() - run.readyAt > HEALTHY_RESET_MS) {
       channel.retryCount = 0;
     }
-    if (channel.retryCount >= MAX_RETRIES) {
-      channel.logger.error({
-        event: 'ws_source_max_retries',
-        websocketId: channel.websocketId,
-      });
-      removeChannel(channel);
-      return;
+    const delay = Math.min(RETRY_BASE_MS * 2 ** channel.retryCount, RETRY_CAP_MS);
+    // An outage lasts from the source's first failure until it is ready again, and
+    // is reported once: the restarts that fail during it are warnings.
+    if (channel.failing) {
+      channel.logger.warn(
+        {
+          event: 'ws_source_restart_failed',
+          websocketId: channel.websocketId,
+          retryCount: channel.retryCount,
+          retryInMs: delay,
+        },
+        wrapped.message
+      );
+    } else {
+      channel.failing = true;
+      channel.context.handleError(wrapped);
     }
-    const delay = RETRY_BASE_MS * 2 ** channel.retryCount;
+    broadcastError(channel, wrapped);
     channel.retryCount += 1;
     channel.restartTimer = setTimeout(() => {
       channel.restartTimer = null;
@@ -145,12 +158,38 @@ function createChannelRegistry() {
   function startResolver(channel) {
     const abortController = new AbortController();
     channel.abortController = abortController;
-    const startedAt = Date.now();
+    const run = { abortController, readyAt: null };
+
+    // A source calls ready once it is listening, and a publish shows it is. The
+    // source heard nothing while it was down, so after an outage each subscriber
+    // gets a subscribed frame for its subscribe, which fires the page's
+    // onSubscribe for it to fetch what it missed.
+    function ready() {
+      if (abortController.signal.aborted) {
+        return;
+      }
+      run.readyAt ??= Date.now();
+      if (!channel.failing) {
+        return;
+      }
+      channel.failing = false;
+      channel.logger.info({ event: 'ws_source_recovered', websocketId: channel.websocketId });
+      channel.subscribers.forEach((subscriber) => {
+        subscriber.send(
+          JSON.stringify({
+            type: 'subscribed',
+            websocketId: channel.websocketId,
+            requestId: channel.subscribeRequestIds.get(subscriber),
+          })
+        );
+      });
+    }
 
     function publish({ data }) {
       if (abortController.signal.aborted) {
         return;
       }
+      ready();
       broadcast(channel, {
         type: 'message',
         websocketId: channel.websocketId,
@@ -165,15 +204,16 @@ function createChannelRegistry() {
           connection: channel.connectionProperties,
           properties: channel.properties,
           publish,
+          ready,
           signal: abortController.signal,
           logger: channel.logger,
           tenant: channel.tenant ?? null,
         })
       )
-      .catch((error) => handleResolverError({ channel, error, startedAt }));
+      .catch((error) => handleResolverError({ channel, error, run }));
   }
 
-  async function subscribe(context, { websocketId, payload, subscriber }) {
+  async function subscribe(context, { websocketId, payload, requestId, subscriber }) {
     // One subscription per websocketId per connection — a re-subscribe (e.g.
     // with a new payload) replaces the previous one. The client stops reading
     // the previous one when it sends the re-subscribe, so it is removed before
@@ -200,9 +240,14 @@ function createChannelRegistry() {
         properties,
         tenant,
         subscribers: new Set(),
+        // subscriber → the requestId of the subscribe that joined it. The client
+        // reads a subscribed frame with any other requestId as a reply to a
+        // subscribe it has since replaced, and ignores it.
+        subscribeRequestIds: new Map(),
         abortController: null,
         restartTimer: null,
         retryCount: 0,
+        failing: false,
         publish: null,
         context,
         logger: context.logger,
@@ -211,6 +256,7 @@ function createChannelRegistry() {
       startResolver(channel);
     }
     channel.subscribers.add(subscriber);
+    channel.subscribeRequestIds.set(subscriber, requestId);
     subscriber.subscriptions.set(websocketId, key);
     if (!type.isNone(websocketConfig.check)) {
       if (!checkedSubscriptions.has(subscriber)) {
@@ -239,6 +285,7 @@ function createChannelRegistry() {
       return;
     }
     channel.subscribers.delete(subscriber);
+    channel.subscribeRequestIds.delete(subscriber);
     if (channel.subscribers.size === 0) {
       removeChannel(channel);
     }

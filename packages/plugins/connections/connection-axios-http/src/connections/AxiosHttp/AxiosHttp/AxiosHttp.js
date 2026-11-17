@@ -14,27 +14,29 @@
   limitations under the License.
 */
 
-import http from 'http';
-import https from 'https';
-
 import axios from 'axios';
-import { mergeObjects } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
-import schema from '../schema.js';
+import createAxiosConfig from './createAxiosConfig.js';
+import { REFUSED_CODE } from './createRefusedError.js';
+import schema from '../requestSchema.js';
 
 async function AxiosHttp({ request, connection }) {
+  const config = createAxiosConfig({ connection, request });
   try {
-    const config = mergeObjects([connection, request]);
-    if (config.httpAgentOptions) {
-      config.httpAgent = new http.Agent(config.httpAgentOptions);
-    }
-    if (config.httpsAgentOptions) {
-      config.httpsAgent = new https.Agent(config.httpsAgentOptions);
-    }
     const res = await axios(config);
     const { status, statusText, headers, method, path, data } = res;
     return { status, statusText, headers, method, path, data };
   } catch (error) {
+    // A refused address or host is raised inside axios, which wraps it (and follow-redirects wraps
+    // it again on a redirect), so the refusal is thrown as it was written.
+    let cause = error;
+    while (!type.isNone(cause)) {
+      if (cause.code === REFUSED_CODE) {
+        throw cause;
+      }
+      cause = cause.cause;
+    }
     if (error.response) {
       const responseError = new Error(
         `Http response "${error.response.status}: ${error.response.statusText}".`,
