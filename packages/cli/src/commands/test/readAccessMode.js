@@ -19,9 +19,9 @@ import { type } from '@lowdefy/helpers';
 const JOURNEYS_PURPOSE = 'to check the table and run those journeys';
 
 // The `lowdefy test` options --access and --update-access do not take, each with the command the
-// developer more likely meant. `typed` options are refused only when typed on the command line:
-// they also come from the environment (PORT, LOWDEFY_DIRECTORY_DEV) or lowdefy.yaml's cli config,
-// which a run does not choose.
+// developer more likely meant. An option is refused only when typed on the command line: options
+// also come from the environment (PORT, LOWDEFY_DIRECTORY_DEV) or lowdefy.yaml's cli config, which
+// a run does not choose.
 const REFUSED_OPTIONS = [
   {
     key: 'paths',
@@ -89,32 +89,26 @@ const REFUSED_OPTIONS = [
     flag: '--port',
     meant: 'lowdefy test --port <port>',
     purpose: 'to run the journeys on a dev server at that port',
-    typed: true,
   },
   {
     key: 'devDirectory',
     flag: '--dev-directory',
     meant: 'lowdefy test --dev-directory <dev-directory>',
     purpose: 'to run the journeys on that dev server',
-    typed: true,
   },
   {
     key: 'refResolver',
     flag: '--ref-resolver',
     meant: 'lowdefy test --ref-resolver <ref-resolver-function-path>',
     purpose: 'to run the journeys on a dev server with that resolver',
-    typed: true,
   },
 ];
 
 function isGiven({ options, refused }) {
-  if (refused.typed === true) {
-    return (options.typedOptions ?? []).includes(refused.key);
-  }
   if (refused.key === 'paths') {
     return (options.paths ?? []).length > 0;
   }
-  return !type.isNone(options[refused.key]) && options[refused.key] !== false;
+  return (options.typedOptions ?? []).includes(refused.key);
 }
 
 // Whether `lowdefy test` checks (--access) or rewrites (--update-access) the access table alone:

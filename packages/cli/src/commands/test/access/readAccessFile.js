@@ -21,6 +21,7 @@ import YAML from 'yaml';
 import getAccessFilePath from './getAccessFilePath.js';
 
 const SECTIONS = ['pages', 'endpoints'];
+const OUTCOMES = new Set(['allow', 'deny', 'enrol_required']);
 
 function checkSection({ content, section }) {
   const rows = content[section] ?? {};
@@ -29,7 +30,7 @@ function checkSection({ content, section }) {
   }
   const invalid = Object.entries(rows).find(
     ([, cells]) =>
-      !type.isObject(cells) || !Object.values(cells).every((cell) => type.isString(cell))
+      !type.isObject(cells) || !Object.values(cells).every((cell) => OUTCOMES.has(cell))
   );
   if (!type.isUndefined(invalid)) {
     return `"${section}.${invalid[0]}" should map each caller to allow, deny or enrol_required. Received ${JSON.stringify(
@@ -47,9 +48,15 @@ function readAccessFile({ configDirectory }) {
   if (!fs.existsSync(filePath)) {
     return { exists: false };
   }
+  let text;
+  try {
+    text = fs.readFileSync(filePath, 'utf8');
+  } catch (error) {
+    return { error: `tests/access.yaml could not be read. ${error.message}` };
+  }
   let content;
   try {
-    content = YAML.parse(fs.readFileSync(filePath, 'utf8'));
+    content = YAML.parse(text);
   } catch (error) {
     return { error: `tests/access.yaml could not be parsed as YAML. ${error.message}` };
   }

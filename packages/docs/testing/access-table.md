@@ -91,7 +91,7 @@ Each takes only `--config-directory`, `--server-directory`, `--log-level` and `-
 --access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.
 ```
 
-The options refused are `--headless`, `--build`, `--lint`, `--repeat`, `--filter`, `--tag`, `--tier`, `--usage-window`, `--journeys-directory` and `--url`, and `--port`, `--dev-directory` and `--ref-resolver` when typed on the command line. A `PORT` in the environment, or a value in `lowdefy.yaml`'s `cli` config, is not refused. The two flags together are refused too.
+The options refused are `--headless`, `--build`, `--lint`, `--repeat`, `--filter`, `--tag`, `--tier`, `--usage-window`, `--journeys-directory`, `--url`, `--port`, `--dev-directory` and `--ref-resolver`, when typed on the command line. A `PORT` in the environment, or a value in `lowdefy.yaml`'s `cli` config, is not refused. The two flags together are refused too.
 
 ## The first file
 

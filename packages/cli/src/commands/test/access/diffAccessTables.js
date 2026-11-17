@@ -62,8 +62,9 @@ function diffAccessTables({ expected, actual }) {
       sortedUnion(Object.keys(expectedRows[id]), Object.keys(actualRows[id]))
         .filter((caller) => expectedCallers.has(caller) && actualCallers.has(caller))
         .forEach((caller) => {
-          const before = expectedRows[id][caller];
-          const after = actualRows[id][caller];
+          // A hand-edited row can leave a caller out; the line names that cell as missing.
+          const before = expectedRows[id][caller] ?? 'missing';
+          const after = actualRows[id][caller] ?? 'missing';
           if (before !== after) {
             lines.push(`${section}.${id}.${caller}: ${before} → ${after}`);
           }

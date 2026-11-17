@@ -1420,7 +1420,7 @@ test('test --access fails with the first-file command when the app has no access
 
 test('test --access with a journey option is refused before the build opens', async () => {
   const { default: test } = await import('./test.js');
-  accessContext({ access: true, tag: ['smoke'] });
+  accessContext({ access: true, tag: ['smoke'], typedOptions: ['tag'] });
   await test({ context });
   expect(logs.error).toEqual([
     '--access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.',

@@ -56,7 +56,11 @@ test('readAccessMode refuses --access with --update-access', () => {
 });
 
 test('readAccessMode refuses a journey option with --access, naming the command meant', () => {
-  expect(readAccessMode({ options: { ...defaults, access: true, tag: ['smoke'] } })).toEqual({
+  expect(
+    readAccessMode({
+      options: { ...defaults, access: true, tag: ['smoke'], typedOptions: ['tag'] },
+    })
+  ).toEqual({
     error:
       '--access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.',
   });
@@ -79,20 +83,31 @@ test('readAccessMode refuses every journey and dev-server option with --access',
     usageWindow: '6m',
     journeysDirectory: 'journeys',
     url: 'http://localhost:3000',
+    port: '3001',
+    devDirectory: 'dev',
+    refResolver: 'resolver.js',
   };
   Object.entries(given).forEach(([key, value]) => {
-    const { error } = readAccessMode({ options: { ...defaults, access: true, [key]: value } });
+    const { error } = readAccessMode({
+      options: { ...defaults, access: true, [key]: value, typedOptions: [key] },
+    });
     expect(error).toMatch(/^--access checks the access table alone: drop --/);
   });
 });
 
-test('readAccessMode refuses --port, --dev-directory and --ref-resolver only when typed', () => {
-  ['port', 'devDirectory', 'refResolver'].forEach((key) => {
-    const fromEnvironment = { ...defaults, access: true, [key]: 'value' };
-    expect(readAccessMode({ options: fromEnvironment }).error).toBeUndefined();
-    const typed = { ...fromEnvironment, typedOptions: [key] };
-    expect(readAccessMode({ options: typed }).error).toMatch(
-      /^--access checks the access table alone: drop --(port|dev-directory|ref-resolver), or run/
-    );
+test('readAccessMode takes options the environment or lowdefy.yaml cli config set', () => {
+  const fromConfig = {
+    port: '3001',
+    devDirectory: 'dev',
+    refResolver: 'resolver.js',
+    journeysDirectory: 'tests/e2e',
+    url: 'http://localhost:3000',
+    tier: 'common',
+  };
+  Object.entries(fromConfig).forEach(([key, value]) => {
+    expect(readAccessMode({ options: { ...defaults, access: true, [key]: value } })).toEqual({
+      access: true,
+      updateAccess: false,
+    });
   });
 });

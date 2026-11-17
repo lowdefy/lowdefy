@@ -69,3 +69,17 @@ test('readAccessFile refuses a row that is not a map of outcomes', () => {
     'tests/access.yaml "pages.billing" should map each caller to allow, deny or enrol_required. Received "allow".'
   );
 });
+
+test('readAccessFile refuses a cell that is not allow, deny or enrol_required', () => {
+  writeRaw('data: roles\npages:\n  billing: { finance: alow }\n');
+  expect(readAccessFile({ configDirectory }).error).toBe(
+    'tests/access.yaml "pages.billing" should map each caller to allow, deny or enrol_required. Received {"finance":"alow"}.'
+  );
+});
+
+test('readAccessFile says a file it can not read could not be read, not that it is bad YAML', () => {
+  fs.mkdirSync(path.join(configDirectory, 'tests', 'access.yaml'), { recursive: true });
+  expect(readAccessFile({ configDirectory }).error).toMatch(
+    /^tests\/access\.yaml could not be read\. /
+  );
+});

@@ -32,7 +32,10 @@ async function updateAccessTable({ app, context }) {
   const configDirectory = context.directories.config;
   const file = readAccessFile({ configDirectory });
   if (!type.isUndefined(file.error)) {
-    context.logger.error(file.error);
+    // The file's data set is kept on a rewrite, so a file that can not be read is not replaced.
+    context.logger.error(
+      `${file.error} Fix it, or delete it to write a new one checked as data set "${FIRST_DATA_SET}".`
+    );
     return { failed: true };
   }
   let data = FIRST_DATA_SET;

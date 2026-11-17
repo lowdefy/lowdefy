@@ -75,3 +75,11 @@ test('diffAccessTables lists cell changes beside an added caller', () => {
     'pages.billing.none: deny → allow',
   ]);
 });
+
+test('diffAccessTables names a cell left out of one row of the file as missing', () => {
+  const expected = table({
+    pages: { billing: { finance: 'allow', none: 'deny' }, reports: row },
+  });
+  const actual = table({ pages: { billing: row, reports: row } });
+  expect(diffAccessTables({ expected, actual })).toEqual(['pages.billing.no-role: missing → deny']);
+});
