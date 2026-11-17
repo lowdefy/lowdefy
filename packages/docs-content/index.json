@@ -3373,7 +3373,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "a02a9bde6403f9e77c89dcd01f3d4e485dbdb0a4beecc82a73bc8a04f78cb39b"
+      "hash": "6a3917131e37a47fdfc6b14bffdfd2fe39242f15be4d3f0018ae655be1792802"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3387,7 +3387,7 @@
         "testing/endpoint-tests.md",
         "testing/endpoint-tests.yaml"
       ],
-      "hash": "d9a414d4f2649bd257b49f076e6bbb5e6aec3df5001864c06cf00748a1306caf"
+      "hash": "f4e51170ab97f0681e191e06df314860e4f8dfd99506ba033dbe7f918b7b8c15"
     },
     "testing/access-table": {
       "files": [
