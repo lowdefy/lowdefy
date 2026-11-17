@@ -2,11 +2,13 @@
 # `lowdefy test --headless --build` and the @lowdefy/journey-headless fixture suite
 # (packages/utils/journey-headless/test/fixture/outside.test.mjs). A browser run refuses as: system.
 # In a folder starting with "_" so the browser suites leave it out.
+# A signed-in caller's call is answered as a missing endpoint, a fault, so the refused call is
+# made signed out.
 - name: only a system call closes the runs
   data: outside
-  user: none
+  user: operator
   steps:
-    - call: { endpoint: close_runs }
+    - call: { endpoint: close_runs, as: none }
     - expect: { status: 401 }
     - expect:
         db:

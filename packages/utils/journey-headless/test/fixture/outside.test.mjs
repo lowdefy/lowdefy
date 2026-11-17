@@ -45,8 +45,7 @@ const webhookJourney = readJourney('webhook.yaml');
 
 let host;
 
-// A journey that names no user runs as the roleless default caller, as on the dev server.
-async function run({ steps, user = {} }) {
+async function run({ steps, user = 'operator' }) {
   host = await createBuildHost({ ...journeyFixture, data: 'outside', user });
   return runHeadlessJourney({ host, journey: { steps }, stepTimeout: 2000 });
 }
@@ -70,7 +69,7 @@ test('the system journey is refused without as: system and closes the runs with 
       status,
     }))
   ).toEqual([
-    { actor: 'main', endpointId: 'close_runs', response: null, status: 401 },
+    { actor: 'user "none"', endpointId: 'close_runs', response: null, status: 401 },
     { actor: 'system', endpointId: 'close_runs', response: { closed: 2 }, status: 200 },
   ]);
 });
@@ -92,7 +91,7 @@ test('a signed-in caller cannot reach an InternalApi endpoint either: it answers
 });
 
 test('the webhook journey writes the signed events and refuses the wrong signature', async () => {
-  const result = await run({ steps: webhookJourney.steps });
+  const result = await run({ steps: webhookJourney.steps, user: webhookJourney.user });
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
   expect(result.steps.map((step) => step.status)).toEqual(webhookJourney.steps.map(() => 'ok'));

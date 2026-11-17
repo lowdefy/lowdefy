@@ -154,7 +154,11 @@ fixtureTest('a webhook posts through the endpoints route, where its verify gate 
     'webhook.yaml'
   );
   const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
-  const result = await postJourney({ data: journey.data, steps: journey.steps });
+  const result = await postJourney({
+    data: journey.data,
+    user: journey.user,
+    steps: journey.steps,
+  });
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
   expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));

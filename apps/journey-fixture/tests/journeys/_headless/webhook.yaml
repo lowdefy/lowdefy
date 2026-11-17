@@ -6,6 +6,7 @@
 # (packages/utils/journey-headless/test/fixture/outside.test.mjs).
 - name: a signed webhook writes its event and a wrong signature is refused
   data: outside
+  user: operator
   steps:
     - webhook:
         endpoint: payment_events
