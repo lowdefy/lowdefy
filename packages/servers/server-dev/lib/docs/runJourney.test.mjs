@@ -252,6 +252,38 @@ test('runJourney refuses a placeholder value (from: shape) before opening a brow
   expect(mockOpenPage).not.toHaveBeenCalled();
 });
 
+test('runJourney refuses hold and release before opening a browser, pointing to a headless run', async () => {
+  const result = await runJourney({
+    origin,
+    steps: [
+      { hold: { requestId: 'claim_run' } },
+      { call: { endpoint: 'approve_run', payload: { id: 'BR-1' } } },
+      { release: 'claim_run' },
+    ],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 0: step "hold" needs the headless runner, which keeps a held call parked in its own process. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).',
+    refused: true,
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
+test('runJourney refuses a call as system before opening a browser, pointing to a headless run', async () => {
+  const result = await runJourney({
+    origin,
+    steps: [{ call: { endpoint: 'close_runs', as: 'system' } }, { expect: { status: 200 } }],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 0: step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).',
+    refused: true,
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
 test('runJourney returns an actionable error when no browser is available', async () => {
   mockGetBrowser.mockRejectedValue(new Error("Executable doesn't exist"));
   const result = await runJourney({ origin, pageId: 'form', steps: [] });

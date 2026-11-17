@@ -193,7 +193,8 @@ function readHeadlessJourney(name) {
 }
 
 // tests/journeys/_headless/race.yaml: hold parks the first approve_run call before claim_run, the
-// other user's call claims the run, and release answers with the parked call.
+// other user's call claims the run, and release answers with the parked call. A browser run
+// refuses hold and release before any browser opens.
 function readRaceJourney() {
   return readHeadlessJourney('race.yaml');
 }
@@ -266,5 +267,27 @@ fixtureTest('the journey route refuses stubs with no data set', async () => {
   expect(status).toBe(400);
   expect(body.error).toBe(
     '"stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".'
+  );
+});
+
+fixtureTest('a browser run refuses the race journey, pointing to a headless run', async () => {
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: readRaceJourney(),
+  });
+  expect(status).toBe(400);
+  expect(body.error).toBe(
+    'Step 0: step "hold" needs the headless runner, which keeps a held call parked in its own process. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).'
+  );
+});
+
+fixtureTest('a browser run refuses the system journey, pointing to a headless run', async () => {
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: readHeadlessJourney('system.yaml'),
+  });
+  expect(status).toBe(400);
+  expect(body.error).toBe(
+    'Step 2: step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).'
   );
 });
