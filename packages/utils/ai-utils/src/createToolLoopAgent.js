@@ -75,8 +75,9 @@ function createHookCallbacks({ callEndpoint, hooks, locale, logger, logIds }) {
 
 // Shared agent assembly for the streaming chat path and the headless generate
 // path: tools, model, hook callbacks, instructions, stop conditions, and the
-// ToolLoopAgent instance.
-async function createToolLoopAgent({ connection, agent, context, autoApprove = false }) {
+// ToolLoopAgent instance. onAbort is the AI SDK's: it is called with the abort signal's
+// reason when a timeout or the caller's signal stops the run.
+async function createToolLoopAgent({ connection, agent, context, autoApprove = false, onAbort }) {
   const { tools, mcpClients, toolApproval } = await buildAgentTools({
     agent,
     context,
@@ -160,6 +161,7 @@ async function createToolLoopAgent({ connection, agent, context, autoApprove = f
       signal: context.signal,
     }),
     ...hookCallbacks,
+    ...(onAbort ? { onAbort } : {}),
     // streamText's default onError writes the whole error to the console, and an AI SDK error
     // can carry the request body (instructions, page context, messages) or the provider's
     // reply. A mid-stream error reaches the client as an error chunk without throwing, so this

@@ -186,7 +186,7 @@ _ref:
                 - `stepMs: number`: Timeout per step.
                 - `chunkMs: number`: Timeout between stream chunks.
 
-            A chat turn keeps running when the client disconnects, so its `onFinish` hooks still save the whole conversation; `timeout` and `maxSteps` are what bound it. A `CallAgent` step is cancelled with the routine that runs it: when its request closes or the server's request timeout (`config.requestTimeout`) answers first.
+            A chat turn keeps running when the client disconnects, so its `onFinish` hooks still save the whole conversation; `timeout` and `maxSteps` are what bound it. When `timeout` stops a chat turn, the chat ends with an error saying the answer took too long, which fires the [`AgentChat`](/AgentChat) block's `onError` event, and the server logs the stop. The `onFinish` hooks still run, with `isAborted: true` and `abortReason: timeout`, so a hook can tell the cut-off reply from a finished one. A `CallAgent` step is cancelled with the routine that runs it: when its request closes or the server's request timeout (`config.requestTimeout`) answers first.
 
             ## File Downloads
 
