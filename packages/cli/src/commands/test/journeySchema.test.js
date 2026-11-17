@@ -116,7 +116,7 @@ test('journeySchema rejects an unknown step key', () => {
   const result = validateJourney({ journey });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Unknown journey step key. Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Unknown journey step key. Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
@@ -482,5 +482,7 @@ test('journeySchema refuses a journey with no pageId at the first step that need
         steps: [{ wait: { state: 'loaded' } }, { expect: { status: 200 } }],
       },
     }).message
-  ).toContain('Step 1: Step "expect.status" must follow a "call" or "request" step');
+  ).toContain(
+    'Step 1: Step "expect.status" must follow a "call", "request", "release" or "webhook" step'
+  );
 });
