@@ -57,14 +57,14 @@ users:
 
 ## Which test for which check
 
-| Check                                                                     | Test                                                                  |
-| ------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| A page's logic and state, what a control writes                           | A [journey](/config-tests) that targets blocks by `blockId`, headless |
-| What a page would never send: another tenant's ids, wrong types           | A journey with no `pageId`, using `call` or `request` steps           |
-| Table-driven cases, stubbed services, races, cron and internal routines   | An endpoint test                                                      |
-| Who can reach which page and endpoint                                     | [The access table](#the-access-table), one snapshot for the whole app |
-| What a page shows, how it reacts, paths across pages, sign-up and sign-in | A [journey](/config-tests) in the browser                             |
-| Custom browser code against a production build                            | [e2e testing](/e2e-introduction)                                      |
+| Check                                                                     | Test                                                                     |
+| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| A page's logic and state, what a control writes                           | A [journey](/config-tests) that targets blocks by `blockId`, headless    |
+| What a page would never send: another tenant's ids, wrong types           | A journey with no `pageId`, using `call` or `request` steps              |
+| Table-driven cases, stubbed services, races, cron and internal routines   | An endpoint test                                                         |
+| Who can reach which page and endpoint                                     | [The access table](/access-table), `tests/access.yaml` for the whole app |
+| What a page shows, how it reacts, paths across pages, sign-up and sign-in | A [journey](/config-tests) in the browser                                |
+| Custom browser code against a production build                            | [e2e testing](/e2e-introduction)                                         |
 
 ## Setting up
 
@@ -114,11 +114,10 @@ When one of those changed, build yourself. A run that builds first, as the scrip
 
 It returns the app:
 
-| Call                         | Description                                                                                    |
-| ---------------------------- | ---------------------------------------------------------------------------------------------- |
-| `app.openSession({ data })`  | Opens a [session](#sessions) on fresh databases, loaded with the data set `data` names.        |
-| `app.accessMatrix({ data })` | [The access table](#the-access-table) for the users of a data set. Needs no session.           |
-| `app.close()`                | Ends the app's sessions, drops their databases and closes its connections. Call it in `after`. |
+| Call                        | Description                                                                                    |
+| --------------------------- | ---------------------------------------------------------------------------------------------- |
+| `app.openSession({ data })` | Opens a [session](#sessions) on fresh databases, loaded with the data set `data` names.        |
+| `app.close()`               | Ends the app's sessions, drops their databases and closes its connections. Call it in `after`. |
 
 ## Sessions
 
@@ -189,7 +188,7 @@ test('only an auditor reaches auditor_only', async () => {
 });
 ```
 
-For every page and endpoint at once, use [the access table](#the-access-table).
+For every page and endpoint at once, use [the access table](/access-table), not an endpoint test.
 
 ### Page requests
 
@@ -319,44 +318,7 @@ test('the stored activity has an id and its source', async () => {
 
 ## The access table
 
-`app.accessMatrix({ data })` asks the app's authorization gate about every page and every endpoint in the build, as each user of a data set and as a signed out caller, `none`. It starts no server and no database, and answers hundreds of pages for tens of users in milliseconds. Keep it as a snapshot:
-
-```js
-// tests/endpoints/access.test.mjs
-import { after, test } from 'node:test';
-import { openTestApp } from '@lowdefy/test-utils';
-
-const app = await openTestApp();
-after(() => app.close());
-
-test('who can reach what', async (t) => {
-  t.assert.snapshot(await app.accessMatrix({ data: 'roles' }));
-});
-```
-
-The data set needs only the users to check as, one for each role:
-
-```yaml
-# tests/data/roles.yaml
-users:
-  auditor: { id: u_auditor, roles: [auditor] }
-  member: { id: u_member, roles: [member] }
-```
-
-The table is `{ pages: { <pageId>: { <user>: <outcome> } }, endpoints: { <endpointId>: { <user>: <outcome> } } }`, with sorted keys. Each outcome is `allow`, `deny` or `enrol_required`.
-
-Write the snapshot once, and again whenever access is meant to change:
-
-```bash
-node --test --test-update-snapshots tests/endpoints/access.test.mjs
-```
-
-**Commit the snapshot file**, `tests/endpoints/access.test.mjs.snapshot`. The table is built from the build it is compared with, so it proves nothing on its own. Its value is the committed file: a page or endpoint that opens to a new role fails the test, and updating the snapshot shows the change as a diff in the pull request. Say in the pull request that the snapshot changed, and why.
-
-- An `InternalApi` endpoint answers `deny` for every caller, since no caller can call one.
-- A user is asked to enrol a second factor (`enrol_required`) only when the data set user carries `two_factor_enrolled: false`.
-- A page whose path has placeholders is listed once, by its page id. `session.as(user).page(path)` checks one path.
-- The table does not show the redirect a browser makes, or which surface (web or mobile) serves a page. Keep one or two journeys for the redirect.
+Who can reach which page and endpoint is checked by `tests/access.yaml`, which `lowdefy test` compares with the build. Do not snapshot it in an endpoint test. See [the access table](/access-table).
 
 ## What endpoint tests do not cover
 

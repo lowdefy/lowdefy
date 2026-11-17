@@ -476,6 +476,12 @@
       "path": "content/testing/endpoint-tests.md"
     },
     {
+      "slug": "testing/access-table",
+      "title": "Access Table",
+      "section": "Testing",
+      "path": "content/testing/access-table.md"
+    },
+    {
       "slug": "testing/explore-pull-request",
       "title": "Exploring a Pull Request",
       "section": "Testing",
@@ -3087,7 +3093,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "ed4c3452a1515c53ff08b2c4a8d363a94b4eb16df508e3419b0030045131e13b"
+      "hash": "cdc795b1ad45e166cd2c5dd347e1575f0c3fdb2aa3c6b90361106325081561b9"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3367,7 +3373,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "9b8eaabcab9c1d030329cf057930afd75562a57465123920f91e40465bd9b034"
+      "hash": "1bc706626cb284b6fbf324f04afe6e84f3237b0ba9134e1eeb16780b18c2dfc2"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3381,7 +3387,14 @@
         "testing/endpoint-tests.md",
         "testing/endpoint-tests.yaml"
       ],
-      "hash": "248c911e200766f1696ced09373a456cbae3e68eab448bfe92d84d3d918a6e03"
+      "hash": "d9a414d4f2649bd257b49f076e6bbb5e6aec3df5001864c06cf00748a1306caf"
+    },
+    "testing/access-table": {
+      "files": [
+        "testing/access-table.md",
+        "testing/access-table.yaml"
+      ],
+      "hash": "491bbb503ba5e1d948cd5bcc343f65cbb7d6cba1f1eab713b732472626491465"
     },
     "testing/explore-pull-request": {
       "files": [

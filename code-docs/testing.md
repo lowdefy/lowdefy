@@ -8,13 +8,13 @@ rules for tests (naming, co-location, ES module mocking) live in `CLAUDE.md`.
 Test each change at the lowest level that fails when the change breaks. The first three levels
 are what a Lowdefy app's own tests use; this repository has suites that prove each of them.
 
-| Level            | Proves                                                                    | Runs on                                               | Cost                                         | Suites here that cover it                                                    |
-| ---------------- | ------------------------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------- | ---------------------------------------------------------------------------- |
-| Journey          | what a page shows, how it reacts, paths across pages, sign-up and sign-in | a dev server and a real Chromium                      | seconds to tens of seconds a journey         | [Journey fixture app](#journey-fixture-app), [Auth journeys](#auth-journeys) |
-| Headless journey | a page's logic and state, what it writes, what a page would never send    | a production build, in the CLI's process, no browser  | a build, then no browser time                | [Journey fixture app](#journey-fixture-app)                                  |
-| Endpoint test    | table-driven logic, stubbed services, races, cron and internal routines   | a production build, in the test's process, a `mongod` | a build, then 2 to 3 seconds a test file     | [Endpoint test harness](#endpoint-test-harness)                              |
-| The access table | who can reach which page and endpoint, as one committed snapshot          | a production build, in the test's process             | a build, then milliseconds for the whole app | [Endpoint test harness](#endpoint-test-harness)                              |
-| Unit test        | one function of a package or plugin                                       | vitest, no app                                        | milliseconds                                 | [Unit tests](#unit-tests)                                                    |
+| Level            | Proves                                                                      | Runs on                                                            | Cost                                         | Suites here that cover it                                                                                |
+| ---------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Journey          | what a page shows, how it reacts, paths across pages, sign-up and sign-in   | a dev server and a real Chromium                                   | seconds to tens of seconds a journey         | [Journey fixture app](#journey-fixture-app), [Auth journeys](#auth-journeys)                             |
+| Headless journey | a page's logic and state, what it writes, what a page would never send      | a production build, in the CLI's process, no browser               | a build, then no browser time                | [Journey fixture app](#journey-fixture-app)                                                              |
+| Endpoint test    | table-driven logic, stubbed services, races, cron and internal routines     | a production build, in the test's process, a `mongod`              | a build, then 2 to 3 seconds a test file     | [Endpoint test harness](#endpoint-test-harness)                                                          |
+| The access table | who can reach which page and endpoint, as one committed `tests/access.yaml` | a production build, in the CLI's process (`lowdefy test --access`) | a build, then milliseconds for the whole app | [Endpoint test harness](#endpoint-test-harness) (`accessMatrix`), the CLI's `test` unit tests (the step) |
+| Unit test        | one function of a package or plugin                                         | vitest, no app                                                     | milliseconds                                 | [Unit tests](#unit-tests)                                                                                |
 
 - **Each check has one home.** A page's logic, state and writes are a journey that targets blocks by
   `blockId` and asserts with `expect.state`, `expect.calls` or `expect: { db }`, so it runs headless
@@ -26,14 +26,18 @@ are what a Lowdefy app's own tests use; this repository has suites that prove ea
   edit needs a build first. While editing an app, call the endpoint on the dev server
   (`lowdefy_run_endpoint` or `lowdefy_run_request` with `user` and `data`), and run the tests once
   before calling the change done.
-- **The access table proves nothing until its snapshot is committed.** A changed snapshot is named
-  in the pull request.
+- **The access table proves nothing until `tests/access.yaml` is committed.** After a change to auth,
+  roles or the set of pages or endpoints, run `lowdefy build --no-client-build && lowdefy test --access`
+  once, before calling the change done; `lowdefy test --headless --build` checks it too. Accept a
+  change with `lowdefy test --update-access` and name each changed cell in the pull request. No test
+  calls `accessMatrix` to snapshot the table.
 - Block behaviour is covered by e2e specs, not by any of these ([Block tests](#block-tests)).
 
 `lowdefy agent-setup` writes the same rules into an app's `AGENTS.md`
 (`packages/cli/src/commands/agentSetup/testingRules.js`) and each journey skill
-(`skills/testLevel.js`), and the user docs for the two levels
-`@lowdefy/test-utils` adds are `packages/docs/testing/endpoint-tests.md`. The package is described
+(`skills/testLevel.js`). The user docs for endpoint tests are
+`packages/docs/testing/endpoint-tests.md`, and for the access table
+`packages/docs/testing/access-table.md`. The package is described
 in [utils/test-utils.md](./utils/test-utils.md).
 
 ## Getting a worktree ready
@@ -98,9 +102,10 @@ What runs is React Native, not the Jest preset's mocks:
 
 - `Text` adds `overflow: 'hidden'` to its style, and passes an array: flatten a style
   (`StyleSheet.flatten`) before reading it.
-- Component methods are real: spy on what a test checks (`vi.spyOn(TextInput.prototype,
-  'focus')`, `vi.spyOn(Linking, 'openSettings')`). ScrollView's `scrollTo` is per instance, so a
-  test spies on the native command it sends (`ScrollViewCommands.scrollTo`).
+- Component methods are real: spy on what a test checks
+  (`vi.spyOn(TextInput.prototype, 'focus')`, `vi.spyOn(Linking, 'openSettings')`). ScrollView's
+  `scrollTo` is per instance, so a test spies on the native command it sends
+  (`ScrollViewCommands.scrollTo`).
 - `ActivityIndicator` draws its style on a View around the native indicator.
 - An iOS `Modal` stays mounted until the native side dismisses it, which never happens in a test.
 - `vi.mock` reaches imports, not a `require()` (a lazily required module, a test's own
@@ -259,7 +264,8 @@ fixture suite and the CLI's `headless.test.mjs`, so do not run them at once in o
 
 `@lowdefy/test-utils` (`packages/utils/test-utils`, described in
 [utils/test-utils.md](./utils/test-utils.md)) opens a production build of an app in the
-test's own process: the access table (`app.accessMatrix`), and sessions (`app.openSession`) that
+test's own process: the access table (`app.accessMatrix`, whose one caller is `lowdefy test`'s
+access step), and sessions (`app.openSession`) that
 run the app's built endpoints and page requests as a named user on an in-memory MongoDB. Its
 tests are in three suites, all run after `pnpm build`:
 
@@ -309,9 +315,9 @@ it needs what a real build writes or a real install holds.
 
 `test/fixtureApps/docsSamples.test.mjs` runs every code sample of the user docs page
 (`packages/docs/testing/endpoint-tests.md`) on a copy of the `apps/journey-fixture` build, with the
-script and the snapshot command the page gives. The page uses that app's ids for this reason.
+script the page gives. The page uses that app's ids for this reason.
 Run it after any edit to the page's samples, and after a change to the fixture app's endpoints,
-`handoff`, `rails` or `ticket` pages, or its `explore` and `roles` data sets.
+`handoff`, `rails` or `ticket` pages, or its `explore` data set.
 
 Run `test` for any change to the package. Run `test:fixture` as well when the change touches what
 the harness reads from a build or how it loads the server's packages (`openTestApp`, the access

@@ -366,6 +366,11 @@
           pageId: endpoint-tests
           properties:
             title: Endpoint Tests
+        - id: access-table
+          type: MenuLink
+          pageId: access-table
+          properties:
+            title: Access Table
         - id: explore-pull-request
           type: MenuLink
           pageId: explore-pull-request
