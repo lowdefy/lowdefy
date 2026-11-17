@@ -288,6 +288,6 @@ fixtureTest('a browser run refuses the system journey, pointing to a headless ru
   });
   expect(status).toBe(400);
   expect(body.error).toBe(
-    'Step 2: step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).'
+    'Step 3: step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).'
   );
 });
