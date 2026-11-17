@@ -14,19 +14,15 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
+import journeyRuns from './journeyRuns.js';
 
-import personaJourney from './personaJourney.js';
-
-// The run of a journey that stands for it where a journey is read once (lint,
-// evidence): the journey itself, or for a journey with a list of users its
-// first user's persona run, whose name keys its measured path and mutation
-// score.
+// The run of a valid journey that stands for it where a journey is read once
+// (lint, evidence): the journey itself, or for a journey with a list of users
+// or a case table its first run (journeyRuns), whose name keys its measured
+// path and mutation score.
 function measuredJourney({ journey }) {
-  if (!type.isArray(journey.user)) {
-    return journey;
-  }
-  return personaJourney({ journey, user: journey.user[0] });
+  const { runs } = journeyRuns({ journey });
+  return runs[0];
 }
 
 export default measuredJourney;

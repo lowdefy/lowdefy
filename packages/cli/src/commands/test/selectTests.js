@@ -16,7 +16,7 @@
 
 import asList from './asList.js';
 import discoverJourneys from './discoverJourneys.js';
-import expandPersonas from './expandPersonas.js';
+import expandJourney from './expandJourney.js';
 import formatJourneyResult from './formatJourneyResult.js';
 import runJourney from './runJourney.js';
 
@@ -55,8 +55,9 @@ function matchesTags({ item, tags }) {
 // suite's items (from `paths` when given) whose name contains any of the
 // filters (case-insensitive) and that carry any of the tags. `filter` is one
 // string or a list; paths, filters and tags combine with AND. A journey with a
-// list of users is one item per user, named `<name> [<user>]`, so a filter can
-// pick one persona run.
+// list of users is one item per user, named `<name> [<user>]`, and a journey
+// with a case table one item per row, named `<name> [<row name>]`, so a filter
+// can pick one run.
 function selectTests({ context, filter, tags, paths }) {
   const filters = asList(filter);
   const tagList = asList(tags);
@@ -64,7 +65,7 @@ function selectTests({ context, filter, tags, paths }) {
     .flatMap((suite) =>
       suite
         .discover({ context, paths })
-        .flatMap((item) => expandPersonas({ item }))
+        .flatMap((item) => expandJourney({ item }))
         .map((item) => ({ suite, item }))
     )
     .filter(({ item }) => matchesFilters({ item, filters }))

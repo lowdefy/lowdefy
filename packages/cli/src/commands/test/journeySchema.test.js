@@ -486,3 +486,60 @@ test('journeySchema refuses a journey with no pageId at the first step that need
     'Step 1: Step "expect.status" must follow a "call", "request", "release" or "webhook" step'
   );
 });
+
+test('validateJourney accepts stubs, each an answer or a forced failure', () => {
+  expect(
+    validateJourney({
+      journey: {
+        ...minimalJourney,
+        stubs: [
+          { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { data: 'pdf' } },
+          { requestId: 'update_run_lines', endpoint: 'billing-run-approve', fail: 'Write failed' },
+        ],
+      },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('validateJourney refuses a stub entry the stub grammar refuses, naming its place', () => {
+  expect(
+    validateJourney({
+      journey: {
+        ...minimalJourney,
+        stubs: [
+          { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: null },
+          { requestId: 'save', fail: 'x', when: 'later' },
+        ],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey "stubs[1]": A forced failure stub does not take "when". It takes requestId, endpoint, pageId, fail, times.',
+  });
+  expect(validateJourney({ journey: { ...minimalJourney, stubs: { fail: 'x' } } })).toEqual({
+    valid: false,
+    message: 'Journey "stubs" should be a list of answer and forced failure stubs.',
+  });
+});
+
+test('validateJourney accepts a case table and validates each run after its row is filled in', () => {
+  const journey = {
+    name: 'opens each page',
+    pageId: { _case: 'page' },
+    cases: [
+      { name: 'orders', page: 'orders' },
+      { name: 'refunds', page: 'refunds' },
+    ],
+    steps: [{ click: 'submit' }],
+  };
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+  expect(
+    validateJourney({
+      journey: { ...journey, cases: [...journey.cases, { name: 'bad', page: 3 }] },
+    })
+  ).toEqual({
+    valid: false,
+    message: 'Journey case "bad": Journey "pageId" should be a string.',
+  });
+});

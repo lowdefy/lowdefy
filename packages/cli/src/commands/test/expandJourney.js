@@ -16,27 +16,28 @@
 
 import { type } from '@lowdefy/helpers';
 
-import personaJourney from './personaJourney.js';
+import isExpandedJourney from './isExpandedJourney.js';
+import journeyRuns from './journeyRuns.js';
 import validateJourney from './validateJourney.js';
 
-// A journey whose `user` is a list runs once per user: one item each, its
-// journey the persona run (personaJourney), `persona` the user and
-// `personaOf` the journey as written. Any other item is returned as it is,
-// an invalid list included, so the runner refuses it once as an invalid file.
-function expandPersonas({ item }) {
-  if (!type.isNone(item.error) || !type.isArray(item.journey?.user)) {
+// A journey that runs more than once (a `cases` table, or a `user` list) is one item per run
+// (journeyRuns), its journey the run and `expandedFrom` the journey as written. Any other item
+// is returned as it is, an invalid journey included, so the runner refuses it once as an
+// invalid file. validateJourney fills in each row and validates the run.
+function expandJourney({ item }) {
+  if (!type.isNone(item.error) || !isExpandedJourney({ journey: item.journey })) {
     return [item];
   }
   if (!validateJourney({ journey: item.journey }).valid) {
     return [item];
   }
-  return item.journey.user.map((user) => ({
+  const { runs } = journeyRuns({ journey: item.journey });
+  return runs.map((run) => ({
     filePath: item.filePath,
     journeyIndex: item.journeyIndex,
-    journey: personaJourney({ journey: item.journey, user }),
-    persona: user,
-    personaOf: item.journey,
+    journey: run,
+    expandedFrom: item.journey,
   }));
 }
 
-export default expandPersonas;
+export default expandJourney;

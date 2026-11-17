@@ -19,8 +19,11 @@ import YAML from 'yaml';
 import { type } from '@lowdefy/helpers';
 
 import listJourneyFiles from './listJourneyFiles.js';
+import resolveJourneyRefs from './resolveJourneyRefs.js';
 
-function readJourneyFile({ filePath }) {
+// A file that does not parse, or holds a `_ref` that cannot be read, is one error item: the
+// runner reports it once, as an invalid file.
+function readJourneyFile({ filePath, configDirectory }) {
   let parsed;
   try {
     parsed = YAML.parse(fs.readFileSync(filePath, 'utf8'));
@@ -29,6 +32,11 @@ function readJourneyFile({ filePath }) {
       { filePath, journeyIndex: 0, journey: undefined, error: `Invalid YAML: ${error.message}` },
     ];
   }
+  try {
+    parsed = resolveJourneyRefs({ value: parsed, configDirectory, chain: [filePath] });
+  } catch (error) {
+    return [{ filePath, journeyIndex: 0, journey: undefined, error: error.message }];
+  }
   if (type.isArray(parsed)) {
     return parsed.map((journey, journeyIndex) => ({ filePath, journeyIndex, journey }));
   }
@@ -36,20 +44,22 @@ function readJourneyFile({ filePath }) {
 }
 
 // Each item is { filePath, journeyIndex, journey }: the journey's place in its
-// file names it where its name may not be unique. With `paths` (journey files
+// file names it where its name may not be unique. Each journey comes with its
+// `_ref`s resolved, from the config root. With `paths` (journey files
 // already resolved by resolveJourneyPaths), the named files are read;
 // otherwise every file under tests/journeys, sub-folders included, except
 // those in a folder whose name starts with "_".
 function discoverJourneys({ context, paths }) {
+  const configDirectory = context.directories.config;
   if (!type.isUndefined(paths)) {
-    return paths.flatMap((filePath) => readJourneyFile({ filePath }));
+    return paths.flatMap((filePath) => readJourneyFile({ filePath, configDirectory }));
   }
   const directory = context.directories.journeys;
   if (!fs.existsSync(directory)) {
     return [];
   }
   return listJourneyFiles({ directory, skipUnderscored: true }).flatMap((filePath) =>
-    readJourneyFile({ filePath })
+    readJourneyFile({ filePath, configDirectory })
   );
 }
 

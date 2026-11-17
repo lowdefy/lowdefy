@@ -17,7 +17,7 @@
 import path from 'path';
 import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
 
-import collapsePersonas from './collapsePersonas.js';
+import collapseRuns from './collapseRuns.js';
 import formatDevServerAccessNote from './access/formatDevServerAccessNote.js';
 import fetchBuildId from './fetchBuildId.js';
 import formatBrowserOnly from './formatBrowserOnly.js';
@@ -158,10 +158,10 @@ async function test({ context }) {
 
   if (lint) {
     // Lints read a journey, not a run of it: a journey with a list of users
-    // is linted once.
+    // or a case table is linted once.
     const linted = await lintJourneys({
       context,
-      items: collapsePersonas({ items: selected.map(({ item }) => item) }),
+      items: collapseRuns({ items: selected.map(({ item }) => item) }),
     });
     if (linted.failed) {
       process.exitCode = 1;

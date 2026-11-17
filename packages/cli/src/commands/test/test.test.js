@@ -771,6 +771,86 @@ test('test --lint lints a journey with a list of users once', async () => {
   );
 });
 
+// A page-less journey whose steps live in a shared file and whose rows fill in the endpoint and
+// the user.
+function writeCaseTable() {
+  writeConfigFile(
+    'tests/shared/comment-steps.yaml',
+    '- call: { endpoint: { _case: endpoint }, payload: { _case: payload } }\n- expect: { status: 400 }\n'
+  );
+  writeJourneyFile(
+    'cases.yaml',
+    `name: refuses another company
+data: tickets
+user: { _case: user }
+cases:
+  - { name: ticket, user: admin, endpoint: tickets-add-comment, payload: { ticket_id: T-B-1 } }
+  - { name: workflow, user: member, endpoint: workflow-submit, payload: { action_id: A-B-1 } }
+  - { name: note, user: stranger, endpoint: notes-add, payload: { note_id: N-B-1 } }
+steps:
+  _ref: tests/shared/comment-steps.yaml
+`
+  );
+}
+
+test('test runs a case table once per row, each named for its row, with its values filled in', async () => {
+  const { default: test } = await import('./test.js');
+  writeCaseTable();
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies.map((body) => body.user)).toEqual(['admin', 'member', 'stranger']);
+  expect(bodies[1].steps).toEqual([
+    { call: { endpoint: 'workflow-submit', payload: { action_id: 'A-B-1' } } },
+    { expect: { status: 400 } },
+  ]);
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringContaining('PASS  refuses another company [ticket]'),
+    expect.stringContaining('PASS  refuses another company [workflow]'),
+    expect.stringContaining('PASS  refuses another company [note]'),
+  ]);
+  expect(logs.info).toContain('3 passed, 0 failed of 3 journeys');
+});
+
+test('test --filter picks one row of a case table by its name', async () => {
+  const { default: test } = await import('./test.js');
+  writeCaseTable();
+  context.options.filter = '[workflow]';
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(1);
+  expect(mockPost.mock.calls[0][1].steps[0]).toEqual({
+    call: { endpoint: 'workflow-submit', payload: { action_id: 'A-B-1' } },
+  });
+});
+
+test('test --lint lints a case table once, as its first row', async () => {
+  const { default: test } = await import('./test.js');
+  writeConfigFile('tests/data/tickets.yaml', 'users:\n  admin:\n    roles: [admin]\n');
+  writeCaseTable();
+  context.options = { lint: true };
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.warn.filter((line) => line.startsWith('L5'))).toEqual([]);
+  expect([...logs.info, ...logs.error]).toContainEqual(
+    expect.stringMatching(/^Linted 1 journeys:/)
+  );
+});
+
+test('test refuses a case table beside a list of users once, as an invalid journey file', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'cases.yaml',
+    'name: both\ndata: tickets\nuser: [admin, member]\ncases:\n  - { name: one }\nsteps:\n  - call: { endpoint: save }\n'
+  );
+  await test({ context });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error).toContainEqual(
+    expect.stringContaining(
+      'Invalid journey file: Journey has "cases" and a list of users: write a row per user'
+    )
+  );
+  expect(logs.error).toContain('0 passed, 1 failed of 1 journeys');
+});
+
 // A journey refreshed with production evidence: `sessions` over the 30 days of
 // September, or the `months` given. No evidence when neither is given.
 function rankedJourneyYaml({ name, sessions, months, failures = 0, ...rest }) {

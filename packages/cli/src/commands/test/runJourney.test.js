@@ -219,8 +219,7 @@ test('runJourney does not apply the name limit to a persona run name', async () 
     item: {
       filePath: '/app/j.yaml',
       journey: persona,
-      persona: 'control_owner',
-      personaOf: authored,
+      expandedFrom: authored,
     },
     url,
   });
@@ -231,7 +230,7 @@ test('runJourney does not apply the name limit to a persona run name', async () 
     item: {
       filePath: '/app/j.yaml',
       journey: { ...tooLong, name: `${tooLong.name} [owner]` },
-      personaOf: tooLong,
+      expandedFrom: tooLong,
     },
     url,
   });
