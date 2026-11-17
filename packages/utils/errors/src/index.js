@@ -87,6 +87,8 @@
  *   expectedAnswers           - The HTTP status, warning line and page text for each expected outcome
  *   expectedErrorNames        - Set of error class names that are expected outcomes, not faults
  *   isExpectedError           - The one test for an expected outcome versus a fault
+ *   isForcedFailure           - Whether an error is a test fail gate's forced failure
+ *   markForcedFailure         - Brands the error a test fail gate throws as forced
  *   readErrorCodes            - {code, statusCode} from one error node's own fields
  *   lowdefyErrorNames         - Set of Lowdefy error class names
  *   lowdefyErrorTypes         - Lowdefy error class by name, for reviving and reshaping errors
@@ -107,9 +109,11 @@ import errorToDisplayString from './errorToDisplayString.js';
 import expectedAnswers from './expectedAnswers.js';
 import expectedErrorNames from './expectedErrorNames.js';
 import isExpectedError from './isExpectedError.js';
+import isForcedFailure from './isForcedFailure.js';
 import LowdefyInternalError from './LowdefyInternalError.js';
 import lowdefyErrorNames from './lowdefyErrorNames.js';
 import lowdefyErrorTypes from './lowdefyErrorTypes.js';
+import markForcedFailure from './markForcedFailure.js';
 import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
 import readErrorCodes from './readErrorCodes.js';
@@ -144,9 +148,11 @@ export {
   expectedAnswers,
   expectedErrorNames,
   isExpectedError,
+  isForcedFailure,
   LowdefyInternalError,
   lowdefyErrorNames,
   lowdefyErrorTypes,
+  markForcedFailure,
   OperatorError,
   PluginError,
   PLUGIN_CHECKS_SLUG,

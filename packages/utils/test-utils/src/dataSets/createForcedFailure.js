@@ -14,15 +14,14 @@
   limitations under the License.
 */
 
-import { ServiceError } from '@lowdefy/errors';
+import { markForcedFailure, ServiceError } from '@lowdefy/errors';
 
 // The error a fail gate throws: a ServiceError carrying the test's message, as a real outage
-// would throw, so the routine's own error handling runs. `forced` marks it as the test's doing,
-// so a host never reports it as an app error.
+// would throw, so the routine's own error handling runs. It is branded forced (markForcedFailure)
+// as the test's doing, so a host never reports it as an app error; an app's own error cannot
+// carry the brand by accident.
 function createForcedFailure({ message }) {
-  const error = new ServiceError(message);
-  error.forced = true;
-  return error;
+  return markForcedFailure(new ServiceError(message));
 }
 
 export default createForcedFailure;

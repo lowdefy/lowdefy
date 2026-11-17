@@ -15,7 +15,13 @@
 */
 
 import { vi, beforeEach, expect, test } from 'vitest';
-import { ConfigError, LowdefyInternalError, ServiceError, UserError } from '@lowdefy/errors';
+import {
+  ConfigError,
+  LowdefyInternalError,
+  ServiceError,
+  UserError,
+  markForcedFailure,
+} from '@lowdefy/errors';
 import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
 vi.doMock('../../docs/serverErrorStore.js', () => ({
@@ -268,8 +274,7 @@ test('handleError records a forced failure on the data session and logs no fault
   };
   const dataSession = { forced: [] };
   const handleError = createHandleError({ context, dataSession });
-  const error = new ServiceError('Write failed on purpose');
-  error.forced = true;
+  const error = markForcedFailure(new ServiceError('Write failed on purpose'));
 
   await handleError(error);
 
@@ -285,4 +290,29 @@ test('handleError records a forced failure on the data session and logs no fault
   );
   expect(context.logger.error).not.toHaveBeenCalled();
   expect(context.readConfigFile).not.toHaveBeenCalled();
+});
+
+test('handleError logs a plain error that carries forced: true as a fault, not a forced failure', async () => {
+  const context = { ...testContext(), rid: 'rid-1', logger: { error: vi.fn(), debug: vi.fn() } };
+  const dataSession = { forced: [] };
+  const handleError = createHandleError({ context, dataSession });
+  const error = new ServiceError('Upstream timed out');
+  error.forced = true;
+
+  await handleError(error);
+
+  expect(dataSession.forced).toEqual([]);
+  expect(context.logger.error).toHaveBeenCalledWith(error);
+  expect(serverErrorStore.push.mock.calls[0][0]).not.toHaveProperty('forced');
+});
+
+test('handleError with no data session logs a forced failure as a fault and does not throw', async () => {
+  const context = { ...testContext(), rid: 'rid-1', logger: { error: vi.fn(), debug: vi.fn() } };
+  const handleError = createHandleError({ context });
+  const error = markForcedFailure(new ServiceError('Write failed on purpose'));
+
+  await expect(handleError(error)).resolves.toBeUndefined();
+
+  expect(error.handled).toBe(true);
+  expect(context.logger.error).toHaveBeenCalledWith(error);
 });

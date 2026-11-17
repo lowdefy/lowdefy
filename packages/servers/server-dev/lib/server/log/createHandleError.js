@@ -19,8 +19,10 @@ import { inspect } from 'node:util';
 import {
   LowdefyInternalError,
   isExpectedError,
+  isForcedFailure,
   loadAndResolveErrorLocation,
 } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 import { scrubCredentials } from '@lowdefy/node-utils';
 import { recordForcedFailure } from '@lowdefy/test-utils/dataSets';
 
@@ -38,13 +40,14 @@ function shouldStore(error) {
 }
 
 // `dataSession` is the journey data session the request runs on, if any. A forced failure (a
-// journey's fail gate) is the test's doing, not a fault: it is recorded there by the request's id
-// (recordForcedFailure), where the journey's checks read its message, and is logged at debug. Its
-// entry goes to the journey run's error buffer marked `forced`, so the run knows the 500 it
+// journey's fail gate, branded by markForcedFailure) is the test's doing, not a fault: fail gates
+// live on a data session, so only a request on one can throw it. It is recorded there by the
+// request's id (recordForcedFailure), where the journey's checks read its message, and is logged
+// at debug. Its entry goes to the journey run's error buffer marked `forced`, so the run knows the 500 it
 // answered was forced, and never counts it as an app error or shows it to the agent.
 function createHandleError({ context, dataSession }) {
   return async function handleError(error) {
-    if (error.forced === true) {
+    if (!type.isNone(dataSession) && isForcedFailure(error)) {
       error.handled = true;
       recordForcedFailure({ error, rid: context.rid, session: dataSession });
       serverErrorStore.push({

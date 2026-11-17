@@ -20,6 +20,7 @@ import { fileURLToPath } from 'url';
 
 import { Hono } from 'hono';
 import { vi, afterAll, afterEach, beforeEach, describe, expect, test } from 'vitest';
+import { isForcedFailure } from '@lowdefy/errors';
 import { projectCaughtError } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
 
@@ -411,7 +412,7 @@ describe('data sessions', () => {
       const error = await MongoDBFind(args).catch((caught) => caught);
       expect(error.name).toEqual('ServiceError');
       expect(error.message).toEqual('Write failed on purpose');
-      expect(error.forced).toBe(true);
+      expect(isForcedFailure(error)).toBe(true);
       expect(mongoFind).not.toHaveBeenCalled();
       expect(await MongoDBFind(args)).toEqual(['real row']);
       expect(session.failGates[0].fired).toEqual(1);

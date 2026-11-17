@@ -15,6 +15,7 @@
 */
 
 import { beforeEach, expect, test, vi } from 'vitest';
+import { isForcedFailure } from '@lowdefy/errors';
 
 import addFailGate from './addFailGate.js';
 import addPauseGate from './addPauseGate.js';
@@ -264,7 +265,7 @@ test('createSessionConnections fails a request at a fail gate before its resolve
     .catch((caught) => caught);
   expect(error.name).toEqual('ServiceError');
   expect(error.message).toEqual('Write failed on purpose');
-  expect(error.forced).toBe(true);
+  expect(isForcedFailure(error)).toBe(true);
   expect(error.isLowdefyError).toBe(true);
   expect(find).not.toHaveBeenCalled();
 });

@@ -25,7 +25,7 @@ import {
   runDetachedEndpoint,
   runWebhookEndpoint,
 } from '@lowdefy/api';
-import { expectedAnswers, isExpectedError } from '@lowdefy/errors';
+import { expectedAnswers, isExpectedError, isForcedFailure } from '@lowdefy/errors';
 import { buildPagePath, serializer, type } from '@lowdefy/helpers';
 import { createHeadlessHost, loadClientPlugins } from '@lowdefy/journey-headless';
 import { matchPagePath } from '@lowdefy/node-utils';
@@ -180,7 +180,7 @@ async function createDevServerHost({
     // fault: the dev server's handleError records it on the data session instead.
     const handleError = context.handleError;
     context.handleError = async (error) => {
-      if (!isExpectedError(error) && error.forced !== true) {
+      if (!isExpectedError(error) && !isForcedFailure(error)) {
         faults.push(error);
       }
       return handleError(error);

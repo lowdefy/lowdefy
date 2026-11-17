@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { lowdefyErrorNames, readErrorCodes } from '@lowdefy/errors';
+import { isForcedFailure, lowdefyErrorNames, readErrorCodes } from '@lowdefy/errors';
 import { translate } from '@lowdefy/helpers';
 
 // The framework writes these messages to reveal nothing, and clients branch on
@@ -86,10 +86,11 @@ function createWireProjection(context) {
       // /api/client-error, and the server logs and reports it a second time.
       isLowdefyError: true,
       handled: err.handled,
-      // A test's fail gate marks the failure it forces (@lowdefy/test-utils' createForcedFailure),
-      // so a journey runner knows the client's failed action came from it and is no app error.
-      // Never set outside a test data session.
-      forced: err.forced === true ? true : undefined,
+      // A test's fail gate brands the failure it forces (@lowdefy/test-utils' createForcedFailure,
+      // markForcedFailure), so a journey runner knows the client's failed action came from it and
+      // is no app error. Only the brand sets it, never a plain `forced` property, and fail gates
+      // exist only on a test data session.
+      forced: isForcedFailure(err) ? true : undefined,
     };
   };
 }
