@@ -17,7 +17,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { DatePicker, Input, InputNumber, Rate, Select, Switch, Tooltip } from 'antd';
 
+import hasOptionDescriptions from '../../core/hasOptionDescriptions.js';
 import SelectedTag from '../../core/SelectedTag.js';
+import SelectOption from '../../core/SelectOption.js';
 import toSelectOptions from '../../core/toSelectOptions.js';
 import toEditorDraft from './toEditorDraft.js';
 import findRow from '../../core/findRow.js';
@@ -209,6 +211,8 @@ function CellEditor({ api, session }) {
       const multiple = kind === 'multiSelect';
       let mode;
       if (multiple) mode = spec.options ? 'multiple' : 'tags';
+      // Descriptions are longer than the cell is wide: the dropdown takes the width of its options.
+      const described = hasOptionDescriptions({ options });
       control = (
         <Select
           allowClear
@@ -224,7 +228,9 @@ function CellEditor({ api, session }) {
             }
           }}
           onOpenChange={onOpenChange}
+          optionRender={described ? SelectOption : undefined}
           options={options}
+          popupMatchSelectWidth={described ? false : undefined}
           showSearch={{ filterOption, onSearch: handleSearch, searchValue: search }}
           size={size}
           status={status}

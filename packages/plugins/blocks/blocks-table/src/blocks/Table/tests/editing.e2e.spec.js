@@ -491,4 +491,56 @@ test.describe('Table editing', () => {
       .poll(() => page.evaluate(() => navigator.clipboard.readText()))
       .toBe('Ann\t30\nCat\t50');
   });
+
+  test('an option description shows under its label in the dropdown only', async ({ page }) => {
+    const stage = cell(page, 'edit_described', 1, 'stage');
+    await stage.dblclick();
+    const options = popup(page).locator('.ant-select-item-option');
+    await expect(options).toHaveCount(3);
+    const lead = options.filter({ hasText: 'Lead' });
+    await expect(lead.locator('.lf-table-status')).toHaveText('Lead');
+    await expect(lead.locator('.lf-table-option-description')).toHaveText('Not yet spoken to.');
+    // An option without a description is the label alone.
+    await expect(options.filter({ hasText: 'Won' }).locator('.lf-table-option')).toHaveCount(0);
+    // The picked value in the select box shows the label alone.
+    const picked = editor(page, 'edit_described').locator('.ant-select-content');
+    await expect(picked).toHaveText('Lead');
+    // The dropdown is as wide as its options, not the 120px cell, and the description is muted.
+    const description = options
+      .filter({ hasText: 'Qualified' })
+      .locator('.lf-table-option-description');
+    const cellBox = await stage.boundingBox();
+    const descriptionBox = await description.boundingBox();
+    expect(descriptionBox.width).toBeGreaterThan(cellBox.width);
+    const colours = await description.evaluate((element) => ({
+      description: getComputedStyle(element).color,
+      label: getComputedStyle(element.parentElement).color,
+    }));
+    expect(colours.description).not.toBe(colours.label);
+    // Typing searches the labels, not the descriptions.
+    await page.keyboard.type('budget');
+    await expect(options).toHaveCount(0);
+    await page.keyboard.press('Backspace+Backspace+Backspace+Backspace+Backspace+Backspace');
+    await page.keyboard.type('qual');
+    await expect(options).toHaveCount(1);
+    await page.keyboard.press('Enter');
+    // The closed cell shows the label alone.
+    await expect(editor(page, 'edit_described')).toHaveCount(0);
+    await expect(stage).toHaveText('Qualified');
+  });
+
+  test('a tags editor shows option descriptions in its dropdown, not in the picked tags', async ({
+    page,
+  }) => {
+    await cell(page, 'edit_described', 1, 'labels').dblclick();
+    const options = popup(page).locator('.ant-select-item-option');
+    await expect(
+      options.filter({ hasText: 'renewal' }).locator('.lf-table-option-description')
+    ).toHaveText('An existing customer renewing.');
+    await expect(
+      editor(page, 'edit_described').locator('.lf-table-option-description')
+    ).toHaveCount(0);
+    await page.keyboard.press('Escape');
+    await page.keyboard.press('Escape');
+  });
 });

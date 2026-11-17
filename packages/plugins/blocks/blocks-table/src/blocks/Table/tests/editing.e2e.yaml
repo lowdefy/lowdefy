@@ -499,3 +499,41 @@ blocks:
         - id: s2
           title: Build
           position: 2048
+
+  # ============================================
+  # OPTION DESCRIPTIONS (a line under the label in the editor's dropdown only)
+  # ============================================
+
+  - id: edit_described
+    type: Table
+    properties:
+      rowKey: id
+      columns:
+        - key: name
+        - key: stage
+          type: status
+          width: 120
+          editable: true
+          options:
+            - value: lead
+              label: Lead
+              description: Not yet spoken to.
+            - value: qualified
+              label: Qualified
+              color: processing
+              description: A need, a budget and a decision maker are confirmed.
+            - value: won
+              label: Won
+              color: success
+        - key: labels
+          type: tags
+          editable: true
+          options:
+            - value: renewal
+              description: An existing customer renewing.
+            - value: strategic
+      data:
+        - id: 1
+          name: Ann
+          stage: lead
+          labels: [renewal]

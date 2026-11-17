@@ -157,7 +157,7 @@ const column = {
     options: {
       type: ['array', 'object'],
       description:
-        'Labels and colours for enum values, for tag, tags and status cells: a list of values or `{ value, label, color, icon }`, or a map from value to a label or `{ label, color, icon }`. Enums sort in option order.',
+        'Labels and colours for enum values, for tag, tags and status cells: a list of values or `{ value, label, color, icon, description }`, or a map from value to a label or `{ label, color, icon, description }`. `description` is a line of text shown under the label in the dropdown of an editable cell. Enums sort in option order.',
       docs: { displayType: 'yaml' },
     },
     tooltip: {

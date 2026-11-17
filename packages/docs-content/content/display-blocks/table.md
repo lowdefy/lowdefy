@@ -1222,7 +1222,7 @@ The type decides how a value renders, sorts, filters, aggregates, exports and ed
 
 ### Options: labels and colours for enum values
 
-`options` gives the labels and colours of `tag`, `tags` and `status` values, the choices of their filters and editors, and the labels of their group headers and exports. It takes a list of values or `{ value, label, color, icon }`, or a map from value to a label or `{ label, color, icon }`:
+`options` gives the labels and colours of `tag`, `tags` and `status` values, the choices of their filters and editors, and the labels of their group headers and exports. It takes a list of values or `{ value, label, color, icon, description }`, or a map from value to a label or `{ label, color, icon, description }`:
 
 ```yaml
 - key: stage
@@ -1230,6 +1230,22 @@ The type decides how a value renders, sorts, filters, aggregates, exports and ed
   options:
     lead: Lead
     qualified: { label: Qualified, color: processing }
+An option's `description` is a line of plain text shown under its label in the dropdown of an editable cell, to say what picking the value means. The dropdown then takes the width of its options instead of the cell's. The cell itself, the picked value, filters, group headers and exports show the label only, and typing in the dropdown searches the labels:
+
+```yaml
+- key: stage
+  type: status
+  editable: true
+  options:
+    - value: lead
+      label: Lead
+      description: Not yet spoken to.
+    - value: qualified
+      label: Qualified
+      color: processing
+      description: A need, a budget and a decision maker are confirmed.
+```
+
     won: { label: Won, color: success }
     lost: { label: Lost, color: error }
 ```
@@ -2152,13 +2168,17 @@ fields:
         type: status
         editable: true
         options:
-          lead: Lead
+          lead:
+            label: Lead
+            description: Not yet spoken to.
           won:
             label: Won
             color: success
+            description: The contract is signed.
           lost:
             label: Lost
             color: error
+            description: The customer chose not to buy.
       - key: amount
         type: currency
         editable:

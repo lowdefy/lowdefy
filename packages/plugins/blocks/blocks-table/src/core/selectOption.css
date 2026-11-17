@@ -1,0 +1,37 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+/* An option with a description in a select's dropdown (SelectOption): the option as the cell
+   shows it, with the description under it. Colours are antd tokens, so they follow dark mode. */
+@layer components {
+  .lf-table-option {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    min-width: 0;
+    padding-block: 2px;
+  }
+
+  .lf-table-option-description {
+    max-width: 320px;
+    color: var(--ant-color-text-secondary, rgba(0, 0, 0, 0.65));
+    font-weight: normal;
+    font-size: var(--ant-font-size-sm, 12px);
+    line-height: 1.35;
+    white-space: normal;
+  }
+}
