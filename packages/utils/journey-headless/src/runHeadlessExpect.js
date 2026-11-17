@@ -92,6 +92,20 @@ async function expectUrl({ actor, params, timeout }) {
   }
 }
 
+// A call parked at a pause gate has not answered: its answer is the release's, read after it.
+function checkAnswered(answer) {
+  if (!type.isString(answer?.parkedAt)) {
+    return;
+  }
+  throw new HeadlessStepError(
+    `The call before this step is parked at the gate on request "${answer.parkedAt}" and has not answered: read its answer after "release: ${answer.parkedAt}".`,
+    {
+      actual: `parked at request "${answer.parkedAt}"`,
+      expected: 'the answer of the call before this step',
+    }
+  );
+}
+
 // One expect step, with the browser runner's messages: on the current actor's page, on the answer
 // of the call or request step before it (`answer`, for status and error), or on the data's
 // database. After an interaction, expect.error is judged with the app errors
@@ -111,11 +125,13 @@ async function runHeadlessExpect({ actor, answer, host, step, timeout }) {
     case 'url':
       return expectUrl({ actor, params, timeout });
     case 'error':
+      checkAnswered(answer);
       if (!type.isUndefined(answer)) {
         expectAnswerError({ answer, text: params });
       }
       return undefined;
     case 'status':
+      checkAnswered(answer);
       return expectAnswerStatus({ answer, status: params });
     case 'db':
       return expectDb({ host, params, timeout });

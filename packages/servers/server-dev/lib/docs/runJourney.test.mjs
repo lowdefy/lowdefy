@@ -231,7 +231,7 @@ test('runJourney returns an error naming an unknown step key before opening a br
     steps: [{ click: 'ok' }, { tap: 'ok' }],
   });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "tap". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Step 1: Unknown journey step "tap". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release.'
   );
   expect(mockGetBrowser).not.toHaveBeenCalled();
   expect(mockOpenPage).not.toHaveBeenCalled();
@@ -246,6 +246,24 @@ test('runJourney refuses a placeholder value (from: shape) before opening a brow
   expect(result).toEqual({
     error:
       'Step 1: fill on "title" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+    refused: true,
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
+test('runJourney refuses hold and release before opening a browser, pointing to a headless run', async () => {
+  const result = await runJourney({
+    origin,
+    steps: [
+      { hold: { requestId: 'claim_run' } },
+      { call: { endpoint: 'approve_run', payload: { id: 'BR-1' } } },
+      { release: 'claim_run' },
+    ],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 0: step "hold" needs the headless runner, which keeps a held call parked in its own process. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).',
     refused: true,
   });
   expect(mockGetBrowser).not.toHaveBeenCalled();

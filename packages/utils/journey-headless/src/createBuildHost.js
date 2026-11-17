@@ -91,7 +91,7 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
       }),
     close: () => app.close(),
     dataSetName: calls.dataSetName,
-    dataSession: session,
+    dataSession: calls.dataSession,
     errorSink: createErrorSink(),
     findDocuments: calls.findDocuments,
     loadClientPlugins: () => {

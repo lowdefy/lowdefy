@@ -33,8 +33,10 @@ import { type } from '@lowdefy/helpers';
  *   { actions, operators, jsMap, blockMetas }. No block components.
  * @property {(args: HostCall) => Promise<HostAnswer>} call Runs a page request or an endpoint as
  *   the server does, in process.
- * @property {Object} dataSession The data the calls run on: a test-utils session
- *   (collection, settled, reset).
+ * @property {Object|null} dataSession The data session the calls run on
+ *   (@lowdefy/test-utils/dataSets), which holds its stubs, fail gates, pause gates and sunk
+ *   requests; null for a journey with no data set on a host that runs it on none. A hold step
+ *   sets its pause gate here.
  * @property {string|null} dataSetName The data set the data was loaded from, or null for none.
  * @property {(name: string) => (Object|null)} readArtifact A build artifact by its path in the
  *   build ("routes.json", "pages/home.json", "api/notify.json"), deserialized, or null when the

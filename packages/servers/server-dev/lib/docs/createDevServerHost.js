@@ -297,7 +297,7 @@ async function createDevServerHost({
     // The data session belongs to the journey run, which closes it (runJourneyHeadless).
     close: async () => {},
     dataSetName: dataSet?.name ?? null,
-    dataSession: session ?? null,
+    dataSession: session?.session ?? null,
     errorSink: createErrorSink(),
     findDocuments,
     loadClientPlugins: () => {

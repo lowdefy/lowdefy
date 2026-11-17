@@ -99,12 +99,8 @@ test('a built page opens in Node with its onMount run, and a click sends its Req
   expect(context._internal.RootSlots.map.save_success.eval.visible).toBe(true);
 
   // The write landed on the data set's database, beside its fixture.
-  const items = await host.dataSession
-    .collection('fixture_db')
-    .find({ kind: 'item' })
-    .sort({ name: 1 })
-    .toArray();
-  expect(items.map((item) => item.name)).toEqual(['Harden item', 'Headless item']);
+  const items = await host.findDocuments({ collection: 'items', match: { kind: 'item' } });
+  expect(items.map((item) => item.name).sort()).toEqual(['Harden item', 'Headless item']);
   expect(host.errorSink.errors).toEqual([]);
 });
 

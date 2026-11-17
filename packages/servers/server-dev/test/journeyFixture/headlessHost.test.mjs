@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { expect } from 'vitest';
+import YAML from 'yaml';
 
 import { fixtureTest, listMutants, postJourney, postJson } from './fixtureClient.mjs';
 
@@ -176,4 +177,45 @@ fixtureTest('headless must be true or false', async () => {
   });
   expect(status).toBe(400);
   expect(body.error).toBe('The "headless" param must be true or false. Received "yes".');
+});
+
+// tests/journeys/_headless/race.yaml: hold parks the first approve_run call before claim_run, the
+// other user's call claims the run, and release answers with the parked call. A browser run
+// refuses hold and release before any browser opens.
+function readRaceJourney() {
+  const file = path.join(
+    process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+    'tests',
+    'journeys',
+    '_headless',
+    'race.yaml'
+  );
+  const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
+  return { data: journey.data, user: journey.user, steps: journey.steps };
+}
+
+fixtureTest(
+  'the race journey parks the held call and releases it, headless on the dev server',
+  async () => {
+    const race = readRaceJourney();
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...race, headless: true },
+    });
+    expect(status).toBe(200);
+    expect(body.failure).toBeUndefined();
+    expect(body.passed).toBe(true);
+    expect(body.steps.map((step) => step.status)).toEqual(race.steps.map(() => 'ok'));
+  }
+);
+
+fixtureTest('a browser run refuses the race journey, pointing to a headless run', async () => {
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: readRaceJourney(),
+  });
+  expect(status).toBe(400);
+  expect(body.error).toBe(
+    'Step 0: step "hold" needs the headless runner, which keeps a held call parked in its own process. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).'
+  );
 });

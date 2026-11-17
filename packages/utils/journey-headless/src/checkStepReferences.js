@@ -154,8 +154,8 @@ function checkActorName({ host, name }) {
 }
 
 // Checked at the start of every step against the build, as the browser runner checks it
-// (server-dev's checkStepReferences): a misspelt blockId, requestId, endpointId, goto pageId or
-// `as` name fails its step and names the unknown id, instead of passing a step that asserts
+// (server-dev's checkStepReferences): a misspelt blockId, requestId, endpointId, goto pageId, the
+// endpoint or page a hold narrows to, or `as` name fails its step and names the unknown id, instead of passing a step that asserts
 // something is absent (expect.hidden, expect.calls with count 0). Block and request ids are read
 // from the actor's current page; with no page open they are not checked.
 function checkStepReferences({ actor, host, journeyPageId, step }) {
@@ -174,6 +174,15 @@ function checkStepReferences({ actor, host, journeyPageId, step }) {
   }
   if (key === 'request') {
     checkRequestId({ host, pageId: step.request.pageId, requestId: step.request.requestId });
+    return;
+  }
+  if (key === 'hold') {
+    if (!type.isUndefined(step.hold.endpoint)) {
+      checkEndpointId({ endpointId: step.hold.endpoint, host });
+    }
+    if (!type.isUndefined(step.hold.pageId)) {
+      checkPageId({ host, pageId: step.hold.pageId });
+    }
     return;
   }
   const calls = key === 'expect' && getStepKey(step.expect) === 'calls' ? step.expect.calls : null;
