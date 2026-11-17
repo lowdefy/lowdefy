@@ -59,6 +59,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'generated',
     'handoff',
     'home',
+    'polling',
     'rails',
     'second',
     'selectors',
