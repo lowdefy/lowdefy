@@ -278,3 +278,25 @@ test('runJourney closes the data session when no browser can be fetched', async 
   expect(close).toHaveBeenCalledTimes(1);
   expect(mockOpenPage).not.toHaveBeenCalled();
 });
+
+test('runJourney sets the journey stubs on the data session it opens', async () => {
+  const session = { stubs: [], failGates: [], forced: [], sunk: [] };
+  mockOpenDataSession.mockResolvedValue({ id: 'session1', cookie: 'session1', session, close });
+  await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [],
+    data: 'sample',
+    user: 'owner',
+    stubs: [
+      { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+      { requestId: 'save_price', fail: 'Write failed on purpose', times: 2 },
+    ],
+  });
+  expect(session.stubs).toMatchObject([
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+  ]);
+  expect(session.failGates).toMatchObject([
+    { requestId: 'save_price', message: 'Write failed on purpose', times: 2, fired: 0 },
+  ]);
+});

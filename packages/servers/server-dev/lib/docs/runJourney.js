@@ -23,7 +23,7 @@ import {
   normaliseJourneySteps,
   validateJourneySteps,
 } from '@lowdefy/node-utils';
-import { getDataStore, openDataSession } from '@lowdefy/test-utils/dataSets';
+import { addJourneyStubs, getDataStore, openDataSession } from '@lowdefy/test-utils/dataSets';
 
 import collectExercised from './collectExercised.js';
 import createDataSetRails from './rails/createDataSetRails.js';
@@ -91,7 +91,9 @@ function defaultReadConfigFile(name) {
 // before any browser opens. `pathParams` fill the placeholders of the page's
 // path; one left without a value is an error before any browser opens. A
 // journey with no pageId opens no page: its steps only call the server (call,
-// request, expect on their answers, the calls made and the database).
+// request, expect on their answers, the calls made and the database). `stubs`,
+// the journey's answer stubs and fail gates (validated by the caller), are set
+// on its data session: the browser's requests resolve on it in this process.
 async function runJourney({
   origin,
   pageId,
@@ -108,6 +110,7 @@ async function runJourney({
   readConfigFile = defaultReadConfigFile,
   mutantCookie,
   data,
+  stubs,
   recording,
   by,
 }) {
@@ -217,6 +220,7 @@ async function runJourney({
         url,
         user: resolved.user,
         dataSet,
+        stubs,
         urlQuery,
         width,
         height,
@@ -242,6 +246,7 @@ async function runJourneyInBrowser({
   url,
   user,
   dataSet,
+  stubs,
   urlQuery,
   width,
   height,
@@ -272,6 +277,7 @@ async function runJourneyInBrowser({
       return { error: error.message, refused: true };
     }
     loadMs = Date.now() - loadStart;
+    addJourneyStubs({ session: session.session, stubs });
   }
 
   let browser;

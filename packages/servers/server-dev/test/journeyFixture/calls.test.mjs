@@ -163,3 +163,27 @@ fixtureTest('a webhook posts through the endpoints route, where its verify gate 
   expect(result.passed).toBe(true);
   expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
 });
+
+// tests/journeys/_headless/stubs.yaml in a browser run: the journey route sets its stubs on the
+// data session the browser's calls resolve on in the dev server process, so the rate service is
+// answered and the writes fail on purpose; expect.error reads each forced message the dev server
+// recorded on that session. postJourney runs it headless on a build too and compares the two.
+fixtureTest('stubs answer and fail requests in a browser run, as headless', async () => {
+  const file = path.join(
+    process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+    'tests',
+    'journeys',
+    '_headless',
+    'stubs.yaml'
+  );
+  const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
+  const result = await postJourney({
+    data: journey.data,
+    user: journey.user,
+    stubs: journey.stubs,
+    steps: journey.steps,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+});
