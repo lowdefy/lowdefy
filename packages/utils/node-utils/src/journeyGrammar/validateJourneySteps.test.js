@@ -100,14 +100,14 @@ test('validateJourneySteps rejects steps that are not an array', () => {
 test('validateJourneySteps names the index and key of an unknown step', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a' }, { hover: 'b' }] });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release.'
+    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
 test('validateJourneySteps rejects a step with more than one key', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a', fill: { blockId: 'b' } }] });
   expect(result.error).toEqual(
-    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release.'
+    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
@@ -581,7 +581,7 @@ test('validateJourneySteps ends an expect error with examples of that expect kin
 
 test('validateJourneySteps lists the valid step names for an unknown step', () => {
   expect(validateJourneySteps({ steps: [{ browser_forward: true }] }).error).toBe(
-    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release.'
+    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
@@ -656,14 +656,14 @@ test('validateJourneySteps accepts expect.status and expect.error after a call o
 
 test('validateJourneySteps rejects an expect.status with no call or request before it', () => {
   expect(validateJourneySteps({ steps: [{ expect: { status: 403 } }] }).error).toBe(
-    'Step 0: Step "expect.status" must follow a "call", "request" or "release" step, whose answer it reads; only expect steps may sit between them. Received it after the start of the journey.'
+    'Step 0: Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after the start of the journey.'
   );
   expect(
     validateJourneySteps({
       steps: [{ call: { endpoint: 'e' } }, { click: 'save' }, { expect: { status: 403 } }],
     }).error
   ).toBe(
-    'Step 2: Step "expect.status" must follow a "call", "request" or "release" step, whose answer it reads; only expect steps may sit between them. Received it after a "click" step.'
+    'Step 2: Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after a "click" step.'
   );
   expect(
     validateJourneySteps({
@@ -770,7 +770,73 @@ test('validateJourneySteps rejects an expect.status after a hold, which answers 
     validateJourneySteps({ steps: [{ hold: { requestId: 'r' } }, { expect: { status: 200 } }] })
       .error
   ).toBe(
-    'Step 1: Step "expect.status" must follow a "call", "request" or "release" step, whose answer it reads; only expect steps may sit between them. Received it after a "hold" step.'
+    'Step 1: Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after a "hold" step.'
+  );
+});
+
+test('validateJourneySteps accepts a call as system and refuses a request as system', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { call: { endpoint: 'nightly_close', as: 'system' } },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+  expect(
+    validateJourneySteps({
+      steps: [{ request: { pageId: 'orders', requestId: 'get_order', as: 'system' } }],
+    }).error.replace(EXAMPLES, '')
+  ).toBe(
+    'Step 0: Step "request" cannot run "as: system": a page request is always sent by a person on the page. Call the endpoint the request reaches with a "call" step "as: system" instead.'
+  );
+});
+
+test('validateJourneySteps accepts a webhook, with expect steps reading its answer', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        {
+          webhook: {
+            endpoint: 'payment_events',
+            body: { id: 'evt_1' },
+            query: { attempt: '1' },
+            headers: { 'x-signature': 'abc' },
+          },
+        },
+        { expect: { status: 401 } },
+        { expect: { error: 'Webhook verification failed.' } },
+        { webhook: { endpoint: 'payment_events', body: 'id=evt_2' } },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed webhook steps', () => {
+  function error(step) {
+    return validateJourneySteps({ steps: [step] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ webhook: 'payment_events' })).toBe(
+    'Step 0: Step "webhook" requires { endpoint, body, query?, headers? }. Received "payment_events".'
+  );
+  expect(error({ webhook: { body: {} } })).toBe(
+    'Step 0: Step "webhook" requires "endpoint" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ webhook: { endpoint: 'payment_events' } })).toBe(
+    'Step 0: Step "webhook" requires "body": a string is sent as written, anything else as JSON.'
+  );
+  expect(error({ webhook: { endpoint: 'e', body: {}, headers: { 'x-attempt': 2 } } })).toBe(
+    'Step 0: Step "webhook" requires "headers" to be an object of strings. Received {"x-attempt":2}.'
+  );
+  expect(error({ webhook: { endpoint: 'e', body: {}, query: 'a=1' } })).toBe(
+    'Step 0: Step "webhook" requires "query" to be an object of strings. Received "a=1".'
+  );
+  expect(error({ webhook: { endpoint: 'e', body: {}, as: 'system' } })).toBe(
+    'Step 0: Step "webhook" has unknown key "as". Keys are: endpoint, body, query, headers.'
+  );
+  expect(validateJourneySteps({ steps: [{ webhook: 1 }] }).error).toMatch(
+    / Example: \{"webhook":\{"endpoint":"payments-events"/
   );
 });
 

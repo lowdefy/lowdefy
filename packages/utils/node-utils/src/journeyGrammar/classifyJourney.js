@@ -35,10 +35,25 @@ const HEADLESS_STEP_KEYS = [
   'request',
   'select',
   'wait',
+  'webhook',
 ];
 // Steps only the headless runner takes: it keeps a held call parked in its own process while the
 // steps after the hold run, which a browser posting to the server cannot.
 const IN_PROCESS_STEP_KEYS = ['hold', 'release'];
+
+// Why a step only the runner in process can take needs it, or undefined for any other step. A
+// call as system runs the endpoint as a cron run does, which over HTTP is the detached route, and
+// that route answers only a caller holding CRON_SECRET.
+function needsInProcess(step) {
+  const key = getStepKey(step);
+  if (IN_PROCESS_STEP_KEYS.includes(key)) {
+    return `step "${key}" needs the headless runner, which keeps a held call parked in its own process`;
+  }
+  if (key === 'call' && step.call.as === 'system') {
+    return 'step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET';
+  }
+  return undefined;
+}
 // Checks a headless run reads from the engine, the calls it recorded or the data session.
 const HEADLESS_EXPECT_KEYS = [
   'calls',
@@ -126,24 +141,18 @@ function needsBrowser({ steps, index }) {
 
 // The first step only the runner in process can take, as { index, step, reason }, or undefined.
 function findInProcessStep({ journey, steps }) {
-  const index = steps.findIndex((step) => IN_PROCESS_STEP_KEYS.includes(getStepKey(step)));
+  const index = steps.findIndex((step) => !type.isUndefined(needsInProcess(step)));
   if (index === -1) {
     return undefined;
   }
-  return {
-    index,
-    step: journey.steps[index],
-    reason: `step "${getStepKey(
-      steps[index]
-    )}" needs the headless runner, which keeps a held call parked in its own process`,
-  };
+  return { index, step: journey.steps[index], reason: needsInProcess(steps[index]) };
 }
 
 // Whether a journey can run headless, read from its steps alone: { headless: true }, or
 // { headless: false, index, step, reason } for the first step that needs a browser. A step
 // may still turn out to need one at run time (an action only a browser can carry out), which the
 // headless runner reports. A journey with a step only the runner in process takes (hold,
-// release) also carries inProcess: { index, step, reason } for the first, which a browser run
+// release, a call as system) also carries inProcess: { index, step, reason } for the first, which a browser run
 // refuses. Runs on a journey whose steps validateJourneySteps accepted.
 function classifyJourney({ journey }) {
   const steps = normaliseJourneySteps({ steps: journey.steps ?? [] });

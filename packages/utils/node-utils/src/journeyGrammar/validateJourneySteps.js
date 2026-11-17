@@ -36,6 +36,7 @@ const STEP_KEYS = [
   'request',
   'hold',
   'release',
+  'webhook',
 ];
 // The steps a person does to the page. An app error one causes can be
 // asserted by an expect.error step straight after it.
@@ -45,8 +46,8 @@ const INTERACTION_STEP_KEYS = ['click', 'open', 'fill', 'select', 'press', 'back
 // them.
 const CALL_STEP_KEYS = ['call', 'request'];
 // The steps whose answer the expect.error and expect.status steps after them read: a call or
-// request, and a release, which answers with the call it let go.
-const ANSWER_STEP_KEYS = [...CALL_STEP_KEYS, 'release'];
+// request, a release, which answers with the call it let go, and a webhook.
+const ANSWER_STEP_KEYS = [...CALL_STEP_KEYS, 'release', 'webhook'];
 const EXPECT_KEYS = [
   'state',
   'visible',
@@ -260,10 +261,14 @@ function validateCalls(value) {
 
 // call and request take `as`, who calls: a data set user's name, "none" for
 // signed out or an inline user object, as the journey's own `user` does. One
-// call has one caller, so a list is refused.
+// call has one caller, so a list is refused. A call also takes "system", which runs the endpoint
+// as a cron or internal run does; a page request always has a caller, so a request refuses it.
 function validateCallUser({ key, user }) {
   if (type.isUndefined(user)) {
     return undefined;
+  }
+  if (user === 'system' && key === 'request') {
+    return 'Step "request" cannot run "as: system": a page request is always sent by a person on the page. Call the endpoint the request reaches with a "call" step "as: system" instead.';
   }
   if (type.isArray(user) || !type.isUndefined(validateJourneyUser({ user }).error)) {
     return `Step "${key}" requires "as" to be a data set user's name, "none" to call signed out, or an inline user object. Received ${describe(
@@ -332,6 +337,46 @@ function validateHold(params) {
   );
   if (!type.isUndefined(invalid)) {
     return `Step "hold" requires "${invalid}" to be a non-empty string. Received ${describe(
+      params[invalid]
+    )}.`;
+  }
+  return undefined;
+}
+
+function isStringMap(value) {
+  return type.isObject(value) && Object.values(value).every((entry) => type.isString(entry));
+}
+
+// webhook: { endpoint, body, query?, headers? } posts to a webhook endpoint as a third party
+// does: body is sent as raw text (a string as written, anything else as JSON), and query and
+// headers are strings, as they arrive over HTTP.
+function validateWebhook(params) {
+  if (!type.isObject(params)) {
+    return `Step "webhook" requires { endpoint, body, query?, headers? }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'webhook',
+    params,
+    allowed: ['endpoint', 'body', 'query', 'headers'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.endpoint) || params.endpoint === '') {
+    return `Step "webhook" requires "endpoint" to be a non-empty string. Received ${describe(
+      params.endpoint
+    )}.`;
+  }
+  if (type.isUndefined(params.body)) {
+    return 'Step "webhook" requires "body": a string is sent as written, anything else as JSON.';
+  }
+  const invalid = ['query', 'headers'].find(
+    (mapKey) => !type.isUndefined(params[mapKey]) && !isStringMap(params[mapKey])
+  );
+  if (!type.isUndefined(invalid)) {
+    return `Step "webhook" requires "${invalid}" to be an object of strings. Received ${describe(
       params[invalid]
     )}.`;
   }
@@ -723,7 +768,7 @@ function validatePlacement({ steps, index }) {
   const previous = steps[index - 1];
   const previousKey = type.isUndefined(previous) ? undefined : getStepKey(previous);
   if (expectKey === 'status' && type.isUndefined(findAnsweredCall({ steps, index }))) {
-    return `Step "expect.status" must follow a "call", "request" or "release" step, whose answer it reads; only expect steps may sit between them. Received it after ${describePrevious(
+    return `Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after ${describePrevious(
       previousKey
     )}.`;
   }
@@ -831,6 +876,8 @@ function validateStepParams({ key, params }) {
         )}.`;
       }
       return undefined;
+    case 'webhook':
+      return validateWebhook(params);
     default:
       return undefined;
   }

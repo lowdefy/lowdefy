@@ -27,6 +27,8 @@ test('findStepNeedingPage returns undefined when every step runs without a page'
         { expect: { status: 403 } },
         { expect: { error: 'x' } },
         { release: 'claim' },
+        { call: { endpoint: 'e', as: 'system' } },
+        { webhook: { endpoint: 'w', body: {} } },
         { request: { pageId: 'p', requestId: 'r', as: 'none' } },
         { as: 'other' },
         { wait: 100 },

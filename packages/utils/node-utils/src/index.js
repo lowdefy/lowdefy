@@ -100,6 +100,7 @@ import buildSessionReport from './sessionLog/buildSessionReport.js';
 import formatSessionLog from './sessionLog/formatSessionLog.js';
 import formatSessionReport from './sessionLog/formatSessionReport.js';
 import summariseSessions from './sessionLog/summariseSessions.js';
+import toWebhookBody from './toWebhookBody.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
   ANSWER_STEP_KEYS,
@@ -219,6 +220,7 @@ export {
   spawnProcess,
   stepIdentity,
   summariseSessions,
+  toWebhookBody,
   readFile,
   writeFile,
   writeFileAtomic,

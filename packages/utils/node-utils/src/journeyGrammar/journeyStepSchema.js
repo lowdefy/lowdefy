@@ -19,8 +19,8 @@ import JOURNEY_STEP_EXAMPLES from './journeyStepExamples.js';
 // The journey step grammar as a JSON schema, for agents to read. The grammar
 // itself is validateJourneySteps; its tests check this schema accepts and
 // refuses the same steps. Rules across steps (expect.error and expect.effect
-// directly follow an interaction, expect.status follows a call, request or
-// release, a release follows a hold of its request) and
+// directly follow an interaction, expect.status follows a call, request,
+// release or webhook, a release follows a hold of its request) and
 // a fromEmail match being a valid regular expression are checked by the
 // validator only.
 
@@ -213,9 +213,18 @@ const EXPECT_KINDS = {
 
 const CALL_AS = {
   description:
-    'Who calls: a data set user\'s name, "none" for signed out, or an inline user object. Defaults to the journey\'s user.',
+    'Who calls: a data set user\'s name, "none" for signed out, an inline user object, or "system" to run the endpoint as a cron or internal run does (no user, InternalApi endpoints callable; headless only). Defaults to the journey\'s user.',
   anyOf: [nonEmptyString, { type: 'object' }],
 };
+
+// A page request is always sent by a person on the page, so it takes no "system" caller.
+const REQUEST_AS = {
+  description:
+    'Who calls: a data set user\'s name, "none" for signed out, or an inline user object. Defaults to the journey\'s user.',
+  anyOf: [{ ...nonEmptyString, not: { const: 'system' } }, { type: 'object' }],
+};
+
+const STRING_MAP = { type: 'object', additionalProperties: { type: 'string' } };
 
 const CALL_PAYLOAD = {
   type: 'object',
@@ -314,7 +323,7 @@ const STEPS = {
   call: {
     type: 'object',
     description:
-      'Call an endpoint directly, outside any page, as the journey\'s user or the user named in "as". For what a page would never send; reach a call the page sends through its own event instead. Read the answer with expect: { status } and expect: { error }.',
+      'Call an endpoint directly, outside any page, as the journey\'s user or the user named in "as". For what a page would never send; reach a call the page sends through its own event instead. "as": "system" runs a cron or InternalApi endpoint as the system does. Read the answer with expect: { status } and expect: { error }.',
     properties: { endpoint: nonEmptyString, payload: CALL_PAYLOAD, as: CALL_AS },
     required: ['endpoint'],
     additionalProperties: false,
@@ -327,7 +336,7 @@ const STEPS = {
       pageId: nonEmptyString,
       requestId: nonEmptyString,
       payload: CALL_PAYLOAD,
-      as: CALL_AS,
+      as: REQUEST_AS,
     },
     required: ['pageId', 'requestId'],
     additionalProperties: false,
@@ -344,6 +353,19 @@ const STEPS = {
     ...nonEmptyString,
     description:
       'Let the call parked at the gate a "hold" step set on this request id go, wait for it to answer, and make its answer the one the expect steps after it read. A gate no call reached, or a call still parked when the journey ends, fails the journey. Headless only.',
+  },
+  webhook: {
+    type: 'object',
+    description:
+      'Post to a webhook endpoint as the third party that sends it does, so its "verify" gate runs. "body" is sent as raw text: a string as written, anything else as JSON. A signature header is a literal, computed once with the test secret the app\'s verifier reads. Read the answer with expect: { status } and expect: { error }, and what it wrote with expect: { db }.',
+    properties: {
+      endpoint: nonEmptyString,
+      body: { description: 'The request body: a string sent as written, anything else as JSON.' },
+      query: { ...STRING_MAP, description: 'The query string, as strings.' },
+      headers: { ...STRING_MAP, description: 'Request headers, as strings.' },
+    },
+    required: ['endpoint', 'body'],
+    additionalProperties: false,
   },
 };
 
@@ -364,7 +386,7 @@ const journeyStepSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Journey step',
   description:
-    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, column, nth }; fill, select and expect.text need a blockId. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request or release step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it. A journey with no pageId runs only call, request, hold, release, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.',
+    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, column, nth }; fill, select and expect.text need a blockId. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request, release or webhook step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it. A request takes no "as": "system". A journey with no pageId runs only call, request, hold, release, webhook, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.',
   oneOf: Object.values(JOURNEY_STEP_SCHEMAS),
 };
 

@@ -104,6 +104,10 @@ const VALID_STEPS = [
   { hold: { requestId: 'claim_run' } },
   { hold: { requestId: 'claim_run', endpoint: 'run-approve', pageId: 'runs' } },
   { release: 'claim_run' },
+  { call: { endpoint: 'nightly_close', as: 'system' } },
+  { webhook: { endpoint: 'payment_events', body: { id: 'evt_1' } } },
+  { webhook: { endpoint: 'payment_events', body: 'raw text', query: { a: '1' } } },
+  { webhook: { endpoint: 'payment_events', body: null, headers: { 'x-signature': 'abc' } } },
   ...Object.values(JOURNEY_STEP_EXAMPLES).flat(),
 ];
 
@@ -205,6 +209,13 @@ const INVALID_STEPS = [
   { hold: { requestId: 'r', times: 2 } },
   { release: '' },
   { release: { requestId: 'r' } },
+  { request: { pageId: 'orders', requestId: 'get_order', as: 'system' } },
+  { webhook: 'payment_events' },
+  { webhook: { endpoint: 'payment_events' } },
+  { webhook: { endpoint: '', body: {} } },
+  { webhook: { endpoint: 'payment_events', body: {}, headers: { 'x-attempt': 2 } } },
+  { webhook: { endpoint: 'payment_events', body: {}, query: 'a=1' } },
+  { webhook: { endpoint: 'payment_events', body: {}, as: 'system' } },
 ];
 
 test.each(VALID_STEPS.map((step) => [step]))(
