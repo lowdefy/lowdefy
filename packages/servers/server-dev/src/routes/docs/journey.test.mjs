@@ -202,6 +202,31 @@ test('docsJourneyHandler passes the journey stubs to the runner with its data se
   expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ data: 'stubs', stubs }));
 });
 
+test('docsJourneyHandler answers 400 for a _case or _ref left in the posted journey', async () => {
+  const placeholder = await docsJourneyHandler(
+    createContext({
+      data: 'scope',
+      user: { _case: 'user' },
+      steps: [{ call: { endpoint: 'tickets-add-comment' } }],
+    })
+  );
+  expect(placeholder.status).toBe(400);
+  expect(placeholder.data.error).toBe(
+    'Journey "user" is a _case placeholder, {"_case":"user"}, with no case row to fill it in: _case reads a key of a row of the journey\'s "cases" table. A journey sent here takes literal values: a journey file with cases or _ref runs through lowdefy test (lowdefy_run_tests), which reads them.'
+  );
+  const ref = await docsJourneyHandler(
+    createContext({
+      data: 'scope',
+      steps: [{ call: { endpoint: 'ping' } }, { _ref: 'tests/shared/steps/check.yaml' }],
+    })
+  );
+  expect(ref.status).toBe(400);
+  expect(ref.data.error).toMatch(
+    /^Journey "steps\[1\]" is a _ref, \{"_ref":"tests\/shared\/steps\/check.yaml"\}, that was not read/
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
 test('docsJourneyHandler answers 400 with the message for a bad stub', async () => {
   const badStub = await docsJourneyHandler(
     createContext({

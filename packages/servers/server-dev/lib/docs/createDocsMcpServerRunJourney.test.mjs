@@ -163,6 +163,35 @@ test('MCP lowdefy_run_journey passes literal stubs with a data set to the run', 
   await client.close();
 });
 
+test('MCP lowdefy_run_journey refuses a _ref or _case left in the journey, pointing to lowdefy test', async () => {
+  const client = await connectClient();
+
+  const ref = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      steps: [{ call: { endpoint: 'price_run' } }],
+      data: 'stubs',
+      stubs: [{ _ref: 'tests/shared/stubs/rates.yaml' }],
+    },
+  });
+  expect(ref.isError).toBe(true);
+  expect(ref.content[0].text).toContain(
+    'Journey "stubs[0]" is a _ref, {"_ref":"tests/shared/stubs/rates.yaml"}, that was not read'
+  );
+  expect(ref.content[0].text).toContain('runs through lowdefy test (lowdefy_run_tests)');
+
+  const placeholder = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { steps: [{ call: { endpoint: { _case: 'endpoint' } } }] },
+  });
+  expect(placeholder.isError).toBe(true);
+  expect(placeholder.content[0].text).toContain(
+    'Journey "steps[0].call.endpoint" is a _case placeholder, {"_case":"endpoint"}'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  await client.close();
+});
+
 test('MCP lowdefy_run_journey refuses a bad stub before running', async () => {
   const client = await connectClient();
 

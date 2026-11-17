@@ -82,6 +82,7 @@ import compileSegments from './journeyCompiler/compileSegments.js';
 import countTextTokens from './journeyEvidence/countTextTokens.js';
 import normaliseClickText from './journeyText/normaliseClickText.js';
 import classifyJourney from './journeyGrammar/classifyJourney.js';
+import findJourneyPlaceholder from './journeyGrammar/findJourneyPlaceholder.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
 import findStepNeedingPage from './journeyGrammar/findStepNeedingPage.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
@@ -164,6 +165,7 @@ export {
   findAndroidDevice,
   findAndroidTool,
   findAvailablePort,
+  findJourneyPlaceholder,
   findPlaceholderStep,
   findPnpmWorkspaceRoot,
   findStepNeedingPage,

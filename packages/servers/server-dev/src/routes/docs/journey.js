@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { validateJourneyStubs, validateJourneySteps } from '@lowdefy/node-utils';
 
 import describePageNeed from '../../../lib/docs/describePageNeed.js';
+import findSentPlaceholder from '../../../lib/docs/findSentPlaceholder.js';
 import getBuildId from '../../../lib/docs/getBuildId.js';
 import lowdefyConfig from '../../../lib/build/config.js';
 import { openMutantRun } from '../../../lib/server/mutants/mutantRuns.js';
@@ -38,6 +39,18 @@ async function docsJourneyHandler(c) {
   const body = await c.req.json().catch(() => ({}));
   const { pathParams, steps, urlQuery, state, timeout } = body;
   const pageId = body.pageId ?? undefined;
+  const placeholderError = findSentPlaceholder({
+    data: body.data,
+    pageId,
+    pathParams,
+    steps,
+    stubs: body.stubs,
+    urlQuery,
+    user: body.user,
+  });
+  if (placeholderError) {
+    return c.json({ error: placeholderError }, 400);
+  }
   if (!type.isUndefined(pageId) && !type.isString(pageId)) {
     return c.json(
       {

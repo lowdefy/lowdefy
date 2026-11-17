@@ -17,6 +17,7 @@
 import { validate } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
 import {
+  findJourneyPlaceholder,
   findStepNeedingPage,
   validateJourneyDataSession,
   validateJourneyStubs,
@@ -70,6 +71,12 @@ function validateCases({ journey }) {
 function validateJourney({ journey }) {
   if (type.isObject(journey) && !type.isUndefined(journey.cases)) {
     return validateCases({ journey });
+  }
+  // Refs are read and rows filled in by now, so a placeholder left would be sent as a literal
+  // object: a _case in a journey with no "cases", or one inside a row's value.
+  const { error: placeholderError } = findJourneyPlaceholder({ journey });
+  if (!type.isUndefined(placeholderError)) {
+    return { valid: false, message: placeholderError };
   }
   try {
     validate({ schema: journeySchema, data: journey });

@@ -23,6 +23,7 @@ import deviceAction from './device/deviceAction.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import findConfig from './findConfig.js';
 import findPageBlock from './findPageBlock.js';
+import findSentPlaceholder from './findSentPlaceholder.js';
 import fitResponse from './fitResponse.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
@@ -380,6 +381,18 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       device,
       headless,
     }) => {
+      const placeholderError = findSentPlaceholder({
+        data,
+        pageId,
+        pathParams,
+        steps,
+        stubs,
+        urlQuery,
+        user,
+      });
+      if (placeholderError) {
+        return notFoundResult(placeholderError);
+      }
       if (!type.isNone(device)) {
         const refused = deviceParamsError({
           tool: 'lowdefy_run_journey',

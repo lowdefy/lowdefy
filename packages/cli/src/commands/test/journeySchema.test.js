@@ -565,6 +565,34 @@ test('validateJourney refuses hold and expect.sunk on a journey with no data set
   ).toEqual({ valid: true });
 });
 
+test('validateJourney refuses a _case in a journey with no cases, and one a row fills in', () => {
+  expect(
+    validateJourney({
+      journey: {
+        name: 'calls the endpoint',
+        steps: [{ call: { endpoint: 'ping', payload: { id: { _case: 'id' } } } }],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey "steps[0].call.payload.id" is a _case placeholder, {"_case":"id"}, with no case row to fill it in: _case reads a key of a row of the journey\'s "cases" table.',
+  });
+  expect(
+    validateJourney({
+      journey: {
+        name: 'calls the endpoint',
+        cases: [{ name: 'nested', payload: { id: { _case: 'id' } } }],
+        steps: [{ call: { endpoint: 'ping', payload: { _case: 'payload' } } }],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey case "nested": Journey "steps[0].call.payload.id" is a _case placeholder, {"_case":"id"}, with no case row to fill it in: _case reads a key of a row of the journey\'s "cases" table.',
+  });
+});
+
 test('validateJourney accepts a case table and validates each run after its row is filled in', () => {
   const journey = {
     name: 'opens each page',
