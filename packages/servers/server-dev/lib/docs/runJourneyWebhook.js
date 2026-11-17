@@ -17,6 +17,8 @@
 import { readForcedError, readWebhookError } from '@lowdefy/journey-headless';
 import { toWebhookBody } from '@lowdefy/node-utils';
 
+import JOURNEY_REQUEST_ID_HEADER from '../server/JOURNEY_REQUEST_ID_HEADER.js';
+
 function parseJson(text) {
   try {
     return JSON.parse(text);
@@ -31,7 +33,9 @@ function parseJson(text) {
 // signed-out actor (journey.actors.callerFor('none')): a webhook has no caller, and the context
 // carries the journey's data set and recording cookies, so it runs on the journey's data. A
 // refusal is the answer, not a failure of the step: expect.status and expect.error read it from
-// journey.lastAnswer, with the headless runner's messages (readWebhookError).
+// journey.lastAnswer, with the headless runner's messages (readWebhookError). A routine a fail gate
+// failed answers 500 with no request id in its body, so its forced message is read by the request
+// id the route names in a header, which it sends only for a call on a journey's data session.
 async function runJourneyWebhook({ journey, step, timeout }) {
   const { body, endpoint, headers, query } = step.webhook;
   const url = `${journey.origin}${journey.basePath}/api/endpoints/${endpoint}`;
@@ -50,8 +54,11 @@ async function runJourneyWebhook({ journey, step, timeout }) {
     description: `webhook "${endpoint}"`,
     status,
     error:
-      readForcedError({ body: answerBody, session: journey.dataSession?.session }) ??
-      readWebhookError({ body: answerBody, status }),
+      readForcedError({
+        body: answerBody,
+        rid: response.headers()[JOURNEY_REQUEST_ID_HEADER],
+        session: journey.dataSession?.session,
+      }) ?? readWebhookError({ body: answerBody, status }),
   };
   return journey.lastAnswer;
 }

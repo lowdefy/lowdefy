@@ -94,15 +94,18 @@ async function openSession({ data, testApp }) {
       call: (endpointId, payload) => callSystemEndpoint({ endpointId, payload, testSession }),
     }),
     // Posts to a webhook endpoint as its sender does: body is sent as raw text, a string as
-    // written and anything else as JSON, so a signature header computed over it verifies.
-    webhook: (endpointId, { body, headers, query } = {}) =>
-      callWebhook({
+    // written and anything else as JSON, so a signature header computed over it verifies. Answers
+    // { status, body, contentType, faults }; the request id the journey hosts read is left out.
+    webhook: async (endpointId, { body, headers, query } = {}) => {
+      const { rid, ...answer } = await callWebhook({
         endpointId,
         headers,
         query,
         rawBody: toWebhookBody(body),
         testSession,
-      }),
+      });
+      return answer;
+    },
   };
   testSessions.set(session, testSession);
   return session;

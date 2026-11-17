@@ -31,17 +31,18 @@ function readErrorRequestId(body) {
 // record of the call on the data session (recordForcedFailure), or null when the answer failed
 // with no forced failure. The client only ever sees the generic message, so expect.error reads
 // this in its place. Every host reads it here: the headless hosts from the body they answered
-// with, a browser run from the body the route sent. A journey with no data session has no fail
-// gates, so no forced failure.
-function readForcedError({ body, session }) {
+// with, a browser run from the body the route sent. A webhook's failed answer names no request id
+// (api's createWebhookAnswer), so a webhook step passes the call's own as `rid`, which the body's
+// is read in place of. A journey with no data session has no fail gates, so no forced failure.
+function readForcedError({ body, rid, session }) {
   if (type.isNone(session)) {
     return null;
   }
-  const rid = readErrorRequestId(body);
-  if (type.isUndefined(rid)) {
+  const callRid = rid ?? readErrorRequestId(body);
+  if (type.isUndefined(callRid)) {
     return null;
   }
-  return readForcedFailure({ rid, session });
+  return readForcedFailure({ rid: callRid, session });
 }
 
 export default readForcedError;

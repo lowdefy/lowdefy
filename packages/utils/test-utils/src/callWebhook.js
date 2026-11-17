@@ -15,24 +15,19 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { toWebhookHeaders } from '@lowdefy/node-utils';
 
 import checkSessionOpen from './checkSessionOpen.js';
 import createCallContext from './createCallContext.js';
 import createErrorAnswer from './createErrorAnswer.js';
 
-// Header names as they reach the route: HTTP sends them case-insensitively and the server reads
-// them lower-cased, so a verifier reads headers['x-signature'] whichever case the test wrote.
-function toHeaders(headers) {
-  return Object.fromEntries(
-    Object.entries(headers ?? {}).map(([name, value]) => [name.toLowerCase(), value])
-  );
-}
-
 // Posts to a webhook endpoint as its sender does, through runWebhookEndpoint, the entry the
 // endpoints route runs for an endpoint declared `webhook`: no caller, and its verify gate runs
 // against rawBody, the body exactly as posted, before the routine. Answers what the route sends,
-// { status, body, contentType, faults }: body is the JSON (or, for a text/plain answer, the text)
-// the sender receives, and faults are the errors the server would log at error level. A webhook
+// { status, body, contentType, faults, rid }: body is the JSON (or, for a text/plain answer, the
+// text) the sender receives, faults are the errors the server would log at error level, and rid is
+// the call's request id. A failed routine's answer names no request id (createWebhookAnswer), so a
+// journey reads a forced failure's message by this one (readForcedError). A webhook
 // that throws (no such webhook endpoint, a verifier that cannot be configured) is answered as the
 // servers' error handler answers it.
 async function callWebhook({ endpointId, headers, query, rawBody, testSession }) {
@@ -56,22 +51,29 @@ async function callWebhook({ endpointId, headers, query, rawBody, testSession })
   try {
     const answer = await testApp.modules.api.runWebhookEndpoint(context, {
       endpointId,
-      headers: toHeaders(headers),
+      headers: toWebhookHeaders(headers),
       query: query ?? {},
       rawBody,
     });
     if (answer.contentType === 'text/plain') {
-      return { status: answer.status, body: answer.body, contentType: 'text/plain', faults };
+      return {
+        status: answer.status,
+        body: answer.body,
+        contentType: 'text/plain',
+        faults,
+        rid: context.rid,
+      };
     }
     return {
       status: answer.status,
       body: JSON.parse(JSON.stringify(answer.body)),
       contentType: 'application/json',
       faults,
+      rid: context.rid,
     };
   } catch (error) {
     const { body, status } = await createErrorAnswer({ context, error, faults, testApp });
-    return { status, body, contentType: 'application/json', faults };
+    return { status, body, contentType: 'application/json', faults, rid: context.rid };
   }
 }
 

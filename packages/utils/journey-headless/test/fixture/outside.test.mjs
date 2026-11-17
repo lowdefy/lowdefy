@@ -32,18 +32,18 @@ import journeyFixture from './journeyFixture.mjs';
 // secret test-secret-FIXTURE_WEBHOOK_SECRET. Each journey runs on a host of its own on the file's
 // one app, so on a fresh session of the data set.
 
-function readJourney(name) {
-  const [journey] = YAML.parse(
+function readJourney(name, index = 0) {
+  return YAML.parse(
     fs.readFileSync(
       path.join(journeyFixture.configDirectory, 'tests', 'journeys', '_headless', name),
       'utf8'
     )
-  );
-  return journey;
+  )[index];
 }
 
 const systemJourney = readJourney('system.yaml');
 const webhookJourney = readJourney('webhook.yaml');
+const failedWebhookJourney = readJourney('webhook.yaml', 1);
 
 let app;
 let host;
@@ -56,8 +56,8 @@ afterAll(async () => {
   await app?.close();
 });
 
-async function run({ steps, user = 'operator' }) {
-  host = await createBuildHost({ app, data: 'outside', user });
+async function run({ steps, stubs, user = 'operator' }) {
+  host = await createBuildHost({ app, data: 'outside', stubs, user });
   return runHeadlessJourney({ host, journey: { steps }, stepTimeout: 2000 });
 }
 
@@ -106,6 +106,19 @@ test('the webhook journey writes the signed events and refuses the wrong signatu
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
   expect(result.steps.map((step) => step.status)).toEqual(webhookJourney.steps.map(() => 'ok'));
+});
+
+test('expect.error reads the forced message of a fail gate inside a webhook routine', async () => {
+  const result = await run({
+    steps: failedWebhookJourney.steps,
+    stubs: failedWebhookJourney.stubs,
+    user: failedWebhookJourney.user,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(
+    failedWebhookJourney.steps.map(() => 'ok')
+  );
 });
 
 test('a webhook step names an endpoint that is not a webhook', async () => {

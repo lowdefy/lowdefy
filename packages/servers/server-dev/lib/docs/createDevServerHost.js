@@ -297,7 +297,8 @@ async function createDevServerHost({
 
   // A webhook step: posted as the endpoints route runs a webhook endpoint, through
   // runWebhookEndpoint with no caller, so its verify gate runs against rawBody. Answers what the
-  // route sends, { status, body, contentType, faults }, as @lowdefy/test-utils' callWebhook does.
+  // route sends, { status, body, contentType, faults, rid }, as @lowdefy/test-utils' callWebhook
+  // does: rid is the call's request id, by which a forced failure's message is read.
   async function webhook({ endpointId, headers, query, rawBody }) {
     const requestPath = `/api/endpoints/${endpointId}`;
     counter.recordCall({ url: `${origin}${requestPath}`, method: 'POST' });
@@ -309,17 +310,24 @@ async function createDevServerHost({
     try {
       const sent = await runWebhookEndpoint(context, { endpointId, headers, query, rawBody });
       if (sent.contentType === 'text/plain') {
-        return { status: sent.status, body: sent.body, contentType: 'text/plain', faults };
+        return {
+          status: sent.status,
+          body: sent.body,
+          contentType: 'text/plain',
+          faults,
+          rid: context.rid,
+        };
       }
       return {
         status: sent.status,
         body: JSON.parse(JSON.stringify(sent.body)),
         contentType: 'application/json',
         faults,
+        rid: context.rid,
       };
     } catch (error) {
       const { body, status } = await answerError({ context, error, faults });
-      return { status, body, contentType: 'application/json', faults };
+      return { status, body, contentType: 'application/json', faults, rid: context.rid };
     }
   }
 

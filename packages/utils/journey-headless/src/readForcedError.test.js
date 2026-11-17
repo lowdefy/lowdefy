@@ -43,3 +43,10 @@ test('readForcedError answers null for an error no fail gate forced, an answer w
   const forced = { '~e': { requestId: 'rid-1' } };
   expect(readForcedError({ body: forced, session: null })).toBeNull();
 });
+
+test("readForcedError reads the forced message by the call's request id when the body names none", () => {
+  const body = { error: { code: 'internal_error', message: 'Webhook failed.' } };
+  expect(readForcedError({ body, session })).toBeNull();
+  expect(readForcedError({ body, rid: 'rid-1', session })).toEqual('Write failed on purpose');
+  expect(readForcedError({ body, rid: 'rid-2', session })).toBeNull();
+});

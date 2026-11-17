@@ -241,6 +241,24 @@ fixtureTest.each([['system.yaml'], ['webhook.yaml'], ['stubs.yaml']])(
   }
 );
 
+// The second journey of tests/journeys/_headless/webhook.yaml: a fail gate fails the event write
+// inside payment_events, whose 500 names no request id; expect.error reads the forced message by
+// the request id the dev server host answers the webhook with.
+fixtureTest(
+  'expect.error reads a forced failure inside a webhook, headless on the dev server',
+  async () => {
+    const journey = readHeadlessJourney('webhook.yaml', 1);
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...journey, headless: true },
+    });
+    expect(status).toBe(200);
+    expect(body.failure).toBeUndefined();
+    expect(body.passed).toBe(true);
+    expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+  }
+);
+
 fixtureTest(
   'a fail gate that never fired fails the journey headless on the dev server',
   async () => {

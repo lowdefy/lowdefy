@@ -14,28 +14,23 @@
   limitations under the License.
 */
 
-import { toWebhookBody } from '@lowdefy/node-utils';
+import { toWebhookBody, toWebhookHeaders } from '@lowdefy/node-utils';
 
 import readForcedError from './readForcedError.js';
 import readWebhookError from './readWebhookError.js';
-
-// Header names as the route reads them, lower-cased, as HTTP carries them case-insensitively.
-function toHeaders(headers) {
-  return Object.fromEntries(
-    Object.entries(headers ?? {}).map(([name, value]) => [name.toLowerCase(), value])
-  );
-}
 
 // Runs a webhook step: the body goes to the host's in-process webhook as raw text (a string as
 // written, anything else as JSON), with the step's query and headers, as its sender posts it to
 // the route, so the endpoint's verify gate runs against those bytes. A refusal is the answer, not
 // a failure of the step: expect.status and expect.error read it from the answer this returns
-// ({ description, status, error }). The server's faults go to the error sink.
+// ({ description, status, error }). The server's faults go to the error sink. A routine a fail gate
+// failed answers 500 with a fixed message and no request id, so its forced message is read by the
+// request id the host's webhook answers with (`rid`).
 async function runHeadlessWebhook({ host, step }) {
   const { body, endpoint, headers, query } = step.webhook;
   const answer = await host.webhook({
     endpointId: endpoint,
-    headers: toHeaders(headers),
+    headers: toWebhookHeaders(headers),
     query: query ?? {},
     rawBody: toWebhookBody(body),
   });
@@ -49,7 +44,7 @@ async function runHeadlessWebhook({ host, step }) {
   return {
     description: `webhook "${endpoint}"`,
     error:
-      readForcedError({ body: answer.body, session: host.dataSession }) ??
+      readForcedError({ body: answer.body, rid: answer.rid, session: host.dataSession }) ??
       readWebhookError({ body: answer.body, status: answer.status }),
     status: answer.status,
   };

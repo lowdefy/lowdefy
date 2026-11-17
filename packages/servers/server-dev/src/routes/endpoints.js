@@ -24,6 +24,7 @@ import {
 import { type } from '@lowdefy/helpers';
 
 import getPathSegments from '../lib/getPathSegments.js';
+import JOURNEY_REQUEST_ID_HEADER from '../../lib/server/JOURNEY_REQUEST_ID_HEADER.js';
 
 // A GET serves a link endpoint (`link: true`): typically an <img src> or a download link, sent
 // by the browser with the session cookie and no Lowdefy headers. The routine runs as that caller
@@ -78,6 +79,9 @@ async function endpointsHandler(c) {
       query: c.req.query(),
       headers: c.req.header(),
     });
+    if (!type.isNone(context.dataSet)) {
+      c.header(JOURNEY_REQUEST_ID_HEADER, context.rid);
+    }
     if (contentType === 'text/plain') {
       // A text answer often echoes a value from the request (a handshake token), so the browser
       // must not sniff it into HTML.

@@ -89,6 +89,8 @@ import { type } from '@lowdefy/helpers';
  * @property {*} body The JSON the route sends, or the text of a text/plain answer.
  * @property {string} contentType "application/json" or "text/plain".
  * @property {Array} faults The errors the server would log at error level.
+ * @property {string} rid The call's request id: a routine that failed answers with no request id,
+ *   so the message of a forced failure is read by this one (readForcedError).
  */
 
 /**
