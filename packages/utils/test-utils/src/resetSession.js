@@ -37,9 +37,11 @@ function describeUnfired(gates) {
 async function resetSession({ testSession }) {
   checkSessionOpen({ testSession });
   const { session } = testSession.dataSession;
-  const unfired = listUnfiredFailGates({ session });
   releasePauseGates({ session });
   await settleSession({ testSession });
+  // Read after the held routines are released and settled: a routine held at a pause gate can
+  // still reach a fail gate once it runs on.
+  const unfired = listUnfiredFailGates({ session });
   await reloadDataSession({
     client: testSession.store.client,
     dataSet: testSession.dataSet,

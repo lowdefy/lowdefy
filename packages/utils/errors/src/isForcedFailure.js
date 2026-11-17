@@ -19,7 +19,7 @@ import forcedFailureBrand from './forcedFailureBrand.js';
 // Whether an error is a forced failure a test's fail gate threw (markForcedFailure). Only the
 // brand counts: a plain `forced` property, which any error could carry, does not.
 function isForcedFailure(error) {
-  return error[forcedFailureBrand] === true;
+  return error?.[forcedFailureBrand] === true;
 }
 
 export default isForcedFailure;

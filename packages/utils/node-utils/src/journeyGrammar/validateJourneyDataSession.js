@@ -40,7 +40,8 @@ function validateJourneyDataSession({ data, steps, stubs }) {
   if (!type.isNone(data)) {
     return {};
   }
-  if (!type.isNone(stubs)) {
+  // An empty list asks for nothing, so it needs no data set.
+  if (!type.isNone(stubs) && !(type.isArray(stubs) && stubs.length === 0)) {
     return {
       error: `Journey "stubs" need a data set: stubs and forced failures live on the journey's data session. ${GIVE_DATA}`,
     };

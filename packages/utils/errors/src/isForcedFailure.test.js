@@ -37,3 +37,8 @@ test('the forced failure brand is not enumerable, so a copy of the error does no
   expect(isForcedFailure({ ...error })).toBe(false);
   expect(JSON.parse(JSON.stringify(error))).toEqual({});
 });
+
+test('isForcedFailure is false for null and undefined', () => {
+  expect(isForcedFailure(null)).toBe(false);
+  expect(isForcedFailure(undefined)).toBe(false);
+});

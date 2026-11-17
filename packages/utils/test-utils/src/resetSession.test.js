@@ -65,3 +65,14 @@ test('resetSession throws naming a fail gate that never fired, after resetting t
   expect(session.failGates).toEqual([]);
   await expect(resetSession({ testSession })).resolves.toBeUndefined();
 });
+
+test('resetSession counts a fail gate a held routine reaches once released', async () => {
+  addFailGate({ session, requestId: 'save_price', message: 'Down' });
+  session.pauseGates.push({
+    release: () => {
+      session.failGates[0].fired = 1;
+    },
+  });
+  await expect(resetSession({ testSession })).resolves.toBeUndefined();
+  expect(session.failGates).toEqual([]);
+});

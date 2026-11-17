@@ -70,3 +70,7 @@ test('validateJourneyDataSession refuses expect.sunk with no data set', () => {
       'Step 0: expect.sunk needs a data set: it reads the requests the journey\'s data session recorded. Give the journey a "data".',
   });
 });
+
+test('validateJourneyDataSession accepts an empty stubs list with no data set', () => {
+  expect(validateJourneyDataSession({ stubs: [], steps: [] })).toEqual({});
+});
