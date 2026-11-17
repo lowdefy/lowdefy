@@ -17,21 +17,19 @@
 import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
-import createBrowserLifecycle from './createBrowserLifecycle.js';
-import guardJourneyOrigin from './guardJourneyOrigin.js';
 import isPageReady from './isPageReady.js';
-import launchBrowser from './launchBrowser.js';
+import launchedBrowsers from './launchedBrowsers.js';
+import lifecycleForOrigin from './lifecycleForOrigin.js';
+import originGuard from './originGuard.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
+import watchJourneyOrigin from './watchJourneyOrigin.js';
 
-// Module-level singleton, shared by every headless caller (screenshots,
-// journeys, state inspection, operator evaluation, state loads) and closed
-// after 45 s unused. See createBrowserLifecycle.js.
-const { getBrowser, trackContext } = createBrowserLifecycle({
-  launch: launchBrowser,
-  idleTimeout: 45_000,
-});
+// See lifecycleForOrigin.js: one browser per origin host and port.
+async function getBrowser({ origin }) {
+  return lifecycleForOrigin({ origin }).getBrowser();
+}
 
 // `origin` should already include any configured basePath prefix that the
 // caller can't derive itself (e.g. from a request URL) — here it's read from
@@ -52,7 +50,7 @@ function buildPageUrl({ origin, pageId, path, pathParams, urlQuery }) {
 }
 
 // Opens a fresh browser context + page at the app's pageId route. Callers
-// obtain `browser` via getBrowser() themselves so they can map a launch
+// obtain `browser` via getBrowser({ origin }) themselves so they can map a launch
 // failure to their own "no browser available" error message, separate from
 // navigation failures. With no pageId (a page-less journey, whose steps only
 // call the server) the context and its cookies are set up and the page stays
@@ -83,12 +81,25 @@ async function openPage({
   // the user is resolved before the context is created so an invalid `user`
   // can't leave an orphaned context behind.
   const injectedUser = user === 'none' ? null : resolveHeadlessUser({ user });
+  // The browser must come from getBrowser, whose lifecycle counts the context.
+  // A data set journey's only protection against reading the real database
+  // under another host is its browser's host resolver rules, so a browser
+  // launched for another origin is refused before any context exists.
+  const launchedAs = launchedBrowsers.get(browser);
+  if (type.isUndefined(launchedAs)) {
+    throw new Error('openPage takes a browser from getBrowser({ origin }).');
+  }
+  if (!type.isUndefined(dataCookie) && launchedAs.guard !== originGuard({ origin })) {
+    throw new Error(
+      `A data set journey on ${origin} must open in the browser getBrowser({ origin }) gives for that origin.`
+    );
+  }
   // colorScheme is what the page's `prefers-color-scheme` media query reports,
   // so an app following the system theme renders light or dark accordingly.
   const context = await browser.newContext({ viewport: { width, height }, colorScheme });
-  trackContext(context);
-  // The URLs a data set journey's context tried to reach on another host of the dev server. Each
-  // was aborted; the journey runner fails the step that caused it.
+  launchedAs.lifecycle.trackContext(context);
+  // The URLs a data set journey's context tried to reach on another host of the dev server. None
+  // left the browser; the journey runner fails the step that caused them.
   const leftOrigin = [];
   // From here a failure must close the context before rethrowing: callers only
   // learn about the context from the return value, so an error thrown mid-open
@@ -138,7 +149,7 @@ async function openPage({
       await context.addCookies([
         writeJourneyCookie({ name: JOURNEY_COOKIES.data.name, payload: dataCookie, origin }),
       ]);
-      await guardJourneyOrigin({
+      watchJourneyOrigin({
         context,
         origin,
         onLeave: (departure) => leftOrigin.push(departure),
