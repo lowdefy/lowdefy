@@ -14,37 +14,16 @@
   limitations under the License.
 */
 
-import { execFile } from 'node:child_process';
-import fs from 'node:fs';
-import path from 'node:path';
-import { pathToFileURL } from 'node:url';
-import { promisify } from 'node:util';
-
-import { afterAll, afterEach, beforeAll, expect, test } from 'vitest';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 
 import openTestApp from '../../src/openTestApp.js';
-import copyFixtureApp from './copyFixtureApp.mjs';
 import fixtureApps from './fixtureApps.mjs';
 
-const execFileAsync = promisify(execFile);
-
 const apps = {};
-const copies = [];
-
-function copyApp(app) {
-  const copy = copyFixtureApp({ app });
-  copies.push(copy);
-  return copy;
-}
-
 beforeAll(async () => {
   for (const [key, { configDirectory, serverDirectory }] of Object.entries(fixtureApps)) {
     apps[key] = await openTestApp({ configDirectory, serverDirectory });
   }
-});
-
-afterEach(() => {
-  copies.splice(0).forEach((copy) => copy.remove());
 });
 
 afterAll(async () => {
@@ -80,6 +59,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'generated',
     'handoff',
     'home',
+    'polling',
     'rails',
     'second',
     'selectors',
@@ -239,42 +219,4 @@ test('accessMatrix gives the same table, in the same order, from two separately 
   const second = await again.accessMatrix({ data: 'roles' });
   await again.close();
   expect(JSON.stringify(second)).toEqual(JSON.stringify(first));
-});
-
-// The way an app uses it: `node --test`, in a process of its own, with the table kept as a
-// snapshot. The first run writes the snapshot and the second compares against it.
-const snapshotTest = `import { test } from 'node:test';
-
-const { openTestApp } = await import(process.env.TEST_UTILS_ENTRY);
-
-test('who can reach what', async (t) => {
-  const app = await openTestApp({
-    configDirectory: process.env.TEST_CONFIG_DIRECTORY,
-    serverDirectory: process.env.TEST_SERVER_DIRECTORY,
-  });
-  t.assert.snapshot(await app.accessMatrix({ data: 'roles' }));
-  await app.close();
-});
-`;
-
-test('t.assert.snapshot of the access table matches on a second node --test run', async () => {
-  const { configDirectory, serverDirectory } = copyApp(fixtureApps.authReference);
-  const testFile = path.join(configDirectory, 'tests', 'access.test.mjs');
-  fs.writeFileSync(testFile, snapshotTest);
-  const env = {
-    ...process.env,
-    TEST_CONFIG_DIRECTORY: configDirectory,
-    TEST_SERVER_DIRECTORY: serverDirectory,
-    TEST_UTILS_ENTRY: pathToFileURL(path.join(import.meta.dirname, '../../src/index.js')).href,
-  };
-
-  await execFileAsync(process.execPath, ['--test', '--test-update-snapshots', testFile], { env });
-  const snapshot = fs.readFileSync(`${testFile}.snapshot`, 'utf8');
-  expect(snapshot).toContain('"unenrolled_auditor": "enrol_required"');
-
-  // A failing comparison exits non-zero, which rejects.
-  const { stdout } = await execFileAsync(process.execPath, ['--test', testFile], { env });
-  expect(stdout).toMatch(/pass 1\b/);
-  expect(stdout).toMatch(/fail 0\b/);
-  expect(fs.readFileSync(`${testFile}.snapshot`, 'utf8')).toEqual(snapshot);
 });

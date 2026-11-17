@@ -76,11 +76,12 @@ test('journeys-harden passes the app folder as --config-directory instead of nam
   expect(skill).toContain('the one holding `lowdefy.yaml`');
 });
 
-test('journeys-harden folds a kept role-granted variant into the user list and keeps refused roles apart', () => {
+test('journeys-harden folds a kept role-granted variant into the user list and leaves refused roles to the access table', () => {
   const skill = journeysHarden();
   expect(skill).toContain(
     "Add its user to the original journey's\n  `user` list (`user: member` becomes `user: [member, admin]`"
   );
-  expect(skill).toContain('a **role, refused** one included');
+  expect(skill).toContain('`tests/access.yaml` checks who reaches\n  what.');
+  expect(skill).not.toContain('role, refused');
   expect(skill).toContain('runs once as each, reported as `<name> [<user>]`');
 });

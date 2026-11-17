@@ -50,7 +50,7 @@ function currentRoleKeys({ journey, dataSet, names }) {
 // role matrix from production use, else each data set user's role set), the
 // same steps as a data set user with exactly that set. A set no user has is
 // listed for the developer to add. When the start page has auth.roles, a set
-// holding none of them is left to the refused variant. A variant that passes
+// holding none of them is not written. A variant that passes
 // is kept as a persona of the journey, not a copy: its comment names the user
 // list to set on the original journey, and the variant file is then deleted.
 function roleGranted({ journey, dataSet, roleMatrix, pageConfigs }) {

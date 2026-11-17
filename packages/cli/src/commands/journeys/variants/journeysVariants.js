@@ -21,7 +21,6 @@ import discoverJourneys from '../../test/discoverJourneys.js';
 import expandPersonas from '../../test/expandPersonas.js';
 import fetchBuildId from '../../test/fetchBuildId.js';
 import fetchVariantInputs from './fetchVariantInputs.js';
-import findAccessSnapshotTest from './findAccessSnapshotTest.js';
 import formatJourneyResult from '../../test/formatJourneyResult.js';
 import generators, { KINDS } from './generators/index.js';
 import readConnectionCollections from './readConnectionCollections.js';
@@ -292,7 +291,6 @@ async function journeysVariants({ context }) {
       inputs: {
         ...inputs,
         ...dataSets,
-        accessSnapshotTest: findAccessSnapshotTest({ directories: context.directories }),
         calls: measured.calls,
         collections: readConnectionCollections({ context }),
       },

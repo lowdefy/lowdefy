@@ -243,7 +243,7 @@ test('test reports a malformed journey file as a failure and still runs the othe
   expect(logs.error[2]).toEqual(
     '      Invalid journey file: Journey should have required property "steps".'
   );
-  expect(logs.info.some((line) => /^PASS  valid journey  \(1 steps, \d+ms\)$/.test(line))).toBe(
+  expect(logs.info.some((line) => /^PASS {2}valid journey {2}\(1 steps, \d+ms\)$/.test(line))).toBe(
     true
   );
   expect(logs.error[logs.error.length - 1]).toEqual('1 passed, 1 failed of 2 journeys');
@@ -1141,9 +1141,26 @@ test('test --headless posts each journey headless to the dev server, takes no sl
   expect(Object.keys(exercised.journeys)).toEqual(['tests/journeys/a.yaml#clicks submit']);
 });
 
+// The build's auth.json, which the build always writes: the access step reads whether auth is
+// configured and the roles it declares.
+function writeBuildAuth(auth = {}) {
+  fs.mkdirSync(context.directories.build, { recursive: true });
+  fs.writeFileSync(
+    path.join(context.directories.build, 'auth.json'),
+    JSON.stringify({
+      configured: false,
+      roles: [],
+      pages: { roles: {} },
+      api: { roles: {} },
+      ...auth,
+    })
+  );
+}
+
 function headlessContext() {
   context.directories.server = path.join(configDirectory, '.lowdefy', 'server');
   context.options = { ...context.options, headless: true, build: true };
+  writeBuildAuth();
 }
 
 test('test --headless --build runs headless journeys on the build with no server or slots, and lists the browser-only ones', async () => {
@@ -1236,4 +1253,256 @@ test('test --headless --build fails on a failed journey and does not repeat one 
     '0 passed, 1 failed of 1 journeys, 1 browser-only not run'
   );
   expect(process.exitCode).toBe(1);
+});
+
+// The build's access table as the harness handle's accessMatrix answers it.
+const builtTable = {
+  pages: { billing: { finance: 'allow', 'no-role': 'deny', none: 'deny' } },
+  endpoints: { approve: { finance: 'allow', 'no-role': 'deny', none: 'deny' } },
+};
+
+function accessFilePath() {
+  return path.join(configDirectory, 'tests', 'access.yaml');
+}
+
+function writeAccessYaml(table) {
+  fs.mkdirSync(path.dirname(accessFilePath()), { recursive: true });
+  fs.writeFileSync(accessFilePath(), YAML.stringify(table));
+}
+
+function openWithTable(table = builtTable) {
+  const app = { accessMatrix: vi.fn(async () => table), close: vi.fn() };
+  mockOpenTestApp.mockResolvedValue(app);
+  return app;
+}
+
+function accessContext(options) {
+  context.directories.server = path.join(configDirectory, '.lowdefy', 'server');
+  context.options = { ...context.options, ...options };
+  writeBuildAuth();
+}
+
+const firstFileCommand =
+  'lowdefy build --no-client-build --config-directory <app> && lowdefy test --update-access --config-directory <app>';
+
+// The commands name the app by its full path: the test's app is outside the working directory.
+function withApp(text) {
+  return text.replaceAll('<app>', configDirectory);
+}
+
+test('test --headless --build checks the access table first, then runs the journeys', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  headlessContext();
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  const app = openWithTable();
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(app.accessMatrix).toHaveBeenCalledWith({ data: 'roles' });
+  expect(app.close).toHaveBeenCalledTimes(1);
+  expect(logs.info[0]).toBe('PASS  access table  (1 pages, 1 endpoints)');
+  expect(logs.info[1]).toMatch(/^PASS {2}clicks submit/);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless --build fails on a changed cell, names it, and still runs the journeys', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  headlessContext();
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  openWithTable({
+    pages: builtTable.pages,
+    endpoints: { approve: { finance: 'allow', 'no-role': 'allow', none: 'deny' } },
+  });
+  await test({ context });
+  expect(logs.error).toEqual([
+    'FAIL  access table: tests/access.yaml differs from the build',
+    '      endpoints.approve.no-role: deny → allow',
+    withApp(
+      '      If these changes are meant, run "lowdefy test --update-access --config-directory <app>" and commit tests/access.yaml.'
+    ),
+  ]);
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(1);
+  expect(logs.info[logs.info.length - 1]).toBe('1 passed, 0 failed of 1 journeys');
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build checks the whole table on a filtered run', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'approves a run' }));
+  headlessContext();
+  context.options.filter = ['approves'];
+  writeAccessYaml({ data: 'roles', pages: builtTable.pages, endpoints: {} });
+  const app = openWithTable();
+  await test({ context });
+  expect(app.accessMatrix).toHaveBeenCalledTimes(1);
+  expect(logs.error).toContain('      endpoints.approve: added');
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(1);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build checks the table of an app with no journeys and keeps exit 0 when it matches', async () => {
+  const { default: test } = await import('./test.js');
+  headlessContext();
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  openWithTable();
+  await test({ context });
+  expect(logs.info).toEqual(['PASS  access table  (1 pages, 1 endpoints)']);
+  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/.']);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless --build exits 1 for an app with no journeys when the table differs', async () => {
+  const { default: test } = await import('./test.js');
+  headlessContext();
+  writeAccessYaml({ data: 'roles', pages: {}, endpoints: builtTable.endpoints });
+  openWithTable();
+  await test({ context });
+  expect(logs.error[1]).toBe('      pages.billing: added');
+  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/.']);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build refuses a build it cannot read once, before any journey, even with no journeys', async () => {
+  const { default: test } = await import('./test.js');
+  headlessContext();
+  mockOpenTestApp.mockRejectedValue(new Error('The build is older than the config.'));
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(logs.error).toEqual(['The build is older than the config.']);
+  expect(logs.warn).toEqual([]);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build warns with the first-file command when the app has auth and no access file', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  headlessContext();
+  writeBuildAuth({ configured: true, roles: [{ id: 'finance' }] });
+  const app = openWithTable();
+  await test({ context });
+  expect(app.accessMatrix).not.toHaveBeenCalled();
+  expect(logs.warn).toEqual([
+    withApp(
+      `This app has auth and no tests/access.yaml, so who reaches which page and endpoint is not checked. Write it with "${firstFileCommand}", then commit the files it writes.`
+    ),
+  ]);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless --build prints nothing about access for an app without auth or access file', async () => {
+  const { default: test } = await import('./test.js');
+  headlessContext();
+  openWithTable();
+  await test({ context });
+  expect(logs.info).toEqual([]);
+  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/.']);
+});
+
+test('test --access checks the table alone and runs no journeys', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  accessContext({ access: true });
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  openWithTable();
+  await test({ context });
+  expect(logs.info).toEqual(['PASS  access table  (1 pages, 1 endpoints)']);
+  expect(mockRunHeadlessJourney).not.toHaveBeenCalled();
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(process.exitCode).toBeUndefined();
+  expect(context.sendTelemetry).toHaveBeenCalled();
+});
+
+test('test --access fails with the first-file command when the app has no access file', async () => {
+  const { default: test } = await import('./test.js');
+  accessContext({ access: true });
+  openWithTable();
+  await test({ context });
+  expect(logs.error).toEqual([
+    withApp(
+      `No tests/access.yaml to check. Write it with "${firstFileCommand}", then commit the files it writes.`
+    ),
+  ]);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --access with a journey option is refused before the build opens', async () => {
+  const { default: test } = await import('./test.js');
+  accessContext({ access: true, tag: ['smoke'], typedOptions: ['tag'] });
+  await test({ context });
+  expect(logs.error).toEqual([
+    '--access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.',
+  ]);
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --update-access writes the roles data set and the first table, and runs nothing else', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  accessContext({ updateAccess: true });
+  writeBuildAuth({ configured: true, roles: [{ id: 'finance' }] });
+  const app = openWithTable();
+  await test({ context });
+  expect(app.accessMatrix).toHaveBeenCalledWith({ data: 'roles' });
+  const roles = YAML.parse(
+    fs.readFileSync(path.join(configDirectory, 'tests', 'data', 'roles.yaml'), 'utf8')
+  );
+  expect(roles).toEqual({
+    users: {
+      finance: { id: 'finance', roles: ['finance'] },
+      'no-role': { id: 'no-role', roles: [] },
+    },
+  });
+  expect(YAML.parse(fs.readFileSync(accessFilePath(), 'utf8'))).toEqual({
+    data: 'roles',
+    ...builtTable,
+  });
+  expect(logs.info).toEqual([
+    'Wrote tests/data/roles.yaml with users finance, no-role.',
+    'Wrote tests/access.yaml: 1 pages and 1 endpoints as data set "roles". Commit the files written.',
+  ]);
+  expect(mockRunHeadlessJourney).not.toHaveBeenCalled();
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(process.exitCode).toBeUndefined();
+});
+
+test("test --update-access keeps the file's data set and lists what changed", async () => {
+  const { default: test } = await import('./test.js');
+  accessContext({ updateAccess: true });
+  writeAccessYaml({ data: 'staff', pages: builtTable.pages, endpoints: {} });
+  const app = openWithTable();
+  await test({ context });
+  expect(app.accessMatrix).toHaveBeenCalledWith({ data: 'staff' });
+  expect(YAML.parse(fs.readFileSync(accessFilePath(), 'utf8'))).toEqual({
+    data: 'staff',
+    ...builtTable,
+  });
+  expect(fs.existsSync(path.join(configDirectory, 'tests', 'data', 'roles.yaml'))).toBe(false);
+  expect(logs.info).toEqual(['Updated tests/access.yaml:', '      endpoints.approve: added']);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test on the dev server prints one line naming lowdefy test --access when the app has an access file', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  await test({ context });
+  expect(logs.info[0]).toBe(
+    withApp(
+      'tests/access.yaml is checked on the production build, not the dev server: run "lowdefy build --no-client-build --config-directory <app> && lowdefy test --access --config-directory <app>" to check it.'
+    )
+  );
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+});
+
+test('test --lint prints nothing about access', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  context.options = { ...context.options, lint: true };
+  await test({ context });
+  expect(logs.info.some((line) => line.includes('access'))).toBe(false);
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
 });
