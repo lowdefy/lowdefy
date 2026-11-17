@@ -18,7 +18,8 @@ import { validate } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
 import {
   findStepNeedingPage,
-  validateJourneyStub,
+  validateJourneyDataSession,
+  validateJourneyStubs,
   validateJourneySteps,
   validateJourneyTags,
   validateJourneyUser,
@@ -45,20 +46,6 @@ function checkPageId({ journey }) {
   return `Journey should have required property "pageId": ${describeStep(
     found
   )} needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.`;
-}
-
-// Stubs live on the journey's data session, so a journey with stubs names its data set.
-function checkStubs({ data, stubs }) {
-  if (!type.isUndefined(stubs) && type.isUndefined(data)) {
-    return 'Journey "stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".';
-  }
-  for (const [index, stub] of (stubs ?? []).entries()) {
-    const { error } = validateJourneyStub({ stub });
-    if (!type.isUndefined(error)) {
-      return `Journey "stubs[${index}]": ${error}`;
-    }
-  }
-  return undefined;
 }
 
 // A journey with a `cases` table is valid when its table is and each of its runs is, validated
@@ -93,7 +80,7 @@ function validateJourney({ journey }) {
   if (!type.isUndefined(mutationError)) {
     return { valid: false, message: mutationError };
   }
-  const stubsError = checkStubs({ data: journey.data, stubs: journey.stubs });
+  const { error: stubsError } = validateJourneyStubs({ stubs: journey.stubs });
   if (!type.isUndefined(stubsError)) {
     return { valid: false, message: stubsError };
   }
@@ -112,6 +99,14 @@ function validateJourney({ journey }) {
   const { error } = validateJourneySteps({ steps: journey.steps });
   if (!type.isUndefined(error)) {
     return { valid: false, message: error };
+  }
+  const { error: dataSessionError } = validateJourneyDataSession({
+    data: journey.data,
+    steps: journey.steps,
+    stubs: journey.stubs,
+  });
+  if (!type.isUndefined(dataSessionError)) {
+    return { valid: false, message: dataSessionError };
   }
   const pageIdError = checkPageId({ journey });
   if (!type.isUndefined(pageIdError)) {

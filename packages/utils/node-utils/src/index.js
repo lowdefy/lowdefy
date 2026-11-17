@@ -111,7 +111,9 @@ import validateJourneySteps, {
   STEP_KEYS,
   TARGET_KEYS,
 } from './journeyGrammar/validateJourneySteps.js';
+import validateJourneyDataSession from './journeyGrammar/validateJourneyDataSession.js';
 import validateJourneyStub from './journeyGrammar/validateJourneyStub.js';
+import validateJourneyStubs from './journeyGrammar/validateJourneyStubs.js';
 import validateJourneyTags, { JOURNEY_TAG_PATTERN } from './journeyGrammar/validateJourneyTags.js';
 import validateJourneyUser from './journeyGrammar/validateJourneyUser.js';
 import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
@@ -236,7 +238,9 @@ export {
   STEP_KEYS,
   TARGET_KEYS,
   validateJourneySteps,
+  validateJourneyDataSession,
   validateJourneyStub,
+  validateJourneyStubs,
   validateTraceRecord,
   JOURNEY_TAG_PATTERN,
   validateJourneyTags,

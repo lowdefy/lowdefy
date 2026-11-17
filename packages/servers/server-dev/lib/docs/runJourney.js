@@ -21,6 +21,7 @@ import {
   classifyJourney,
   findPlaceholderStep,
   normaliseJourneySteps,
+  validateJourneyDataSession,
   validateJourneySteps,
 } from '@lowdefy/node-utils';
 import {
@@ -190,6 +191,16 @@ async function runJourney({
       error: `Step ${inProcess.index}: ${inProcess.reason}. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).`,
       refused: true,
     };
+  }
+  // Stubs and expect.sunk live on the data session: refused without a data set, as lowdefy test
+  // and the headless run refuse them.
+  const { error: dataSessionError } = validateJourneyDataSession({
+    data,
+    steps: inputSteps,
+    stubs,
+  });
+  if (!type.isUndefined(dataSessionError)) {
+    return { error: dataSessionError, refused: true };
   }
   // A page-less journey's messages name the app it calls.
   let pagePath;

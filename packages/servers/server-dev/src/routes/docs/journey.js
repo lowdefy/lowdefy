@@ -15,7 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { validateJourneySteps } from '@lowdefy/node-utils';
+import { validateJourneyStubs, validateJourneySteps } from '@lowdefy/node-utils';
 
 import describePageNeed from '../../../lib/docs/describePageNeed.js';
 import getBuildId from '../../../lib/docs/getBuildId.js';
@@ -24,7 +24,6 @@ import { openMutantRun } from '../../../lib/server/mutants/mutantRuns.js';
 import parseUserParam from './parseUserParam.js';
 import runJourney from '../../../lib/docs/runJourney.js';
 import runJourneyHeadless from '../../../lib/docs/runJourneyHeadless.js';
-import validateJourneyStubs from '../../../lib/docs/validateJourneyStubs.js';
 import validateJourneyTimeout from '../../../lib/docs/validateJourneyTimeout.js';
 import validateMutantParam from '../../../lib/server/mutants/validateMutantParam.js';
 import validateRecordingParam from '../../../lib/docs/validateRecordingParam.js';
@@ -99,7 +98,7 @@ async function docsJourneyHandler(c) {
       400
     );
   }
-  const stubsError = validateJourneyStubs({ data: body.data, stubs: body.stubs });
+  const { error: stubsError } = validateJourneyStubs({ stubs: body.stubs });
   if (stubsError) {
     return c.json({ error: stubsError }, 400);
   }

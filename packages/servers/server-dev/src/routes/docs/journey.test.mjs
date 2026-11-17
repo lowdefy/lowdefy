@@ -202,7 +202,7 @@ test('docsJourneyHandler passes the journey stubs to the runner with its data se
   expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ data: 'stubs', stubs }));
 });
 
-test('docsJourneyHandler answers 400 with the message for a bad stub, or stubs with no data set', async () => {
+test('docsJourneyHandler answers 400 with the message for a bad stub', async () => {
   const badStub = await docsJourneyHandler(
     createContext({
       steps: [{ call: { endpoint: 'price_run' } }],
@@ -212,17 +212,7 @@ test('docsJourneyHandler answers 400 with the message for a bad stub, or stubs w
   );
   expect(badStub.status).toBe(400);
   expect(badStub.data.error).toBe(
-    '"stubs[0]": Journey stub "times" should be a whole number above 0 or "all". Received 0.'
-  );
-  const noData = await docsJourneyHandler(
-    createContext({
-      steps: [{ call: { endpoint: 'price_run' } }],
-      stubs: [{ requestId: 'save_price', fail: 'Down' }],
-    })
-  );
-  expect(noData.status).toBe(400);
-  expect(noData.data.error).toBe(
-    '"stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".'
+    'Journey "stubs[0]": Journey stub "times" should be a whole number above 0 or "all". Received 0.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });

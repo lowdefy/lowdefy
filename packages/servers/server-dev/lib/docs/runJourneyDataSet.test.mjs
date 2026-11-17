@@ -320,3 +320,17 @@ test('runJourney refuses an answer stub on a request type the app does not have,
   expect(mockOpenDataSession).not.toHaveBeenCalled();
   expect(mockOpenPage).not.toHaveBeenCalled();
 });
+
+test('runJourney refuses expect.sunk on a journey with no data set, before any browser opens', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [{ expect: { sunk: { count: 0 } } }],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 0: expect.sunk needs a data set: it reads the requests the journey\'s data session recorded. Give the journey a "data".',
+    refused: true,
+  });
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});

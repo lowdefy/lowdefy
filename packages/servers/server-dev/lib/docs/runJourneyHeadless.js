@@ -21,6 +21,7 @@ import {
   classifyJourney,
   findPlaceholderStep,
   normaliseJourneySteps,
+  validateJourneyDataSession,
   validateJourneySteps,
 } from '@lowdefy/node-utils';
 import {
@@ -117,6 +118,16 @@ async function runJourneyHeadless({
     if (!type.isUndefined(pageError)) {
       return { error: `runJourney ${pageError}`, refused: true };
     }
+  }
+  // Stubs, gates and expect.sunk live on the data session: refused without a data set, as
+  // lowdefy test refuses them, whether or not this host would open a session.
+  const { error: dataSessionError } = validateJourneyDataSession({
+    data,
+    steps: inputSteps,
+    stubs,
+  });
+  if (!type.isUndefined(dataSessionError)) {
+    return { error: dataSessionError, refused: true };
   }
   const steps = normaliseJourneySteps({ steps: inputSteps });
   const { error: placeholderError } = findPlaceholderStep({ steps });

@@ -17,7 +17,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { isExpectedError } from '@lowdefy/errors';
 import { createTraceId, type } from '@lowdefy/helpers';
-import { validateJourneyUser } from '@lowdefy/node-utils';
+import { validateJourneyStubs, validateJourneyUser } from '@lowdefy/node-utils';
 
 import deviceAction from './device/deviceAction.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
@@ -53,7 +53,6 @@ import screenshotDevice from './device/screenshotDevice.js';
 import screenshotPage from './screenshotPage.js';
 import searchDocs from './searchDocs.js';
 import searchIcons from './searchIcons.js';
-import validateJourneyStubs from './validateJourneyStubs.js';
 
 const logger = createLogger({ server: 'lowdefy-dev-mcp' });
 
@@ -414,7 +413,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       if (userError) {
         return notFoundResult(userError);
       }
-      const stubsError = validateJourneyStubs({ data, stubs });
+      const { error: stubsError } = validateJourneyStubs({ stubs });
       if (stubsError) {
         return notFoundResult(stubsError);
       }

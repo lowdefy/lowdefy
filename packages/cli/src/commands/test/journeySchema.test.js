@@ -537,6 +537,34 @@ test('validateJourney refuses stubs on a journey with no data set', () => {
   });
 });
 
+test('validateJourney refuses hold and expect.sunk on a journey with no data set', () => {
+  const pageLess = { name: 'races the claim' };
+  expect(
+    validateJourney({
+      journey: {
+        ...pageLess,
+        steps: [{ hold: { requestId: 'claim_run' } }, { call: { endpoint: 'approve_run' } }],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Step 0: "hold" needs a data set: its gate lives on the journey\'s data session. Give the journey a "data".',
+  });
+  expect(
+    validateJourney({ journey: { ...pageLess, steps: [{ expect: { sunk: { count: 0 } } }] } })
+  ).toEqual({
+    valid: false,
+    message:
+      'Step 0: expect.sunk needs a data set: it reads the requests the journey\'s data session recorded. Give the journey a "data".',
+  });
+  expect(
+    validateJourney({
+      journey: { ...pageLess, data: 'races', steps: [{ expect: { sunk: { count: 0 } } }] },
+    })
+  ).toEqual({ valid: true });
+});
+
 test('validateJourney accepts a case table and validates each run after its row is filled in', () => {
   const journey = {
     name: 'opens each page',

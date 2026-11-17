@@ -204,3 +204,31 @@ test('runJourneyHeadless refuses an answer stub on a connection type the app doe
   expect(mockOpenDataSession).not.toHaveBeenCalled();
   expect(mockRunHeadlessJourney).not.toHaveBeenCalled();
 });
+
+test('runJourneyHeadless refuses hold and expect.sunk on a journey with no data set, as lowdefy test does', async () => {
+  expect(
+    await runJourneyHeadless({
+      origin,
+      steps: [{ hold: { requestId: 'claim_run' } }, { call: { endpoint: 'approve_run' } }],
+      readConfigFile,
+    })
+  ).toEqual({
+    error:
+      'Step 0: "hold" needs a data set: its gate lives on the journey\'s data session. Give the journey a "data".',
+    refused: true,
+  });
+  expect(
+    await runJourneyHeadless({
+      origin,
+      steps: [{ call: { endpoint: 'price_run' } }],
+      stubs: [{ requestId: 'save_price', fail: 'Down' }],
+      readConfigFile,
+    })
+  ).toEqual({
+    error:
+      'Journey "stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".',
+    refused: true,
+  });
+  expect(mockResolveJourneyDataSet).not.toHaveBeenCalled();
+  expect(mockRunHeadlessJourney).not.toHaveBeenCalled();
+});
