@@ -18,9 +18,17 @@ import formatAccessCommand from './formatAccessCommand.js';
 
 // The one command that writes an app's first tests/access.yaml, and its roles data set when the
 // app has none, from a fresh production build.
-function formatFirstFileCommand({ configDirectory }) {
-  const build = formatAccessCommand({ configDirectory, args: 'build --no-client-build' });
-  const update = formatAccessCommand({ configDirectory, args: 'test --update-access' });
+function formatFirstFileCommand({ configDirectory, serverDirectory }) {
+  const build = formatAccessCommand({
+    args: 'build --no-client-build',
+    configDirectory,
+    serverDirectory,
+  });
+  const update = formatAccessCommand({
+    args: 'test --update-access',
+    configDirectory,
+    serverDirectory,
+  });
   return `${build} && ${update}`;
 }
 

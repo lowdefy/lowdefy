@@ -15,12 +15,13 @@
 */
 
 // Every role the build declares: the auth.roles ids and the roles the page and endpoint gates
-// name, sorted by code unit so the roles data set is the same on every machine.
+// name, sorted by code unit so the roles data set is the same on every machine. The build writes
+// roles, pages.roles and api.roles on every auth.json, auth configured or not.
 function listDeclaredRoles({ authJson }) {
   const roles = new Set();
-  (authJson.roles ?? []).forEach((role) => roles.add(role.id));
-  Object.keys(authJson.pages?.roles ?? {}).forEach((role) => roles.add(role));
-  Object.keys(authJson.api?.roles ?? {}).forEach((role) => roles.add(role));
+  authJson.roles.forEach((role) => roles.add(role.id));
+  Object.keys(authJson.pages.roles).forEach((role) => roles.add(role));
+  Object.keys(authJson.api.roles).forEach((role) => roles.add(role));
   return [...roles].sort();
 }
 

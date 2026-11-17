@@ -32,13 +32,18 @@ afterEach(() => {
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
 
+// An auth.json as the build writes it: roles, pages.roles and api.roles are always there.
+function buildAuth(auth) {
+  return { configured: false, roles: [], pages: { roles: {} }, api: { roles: {} }, ...auth };
+}
+
 test('writeRolesDataSet writes a data set of the declared roles that passes the data set checks', async () => {
-  const authJson = {
+  const authJson = buildAuth({
     configured: true,
     roles: [{ id: 'finance' }, { id: 'none' }, { id: '_ops' }],
     pages: { roles: { finance: ['billing'] } },
     api: { roles: { technician: ['approve'] } },
-  };
+  });
   expect(writeRolesDataSet({ authJson, configDirectory })).toEqual([
     'finance',
     'no-role',
@@ -57,7 +62,7 @@ test('writeRolesDataSet writes a data set of the declared roles that passes the 
 });
 
 test('writeRolesDataSet writes only the no-role user for an app with no auth', async () => {
-  writeRolesDataSet({ authJson: { configured: false }, configDirectory });
+  writeRolesDataSet({ authJson: buildAuth(), configDirectory });
   const { users } = await parseDataSet({ configDirectory, name: 'roles' });
   expect(users).toEqual({ 'no-role': { id: 'no-role', roles: [] } });
 });
@@ -67,7 +72,7 @@ test('writeRolesDataSet leaves an existing roles data set alone', () => {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, 'users: {}\n');
   expect(
-    writeRolesDataSet({ authJson: { roles: [{ id: 'finance' }] }, configDirectory })
+    writeRolesDataSet({ authJson: buildAuth({ roles: [{ id: 'finance' }] }), configDirectory })
   ).toBeUndefined();
   expect(fs.readdirSync(path.dirname(filePath))).toEqual(['roles.yml']);
 });

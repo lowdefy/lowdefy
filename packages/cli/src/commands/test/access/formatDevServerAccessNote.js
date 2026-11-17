@@ -26,8 +26,8 @@ function formatDevServerAccessNote({ configDirectory }) {
   if (!fs.existsSync(getAccessFilePath({ configDirectory }))) {
     return undefined;
   }
-  const build = formatAccessCommand({ configDirectory, args: 'build --no-client-build' });
-  const access = formatAccessCommand({ configDirectory, args: 'test --access' });
+  const build = formatAccessCommand({ args: 'build --no-client-build', configDirectory });
+  const access = formatAccessCommand({ args: 'test --access', configDirectory });
   return `tests/access.yaml is checked on the production build, not the dev server: run "${build} && ${access}" to check it.`;
 }
 

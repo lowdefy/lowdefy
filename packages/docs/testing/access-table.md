@@ -73,7 +73,7 @@ FAIL  access table: tests/access.yaml differs from the build
 | `<section>.<id>: added`              | A page or endpoint the file does not have. `removed` is one the build no longer has.                   |
 | `caller <name>: added`               | A user the data set gained, or `removed` for one it lost. Listed once, not once for each of its cells. |
 
-When the app is not the working directory, the commands the access check prints carry `--config-directory <app>`.
+When the app is not the working directory, the commands the access check prints carry `--config-directory <app>`, and when the run was given `--server-directory`, they carry it too, so they read the same build.
 
 ## `--access` and `--update-access`
 

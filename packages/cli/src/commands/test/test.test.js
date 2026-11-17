@@ -1143,9 +1143,18 @@ test('test --headless posts each journey headless to the dev server, takes no sl
 
 // The build's auth.json, which the build always writes: the access step reads whether auth is
 // configured and the roles it declares.
-function writeBuildAuth(auth = { configured: false }) {
+function writeBuildAuth(auth = {}) {
   fs.mkdirSync(context.directories.build, { recursive: true });
-  fs.writeFileSync(path.join(context.directories.build, 'auth.json'), JSON.stringify(auth));
+  fs.writeFileSync(
+    path.join(context.directories.build, 'auth.json'),
+    JSON.stringify({
+      configured: false,
+      roles: [],
+      pages: { roles: {} },
+      api: { roles: {} },
+      ...auth,
+    })
+  );
 }
 
 function headlessContext() {

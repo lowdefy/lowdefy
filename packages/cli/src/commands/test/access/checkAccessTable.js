@@ -21,6 +21,7 @@ import formatAccessCommand from './formatAccessCommand.js';
 import formatFirstFileCommand from './formatFirstFileCommand.js';
 import readAccessFile from './readAccessFile.js';
 import readBuildAuth from './readBuildAuth.js';
+import readCommandDirectories from './readCommandDirectories.js';
 
 const DETAIL = '      ';
 
@@ -29,14 +30,14 @@ const DETAIL = '      ';
 // with auth is warned with the command that writes the first one, and `required` (--access)
 // fails with it. Returns { failed }.
 async function checkAccessTable({ app, context, required }) {
-  const configDirectory = context.directories.config;
-  const file = readAccessFile({ configDirectory });
+  const commandDirectories = readCommandDirectories({ context });
+  const file = readAccessFile({ configDirectory: context.directories.config });
   if (!type.isUndefined(file.error)) {
     context.logger.error(`FAIL  access table: ${file.error}`);
     return { failed: true };
   }
   if (!file.exists) {
-    const command = formatFirstFileCommand({ configDirectory });
+    const command = formatFirstFileCommand(commandDirectories);
     if (required) {
       context.logger.error(
         `No tests/access.yaml to check. Write it with "${command}", then commit the files it writes.`
@@ -66,7 +67,7 @@ async function checkAccessTable({ app, context, required }) {
     context.logger.info(`PASS  access table  (${pages} pages, ${endpoints} endpoints)`);
     return { failed: false };
   }
-  const accept = formatAccessCommand({ configDirectory, args: 'test --update-access' });
+  const accept = formatAccessCommand({ ...commandDirectories, args: 'test --update-access' });
   context.logger.error('FAIL  access table: tests/access.yaml differs from the build');
   lines.forEach((line) => context.logger.error(`${DETAIL}${line}`));
   context.logger.error(

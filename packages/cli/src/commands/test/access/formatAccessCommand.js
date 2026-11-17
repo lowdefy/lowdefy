@@ -15,18 +15,22 @@
 */
 
 import path from 'path';
+import { type } from '@lowdefy/helpers';
+
+import formatPathArgument from './formatPathArgument.js';
 
 // A `lowdefy` command for the run's app, as the developer types it: with --config-directory when
-// the app is not the working directory, relative when the app is inside it.
-function formatAccessCommand({ configDirectory, args }) {
-  const relative = path.relative(process.cwd(), configDirectory);
-  if (relative === '') {
-    return `lowdefy ${args}`;
+// the app is not the working directory, and with --server-directory when the run was given one,
+// so the command reads the same build the run did.
+function formatAccessCommand({ args, configDirectory, serverDirectory }) {
+  const parts = ['lowdefy', args];
+  if (path.relative(process.cwd(), configDirectory) !== '') {
+    parts.push('--config-directory', formatPathArgument({ directory: configDirectory }));
   }
-  const inside = !relative.startsWith('..') && !path.isAbsolute(relative);
-  const directory = inside ? relative : path.resolve(configDirectory);
-  const quoted = /\s/.test(directory) ? `"${directory}"` : directory;
-  return `lowdefy ${args} --config-directory ${quoted}`;
+  if (!type.isUndefined(serverDirectory)) {
+    parts.push('--server-directory', formatPathArgument({ directory: serverDirectory }));
+  }
+  return parts.join(' ');
 }
 
 export default formatAccessCommand;
