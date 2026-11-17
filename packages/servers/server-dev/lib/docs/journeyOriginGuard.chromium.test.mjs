@@ -37,13 +37,15 @@ const lanAddress = Object.values(os.networkInterfaces())
 let server;
 let port;
 let origin;
+// Whether the server listens on IPv6 too: a host without IPv6 (some CI containers) cannot.
+let ipv6 = true;
 const received = [];
 
 function otherHostUrls() {
-  const urls = [
-    `http://127.0.0.1:${port}/api/request/other`,
-    `http://[::1]:${port}/api/request/other`,
-  ];
+  const urls = [`http://127.0.0.1:${port}/api/request/other`];
+  if (ipv6) {
+    urls.push(`http://[::1]:${port}/api/request/other`);
+  }
   if (lanAddress !== undefined) {
     urls.push(`http://${lanAddress}:${port}/api/request/other`);
   }
@@ -56,6 +58,13 @@ function pageHtml(pageId) {
     Promise.allSettled(${JSON.stringify(otherHostUrls())}.map((url) => fetch(url, { method: 'POST' })))
       .then(() => { ${pageReadyScript({ pageId })} });
   </script></body></html>`;
+}
+
+function listen(host) {
+  return new Promise((resolve, reject) => {
+    server.once('error', reject);
+    server.listen(0, host, resolve);
+  });
 }
 
 beforeAll(async () => {
@@ -80,8 +89,14 @@ beforeAll(async () => {
     res.writeHead(200, { 'content-type': 'text/html' });
     res.end(pageHtml(req.url.slice(1)));
   });
-  await new Promise((resolve) => server.listen(0, '::', resolve));
+  try {
+    await listen('::');
+  } catch {
+    ipv6 = false;
+    await listen('0.0.0.0');
+  }
   port = server.address().port;
+  // localhost, not 127.0.0.1: then 127.0.0.1 is one of the other hosts.
   origin = `http://localhost:${port}`;
 });
 

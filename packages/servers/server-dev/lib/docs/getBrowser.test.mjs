@@ -84,6 +84,23 @@ function createBrowser() {
   };
 }
 
+// openPage takes only a browser getBrowser launched. Each call gives a fresh fake browser for the
+// origin: the ones before read as disconnected, so the origin's lifecycle launches again.
+const guardedBrowsers = [];
+
+async function launchFor(origin = 'http://localhost:3001') {
+  guardedBrowsers.forEach((previous) => {
+    previous.isConnected = () => false;
+  });
+  const mocked = createBrowser();
+  mocked.browser.isConnected = () => true;
+  mocked.browser.close = vi.fn(async () => {});
+  guardedBrowsers.push(mocked.browser);
+  mockLaunch.mockResolvedValueOnce(mocked.browser);
+  expect(await getBrowser({ origin })).toBe(mocked.browser);
+  return mocked;
+}
+
 // Reads the cookie back through the dev server's own reader, so these tests
 // also check that what the headless browser writes passes signature checks.
 function decodeCallerCookie(addCookies) {
@@ -100,7 +117,7 @@ function decodeUserCookie(addCookies) {
 }
 
 test('openPage opens a 1280x800 light viewport by default', async () => {
-  const { browser } = createBrowser();
+  const { browser } = await launchFor();
 
   await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
@@ -111,7 +128,7 @@ test('openPage opens a 1280x800 light viewport by default', async () => {
 });
 
 test('openPage opens the viewport size and colour scheme it is given', async () => {
-  const { browser } = createBrowser();
+  const { browser } = await launchFor();
 
   await openPage({
     browser,
@@ -129,7 +146,7 @@ test('openPage opens the viewport size and colour scheme it is given', async () 
 });
 
 test('openPage injects the default roleless user when no user is given, not marked explicit', async () => {
-  const { browser, addCookies } = createBrowser();
+  const { browser, addCookies } = await launchFor();
 
   await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
@@ -140,7 +157,7 @@ test('openPage injects the default roleless user when no user is given, not mark
 });
 
 test('openPage injects no user for user none, so the app resolves its own sessions', async () => {
-  const { browser, addCookies } = createBrowser();
+  const { browser, addCookies } = await launchFor();
 
   const opened = await openPage({
     browser,
@@ -159,7 +176,7 @@ function findCookie(addCookies, name) {
 }
 
 test('openPage marks a context with no recording as off, so screenshots and inspection never record', async () => {
-  const { browser, addCookies } = createBrowser();
+  const { browser, addCookies } = await launchFor();
 
   await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
@@ -169,7 +186,7 @@ test('openPage marks a context with no recording as off, so screenshots and insp
 });
 
 test('openPage marks a recording context with a cookie readRecordingCookie verifies', async () => {
-  const { browser, addCookies, page } = createBrowser();
+  const { browser, addCookies, page } = await launchFor();
   const recording = {
     source: 'journey',
     run: {
@@ -189,7 +206,7 @@ test('openPage marks a recording context with a cookie readRecordingCookie verif
 });
 
 test('openPage gives the context the client address it is given, which the dev server resolves', async () => {
-  const { browser, addCookies } = createBrowser();
+  const { browser, addCookies } = await launchFor();
 
   await openPage({
     browser,
@@ -222,7 +239,7 @@ test('openPage gives the context the client address it is given, which the dev s
 });
 
 test('openPage injects a per-call user with roles, marked explicit so it beats a mock user', async () => {
-  const { browser, addCookies } = createBrowser();
+  const { browser, addCookies } = await launchFor();
 
   await openPage({
     browser,
@@ -238,8 +255,8 @@ test('openPage injects a per-call user with roles, marked explicit so it beats a
 });
 
 test('openPage gives concurrent calls their own identity', async () => {
-  const admin = createBrowser();
-  const member = createBrowser();
+  const admin = await launchFor();
+  const member = await launchFor();
 
   await Promise.all([
     openPage({
@@ -261,7 +278,7 @@ test('openPage gives concurrent calls their own identity', async () => {
 });
 
 test('openPage rejects an invalid user before opening a browser context', async () => {
-  const { browser } = createBrowser();
+  const { browser } = await launchFor();
 
   await expect(
     openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'admin' })
@@ -270,7 +287,7 @@ test('openPage rejects an invalid user before opening a browser context', async 
 });
 
 test('openPage loads the page and waits on isPageReady for the page the app shows', async () => {
-  const { browser } = createBrowser();
+  const { browser } = await launchFor();
 
   const started = Date.now();
   const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
@@ -308,7 +325,7 @@ test.each([
     true,
   ],
 ])('openPage treats the page images as loaded when %s', async (_, images, loaded) => {
-  const { browser, page } = createBrowser();
+  const { browser, page } = await launchFor();
 
   await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
 
@@ -322,7 +339,7 @@ test.each([
 });
 
 test('openPage resolves with ready false when the readiness wait times out', async () => {
-  const { browser, page } = createBrowser();
+  const { browser, page } = await launchFor();
   page.waitForFunction.mockRejectedValueOnce(new Error('Timeout 15000ms exceeded.'));
 
   const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
@@ -332,7 +349,7 @@ test('openPage resolves with ready false when the readiness wait times out', asy
 });
 
 test('openPage closes the context it created when the navigation fails', async () => {
-  const { browser, context, page } = createBrowser();
+  const { browser, context, page } = await launchFor();
   page.goto.mockRejectedValue(new Error('Timeout 15000ms exceeded.'));
 
   await expect(
@@ -342,7 +359,7 @@ test('openPage closes the context it created when the navigation fails', async (
 });
 
 test('openPage closes the context it created when opening a page fails', async () => {
-  const { browser, context } = createBrowser();
+  const { browser, context } = await launchFor();
   context.newPage.mockRejectedValue(new Error('Browser crashed.'));
 
   await expect(
@@ -389,7 +406,7 @@ test('buildPageUrl serves a multi-segment page id without a path as is', () => {
 });
 
 test('openPage opens the page instance its pathParams name', async () => {
-  const { browser, page } = createBrowser();
+  const { browser, page } = await launchFor();
 
   const opened = await openPage({
     browser,
@@ -404,7 +421,7 @@ test('openPage opens the page instance its pathParams name', async () => {
 });
 
 test('openPage opens the page at the urlQuery it was given', async () => {
-  const { browser, page } = createBrowser();
+  const { browser, page } = await launchFor();
 
   const opened = await openPage({
     browser,
@@ -417,30 +434,13 @@ test('openPage opens the page at the urlQuery it was given', async () => {
   expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/detail?id=1');
 });
 
-// A data set journey opens only in the browser getBrowser launched for its origin. Each call gives
-// a fresh fake browser: the last one reads as disconnected, so the origin's lifecycle relaunches.
-const guardedBrowsers = [];
-
-async function launchGuarded(origin) {
-  guardedBrowsers.forEach((previous) => {
-    previous.isConnected = () => false;
-  });
-  const mocked = createBrowser();
-  mocked.browser.isConnected = () => true;
-  mocked.browser.close = vi.fn(async () => {});
-  guardedBrowsers.push(mocked.browser);
-  mockLaunch.mockResolvedValueOnce(mocked.browser);
-  expect(await getBrowser({ origin })).toBe(mocked.browser);
-  return mocked;
-}
-
 function emitRequest(context, url) {
   context.emit('request', { url: () => url });
 }
 
 test('openPage sets the data cookie with the actor cookie attributes before the first navigation', async () => {
   const { journeyActorToken } = await import('../server/auth/journeyActor.js');
-  const { browser, addCookies, page } = await launchGuarded('http://localhost:4001');
+  const { browser, addCookies, page } = await launchFor('http://localhost:4001');
   addCookies.mockImplementation(async () => {
     expect(page.goto).not.toHaveBeenCalled();
   });
@@ -466,7 +466,7 @@ test('openPage sets the data cookie with the actor cookie attributes before the 
 });
 
 test('openPage sets no data cookie without a dataCookie', async () => {
-  const { browser, addCookies } = createBrowser();
+  const { browser, addCookies } = await launchFor();
   await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home', user: 'none' });
   const names = addCookies.mock.calls.map(([[cookie]]) => cookie.name);
   expect(names).not.toContain('lowdefy_journey_data');
@@ -474,9 +474,9 @@ test('openPage sets no data cookie without a dataCookie', async () => {
 
 test('getBrowser launches each origin its own browser with host resolver rules for that origin', async () => {
   mockLaunch.mockClear();
-  await launchGuarded('http://localhost:4002');
+  await launchFor('http://localhost:4002');
   const reused = await getBrowser({ origin: 'http://localhost:4002' });
-  await launchGuarded('http://127.0.0.1:4002');
+  await launchFor('http://127.0.0.1:4002');
   expect(reused).toBe(guardedBrowsers.at(-2));
   expect(mockLaunch.mock.calls.map(([{ args }]) => args)).toEqual([
     ['--host-resolver-rules=MAP *:4002 ~NOTFOUND, EXCLUDE localhost'],
@@ -485,7 +485,7 @@ test('getBrowser launches each origin its own browser with host resolver rules f
 });
 
 test('openPage refuses a data set journey in a browser launched for another origin', async () => {
-  const { browser } = await launchGuarded('http://localhost:4003');
+  const { browser } = await launchFor('http://localhost:4003');
   await expect(
     openPage({
       browser,
@@ -499,21 +499,55 @@ test('openPage refuses a data set journey in a browser launched for another orig
   expect(browser.newContext).not.toHaveBeenCalled();
 });
 
-test('openPage refuses a data set journey in a browser getBrowser did not launch', async () => {
+test('openPage refuses a browser getBrowser did not launch', async () => {
   const { browser } = createBrowser();
   await expect(
-    openPage({
-      browser,
-      origin: 'http://localhost:3001',
-      pageId: 'tickets',
-      dataCookie: 'session1',
-    })
-  ).rejects.toThrow('must open in the browser getBrowser({ origin }) gives for that origin.');
+    openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' })
+  ).rejects.toThrow('openPage takes a browser from getBrowser({ origin }).');
   expect(browser.newContext).not.toHaveBeenCalled();
 });
 
+test('openPage keys the guard on host and port, so http and https on one port share it', async () => {
+  const { browser } = await launchFor('http://localhost:4005');
+  await openPage({
+    browser,
+    origin: 'https://localhost:4005',
+    pageId: 'tickets',
+    dataCookie: 'session1',
+  });
+  const { browser: secure } = await launchFor('https://localhost');
+  await expect(
+    openPage({ browser: secure, origin: 'http://localhost', pageId: 'home', dataCookie: 's1' })
+  ).rejects.toThrow('A data set journey on http://localhost must open in the browser');
+});
+
+test('openPage counts a context on the lifecycle of the browser it opens in', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout', 'Date'] });
+  try {
+    const { browser } = await launchFor('http://localhost:4006');
+    // A screenshot on another host, in the browser launched for this one: its context keeps this
+    // browser open past the idle timeout.
+    const { context } = await openPage({
+      browser,
+      origin: 'http://127.0.0.1:4006',
+      pageId: 'home',
+    });
+    vi.advanceTimersByTime(45_000);
+    await Promise.resolve();
+    expect(browser.close).not.toHaveBeenCalled();
+    await context.close();
+    vi.advanceTimersByTime(45_000);
+    for (let i = 0; i < 5; i += 1) {
+      await Promise.resolve();
+    }
+    expect(browser.close).toHaveBeenCalledTimes(1);
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
 test('openPage records, without routing, each data set journey request to the dev server port on another host', async () => {
-  const { browser, context } = await launchGuarded('http://localhost:4004');
+  const { browser, context } = await launchFor('http://localhost:4004');
   const opened = await openPage({
     browser,
     origin: 'http://localhost:4004',
@@ -544,7 +578,7 @@ test('openPage records, without routing, each data set journey request to the de
 });
 
 test('openPage matches the default port of an origin that names none', async () => {
-  const { browser, context } = await launchGuarded('http://localhost');
+  const { browser, context } = await launchFor('http://localhost');
   const opened = await openPage({
     browser,
     origin: 'http://localhost',
@@ -562,7 +596,7 @@ test('openPage matches the default port of an origin that names none', async () 
 });
 
 test('openPage routes nothing and records no departures without a dataCookie', async () => {
-  const { browser, context } = createBrowser();
+  const { browser, context } = await launchFor();
   const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
   emitRequest(context, 'http://127.0.0.1:3001/home');
   expect(context.route).not.toHaveBeenCalled();
@@ -594,9 +628,9 @@ test('a failed openPage closes its context, so the idle browser still closes', a
     mockLaunch.mockResolvedValue(browser);
     page.goto.mockRejectedValue(new Error('net::ERR_CONNECTION_REFUSED'));
 
-    const launched = await getBrowser({ origin: 'http://localhost:3001' });
+    const launched = await getBrowser({ origin: 'http://localhost:3999' });
     await expect(
-      openPage({ browser: launched, origin: 'http://localhost:3001', pageId: 'home' })
+      openPage({ browser: launched, origin: 'http://localhost:3999', pageId: 'home' })
     ).rejects.toThrow('net::ERR_CONNECTION_REFUSED');
     vi.advanceTimersByTime(45_000);
     for (let i = 0; i < 5; i += 1) {

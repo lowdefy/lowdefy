@@ -16,7 +16,7 @@
 
 import http from 'node:http';
 
-import { vi, afterAll, beforeAll, expect, test } from 'vitest';
+import { vi, afterAll, expect, test } from 'vitest';
 
 import pageReadyScript from '../../test-utils/pageReadyScript.mjs';
 
@@ -47,34 +47,30 @@ function pageHtml(pageId) {
   </script></body></html>`;
 }
 
-let server;
-let origin;
 const received = [];
-// Launched for the test server's host before its port is known: its rules refuse only port 80
-// under other hosts, and these contexts carry no data cookie, so nothing here depends on them.
+
+const server = http.createServer((req, res) => {
+  const [, pageId] = req.url.match(/^\/(?:api\/(?:page|request)\/)?([a-z]+)/) ?? [];
+  received.push({ url: req.url, pageId, cookie: req.headers.cookie });
+  if (!req.url.startsWith('/api/')) {
+    res.writeHead(200, { 'content-type': 'text/html' });
+    res.end(pageHtml(pageId));
+    return;
+  }
+  res.writeHead(200, { 'content-type': 'application/json' });
+  res.end('{}');
+});
+await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
+const origin = `http://127.0.0.1:${server.address().port}`;
+
+// The server starts first, so the browser is launched for its origin.
 let browser = null;
 try {
-  browser = await getBrowser({ origin: 'http://127.0.0.1' });
+  browser = await getBrowser({ origin });
 } catch {
   browser = null;
 }
 const chromiumTest = browser === null ? test.skip : test;
-
-beforeAll(async () => {
-  server = http.createServer((req, res) => {
-    const [, pageId] = req.url.match(/^\/(?:api\/(?:page|request)\/)?([a-z]+)/) ?? [];
-    received.push({ url: req.url, pageId, cookie: req.headers.cookie });
-    if (!req.url.startsWith('/api/')) {
-      res.writeHead(200, { 'content-type': 'text/html' });
-      res.end(pageHtml(pageId));
-      return;
-    }
-    res.writeHead(200, { 'content-type': 'application/json' });
-    res.end('{}');
-  });
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-  origin = `http://127.0.0.1:${server.address().port}`;
-});
 
 // Closing Chromium on Windows can take longer than the 10 s hook default.
 afterAll(async () => {

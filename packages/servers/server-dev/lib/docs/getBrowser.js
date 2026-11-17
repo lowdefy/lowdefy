@@ -20,36 +20,43 @@ import lowdefyConfig from '../build/config.js';
 import createBrowserLifecycle from './createBrowserLifecycle.js';
 import isPageReady from './isPageReady.js';
 import launchBrowser from './launchBrowser.js';
+import originPort from './originPort.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
 import watchJourneyOrigin from './watchJourneyOrigin.js';
 
-// One browser per origin (host and port), shared by every headless caller on
+// One browser per origin host and port, shared by every headless caller on
 // that origin (screenshots, journeys, state inspection, operator evaluation,
 // state loads) and closed after 45 s unused. See createBrowserLifecycle.js.
 // Each is launched with host resolver rules for its origin, which is why an
 // origin gets its own: the rules are fixed for the browser's life.
 const lifecycles = new Map();
-// The origin host each launched browser is guarded for.
-const guardedHosts = new WeakMap();
+// Each launched browser's { guard, lifecycle }: the origin host and port its
+// rules guard, and the lifecycle that counts its contexts.
+const launched = new WeakMap();
+
+// What the host resolver rules depend on, so http and https on one host and
+// port share a browser and any other difference does not.
+function guardOf({ origin }) {
+  const url = new URL(origin);
+  return `${url.hostname}:${originPort(url)}`;
+}
 
 function lifecycleFor({ origin }) {
-  const { host } = new URL(origin);
-  if (!lifecycles.has(host)) {
-    lifecycles.set(
-      host,
-      createBrowserLifecycle({
-        launch: async () => {
-          const browser = await launchBrowser({ origin });
-          guardedHosts.set(browser, host);
-          return browser;
-        },
-        idleTimeout: 45_000,
-      })
-    );
+  const guard = guardOf({ origin });
+  if (!lifecycles.has(guard)) {
+    const lifecycle = createBrowserLifecycle({
+      launch: async () => {
+        const browser = await launchBrowser({ origin });
+        launched.set(browser, { guard, lifecycle });
+        return browser;
+      },
+      idleTimeout: 45_000,
+    });
+    lifecycles.set(guard, lifecycle);
   }
-  return lifecycles.get(host);
+  return lifecycles.get(guard);
 }
 
 async function getBrowser({ origin }) {
@@ -75,7 +82,7 @@ function buildPageUrl({ origin, pageId, path, pathParams, urlQuery }) {
 }
 
 // Opens a fresh browser context + page at the app's pageId route. Callers
-// obtain `browser` via getBrowser() themselves so they can map a launch
+// obtain `browser` via getBrowser({ origin }) themselves so they can map a launch
 // failure to their own "no browser available" error message, separate from
 // navigation failures. With no pageId (a page-less journey, whose steps only
 // call the server) the context and its cookies are set up and the page stays
@@ -106,10 +113,15 @@ async function openPage({
   // the user is resolved before the context is created so an invalid `user`
   // can't leave an orphaned context behind.
   const injectedUser = user === 'none' ? null : resolveHeadlessUser({ user });
+  // The browser must come from getBrowser, whose lifecycle counts the context.
   // A data set journey's only protection against reading the real database
   // under another host is its browser's host resolver rules, so a browser
   // launched for another origin is refused before any context exists.
-  if (!type.isUndefined(dataCookie) && guardedHosts.get(browser) !== new URL(origin).host) {
+  const launchedAs = launched.get(browser);
+  if (type.isUndefined(launchedAs)) {
+    throw new Error('openPage takes a browser from getBrowser({ origin }).');
+  }
+  if (!type.isUndefined(dataCookie) && launchedAs.guard !== guardOf({ origin })) {
     throw new Error(
       `A data set journey on ${origin} must open in the browser getBrowser({ origin }) gives for that origin.`
     );
@@ -117,7 +129,7 @@ async function openPage({
   // colorScheme is what the page's `prefers-color-scheme` media query reports,
   // so an app following the system theme renders light or dark accordingly.
   const context = await browser.newContext({ viewport: { width, height }, colorScheme });
-  lifecycleFor({ origin }).trackContext(context);
+  launchedAs.lifecycle.trackContext(context);
   // The URLs a data set journey's context tried to reach on another host of the dev server. None
   // left the browser; the journey runner fails the step that caused them.
   const leftOrigin = [];
