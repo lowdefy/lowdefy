@@ -236,6 +236,24 @@ test('errorHandler returns 400 with only name and message for a UserError on an 
   expect(captureException).not.toHaveBeenCalled();
 });
 
+// A request the request timeout or the client cancelled is a UserError its request step
+// already logged at debug and marked handled.
+test('errorHandler does not log a UserError again once it was handled', async () => {
+  const logger = createLogger();
+  const context = { handleError: vi.fn() };
+  const error = createUserError('The request timeout of 30000ms was exceeded.');
+  error.handled = true;
+  const res = await createApp({ context, error, logger }).request('/api/request/home/get_data', {
+    method: 'POST',
+  });
+
+  expect(res.status).toEqual(400);
+  expect(logger.warn).not.toHaveBeenCalled();
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(context.handleError).not.toHaveBeenCalled();
+  expect(captureException).not.toHaveBeenCalled();
+});
+
 test('errorHandler does not send a UserError through the redactor', async () => {
   const res = await createApp({
     error: createUserError('Bad payload.'),

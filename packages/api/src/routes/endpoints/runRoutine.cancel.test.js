@@ -88,9 +88,14 @@ test('a :catch and :finally do not run their steps once the request timed out', 
     },
     step('after_write', 'TestRequest', { response: 'after' }),
   ];
-  const { res, routineContext } = await runTest({ routine, signal: controller.signal });
+  const { res, context, routineContext } = await runTest({ routine, signal: controller.signal });
   expect(res.status).toBe('error');
   expect(Object.keys(routineContext.steps)).toEqual(['slow_read']);
+  // One cancellation, logged once, however many controls it stops.
+  const cancelled = context.logger.debug.mock.calls.filter(
+    ([fields]) => fields.event === 'debug_request_cancelled'
+  );
+  expect(cancelled).toHaveLength(1);
 });
 
 test('a routine with a signal that never aborts runs every step', async () => {

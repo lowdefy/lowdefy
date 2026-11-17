@@ -28,6 +28,9 @@ import invokeEndpoint from '../endpoints/invokeEndpoint.js';
 // reap the invocation once the response is sent.
 async function runAfterToolCall(context, { hookId, payload }) {
   const { logger } = context;
+  // The tool's work is done and the hook only records it (an audit trail), so the agent
+  // hanging up or the request timing out must not stop it.
+  context.signal = undefined;
   try {
     const result = await invokeEndpoint(context, {
       endpointId: hookId,

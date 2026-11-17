@@ -61,6 +61,21 @@ test('runs a scheduled endpoint and injects the matching schedule payload', asyn
   expect(routineContext.payload).toEqual({ mode: 'incremental' });
 });
 
+// A scheduled run answering its cron trigger is nobody's request: the trigger timing out
+// or hanging up does not stop it part-way.
+test('runs a synchronous scheduled endpoint with no request signal', async () => {
+  const context = makeContext({
+    endpointId: 'purge',
+    type: 'Api',
+    schedules: [{ cron: '0 6 * * *' }],
+    routine: [],
+  });
+  context.signal = new AbortController().signal;
+  await runScheduledEndpoint(context, { endpointId: 'purge', cron: '0 6 * * *' });
+  const [routineRunContext] = runRoutine.mock.calls[0];
+  expect(routineRunContext.signal).toBeUndefined();
+});
+
 test('forces a system context (no user) even if a user is present', async () => {
   const context = makeContext(
     { endpointId: 'purge', type: 'Api', schedules: [{ cron: '0 6 * * *' }], routine: [] },

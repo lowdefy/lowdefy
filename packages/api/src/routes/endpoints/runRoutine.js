@@ -34,16 +34,25 @@ import handleValidateSchema from './handleValidateSchema.js';
 // errors meant for the user. Config, operator and internal errors are faults even when caught.
 const expectedCaughtErrorNames = new Set(['RequestError', 'ServiceError', 'UserError']);
 
+// The cancellation each aborted request signal stopped its routine with, so it is logged once
+// however many steps, controls and nested endpoint calls it stops.
+const cancellations = new WeakMap();
+
+function cancellationFor(context) {
+  const { logger, signal } = context;
+  if (!cancellations.has(signal)) {
+    cancellations.set(signal, createCancellationError({ logger, signal }));
+  }
+  return cancellations.get(signal);
+}
+
 async function runRoutine(context, routineContext, { routine }) {
   // The request this routine answers closed (the client left, or the request timed out):
   // no later step or control runs, so a routine stopped mid-way makes no more writes. A
   // step already running is not undone. Background, detached and scheduled runs have no
   // signal and run to the end.
   if (context.signal?.aborted === true) {
-    return {
-      status: 'error',
-      error: createCancellationError({ logger: context.logger, signal: context.signal }),
-    };
+    return { status: 'error', error: cancellationFor(context) };
   }
   try {
     if (type.isObject(routine)) {
