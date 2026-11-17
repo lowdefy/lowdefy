@@ -246,9 +246,11 @@ function createApp() {
   return app;
 }
 
+// Whether this machine can launch Chromium. The journeys launch their own browser, for the
+// server's origin, through the journey route.
 let browser = null;
 try {
-  browser = await getBrowser();
+  browser = await getBrowser({ origin: 'http://127.0.0.1' });
 } catch {
   browser = null;
 }

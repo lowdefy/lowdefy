@@ -585,7 +585,17 @@ re-optimisation the child triggers mid-session keeps its memory until the next r
 
 **Agent browser** (`lib/docs/getBrowser.js`, `createBrowserLifecycle.js`, `launchBrowser.js`,
 `installHeadlessShell.js`). Screenshots, journeys, headless inspection and expression evaluation
-share one browser per child:
+share one browser per origin host and port in each child; callers on one URL get one browser:
+
+- `getBrowser({ origin })` keeps a `createBrowserLifecycle` per origin host and port
+  (`lifecycleForOrigin.js`, keyed by `originGuard.js`), because each browser is launched with
+  `--host-resolver-rules` (`hostResolverRules.js`) and explicit proxy switches
+  (`proxyLaunchArgs.js`) for its origin: the journey origin guard in `architecture/journeys.md`.
+  The browsers use a proxy only when the environment names one. A second origin, such as
+  `127.0.0.1` beside `localhost`, launches a second browser: about 140 MB more resident memory
+  on macOS while both are open. `openPage` takes only a browser `getBrowser` launched, counts
+  the context on that browser's lifecycle, and refuses a data cookie in a browser launched for
+  another origin.
 
 - `launchBrowser` imports `playwright-core` lazily and launches `chromium-headless-shell` first,
   system Chrome (`channel: 'chrome'`) as the fallback. A missing shell starts
@@ -598,7 +608,7 @@ share one browser per child:
   registry): a killed install can leave the executable without it, and the installer repairs
   such a directory.
   `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` turns the download off.
-- `createBrowserLifecycle` closes the browser 90 s after the last `getBrowser()` call once no
+- `createBrowserLifecycle` closes the browser 45 s after the last `getBrowser()` call once no
   context is open and no launch is in flight. `openPage` counts contexts through their `close`
   event. The `getBrowser()` re-arm covers a caller between `getBrowser()` and its first
   `newContext`.

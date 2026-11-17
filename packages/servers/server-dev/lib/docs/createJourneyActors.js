@@ -162,7 +162,7 @@ function createJourneyActors({
   }
 
   // The first URL any actor's context tried to reach on another host of the dev server, which a
-  // data set journey must never do (see guardJourneyOrigin).
+  // data set journey must never do (see watchJourneyOrigin).
   function leftOrigin() {
     for (const opened of actors.values()) {
       if (opened.leftOrigin.length > 0) {

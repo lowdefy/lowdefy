@@ -14,26 +14,23 @@
   limitations under the License.
 */
 
-const DEFAULT_PORTS = { 'http:': '80', 'https:': '443' };
-
-function portOf(url) {
-  return url.port === '' ? DEFAULT_PORTS[url.protocol] : url.port;
-}
+import originPort from './originPort.js';
 
 // The data cookie is set for the journey's origin only, so a request to the dev server's port on
 // another host (127.0.0.1 against localhost, [::1], a LAN address) would carry none and read the
-// real database as a signed-out caller. Such requests are aborted before they leave the browser and
-// handed to onLeave; requests to other ports and other sites are untouched.
-async function guardJourneyOrigin({ context, origin, onLeave }) {
+// real database as a signed-out caller. The browser's host resolver rules (hostResolverRules.js)
+// stop every such request before it leaves the browser; this hands each attempt to onLeave, so the
+// journey fails at the step that made it. A listener, not a route: any Playwright route turns the
+// context's HTTP cache off. Requests to other ports and other sites are untouched.
+function watchJourneyOrigin({ context, origin, onLeave }) {
   const originUrl = new URL(origin);
-  const originPort = portOf(originUrl);
-  await context.route(
-    (url) => portOf(url) === originPort && url.hostname !== originUrl.hostname,
-    async (route) => {
-      onLeave(route.request().url());
-      await route.abort('blockedbyclient');
+  const port = originPort({ url: originUrl });
+  context.on('request', (request) => {
+    const url = new URL(request.url());
+    if (originPort({ url }) === port && url.hostname !== originUrl.hostname) {
+      onLeave(request.url());
     }
-  );
+  });
 }
 
-export default guardJourneyOrigin;
+export default watchJourneyOrigin;
