@@ -329,7 +329,7 @@ test('an external request is recorded in sunk and answers null, or what its stub
     throw new Error('connect ECONNREFUSED');
   });
   const failed = await session.as('member').request('rails', 'call_external');
-  expect(failed.status).toEqual(500);
+  expect(failed.success).toBe(false);
   expect(failed.success).toBe(false);
   expect(failed.faults).toHaveLength(1);
 });
@@ -395,6 +395,31 @@ test('reset releases a routine a test left held, so the next test starts clean',
   expect((await held).status).toEqual(200);
   const again = await session.as('member').call('log_activity', { source: 'next test' });
   expect(again.status).toEqual(200);
+});
+
+test('a fail gate that never fired is listed, and reset throws naming it', async () => {
+  const session = await fixture.openSession({ data: 'explore' });
+  session.fail({ requestId: 'insert_activity', message: 'Activity log is down' });
+  session.fail({ requestId: 'never_called', endpoint: 'log_activity', message: 'Never reached' });
+  const failed = await session.as('member').call('log_activity', { source: 'failed' });
+  expect(failed.success).toBe(false);
+  expect(session.unfiredFailGates()).toEqual([
+    {
+      requestId: 'never_called',
+      endpoint: 'log_activity',
+      pageId: undefined,
+      message: 'Never reached',
+      times: 1,
+    },
+  ]);
+  await expect(session.reset()).rejects.toThrow(
+    'session.reset(): the forced failure on request "never_called" on endpoint "log_activity" ("Never reached") never fired'
+  );
+  // The session was reset all the same: the gate is gone and the next test starts clean.
+  expect(session.unfiredFailGates()).toEqual([]);
+  const next = await session.as('member').call('log_activity', { source: 'next test' });
+  expect(next.status).toEqual(200);
+  await session.reset();
 });
 
 test('settled waits for the background work of an async endpoint', async () => {

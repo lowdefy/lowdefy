@@ -31,6 +31,7 @@ import settleSession from './settleSession.js';
 import storeLogger from './storeLogger.js';
 import stubRequest from './stubRequest.js';
 import testSessions from './testSessions.js';
+import unfiredFailGates from './unfiredFailGates.js';
 import { openDataSession, readDataSet } from './dataSets/index.js';
 import readConnectionArtifacts from './dataSets/readConnectionArtifacts.js';
 import readEmptyDataSet from './dataSets/readEmptyDataSet.js';
@@ -93,6 +94,8 @@ async function openSession({ data, testApp }) {
     system: () => ({
       call: (endpointId, payload) => callSystemEndpoint({ endpointId, payload, testSession }),
     }),
+    // The fail gates fail() set that no request has reached yet; reset() throws on any left.
+    unfiredFailGates: () => unfiredFailGates({ testSession }),
     // Posts to a webhook endpoint as its sender does: body is sent as raw text, a string as
     // written and anything else as JSON, so a signature header computed over it verifies. Answers
     // { status, body, contentType, faults }; the request id the journey hosts read is left out.

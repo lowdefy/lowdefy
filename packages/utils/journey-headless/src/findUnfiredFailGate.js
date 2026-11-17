@@ -15,20 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { listUnfiredFailGates } from '@lowdefy/test-utils/dataSets';
-
-function describeGate(gate) {
-  const narrowing = [];
-  if (!type.isNone(gate.endpoint)) {
-    narrowing.push(`endpoint "${gate.endpoint}"`);
-  }
-  if (!type.isNone(gate.pageId)) {
-    narrowing.push(`page "${gate.pageId}"`);
-  }
-  return narrowing.length === 0
-    ? `request "${gate.requestId}"`
-    : `request "${gate.requestId}" on ${narrowing.join(' and ')}`;
-}
+import { describeFailGate, listUnfiredFailGates } from '@lowdefy/test-utils/dataSets';
 
 // A journey's failure when a fail gate its stubs set never fired, so a check can't pass while
 // testing nothing: { index, step, expected, actual, message } on its last step, as a journey's
@@ -39,7 +26,7 @@ function findUnfiredFailGate({ session, steps }) {
     return undefined;
   }
   const index = steps.length - 1;
-  const description = describeGate(gate);
+  const description = describeFailGate(gate);
   return {
     index,
     step: steps[index],
