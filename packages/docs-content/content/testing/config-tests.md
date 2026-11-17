@@ -467,7 +467,15 @@ lowdefy build
 lowdefy test --headless --build
 ```
 
-`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run, and the app's real secrets are never read. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route. The results are written to `.lowdefy/test/headless-run.json`.
+`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route. The results are written to `.lowdefy/test/headless-run.json`.
+
+The app's real secrets are never read: every secret the build names reads the stand-in `test-secret-<NAME>`, and the values in the app's `.env` file are left out. To give a secret a test value, set `LOWDEFY_SECRET_<NAME>` in the environment of the command:
+
+```
+LOWDEFY_SECRET_ORG_ID=org-a lowdefy test --headless --build
+```
+
+Every journey of the run reads `org-a` for `_secret: ORG_ID`, and a secret that is not set keeps its stand-in. Use it for logic that compares a secret with data, such as an id the data set also holds. The run takes every `LOWDEFY_SECRET_*` variable its shell holds, so start it from a shell without the app's real secrets, and set the same test values in CI.
 
 ### While you edit
 

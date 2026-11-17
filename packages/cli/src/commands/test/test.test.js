@@ -95,6 +95,7 @@ beforeEach(() => {
       test: path.join(configDirectory, '.lowdefy', 'test'),
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
+    dotEnvNames: [],
     options: { port: 3000 },
     logger: {
       info: (line) => logs.info.push(line),
@@ -1186,6 +1187,7 @@ test('test --headless --build runs headless journeys on the build with no server
   expect(mockCreateBuildHost).toHaveBeenCalledWith({
     configDirectory,
     data: undefined,
+    secrets: {},
     serverDirectory: context.directories.server,
     user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] },
   });
@@ -1205,6 +1207,37 @@ test('test --headless --build runs headless journeys on the build with no server
   expect(written.journeys['tests/journeys/a.yaml#clicks submit']).toEqual({ passed: true });
   expect(written.journeys['tests/journeys/b.yaml#reads the title'].browserOnly.index).toBe(1);
   expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
+});
+
+test('test --headless --build gives every journey the LOWDEFY_SECRET_ values of its environment, without the ones from .env', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  context.dotEnvNames = ['LOWDEFY_SECRET_FROM_DOT_ENV'];
+  process.env.LOWDEFY_SECRET_ORG_ID = 'org-a';
+  process.env.LOWDEFY_SECRET_FROM_DOT_ENV = 'real';
+  // The access step's openTestApp takes the secrets out of the environment, before any journey.
+  mockOpenTestApp.mockImplementation(async () => {
+    delete process.env.LOWDEFY_SECRET_ORG_ID;
+    delete process.env.LOWDEFY_SECRET_FROM_DOT_ENV;
+    return { close: vi.fn() };
+  });
+  try {
+    await test({ context });
+  } finally {
+    delete process.env.LOWDEFY_SECRET_ORG_ID;
+    delete process.env.LOWDEFY_SECRET_FROM_DOT_ENV;
+  }
+  expect(mockOpenTestApp).toHaveBeenCalledWith({
+    configDirectory,
+    serverDirectory: context.directories.server,
+  });
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(2);
+  mockCreateBuildHost.mock.calls.forEach(([options]) => {
+    expect(options.secrets).toEqual({ ORG_ID: 'org-a' });
+  });
+  expect(process.exitCode).toBeUndefined();
 });
 
 test('test --headless --build is refused with the harness message when the build cannot be read', async () => {

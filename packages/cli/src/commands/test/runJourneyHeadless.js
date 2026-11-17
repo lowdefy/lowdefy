@@ -28,8 +28,8 @@ const DEFAULT_STEP_TIMEOUT = 5000;
 // (@lowdefy/journey-headless' build host). Answers in the result shape runJourney gives the
 // reporter. A journey that needs a browser (classifyJourney, or an action the runner reaches
 // that only a browser can carry out) answers `browserOnly` ({ index, step, reason }) and is
-// neither passed nor failed.
-async function runJourneyHeadless({ context, item }) {
+// neither passed nor failed. `secrets` replace the stand-in values of the app's secrets, by name.
+async function runJourneyHeadless({ context, item, secrets }) {
   const { filePath, journey } = item;
   const refused = checkJourneyItem({ item });
   if (!type.isUndefined(refused)) {
@@ -58,6 +58,7 @@ async function runJourneyHeadless({ context, item }) {
     host = await createBuildHost({
       configDirectory: context.directories.config,
       data: journey.data,
+      secrets,
       serverDirectory: context.directories.server,
       user,
     });

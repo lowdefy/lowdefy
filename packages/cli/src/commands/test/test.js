@@ -33,6 +33,7 @@ import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
 import readAccessMode from './readAccessMode.js';
 import readHeadlessMode from './readHeadlessMode.js';
+import readTestSecrets from './readTestSecrets.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
 import runAccessStep from './access/runAccessStep.js';
@@ -120,7 +121,10 @@ async function test({ context }) {
   // selected, so an app with no journeys is checked too, and it checks the whole table whatever
   // the run selects. A difference fails the run, and the journeys still run.
   const lint = context.options.lint === true;
+  let secrets;
   if (headless && build && !lint) {
+    // Read before the access step: its openTestApp takes every secret out of the environment.
+    secrets = readTestSecrets({ dotEnvNames: context.dotEnvNames, env: process.env });
     const step = await runAccessStep({ context, mode: 'check' });
     if (!type.isUndefined(step.refused)) {
       refuse({ context, message: step.refused });
@@ -194,6 +198,7 @@ async function test({ context }) {
       selected: tiered.selected,
       skipped: tiered.skipped.length,
       repeat,
+      secrets,
     });
     if (ran.failed > 0) {
       process.exitCode = 1;

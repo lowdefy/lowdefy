@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 test('loadDotEnvFile does nothing when the file does not exist', () => {
-  expect(loadDotEnvFile({ filePath })).toBe(undefined);
+  expect(loadDotEnvFile({ filePath })).toEqual([]);
   expect(process.env.LDF_TEST_ONE).toBe(undefined);
 });
 
@@ -78,4 +78,18 @@ test('loadDotEnvFile reads the first variable of a file saved with a byte order 
 test('loadDotEnvFile throws when the path cannot be read as a file', () => {
   fs.mkdirSync(filePath);
   expect(() => loadDotEnvFile({ filePath })).toThrow(expect.objectContaining({ code: 'EISDIR' }));
+});
+
+test('loadDotEnvFile returns the names it set, without the ones the environment already held', () => {
+  process.env.LDF_TEST_SHELL = 'shell';
+  fs.writeFileSync(filePath, 'LDF_TEST_ONE=one\nLDF_TEST_SHELL=file\n');
+  expect(loadDotEnvFile({ filePath })).toEqual(['LDF_TEST_ONE']);
+  expect(process.env.LDF_TEST_SHELL).toBe('shell');
+});
+
+test('loadDotEnvFile with override returns every name in the file', () => {
+  process.env.LDF_TEST_SHELL = 'shell';
+  fs.writeFileSync(filePath, 'LDF_TEST_ONE=one\nLDF_TEST_SHELL=file\n');
+  expect(loadDotEnvFile({ filePath, override: true })).toEqual(['LDF_TEST_ONE', 'LDF_TEST_SHELL']);
+  expect(process.env.LDF_TEST_SHELL).toBe('file');
 });
