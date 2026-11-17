@@ -18,7 +18,6 @@ import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 import { getState } from '@lowdefy/e2e-utils/runtime';
 import {
-  classifyJourney,
   findPlaceholderStep,
   normaliseJourneySteps,
   validateJourneySteps,
@@ -171,15 +170,6 @@ async function runJourney({
   const callChecksError = validateBrowserCallChecks({ steps });
   if (!type.isUndefined(callChecksError)) {
     return { error: callChecksError, refused: true };
-  }
-  // hold and release park a call in the runner's own process, which a browser posting to the
-  // server cannot do, so they are refused before any browser opens rather than run unchecked.
-  const { inProcess } = classifyJourney({ journey: { steps: inputSteps } });
-  if (!type.isUndefined(inProcess)) {
-    return {
-      error: `Step ${inProcess.index}: ${inProcess.reason}. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).`,
-      refused: true,
-    };
   }
   // A page-less journey's messages name the app it calls.
   let pagePath;

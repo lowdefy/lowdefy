@@ -180,8 +180,7 @@ fixtureTest('headless must be true or false', async () => {
 });
 
 // tests/journeys/_headless/race.yaml: hold parks the first approve_run call before claim_run, the
-// other user's call claims the run, and release answers with the parked call. A browser run
-// refuses hold and release before any browser opens.
+// other user's call claims the run, and release answers with the parked call.
 function readRaceJourney() {
   const file = path.join(
     process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
@@ -208,14 +207,3 @@ fixtureTest(
     expect(body.steps.map((step) => step.status)).toEqual(race.steps.map(() => 'ok'));
   }
 );
-
-fixtureTest('a browser run refuses the race journey, pointing to a headless run', async () => {
-  const { status, body } = await postJson({
-    path: '/lowdefy-docs/journey',
-    body: readRaceJourney(),
-  });
-  expect(status).toBe(400);
-  expect(body.error).toBe(
-    'Step 0: step "hold" needs the headless runner, which keeps a held call parked in its own process. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).'
-  );
-});
