@@ -291,7 +291,7 @@ fixtureTest('the journey route refuses stubs with no data set', async () => {
   });
   expect(status).toBe(400);
   expect(body.error).toBe(
-    '"stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".'
+    'Journey "stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".'
   );
 });
 
