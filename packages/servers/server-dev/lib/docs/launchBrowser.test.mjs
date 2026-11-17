@@ -28,6 +28,9 @@ vi.doMock('./isHeadlessShellIncomplete.js', () => ({ default: mockIsIncomplete }
 
 const { default: launchBrowser } = await import('./launchBrowser.js');
 
+const origin = 'http://localhost:3001';
+const rules = '--host-resolver-rules=MAP *:3001 ~NOTFOUND, EXCLUDE localhost';
+
 const shellMissing = new Error(
   "browserType.launch: Executable doesn't exist at /cache/chromium_headless_shell-1217/chrome-headless-shell"
 );
@@ -42,13 +45,13 @@ afterEach(() => {
   mockIsIncomplete.mockResolvedValue(false);
 });
 
-test('launchBrowser launches the headless shell and never system Chrome when the shell is installed', async () => {
+test('launchBrowser launches the headless shell, with host resolver rules for its origin, and never system Chrome when the shell is installed', async () => {
   const shell = { name: 'shell' };
   mockLaunch.mockResolvedValue(shell);
 
-  expect(await launchBrowser()).toBe(shell);
+  expect(await launchBrowser({ origin })).toBe(shell);
   expect(mockLaunch).toHaveBeenCalledTimes(1);
-  expect(mockLaunch.mock.calls[0][0]).toEqual({ args: [] });
+  expect(mockLaunch.mock.calls[0][0]).toEqual({ args: [rules] });
   expect(mockInstall).not.toHaveBeenCalled();
 });
 
@@ -60,12 +63,12 @@ test('launchBrowser tags the browser with the tag the manager gave this child', 
   });
   mockInstall.mockReturnValue(null);
 
-  await launchBrowser();
+  await launchBrowser({ origin });
 
-  expect(mockLaunch.mock.calls[0][0]).toEqual({ args: ['--lowdefy-browser-tag=tag-1'] });
+  expect(mockLaunch.mock.calls[0][0]).toEqual({ args: ['--lowdefy-browser-tag=tag-1', rules] });
   expect(mockLaunch.mock.calls[1][0]).toEqual({
     channel: 'chrome',
-    args: ['--lowdefy-browser-tag=tag-1'],
+    args: ['--lowdefy-browser-tag=tag-1', rules],
   });
 });
 
@@ -78,7 +81,7 @@ test('launchBrowser serves the call with system Chrome while the shell installs'
   // Never settles: the call must not wait for the download.
   mockInstall.mockReturnValue(new Promise(() => {}));
 
-  expect(await launchBrowser()).toBe(chrome);
+  expect(await launchBrowser({ origin })).toBe(chrome);
   expect(mockInstall).toHaveBeenCalledTimes(1);
 });
 
@@ -95,7 +98,7 @@ test('launchBrowser waits for the shell install when system Chrome is missing to
     return { installed: true };
   });
 
-  expect(await launchBrowser()).toBe(shell);
+  expect(await launchBrowser({ origin })).toBe(shell);
   expect(mockLaunch).toHaveBeenCalledTimes(3);
 });
 
@@ -108,7 +111,7 @@ test('launchBrowser says why when both browsers are missing and the install fail
     reason: 'the install did not finish within 3 minutes',
   });
 
-  await expect(launchBrowser()).rejects.toThrow(
+  await expect(launchBrowser({ origin })).rejects.toThrow(
     'The chromium-headless-shell install failed (the install did not finish within 3 minutes), and system Chrome is not installed.'
   );
 });
@@ -119,7 +122,7 @@ test('launchBrowser throws the shell error when both browsers are missing and do
   });
   mockInstall.mockReturnValue(null);
 
-  await expect(launchBrowser()).rejects.toBe(shellMissing);
+  await expect(launchBrowser({ origin })).rejects.toBe(shellMissing);
   expect(mockLaunch).toHaveBeenCalledTimes(2);
 });
 
@@ -130,7 +133,7 @@ test('launchBrowser falls back to system Chrome without installing when the shel
     throw new Error('browserType.launch: Target page, context or browser has been closed');
   });
 
-  expect(await launchBrowser()).toBe(chrome);
+  expect(await launchBrowser({ origin })).toBe(chrome);
   expect(mockInstall).not.toHaveBeenCalled();
 });
 
@@ -155,7 +158,7 @@ test('launchBrowser installs the shell when the executable exists but its instal
     return { installed: true };
   });
 
-  expect(await launchBrowser()).toBe(shell);
+  expect(await launchBrowser({ origin })).toBe(shell);
   expect(mockInstall).toHaveBeenCalledTimes(1);
 });
 
@@ -169,7 +172,7 @@ test('launchBrowser says why when an incomplete shell cannot be reinstalled and 
     reason: 'the install did not finish within 3 minutes',
   });
 
-  await expect(launchBrowser()).rejects.toThrow(
+  await expect(launchBrowser({ origin })).rejects.toThrow(
     'The chromium-headless-shell install failed (the install did not finish within 3 minutes), and system Chrome is not installed.'
   );
 });

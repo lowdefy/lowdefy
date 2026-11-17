@@ -417,16 +417,37 @@ test('openPage opens the page at the urlQuery it was given', async () => {
   expect(page.goto.mock.calls[0][0]).toEqual('http://localhost:3001/detail?id=1');
 });
 
+// A data set journey opens only in the browser getBrowser launched for its origin. Each call gives
+// a fresh fake browser: the last one reads as disconnected, so the origin's lifecycle relaunches.
+const guardedBrowsers = [];
+
+async function launchGuarded(origin) {
+  guardedBrowsers.forEach((previous) => {
+    previous.isConnected = () => false;
+  });
+  const mocked = createBrowser();
+  mocked.browser.isConnected = () => true;
+  mocked.browser.close = vi.fn(async () => {});
+  guardedBrowsers.push(mocked.browser);
+  mockLaunch.mockResolvedValueOnce(mocked.browser);
+  expect(await getBrowser({ origin })).toBe(mocked.browser);
+  return mocked;
+}
+
+function emitRequest(context, url) {
+  context.emit('request', { url: () => url });
+}
+
 test('openPage sets the data cookie with the actor cookie attributes before the first navigation', async () => {
   const { journeyActorToken } = await import('../server/auth/journeyActor.js');
-  const { browser, addCookies, page } = createBrowser();
+  const { browser, addCookies, page } = await launchGuarded('http://localhost:4001');
   addCookies.mockImplementation(async () => {
     expect(page.goto).not.toHaveBeenCalled();
   });
 
   await openPage({
     browser,
-    origin: 'http://localhost:3001',
+    origin: 'http://localhost:4001',
     pageId: 'tickets',
     clientAddress: '203.0.113.7',
     dataCookie: 'session1',
@@ -438,7 +459,7 @@ test('openPage sets the data cookie with the actor cookie attributes before the 
   expect(data).toEqual({
     name: 'lowdefy_journey_data',
     value: `${journeyActorToken}.session1`,
-    url: 'http://localhost:3001',
+    url: 'http://localhost:4001',
     httpOnly: actor.httpOnly,
     sameSite: actor.sameSite,
   });
@@ -451,56 +472,99 @@ test('openPage sets no data cookie without a dataCookie', async () => {
   expect(names).not.toContain('lowdefy_journey_data');
 });
 
-test('openPage aborts and records a data set journey request to the dev server port on another host', async () => {
-  const { browser, context, page } = createBrowser();
-  context.route.mockImplementation(async () => {
-    expect(page.goto).not.toHaveBeenCalled();
-  });
+test('getBrowser launches each origin its own browser with host resolver rules for that origin', async () => {
+  mockLaunch.mockClear();
+  await launchGuarded('http://localhost:4002');
+  const reused = await getBrowser({ origin: 'http://localhost:4002' });
+  await launchGuarded('http://127.0.0.1:4002');
+  expect(reused).toBe(guardedBrowsers.at(-2));
+  expect(mockLaunch.mock.calls.map(([{ args }]) => args)).toEqual([
+    ['--host-resolver-rules=MAP *:4002 ~NOTFOUND, EXCLUDE localhost'],
+    ['--host-resolver-rules=MAP *:4002 ~NOTFOUND, EXCLUDE 127.0.0.1'],
+  ]);
+});
+
+test('openPage refuses a data set journey in a browser launched for another origin', async () => {
+  const { browser } = await launchGuarded('http://localhost:4003');
+  await expect(
+    openPage({
+      browser,
+      origin: 'http://127.0.0.1:4003',
+      pageId: 'tickets',
+      dataCookie: 'session1',
+    })
+  ).rejects.toThrow(
+    'A data set journey on http://127.0.0.1:4003 must open in the browser getBrowser({ origin }) gives for that origin.'
+  );
+  expect(browser.newContext).not.toHaveBeenCalled();
+});
+
+test('openPage refuses a data set journey in a browser getBrowser did not launch', async () => {
+  const { browser } = createBrowser();
+  await expect(
+    openPage({
+      browser,
+      origin: 'http://localhost:3001',
+      pageId: 'tickets',
+      dataCookie: 'session1',
+    })
+  ).rejects.toThrow('must open in the browser getBrowser({ origin }) gives for that origin.');
+  expect(browser.newContext).not.toHaveBeenCalled();
+});
+
+test('openPage records, without routing, each data set journey request to the dev server port on another host', async () => {
+  const { browser, context } = await launchGuarded('http://localhost:4004');
   const opened = await openPage({
     browser,
-    origin: 'http://localhost:3001',
+    origin: 'http://localhost:4004',
     pageId: 'tickets',
     dataCookie: 'session1',
   });
-  expect(context.route).toHaveBeenCalledTimes(1);
-  const [[matches, handle]] = context.route.mock.calls;
+  // Any route turns the context's HTTP cache off.
+  expect(context.route).not.toHaveBeenCalled();
   for (const url of [
-    'http://127.0.0.1:3001/api/page/tickets',
-    'http://[::1]:3001/tickets',
-    'http://192.168.1.20:3001/tickets',
-    'https://127.0.0.1:3001/tickets',
-  ]) {
-    expect([url, matches(new URL(url))]).toEqual([url, true]);
-  }
-  for (const url of [
-    'http://localhost:3001/api/page/tickets',
+    'http://127.0.0.1:4004/api/page/tickets',
+    'http://[::1]:4004/tickets',
+    'http://192.168.1.20:4004/tickets',
+    'https://127.0.0.1:4004/tickets',
+    'http://localhost:4004/api/page/tickets',
     'http://127.0.0.1:9000/assets/app.js',
     'https://example.com/logo.png',
     'http://127.0.0.1/tickets',
+    'data:text/html,<p>email</p>',
   ]) {
-    expect([url, matches(new URL(url))]).toEqual([url, false]);
+    emitRequest(context, url);
   }
-  const route = {
-    request: () => ({ url: () => 'http://127.0.0.1:3001/api/page/tickets' }),
-    abort: vi.fn(async () => {}),
-  };
-  await handle(route);
-  expect(route.abort).toHaveBeenCalledTimes(1);
-  expect(opened.leftOrigin).toEqual(['http://127.0.0.1:3001/api/page/tickets']);
+  expect(opened.leftOrigin).toEqual([
+    'http://127.0.0.1:4004/api/page/tickets',
+    'http://[::1]:4004/tickets',
+    'http://192.168.1.20:4004/tickets',
+    'https://127.0.0.1:4004/tickets',
+  ]);
 });
 
 test('openPage matches the default port of an origin that names none', async () => {
-  const { browser, context } = createBrowser();
-  await openPage({ browser, origin: 'http://localhost', pageId: 'home', dataCookie: 'session1' });
-  const [[matches]] = context.route.mock.calls;
-  expect(matches(new URL('http://127.0.0.1/home'))).toBe(true);
-  expect(matches(new URL('http://127.0.0.1:80/home'))).toBe(true);
-  expect(matches(new URL('http://127.0.0.1:3001/home'))).toBe(false);
+  const { browser, context } = await launchGuarded('http://localhost');
+  const opened = await openPage({
+    browser,
+    origin: 'http://localhost',
+    pageId: 'home',
+    dataCookie: 'session1',
+  });
+  for (const url of [
+    'http://127.0.0.1/home',
+    'http://127.0.0.1:80/home',
+    'http://127.0.0.1:3001/home',
+  ]) {
+    emitRequest(context, url);
+  }
+  expect(opened.leftOrigin).toEqual(['http://127.0.0.1/home', 'http://127.0.0.1:80/home']);
 });
 
 test('openPage routes nothing and records no departures without a dataCookie', async () => {
   const { browser, context } = createBrowser();
   const opened = await openPage({ browser, origin: 'http://localhost:3001', pageId: 'home' });
+  emitRequest(context, 'http://127.0.0.1:3001/home');
   expect(context.route).not.toHaveBeenCalled();
   expect(opened.leftOrigin).toEqual([]);
 });
@@ -530,7 +594,7 @@ test('a failed openPage closes its context, so the idle browser still closes', a
     mockLaunch.mockResolvedValue(browser);
     page.goto.mockRejectedValue(new Error('net::ERR_CONNECTION_REFUSED'));
 
-    const launched = await getBrowser();
+    const launched = await getBrowser({ origin: 'http://localhost:3001' });
     await expect(
       openPage({ browser: launched, origin: 'http://localhost:3001', pageId: 'home' })
     ).rejects.toThrow('net::ERR_CONNECTION_REFUSED');

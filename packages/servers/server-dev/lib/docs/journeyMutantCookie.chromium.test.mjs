@@ -50,9 +50,11 @@ function pageHtml(pageId) {
 let server;
 let origin;
 const received = [];
+// Launched for the test server's host before its port is known: its rules refuse only port 80
+// under other hosts, and these contexts carry no data cookie, so nothing here depends on them.
 let browser = null;
 try {
-  browser = await getBrowser();
+  browser = await getBrowser({ origin: 'http://127.0.0.1' });
 } catch {
   browser = null;
 }

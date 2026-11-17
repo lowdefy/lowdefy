@@ -264,7 +264,7 @@ async function runJourneyInBrowser({
 
   let browser;
   try {
-    browser = await getBrowser();
+    browser = await getBrowser({ origin });
   } catch (error) {
     if (session !== null) {
       await session.close();

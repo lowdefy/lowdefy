@@ -18,20 +18,43 @@ import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
 import createBrowserLifecycle from './createBrowserLifecycle.js';
-import guardJourneyOrigin from './guardJourneyOrigin.js';
 import isPageReady from './isPageReady.js';
 import launchBrowser from './launchBrowser.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
+import watchJourneyOrigin from './watchJourneyOrigin.js';
 
-// Module-level singleton, shared by every headless caller (screenshots,
-// journeys, state inspection, operator evaluation, state loads) and closed
-// after 45 s unused. See createBrowserLifecycle.js.
-const { getBrowser, trackContext } = createBrowserLifecycle({
-  launch: launchBrowser,
-  idleTimeout: 45_000,
-});
+// One browser per origin (host and port), shared by every headless caller on
+// that origin (screenshots, journeys, state inspection, operator evaluation,
+// state loads) and closed after 45 s unused. See createBrowserLifecycle.js.
+// Each is launched with host resolver rules for its origin, which is why an
+// origin gets its own: the rules are fixed for the browser's life.
+const lifecycles = new Map();
+// The origin host each launched browser is guarded for.
+const guardedHosts = new WeakMap();
+
+function lifecycleFor({ origin }) {
+  const { host } = new URL(origin);
+  if (!lifecycles.has(host)) {
+    lifecycles.set(
+      host,
+      createBrowserLifecycle({
+        launch: async () => {
+          const browser = await launchBrowser({ origin });
+          guardedHosts.set(browser, host);
+          return browser;
+        },
+        idleTimeout: 45_000,
+      })
+    );
+  }
+  return lifecycles.get(host);
+}
+
+async function getBrowser({ origin }) {
+  return lifecycleFor({ origin }).getBrowser();
+}
 
 // `origin` should already include any configured basePath prefix that the
 // caller can't derive itself (e.g. from a request URL) — here it's read from
@@ -83,12 +106,20 @@ async function openPage({
   // the user is resolved before the context is created so an invalid `user`
   // can't leave an orphaned context behind.
   const injectedUser = user === 'none' ? null : resolveHeadlessUser({ user });
+  // A data set journey's only protection against reading the real database
+  // under another host is its browser's host resolver rules, so a browser
+  // launched for another origin is refused before any context exists.
+  if (!type.isUndefined(dataCookie) && guardedHosts.get(browser) !== new URL(origin).host) {
+    throw new Error(
+      `A data set journey on ${origin} must open in the browser getBrowser({ origin }) gives for that origin.`
+    );
+  }
   // colorScheme is what the page's `prefers-color-scheme` media query reports,
   // so an app following the system theme renders light or dark accordingly.
   const context = await browser.newContext({ viewport: { width, height }, colorScheme });
-  trackContext(context);
-  // The URLs a data set journey's context tried to reach on another host of the dev server. Each
-  // was aborted; the journey runner fails the step that caused it.
+  lifecycleFor({ origin }).trackContext(context);
+  // The URLs a data set journey's context tried to reach on another host of the dev server. None
+  // left the browser; the journey runner fails the step that caused them.
   const leftOrigin = [];
   // From here a failure must close the context before rethrowing: callers only
   // learn about the context from the return value, so an error thrown mid-open
@@ -138,7 +169,7 @@ async function openPage({
       await context.addCookies([
         writeJourneyCookie({ name: JOURNEY_COOKIES.data.name, payload: dataCookie, origin }),
       ]);
-      await guardJourneyOrigin({
+      watchJourneyOrigin({
         context,
         origin,
         onLeave: (departure) => leftOrigin.push(departure),
