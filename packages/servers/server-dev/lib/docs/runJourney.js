@@ -23,7 +23,12 @@ import {
   normaliseJourneySteps,
   validateJourneySteps,
 } from '@lowdefy/node-utils';
-import { addJourneyStubs, getDataStore, openDataSession } from '@lowdefy/test-utils/dataSets';
+import {
+  addJourneyStubs,
+  checkJourneyStubTargets,
+  getDataStore,
+  openDataSession,
+} from '@lowdefy/test-utils/dataSets';
 
 import collectExercised from './collectExercised.js';
 import createDataSetRails from './rails/createDataSetRails.js';
@@ -265,6 +270,15 @@ async function runJourneyInBrowser({
   let store = null;
   let loadMs;
   if (!type.isUndefined(dataSet)) {
+    // An answer stub on a type the app does not have would never answer: refused before the data
+    // set loads.
+    const stubsError = checkJourneyStubTargets({
+      connections: await readConnectionPlugins(),
+      stubs,
+    });
+    if (!type.isUndefined(stubsError)) {
+      return { error: stubsError, refused: true };
+    }
     try {
       store = await getDataStore({ logger });
     } catch (error) {

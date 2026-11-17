@@ -17,13 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import checkSessionOpen from './checkSessionOpen.js';
-
-function listNames(names) {
-  return names
-    .sort()
-    .map((name) => `"${name}"`)
-    .join(', ');
-}
+import checkStubTarget from './dataSets/checkStubTarget.js';
 
 // Gives the requests of one request type an answer of the test's own, for the rest of the
 // session: `fn` is called with the request as the session records it in `sunk`
@@ -42,23 +36,13 @@ function stubRequest({ connectionType, fn, requestType, testSession }) {
       )} for ${connectionType} ${requestType}.`
     );
   }
-  const { connections } = testSession.runtime;
-  if (type.isNone(connections[connectionType])) {
-    throw new Error(
-      `Connection type ${JSON.stringify(
-        connectionType
-      )} is not used by this app. Its connection types are ${listNames(Object.keys(connections))}.`
-    );
-  }
-  const requests = connections[connectionType].requests ?? {};
-  if (type.isNone(requests[requestType])) {
-    throw new Error(
-      `Request type ${JSON.stringify(
-        requestType
-      )} is not a request of connection type "${connectionType}". Its request types are ${listNames(
-        Object.keys(requests)
-      )}.`
-    );
+  const error = checkStubTarget({
+    connections: testSession.runtime.connections,
+    connectionType,
+    requestType,
+  });
+  if (!type.isUndefined(error)) {
+    throw new Error(error);
   }
   const { stubs } = testSession.dataSession.session;
   const stub = { connectionType, requestType, fn };

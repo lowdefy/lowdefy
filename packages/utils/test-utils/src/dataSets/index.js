@@ -18,6 +18,7 @@ import addFailGate from './addFailGate.js';
 import addJourneyStubs from './addJourneyStubs.js';
 import addPauseGate from './addPauseGate.js';
 import applyDataSetRedirect from './applyDataSetRedirect.js';
+import checkJourneyStubTargets from './checkJourneyStubTargets.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
 import createSessionConnections from './createSessionConnections.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
@@ -41,6 +42,7 @@ export {
   addJourneyStubs,
   addPauseGate,
   applyDataSetRedirect,
+  checkJourneyStubTargets,
   createDataSetRefusal,
   createSessionConnections,
   dataSessionRegistry,

@@ -45,7 +45,10 @@ vi.doMock('./readDevAuthMode.js', () => ({
 vi.doMock('./collectExercised.js', () => ({ default: async () => ({}) }));
 // The plugin connection map lives in a running server's build directory.
 vi.doMock('./readConnectionPlugins.js', () => ({
-  default: async () => ({ MongoDBCollection: { meta: { dataSet: 'redirect' } } }),
+  default: async () => ({
+    AxiosHttp: { meta: { dataSet: 'external' }, requests: { AxiosHttp: async () => null } },
+    MongoDBCollection: { meta: { dataSet: 'redirect' } },
+  }),
 }));
 
 vi.doMock('./observe/waitForClientErrorReports.js', () => ({
@@ -299,4 +302,21 @@ test('runJourney sets the journey stubs on the data session it opens', async () 
   expect(session.failGates).toMatchObject([
     { requestId: 'save_price', message: 'Write failed on purpose', times: 2, fired: 0 },
   ]);
+});
+
+test('runJourney refuses an answer stub on a request type the app does not have, before the data set loads', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [],
+    data: 'sample',
+    stubs: [{ connectionType: 'AxiosHttp', requestType: 'AxiosPost', answer: null }],
+  });
+  expect(result).toEqual({
+    error:
+      'Journey "stubs[0]": Request type "AxiosPost" is not a request of connection type "AxiosHttp". Its request types are "AxiosHttp".',
+    refused: true,
+  });
+  expect(mockOpenDataSession).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
 });

@@ -31,6 +31,16 @@ vi.doMock('./readBuildArtifact.js', () => ({
   default: ({ name }) =>
     name === 'routes.json' ? [{ pageId: 'form' }, { pageId: 'other' }] : null,
 }));
+// The plugin connection map lives in a running server's build directory.
+vi.doMock('./readConnectionPlugins.js', () => ({
+  default: async () => ({ AxiosHttp: { requests: { AxiosHttp: async () => null } } }),
+}));
+const mockOpenDataSession = vi.fn();
+vi.doMock('@lowdefy/test-utils/dataSets', async (importOriginal) => ({
+  ...(await importOriginal()),
+  getDataStore: vi.fn(async () => ({})),
+  openDataSession: mockOpenDataSession,
+}));
 vi.doMock('./collectExercised.js', () => ({
   default: async ({ snapshots, observed }) => ({ snapshots, events: observed.events }),
 }));
@@ -175,4 +185,22 @@ test('runJourneyHeadless builds the pages the journey names before it runs, as t
     readConfigFile,
   });
   expect(mockBuildPageIfNeeded.mock.calls.map(([args]) => args.pageId)).toEqual(['form', 'other']);
+});
+
+test('runJourneyHeadless refuses an answer stub on a connection type the app does not have, before the data set loads', async () => {
+  mockResolveJourneyDataSet.mockResolvedValue({ dataSet: { name: 'stubs' }, user: 'finance' });
+  const result = await runJourneyHeadless({
+    origin,
+    data: 'stubs',
+    steps: [{ call: { endpoint: 'price_run' } }],
+    stubs: [{ connectionType: 'Knex', requestType: 'KnexRaw', answer: [] }],
+    readConfigFile,
+  });
+  expect(result).toEqual({
+    error:
+      'Journey "stubs[0]": Connection type "Knex" is not used by this app. Its connection types are "AxiosHttp".',
+    refused: true,
+  });
+  expect(mockOpenDataSession).not.toHaveBeenCalled();
+  expect(mockRunHeadlessJourney).not.toHaveBeenCalled();
 });

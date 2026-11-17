@@ -17,8 +17,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { buildPagePath, serializer } from '@lowdefy/helpers';
-import { addJourneyStubs } from '@lowdefy/test-utils/dataSets';
+import { buildPagePath, serializer, type } from '@lowdefy/helpers';
+import { addJourneyStubs, checkJourneyStubTargets } from '@lowdefy/test-utils/dataSets';
 import { headlessCalls } from '@lowdefy/test-utils/headless';
 
 import createErrorSink from './createErrorSink.js';
@@ -31,17 +31,22 @@ const NOT_FOUND_PATH = '404';
 // opened: a session is opened on data set `data` (or none), so requests and endpoint calls run in
 // process on a fresh copy of it on the run's data store. `user` is who the page is opened as by
 // default: a user of the data set by name, a user object, or "none". `stubs` are the journey's
-// own (answer stubs and fail gates), set on the session before any call. The app is opened once and
+// own (answer stubs and fail gates), set on the session before any call; an answer stub on a
+// connection or request type the app does not have is refused (checkJourneyStubTargets). The app is opened once and
 // serves every journey of a run (openTestApp checks the build and takes the app's secrets out of
 // the environment); the host's close() ends only its session, and the app's close() ends the app.
 async function createBuildHost({ app, data, stubs, user }) {
   const session = await app.openSession({ data });
   const calls = headlessCalls(session);
-  addJourneyStubs({ session: calls.dataSession, stubs });
   let rootConfig;
-  // The caller closes only a host it got back, so a session whose root config is refused (an
-  // unknown user) is closed here.
+  // The caller closes only a host it got back, so a session whose stubs or root config are
+  // refused (an unknown user) is closed here.
   try {
+    const stubsError = checkJourneyStubTargets({ connections: calls.connections, stubs });
+    if (!type.isUndefined(stubsError)) {
+      throw new Error(stubsError);
+    }
+    addJourneyStubs({ session: calls.dataSession, stubs });
     rootConfig = await calls.readRootConfig({ user });
   } catch (error) {
     await calls.close();

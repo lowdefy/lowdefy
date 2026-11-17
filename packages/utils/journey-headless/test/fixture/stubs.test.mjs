@@ -76,6 +76,19 @@ test('the stubs journey answers the rate service, and its forced failures read a
   });
 });
 
+test('an answer stub on a request type the app does not have is refused when the host opens', async () => {
+  await expect(
+    createBuildHost({
+      app,
+      data: 'stubs',
+      stubs: [{ connectionType: 'AxiosHttp', requestType: 'AxiosPost', answer: { rate: 1.5 } }],
+      user: 'finance',
+    })
+  ).rejects.toThrow(
+    'Journey "stubs[0]": Request type "AxiosPost" is not a request of connection type "AxiosHttp".'
+  );
+});
+
 test('a fail gate that never fired fails the journey at its last step, naming the gate', async () => {
   const steps = [
     { call: { endpoint: 'price_run', payload: { id: 'BR-1', currency: 'EUR' } } },

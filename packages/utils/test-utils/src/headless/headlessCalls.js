@@ -32,7 +32,8 @@ import testSessions from '../testSessions.js';
 // database, as the browser runner reads them (findSessionDocuments).
 // `user` takes the forms session.as() takes. buildDirectory is where the client plugins the build
 // wrote are imported from; dataSetName is the session's data set (null when it was opened with
-// none) and userNames are its users. dataSession is the data session the calls run on, which holds
+// none) and userNames are its users. connections is the app's connection plugin map, which a
+// journey's answer stubs are checked against (checkJourneyStubTargets). dataSession is the data session the calls run on, which holds
 // its stubs, gates and sunk requests (@lowdefy/test-utils/dataSets). close() ends this session
 // alone, as the app's close() ends each of its sessions, so one test app can serve many journeys,
 // each on a fresh session.
@@ -43,6 +44,7 @@ function headlessCalls(session) {
   }
   return {
     buildDirectory: testSession.testApp.directories.build,
+    connections: testSession.runtime.connections,
     dataSetName: testSession.named ? testSession.dataSet.name : null,
     dataSession: testSession.dataSession.session,
     call: ({ body, endpointId, kind, pageId, requestId, user }) =>
