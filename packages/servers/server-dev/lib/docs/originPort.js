@@ -17,7 +17,7 @@
 const DEFAULT_PORTS = { 'http:': '80', 'https:': '443' };
 
 // The port a URL reaches, which is its scheme's default when it names none.
-function originPort(url) {
+function originPort({ url }) {
   return url.port === '' ? DEFAULT_PORTS[url.protocol] : url.port;
 }
 

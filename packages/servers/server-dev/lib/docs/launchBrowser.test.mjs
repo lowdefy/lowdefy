@@ -27,9 +27,12 @@ vi.doMock('./installHeadlessShell.js', () => ({ default: mockInstall }));
 vi.doMock('./isHeadlessShellIncomplete.js', () => ({ default: mockIsIncomplete }));
 
 const { default: launchBrowser } = await import('./launchBrowser.js');
+const { default: proxyLaunchArgs } = await import('./proxyLaunchArgs.js');
 
 const origin = 'http://localhost:3001';
 const rules = '--host-resolver-rules=MAP *:3001 ~NOTFOUND, EXCLUDE localhost';
+// Whatever proxy this machine's environment names: proxyLaunchArgs.test.mjs pins the switches.
+const proxy = proxyLaunchArgs({ origin, env: process.env });
 
 const shellMissing = new Error(
   "browserType.launch: Executable doesn't exist at /cache/chromium_headless_shell-1217/chrome-headless-shell"
@@ -45,13 +48,13 @@ afterEach(() => {
   mockIsIncomplete.mockResolvedValue(false);
 });
 
-test('launchBrowser launches the headless shell, with host resolver rules for its origin, and never system Chrome when the shell is installed', async () => {
+test('launchBrowser launches the headless shell, with host resolver rules and proxy switches for its origin, and never system Chrome when the shell is installed', async () => {
   const shell = { name: 'shell' };
   mockLaunch.mockResolvedValue(shell);
 
   expect(await launchBrowser({ origin })).toBe(shell);
   expect(mockLaunch).toHaveBeenCalledTimes(1);
-  expect(mockLaunch.mock.calls[0][0]).toEqual({ args: [rules] });
+  expect(mockLaunch.mock.calls[0][0]).toEqual({ args: [rules, ...proxy] });
   expect(mockInstall).not.toHaveBeenCalled();
 });
 
@@ -65,10 +68,12 @@ test('launchBrowser tags the browser with the tag the manager gave this child', 
 
   await launchBrowser({ origin });
 
-  expect(mockLaunch.mock.calls[0][0]).toEqual({ args: ['--lowdefy-browser-tag=tag-1', rules] });
+  expect(mockLaunch.mock.calls[0][0]).toEqual({
+    args: ['--lowdefy-browser-tag=tag-1', rules, ...proxy],
+  });
   expect(mockLaunch.mock.calls[1][0]).toEqual({
     channel: 'chrome',
-    args: ['--lowdefy-browser-tag=tag-1', rules],
+    args: ['--lowdefy-browser-tag=tag-1', rules, ...proxy],
   });
 });
 

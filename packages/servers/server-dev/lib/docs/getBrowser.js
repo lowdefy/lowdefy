@@ -17,50 +17,18 @@
 import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
 import lowdefyConfig from '../build/config.js';
-import createBrowserLifecycle from './createBrowserLifecycle.js';
 import isPageReady from './isPageReady.js';
-import launchBrowser from './launchBrowser.js';
-import originPort from './originPort.js';
+import launchedBrowsers from './launchedBrowsers.js';
+import lifecycleForOrigin from './lifecycleForOrigin.js';
+import originGuard from './originGuard.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
 import watchJourneyOrigin from './watchJourneyOrigin.js';
 
-// One browser per origin host and port, shared by every headless caller on
-// that origin (screenshots, journeys, state inspection, operator evaluation,
-// state loads) and closed after 45 s unused. See createBrowserLifecycle.js.
-// Each is launched with host resolver rules for its origin, which is why an
-// origin gets its own: the rules are fixed for the browser's life.
-const lifecycles = new Map();
-// Each launched browser's { guard, lifecycle }: the origin host and port its
-// rules guard, and the lifecycle that counts its contexts.
-const launched = new WeakMap();
-
-// What the host resolver rules depend on, so http and https on one host and
-// port share a browser and any other difference does not.
-function guardOf({ origin }) {
-  const url = new URL(origin);
-  return `${url.hostname}:${originPort(url)}`;
-}
-
-function lifecycleFor({ origin }) {
-  const guard = guardOf({ origin });
-  if (!lifecycles.has(guard)) {
-    const lifecycle = createBrowserLifecycle({
-      launch: async () => {
-        const browser = await launchBrowser({ origin });
-        launched.set(browser, { guard, lifecycle });
-        return browser;
-      },
-      idleTimeout: 45_000,
-    });
-    lifecycles.set(guard, lifecycle);
-  }
-  return lifecycles.get(guard);
-}
-
+// See lifecycleForOrigin.js: one browser per origin host and port.
 async function getBrowser({ origin }) {
-  return lifecycleFor({ origin }).getBrowser();
+  return lifecycleForOrigin({ origin }).getBrowser();
 }
 
 // `origin` should already include any configured basePath prefix that the
@@ -117,11 +85,11 @@ async function openPage({
   // A data set journey's only protection against reading the real database
   // under another host is its browser's host resolver rules, so a browser
   // launched for another origin is refused before any context exists.
-  const launchedAs = launched.get(browser);
+  const launchedAs = launchedBrowsers.get(browser);
   if (type.isUndefined(launchedAs)) {
     throw new Error('openPage takes a browser from getBrowser({ origin }).');
   }
-  if (!type.isUndefined(dataCookie) && launchedAs.guard !== guardOf({ origin })) {
+  if (!type.isUndefined(dataCookie) && launchedAs.guard !== originGuard({ origin })) {
     throw new Error(
       `A data set journey on ${origin} must open in the browser getBrowser({ origin }) gives for that origin.`
     );

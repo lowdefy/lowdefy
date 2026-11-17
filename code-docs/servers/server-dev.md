@@ -587,9 +587,11 @@ re-optimisation the child triggers mid-session keeps its memory until the next r
 `installHeadlessShell.js`). Screenshots, journeys, headless inspection and expression evaluation
 share one browser per origin host and port in each child; callers on one URL get one browser:
 
-- `getBrowser({ origin })` keeps a `createBrowserLifecycle` per origin host and port, because
-  each browser is launched with `--host-resolver-rules` for its origin (`hostResolverRules.js`,
-  the journey origin guard in `architecture/journeys.md`). A second origin, such as
+- `getBrowser({ origin })` keeps a `createBrowserLifecycle` per origin host and port
+  (`lifecycleForOrigin.js`, keyed by `originGuard.js`), because each browser is launched with
+  `--host-resolver-rules` (`hostResolverRules.js`) and explicit proxy switches
+  (`proxyLaunchArgs.js`) for its origin: the journey origin guard in `architecture/journeys.md`.
+  The browsers use a proxy only when the environment names one. A second origin, such as
   `127.0.0.1` beside `localhost`, launches a second browser: about 140 MB more resident memory
   on macOS while both are open. `openPage` takes only a browser `getBrowser` launched, counts
   the context on that browser's lifecycle, and refuses a data cookie in a browser launched for

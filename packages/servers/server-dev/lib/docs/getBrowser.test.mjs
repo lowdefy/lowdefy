@@ -41,6 +41,7 @@ process.chdir(fixtureDir);
 
 const { getBrowser, openPage, buildPageUrl } = await import('./getBrowser.js');
 const { default: isPageReady } = await import('./isPageReady.js');
+const { default: proxyLaunchArgs } = await import('./proxyLaunchArgs.js');
 const { default: getClientAddress } = await import('../server/getClientAddress.js');
 const { default: readRecordingCookie } = await import('../server/recording/readRecordingCookie.js');
 
@@ -472,15 +473,16 @@ test('openPage sets no data cookie without a dataCookie', async () => {
   expect(names).not.toContain('lowdefy_journey_data');
 });
 
-test('getBrowser launches each origin its own browser with host resolver rules for that origin', async () => {
+test('getBrowser launches each origin its own browser with host resolver rules and proxy switches for that origin', async () => {
   mockLaunch.mockClear();
   await launchFor('http://localhost:4002');
   const reused = await getBrowser({ origin: 'http://localhost:4002' });
   await launchFor('http://127.0.0.1:4002');
   expect(reused).toBe(guardedBrowsers.at(-2));
+  const proxy = proxyLaunchArgs({ origin: 'http://localhost:4002', env: process.env });
   expect(mockLaunch.mock.calls.map(([{ args }]) => args)).toEqual([
-    ['--host-resolver-rules=MAP *:4002 ~NOTFOUND, EXCLUDE localhost'],
-    ['--host-resolver-rules=MAP *:4002 ~NOTFOUND, EXCLUDE 127.0.0.1'],
+    ['--host-resolver-rules=MAP *:4002 ~NOTFOUND, EXCLUDE localhost', ...proxy],
+    ['--host-resolver-rules=MAP *:4002 ~NOTFOUND, EXCLUDE 127.0.0.1', ...proxy],
   ]);
 });
 

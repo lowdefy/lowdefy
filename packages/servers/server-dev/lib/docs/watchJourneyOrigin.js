@@ -24,10 +24,10 @@ import originPort from './originPort.js';
 // context's HTTP cache off. Requests to other ports and other sites are untouched.
 function watchJourneyOrigin({ context, origin, onLeave }) {
   const originUrl = new URL(origin);
-  const port = originPort(originUrl);
+  const port = originPort({ url: originUrl });
   context.on('request', (request) => {
     const url = new URL(request.url());
-    if (originPort(url) === port && url.hostname !== originUrl.hostname) {
+    if (originPort({ url }) === port && url.hostname !== originUrl.hostname) {
       onLeave(request.url());
     }
   });

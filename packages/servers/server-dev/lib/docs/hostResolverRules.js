@@ -25,7 +25,7 @@ import originPort from './originPort.js';
 function hostResolverRules({ origin }) {
   const url = new URL(origin);
   const host = url.hostname.replace(/^\[(.*)\]$/, '$1');
-  return `MAP *:${originPort(url)} ~NOTFOUND, EXCLUDE ${host}`;
+  return `MAP *:${originPort({ url })} ~NOTFOUND, EXCLUDE ${host}`;
 }
 
 export default hostResolverRules;

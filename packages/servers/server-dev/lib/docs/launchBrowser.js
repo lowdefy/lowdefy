@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import hostResolverRules from './hostResolverRules.js';
 import installHeadlessShell from './installHeadlessShell.js';
 import isHeadlessShellIncomplete from './isHeadlessShellIncomplete.js';
+import proxyLaunchArgs from './proxyLaunchArgs.js';
 import registerShownTextEngine from './registerShownTextEngine.js';
 
 // The manager tags every browser this child launches, so it can kill one
@@ -55,11 +56,17 @@ async function isShellMissing(error) {
 // load it at boot. The journey runner's selector engine is registered first,
 // so every page of the browser can resolve a `containing` target. The browser
 // serves one origin, and its host resolver rules keep it off the dev server
-// under any other host (hostResolverRules.js).
+// under any other host (hostResolverRules.js); its proxy switches send every
+// request to that port direct, so no proxy can carry one past the rules
+// (proxyLaunchArgs.js).
 async function launchBrowser({ origin }) {
   const { chromium, selectors } = await import('playwright-core');
   await registerShownTextEngine(selectors);
-  const args = [...launchArgs(), `--host-resolver-rules=${hostResolverRules({ origin })}`];
+  const args = [
+    ...launchArgs(),
+    `--host-resolver-rules=${hostResolverRules({ origin })}`,
+    ...proxyLaunchArgs({ origin, env: process.env }),
+  ];
   try {
     return await chromium.launch({ args });
   } catch (shellError) {
