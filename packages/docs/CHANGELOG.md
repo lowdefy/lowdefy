@@ -1,5 +1,65 @@
 # Change Log
 
+## 7.4.0
+
+### Minor Changes
+
+- 3069706: feat(connection-axios-http): AxiosHttp refuses internal addresses by default
+
+  **Breaking:** an `AxiosHttp` request to an address that is not public now fails: localhost, private networks (`10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`), link-local addresses such as the cloud metadata endpoint `169.254.169.254`, and the like. A hostname is checked by the address it resolves to, and every redirect is checked too. An app that calls a service on the same machine or network, such as a localhost API, a Docker service name or a private network API, sets `allowInternalAddresses: true` on the connection:
+
+  ```yaml
+  connections:
+    - id: internal_api
+      type: AxiosHttp
+      properties:
+        baseURL: http://orders-service:8080
+        allowInternalAddresses: true
+  ```
+
+  Request properties can be filled from the client payload, so a request with `url: { _payload: url }` could make the server call any address it can reach. The check stops that reaching internal services.
+
+  Also:
+
+  - `allowedHosts` on the connection lists the hostnames requests may connect to. A request to any other host, or a redirect to one, is refused. It applies alongside the address check.
+  - `allowInternalAddresses`, `allowedHosts`, `allowAbsoluteUrls`, `proxy`, `socketPath`, `httpVersion`, `httpAgentOptions` and `httpsAgentOptions` can only be set on the connection. A request that sets one fails schema validation.
+  - Without `allowInternalAddresses`, the server connects directly: `HTTP_PROXY` and `HTTPS_PROXY` are ignored, and `proxy`, `socketPath` and `httpVersion: 2` fail, since the address check cannot see where they connect.
+  - `adapter`, `transport`, `lookup`, `beforeRedirect`, `httpAgent` and `httpsAgent` are not supported on a connection or request.
+
+### Patch Changes
+
+- bd56850: fix(api): Dynamic blocks policies check object keys and slot names the same way as values
+
+  A block can draw an object key as well as a value: the keys of a `Descriptions` `items` object are its labels, and `Tabs` and `Collapse` draw slot names as titles. A dynamic blocks policy now applies the `html` rule and its URL checks to every object key and every slot or area name in the content, as it does to a string no block schema marks. Keys in data, such as a `SetState` value under the policy's `state` path, are not checked, since data is never drawn.
+
+  - @lowdefy/helpers@7.4.0
+
+## 7.3.0
+
+### Minor Changes
+
+- 023cb67: feat: A websocket can name a `check` endpoint that decides, on every subscribe and publish, whether the caller may use the channel. Use it for a channel whose payload names a record, such as the events on one ticket, where roles alone can not say whether this subscriber may see that record.
+
+  ```yaml
+  websockets:
+    - id: ticket_events
+      type: MongoDBChangeStream
+      connectionId: events
+      check:
+        endpointId: can-view-ticket # Api or InternalApi
+        payload: # optional; defaults to the subscription payload
+          ticket_id:
+            _payload: ticket_id
+  ```
+
+  The endpoint runs as the subscriber, after the `auth.websockets` role check. Only a return value of exactly `true` lets the subscription continue; any other value, an error or an endpoint the subscriber may not call refuses it with the same response as a websocket that does not exist, and an error is also logged. The check runs on the first subscribe, the resubscribe after a reconnect and a `Subscribe` with a new payload, and again once a minute while a subscription stays open, so revoking access ends a running subscription within a minute. A publish is checked too, with an empty payload, so a caller the check refuses can not publish into the channel. The check is not part of the channel identity, so subscribers who each pass still share one running source. The build fails when `check.endpointId` names no endpoint in the app.
+
+  fix: The server now deserializes a subscribe payload, as it already did a publish payload, so a Date the page sends reaches websocket `properties` and the check endpoint as a Date.
+
+### Patch Changes
+
+- @lowdefy/helpers@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

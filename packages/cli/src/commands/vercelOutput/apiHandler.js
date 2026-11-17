@@ -72,8 +72,13 @@ const { default: serializeErrorForLog } = await import(
 const { default: scrubSecrets } = await import('../lib/server/scrubSecrets.js');
 // Vercel's edge sets x-real-ip to the client address on every request, replacing any value the
 // client sent, so the app takes the address from it instead of the connection (which is Vercel's
-// own proxy).
-const app = createApp({ serveStaticAssets: false, clientAddressHeader: 'x-real-ip' });
+// own proxy). Vercel stops the function at its maxDuration without closing its websockets, so the
+// app closes each one shortly before then and the browser reconnects at once.
+const app = createApp({
+  serveStaticAssets: false,
+  clientAddressHeader: 'x-real-ip',
+  closeWebSocketsBeforeMaxDuration: true,
+});
 
 export const config = { runtime: 'nodejs' };
 

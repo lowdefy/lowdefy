@@ -565,7 +565,7 @@ test('a backgroundTint cross-fades to a new colour', async () => {
   // The fade runs on fake timers. React Native's Jest preset ends a native-driver animation 16ms
   // after it starts, so on real timers a slow runner can remove the old tint before the test
   // sees both.
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   try {
     await act(async () => {
       fireEvent.press(screen.getByText('Next'));
@@ -577,12 +577,12 @@ test('a backgroundTint cross-fades to a new colour', async () => {
     // Once the fade ends, the old tint is gone. A sync act does not apply the update the fade's
     // end makes; an async one does.
     await act(async () => {
-      jest.advanceTimersByTime(400);
+      vi.advanceTimersByTime(400);
     });
     expect(screen.queryByTestId('screen_tint_0')).toBeNull();
     expect(screen.getByTestId('screen_tint_1')).toBeTruthy();
   } finally {
-    jest.useRealTimers();
+    vi.useRealTimers();
   }
 });
 

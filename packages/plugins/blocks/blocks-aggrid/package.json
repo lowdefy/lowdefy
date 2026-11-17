@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/blocks-aggrid",
-  "version": "7.2.0",
+  "version": "7.4.0",
   "license": "Apache-2.0",
   "description": "AgGrid Blocks for Lowdefy.",
   "homepage": "https://lowdefy.com",
@@ -55,9 +55,9 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@lowdefy/block-utils": "7.2.0",
-    "@lowdefy/blocks-antd": "7.2.0",
-    "@lowdefy/helpers": "7.2.0",
+    "@lowdefy/block-utils": "7.4.0",
+    "@lowdefy/blocks-antd": "7.4.0",
+    "@lowdefy/helpers": "7.4.0",
     "ag-grid-community": "36.3.0",
     "ag-grid-react": "36.3.0"
   },
@@ -68,9 +68,9 @@
     "react-dom": "^19"
   },
   "devDependencies": {
-    "@lowdefy/ajv": "7.2.0",
-    "@lowdefy/block-dev-e2e": "7.2.0",
-    "@lowdefy/e2e-utils": "7.2.0",
+    "@lowdefy/ajv": "7.4.0",
+    "@lowdefy/block-dev-e2e": "7.4.0",
+    "@lowdefy/e2e-utils": "7.4.0",
     "@playwright/test": "1.65.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",

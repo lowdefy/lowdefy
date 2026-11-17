@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/email-templates",
-  "version": "7.2.0",
+  "version": "7.4.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
@@ -22,8 +22,8 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@lowdefy/helpers": "7.2.0",
-    "@lowdefy/nunjucks": "7.2.0",
+    "@lowdefy/helpers": "7.4.0",
+    "@lowdefy/nunjucks": "7.4.0",
     "@react-email/render": "2.3.1",
     "markdown-it": "15.0.3"
   },

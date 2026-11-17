@@ -362,7 +362,7 @@ See `code-docs/architecture/error-tracing.md` for the complete error system.
 - Test files: `{name}.test.js` co-located with source, run by vitest. Import `test`, `expect`, `vi` and the hooks from `'vitest'`: there are no globals
 - **Do not create tests for blocks** (currently disabled)
 - **NEVER run `pnpm vitest` or `npx vitest` directly** — always use `pnpm test`
-- **CI does not test pull requests by default** — run the tests your change needs before you push (`code-docs/testing.md`, "Before pushing") and list them in the PR body. The `ci` label runs the fast affected-only job on a PR, `ci-full` the complete matrix with the MongoDB, journey fixture and block e2e suites; pushes to `main` always run the complete path.
+- **CI does not test pull requests by default** — run the tests your change needs before you push (`code-docs/testing.md`, "Before pushing") and list them in the PR body. A builder whose branch another agent merges does not push: it runs only the test files for what it changed (`pnpm --filter=<package> test <file>`), once its change is complete, not after each edit, and the merging agent runs `pnpm build` and the package suites once, after the last merge. The `ci` label runs the fast affected-only job on a PR, `ci-full` the complete matrix with the MongoDB, journey fixture and block e2e suites; pushes to `main` always run the complete path.
 
 ### Running Tests
 

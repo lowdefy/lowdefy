@@ -21,7 +21,6 @@ import createBrowserLifecycle from './createBrowserLifecycle.js';
 import guardJourneyOrigin from './guardJourneyOrigin.js';
 import isPageReady from './isPageReady.js';
 import launchBrowser from './launchBrowser.js';
-import { HEADLESS_USER_COOKIE } from '../server/auth/headlessUser.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
@@ -98,19 +97,20 @@ async function openPage({
       await onContext(context);
     }
     // Inject an authenticated user so auth-protected pages don't 404 for the
-    // cookieless headless context. Mirrors the e2e user-cookie pattern; scoped to
-    // `origin` so it rides along on the same-origin /api/* fetches. A user the
+    // cookieless headless context. Signed with the dev server's token like the
+    // other journey cookies, so no other client can name a user this way; scoped
+    // to `origin` so it rides along on the same-origin /api/* fetches. A user the
     // caller named is explicit: it beats a dev mock user (createLowdefyContext),
     // while the roleless default does not, so a screenshot under a mock user
     // still sees what the developer sees.
     if (injectedUser !== null) {
       const caller = { user: injectedUser, explicit: !type.isNone(user) };
       await context.addCookies([
-        {
-          name: HEADLESS_USER_COOKIE,
-          value: Buffer.from(JSON.stringify(caller)).toString('base64'),
-          url: origin,
-        },
+        writeJourneyCookie({
+          name: JOURNEY_COOKIES.headlessUser.name,
+          payload: Buffer.from(JSON.stringify(caller)).toString('base64'),
+          origin,
+        }),
       ]);
     }
     // clientAddress is the address the context's requests come from, as far

@@ -19,6 +19,7 @@ import { getPossibleOperators, isNestedDeeperThan, MAX_DATA_DEPTH } from '@lowde
 
 import getPropertiesSchemaErrors from '../getPropertiesSchemaErrors.js';
 import checkEvents from './checkEvents.js';
+import checkKey from './checkKey.js';
 import checkValue from './checkValue.js';
 import collectSchemaKinds from './collectSchemaKinds.js';
 import findDataRows from './findDataRows.js';
@@ -172,6 +173,13 @@ function checkBlock({ block, path, depth, walk }) {
   if (!type.isUndefined(block.skeleton)) {
     checkBlock({ block: block.skeleton, path: `${path}.skeleton`, depth: depth + 1, walk });
   }
+  // Tabs and Collapse draw a slot name as its title when no tabs or panels are given.
+  ['areas', 'slots'].forEach((containerKey) => {
+    Object.keys(block[containerKey] ?? {}).forEach((name) => {
+      if (name.startsWith('~')) return;
+      checkKey({ key: name, path: `${path}.${containerKey}.${name}`, walk });
+    });
+  });
   childBlockLists(block).forEach((list) => {
     checkBlockList({ blocks: list.blocks, path: `${path}.${list.path}`, depth: depth + 1, walk });
   });

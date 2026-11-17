@@ -50,7 +50,7 @@ config:
     memory: 2048 # MB — omit to use the Vercel default
 ```
 
-- **`maxDuration`** — the hard cap on function execution time, in seconds. Defaults to `60`. Your plan's limits apply; Vercel rejects an over-limit value at deploy time.
+- **`maxDuration`** — the hard cap on function execution time, in seconds. Defaults to `60`. Your plan's limits apply; Vercel rejects an over-limit value at deploy time. It also bounds each websocket connection: the server closes it 5 seconds before the limit and the client reconnects.
 - **`memory`** — function memory in MB. Omit to use the Vercel default.
 
 Each build writes these into the generated `.vercel/output/functions/api.func/.vc-config.json`. The output is regenerated on every deploy, so there is nothing to edit by hand — and because the deployment is prebuilt (Build Output API), `functions` settings in `vercel.json` or the dashboard's function defaults do not apply; `lowdefy.yaml` is the single source of truth.
@@ -119,8 +119,10 @@ Vercel Fluid bills by execution duration, so a request that hangs (a stuck datab
 
 Keep `config.requestTimeout` below `maxDuration`: when it is not, Vercel stops the function before the request timeout answers, so the upstream calls the request left running are not cancelled and the request ends without a logged timeout. The build warns when `config.requestTimeout` is not shorter than `maxDuration` (or than the 60-second default, when it runs on Vercel).
 
+Give each agent a `timeout` below `maxDuration`, on the agent or on its connection. A chat turn is exempt from `config.requestTimeout` and runs on after its client disconnects, so without one only `maxDuration` stops it: the stream then ends without an error and the agent's `onFinish` hooks, which save the conversation, never run. The build warns for an agent with no timeout, or with one not shorter than `maxDuration`.
+
 On Vercel, only the request timeout cancels an AI model call a request is waiting on. A client that disconnects does not: the call runs until it finishes, reaches its own `timeout`, or hits the request timeout. On the Node server a disconnect cancels it too.
 
-> The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded only by `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better. An agent run keeps running to the end when its client disconnects, so its work completes; a `GET` stream (such as an SSE feed) stops when its client goes, instead of holding the function until `maxDuration`. The MCP endpoint answers `GET` with 405, so an MCP client holds no stream open.
+> The function runs on Vercel's Node.js runtime. Streaming agent responses (`/api/agent/*`) are exempt from `config.requestTimeout` and are bounded by the agent's own `timeout` and `maxDuration` — for heavy streaming or agent workloads, a long-lived Node host (Docker, Fly.io, Railway, Render) may suit better. An agent run keeps running to the end when its client disconnects, so its work completes; a `GET` stream (such as an SSE feed) stops when its client goes, instead of holding the function until `maxDuration`. The MCP endpoint answers `GET` with 405, so an MCP client holds no stream open.
 
 All other Vercel configuration like domain names, preview deploy branches, serverless regions and redirects can be configured as desired.

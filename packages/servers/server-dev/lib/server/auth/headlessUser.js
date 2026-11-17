@@ -14,10 +14,9 @@
   limitations under the License.
 */
 
-// Shared between the headless renderer (getBrowser.js, which sets the cookie on
-// its browser context) and the dev caller resolver (getHeadlessUser.js, which
-// decodes it) so the cookie name and injected user shape live in one place.
-const HEADLESS_USER_COOKIE = 'lowdefy_headless_user';
+// The roleless user a headless browser context acts as when its caller names
+// none (resolveHeadlessUser.js). The cookie that carries it is
+// JOURNEY_COOKIES.headlessUser.
 
 // BetterAuth's session user carries `id`, never `sub`. attributes is floored to
 // {} by normalizeInjectedCaller at injection, so it is not spelled out here.
@@ -27,4 +26,4 @@ const headlessUser = {
   roles: [],
 };
 
-export { HEADLESS_USER_COOKIE, headlessUser };
+export { headlessUser };
