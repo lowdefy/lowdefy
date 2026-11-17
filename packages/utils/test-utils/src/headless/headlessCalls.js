@@ -18,6 +18,7 @@ import callFromPage from '../callFromPage.js';
 import callSystemEndpoint from '../callSystemEndpoint.js';
 import callWebhook from '../callWebhook.js';
 import checkSessionOpen from '../checkSessionOpen.js';
+import closeSession from '../closeSession.js';
 import findSessionDocuments from '../dataSets/findSessionDocuments.js';
 import readPageAs from '../readPageAs.js';
 import readRootConfigAs from '../readRootConfigAs.js';
@@ -32,7 +33,9 @@ import testSessions from '../testSessions.js';
 // `user` takes the forms session.as() takes. buildDirectory is where the client plugins the build
 // wrote are imported from; dataSetName is the session's data set (null when it was opened with
 // none) and userNames are its users. dataSession is the data session the calls run on, which holds
-// its stubs, gates and sunk requests (@lowdefy/test-utils/dataSets).
+// its stubs, gates and sunk requests (@lowdefy/test-utils/dataSets). close() ends this session
+// alone, as the app's close() ends each of its sessions, so one test app can serve many journeys,
+// each on a fresh session.
 function headlessCalls(session) {
   const testSession = testSessions.get(session);
   if (testSession === undefined) {
@@ -74,6 +77,10 @@ function headlessCalls(session) {
     system: ({ endpointId, payload }) => callSystemEndpoint({ endpointId, payload, testSession }),
     webhook: ({ endpointId, headers, query, rawBody }) =>
       callWebhook({ endpointId, headers, query, rawBody, testSession }),
+    close: async () => {
+      testSession.testApp.sessions.delete(testSession);
+      await closeSession({ testSession });
+    },
     readRootConfig: ({ user }) =>
       readRootConfigAs({ testSession, user: resolveSessionUser({ testSession, user }) }),
     resolveUser: (user) => resolveSessionUser({ testSession, user }),

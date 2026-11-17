@@ -17,8 +17,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { afterEach, expect, test } from 'vitest';
+import { afterAll, afterEach, beforeAll, expect, test } from 'vitest';
 import YAML from 'yaml';
+
+import { openTestApp } from '@lowdefy/test-utils';
 
 import createBuildHost from '../../src/createBuildHost.js';
 import runHeadlessJourney from '../../src/runHeadlessJourney.js';
@@ -26,7 +28,7 @@ import journeyFixture from './journeyFixture.mjs';
 
 // hold and release over a production build of apps/journey-fixture: two approve_run calls race
 // for one run of data set "races", the first parked before claim_run. Each journey runs on a host
-// of its own, so on a fresh session of the data set.
+// of its own on the file's one app, so on a fresh session of the data set.
 
 const [raceJourney] = YAML.parse(
   fs.readFileSync(
@@ -35,10 +37,19 @@ const [raceJourney] = YAML.parse(
   )
 );
 
+let app;
 let host;
 
+beforeAll(async () => {
+  app = await openTestApp(journeyFixture);
+});
+
+afterAll(async () => {
+  await app?.close();
+});
+
 async function run({ data = 'races', steps, user = 'finance' }) {
-  host = await createBuildHost({ ...journeyFixture, data, user });
+  host = await createBuildHost({ app, data, user });
   return runHeadlessJourney({ host, journey: { steps }, stepTimeout: 2000 });
 }
 
@@ -124,7 +135,7 @@ test('an expect step reads nothing from a parked call', async () => {
 });
 
 test('a click whose request reaches a gate fails the step, pointing to the doubleSubmit variant', async () => {
-  host = await createBuildHost({ ...journeyFixture, data: 'harden', user: 'member' });
+  host = await createBuildHost({ app, data: 'harden', user: 'member' });
   const result = await runHeadlessJourney({
     host,
     journey: {

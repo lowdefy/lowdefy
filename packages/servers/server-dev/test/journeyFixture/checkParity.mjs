@@ -20,6 +20,7 @@ import path from 'node:path';
 import { createBuildHost, runHeadlessJourney } from '@lowdefy/journey-headless';
 import { classifyJourney } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
+import { openTestApp } from '@lowdefy/test-utils';
 import { expect } from 'vitest';
 
 import isDeepEqual from '../../lib/docs/isDeepEqual.js';
@@ -129,17 +130,20 @@ async function checkParity({ body, browser }) {
     record({ ...entry, kind: 'browser-only', reason: classification.reason });
     return;
   }
-  const host = await createBuildHost({
+  const app = await openTestApp({
     configDirectory: process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY,
-    data: body.data,
     serverDirectory,
-    user: body.user,
   });
   let headless;
   try {
-    headless = await runHeadlessJourney({ host, journey, stepTimeout: body.timeout ?? 5000 });
+    const host = await createBuildHost({ app, data: body.data, user: body.user });
+    try {
+      headless = await runHeadlessJourney({ host, journey, stepTimeout: body.timeout ?? 5000 });
+    } finally {
+      await host.close();
+    }
   } finally {
-    await host.close();
+    await app.close();
   }
   if (!type.isUndefined(headless.browserOnly)) {
     record({ ...entry, kind: 'browser-only at run time', reason: headless.browserOnly.reason });
