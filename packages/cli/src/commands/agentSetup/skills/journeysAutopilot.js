@@ -105,7 +105,7 @@ items:
   - id: orders.admin.open     # <pageId>.<role>.<short path name>
     page: orders
     role: admin               # a data set user name
-    kind: view                # view | refusal | write | edge
+    kind: view                # view | write | edge
     value: high               # high | medium | low
     state: covered            # todo | covered | quarantined | finding | skipped
     journey: tests/journeys/orders/admin-opens-orders.yaml
@@ -197,18 +197,16 @@ as Blocked.
    \`MongoDBCollection\` connection the pages' requests read, with fields taken from the requests'
    filters, pipelines and the blocks that show them. Fixtures are made-up, recognisable values
    (\`Autopilot Widget Alpha\`), at least two rows wherever order or filtering matters, a second tenant when the
-   app has tenants (for refusal journeys), and dates written as explicit values. Read
+   app has tenants, and dates written as explicit values. Read
    [journey data sets](/journey-data-sets) for the file format; \`generate:\` adds volume.
 4. Map the app: \`lowdefy journeys scope --config-directory <app> --json\` lists every page with its roles; read each
    page's requests, endpoints and event chains (\`lowdefy_get_page_config\`, \`lowdefy_app_map\`,
-   \`lowdefy_find_config\`). Write one \`todo\` item for each page and role that can open it, one
-   \`refusal\` item for each role that cannot, and one \`write\` item for each control that writes data
+   \`lowdefy_find_config\`). Write one \`todo\` item for each page and role that can open it, and one \`write\` item for each control that writes data
    (a request or endpoint that inserts, updates or deletes). A \`write\` item is one journey: the
-   role uses the control and the journey asserts what it stored (see Where each check lives). When
-   the app keeps an access table
-   snapshot (see Where each check lives), it already proves which role opens which page: write
-   \`refusal\` items only for what it cannot show, which is a control hidden from a role, another
-   tenant's rows, and one page whose redirect a browser must see. A signed-out visitor is not a data set
+   role uses the control and the journey asserts what it stored (see Where each check lives). Which
+   role reaches which page is checked by \`tests/access.yaml\` (see Where each check lives), so
+   write no item for a role that cannot open a page. A control hidden from a role is a page item for
+   that role. Another tenant's rows stay items, proved by the tenant variants (step 7). A signed-out visitor is not a data set
    user: its items (a protected page's bounce, a public page opened signed out) are \`skipped\` with
    the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set is refused
    while auth is configured, because signing in would write to the real auth database).
@@ -230,8 +228,7 @@ as Blocked.
 Read the ledger. If the open journeys pull request holds about 20 journeys, take no items: it is
 at its cap (step 8): only re-check quarantines (the last part of step 7, which may return a
 journey to the suite), nothing else, then ship. Otherwise take up to 8
-\`todo\` items, in this order: **refusals and permissions** (a role that must not reach a page or
-control, and the other tenant's rows, proved between signed-in data set users); **writes** (create, edit, status
+\`todo\` items, in this order: **writes** (create, edit, status
 changes, deletes by the app); the **views** people use most (home, lists, the pages the menu leads to);
 then **edge cases** (empty state, bad input, a reload mid-flow). Within a tier, take the page
 that is the most-used first: the \`value: high\` items. When no \`todo\` items remain, go to step 6
@@ -253,8 +250,6 @@ Follow the format in [config tests](/config-tests): \`name\` (at most 100 charac
   (\`count: 0\` for a delete), with the fields and status it set in \`match\`. Target the control by
   \`blockId\`, so the journey needs no browser. Add an \`expect.text\` of the result only when what
   the page shows is the point.
-- A refusal asserts the landing page (\`expect.url\`) or \`expect.hidden\`
-  paired with a presence check that proves the page loaded.
 - After a click whose chain moves to another page (a \`Link\`), wait on a request of the page it
   lands on: the page you left is gone, so its requests are not found.
 - Address blocks by \`blockId\`, wait on \`{ request }\` or \`{ state }\`, and prefer \`urlQuery\` /
@@ -298,7 +293,7 @@ For each finding, decide:
   tests/journeys/<area>/\`, so the pull request shows the journey turning green and leaves one copy.
   Before pushing, run \`lowdefy test --config-directory <app> --repeat 3 <file>\`, then the whole suite once
   (\`lowdefy test --config-directory <app>\`: a fix can break a journey that asserted the old behaviour). Where the
-  app has endpoint tests, run them once too, and name a changed access table snapshot in the pull request. Open a pull
+  app has endpoint tests, run them once too, and name each changed cell of \`tests/access.yaml\` in the pull request. Open a pull
   request titled \`fix: ...\` that says what broke, where, and which journey proves it (with no \`gh\`, push the branch and put
   that title and body in the cycle report), then \`git switch journeys-autopilot/main\`. The item stays \`finding\`, with the fix pull request url (with no \`gh\`, the
   fix branch) in \`note\`, until that pull request merges; then set it \`covered\` with the journey's new path.
@@ -318,7 +313,7 @@ passes as the skill describes (granted roles join the original journey's \`user\
 become their own journeys; a failing variant is a finding). A developer's journey is never edited,
 whatever the variant file's comment says: its granted role becomes a journey of its own instead.
 Variants run on the journey's own data set, so a journey whose data set has no user in another
-organization gets no tenant variant; a tenant refusal on your data set covers that. Add each as a ledger item. A variant that proves only what a
+organization gets no tenant variant. Add each as a ledger item. A variant that proves only what a
 covered journey already proves (same page, user and outcome) adds nothing: discard its candidate
 file, which never joined the suite, and name it in the report, so \`_candidates/\` is left empty.
 A survivor whose config is dead is a finding about the app. If the app already has production

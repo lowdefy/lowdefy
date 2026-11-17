@@ -18,6 +18,7 @@ import path from 'path';
 import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
 
 import collapsePersonas from './collapsePersonas.js';
+import formatDevServerAccessNote from './access/formatDevServerAccessNote.js';
 import fetchBuildId from './fetchBuildId.js';
 import formatBrowserOnly from './formatBrowserOnly.js';
 import formatNoTestsMatched from './formatNoTestsMatched.js';
@@ -30,9 +31,11 @@ import parseRepeat from './parseRepeat.js';
 import parseTestSelection from './parseTestSelection.js';
 import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
+import readAccessMode from './readAccessMode.js';
 import readHeadlessMode from './readHeadlessMode.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
+import runAccessStep from './access/runAccessStep.js';
 import runHeadlessTests from './runHeadlessTests.js';
 import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
@@ -54,7 +57,29 @@ function refuse({ context, message }) {
   process.exitCode = 1;
 }
 
+// `lowdefy test --access` and `--update-access`: the access step alone, on the production build.
+async function testAccessAlone({ context, updateAccess }) {
+  const step = await runAccessStep({ context, mode: updateAccess ? 'update' : 'access' });
+  if (!type.isUndefined(step.refused)) {
+    refuse({ context, message: step.refused });
+    return;
+  }
+  if (step.failed) {
+    process.exitCode = 1;
+  }
+  context.sendTelemetry();
+}
+
 async function test({ context }) {
+  const { access, updateAccess, error: accessError } = readAccessMode({ options: context.options });
+  if (accessError) {
+    refuse({ context, message: accessError });
+    return;
+  }
+  if (access || updateAccess) {
+    await testAccessAlone({ context, updateAccess });
+    return;
+  }
   const { repeat, error: repeatError } = parseRepeat(context.options.repeat);
   if (repeatError) {
     refuse({ context, message: repeatError });
@@ -90,6 +115,28 @@ async function test({ context }) {
     }
     paths = resolved.files;
   }
+
+  // The access step runs on every run that reads the production build, before journeys are
+  // selected, so an app with no journeys is checked too, and it checks the whole table whatever
+  // the run selects. A difference fails the run, and the journeys still run.
+  const lint = context.options.lint === true;
+  if (headless && build && !lint) {
+    const step = await runAccessStep({ context, mode: 'check' });
+    if (!type.isUndefined(step.refused)) {
+      refuse({ context, message: step.refused });
+      return;
+    }
+    if (step.failed) {
+      process.exitCode = 1;
+    }
+  }
+  if (!build && !lint) {
+    const note = formatDevServerAccessNote({ configDirectory: context.directories.config });
+    if (!type.isUndefined(note)) {
+      context.logger.info(note);
+    }
+  }
+
   const selected = selectTests({ context, filter: filters, tags, paths });
 
   if (selected.length === 0) {
@@ -109,7 +156,7 @@ async function test({ context }) {
     return;
   }
 
-  if (context.options.lint === true) {
+  if (lint) {
     // Lints read a journey, not a run of it: a journey with a list of users
     // is linted once.
     const linted = await lintJourneys({
@@ -148,10 +195,6 @@ async function test({ context }) {
       skipped: tiered.skipped.length,
       repeat,
     });
-    if (!type.isUndefined(ran.refused)) {
-      refuse({ context, message: ran.refused });
-      return;
-    }
     if (ran.failed > 0) {
       process.exitCode = 1;
     }

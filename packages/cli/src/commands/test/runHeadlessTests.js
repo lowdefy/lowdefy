@@ -29,34 +29,13 @@ const headlessSuite = {
   format: formatJourneyResult,
 };
 
-// The build every journey of the run reads is checked once, before any journey runs: a missing
-// build, one of another Lowdefy version and one older than the config fail the whole run with
-// @lowdefy/test-utils' message, which names the command to run.
-async function checkBuild({ context }) {
-  const { openTestApp } = await import('@lowdefy/test-utils');
-  try {
-    const app = await openTestApp({
-      configDirectory: context.directories.config,
-      serverDirectory: context.directories.server,
-    });
-    await app.close();
-    return undefined;
-  } catch (error) {
-    return error.message;
-  }
-}
-
 // `lowdefy test --headless --build`: runs the selected journeys that need no browser on the app's
 // production build, in this process, with no dev server and no browser, so it takes no browser
 // or journey run slot. Each journey gets a fresh session of its data set on the run's one data
 // store. Journeys that need a browser are listed as browser-only, with the first step that does,
-// and are neither passed nor failed. Returns { refused } when the build cannot be read, or
-// { failed } once the run is reported.
+// and are neither passed nor failed. The run's access step (runAccessStep) has checked the build
+// once before this runs. Returns { failed } once the run is reported.
 async function runHeadlessTests({ context, selected, skipped, repeat }) {
-  const buildError = await checkBuild({ context });
-  if (!type.isUndefined(buildError)) {
-    return { refused: buildError };
-  }
   const results = [];
   const browserOnly = [];
   const seen = new Set();

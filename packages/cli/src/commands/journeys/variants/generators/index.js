@@ -19,7 +19,6 @@ import empty from './empty.js';
 import interrupt from './interrupt.js';
 import negative from './negative.js';
 import roleGranted from './roleGranted.js';
-import roleRefused from './roleRefused.js';
 import tenant from './tenant.js';
 import tenantCalls from './tenantCalls.js';
 import volume from './volume.js';
@@ -30,7 +29,7 @@ import volume from './volume.js';
 const KINDS = ['role', 'tenant', 'empty', 'volume', 'negative', 'interrupt', 'double-submit'];
 
 const generators = {
-  role: [roleGranted, roleRefused],
+  role: [roleGranted],
   tenant: [tenant, tenantCalls],
   empty: [empty],
   volume: [volume],

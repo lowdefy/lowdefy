@@ -27,16 +27,18 @@ Each check has one home, so it is never written twice:
   browser: \`lowdefy test --headless --build\` runs it on a build. A write journey ends with
   \`expect: { db }\` on what was stored; add \`expect.text\` only when what the page shows is the
   point.
-- What a page would never send (another tenant's ids, wrong types, a refused role): a journey with
+- What a page would never send (another tenant's ids, wrong types): a journey with
   no \`pageId\` and \`call\` or \`request\` steps.
 - While you edit, call the request or endpoint with \`lowdefy_run_request\` or
   \`lowdefy_run_endpoint\`, passing \`user\` and \`data\`.
 - Table-driven cases, computed expected values, fixtures built in code, stubbed services, race tests
   and cron or internal routines: an endpoint test (\`tests/endpoints/\`), never a journey per case.
   "Testing a change" in AGENTS.md has the command.
-- Where the app keeps an access table snapshot (an endpoint test that calls \`accessMatrix\`), it is
-  the check of who can reach which page and endpoint: write no journey per role and page for it.
-  Say in the pull request when that snapshot changed, and why.`;
+- Who can reach which page and endpoint: \`tests/access.yaml\` is the check, so write no journey per
+  role and page for it. After a change to auth, roles or the set of pages or endpoints, run
+  \`lowdefy build --no-client-build && lowdefy test --access\` once. Update the file with
+  \`lowdefy test --update-access\` when the changed cells are the ones meant, and say in the pull
+  request which cells changed and why.`;
 }
 
 export default testLevel;

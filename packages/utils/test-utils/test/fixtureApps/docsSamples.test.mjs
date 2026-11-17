@@ -30,7 +30,7 @@ import fixtureApps, { repositoryRoot } from './fixtureApps.mjs';
 // - A `js` sample that calls openTestApp is a whole test file, and its first line is a comment
 //   with its path. Every other `js` sample belongs to the file before it.
 // - A `yaml` sample starts with a comment naming a file of apps/journey-fixture, and matches it.
-// - The `json` sample holds the script an app runs, and the `bash` sample the snapshot command.
+// - The `json` sample holds the script an app runs.
 
 const execFileAsync = promisify(execFile);
 
@@ -101,7 +101,9 @@ async function runNode({ args, configDirectory }) {
     const { stdout } = await execFileAsync(process.execPath, args, { cwd: configDirectory });
     return stdout;
   } catch (error) {
-    throw new Error(`node ${args.join(' ')} failed.\n${error.stdout}\n${error.stderr}`);
+    throw new Error(`node ${args.join(' ')} failed.\n${error.stdout}\n${error.stderr}`, {
+      cause: error,
+    });
   }
 }
 
@@ -134,15 +136,6 @@ test('every js sample on the endpoint tests page passes under the script the pag
     fs.writeFileSync(target, code);
   });
 
-  // The snapshot of the access table is written once, by the command the page gives.
-  const [snapshotCommand] = samples.filter(({ language }) => language === 'bash');
-  const snapshotArgs = readNodeArguments(snapshotCommand.code);
-  const snapshotPath = path.join(configDirectory, `${snapshotArgs.at(-1)}.snapshot`);
-  await runNode({ args: snapshotArgs, configDirectory });
-  const snapshot = fs.readFileSync(snapshotPath, 'utf8');
-  expect(snapshot).toContain('"auditor_only"');
-  expect(snapshot).toContain('"member": "deny"');
-
   // The script without its build step: the global setup has built the app.
   const [scripts] = samples.filter(({ language }) => language === 'json');
   const script = JSON.parse(scripts.code).scripts['test:endpoints'];
@@ -155,10 +148,8 @@ test('every js sample on the endpoint tests page passes under the script the pag
   const testCount = testFiles
     .map(({ code }) => code.match(/^test\(/gm).length)
     .reduce((sum, count) => sum + count, 0);
-  expect(testFiles.length).toEqual(2);
+  expect(testFiles.length).toEqual(1);
   expect(testCount).toBeGreaterThan(8);
   expect(output).toMatch(new RegExp(`pass ${testCount}\\b`));
   expect(output).toMatch(/fail 0\b/);
-  // The second run compared the table with the snapshot and left it as written.
-  expect(fs.readFileSync(snapshotPath, 'utf8')).toEqual(snapshot);
 });

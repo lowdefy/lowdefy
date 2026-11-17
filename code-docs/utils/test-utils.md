@@ -4,7 +4,8 @@ Runs a built Lowdefy app's authorization gate, API endpoints and page requests i
 and holds the data session code journeys run on.
 
 **Source:** `packages/utils/test-utils/`
-**User docs:** `packages/docs/testing/endpoint-tests.md`
+**User docs:** `packages/docs/testing/endpoint-tests.md`; the access table's are
+`packages/docs/testing/access-table.md`
 **How to run its tests:** [testing.md](../testing.md#endpoint-test-harness)
 
 ## Purpose
@@ -14,12 +15,12 @@ built endpoints and requests as a named user, on an in-memory MongoDB, and read 
 It gives a test level below journeys, for logic, permissions and writes, which need no browser.
 [testing.md](../testing.md#test-levels) says which level proves what.
 
-| Export       | Holds                                                                                                   | Used by                          |
-| ------------ | ------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| `.`          | `openTestApp`: the access table and endpoint test sessions                                              | an app's tests                   |
-| `./assert`   | `assertEquals`, `assertMatches` and matchers, with no imports beyond Node                               | an app's tests, under any runner |
-| `./dataSets` | the data store, data sessions, the `tests/data` loaders and the gate connections pass under a session   | `@lowdefy/server-dev` (journeys) |
-| `./headless` | `headlessCalls(session)`: a page's reads and calls on a session, as the page route and client send them | `@lowdefy/journey-headless`      |
+| Export       | Holds                                                                                                   | Used by                                                          |
+| ------------ | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `.`          | `openTestApp`: endpoint test sessions, and `accessMatrix`, the access table                             | an app's tests; `accessMatrix` only `lowdefy test`'s access step |
+| `./assert`   | `assertEquals`, `assertMatches` and matchers, with no imports beyond Node                               | an app's tests, under any runner                                 |
+| `./dataSets` | the data store, data sessions, the `tests/data` loaders and the gate connections pass under a session   | `@lowdefy/server-dev` (journeys)                                 |
+| `./headless` | `headlessCalls(session)`: a page's reads and calls on a session, as the page route and client send them | `@lowdefy/journey-headless`                                      |
 
 ## Decisions it is built on
 
@@ -68,7 +69,13 @@ so an app opened only for the access table does not pay for them.
 
 ## The access table
 
-`app.accessMatrix({ data })` (`src/accessMatrix.js`) needs no session, database or plugin map:
+`app.accessMatrix({ data })` (`src/accessMatrix.js`) has one caller: the access step of
+`lowdefy test` (`packages/cli/src/commands/test/access/`), which compares it with an app's committed
+`tests/access.yaml` and writes that file with `--update-access`. The comparison, the diff lines, the
+file and the first `roles` data set live in the CLI; this package exports nothing for them. The user
+docs do not show the method, so apps meet only the file, never a snapshot of the table in a test.
+
+It needs no session, database or plugin map:
 
 - Users come from the data set with `parseDataSet` (`@lowdefy/node-utils`), plus a signed out
   caller, `none`.
@@ -79,7 +86,8 @@ so an app opened only for the access table does not pay for them.
 - `getEndpointOutcome` answers `deny` for an `InternalApi` endpoint without asking the gate.
   `callEndpoint` refuses one before the gate, and most are built `auth.public: true`, so the
   gate's answer would read `allow`.
-- Keys are sorted (`sortByKey`), so the table is the same on every run and fits a snapshot.
+- Keys are sorted (`sortByKey`), so the table is the same on every run and `tests/access.yaml`
+  changes by one line for each changed row.
 
 An outcome is `allow`, `deny` or `enrol_required`. A data set user gets `enrol_required` only when
 it carries `two_factor_enrolled: false`.

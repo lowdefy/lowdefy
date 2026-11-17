@@ -668,6 +668,18 @@ program
     '[paths...]',
     'Journey files, directories or quoted globs (e.g. "tests/journeys/review/**") to run instead of the whole suite, anywhere under the config directory (tests/journeys/_candidates included).'
   )
+  .addOption(
+    new Option(
+      '--access',
+      'Only compare the access table of the production build (lowdefy build) with tests/access.yaml, and run no journeys. Every --headless --build run checks it too.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--update-access',
+      'Rewrite tests/access.yaml from the production build and run nothing else. With no file, also writes the tests/data/roles.yaml data set it is checked as, when missing.'
+    )
+  )
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
@@ -736,7 +748,18 @@ program
     )
   )
   .action((paths, commandOptions, command) =>
-    runCommand({ cliVersion, handler: test })({ ...commandOptions, paths }, command)
+    runCommand({ cliVersion, handler: test })(
+      {
+        ...commandOptions,
+        paths,
+        // The options typed on the command line, apart from those the environment set:
+        // --access refuses a typed --port, not a PORT in the shell.
+        typedOptions: Object.keys(commandOptions).filter(
+          (name) => command.getOptionValueSource(name) === 'cli'
+        ),
+      },
+      command
+    )
   );
 
 program
