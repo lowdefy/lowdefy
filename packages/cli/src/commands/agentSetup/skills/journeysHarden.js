@@ -118,8 +118,9 @@ When the developer keeps a variant:
   \`user\` list (\`user: member\` becomes \`user: [member, admin]\`; the variant's first comment
   names the list), and the variant file then goes, so the steps stay in one place. A journey with
   a list of users runs once as each, reported as \`<name> [<user>]\`.
-- Every other variant, a **role, refused** one included (it expects a different outcome: \`/404\`
-  or the feature hidden), moves into \`tests/journeys/\` as a journey of its own.
+- Every other variant moves into \`tests/journeys/\` as a journey of its own. No variant is
+  written for a role that is refused a page or endpoint: \`tests/access.yaml\` checks who reaches
+  what.
 
 ## 6. Evidence
 
