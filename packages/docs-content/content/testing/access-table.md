@@ -138,4 +138,4 @@ Do not test who can reach which page and endpoint any other way: no snapshot of 
 
 If your app keeps an endpoint test that snapshots `accessMatrix`, delete the test and its `.snapshot` file, and run `lowdefy build --no-client-build && lowdefy test --update-access` to write the table in its place.
 
-To test what a role does once it is in, such as a write it may or may not make, use a [journey](/config-tests) or an [endpoint test](/endpoint-tests#permissions).
+To test what a role does once it is in, such as a write it may or may not make, use a [journey](/config-tests), page-less for an endpoint ([calls, requests and the database](/config-tests#calls-requests-and-the-database)).
