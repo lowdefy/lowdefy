@@ -26,7 +26,8 @@ import {
   validateUIMessages,
 } from 'ai';
 
-import { serializer } from '@lowdefy/helpers';
+import { UserError } from '@lowdefy/errors';
+import { serializer, translate } from '@lowdefy/helpers';
 
 import agentErrorForLog, { agentLogIds, stackFramesForLog } from './agentErrorForLog.js';
 import buildChatTitlePrompt from './buildChatTitlePrompt.js';
@@ -84,6 +85,13 @@ function getMessageText(message) {
     .join('\n');
 }
 
+// Why the AI SDK aborted a turn, from the abort signal's reason. Every limit in the agent's
+// `timeout` (totalMs, stepMs, chunkMs, a number) aborts with a DOMException named TimeoutError;
+// any other abort is the caller's signal, the client going away.
+function abortReasonOf(signalReason) {
+  return signalReason?.name === 'TimeoutError' ? 'timeout' : 'client';
+}
+
 // A reply that ends on a tool call waiting for the user's approval, or for the client to run
 // it, is not finished: the next request continues the same assistant message.
 function isWaitingOnClient(message) {
@@ -91,6 +99,13 @@ function isWaitingOnClient(message) {
     (part) => part.state === 'approval-requested' || part.state === 'input-available'
   );
 }
+
+// The onFinish finishReason of an aborted turn: a timeout failed it, as the error the client is
+// shown says; the client going away is neither a finish nor a failure of the agent.
+const ABORTED_FINISH_REASONS = {
+  timeout: 'error',
+  client: 'other',
+};
 
 async function handleAgentChat({ connection, properties, context }) {
   // Headless run-to-completion mode (CallAgent routine step) — dispatched here
@@ -102,10 +117,16 @@ async function handleAgentChat({ connection, properties, context }) {
   const { agent, messages: rawMessages } = properties;
   const messages = dropEmptyMessages(convertDataUrlsToBase64(rawMessages));
 
+  // The abort signal's reason, when a timeout or the caller's signal stops the turn. The UI
+  // stream's abort chunk carries only its message, which can't tell the two apart.
+  let abortSignalReason;
   const { agentInstance, mcpClients, model, timeoutConfig, locale } = await createToolLoopAgent({
     connection,
     agent,
     context,
+    onAbort: ({ reason }) => {
+      abortSignalReason = reason;
+    },
   });
 
   const onFinishEndpointIds = agent.hooks?.onFinish;
@@ -136,6 +157,10 @@ async function handleAgentChat({ connection, properties, context }) {
       // hooks persist the complete conversation, not just the request input.
       let capturedMessages;
       let turnFailed = false;
+      // Set from the UI stream's onEnd. The AI SDK ends an aborted stream cleanly with an
+      // abort chunk, so the read loop below finishes without throwing.
+      let isAborted = false;
+      let abortReason;
 
       function collectStep(stepResult) {
         usageAccumulator.add(stepResult);
@@ -148,8 +173,9 @@ async function handleAgentChat({ connection, properties, context }) {
         });
       }
 
-      function captureMessages({ messages: finalMessages }) {
+      function captureMessages({ messages: finalMessages, isAborted: streamAborted }) {
         capturedMessages = finalMessages;
+        isAborted = streamAborted === true;
       }
 
       // The title is cosmetic: a failed title call is logged and the turn ends without one.
@@ -252,6 +278,23 @@ async function handleAgentChat({ connection, properties, context }) {
           if (value.type === 'error' || value.type === 'abort') turnFailed = true;
           writer.write(value);
         }
+        if (isAborted) {
+          abortReason = abortReasonOf(abortSignalReason);
+          // The client has no case for an abort chunk: without an error the reply stops
+          // mid-sentence and reads as complete. A client that went away is shown nothing.
+          if (abortReason === 'timeout') {
+            context.logger.error(
+              { ...logIds, stepCount: steps.length, error: agentErrorForLog(abortSignalReason) },
+              'Agent turn stopped by its timeout.'
+            );
+            writer.write({
+              type: 'error',
+              errorText: clientErrorText(
+                new UserError(translate({ key: 'agent.runtime.timedOut', i18n: context.i18n }))
+              ),
+            });
+          }
+        }
       } catch (error) {
         // The client only ever sees the redacted error text, so the fault is
         // logged server-side before it is written to the stream - its summary,
@@ -284,8 +327,13 @@ async function handleAgentChat({ connection, properties, context }) {
           messages: capturedMessages ?? messages,
           steps,
           toolResults: steps.flatMap((s) => s.toolResults ?? []),
-          finishReason: usageAccumulator.getFinishReason(),
-          isAborted: false,
+          // An aborted turn's last step reports the finish reason of the step before it, or
+          // 'stop'; a hook that saves answers must not read the cut-off reply as complete.
+          finishReason: isAborted
+            ? ABORTED_FINISH_REASONS[abortReason]
+            : usageAccumulator.getFinishReason(),
+          isAborted,
+          ...(isAborted ? { abortReason } : {}),
           ...(context.agentContext ?? {}),
           usage: usageAccumulator.usage,
           locale,

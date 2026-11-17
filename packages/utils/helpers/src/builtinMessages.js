@@ -48,6 +48,7 @@ const builtinMessages = {
   'agent.runtime.agentNotFound': 'Agent "{agentId}" does not exist.',
   'agent.runtime.agentTypeNotFound': 'Agent type "{type}" can not be found.',
   'agent.runtime.toolExecutionFailed': 'Endpoint execution failed',
+  'agent.runtime.timedOut': 'The answer took too long and was stopped. Try again.',
   'agent.runtime.subAgentDepthExceeded': 'Sub-agent nesting exceeds maximum depth of {max}.',
   'agent.runtime.reservedToolName':
     '{kind} "{name}" uses a reserved platform tool name. Rename it (e.g., to "{name}-app" or "custom-{name}"). Reserved: {reserved}.',

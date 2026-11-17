@@ -3140,3 +3140,57 @@ test.each([
     expect(writer.write).toHaveBeenCalledWith({ type: 'error', errorText: expected });
   }
 );
+
+// Chat runs pass no client signal to the AI SDK today, so only a timeout aborts one for real
+// (handleAgentChat.timeout.test.js). This drives the other branch: an abort whose reason is
+// not a TimeoutError is the caller's, and the client is shown nothing.
+test('a turn aborted for a reason other than a timeout writes no error and reports a client abort', async () => {
+  const { default: handleAgentChat } = await import('./handleAgentChat.js');
+  const callEndpoint = vi.fn().mockResolvedValue({ success: true, response: {} });
+  const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
+  const messages = [{ id: 'msg-1', role: 'user', parts: [{ type: 'text', text: 'hi' }] }];
+  const fragment = { id: 'a-1', role: 'assistant', parts: [{ type: 'text', text: 'The ans' }] };
+
+  mockCreateAgentUIStream.mockImplementationOnce(async (opts) => {
+    await lastAgentConfig.onAbort({
+      steps: [],
+      reason: new DOMException('This operation was aborted', 'AbortError'),
+    });
+    opts.onEnd({ messages: [...opts.uiMessages, fragment], isAborted: true });
+    return createMockReadableStream([
+      { type: 'text-delta', id: 't1', delta: 'The ans' },
+      { type: 'abort', reason: 'This operation was aborted' },
+    ]);
+  });
+
+  await handleAgentChat({
+    connection: { provider: vi.fn().mockReturnValue({}) },
+    properties: {
+      agent: {
+        tools: [],
+        hooks: { onFinish: ['save-conversation'] },
+        properties: { model: 'gpt-4o' },
+      },
+      messages,
+    },
+    context: {
+      logger,
+      callEndpoint,
+      getEndpointConfig: vi.fn(),
+      wireErrorMessage: () => 'Something went wrong.',
+    },
+  });
+  const writer = { write: vi.fn() };
+  await mockCreateUIMessageStream._lastExecute({ writer });
+
+  expect(writer.write).not.toHaveBeenCalledWith(expect.objectContaining({ type: 'error' }));
+  expect(logger.error).not.toHaveBeenCalled();
+  expect(callEndpoint).toHaveBeenCalledWith('save-conversation', {
+    payload: expect.objectContaining({
+      messages: [...messages, fragment],
+      isAborted: true,
+      abortReason: 'client',
+      finishReason: 'other',
+    }),
+  });
+});

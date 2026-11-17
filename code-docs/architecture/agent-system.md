@@ -317,10 +317,12 @@ Hook payloads are cleaned of non-serializable fields (`abortSignal`, functions, 
   - `messages` -- full UIMessage array
   - `steps` -- per-step records collected via the SDK's `onStepFinish` (each with `text`, `finishReason`, `usage`, `toolCalls`, `toolResults`)
   - `toolResults` -- flattened `steps.flatMap(s => s.toolResults)` convenience field
-  - `finishReason` -- overall finish reason from the usage accumulator
-  - `isAborted` -- currently always `false` here
+  - `finishReason` -- overall finish reason from the usage accumulator; `'error'` for a turn a timeout aborted, `'other'` for any other abort
+  - `isAborted` -- from the UI stream's `onEnd`. The AI SDK ends an aborted stream cleanly with an `abort` chunk, so the read loop does not throw
+  - `abortReason` -- only on an aborted turn: `'timeout'` when the abort signal's reason (from the SDK's `onAbort`, which `createToolLoopAgent` passes to the `ToolLoopAgent`) is a `TimeoutError`, which every `timeout` limit aborts with, else `'client'`. Chat runs pass no client signal, so today only `'timeout'` occurs
   - `usage` -- accumulated usage across all steps
   - `agentContext` fields spread in: `pageId`, `userId`, `conversationId`, `urlQuery`, `sharedState`
+- A turn its `timeout` aborted first gets an `error` chunk (the `agent.runtime.timedOut` message, a `UserError` through `clientErrorText`) and an error-level `Agent turn stopped by its timeout.` log with `agentLogIds` and the step count, since the client has no case for the `abort` chunk and would otherwise end the turn as `ready`
 - **Awaits** each endpoint call sequentially
 - If an endpoint returns `{ dataParts: [...] }`, each data part is written to the response stream
 - This enables patterns like title generation: the hook endpoint calls an LLM, returns `[{ type: 'data-chat-title', data: { title } }]`, and the client receives the title as a stream event
