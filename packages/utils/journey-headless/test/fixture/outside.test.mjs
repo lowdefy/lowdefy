@@ -17,8 +17,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { afterEach, expect, test } from 'vitest';
+import { afterAll, afterEach, beforeAll, expect, test } from 'vitest';
 import YAML from 'yaml';
+
+import { openTestApp } from '@lowdefy/test-utils';
 
 import createBuildHost from '../../src/createBuildHost.js';
 import runHeadlessJourney from '../../src/runHeadlessJourney.js';
@@ -27,8 +29,8 @@ import journeyFixture from './journeyFixture.mjs';
 // System calls and webhooks over a production build of apps/journey-fixture, on data set
 // "outside": close_runs is an InternalApi endpoint only a call as system reaches, and
 // payment_events a webhook whose verify gate checks an HMAC of the raw body under the stand-in
-// secret test-secret-FIXTURE_WEBHOOK_SECRET. Each journey runs on a host of its own, so on a fresh
-// session of the data set.
+// secret test-secret-FIXTURE_WEBHOOK_SECRET. Each journey runs on a host of its own on the file's
+// one app, so on a fresh session of the data set.
 
 function readJourney(name) {
   const [journey] = YAML.parse(
@@ -43,10 +45,19 @@ function readJourney(name) {
 const systemJourney = readJourney('system.yaml');
 const webhookJourney = readJourney('webhook.yaml');
 
+let app;
 let host;
 
+beforeAll(async () => {
+  app = await openTestApp(journeyFixture);
+});
+
+afterAll(async () => {
+  await app?.close();
+});
+
 async function run({ steps, user = 'operator' }) {
-  host = await createBuildHost({ ...journeyFixture, data: 'outside', user });
+  host = await createBuildHost({ app, data: 'outside', user });
   return runHeadlessJourney({ host, journey: { steps }, stepTimeout: 2000 });
 }
 

@@ -17,8 +17,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { expect, test } from 'vitest';
+import { afterAll, beforeAll, expect, test } from 'vitest';
 import YAML from 'yaml';
+
+import { openTestApp } from '@lowdefy/test-utils';
 
 import createBuildHost from '../../src/createBuildHost.js';
 import runHeadlessJourney from '../../src/runHeadlessJourney.js';
@@ -42,6 +44,16 @@ function readYamlSamples(section) {
 
 const samples = readYamlSamples(readSection({ heading: '### Calls, requests and the database' }));
 
+let app;
+
+beforeAll(async () => {
+  app = await openTestApp(journeyFixture);
+});
+
+afterAll(async () => {
+  await app?.close();
+});
+
 test('the calls, requests and database section shows two journeys', () => {
   expect(samples.map((sample) => sample.name)).toEqual([
     'a member is refused the auditor endpoint',
@@ -52,11 +64,7 @@ test('the calls, requests and database section shows two journeys', () => {
 test.each(samples.map((sample) => [sample.name, sample]))(
   'the docs sample "%s" passes headless on the fixture build',
   async (name, journey) => {
-    const host = await createBuildHost({
-      ...journeyFixture,
-      data: journey.data,
-      user: journey.user,
-    });
+    const host = await createBuildHost({ app, data: journey.data, user: journey.user });
     try {
       const result = await runHeadlessJourney({ host, journey });
       expect(result.failure).toBeUndefined();

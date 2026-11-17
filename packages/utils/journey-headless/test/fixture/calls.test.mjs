@@ -20,6 +20,8 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, expect, test } from 'vitest';
 
+import { openTestApp } from '@lowdefy/test-utils';
+
 import createBuildHost from '../../src/createBuildHost.js';
 import runHeadlessJourney from '../../src/runHeadlessJourney.js';
 import journeyFixture from './journeyFixture.mjs';
@@ -30,6 +32,8 @@ import journeyFixture from './journeyFixture.mjs';
 // writes, and its journey suites count its endpoints, so the app is left as it is.
 
 let directory;
+let gatedApp;
+let fixtureApp;
 let host;
 let pageHost;
 
@@ -65,12 +69,15 @@ function copyBuildWithGatedWrite() {
 }
 
 beforeAll(async () => {
-  host = await createBuildHost({ ...copyBuildWithGatedWrite(), data: 'roles', user: 'member' });
-  pageHost = await createBuildHost({ ...journeyFixture, data: 'harden', user: 'member' });
+  gatedApp = await openTestApp(copyBuildWithGatedWrite());
+  fixtureApp = await openTestApp(journeyFixture);
+  host = await createBuildHost({ app: gatedApp, data: 'roles', user: 'member' });
+  pageHost = await createBuildHost({ app: fixtureApp, data: 'harden', user: 'member' });
 });
 
 afterAll(async () => {
   await Promise.all([host?.close(), pageHost?.close()]);
+  await Promise.all([gatedApp?.close(), fixtureApp?.close()]);
   if (directory) fs.rmSync(directory, { recursive: true, force: true });
 });
 
