@@ -15,8 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { toWebhookBody } from '@lowdefy/node-utils';
 
 import callSystemEndpoint from './callSystemEndpoint.js';
+import callWebhook from './callWebhook.js';
 import createSessionCaller from './createSessionCaller.js';
 import failRequest from './failRequest.js';
 import getSessionCollection from './getSessionCollection.js';
@@ -91,6 +93,16 @@ async function openSession({ data, testApp }) {
     system: () => ({
       call: (endpointId, payload) => callSystemEndpoint({ endpointId, payload, testSession }),
     }),
+    // Posts to a webhook endpoint as its sender does: body is sent as raw text, a string as
+    // written and anything else as JSON, so a signature header computed over it verifies.
+    webhook: (endpointId, { body, headers, query } = {}) =>
+      callWebhook({
+        endpointId,
+        headers,
+        query,
+        rawBody: toWebhookBody(body),
+        testSession,
+      }),
   };
   testSessions.set(session, testSession);
   return session;

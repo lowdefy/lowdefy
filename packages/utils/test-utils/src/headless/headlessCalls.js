@@ -15,6 +15,8 @@
 */
 
 import callFromPage from '../callFromPage.js';
+import callSystemEndpoint from '../callSystemEndpoint.js';
+import callWebhook from '../callWebhook.js';
 import checkSessionOpen from '../checkSessionOpen.js';
 import findSessionDocuments from '../dataSets/findSessionDocuments.js';
 import readPageAs from '../readPageAs.js';
@@ -24,8 +26,9 @@ import testSessions from '../testSessions.js';
 
 // The calls a page shown without a browser makes on a session openSession opened
 // (@lowdefy/journey-headless): read the root config and a page as the route sends them, post a
-// request or an endpoint call as the page's client does, and find the documents an expect.db step
-// reads in the session's database, as the browser runner reads them (findSessionDocuments).
+// request or an endpoint call as the page's client does, run an endpoint as the system, post a
+// webhook as its sender does, and find the documents an expect.db step reads in the session's
+// database, as the browser runner reads them (findSessionDocuments).
 // `user` takes the forms session.as() takes. buildDirectory is where the client plugins the build
 // wrote are imported from; dataSetName is the session's data set (null when it was opened with
 // none) and userNames are its users. dataSession is the data session the calls run on, which holds
@@ -68,6 +71,9 @@ function headlessCalls(session) {
         urlQuery,
         user: resolveSessionUser({ testSession, user }),
       }),
+    system: ({ endpointId, payload }) => callSystemEndpoint({ endpointId, payload, testSession }),
+    webhook: ({ endpointId, headers, query, rawBody }) =>
+      callWebhook({ endpointId, headers, query, rawBody, testSession }),
     readRootConfig: ({ user }) =>
       readRootConfigAs({ testSession, user: resolveSessionUser({ testSession, user }) }),
     resolveUser: (user) => resolveSessionUser({ testSession, user }),
