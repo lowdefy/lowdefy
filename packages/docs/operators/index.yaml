@@ -474,6 +474,25 @@ _ref:
                 type: Html
                 properties:
                   html: '<code>_url_query</code>'
+          - id: card__url_hash
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__url_hash
+                  type: Link
+                  params:
+                    pageId: _url_hash
+            blocks:
+              - id: card__url_hash_label
+                type: Html
+                properties:
+                  html: '<code>_url_hash</code>'
           - id: card__index
             type: Card
             layout:

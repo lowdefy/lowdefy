@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import isSameOriginRequest from '../../context/isSameOriginRequest.js';
+
 // BetterAuth reads the client address (its rate-limit key, the session's
 // ipAddress, the captcha remote IP) only from request headers. The server
 // resolves the address itself - from the connection and the app's trusted
@@ -24,15 +26,122 @@ import { type } from '@lowdefy/helpers';
 // header carries only what the server resolved.
 const CLIENT_ADDRESS_HEADER = 'x-lowdefy-client-address';
 
+// The fields MagicLinkVerify posts: the token and the destinations BetterAuth
+// put on the verify URL it minted. Nothing else is carried onto the verify
+// query.
+const MAGIC_LINK_VERIFY_FIELDS = ['token', 'callbackURL', 'newUserCallbackURL', 'errorCallbackURL'];
+
+// A form of four short fields. Anything larger is not MagicLinkVerify.
+const MAX_MAGIC_LINK_FORM_LENGTH = 8192;
+
+function isMagicLinkVerifyPost({ auth, request }) {
+  return (
+    request.method === 'POST' &&
+    new URL(request.url).pathname === `${auth.options.basePath}/magic-link/verify`
+  );
+}
+
+// The magic-link landing page posts the token rather than navigating to
+// BetterAuth's GET verify URL, so the token never sits in a URL the server,
+// its host's request logs or a Referer header receive. The post becomes the
+// GET BetterAuth serves, built inside the server and handed to auth.handler as
+// a real Request, so BetterAuth's checks and Lowdefy's request hooks run as
+// on the GET path. BetterAuth checks no Origin on a GET, so the post's Origin
+// is checked here: a post from another site would sign the visitor in to the
+// account whose token that site holds. The origins accepted are the request's
+// own host, the pinned base URL and any trusted origins configured as strings
+// (the origins BetterAuth trusts), as for the mobile sign-in confirmation.
+// The first X-Forwarded-Host is accepted too, for a proxy that rewrites Host:
+// a form post from another site cannot set that header.
+//
+// Under Referrer-Policy: no-referrer a browser sends Origin: null on a
+// same-origin form post. BetterAuth accepts that when Sec-Fetch-Site, which
+// page script cannot set, says same-origin, and so does this check; without
+// Sec-Fetch-Site a null Origin is refused.
+function isMagicLinkPostAllowed({ auth, request }) {
+  const getHeader = (name) => request.headers.get(name);
+  if (getHeader('origin') === 'null') {
+    return getHeader('sec-fetch-site') === 'same-origin';
+  }
+  return isSameOriginRequest({
+    getHeader,
+    acceptForwardedHost: true,
+    publicOrigins: [
+      auth.options.baseURL,
+      ...(type.isArray(auth.options.trustedOrigins) ? auth.options.trustedOrigins : []),
+    ].filter((origin) => type.isString(origin)),
+  });
+}
+
+// Reads the body a chunk at a time and stops past the limit, so an oversized
+// post is refused without holding it in memory. Returns null when too large.
+async function readLimitedBody({ request, limit }) {
+  if (Number(request.headers.get('content-length')) > limit) {
+    return null;
+  }
+  if (type.isNone(request.body)) {
+    return '';
+  }
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder();
+  let body = '';
+  let length = 0;
+  let chunk = await reader.read();
+  while (!chunk.done) {
+    length += chunk.value.byteLength;
+    if (length > limit) {
+      await reader.cancel();
+      return null;
+    }
+    body += decoder.decode(chunk.value, { stream: true });
+    chunk = await reader.read();
+  }
+  return body + decoder.decode();
+}
+
+async function getMagicLinkVerifyRequest({ auth, request, headers }) {
+  const sameOrigin = isMagicLinkPostAllowed({ auth, request });
+  if (!sameOrigin) {
+    return { response: new Response('Forbidden.', { status: 403 }) };
+  }
+  const body = await readLimitedBody({ request, limit: MAX_MAGIC_LINK_FORM_LENGTH });
+  if (body === null) {
+    return { response: new Response('Request too large.', { status: 413 }) };
+  }
+  const form = new URLSearchParams(body);
+  const verifyUrl = new URL(request.url);
+  MAGIC_LINK_VERIFY_FIELDS.forEach((field) => {
+    if (form.has(field)) {
+      verifyUrl.searchParams.set(field, form.get(field));
+    }
+  });
+  headers.delete('content-type');
+  headers.delete('content-length');
+  return {
+    request: new Request(verifyUrl.href, {
+      method: 'GET',
+      headers,
+      signal: request.signal,
+    }),
+  };
+}
+
 // The new Request is built from the incoming one's parts rather than cloned
 // from it: @hono/node-server hands the app a lightweight stand-in for a
 // Request, which only its own copy's Request constructor accepts as input,
 // and the dev server loads two copies.
-function handleAuthRequest({ auth, request, clientAddress }) {
+async function handleAuthRequest({ auth, request, clientAddress }) {
   const headers = new Headers(request.headers);
   headers.delete(CLIENT_ADDRESS_HEADER);
   if (!type.isNone(clientAddress)) {
     headers.set(CLIENT_ADDRESS_HEADER, clientAddress);
+  }
+  if (isMagicLinkVerifyPost({ auth, request })) {
+    const verify = await getMagicLinkVerifyRequest({ auth, request, headers });
+    if (verify.response) {
+      return verify.response;
+    }
+    return auth.handler(verify.request);
   }
   const hasBody = request.method !== 'GET' && request.method !== 'HEAD';
   return auth.handler(

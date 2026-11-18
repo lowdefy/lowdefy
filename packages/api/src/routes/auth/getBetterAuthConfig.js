@@ -146,8 +146,10 @@ const MCP_OAUTH_SCOPES = ['mcp:read', 'mcp:write', 'offline_access'];
 //
 // Every query BetterAuth put on the verify URL - token, callbackURL, and the
 // newUserCallbackURL / errorCallbackURL it adds when the caller supplied them -
-// is copied onto the landing URL, because the action reads its defaults back out
-// of the page query. The origin comes from the verify URL rather than
+// is written into the landing URL's fragment, as a query string, because the
+// action reads its defaults back out of it. A browser never sends the fragment,
+// so the token stays out of every request log, firewall log and Referer header
+// on the way; MagicLinkVerify then posts it (handleAuthRequest). The origin comes from the verify URL rather than
 // baseUrlOrigin: on the zero-config path (no BETTER_AUTH_URL) baseUrlOrigin is
 // undefined while BetterAuth has already derived the request's origin here.
 function buildMagicLinkUrl({ authConfig, config, url }) {
@@ -157,9 +159,7 @@ function buildMagicLinkUrl({ authConfig, config, url }) {
   }
   const verifyUrl = new URL(url);
   const landingUrl = new URL(`${config.basePath ?? ''}${landingPage}`, verifyUrl.origin);
-  verifyUrl.searchParams.forEach((value, key) => {
-    landingUrl.searchParams.set(key, value);
-  });
+  landingUrl.hash = verifyUrl.searchParams.toString();
   return landingUrl.href;
 }
 

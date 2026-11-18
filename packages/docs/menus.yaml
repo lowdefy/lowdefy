@@ -1046,6 +1046,9 @@
             - id: _url_query
               type: MenuLink
               pageId: _url_query
+            - id: _url_hash
+              type: MenuLink
+              pageId: _url_hash
             - id: _path_params
               type: MenuLink
               pageId: _path_params

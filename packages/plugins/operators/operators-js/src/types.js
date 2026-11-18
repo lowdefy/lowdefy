@@ -72,6 +72,7 @@ export default {
       '_theme',
       '_type',
       '_uri',
+      '_url_hash',
       '_url_query',
       '_user',
       '_websocket',
