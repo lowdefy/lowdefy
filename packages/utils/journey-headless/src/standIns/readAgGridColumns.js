@@ -39,14 +39,37 @@ function readPinned(colDef) {
   return pinned === 'right' ? 'right' : 'center';
 }
 
-// A column in a group with columnGroupShow shows only while the group is open (`open`) or closed
-// (`closed`); a group starts open only with openByDefault.
-function isShownInGroup({ col, group }) {
-  if (type.isNone(group) || type.isNone(col.columnGroupShow)) {
+// Whether a column or group with columnGroupShow `show` shows in its group: only while the group
+// is open (`open`) or closed (`closed`). `expanded` is whether the group is open, or null when its
+// columnGroupShow rules do not apply (no group, or a group that is not expandable).
+function showsInGroup({ show, expanded }) {
+  if (expanded === null) {
     return true;
   }
-  const open = group.openByDefault === true;
-  return col.columnGroupShow === 'open' ? open : !open;
+  if (show === 'open') {
+    return expanded;
+  }
+  return show === 'closed' ? !expanded : true;
+}
+
+// AG Grid applies a group's columnGroupShow rules only when the group is expandable: its visible
+// children (a padding group counting as its children) include one shown only while the group is
+// open or closed, and something shows both while it is open and while it is closed
+// (walkForExpandFlags in ag-grid-community 36).
+function isExpandable(children) {
+  let open = false;
+  let closed = false;
+  let changeable = false;
+  children
+    .filter((child) => child.visible)
+    .forEach(({ show }) => {
+      if (show === 'open' || show === 'closed') {
+        changeable = true;
+      }
+      open = open || show !== 'closed';
+      closed = closed || show !== 'open';
+    });
+  return open && closed && changeable;
 }
 
 // AG Grid makes a group of any entry whose children is truthy (`if (childDefs)` in
@@ -179,23 +202,71 @@ function toColumnObjects({ defs, path, description }) {
   });
 }
 
-function collectLeaves({ defs, group, properties, ids, leaves }) {
-  defs.forEach((col) => {
+// The deepest level of columnDefs, as _buildColumnTree measures it: each group adds a level, an
+// empty one too.
+function measureDepth(defs, level) {
+  return defs.reduce(
+    (depth, col) => (isGroup(col) ? Math.max(depth, measureDepth(col.children, level + 1)) : depth),
+    level
+  );
+}
+
+// The column tree AG Grid builds, each entry { show, visible } with a group's open state and
+// children, or a leaf's column: show is its columnGroupShow, visible whether it or one of its
+// leaves is not hidden. A group's definition is merged over defaultColGroupDef, and a leaf's over
+// defaultColDef and its column types (its columnGroupShow too). A leaf above the deepest level
+// sits in padding groups, whose definition is defaultColGroupDef, so its columnGroupShow
+// (paddingShow) applies to the leaf as well.
+function buildTree({ defs, level, depth, ids, properties }) {
+  const defaultColGroupDef = type.isObject(properties.defaultColGroupDef)
+    ? properties.defaultColGroupDef
+    : {};
+  return defs.map((col) => {
     if (isGroup(col)) {
-      collectLeaves({ defs: col.children, group: col, properties, ids, leaves });
-      return;
+      const groupDef = { ...defaultColGroupDef, ...col };
+      const children = buildTree({ defs: col.children, level: level + 1, depth, ids, properties });
+      return {
+        show: groupDef.columnGroupShow,
+        open: Boolean(groupDef.openByDefault),
+        children,
+        visible: children.some((child) => child.visible),
+      };
     }
     const colDef = mergeColDef({
       col,
       columnTypes: properties.columnTypes,
       defaultColDef: properties.defaultColDef,
     });
-    leaves.push({
-      id: ids.get(col),
-      colDef,
-      hidden: (colDef.hide ?? colDef.initialHide) === true || !isShownInGroup({ col, group }),
-      pinned: readPinned(colDef),
-    });
+    const hidden = (colDef.hide ?? colDef.initialHide) === true;
+    return {
+      show: colDef.columnGroupShow,
+      paddingShow: level < depth ? defaultColGroupDef.columnGroupShow : undefined,
+      visible: !hidden,
+      leaf: { id: ids.get(col), colDef, hidden, pinned: readPinned(colDef) },
+    };
+  });
+}
+
+// Every leaf column, each hidden when its own hide says so or a group above it, at any level,
+// hides it in its starting state: a group starts open only with openByDefault. `expanded` is the
+// enclosing group's open state when its columnGroupShow rules apply, else null; `shown` is
+// whether every group above shows the entries.
+function collectLeaves({ nodes, expanded, shown, leaves }) {
+  nodes.forEach((node) => {
+    const shownHere =
+      shown &&
+      showsInGroup({ show: node.paddingShow, expanded }) &&
+      showsInGroup({ show: node.show, expanded });
+    if (!type.isUndefined(node.children)) {
+      collectLeaves({
+        nodes: node.children,
+        expanded: isExpandable(node.children) ? node.open : null,
+        shown: shownHere,
+        leaves,
+      });
+      return;
+    }
+    leaves.push({ ...node.leaf, hidden: node.leaf.hidden || !shownHere });
   });
   return leaves;
 }
@@ -211,7 +282,14 @@ function readAgGridColumns(properties, { description = 'The grid' } = {}) {
     description,
   });
   const ids = assignColumnIds(columnDefs);
-  const all = collectLeaves({ defs: columnDefs, properties, ids, leaves: [] });
+  const tree = buildTree({
+    defs: columnDefs,
+    level: 0,
+    depth: measureDepth(columnDefs, 0),
+    ids,
+    properties,
+  });
+  const all = collectLeaves({ nodes: tree, expanded: null, shown: true, leaves: [] });
   const shown = all
     .filter((column) => !column.hidden)
     .map((column, index) => ({ column, index }))

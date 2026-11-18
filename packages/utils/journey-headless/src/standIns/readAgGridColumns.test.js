@@ -143,3 +143,243 @@ test.each([
     );
   }
 );
+
+// Each case's shown columns are what ag-grid-community 36.3.0 displayed for the same properties
+// (getAllDisplayedColumns), read by running the grid in jsdom.
+test.each([
+  [
+    'a closed group shows its always and closed columns',
+    {
+      columnDefs: [
+        {
+          headerName: 'G',
+          children: [
+            { field: 'a' },
+            { field: 'b', columnGroupShow: 'open' },
+            { field: 'c', columnGroupShow: 'closed' },
+          ],
+        },
+      ],
+    },
+    ['a', 'c'],
+  ],
+  [
+    'an openByDefault group shows its always and open columns',
+    {
+      columnDefs: [
+        {
+          headerName: 'G',
+          openByDefault: true,
+          children: [
+            { field: 'a' },
+            { field: 'b', columnGroupShow: 'open' },
+            { field: 'c', columnGroupShow: 'closed' },
+          ],
+        },
+      ],
+    },
+    ['a', 'b'],
+  ],
+  [
+    'a group with nothing shown only while closed is not expandable, so its open columns show',
+    {
+      columnDefs: [
+        {
+          headerName: 'G',
+          children: [
+            { field: 'a', columnGroupShow: 'open' },
+            { field: 'b', columnGroupShow: 'open' },
+          ],
+        },
+      ],
+    },
+    ['a', 'b'],
+  ],
+  [
+    'an open-only group inside a closed group hides with its leaves',
+    {
+      columnDefs: [
+        {
+          headerName: 'P',
+          children: [
+            { field: 'a' },
+            {
+              headerName: 'C',
+              columnGroupShow: 'open',
+              openByDefault: true,
+              children: [{ field: 'x' }, { field: 'y' }],
+            },
+          ],
+        },
+      ],
+    },
+    ['a'],
+  ],
+  [
+    'a group inside an open group applies its own columnGroupShow to its leaves',
+    {
+      columnDefs: [
+        {
+          headerName: 'P',
+          openByDefault: true,
+          children: [
+            { field: 'a' },
+            {
+              headerName: 'C',
+              columnGroupShow: 'open',
+              children: [
+                { field: 'x' },
+                { field: 'y', columnGroupShow: 'open' },
+                { field: 'z', columnGroupShow: 'closed' },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    ['a', 'x', 'z'],
+  ],
+  [
+    'a closed-only group inside a closed group shows, by its own columnGroupShow',
+    {
+      columnDefs: [
+        {
+          headerName: 'P',
+          children: [
+            { field: 'a', columnGroupShow: 'open' },
+            {
+              headerName: 'C',
+              columnGroupShow: 'closed',
+              children: [
+                { field: 'x' },
+                { field: 'y', columnGroupShow: 'open' },
+                { field: 'z', columnGroupShow: 'closed' },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    ['x', 'z'],
+  ],
+  [
+    'a group three levels deep, each level by its own group',
+    {
+      columnDefs: [
+        {
+          headerName: 'A',
+          openByDefault: true,
+          children: [
+            { field: 'a0' },
+            {
+              headerName: 'B',
+              columnGroupShow: 'open',
+              children: [
+                { field: 'b0' },
+                {
+                  headerName: 'C',
+                  columnGroupShow: 'closed',
+                  openByDefault: true,
+                  children: [{ field: 'c0' }, { field: 'c1', columnGroupShow: 'closed' }],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    ['a0', 'b0', 'c0'],
+  ],
+  [
+    'a hidden column does not make its group expandable',
+    {
+      columnDefs: [
+        {
+          headerName: 'G',
+          children: [
+            { field: 'a', hide: true },
+            { field: 'b', columnGroupShow: 'open' },
+          ],
+        },
+      ],
+    },
+    ['b'],
+  ],
+  [
+    "a column above the deepest level takes its padding group's defaultColGroupDef columnGroupShow",
+    {
+      defaultColGroupDef: { columnGroupShow: 'open' },
+      columnDefs: [
+        {
+          headerName: 'P',
+          groupId: 'p',
+          columnGroupShow: 'always',
+          children: [
+            { field: 'a', columnGroupShow: 'closed' },
+            { field: 'b' },
+            { headerName: 'C', groupId: 'c', children: [{ field: 'x' }] },
+          ],
+        },
+      ],
+    },
+    [],
+  ],
+  [
+    'defaultColGroupDef openByDefault opens every group',
+    {
+      defaultColGroupDef: { openByDefault: true },
+      columnDefs: [
+        {
+          headerName: 'G',
+          children: [
+            { field: 'a' },
+            { field: 'b', columnGroupShow: 'open' },
+            { field: 'c', columnGroupShow: 'closed' },
+          ],
+        },
+      ],
+    },
+    ['a', 'b'],
+  ],
+  [
+    'defaultColDef columnGroupShow applies to every column',
+    {
+      defaultColDef: { columnGroupShow: 'closed' },
+      columnDefs: [
+        { headerName: 'G', children: [{ field: 'a', columnGroupShow: 'open' }, { field: 'b' }] },
+      ],
+    },
+    ['b'],
+  ],
+  [
+    'columnGroupShow outside a group does nothing',
+    {
+      columnDefs: [
+        { field: 'a', columnGroupShow: 'open' },
+        { field: 'b', columnGroupShow: 'closed' },
+      ],
+    },
+    ['a', 'b'],
+  ],
+  [
+    'a padded column hides when defaultColGroupDef columnGroupShow is closed and its group is open',
+    {
+      defaultColGroupDef: { columnGroupShow: 'closed' },
+      columnDefs: [
+        {
+          headerName: 'P',
+          openByDefault: true,
+          columnGroupShow: 'always',
+          children: [
+            { field: 'a', columnGroupShow: 'open' },
+            { field: 'b' },
+            { headerName: 'C', groupId: 'c', columnGroupShow: 'open', children: [{ field: 'x' }] },
+          ],
+        },
+      ],
+    },
+    ['x'],
+  ],
+])('AgGrid shown columns: %s', (_name, properties, ids) => {
+  expect(readAgGridColumns(properties).shown.map((column) => column.id)).toEqual(ids);
+});
