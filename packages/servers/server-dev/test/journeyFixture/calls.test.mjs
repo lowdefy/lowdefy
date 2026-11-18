@@ -85,6 +85,31 @@ fixtureTest('a call an allowed user makes writes, and expect.db sees the write',
   ]);
 });
 
+// A journey sent to the route takes literal values: a _ref inside a payload is data, posted to the
+// endpoint and written as sent, through the real route and runner.
+fixtureTest('a _ref inside a posted payload reaches the endpoint as written', async () => {
+  const result = await postJourney({
+    data: 'roles',
+    user: 'member',
+    steps: [
+      { call: { endpoint: 'log_activity', payload: { source: { _ref: 'x' } } } },
+      { expect: { status: 200 } },
+      {
+        expect: {
+          db: {
+            collection: 'items',
+            connectionId: 'fixture_db',
+            match: { kind: 'activity' },
+            equals: [{ kind: 'activity', source: { _ref: 'x' } }],
+          },
+        },
+      },
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
 fixtureTest(
   'expect.db fails at its step when the database does not hold what it expects',
   async () => {
