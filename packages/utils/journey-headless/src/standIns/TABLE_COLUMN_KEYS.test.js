@@ -58,3 +58,11 @@ test('every Table column kind loads enrichment or is one the stand-in models', (
   const kinds = COLUMN.kind.enum;
   expect(kinds.filter((kind) => !needsFeature({ key: 'a', kind }))).toEqual(['input', 'formula']);
 });
+
+test('no headless column key loads a feature by blocks-table rules, whatever its value', () => {
+  const values = [true, 1, 'enrichment', {}, [{}]];
+  const loading = TABLE_COLUMN_KEYS.headless.filter((name) =>
+    values.some((value) => needsFeature({ key: 'a', [name]: value }))
+  );
+  expect(loading).toEqual([]);
+});

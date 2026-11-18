@@ -346,10 +346,14 @@ test.each([
     {
       defaultColDef: { columnGroupShow: 'closed' },
       columnDefs: [
-        { headerName: 'G', children: [{ field: 'a', columnGroupShow: 'open' }, { field: 'b' }] },
+        {
+          headerName: 'G',
+          openByDefault: true,
+          children: [{ field: 'a', columnGroupShow: 'open' }, { field: 'b' }],
+        },
       ],
     },
-    ['b'],
+    ['a'],
   ],
   [
     'columnGroupShow outside a group does nothing',

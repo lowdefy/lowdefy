@@ -55,14 +55,11 @@ function isOn(value) {
 }
 
 // What makes the rows or columns a person sees differ from the data and columns, or keeps state
-// the stand-in does not model: a method called on the table (state.changedBy, registerMethods), a
-// property outside the modelled and looks-only ones (TABLE_PROPERTIES; one no list classes counts
-// too), server data, a column that loads enrichment or editing, or a view in the block's value (a
-// sort, filter, search or column change the table wrote, or the app set).
-function findTableFeature({ block, state }) {
-  if (!type.isNone(state.changedBy)) {
-    return state.changedBy;
-  }
+// the stand-in does not model: a property outside the modelled and looks-only ones
+// (TABLE_PROPERTIES; one no list classes counts too), server data, a column that loads enrichment
+// or editing, or a view in the block's value (a sort, filter, search or column change the table
+// wrote, or the app set).
+function findTableFeature(block) {
   const properties = block.eval.properties ?? {};
   const property = Object.keys(properties).find(
     (name) => !MODELLED.has(name) && isOn(properties[name])
@@ -143,8 +140,8 @@ function clickCell({ actor, block, column, entry }) {
   }
 }
 
-function readGrid({ actor, block, state }) {
-  const feature = findTableFeature({ block, state });
+function readGrid({ actor, block }) {
+  const feature = findTableFeature(block);
   const grid = {
     browserOnly: null,
     rows: [],
@@ -172,19 +169,22 @@ function readGrid({ actor, block, state }) {
   return grid;
 }
 
-// The Table methods that change the rows a person sees: a filter, a search, or rows added, updated
-// or removed over the data. The stand-in does not apply them, so every row step on the table after
-// one is called is the browser's, naming the method.
+// The Table methods that change the rows a person sees: a filter or a search, which the table
+// writes to its value with an onChange, or rows added, updated or removed over the data, whose
+// counts the method returns. The stand-in models none of it, so a CallMethod with one leaves the
+// journey to the browser at that step, naming the method.
 const ROW_METHODS = {
-  applyTransaction: 'rows changed by applyTransaction',
-  setFilter: 'a filter set by setFilter',
-  setSearch: 'a search set by setSearch',
+  applyTransaction: 'changes its rows',
+  setFilter: 'sets a filter',
+  setSearch: 'sets a search',
 };
 
-function registerMethods({ block, state }) {
+function registerMethods({ actor, block }) {
   Object.entries(ROW_METHODS).forEach(([method, what]) => {
     block.registerMethod(method, () => {
-      state.changedBy = what;
+      actor.browserOnly.push(
+        `CallMethod ${method} on ${describeBlock(block)} ${what}, which the headless stand-in does not model: the step runs in a browser.`
+      );
     });
   });
 }
