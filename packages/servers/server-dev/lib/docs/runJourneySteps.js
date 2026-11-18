@@ -34,7 +34,6 @@ import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
 import checkStepRails from './rails/checkStepRails.js';
-import RAILED_STEPS from './rails/railedSteps.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
@@ -1501,6 +1500,11 @@ const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];
 // page open.
 const REQUEST_WINDOW_STEPS = [...INTERACTION_STEPS, 'goto', 'as'];
 
+// The steps this runner checks against the data-set rails (see checkStepRails). The headless
+// runner also checks a press against the input it presses Enter in; this runner does not rail a
+// press yet.
+const BROWSER_RAILED_STEP_KEYS = ['click', 'open', 'fill', 'select'];
+
 const SETTLE_TIMEOUT_MS = 5000;
 
 async function runStep({ journey, step, index, screenshots, requestWindowStart }) {
@@ -1619,7 +1623,7 @@ async function runJourneySteps({ journey, steps }) {
           timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
         });
       }
-      if (Object.hasOwn(RAILED_STEPS, getStepKey(step))) {
+      if (BROWSER_RAILED_STEP_KEYS.includes(getStepKey(step))) {
         await checkAuthActionsRan({
           journey,
           page: journey.actors.current().page,

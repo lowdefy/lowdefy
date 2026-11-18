@@ -15,8 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-
-import readRoutineSteps from './readRoutineSteps.js';
+import { readRoutineSteps } from '@lowdefy/node-utils';
 
 // The browser never sees a routine's CallApi, in-process or detached, so the
 // endpoints a journey reached through one are added from config: every

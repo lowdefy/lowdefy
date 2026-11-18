@@ -15,11 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { getStepKey, normaliseBlockId } from '@lowdefy/node-utils';
+import { getStepKey, normaliseBlockId, pageBlocks } from '@lowdefy/node-utils';
 
 import getPageConfig from './getPageConfig.js';
 import JourneyStepError from './JourneyStepError.js';
-import pageBlocks from './pageBlocks.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readPageArtifact from './readPageArtifact.js';
 
