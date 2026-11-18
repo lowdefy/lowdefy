@@ -45,7 +45,7 @@ function describeConnection(connection) {
 }
 
 // The static rail of a data-set journey run: a step that acts on a block (a click, an open, a
-// fill or a select, see railedSteps) whose events reach a connection whose type declares
+// fill, a select or a press, see railedSteps) whose events reach a connection whose type declares
 // meta.dataSet 'external', declares nothing, or has no artifact would reach a real service or be
 // refused by the gate. Declarations are read from connections, the plugin connection map the
 // gate reads, and the build through readArtifact(name), a build artifact by its path in the build

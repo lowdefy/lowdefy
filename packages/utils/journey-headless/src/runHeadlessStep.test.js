@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 
+import runHeadlessStep from './runHeadlessStep.js';
 import runTestJourney, { readLog, record } from './tests/runTestJourney.js';
 
 const PAGE = {
@@ -139,4 +140,48 @@ test('A block type installed under a prefix has no stand-in', async () => {
   expect(result.browserOnly.reason).toBe(
     'Block "menu" is of type antd_DropdownMenu, which has no headless stand-in for a click on a control target: the step runs in a browser.'
   );
+});
+
+// A headless press presses Enter in the input the step runner filled last, which a journey's fill
+// step has already checked; the press is checked against that input as well, before it acts.
+test('a press is checked against the input it presses Enter in, before it acts', async () => {
+  const run = vi.fn();
+  const actor = {
+    page: { pageId: 'home' },
+    stepRunner: { lastInputBlockId: () => 'note', run },
+  };
+  const refusal = vi.fn(() => ({ message: 'Refused.', actual: 'a press that reaches it' }));
+  const error = await runHeadlessStep({
+    actors: { current: () => actor },
+    rails: { refusal },
+    since: new Map(),
+    step: { press: 'Enter' },
+    stepTimeout: 300,
+  }).catch((caught) => caught);
+  expect(refusal).toHaveBeenCalledWith({ pageId: 'home', blockId: 'note', step: 'press' });
+  expect(error.message).toBe('Refused.');
+  expect(error.expected).toBe('a press a data-set journey can make');
+  expect(error.actual).toBe('a press that reaches it');
+  expect(run).not.toHaveBeenCalled();
+});
+
+test('a press with no input filled before it is left to the step runner, which refuses it', async () => {
+  const run = vi.fn(async () => {
+    throw new Error('Press "Enter" needs an input filled before it.');
+  });
+  const actor = {
+    page: { pageId: 'home' },
+    stepRunner: { lastInputBlockId: () => null, run },
+  };
+  const refusal = vi.fn(() => null);
+  await expect(
+    runHeadlessStep({
+      actors: { current: () => actor },
+      rails: { refusal },
+      since: new Map(),
+      step: { press: 'Enter' },
+      stepTimeout: 300,
+    })
+  ).rejects.toThrow('Press "Enter" needs an input filled before it.');
+  expect(refusal).not.toHaveBeenCalled();
 });

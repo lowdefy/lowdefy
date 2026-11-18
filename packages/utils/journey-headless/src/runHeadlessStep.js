@@ -178,7 +178,10 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
     checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'select' });
     leaveDropdowns({ actor, targetBlock: block });
   }
-  // The step runner refuses a press with no input filled before it, saying so.
+  // A press presses Enter in the input the step runner filled last, so the fill before it has
+  // already checked that block against every event it has; this check keeps a press railed should
+  // it ever reach an input its own step did not check. The step runner refuses a press with no
+  // input filled before it, saying so.
   if (key === 'press' && actor.stepRunner.lastInputBlockId() !== null) {
     checkHeadlessRails({
       actor,
