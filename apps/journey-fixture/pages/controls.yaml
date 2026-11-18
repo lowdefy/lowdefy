@@ -6,7 +6,8 @@ type: Box
 # did to state `last`. The grid's pinned column is listed last, so the row's first displayed cell
 # is not its first column in the config. plain_grid's rows carry no key, so the grid generates
 # one. tickets_table shows its reply button only while the row is hovered. Two of dupes_table's
-# rows share a key. notes_menu opens on a right click (trigger: contextMenu).
+# rows share a key. notes_menu opens on a right click (trigger: contextMenu). switch_grid's switch
+# writes into its row, and reload_switch_grid gives it new rows.
 blocks:
   - id: controls_title
     type: Title
@@ -269,3 +270,48 @@ blocks:
           subject: First copy
         - _id: d-1
           subject: Second copy
+  # switch_grid's rows come from state `rows` until reload_switch_grid sets new ones. Each toggle
+  # appends its newValue to state `toggles`, so a test reads whether a toggle saw the write
+  # before it.
+  - id: switch_grid
+    type: AgGridAlpine
+    properties:
+      height: 140
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Active
+          field: active
+          cell:
+            type: switch
+            eventName: onToggle
+      rowData:
+        _if_none:
+          - _state: rows
+          - - id: s-1
+              name: Ada
+              active: false
+    events:
+      onToggle:
+        - id: record_toggle
+          type: SetState
+          params:
+            toggles:
+              _array.concat:
+                - _if_none:
+                    - _state: toggles
+                    - []
+                - - _event: newValue
+  - id: reload_switch_grid
+    type: Button
+    properties:
+      title: Reload switch grid
+    events:
+      onClick:
+        - id: set_rows
+          type: SetState
+          params:
+            rows:
+              - id: s-1
+                name: Ada Lovelace
+                active: false

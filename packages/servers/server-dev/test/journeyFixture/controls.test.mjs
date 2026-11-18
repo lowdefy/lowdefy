@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { fixtureTest, postBrowserJourney } from './fixtureClient.mjs';
+import { fixtureTest, postBrowserJourney, postJourney } from './fixtureClient.mjs';
 import { expect } from 'vitest';
 
 // The browser runner's rowKey and control targets (LDF-1044), run by the real runner over the
@@ -138,6 +138,45 @@ fixtureTest(
     expect(result.passed).toBe(true);
   }
 );
+
+function togglesAre(value) {
+  return { expect: { state: { path: 'toggles', equals: value } } };
+}
+
+// The switch's own event re-renders the grid with a newly evaluated rowData. The grid keeps the
+// write until rowData really changes (LDF-1097), so the second toggle reads the first one's value.
+// The headless stand-in keeps it the same way, so these journeys post with the parity check. The
+// second waits for the new rows with expect.text on a cell, which leaves it to the browser.
+fixtureTest('an AgGrid switch clicked twice sees its first write', async () => {
+  const toggle = { click: { blockId: 'switch_grid', rowKey: 's-1', control: 'onToggle' } };
+  const result = await postJourney({
+    pageId: 'controls',
+    steps: [toggle, togglesAre([true]), toggle, togglesAre([true, false])],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+fixtureTest('an AgGrid rowData change replaces the rows a switch wrote into', async () => {
+  const toggle = { click: { blockId: 'switch_grid', rowKey: 's-1', control: 'onToggle' } };
+  const result = await postJourney({
+    pageId: 'controls',
+    steps: [
+      toggle,
+      togglesAre([true]),
+      { click: 'reload_switch_grid' },
+      {
+        expect: {
+          text: { blockId: 'switch_grid', rowKey: 's-1', column: 'name', contains: 'Lovelace' },
+        },
+      },
+      toggle,
+      togglesAre([true, true]),
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
 
 fixtureTest('a Table button by row key hovers the row to show its hover-only button', async () => {
   const result = await postBrowserJourney({

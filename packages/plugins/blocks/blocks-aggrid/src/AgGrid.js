@@ -163,9 +163,16 @@ const AgGrid = ({ blockId, components, events, loading, methods, properties, the
     });
   }, []);
 
+  // The grid keeps its rows until the block's rowData changes. A cell control (SwitchCell) writes
+  // into those rows with node.setDataValue, which changes the row objects in place, so the new
+  // rowData is compared with the previous rowData as it arrived, never with the rows the grid
+  // holds. Otherwise every render with a newly evaluated rowData would undo the write.
+  const rowDataSource = useRef(JSON.stringify(newRowData ?? []));
   useEffect(() => {
-    if (JSON.stringify(rowData) !== JSON.stringify(newRowData)) {
-      setRowData(newRowData);
+    const source = JSON.stringify(newRowData ?? []);
+    if (source !== rowDataSource.current) {
+      rowDataSource.current = source;
+      setRowData(newRowData ?? []);
     }
   }, [newRowData]);
 
