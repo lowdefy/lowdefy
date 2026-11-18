@@ -20,7 +20,12 @@ import getLabelCol from './getLabelCol.js';
 import getLabelThemeStyle from './getLabelThemeStyle.js';
 import getWrapperCol from './getWrapperCol.js';
 
-const labelLogic = ({
+const inlineLabelMinHeights = {
+  large: 40,
+  small: 24,
+};
+
+function labelLogic({
   blockId,
   blockClassNames = {},
   content,
@@ -33,21 +38,37 @@ const labelLogic = ({
     messages: [],
     status: null, // enum: [null, 'success', 'warning', 'error', 'validating'
   },
-}) => {
+}) {
   const wrapperCol = getWrapperCol(properties, properties.inline);
   const labelCol = getLabelCol(properties, properties.inline);
   const themeStyle = getLabelThemeStyle(properties.theme);
 
   // render label priority order: content.label area -> properties.title -> blockId and do not render an empty label
-  let label = content.label
-    ? content.label()
-    : !type.isString(properties.title)
-      ? blockId
-      : properties.title;
+  let label = properties.title;
+  if (content.label) {
+    label = content.label();
+  } else if (!type.isString(properties.title)) {
+    label = blockId;
+  }
   label = label === '' ? null : label;
   // trim colon when colon is set, and the user inputs a colon, because antd class renders a colon
   if (type.isString(label) && properties.colon && label.trim() !== '') {
     label = label.replace(/[:|：]\s*$/u, '');
+  }
+  const showLabel = !properties.disabled && !type.isNone(label);
+  const isSmall = properties.size === 'small';
+
+  // A stacked field carries the space to the next field, so a form needs no layout gap and a label
+  // sits nearer its own input than the field above. Inline and labelless inputs sit in toolbars
+  // beside buttons, so they keep none. Containers can tune it with the CSS variables.
+  let fieldGap = 0;
+  if (showLabel && !properties.inline) {
+    fieldGap = isSmall ? 'var(--lf-field-gap-small, 4px)' : 'var(--lf-field-gap, 16px)';
+  }
+
+  let labelGap = 8;
+  if (isSmall) {
+    labelGap = properties.inline ? 0 : 2;
   }
 
   const rowClassName = clsx(
@@ -60,7 +81,7 @@ const labelLogic = ({
   );
   const rowStyle = {
     flexWrap: properties.inline ? 'inherit' : undefined,
-    marginBottom: 0,
+    marginBottom: fieldGap,
     ...blockRowStyle,
   };
 
@@ -71,7 +92,7 @@ const labelLogic = ({
   const labelColStyle = {
     overflow: properties.inline ? 'inherit' : undefined,
     whiteSpace: !properties.inline || properties.wrap ? 'normal' : undefined,
-    marginBottom: properties.size === 'small' ? 0 : 8,
+    marginBottom: labelGap,
     ...themeStyle,
   };
 
@@ -84,13 +105,7 @@ const labelLogic = ({
   );
   const labelStyle = {
     height: 'fit-content',
-    minHeight: properties.inline
-      ? properties.size === 'large'
-        ? 40
-        : properties.size === 'small'
-          ? 24
-          : 32
-      : undefined,
+    minHeight: properties.inline ? (inlineLabelMinHeights[properties.size] ?? 32) : undefined,
     ...styles.label,
   };
 
@@ -153,6 +168,6 @@ const labelLogic = ({
     showFeedbackIcon,
     wrapperCol,
   };
-};
+}
 
 export default labelLogic;
