@@ -33,6 +33,13 @@ function runGenerator({ generator, journey, exercised, inputs }) {
   return { variants: generated.variants ?? [], notes };
 }
 
+// The row key a `{ _case: <key> }` user reads, else null.
+function caseKey(user) {
+  return type.isObject(user) && Object.keys(user).length === 1 && type.isString(user._case)
+    ? user._case
+    : null;
+}
+
 function rowLabel(rows) {
   const names = rows.map(({ name }) => name).join(', ');
   return rows.length === 1 ? `row ${names}` : `rows ${names}`;
@@ -55,7 +62,10 @@ function generateByRow({ generator, rowsTaken, journey, runs, cases, exercised, 
       generator,
       journey: run,
       exercised,
-      inputs: { ...inputs, caseTable: { journeyName: journey.name } },
+      inputs: {
+        ...inputs,
+        caseTable: { journeyName: journey.name, userKey: caseKey(journey.user) },
+      },
     });
     generated.variants.forEach((variant) => {
       const steps = variant.steps.map((step) => {

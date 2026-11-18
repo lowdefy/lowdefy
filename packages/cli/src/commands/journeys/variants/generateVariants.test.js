@@ -186,3 +186,70 @@ test('generateVariants reads a journey with no case table as written', () => {
     ['granted to viewer [viewer]', { user: 'viewer' }],
   ]);
 });
+
+test('a role variant of a case-table journey with one fixed user says to make the user a _case placeholder', () => {
+  const { variants } = generateVariants({
+    kinds: ['role'],
+    journey: { ...journey, user: 'member' },
+    exercised: { pages: ['tickets'], requests: [], endpoints: [] },
+    inputs: { dataSet, roleMatrix: null, pageConfigs },
+  });
+  expect(variants.map(({ detail }) => detail)).toEqual([
+    'granted to admin [admin]',
+    'granted to viewer [viewer]',
+  ]);
+  expect(variants[0].comments[0]).toBe(
+    'Passes? Keep admin as rows of "closes a ticket", not a copy: set its user to { _case: user }, give each row its user, add these rows with user: admin, renamed, and delete this file.'
+  );
+});
+
+test('a role variant of a case-table journey names the key its _case user reads', () => {
+  const { variants } = generateVariants({
+    kinds: ['role'],
+    journey: {
+      ...journey,
+      user: { _case: 'who' },
+      cases: cases.map(({ user, ...row }) => ({ ...row, who: user })),
+    },
+    exercised: { pages: ['tickets'], requests: [], endpoints: [] },
+    inputs: { dataSet, roleMatrix: null, pageConfigs },
+  });
+  expect(variants[1].comments[0]).toBe(
+    'Passes? Keep viewer as rows of "closes a ticket", not a copy: add these rows to its cases with who: viewer, renamed, and delete this file.'
+  );
+});
+
+test("the empty and volume variants of a case-table journey find each row's user in their data set", () => {
+  const other = (name) => ({
+    name,
+    fixtures: {},
+    users: { member: dataSet.users.member, admin: dataSet.users.admin },
+  });
+  const { variants, skipped } = generateVariants({
+    kinds: ['empty', 'volume'],
+    journey,
+    exercised: { pages: ['tickets'], requests: [], endpoints: [] },
+    inputs: {
+      dataSet,
+      roleMatrix: null,
+      pageConfigs,
+      emptyDataSet: other('tickets-empty'),
+      volumeDataSet: other('tickets-volume'),
+    },
+  });
+  expect(skipped).toEqual([]);
+  expect(variants).toEqual([
+    {
+      kind: 'empty',
+      detail: 'on tickets-empty',
+      overrides: { data: 'tickets-empty', cases },
+      steps: [journey.steps[0], { expect: { visible: 'grid' } }],
+    },
+    {
+      kind: 'volume',
+      detail: 'on tickets-volume',
+      overrides: { data: 'tickets-volume', cases },
+      steps: journey.steps,
+    },
+  ]);
+});

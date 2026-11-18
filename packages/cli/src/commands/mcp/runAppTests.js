@@ -220,9 +220,12 @@ async function runAppTests({
     browserOnly: browserOnlyResults,
     skipped,
   });
+  // A thrown run's stack stays in results.json; in the answer, the first report that holds it
+  // prints it once, and a stack on every entry would spend the detail budget on one bug.
+  const answerResults = journeyResults.map(({ stack, ...result }) => result);
   return {
     summary,
-    ...compactTestResults({ results: journeyResults, browserOnly: browserOnlyResults, skipped }),
+    ...compactTestResults({ results: answerResults, browserOnly: browserOnlyResults, skipped }),
     resultFile,
   };
 }
