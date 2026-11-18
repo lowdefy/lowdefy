@@ -48,13 +48,16 @@ function isHiddenInDom(element) {
   return false;
 }
 
-// The rows of the block with the target's row key, or none when the grid generated the key: a
-// generated key changes between renders, so the runner refuses it.
+// The rows of the block with the target's row key, or none when the grid generated the key (a
+// generated key changes between renders) or when several rows carry it, as the runner refuses
+// both. A row AG Grid splits across pinned containers holds its first cell once, so the rows
+// with a first cell count the rows.
 function rowsByKey({ roots, rowKey }) {
   if (isGeneratedRowKey(rowKey)) return [];
-  return roots.flatMap((root) => [
+  const rows = roots.flatMap((root) => [
     ...root.querySelectorAll(gridSelector({ kind: 'rowKey', value: rowKey })),
   ]);
+  return rows.filter((row) => row.querySelector(FIRST_CELL) !== null).length > 1 ? [] : rows;
 }
 
 // The roots the target's scope keys name: the block wrapper, narrowed to every grid row with the
