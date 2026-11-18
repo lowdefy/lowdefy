@@ -79,6 +79,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'detached_log',
     'explode',
     'log_activity',
+    'log_payload',
     'notify',
     'payment_events',
     'price_run',

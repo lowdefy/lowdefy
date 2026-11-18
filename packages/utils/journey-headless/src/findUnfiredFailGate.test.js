@@ -119,3 +119,18 @@ test('findUnfiredFailGate counts a fail gate fired by background work that ends 
   work.then(() => background.work.delete(work));
   expect(await findUnfiredFailGate({ session: background, steps })).toBeUndefined();
 });
+
+test('findUnfiredFailGate does not wait for background work when nothing is left to check', async () => {
+  const neverEnds = new Promise(() => {});
+  const cases = [
+    session(),
+    session({ stubs: [stub()] }),
+    session({ failGates: [gate({ fired: 1 })], stubs: [stub({ requestId: 'a', answered: 1 })] }),
+  ];
+  for (const idle of cases) {
+    idle.work.add(neverEnds);
+    const started = Date.now();
+    expect(await findUnfiredFailGate({ session: idle, steps })).toBeUndefined();
+    expect(Date.now() - started).toBeLessThan(1000);
+  }
+});
