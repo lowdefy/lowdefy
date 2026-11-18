@@ -104,7 +104,7 @@ test('the browser closes 90 s after the last context closes', async () => {
 
   await getBrowser();
   const context = createContext();
-  trackContext(context);
+  trackContext({ browser, context });
   vi.advanceTimersByTime(IDLE * 2);
   await flush();
   expect(browser.close).not.toHaveBeenCalled();
@@ -147,8 +147,8 @@ test('a context still open keeps the browser open', async () => {
   await getBrowser();
   const first = createContext();
   const second = createContext();
-  trackContext(first);
-  trackContext(second);
+  trackContext({ browser, context: first });
+  trackContext({ browser, context: second });
   await first.close();
   vi.advanceTimersByTime(IDLE * 3);
   await flush();
@@ -224,5 +224,99 @@ test('getBrowser relaunches once for concurrent callers when the browser disconn
 
   expect(first).toBe(fresh);
   expect(second).toBe(fresh);
+  expect(launch).toHaveBeenCalledTimes(2);
+});
+
+test('retire hands out a new browser on the next call while the crashed one stays connected', async () => {
+  const crashed = createFakeBrowser();
+  const fresh = createFakeBrowser();
+  const launch = vi.fn().mockResolvedValueOnce(crashed).mockResolvedValueOnce(fresh);
+  const { getBrowser, retire } = createBrowserLifecycle({ launch, idleTimeout: IDLE });
+
+  await getBrowser();
+  await flush();
+  retire(crashed);
+  await flush();
+
+  expect(crashed.isConnected()).toBe(true);
+  expect(crashed.close).toHaveBeenCalledTimes(1);
+  expect(await getBrowser()).toBe(fresh);
+  expect(launch).toHaveBeenCalledTimes(2);
+});
+
+test('concurrent calls that hit the same crash share one relaunch', async () => {
+  const crashed = createFakeBrowser();
+  const fresh = createFakeBrowser();
+  const launch = vi.fn().mockResolvedValueOnce(crashed).mockResolvedValueOnce(fresh);
+  const { getBrowser, retire } = createBrowserLifecycle({ launch, idleTimeout: IDLE });
+
+  await getBrowser();
+  await flush();
+  retire(crashed);
+  const [first, second] = await Promise.all([getBrowser(), getBrowser()]);
+  await flush();
+  // A late report of the same crash leaves the new browser alone.
+  retire(crashed);
+
+  expect(first).toBe(fresh);
+  expect(second).toBe(fresh);
+  expect(await getBrowser()).toBe(fresh);
+  expect(launch).toHaveBeenCalledTimes(2);
+  expect(crashed.close).toHaveBeenCalledTimes(1);
+  expect(fresh.close).not.toHaveBeenCalled();
+});
+
+test('a retired browser closes once its last open context closes', async () => {
+  const crashed = createFakeBrowser();
+  const fresh = createFakeBrowser();
+  const launch = vi.fn().mockResolvedValueOnce(crashed).mockResolvedValueOnce(fresh);
+  const { getBrowser, retire, trackContext } = createBrowserLifecycle({
+    launch,
+    idleTimeout: IDLE,
+  });
+
+  await getBrowser();
+  await flush();
+  // A journey still running on the crashed browser.
+  const running = createContext();
+  trackContext({ browser: crashed, context: running });
+  retire(crashed);
+  expect(await getBrowser()).toBe(fresh);
+  const freshContext = createContext();
+  trackContext({ browser: fresh, context: freshContext });
+  await flush();
+  expect(crashed.close).not.toHaveBeenCalled();
+
+  await running.close();
+  await flush();
+
+  expect(crashed.close).toHaveBeenCalledTimes(1);
+  expect(fresh.close).not.toHaveBeenCalled();
+});
+
+test('retire while a relaunch is in flight leaves the relaunch alone', async () => {
+  const crashed = createFakeBrowser();
+  const fresh = createFakeBrowser();
+  let finishLaunch;
+  const launch = vi
+    .fn()
+    .mockResolvedValueOnce(crashed)
+    .mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finishLaunch = () => resolve(fresh);
+        })
+    );
+  const { getBrowser, retire } = createBrowserLifecycle({ launch, idleTimeout: IDLE });
+
+  await getBrowser();
+  await flush();
+  retire(crashed);
+  const pending = getBrowser();
+  retire(crashed);
+  finishLaunch();
+
+  expect(await pending).toBe(fresh);
+  expect(await getBrowser()).toBe(fresh);
   expect(launch).toHaveBeenCalledTimes(2);
 });

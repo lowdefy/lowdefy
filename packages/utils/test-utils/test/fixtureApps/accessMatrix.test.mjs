@@ -74,6 +74,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
   expect(Object.keys(matrix.endpoints)).toEqual([
     'approve_run',
     'auditor_only',
+    'caught_webhook',
     'close_runs',
     'detached_log',
     'explode',
