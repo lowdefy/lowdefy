@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { fixtureTest, postBrowserJourney, postJourney } from './fixtureClient.mjs';
 import { expect } from 'vitest';
 
 // The data-set rails: on a journey with a data set, a click that would reach a
@@ -207,11 +207,14 @@ fixtureTest.each([
   }
 );
 
-// The same steps on a journey with no data set act, so the refusals above are the rails'.
+// The same steps on a journey with no data set act, so the refusals above are the rails'. In the
+// browser only: the parity check's build host runs every call on a data session, whose gate
+// refuses the undeclared connection these blocks reach, where the dev server runs a journey with
+// no data set on none.
 fixtureTest(
   'a journey without a data set opens, fills and selects on the railed blocks',
   async () => {
-    const result = await postJourney({
+    const result = await postBrowserJourney({
       pageId: 'rails',
       steps: [
         { open: 'rails_menu' },
