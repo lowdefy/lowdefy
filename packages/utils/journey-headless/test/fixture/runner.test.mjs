@@ -227,7 +227,7 @@ test('a journey whose steps need a browser is not run and names the first such s
     browserOnly: {
       index: 1,
       step: { click: { text: 'Save' } },
-      reason: 'a target by "text" reads the page; a headless run targets blocks by blockId',
+      reason: 'a target by text reads the page; name the control with control on its block',
     },
     steps: [],
   });
