@@ -27,9 +27,8 @@ import { vi, afterAll, expect, test } from 'vitest';
 // Skipped when no Chromium can be launched, and on Windows, which runs no shell script.
 vi.doMock('../build/config.js', () => ({ default: {} }));
 
-const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-browser-crash-'));
-const deadRenderer = path.join(directory, 'dead-renderer.sh');
-fs.writeFileSync(deadRenderer, '#!/bin/sh\nexit 1\n', { mode: 0o755 });
+let directory = null;
+let deadRenderer = null;
 
 const launched = [];
 vi.doMock('playwright-core', async (importOriginal) => {
@@ -59,25 +58,40 @@ const origin = 'http://127.0.0.1:4019';
 
 let crashing = null;
 if (process.platform !== 'win32') {
+  directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-browser-crash-'));
+  deadRenderer = path.join(directory, 'dead-renderer.sh');
+  fs.writeFileSync(deadRenderer, '#!/bin/sh\nexit 1\n', { mode: 0o755 });
   try {
     crashing = await getBrowser({ origin });
   } catch {
     crashing = null;
   }
 }
+// A file whose tests are all skipped runs no afterAll.
+function removeDirectory() {
+  if (directory !== null) {
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
+}
+if (crashing === null) {
+  removeDirectory();
+}
 const chromiumTest = crashing === null ? test.skip : test;
 
 afterAll(async () => {
   await Promise.all(launched.map((browser) => browser.close().catch(() => {})));
-  fs.rmSync(directory, { recursive: true, force: true });
+  removeDirectory();
 });
 
 chromiumTest(
   'a browser whose renderers crash is replaced, and the next openPage works',
   async () => {
     // A page-less openPage goes as far as newPage, whose renderer exits as it starts.
+    // An Error, so the whole message must match, not only part of it.
     await expect(openPage({ browser: crashing, origin })).rejects.toThrow(
-      'The headless browser crashed (browserContext.newPage: Target crashed); it is relaunched for the next call.'
+      new Error(
+        'The headless browser crashed (browserContext.newPage: Target crashed); it is relaunched for the next call.'
+      )
     );
     expect(crashing.isConnected()).toBe(true);
 
