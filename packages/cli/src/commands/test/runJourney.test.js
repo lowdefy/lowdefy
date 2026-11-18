@@ -57,6 +57,26 @@ test('runJourney posts the journey to the REST route and reports a pass', async 
   expect(result.durationMs).toEqual(expect.any(Number));
 });
 
+test("runJourney reports the route's own duration and its wait for a browser slot", async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({
+    data: { pageId: 'form', passed: false, steps: [], durationMs: 4200, waitedMs: 61000 },
+  });
+  const result = await runJourney({ item, url });
+  expect(result).toMatchObject({ passed: false, durationMs: 4200, waitedMs: 61000 });
+});
+
+test('runJourney reports its own POST time against an older server that sends no timing', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const now = vi.spyOn(Date, 'now');
+  now.mockReturnValueOnce(1000).mockReturnValueOnce(3500);
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [] } });
+  const result = await runJourney({ item, url });
+  now.mockRestore();
+  expect(result.durationMs).toBe(2500);
+  expect(result.waitedMs).toBeUndefined();
+});
+
 test('runJourney returns the failure from a failed journey response', async () => {
   const { default: runJourney } = await import('./runJourney.js');
   const failure = {
