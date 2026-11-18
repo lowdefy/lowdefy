@@ -455,3 +455,31 @@ test('Table with a view in its value leaves the step to the browser', async () =
   );
   expect(log).toEqual([]);
 });
+
+test('Table row methods leave later row steps to the browser, naming the method', async () => {
+  const cases = [
+    ['setFilter', [{ key: 'name', op: 'eq', value: 'Ada' }], 'a filter set by setFilter'],
+    ['setSearch', ['Ada'], 'a search set by setSearch'],
+    ['applyTransaction', [{ remove: ['a1'] }], 'rows changed by applyTransaction'],
+  ];
+  for (const [method, args, what] of cases) {
+    const pages = tablePage();
+    pages[0].blocks.push({
+      id: 'change',
+      type: 'Button',
+      events: {
+        onClick: [{ id: 'call', type: 'CallMethod', params: { blockId: 'people', method, args } }],
+      },
+    });
+    const { log, result } = await runTestJourney({
+      pages,
+      steps: [{ click: 'change' }, { click: { blockId: 'people', rowKey: 'a1' } }],
+    });
+    expect(result.browserOnly).toEqual({
+      index: 1,
+      step: { click: { blockId: 'people', rowKey: 'a1' } },
+      reason: `Table "people" uses ${what}, which the headless stand-in does not model: the step runs in a browser.`,
+    });
+    expect(log).toEqual([]);
+  }
+});

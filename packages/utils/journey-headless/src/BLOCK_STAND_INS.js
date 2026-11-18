@@ -29,7 +29,7 @@ import tableStandIn from './standIns/tableStandIn.js';
 // of optional parts, each called with { actor, block, state }, state being what the stand-in keeps
 // for the block on the shown page (readStandInState):
 // - registerMethods(): registers the block methods the component registers (setOpen, open, a
-//   grid's setFilterModel), for CallMethod. Run when a page shows and after each step settles
+//   grid's setFilterModel or setFilter), for CallMethod. Run when a page shows and after each step settles
 //   (registerBlockStandIns).
 // - click({ target }): a click with rowKey or control (step.click), once the block shows.
 // - answersBlockClick() and clickBlock(): whether the component answers a plain click on the block
