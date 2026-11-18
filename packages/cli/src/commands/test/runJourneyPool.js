@@ -71,6 +71,8 @@ function thrownResult({ entry, error }) {
 // `onFinished({ entry, result, done, total })` is called as each item finishes, and
 // `onReported({ entry, result })` in run order: once an item and every item before it in run
 // order have finished, so an alone journey early in the selection never holds the rest back.
+// A callback that throws starts no more journeys: the pool waits for those in flight, so none
+// runs on past the caller's cleanup, and then throws the first such error.
 async function runJourneyPool({ entries, readLimit, run, onFinished, onReported }) {
   const { overlapping, alone } = splitSelection({ entries });
   const runOrder = [...overlapping, ...alone];
@@ -78,6 +80,7 @@ async function runJourneyPool({ entries, readLimit, run, onFinished, onReported 
   const finished = new Array(entries.length).fill(false);
   let done = 0;
   let reported = 0;
+  let callbackError;
   // One report at a time, so an async onReported still sees the run order.
   let reporting = Promise.resolve();
 
@@ -102,10 +105,16 @@ async function runJourneyPool({ entries, readLimit, run, onFinished, onReported 
     results[index] = result;
     finished[index] = true;
     done += 1;
-    if (!type.isNone(onFinished)) {
-      await onFinished({ entry, result, done, total: entries.length });
+    try {
+      if (!type.isNone(onFinished)) {
+        await onFinished({ entry, result, done, total: entries.length });
+      }
+    } catch (error) {
+      callbackError ??= error;
     }
-    reporting = reporting.then(report);
+    reporting = reporting.then(report).catch((error) => {
+      callbackError ??= error;
+    });
     await reporting;
   }
 
@@ -116,14 +125,19 @@ async function runJourneyPool({ entries, readLimit, run, onFinished, onReported 
   }
 
   for (const index of overlapping) {
-    while (inFlight.size > 0 && inFlight.size >= readLimit()) {
+    while (type.isUndefined(callbackError) && inFlight.size > 0 && inFlight.size >= readLimit()) {
       await Promise.race(inFlight);
     }
+    if (!type.isUndefined(callbackError)) break;
     start(index);
   }
   await Promise.all(inFlight);
   for (const index of alone) {
+    if (!type.isUndefined(callbackError)) break;
     await runOne(index);
+  }
+  if (!type.isUndefined(callbackError)) {
+    throw callbackError;
   }
   return results;
 }

@@ -194,3 +194,28 @@ test('runJourneyPool calls onFinished as each journey finishes and onReported in
   ]);
   expect(reported).toEqual(['a', 'b', 'alone']);
 });
+
+test('runJourneyPool waits for the journeys in flight when a callback throws, starts no more, then throws', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b', 'c', 'alone'].map((name) =>
+    entry({ name, data: name === 'alone' ? null : 'base' })
+  );
+  let settled = false;
+  const pool = runJourneyPool({
+    entries,
+    readLimit: () => 2,
+    run: runner.run,
+    onReported: ({ result }) => {
+      if (result.name === 'a') throw new Error('format failed');
+    },
+  }).finally(() => {
+    settled = true;
+  });
+  const rejected = expect(pool).rejects.toThrow('format failed');
+  await runner.finish('a');
+  // b is still in flight, so the pool has not ended.
+  expect(settled).toBe(false);
+  await runner.finish('b');
+  await rejected;
+  expect(runner.started).toEqual(['a', 'b']);
+});
