@@ -96,7 +96,7 @@ fixtureTest('a data-set journey clicking a button whose request uses MongoDB pas
   expect(result.passed).toBe(true);
 });
 
-// A modal's OK button is drawn in a portal outside every block wrapper, so the click rails read
+// A modal's OK button is drawn in a portal outside every block wrapper, so the step rails read
 // the block a control target names, not the one around the clicked element.
 fixtureTest(
   "a data-set journey clicking a modal's ok control is refused when its onOk reaches an undeclared connection",
@@ -186,14 +186,18 @@ fixtureTest(
   }
 );
 
-fixtureTest(
-  'a data-set journey selecting in a selector whose onChange reaches an undeclared connection is refused',
-  async () => {
+// A select on a container picks in the input inside it, so the rails check that input's block.
+fixtureTest.each([
+  ['the selector', 'rails_selector'],
+  ['the container around it', 'rails_choice_box'],
+])(
+  'a data-set journey selecting through %s, whose onChange reaches an undeclared connection, is refused',
+  async (_, blockId) => {
     const result = await postBrowserJourney({
       pageId: 'rails',
       data: 'rails',
       user: 'member',
-      steps: [{ select: { blockId: 'rails_selector', value: 'Second' } }],
+      steps: [{ select: { blockId, value: 'Second' } }],
     });
     expect(result.passed).toBe(false);
     expect(result.failure.index).toBe(0);

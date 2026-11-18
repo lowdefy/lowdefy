@@ -336,7 +336,7 @@ function plural({ count, word }) {
 //
 // beforeReveal runs once, before a `control` target hovers its row or opens a
 // dropdown to show the control: those act on the block too (a dropdown fires
-// onOpenChange), so a click's rails check must come first.
+// onOpenChange), so a click's step rails check must come first.
 async function resolveActionTarget({ page, target, timeout, beforeReveal }) {
   await refuseGeneratedRowKey({ page, target });
   if (!type.isUndefined(target.control)) {
@@ -503,7 +503,7 @@ async function openDropdown({ page, target, trigger, timeout }) {
 // then opens the first closed dropdown trigger in the scope (the cell, else the row, else the
 // block) and waits for its popup. Several visible matches fail with the count, as a `text` that
 // matches several controls does; none within the timeout fails naming what was tried.
-// beforeReveal (the click rails) runs once, before the first hover or open.
+// beforeReveal (a click's step rails) runs once, before the first hover or open.
 async function locateControl({ page, target, timeout, beforeReveal }) {
   const deadline = Date.now() + timeout;
   const description = describeTarget(target);
@@ -661,12 +661,7 @@ async function runOpen({ journey, page, step, timeout }) {
     await actOnTarget({
       target,
       action: async () => {
-        const located = await resolveActionTarget({
-          page,
-          target,
-          timeout,
-          beforeReveal: () => rails.check(null),
-        });
+        const located = await resolveActionTarget({ page, target, timeout });
         const trigger = located.locator(POPUP_TRIGGER).first();
         // The input renders its trigger with the block (a lazy block once its
         // implementation has rendered); counted once either shows.
@@ -932,25 +927,30 @@ async function runSelect({ journey, page, step, timeout }) {
       // block; counted once it shows, so a late block does not fall through to
       // the dropdown.
       await scope.first().waitFor({ state: 'visible', timeout });
-      // Every way below picks an option in this block, firing its onChange.
-      await rails.check(scope.first());
     },
   });
+  // Each way below is checked against the block of the element it picks in (a container
+  // target's scope holds the input block whose onChange the pick fires), before it picks.
   const native = scope.locator('select');
   if ((await native.count()) > 0) {
     await actOnTarget({
       target,
-      action: () => native.first().selectOption({ label: text }, { timeout }),
+      action: async () => {
+        await rails.check(native.first());
+        await native.first().selectOption({ label: text }, { timeout });
+      },
     });
     return { blockId: rails.blockId() };
   }
   const radioOptions = scope.locator(RADIO_OPTION);
   if ((await radioOptions.count()) > 0) {
+    await rails.check(radioOptions.first());
     await selectRadioOption({ options: radioOptions, target, text, timeout });
     return { blockId: rails.blockId() };
   }
   const checkboxOptions = scope.locator(CHECKBOX_OPTION);
   if ((await checkboxOptions.count()) > 0) {
+    await rails.check(checkboxOptions.first());
     await tickCheckboxOption({ options: checkboxOptions, target, text, timeout });
     return { blockId: rails.blockId() };
   }
@@ -958,6 +958,7 @@ async function runSelect({ journey, page, step, timeout }) {
     target,
     action: async () => {
       const locator = await resolveClickLocator({ located: scope, target, timeout });
+      await rails.check(locator);
       await locator.click({ timeout });
     },
   });

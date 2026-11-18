@@ -16,7 +16,8 @@
 # onOpenChange sets rails_menu_opened and then calls the undeclared request, so
 # an open is refused before it hovers the menu and the state is never set;
 # rails_fill_input's and rails_selector's onChange call it too, so a fill or a
-# select is refused before it types or picks.
+# select is refused before it types or picks, a select on rails_choice_box (the
+# container around rails_selector) as rails_selector's.
 id: rails
 type: Box
 requests:
@@ -182,15 +183,19 @@ blocks:
         - id: call_undeclared_on_fill
           type: Request
           params: call_undeclared
-  - id: rails_selector
-    type: Selector
-    properties:
-      title: Rails choice
-      options:
-        - First
-        - Second
-    events:
-      onChange:
-        - id: call_undeclared_on_select
-          type: Request
-          params: call_undeclared
+  # A container: a select on it picks in rails_selector, so the rails check rails_selector.
+  - id: rails_choice_box
+    type: Box
+    blocks:
+      - id: rails_selector
+        type: Selector
+        properties:
+          title: Rails choice
+          options:
+            - First
+            - Second
+        events:
+          onChange:
+            - id: call_undeclared_on_select
+              type: Request
+              params: call_undeclared
