@@ -49,9 +49,9 @@ async function postJourney(body) {
   return result;
 }
 
-// Posts a journey to the fixture's dev server with no parity check, for a journey whose rowKey,
-// control or open steps the headless runner has no block stand-ins for yet (LDF-1044's
-// stand-ins and its parity journeys come later).
+// Posts a journey to the fixture's dev server with no parity check, for a test of the browser
+// runner alone: how it finds and refuses rowKey and control targets, and the data-set rails. The
+// block stand-ins' parity journeys are standInParity.test.mjs.
 async function postBrowserJourney(body) {
   const { status, body: result } = await postJson({
     path: '/lowdefy-docs/journey',

@@ -1,0 +1,236 @@
+# Parity journeys for the AgGrid and Table stand-ins (LDF-1063), on the grid_targets page. Each runs
+# in the browser and headless (packages/servers/server-dev/test/journeyFixture/
+# standInParity.test.mjs) and must end with the same state `log`, the events the page fired in order
+# with their payloads. The final expect on `log` is what the component does in the browser. The
+# disabled button's journey fails at its click in both runners. In a folder starting with "_" so
+# the suite's own runs, and harden, leave it out.
+- name: an AgGrid row by key clicks its first displayed cell, in the pinned column
+  pageId: grid_targets
+  steps:
+    - click: { blockId: orders_grid, rowKey: ord-1 }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: orders_grid.onCellClick
+              payload:
+                cell:
+                  column: number
+                  value: ORD-0001
+                colId: number
+                row:
+                  id: ord-1
+                  number: ORD-0001
+                  customer:
+                    name: Acme
+                  amount: 100
+                  priority: false
+                rowIndex: 0
+                selected: []
+            - event: orders_grid.onRowClick
+              payload:
+                row:
+                  id: ord-1
+                  number: ORD-0001
+                  customer:
+                    name: Acme
+                  amount: 100
+                  priority: false
+                selected: []
+                rowIndex: 0
+- name: an AgGrid cell by key and a dot-path column
+  pageId: grid_targets
+  steps:
+    - click: { blockId: orders_grid, rowKey: ord-2, column: customer.name }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: orders_grid.onCellClick
+              payload:
+                cell:
+                  column: customer.name
+                  value: Globex
+                colId: customer.name
+                row:
+                  id: ord-2
+                  number: ORD-0002
+                  customer:
+                    name: Globex
+                  amount: 250
+                  priority: false
+                rowIndex: 1
+                selected: []
+            - event: orders_grid.onRowClick
+              payload:
+                row:
+                  id: ord-2
+                  number: ORD-0002
+                  customer:
+                    name: Globex
+                  amount: 250
+                  priority: false
+                selected: []
+                rowIndex: 1
+- name: an AgGrid row's button
+  pageId: grid_targets
+  steps:
+    - click: { blockId: orders_grid, rowKey: ord-1, control: onShip }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: orders_grid.onShip
+              payload:
+                row:
+                  id: ord-1
+                  number: ORD-0001
+                  customer:
+                    name: Acme
+                  amount: 100
+                  priority: false
+                button:
+                  eventName: onShip
+                  title: Ship
+                buttonIndex: 0
+- name: an AgGrid menu item removes its row
+  pageId: grid_targets
+  steps:
+    - click: { blockId: orders_grid, rowKey: ord-2, control: onCancelOrder }
+    - expect: { hidden: { blockId: orders_grid, rowKey: ord-2 } }
+    - expect: { visible: { blockId: orders_grid, rowKey: ord-3 } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: orders_grid.onCancelOrder
+              payload:
+                row:
+                  id: ord-2
+                  number: ORD-0002
+                  customer:
+                    name: Globex
+                  amount: 250
+                  priority: false
+                item:
+                  eventName: onCancelOrder
+                  title: Cancel order
+                itemIndex: 0
+- name: an AgGrid switch clicked twice
+  pageId: grid_targets
+  steps:
+    - click: { blockId: orders_grid, rowKey: ord-1, control: onPriority }
+    - click: { blockId: orders_grid, rowKey: ord-1, control: onPriority }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: orders_grid.onPriority
+              payload:
+                row:
+                  id: ord-1
+                  number: ORD-0001
+                  customer:
+                    name: Acme
+                  amount: 100
+                  priority: true
+                value: false
+                newValue: true
+            - event: orders_grid.onPriority
+              payload:
+                row:
+                  id: ord-1
+                  number: ORD-0001
+                  customer:
+                    name: Acme
+                  amount: 100
+                  priority: false
+                value: true
+                newValue: false
+- name: a Table row by key fires onCellClick, then onRowClick
+  pageId: grid_targets
+  steps:
+    - click: { blockId: cases_table, rowKey: c-1 }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: cases_table.onCellClick
+              payload:
+                row:
+                  _id: c-1
+                  subject: Cannot export the invoice
+                  priority: high
+                  closed: false
+                rowKey: c-1
+                column:
+                  key: subject
+                  field: subject
+                value: Cannot export the invoice
+            - event: cases_table.onRowClick
+              payload:
+                row:
+                  _id: c-1
+                  subject: Cannot export the invoice
+                  priority: high
+                  closed: false
+                rowKey: c-1
+                index: 0
+- name: a Table row with rowLink and no onRowClick goes to its page
+  pageId: grid_targets
+  steps:
+    - click: { blockId: links_table, rowKey: l-1 }
+    - expect: { visible: popup_parity_title }
+- name: a Table formula cell
+  pageId: grid_targets
+  steps:
+    - click: { blockId: cases_table, rowKey: c-1, column: summary }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: cases_table.onCellClick
+              payload:
+                row:
+                  _id: c-1
+                  subject: Cannot export the invoice
+                  priority: high
+                  closed: false
+                rowKey: c-1
+                column:
+                  key: summary
+                  field: summary
+                value: Cannot export the invoice (high)
+            - event: cases_table.onRowClick
+              payload:
+                row:
+                  _id: c-1
+                  subject: Cannot export the invoice
+                  priority: high
+                  closed: false
+                rowKey: c-1
+                index: 0
+- name: a Table button disabled by its when condition refuses the click
+  pageId: grid_targets
+  steps:
+    - click: { blockId: cases_table, rowKey: c-2, control: onCloseCase }
+- name: a Table menu item
+  pageId: grid_targets
+  steps:
+    - click: { blockId: cases_table, rowKey: c-1, control: onAssign }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: cases_table.onAssign
+              payload:
+                row:
+                  _id: c-1
+                  subject: Cannot export the invoice
+                  priority: high
+                  closed: false
+                rowKey: c-1
+                item:
+                  eventName: onAssign
+                  title: Assign
+                itemIndex: 0

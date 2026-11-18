@@ -1,0 +1,230 @@
+id: grid_targets
+type: Box
+# Grid rows and cell controls a journey names by key ({ blockId, rowKey, column?, control? }), for
+# the parity journeys in tests/journeys/_parity/grids.yaml
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1063). Each runs in
+# the browser and headless and must end with the same state. Every event appends
+# { event, payload } to state `log`, so a missing, extra or reordered event, or a different
+# payload, shows in the end state. orders_grid's pinned column is listed after the others, so a
+# row's first displayed cell is not its first column in the config; its customer column reads a
+# dot path; onCancelOrder removes the row from state `orders`, which the grid shows; its switch
+# writes into its row. cases_table's summary column is a formula, and its close button is
+# disabled while the row is closed. links_table's rows link to the popup_parity page and it has no
+# onRowClick.
+events:
+  onInit:
+    - id: set_orders
+      type: SetState
+      params:
+        orders:
+          - id: ord-1
+            number: ORD-0001
+            customer:
+              name: Acme
+            amount: 100
+            priority: false
+          - id: ord-2
+            number: ORD-0002
+            customer:
+              name: Globex
+            amount: 250
+            priority: false
+          - id: ord-3
+            number: ORD-0003
+            customer:
+              name: Initech
+            amount: 75
+            priority: false
+blocks:
+  - id: grid_targets_title
+    type: Title
+    properties:
+      content: Grid targets
+      level: 2
+  - id: orders_grid
+    type: AgGridAlpine
+    properties:
+      height: 220
+      rowData:
+        _state: orders
+      columnDefs:
+        - headerName: Amount
+          field: amount
+        - headerName: Customer
+          field: customer.name
+        - headerName: Number
+          field: number
+          pinned: left
+        - headerName: Priority
+          field: priority
+          cell:
+            type: switch
+            eventName: onPriority
+        - headerName: ''
+          colId: ship
+          width: 90
+          cell:
+            type: buttons
+            buttons:
+              - eventName: onShip
+                title: Ship
+        - headerName: ''
+          colId: menu
+          width: 70
+          cell:
+            type: menu
+            items:
+              - eventName: onCancelOrder
+                title: Cancel order
+    events:
+      onCellClick:
+        - id: log_orders_cell_click
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: orders_grid.onCellClick
+                    payload: { _event: true }
+      onRowClick:
+        - id: log_orders_row_click
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: orders_grid.onRowClick
+                    payload: { _event: true }
+      onShip:
+        - id: log_orders_ship
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: orders_grid.onShip
+                    payload: { _event: true }
+      onPriority:
+        - id: log_orders_priority
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: orders_grid.onPriority
+                    payload: { _event: true }
+      onCancelOrder:
+        - id: log_orders_cancel
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: orders_grid.onCancelOrder
+                    payload: { _event: true }
+        - id: remove_order
+          type: SetState
+          params:
+            orders:
+              _array.filter:
+                - _state: orders
+                - _function:
+                    __ne:
+                      - __args: 0.id
+                      - _event: row.id
+  - id: cases_table
+    type: Table
+    properties:
+      columns:
+        - key: subject
+        - key: summary
+          kind: formula
+          template: '{{ subject }} ({{ priority }})'
+        - key: priority
+        - key: closed
+          type: boolean
+          hidden: true
+        - key: close
+          type: buttons
+          title: ''
+          cell:
+            buttons:
+              - eventName: onCloseCase
+                title: Close
+                disabled:
+                  when:
+                    key: closed
+                    op: isTrue
+        - key: actions
+          type: menu
+          title: ''
+          cell:
+            items:
+              - eventName: onAssign
+                title: Assign
+      data:
+        - _id: c-1
+          subject: Cannot export the invoice
+          priority: high
+          closed: false
+        - _id: c-2
+          subject: Login link expired
+          priority: low
+          closed: true
+    events:
+      onCellClick:
+        - id: log_cases_cell_click
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: cases_table.onCellClick
+                    payload: { _event: true }
+      onRowClick:
+        - id: log_cases_row_click
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: cases_table.onRowClick
+                    payload: { _event: true }
+      onCloseCase:
+        - id: log_cases_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: cases_table.onCloseCase
+                    payload: { _event: true }
+      onAssign:
+        - id: log_cases_assign
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: cases_table.onAssign
+                    payload: { _event: true }
+  - id: links_table
+    type: Table
+    properties:
+      rowLink:
+        pageId: popup_parity
+      columns:
+        - key: title
+      data:
+        - _id: l-1
+          title: Popup parity
+    events:
+      onCellClick:
+        - id: log_links_cell_click
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: links_table.onCellClick
+                    payload: { _event: true }
