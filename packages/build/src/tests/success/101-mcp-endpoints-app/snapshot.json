@@ -837,6 +837,11 @@
     },
     "configured": true,
     "hasPublicTool": true,
+    "views": {
+      "configured": false,
+      "pages": {},
+      "sources": []
+    },
     "~k": "b"
   },
   "menus.json": {

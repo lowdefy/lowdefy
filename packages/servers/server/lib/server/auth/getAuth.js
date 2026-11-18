@@ -22,6 +22,7 @@ import appMeta from '../../build/appMeta.js';
 import authJson from '../../build/auth.js';
 import createSystemContext from './createSystemContext.js';
 import lowdefyConfig from '../../build/config.js';
+import mcpJson from '../../build/mcp.js';
 import providers from '../../../build/plugins/auth/providers.js';
 
 // Returns the BetterAuth instance (memoized in @lowdefy/api), or null when
@@ -37,6 +38,7 @@ function getAuth({ logger }) {
     config: lowdefyConfig,
     createSystemContext,
     logger,
+    mcpJson,
     plugins: { adapters, providers },
     secrets: getSecretsFromEnv(),
   });

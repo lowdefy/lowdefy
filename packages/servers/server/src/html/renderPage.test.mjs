@@ -52,6 +52,7 @@ const routes = [
   { pageId: 'home', path: 'home' },
   { pageId: 'state-title', path: 'state-title' },
   { pageId: 'ticket', path: '{space}/tickets/{ticket_id}' },
+  { pageId: 'task', path: 'task' },
   { pageId: 'section', path: '{section}' },
 ];
 
@@ -61,6 +62,8 @@ const pages = {
   'state-title': { id: 'state-title', properties: { title: { _state: 'title' } } },
   ticket: { id: 'ticket', properties: { title: 'Ticket' } },
   section: { id: 'section' },
+  // A page an MCP tool names as its view.
+  task: { id: 'task', view: true },
 };
 
 function createApp({
@@ -68,6 +71,7 @@ function createApp({
   pagesProtectedByDefault = false,
   routeTable = routes,
   user = { id: 'u1' },
+  viewSession = null,
 } = {}) {
   const app = new Hono();
   app.use('*', async (c, next) => {
@@ -80,6 +84,7 @@ function createApp({
         return pages[file.slice('pages/'.length, -'.json'.length)] ?? null;
       },
       user,
+      viewSession,
     });
     await next();
   });
@@ -189,4 +194,39 @@ test('renderPage serves the page title written as a string', async () => {
 test('renderPage serves the page id as the title when the title is an operator', async () => {
   const res = await createApp().request('/state-title');
   expect(JSON.parse(await res.text()).title).toEqual('state-title');
+});
+
+// The page routes sit outside /api, so refuseViewSession does not cover them:
+// what a view session is served here is decided by getPageConfig alone.
+const readViewSession = { clientId: 'client-1', grantedScopes: ['mcp:read'] };
+
+test.each([
+  ['a page that is not a view page', '/home'],
+  ['a patterned page that is not a view page', '/acme/tickets/42'],
+  ['the home page at /', '/'],
+])('renderPage serves a view session no HTML for %s', async (_, url) => {
+  const res = await createApp({ viewSession: readViewSession }).request(url);
+  expect(res.status).toEqual(302);
+  expect(res.headers.get('location')).toEqual('/404');
+  expect(await res.text()).not.toContain('u1');
+});
+
+test('renderPage answers a view session a plain 404 at /404, with no user or root config', async () => {
+  const res = await createApp({ viewSession: readViewSession }).request('/404');
+  expect(res.status).toEqual(404);
+  expect(await res.text()).toEqual('Page not found.');
+});
+
+test('renderPage serves a view session a view page', async () => {
+  const res = await createApp({ viewSession: readViewSession }).request('/task');
+  expect(res.status).toEqual(200);
+  expect((await readConfig(res)).pageId).toEqual('task');
+});
+
+test('renderPage serves no view page to a view session whose grant carries no MCP scope', async () => {
+  const res = await createApp({
+    viewSession: { clientId: 'client-1', grantedScopes: [] },
+  }).request('/task');
+  expect(res.status).toEqual(302);
+  expect(res.headers.get('location')).toEqual('/404');
 });

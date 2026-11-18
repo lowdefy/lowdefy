@@ -18,6 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import addStepResult from './addStepResult.js';
+import authorizeViewWrite from '../auth/view/authorizeViewWrite.js';
 import prepareAgent from '../agent/prepareAgent.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 
@@ -81,6 +82,10 @@ async function handleAgentCall(context, routineContext, { step }) {
       );
     }
   });
+
+  // An agent run calls tools and hooks, which write: a view session on a
+  // read-only grant runs none.
+  authorizeViewWrite(context, { subject: `CallAgent step "${step.stepId}"` });
 
   // Headless agent context — no page, no conversation, no sharedState (which
   // also excludes the client-only update-page-state tool). userId is null

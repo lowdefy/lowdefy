@@ -171,6 +171,7 @@ function createContext({ user = { id: 'user_1', sub: 'user_1' } } = {}) {
       configured: true,
       hasPublicTool: true,
       endpoints: [{ id: 'whoami', scope: 'mcp:read' }],
+      views: { configured: false, pages: {}, sources: [] },
     },
   };
   const readConfigFile = vi.fn((path) => {

@@ -1,0 +1,56 @@
+# V1: MCP View Missing Page
+# =========================
+# Tests that a view names a page that exists: a tool's view.pageId and a
+# mcp.viewPages entry that name no page each fail the build.
+#
+# Expected errors:
+#   [Config Error] MCP endpoint "open_task" view references page "tsak", which does not exist.
+#   [Config Error] MCP "viewPages" entry "concept" does not reference a page.
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+  oauthProvider:
+    consentPage: consent
+
+api:
+  - id: open_task
+    type: Api
+    description: Open a task.
+    payloadSchema:
+      type: object
+      properties:
+        key:
+          type: string
+    routine: []
+
+mcp:
+  viewPages:
+    - consent
+    - concept
+  endpoints:
+    - id: open_task
+      scope: mcp:read
+      view:
+        pageId: tsak
+
+pages:
+  - id: consent
+    type: Box
+  - id: task
+    type: Box
+    path: '{space}/tasks/{ref}'

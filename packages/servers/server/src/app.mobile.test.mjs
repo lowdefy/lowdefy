@@ -144,6 +144,7 @@ vi.doMock('../lib/build/auth.js', () => ({
   default: { configured: false, authPages: { signIn: '/auth/login' } },
 }));
 vi.doMock('../lib/build/theme.js', () => ({ default: {} }));
+vi.doMock('../lib/build/mcp.js', () => ({ default: { views: { configured: false } } }));
 vi.doMock('../lib/build/config.js', () => ({ default: {} }));
 vi.doMock('../lib/build/mobileConfig.js', () => ({ default: mobileConfig }));
 vi.doMock('../lib/server/auth/getAuth.js', () => ({ default: vi.fn() }));

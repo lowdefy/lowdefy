@@ -42,6 +42,22 @@ const expectedAnswers = {
   UserError: { status: 400, warning: 'Bad request', text: 'Bad Request' },
 };
 
+// The codes of expected outcomes that a client acts on, sent beside name and message.
+//   view_write_required: a view session on a read-only grant attempted a write
+//     (authorizeViewWrite in @lowdefy/api). An MCP App view shows a message asking the person
+//     to reconnect with write access.
+// A list, not every code: an error can carry the code of the driver or system call it wraps
+// (ECONNREFUSED, a database's numeric code), which says how the app is built.
+const clientErrorCodes = new Set(['view_write_required']);
+
+function getExpectedErrorBody(error) {
+  const body = { name: error.name, message: error.message };
+  if (clientErrorCodes.has(error.code)) {
+    body.code = error.code;
+  }
+  return body;
+}
+
 // Hono routes every handler error to the app-level error handler — upstream
 // middleware try/catch never sees them (compose catches per dispatch level).
 // API routes get the serialized error JSON the old apiWrapper returned;
@@ -58,7 +74,7 @@ function createErrorHandler({ basePath = '', logger }) {
       const detail = error.name === 'UserError' ? ` - ${error.message}` : '';
       logger.warn(`${warning}: ${c.req.method} ${c.req.path}${detail}`);
       if (path.startsWith('/api/')) {
-        return c.json({ name: error.name, message: error.message }, status);
+        return c.json(getExpectedErrorBody(error), status);
       }
       return c.text(text, status);
     }

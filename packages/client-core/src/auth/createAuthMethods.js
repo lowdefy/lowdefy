@@ -217,6 +217,25 @@ function createAuthMethods(lowdefy, auth) {
     }
   }
 
+  // A sign-in made while the page holds a signed OAuth authorization query (an
+  // MCP client connecting, say) is answered by the oauth-provider plugin with
+  // { redirect: true, url } in place of the session body: the url resumes the
+  // authorization, at the consent page or the client's redirect URI. The auth
+  // client's built-in redirect fetch plugin is already navigating there as the
+  // response lands, so the sign-in must not navigate to its own callback over
+  // it - that drops the authorization and the client never connects. This
+  // outranks every callbackUrl, an explicit one and false included: the person
+  // came to sign in for the authorization, and the app's destination is where
+  // they go after a sign-in of their own. The session reloads are suppressed
+  // as for any other departure, so none lands back on the page being left.
+  function resumesAuthorization(data) {
+    if (data?.redirect !== true || !type.isString(data.url)) {
+      return false;
+    }
+    auth.suppressSessionReload();
+    return true;
+  }
+
   // The wire form of a target: a string BetterAuth performs a later redirect hop
   // to (an emailed link, an OAuth return). A page target is baked to its
   // basePath-prefixed URL through the single boundary; an external target is
@@ -427,6 +446,9 @@ function createAuthMethods(lowdefy, auth) {
       if (data?.twoFactorRedirect) {
         return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
       }
+      if (resumesAuthorization(data)) {
+        return data;
+      }
       const win = lowdefy._internal?.globals?.window;
       if (win) {
         await settleSignIn(callbackTarget);
@@ -447,6 +469,9 @@ function createAuthMethods(lowdefy, auth) {
       // a chain is never stranded by a navigation that did not happen.
       if (data?.twoFactorRedirect) {
         return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
+      }
+      if (resumesAuthorization(data)) {
+        return data;
       }
       const win = lowdefy._internal?.globals?.window;
       if (win) {
@@ -481,6 +506,9 @@ function createAuthMethods(lowdefy, auth) {
         ...captchaFetchOptions(captchaToken),
       })
     );
+    if (resumesAuthorization(data)) {
+      return data;
+    }
     // With requireEmailVerification the response carries no session - do not
     // navigate; the page shows a "verify your email" message instead.
     const win = lowdefy._internal?.globals?.window;
@@ -664,6 +692,9 @@ function createAuthMethods(lowdefy, auth) {
   async function passkeySignIn({ callbackUrl } = {}) {
     const callbackTarget = resolveCallbackURL({ lowdefy, callbackUrl });
     const data = await runWebAuthnCeremony(unwrap(auth.signInPasskey()));
+    if (resumesAuthorization(data)) {
+      return data;
+    }
     const win = lowdefy._internal?.globals?.window;
     if (win) {
       await settleSignIn(callbackTarget);
@@ -783,6 +814,9 @@ function createAuthMethods(lowdefy, auth) {
     if (data?.twoFactorRedirect) {
       return navigateToTwoFactorChallenge({ callbackTarget }) ? stopChain(data) : data;
     }
+    if (resumesAuthorization(data)) {
+      return data;
+    }
     const win = lowdefy._internal?.globals?.window;
     if (data?.token && win) {
       await settleSignIn(callbackTarget);
@@ -829,6 +863,9 @@ function createAuthMethods(lowdefy, auth) {
     // would yank them out of what is usually a modal. The discriminator has to
     // come from the request, and updatePhoneNumber is still in rest because
     // BetterAuth needs it.
+    if (resumesAuthorization(data)) {
+      return data;
+    }
     const win = lowdefy._internal?.globals?.window;
     if (data?.token && rest.updatePhoneNumber !== true && win) {
       await settleSignIn(callbackTarget);
@@ -955,6 +992,9 @@ function createAuthMethods(lowdefy, auth) {
     // A token is the whole guard here, unlike phoneNumberVerify's: verify has no
     // session-less mode, so a successful challenge always mints one and a failed
     // one throws to the action's catch.
+    if (resumesAuthorization(data)) {
+      return data;
+    }
     const win = lowdefy._internal?.globals?.window;
     if (data?.token && win) {
       await settleSignIn(callbackTarget);

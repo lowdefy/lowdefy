@@ -35,6 +35,7 @@ import createHandleError from '../../lib/server/log/createHandleError.js';
 import createLogger from '../../lib/server/log/createLogger.js';
 import fileCache from '../../lib/server/fileCache.js';
 import getAuth from '../../lib/server/auth/getAuth.js';
+import getAuthenticationHeaders from '../lib/getAuthenticationHeaders.js';
 import getClientAddress from '../../lib/server/getClientAddress.js';
 import getStrategies from '../../lib/server/auth/getStrategies.js';
 import i18nConfig from '../../lib/build/i18n.js';
@@ -159,7 +160,7 @@ function apiContext({ clientAddressHeader } = {}) {
       // resolveAuthentication is the single writer of context.user.
       await resolveAuthentication(context, {
         auth: context.auth,
-        headers: c.req.raw.headers,
+        headers: getAuthenticationHeaders(c),
         strategies: getStrategies({ logger: context.logger }),
         mcp: isMcpPath(c.req.path),
       });

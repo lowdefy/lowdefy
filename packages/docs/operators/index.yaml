@@ -23,7 +23,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            Operators are functions written directly in config — they evaluate wherever they appear. All 70 operators, grouped by what they do. See [Operators](/operators) for how evaluation works.
+            Operators are functions written directly in config — they evaluate wherever they appear. All 71 operators, grouped by what they do. See [Operators](/operators) for how evaluation works.
       - id: section_logic_control_title
         type: Title
         properties:
@@ -455,6 +455,25 @@ _ref:
                 type: Html
                 properties:
                   html: '<code>_location</code>'
+          - id: card__mcp
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__mcp
+                  type: Link
+                  params:
+                    pageId: _mcp
+            blocks:
+              - id: card__mcp_label
+                type: Html
+                properties:
+                  html: '<code>_mcp</code>'
           - id: card__url_query
             type: Card
             layout:
@@ -531,6 +550,25 @@ _ref:
                 type: Html
                 properties:
                   html: '<code>_step</code>'
+          - id: card__response
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link__response
+                  type: Link
+                  params:
+                    pageId: _response
+            blocks:
+              - id: card__response_label
+                type: Html
+                properties:
+                  html: '<code>_response</code>'
           - id: card__actions
             type: Card
             layout:

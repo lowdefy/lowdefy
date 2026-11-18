@@ -2488,3 +2488,114 @@ test('emailOtpVerify navigates an enrolled user to the two factor challenge carr
   });
   expect(assign.mock.calls).toEqual([['/two-factor?callbackUrl=%2Freports']]);
 });
+
+// A sign-in made on a login page that holds a signed OAuth authorization query
+// is answered with the URL that resumes the authorization. The auth client's
+// redirect fetch plugin navigates there; the fake client has no such plugin, so
+// "no navigation" here means Lowdefy left that redirect alone.
+const authorizationRedirect = {
+  redirect: true,
+  url: 'https://app.lowdefy.test/api/auth/oauth2/authorize?client_id=abc',
+};
+
+test('login with email and password leaves the navigation to an authorization redirect', async () => {
+  const { auth, lowdefy, assign, push } = setup({ signInResult: authorizationRedirect });
+  const { login } = createAuthMethods(lowdefy, auth);
+  const data = await login({ email: 'user@example.com', password: 'password123' });
+  expect(push).not.toHaveBeenCalled();
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).toHaveBeenCalledTimes(1);
+  expect(data).toEqual(authorizationRedirect);
+});
+
+test('login lets an authorization redirect outrank an explicit callbackUrl', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: authorizationRedirect });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign).not.toHaveBeenCalled();
+});
+
+test('login with callbackUrl false does not sync the session over an authorization redirect', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: authorizationRedirect });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({ email: 'user@example.com', password: 'password123', callbackUrl: false });
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.getSession).not.toHaveBeenCalled();
+  expect(auth.getResolvedUser).not.toHaveBeenCalled();
+});
+
+test('login does not treat a redirect response without a url as an authorization redirect', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: { redirect: true, token: 't' } });
+  const { login } = createAuthMethods(lowdefy, auth);
+  await login({
+    email: 'user@example.com',
+    password: 'password123',
+    callbackUrl: { url: '/dashboard' },
+  });
+  expect(assign.mock.calls).toEqual([['/dashboard']]);
+});
+
+test('login with phoneNumber and password leaves the navigation to an authorization redirect', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: authorizationRedirect });
+  const { login } = createAuthMethods(lowdefy, auth);
+  const data = await login({ phoneNumber: '+27820000000', password: 'password123' });
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).toHaveBeenCalledTimes(1);
+  expect(data).toEqual(authorizationRedirect);
+});
+
+test('passkeySignIn leaves the navigation to an authorization redirect', async () => {
+  const { auth, lowdefy, assign } = setup({ signInResult: authorizationRedirect });
+  const { passkeySignIn } = createAuthMethods(lowdefy, auth);
+  const data = await passkeySignIn({ callbackUrl: { url: '/dashboard' } });
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).toHaveBeenCalledTimes(1);
+  expect(data).toEqual(authorizationRedirect);
+});
+
+test('signUp leaves the navigation to an authorization redirect', async () => {
+  const { auth, lowdefy, assign } = setup({ signUpResult: authorizationRedirect });
+  const { signUp } = createAuthMethods(lowdefy, auth);
+  const data = await signUp({ email: 'user@example.com', password: 'password123', name: 'User' });
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).toHaveBeenCalledTimes(1);
+  expect(data).toEqual(authorizationRedirect);
+});
+
+test('emailOtpVerify leaves the navigation to an authorization redirect', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.emailOtpVerify = vi.fn(() => Promise.resolve({ data: authorizationRedirect, error: null }));
+  const { emailOtpVerify } = createAuthMethods(lowdefy, auth);
+  const data = await emailOtpVerify({ email: 'user@example.com', otp: '482913' });
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).toHaveBeenCalledTimes(1);
+  expect(data).toEqual(authorizationRedirect);
+});
+
+test('phoneNumberVerify leaves the navigation to an authorization redirect', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.phoneNumberVerify = vi.fn(() =>
+    Promise.resolve({ data: authorizationRedirect, error: null })
+  );
+  const { phoneNumberVerify } = createAuthMethods(lowdefy, auth);
+  const data = await phoneNumberVerify({ phoneNumber: '+27820000000', code: '482913' });
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).toHaveBeenCalledTimes(1);
+  expect(data).toEqual(authorizationRedirect);
+});
+
+test('twoFactorVerify leaves the navigation to an authorization redirect', async () => {
+  const { auth, lowdefy, assign } = setup();
+  auth.twoFactorVerifyTotp = vi.fn(() =>
+    Promise.resolve({ data: authorizationRedirect, error: null })
+  );
+  const { twoFactorVerify } = createAuthMethods(lowdefy, auth);
+  const data = await twoFactorVerify({ code: '012345' });
+  expect(assign).not.toHaveBeenCalled();
+  expect(auth.suppressSessionReload).toHaveBeenCalledTimes(1);
+  expect(data).toEqual(authorizationRedirect);
+});

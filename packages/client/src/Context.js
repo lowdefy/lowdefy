@@ -19,6 +19,7 @@ import { createPageLifecycleManager, getContextKey } from '@lowdefy/client-core'
 import getContext from '@lowdefy/engine';
 
 import createShortcutManager from './createShortcutManager.js';
+import McpEffect from './McpEffect.js';
 import MountEvents from './MountEvents.js';
 
 const ShortcutEffect = ({ context }) => {
@@ -77,6 +78,7 @@ const Context = ({ appContext, children, config, jsMap, lowdefy, pathParams, res
             <ShortcutEffect context={context} />
             <PageLifecycleEffect context={context} />
             <WebSocketsEffect context={context} />
+            <McpEffect context={context} lowdefy={lowdefy} />
             {children(context)}
           </>
         );

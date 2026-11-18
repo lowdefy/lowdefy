@@ -104,6 +104,7 @@ class ServerParser {
     location,
     operatorPrefix = '_',
     payload,
+    response,
     state,
     steps,
   }) {
@@ -129,6 +130,7 @@ class ServerParser {
           literalData,
           location,
           payload,
+          response,
           state,
           steps,
           ...callOptions,
@@ -188,6 +190,7 @@ class ServerParser {
           params,
           parser: operatorParser,
           payload,
+          response,
           runtime: 'node',
           secrets: this.secrets,
           state,

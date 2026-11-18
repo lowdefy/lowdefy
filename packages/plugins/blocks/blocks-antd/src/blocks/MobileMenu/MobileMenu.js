@@ -20,10 +20,12 @@ import { withBlockDefaults } from '@lowdefy/block-utils';
 
 import Button from '../Button/Button.js';
 import Drawer from '../Drawer/Drawer.js';
+import getDefaultLogoUrl from '../getDefaultLogoUrl.js';
 import Menu from '../Menu/Menu.js';
 import { getDarkMode } from '../headerActions.js';
 
 const MobileMenu = ({
+  apiBase,
   basePath,
   blockId,
   classNames = {},
@@ -94,7 +96,7 @@ const MobileMenu = ({
                       src={
                         properties.logo?.srcMobile ??
                         properties.logo?.src ??
-                        `${basePath}/logo-square-${getDarkMode() ? 'dark' : 'light'}-theme.png`
+                        getDefaultLogoUrl({ apiBase, darkMode: getDarkMode(), square: true })
                       }
                       alt={properties.logo?.alt ?? 'Lowdefy'}
                       style={properties.logo?.style}
@@ -107,6 +109,7 @@ const MobileMenu = ({
             <>
               {content?.drawerHeader && content.drawerHeader()}
               <Menu
+                apiBase={apiBase}
                 basePath={basePath}
                 components={components}
                 blockId={`${blockId}_menu`}

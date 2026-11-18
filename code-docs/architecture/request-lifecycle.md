@@ -593,7 +593,7 @@ Two additive controls decouple routine execution from the response:
 | Event Trigger        | `packages/engine/src/Events.js`                           |
 | Action Runner        | `packages/engine/src/Actions.js`                          |
 | Request Manager      | `packages/engine/src/Requests.js`                         |
-| HTTP Client          | `packages/client-core/src/createCallRequest.js`                |
+| HTTP Client          | `packages/client-core/src/createCallRequest.js`           |
 | Server Handler       | `packages/api/src/routes/request/callRequest.js`          |
 | Connection Resolver  | `packages/api/src/routes/request/getConnection.js`        |
 | Request Resolver     | `packages/api/src/routes/request/getRequestResolver.js`   |
@@ -621,6 +621,17 @@ Two additive controls decouple routine execution from the response:
 ## Link endpoints (`link: true`)
 
 A `GET` on `/api/endpoints/<endpointId>/<path...>` serves an `Api` endpoint declared `link: true`. The build validates the flag (`validateEndpoint`: `Api` only, not with `webhook` or `async`) and writes `linkEndpoints.json`, `[{ endpointId, segments }]` sorted longest id first and always written (also as `[]`), so `runLinkEndpoint` matches the decoded path segments by prefix without probing endpoint configs, and an id with slashes (`a/b`) wins over a shorter one it starts with. The segments after the id, joined with `/`, are `path`. The routine runs as the session caller, `authorizeApiEndpoint` applies, and the payload `{ path, query }` is checked against any `payloadSchema` (an outside caller's mistake: 400 with no body, logged at debug without the path). `buildMcp` refuses a link endpoint as an MCP tool, since `callEndpoint` refuses every non-GET call to it. `createLinkAnswer` turns the outcome into the answer: a 302 to the returned URL, a `:reject` `:status` (the build allows `:status`, not `:body`, in a link endpoint's routine), 400 for a failed `ValidateSchema`, or 500 with a fixed message; a `:return` that is not an absolute http(s) URL or an origin path is logged as a `ConfigError`. The info log `call_link_endpoint` carries the endpoint id only, never the path, which can be a file name.
+
+## View sessions (MCP App views)
+
+A page shown as an MCP App view calls the app from its host's origin with a bearer view session (`context.viewSession`). See [mcp-server.md](./mcp-server.md) for the whole flow. What it changes on the routes in this document:
+
+- **Refused by default.** `refuseViewSession` answers a view session with 403 on every `/api/*` route that `packages/servers/server/src/lib/viewRoutes.js` does not list. Listed: `/api/view/boot`, `/api/view/root`, `/api/page/*`, `/api/request/*`, `/api/endpoints/*`, `/api/agent/*`, `/api/user`, `/api/client-error`, `/api/usage` and `/api/websocket`. `/api/auth/*` refuses it inside BetterAuth (`buildViewSessionGatePlugin`).
+- **CORS.** The listed routes except `/api/websocket` answer the exact view origins (`viewCors`), with no credentials. No other API route sends a CORS header; static files send `Access-Control-Allow-Origin: *` for an app with a view.
+- **`/api/request`.** `authorizeViewRequest` runs before the request lookup: the request's page must be a view page. On a grant without `mcp:write`, `authorizeViewRequestResolver` runs only a resolver whose meta is `checkRead: true` and not `checkWrite: true`, and `authorizeViewRequestProperties` refuses `$out` and `$merge`. Both also run for a request step in a routine (`handleRequest`).
+- **`/api/endpoints`.** `authorizeViewEndpoint` runs before the endpoint lookup, for the POST route and for link endpoints: the id must be listed for a view page in `mcp.json`. After the role check, `authorizeViewWrite` refuses an endpoint whose listed scope is not `mcp:read` on a read-only grant. Auth steps and `CallAgent` steps are held to the grant too (`authorizeViewAuthStep`, `handleAgentCall`).
+- **The refusal.** A write refused for the grant is an `AuthorizationError` with `code: 'view_write_required'`, the one code the error handler passes through in the body.
+- **Two new routes.** `GET /api/view/boot` is public and never stored. `GET /api/view/root` answers a view session only, is `no-store` and carries the caller stamp. Both keep the request timeout; neither goes through `refuseOtherBuild`.
 
 ## Webhook endpoints (`webhook: true`)
 

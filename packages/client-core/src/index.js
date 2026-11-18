@@ -25,6 +25,7 @@ export { default as createRecordBatcher } from './recorder/createRecordBatcher.j
 export { default as createRecordingSession } from './recorder/createRecordingSession.js';
 export { createUrl, serializeQuery } from './url.js';
 export { default as decodeErrorBody } from './decodeErrorBody.js';
+export { default as fetchApi } from './fetchApi.js';
 export { default as getActiveLocale } from './getActiveLocale.js';
 export { default as getAuthorizationHeaders } from './auth/getAuthorizationHeaders.js';
 export { default as getContextKey } from './getContextKey.js';
