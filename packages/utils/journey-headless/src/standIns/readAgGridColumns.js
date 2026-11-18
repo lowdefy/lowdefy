@@ -72,13 +72,13 @@ function assignColumnIds(columnDefs) {
   const padding = { next: 0 };
   let treeDepth = 0;
   const measure = (defs, level) => {
+    treeDepth = Math.max(treeDepth, level);
     defs.forEach((col) => {
-      treeDepth = Math.max(treeDepth, level);
       if (isGroup(col)) {
         if (type.isNone(col.groupId)) {
           padding.next += 1;
         }
-        measure(col.children.filter(type.isObject), level + 1);
+        measure(col.children, level + 1);
         return;
       }
       const base = readBase(col);
@@ -121,7 +121,9 @@ function assignColumnIds(columnDefs) {
   };
   const build = (defs, level) => {
     const padded = level < treeDepth;
-    if (padded && defs.length > 0 && !defs.some(isGroup)) {
+    // AG Grid wraps a level's columns in one padding chain only when no entry has children at all;
+    // `children: null` is a column, yet still gives each column a chain of its own.
+    if (padded && defs.length > 0 && defs.every((col) => col.children === undefined)) {
       defs.forEach(takeColumn);
       padLevels(level);
       return;
@@ -133,7 +135,7 @@ function assignColumnIds(columnDefs) {
         } else {
           takeKeyed(col.groupId);
         }
-        build(col.children.filter(type.isObject), level + 1);
+        build(col.children, level + 1);
         return;
       }
       takeColumn(col);
@@ -142,17 +144,24 @@ function assignColumnIds(columnDefs) {
       }
     });
   };
-  const defs = (columnDefs ?? []).filter(type.isObject);
-  measure(defs, 0);
-  build(defs, 0);
+  measure(columnDefs, 0);
+  build(columnDefs, 0);
   return ids;
 }
 
-function collectLeaves({ defs, group, properties, ids, leaves }) {
-  (defs ?? []).forEach((col) => {
+// The block's processColDefs spreads each entry into an object, so an entry that is not an object
+// (a string, or false from an _if) reaches AG Grid as a column with no key.
+function toColumnObjects(defs) {
+  return (defs ?? []).map((col) => {
     if (!type.isObject(col)) {
-      return;
+      return {};
     }
+    return isGroup(col) ? { ...col, children: toColumnObjects(col.children) } : col;
+  });
+}
+
+function collectLeaves({ defs, group, properties, ids, leaves }) {
+  defs.forEach((col) => {
     if (isGroup(col)) {
       collectLeaves({ defs: col.children, group: col, properties, ids, leaves });
       return;
@@ -177,8 +186,9 @@ function collectLeaves({ defs, group, properties, ids, leaves }) {
 // its cells' col-id. `shown` is the columns a person sees, in display order: pinned left, then unpinned, then
 // pinned right, hidden ones left out.
 function readAgGridColumns(properties) {
-  const ids = assignColumnIds(properties.columnDefs);
-  const all = collectLeaves({ defs: properties.columnDefs, properties, ids, leaves: [] });
+  const columnDefs = toColumnObjects(properties.columnDefs);
+  const ids = assignColumnIds(columnDefs);
+  const all = collectLeaves({ defs: columnDefs, properties, ids, leaves: [] });
   const shown = all
     .filter((column) => !column.hidden)
     .map((column, index) => ({ column, index }))

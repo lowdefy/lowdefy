@@ -19,7 +19,7 @@ import { expect, test } from 'vitest';
 import readAgGridColumns from './readAgGridColumns.js';
 
 // Each case's ids are what ag-grid-community 36.3.0 gave the same columnDefs (getColumns, colId),
-// read by running the grid in jsdom.
+// read by running the grid in jsdom on the entries processColDefs hands it.
 test.each([
   [
     'anonymous columns',
@@ -84,6 +84,29 @@ test.each([
       { field: 'n' },
     ],
     ['0', '1', 'n', 'n_1'],
+  ],
+  [
+    'an empty group, which still adds a level',
+    [{ field: '0' }, { headerName: 'A' }, { children: [] }, { headerName: 'B' }],
+    ['0', '1', '5'],
+  ],
+  [
+    'entries that are not objects, which reach AG Grid as columns with no key',
+    ['note', { headerName: 'Actions' }, false, { field: 'name' }, { headerName: 'B' }],
+    ['0', '1', '2', 'name', '3'],
+  ],
+  [
+    'a column with children null beside others, each given its own padding',
+    [
+      { field: '0' },
+      { field: '1' },
+      { field: '2' },
+      { children: [{ headerName: 'B', children: null }, { headerName: 'C' }, { headerName: 'E' }] },
+      { children: [{ children: [{ headerName: 'X' }] }] },
+      { headerName: 'F' },
+      { headerName: 'G' },
+    ],
+    ['0', '1', '2', '4', '5', '6', '18', '19', '22'],
   ],
 ])('AgGrid column ids: %s', (_name, columnDefs, ids) => {
   expect(readAgGridColumns({ columnDefs }).all.map((column) => column.id)).toEqual(ids);
