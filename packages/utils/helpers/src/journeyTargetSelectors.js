@@ -126,6 +126,19 @@ function controlSelector({ blockId, control, rowKey }) {
   )}]${rowPart}`;
 }
 
+// The DOM attributes that mark one control: spread them onto the element (or a menu item, which
+// antd passes to its <li>). A control drawn with no block id (a component used outside a block)
+// carries no marks, and a row key is written only in a grid row.
+function controlMarks({ blockId, control, rowKey }) {
+  if (type.isNone(blockId) || type.isNone(control)) return {};
+  const marks = {
+    [controlAttributes.blockId]: String(blockId),
+    [controlAttributes.control]: String(control),
+  };
+  if (!type.isNone(rowKey)) marks[controlAttributes.rowKey] = String(rowKey);
+  return marks;
+}
+
 // A block that renders into a portal (Modal, Drawer) puts this class on the portal's root, so a
 // journey target scoped to the block reaches the portal content, which is outside the block's
 // #bl- wrapper. The class is a CSS selector-safe form of the block id.
@@ -138,6 +151,7 @@ const journeyTargetSelectors = {
   blockWrapperPrefix: 'bl-',
   checkboxOption,
   controlAttributes,
+  controlMarks,
   controlSelector,
   // The elements that open a dropdown: antd's Dropdown trigger and a Table cell menu's button.
   dropdownTrigger: '.ant-dropdown-trigger, .lf-table-menu-trigger',

@@ -142,3 +142,32 @@ test('dropdownTrigger names antd dropdown triggers and Table cell menu buttons',
     '.ant-dropdown-trigger, .lf-table-menu-trigger'
   );
 });
+
+test('controlMarks are the attributes controlSelector finds', () => {
+  const { controlMarks, controlSelector } = journeyTargetSelectors;
+  const marks = controlMarks({ blockId: 'invoices', control: 'void', rowKey: 42 });
+  expect(marks).toEqual({
+    'data-lf-block': 'invoices',
+    'data-lf-control': 'void',
+    'data-lf-row-key': '42',
+  });
+  const button = document.createElement('button');
+  Object.entries(marks).forEach(([name, value]) => button.setAttribute(name, value));
+  document.body.replaceChildren(button);
+  expect(
+    document.querySelector(controlSelector({ blockId: 'invoices', control: 'void', rowKey: '42' }))
+  ).toBe(button);
+});
+
+test('controlMarks leave out the row key outside a grid and mark nothing without a block', () => {
+  const { controlMarks } = journeyTargetSelectors;
+  expect(controlMarks({ blockId: 'deleteModal', control: 'ok' })).toEqual({
+    'data-lf-block': 'deleteModal',
+    'data-lf-control': 'ok',
+  });
+  expect(controlMarks({ blockId: 'deleteModal', control: 'ok', rowKey: null })).toEqual({
+    'data-lf-block': 'deleteModal',
+    'data-lf-control': 'ok',
+  });
+  expect(controlMarks({ control: 'ok' })).toEqual({});
+});

@@ -16,6 +16,7 @@
 
 import React from 'react';
 import { cn } from '@lowdefy/block-utils';
+import { journeyTargetSelectors } from '@lowdefy/helpers';
 
 import normalizeItemClassAndStyle from './normalizeItemClassAndStyle.js';
 
@@ -27,7 +28,10 @@ function defaultGetKey(link) {
   return link.id;
 }
 
+// `blockId` is the menu block's id: each MenuLink item carries it and its key as journey control
+// marks.
 function buildMenuItems({
+  blockId,
   links,
   components: { Icon, Link, ShortcutBadge },
   classNames,
@@ -68,6 +72,7 @@ function buildMenuItems({
         className: cn(classNames?.item, item.class.element) || undefined,
         style: { ...styles?.item, ...item.style.element },
         children: buildMenuItems({
+          blockId,
           links: link.links,
           components: { Icon, Link, ShortcutBadge },
           classNames,
@@ -110,8 +115,10 @@ function buildMenuItems({
     // on `.ant-menu-title-content-with-extra` that interacts badly with the Lowdefy
     // `<Link>` wrapper (collapses the label). Render extra ourselves inside the Link
     // using float, which works regardless of the parent's display mode.
+    const key = getKey(link);
     return {
-      key: getKey(link),
+      ...journeyTargetSelectors.controlMarks({ blockId, control: key }),
+      key,
       danger: link.properties?.danger,
       disabled: link.properties?.disabled,
       title: link.properties?.tooltip,

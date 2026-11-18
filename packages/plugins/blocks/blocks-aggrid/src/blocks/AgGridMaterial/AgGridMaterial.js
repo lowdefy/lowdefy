@@ -32,6 +32,7 @@ const AgGridMaterial = ({ blockId, components, events, loading, methods, propert
       style={{ width: '100%', height: properties.height ?? 500, ...styles?.element }}
     >
       <AgGrid
+        blockId={blockId}
         components={components}
         events={events}
         loading={loading}

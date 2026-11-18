@@ -115,6 +115,7 @@ function MenuComp({
   const itemsClassNames = { ...classNames, itemIcon: classNames.itemIcon ?? classNames.icon };
   const itemsStyles = { ...styles, itemIcon: styles.itemIcon ?? styles.icon };
   const items = buildMenuItems({
+    blockId,
     links: menu,
     events,
     components: { Icon, Link, ShortcutBadge },

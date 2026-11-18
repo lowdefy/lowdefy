@@ -14,14 +14,22 @@
   limitations under the License.
 */
 
+import { journeyTargetSelectors } from '@lowdefy/helpers';
+
+// Generated row keys count up across every grid on the page, so a generated key never repeats.
+let generatedRowCount = 0;
+
 const assignRowId = (params) => {
   if (params.data.id !== undefined) return params.data.id;
   if (params.data._id !== undefined) return params.data._id;
   // Without an id field a refetched row is a new object with a new id, so it loses its selection.
-  // The rowId property is how an app keeps selection across data changes.
+  // The rowId property is how an app keeps selection across data changes. The generated key
+  // (`__row_<n>`) stays with the row object, so it is the same across re-renders of that object,
+  // and its prefix tells a journey reader it is no key to name the row by.
   if (!params.data.__rid) {
+    generatedRowCount += 1;
     Object.defineProperty(params.data, '__rid', {
-      value: Math.random(),
+      value: `${journeyTargetSelectors.generatedRowKeyPrefix}${generatedRowCount}`,
       enumerable: false,
     });
   }

@@ -17,7 +17,7 @@
 import React, { useEffect } from 'react';
 import { App } from 'antd';
 import { ErrorBoundary, renderHtml, withBlockDefaults } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
+import { journeyTargetSelectors, type } from '@lowdefy/helpers';
 
 import getMask from '../getMask.js';
 import statusIcons from '../statusIcons.js';
@@ -33,6 +33,24 @@ const ConfirmModal = ({
   styles = {},
 }) => {
   const { modal } = App.useApp();
+  // The OK or Cancel button's props, its icon drawn as a block icon.
+  function buttonProps({ button, iconId, iconClass, iconStyle }) {
+    if (!button?.icon) return button;
+    return {
+      ...button,
+      icon: (
+        <ErrorBoundary onError={handleError}>
+          <Icon
+            blockId={`${blockId}_${iconId}_icon`}
+            classNames={{ element: iconClass }}
+            events={events}
+            properties={button.icon}
+            styles={{ element: iconStyle }}
+          />
+        </ErrorBoundary>
+      ),
+    };
+  }
   useEffect(() => {
     methods.registerMethod('open', (args = {}) => {
       const status = args.status || properties.status || 'confirm';
@@ -57,38 +75,24 @@ const ConfirmModal = ({
         keyboard: properties.keyboard,
         scrollLock: properties.scrollLock,
         okText: properties.okText,
-        okButtonProps: properties.okButton?.icon
-          ? {
-              ...properties.okButton,
-              icon: properties.okButton.icon && (
-                <ErrorBoundary onError={handleError}>
-                  <Icon
-                    blockId={`${blockId}_ok_icon`}
-                    classNames={{ element: classNames.okIcon }}
-                    events={events}
-                    properties={properties.okButton.icon}
-                    styles={{ element: styles.okIcon }}
-                  />
-                </ErrorBoundary>
-              ),
-            }
-          : properties.okButton,
-        cancelButtonProps: properties.cancelButton?.icon
-          ? {
-              ...properties.cancelButton,
-              icon: properties.cancelButton.icon && (
-                <ErrorBoundary onError={handleError}>
-                  <Icon
-                    blockId={`${blockId}_cancel_icon`}
-                    classNames={{ element: classNames.cancelIcon }}
-                    events={events}
-                    properties={properties.cancelButton.icon}
-                    styles={{ element: styles.cancelIcon }}
-                  />
-                </ErrorBoundary>
-              ),
-            }
-          : properties.cancelButton,
+        okButtonProps: {
+          ...buttonProps({
+            button: properties.okButton,
+            iconId: 'ok',
+            iconClass: classNames.okIcon,
+            iconStyle: styles.okIcon,
+          }),
+          ...journeyTargetSelectors.controlMarks({ blockId, control: 'ok' }),
+        },
+        cancelButtonProps: {
+          ...buttonProps({
+            button: properties.cancelButton,
+            iconId: 'cancel',
+            iconClass: classNames.cancelIcon,
+            iconStyle: styles.cancelIcon,
+          }),
+          ...journeyTargetSelectors.controlMarks({ blockId, control: 'cancel' }),
+        },
         cancelText: properties.cancelText,
         centered: properties.centered ?? false,
         mask: getMask({ mask: properties.mask, maskClosable: properties.maskClosable }),

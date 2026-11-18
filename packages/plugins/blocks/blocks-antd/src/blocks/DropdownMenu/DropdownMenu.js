@@ -53,6 +53,7 @@ function DropdownMenuBlock({
   const links = properties.links ?? [];
 
   const items = buildMenuItems({
+    blockId,
     links,
     components: { Icon, Link, ShortcutBadge },
     classNames,
