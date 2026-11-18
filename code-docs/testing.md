@@ -380,7 +380,9 @@ share one `mongod` (`getRunDataStore`), where the dev server has one per server 
 - **A dead record is replaced.** The next join replaces a record whose keeper is gone, and one
   whose URI does not answer although its keeper pid lives (the pid was reused, or the keeper is
   stopping): the join that cannot connect removes the record, if it still carries the same
-  token, and claims a new one. Three dead stores in a row are thrown.
+  token, and claims a new one. Three dead stores in a row are thrown. A keeper whose record was
+  removed or replaced this way (its `mongod` may only have been slow) lets it go as after an idle
+  release: it serves the clients it has and stops once they have left.
 - **A test file whose runner is gone owns its store.** A killed runner leaves its test files
   running under another parent (process 1, or a process that adopts orphans), which never
   exits. A file whose parent has changed since the harness loaded, or is process 1, is
