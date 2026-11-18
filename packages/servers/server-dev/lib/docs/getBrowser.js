@@ -16,6 +16,7 @@
 
 import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
+import browserCrashError from './browserCrashError.js';
 import lowdefyConfig from '../build/config.js';
 import isPageReady from './isPageReady.js';
 import launchedBrowsers from './launchedBrowsers.js';
@@ -29,20 +30,6 @@ import watchJourneyOrigin from './watchJourneyOrigin.js';
 // See lifecycleForOrigin.js: one browser per origin host and port.
 async function getBrowser({ origin }) {
   return lifecycleForOrigin({ origin }).getBrowser();
-}
-
-// A browser can break while it stays connected: newContext and newPage then
-// answer `Target crashed` on every call. Such a browser is retired, so the
-// next getBrowser() launches a new one, and the call that hit it says so.
-function browserCrashError({ error, browser, lifecycle }) {
-  if (!type.isString(error?.message) || !error.message.includes('Target crashed')) {
-    return error;
-  }
-  lifecycle.retire(browser);
-  return new Error(
-    `The headless browser crashed (${error.message.trim()}); it is relaunched for the next call.`,
-    { cause: error }
-  );
 }
 
 // `origin` should already include any configured basePath prefix that the
