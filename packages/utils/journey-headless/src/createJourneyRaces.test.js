@@ -251,11 +251,20 @@ test('createJourneyRaces keeps a shared release hint true when the call ahead is
   const { races, request, run } = setUp();
   await run({ hold: { requestId: 'claim' } });
   await run({ hold: { requestId: 'claim' } });
-  await request({ pageId: 'claims', endpointId: 'approve', label: 'routine' });
-  await request({ pageId: 'claims', label: 'page' });
+  expect(
+    (await request({ pageId: 'claims', endpointId: 'approve', label: 'routine' })).release
+  ).toBe('release: { requestId: claim, endpoint: approve }');
+  // The page call's hint names the routine's call ahead of it, not a count of page releases, so
+  // it stays true when the routine's call is let go by its own release first.
+  expect(await request({ pageId: 'claims', label: 'page' })).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, pageId: claims }',
+    hold: 'the hold at step 1, once the call at step 2 is let go',
+  });
   expect((await run({ release: { requestId: 'claim', endpoint: 'approve' } })).label).toBe(
     'routine'
   );
+  // The first page release after it lets the page call go.
   expect((await run({ release: { requestId: 'claim', pageId: 'claims' } })).label).toBe('page');
   expect(await races.finish()).toBeUndefined();
 });
