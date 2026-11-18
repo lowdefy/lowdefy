@@ -122,4 +122,25 @@ test('findJourneyPlaceholder with literal refuses a _ref or _case where a file m
   expect(refused({ steps: [{ _case: 'step' }] })).toMatch(
     /^Journey "steps\[0\]" is a _case placeholder/
   );
+  expect(refused({ pathParams: { _case: 'params' }, steps: [] })).toMatch(
+    /^Journey "pathParams" is a _case placeholder/
+  );
+  expect(refused({ pathParams: { id: { _case: 'id' } }, steps: [] })).toMatch(
+    /^Journey "pathParams.id" is a _case placeholder/
+  );
+  expect(refused({ urlQuery: { _ref: 'tests/shared/q.yaml' }, steps: [] })).toMatch(
+    /^Journey "urlQuery" is a _ref/
+  );
+  expect(refused({ urlQuery: { tab: { _ref: 'tests/shared/tab.yaml' } }, steps: [] })).toMatch(
+    /^Journey "urlQuery.tab" is a _ref/
+  );
+});
+
+test('findJourneyPlaceholder with literal passes a placeholder deeper in a urlQuery value as data', () => {
+  expect(
+    findJourneyPlaceholder({
+      literal: true,
+      journey: { urlQuery: { filter: { where: { _ref: 'x' } } }, steps: [] },
+    })
+  ).toEqual({});
 });

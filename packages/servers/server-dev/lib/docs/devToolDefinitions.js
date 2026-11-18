@@ -357,6 +357,14 @@ const devToolDefinitions = {
         .describe(
           "What the result carries of what the run exercised (every request, endpoint, event and rendered block it touched). Omitted: only a count of each. true: the full block, e.g. to check that a block rendered or which requests ran. false: leave it out. `lowdefy test` and the journey lints always read the full block; this only shapes this tool's response."
         ),
+      // Taken only to be refused: left out of the schema, a case table would be dropped and the
+      // journey run once with each _case sent as a literal object.
+      cases: z
+        .any()
+        .optional()
+        .describe(
+          'Not taken: this tool runs a journey once, so a journey with a cases table is refused. Run its file through lowdefy_run_tests, one run per row.'
+        ),
     },
   },
 

@@ -380,8 +380,18 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       exercised,
       device,
       headless,
+      cases,
     }) => {
-      const placeholderError = findSentPlaceholder({ data, pageId, steps, stubs, user });
+      const placeholderError = findSentPlaceholder({
+        cases,
+        data,
+        pageId,
+        pathParams,
+        steps,
+        stubs,
+        urlQuery,
+        user,
+      });
       if (placeholderError) {
         return notFoundResult(placeholderError);
       }
