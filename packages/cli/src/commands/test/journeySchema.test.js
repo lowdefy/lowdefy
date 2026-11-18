@@ -636,7 +636,12 @@ test('journeySchema refuses an unknown top-level key, naming it and listing the 
 test('journeySchema names every unknown top-level key', () => {
   const result = validateJourney({ journey: { ...minimalJourney, seriel: true, page: 'form' } });
   expect(result.valid).toBe(false);
-  expect(result.message).toContain('Journey has an unknown key "seriel", "page".');
+  expect(result.message).toContain('Journey has unknown keys "seriel", "page".');
+});
+
+test('journeySchema shows an unknown key as written, not HTML-escaped', () => {
+  const result = validateJourney({ journey: { ...minimalJourney, "it's<a&b>": true } });
+  expect(result.message).toContain('Journey has an unknown key "it\'s<a&b>".');
 });
 
 test('journeySchema accepts every root key it lists', () => {

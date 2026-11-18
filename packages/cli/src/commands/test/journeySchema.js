@@ -393,7 +393,8 @@ const journeySchema = {
   properties,
   errorMessage: {
     type: 'Journey should be an object.',
-    additionalProperties: `Journey has an unknown key {% for error in params.errors %}"{{ error.params.additionalProperty }}"{% if not loop.last %}, {% endif %}{% endfor %}. Keys are: ${JOURNEY_KEYS}.`,
+    // `| safe`: the message is plain text, so a key is shown as written, not HTML-escaped.
+    additionalProperties: `Journey has {% if params.errors | length > 1 %}unknown keys{% else %}an unknown key{% endif %} {% for error in params.errors %}"{{ error.params.additionalProperty | safe }}"{% if not loop.last %}, {% endif %}{% endfor %}. Keys are: ${JOURNEY_KEYS}.`,
     required: {
       name: 'Journey should have required property "name".',
       steps: 'Journey should have required property "steps".',
