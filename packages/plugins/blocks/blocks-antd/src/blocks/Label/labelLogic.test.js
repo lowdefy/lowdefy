@@ -49,7 +49,20 @@ test('labelLogic gives a large stacked field the default spacing', () => {
 });
 
 test('labelLogic gives a field with its label beside the input on wide screens the field gap', () => {
-  expect(spacing({ title: 'Name', span: 8 }).fieldGap).toEqual('var(--lf-field-gap, 16px)');
+  expect(spacing({ title: 'Name', span: 8 })).toEqual({
+    labelGap: 8,
+    fieldGap: 'var(--lf-field-gap, 16px)',
+  });
+});
+
+test('labelLogic gives a field labelled by a label area the field gap', () => {
+  const { label, rowStyle } = labelLogic({
+    blockId: 'field',
+    content: { label: () => 'Area label' },
+    properties: { title: '' },
+  });
+  expect(label).toEqual('Area label');
+  expect(rowStyle.marginBottom).toEqual('var(--lf-field-gap, 16px)');
 });
 
 test('labelLogic gives an inline field no field gap and keeps its label gap', () => {

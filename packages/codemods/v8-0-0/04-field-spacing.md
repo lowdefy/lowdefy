@@ -28,31 +28,65 @@ Skip `node_modules/`, `.lowdefy/`, `.git/` and build output folders in every ste
 ### 1. Find containers that space fields with a gap
 
 ```
-grep -rnE '^\s*(gap|gutter|contentGap|contentGutter):' \
+grep -rnE '\b"?(gap|gutter|contentGap|contentGutter)"?\s*:' \
   --include='*.yaml' --include='*.yml' --include='*.njk' --include='*.json' \
   --exclude-dir=node_modules --exclude-dir=.lowdefy .
 ```
 
-`gutter`, `contentGap` and `contentGutter` are deprecated names for `gap`, under `layout` or
-`slots.content`. For each hit, look at the blocks directly inside that container. It is a **form
-container** when its blocks are stacked input blocks with their label above the input (no
-`label.inline`, no `label.disabled`), with at most one row of buttons after the last field. A
-`Box` of fields placed side by side (`layout.span` below 24, or `layout.flex`) counts too.
+The pattern also matches JSON (`"gap": 16`) and flow style (`layout: { gap: 16 }`). `gutter`,
+`contentGap` and `contentGutter` are deprecated names for `gap`, under `layout` or `slots.content`.
+For each hit, look at the blocks directly inside that container. It is a **form container** when
+its blocks are stacked input blocks with their label above the input (no `label.inline`, no
+`label.disabled`), with at most one row of buttons after the last field. A `Box` of fields placed
+side by side (`layout.span` below 24, or `layout.flex`) counts too.
 
-Leave every other container alone: page layouts, card grids, button rows, and filter bars whose
-inputs are inline or have no label.
+Leave every other container's gap alone: page layouts, card grids, button rows, and filter bars
+whose inputs are inline or have no label.
 
 ### 2. Take the vertical gap off each form container
 
-`gap` is either one value for both directions, `[horizontal, vertical]`, or either of those as a
-breakpoint object (`{ xs: 8, md: 16 }`).
+`gap` takes three shapes. Each number in them may also be a breakpoint object of numbers
+(`{ xs: 8, md: 16 }`):
 
-- **Fields one per row:** remove `gap`. If it was a `[horizontal, vertical]` array, remove it too.
+| Shape                    | Example                       | Means                              |
+| ------------------------ | ----------------------------- | ---------------------------------- |
+| A number                 | `gap: 16`                     | Both directions                    |
+| A breakpoint object      | `gap: { xs: 8, md: 16 }`      | Both directions, per breakpoint    |
+| `[horizontal, vertical]` | `gap: [{ xs: 8, md: 16 }, 0]` | Each direction, a number or object |
+
+A breakpoint object never holds arrays: `{ xs: [8, 0] }` is invalid and silently loses the gap.
+
+- **Fields one per row:** remove `gap`.
 - **Fields side by side:** keep the horizontal gap and set the vertical gap to 0: `gap: 16`
-  becomes `gap: [16, 0]`, and `gap: [24, 16]` becomes `gap: [24, 0]`.
-- **A vertical gap under 12 or over 24:** the app chose tighter or looser spacing than the new
-  16px. Keep it by setting the variable on the container instead, with the old vertical gap:
-  `style: { --lf-field-gap: 8px }`. Use `--lf-field-gap-small` when the fields are `size: small`.
+  becomes `gap: [16, 0]`, `gap: [24, 16]` becomes `gap: [24, 0]`, and `gap: { xs: 8, md: 16 }`
+  becomes `gap: [{ xs: 8, md: 16 }, 0]`.
+- **Spacing the app chose on purpose:** fields now carry 16px below them (4px for `size: small`).
+  When the old vertical gap is under 12 or over 24 (for small fields, anything but 0 to 8), keep it
+  by setting the variable on the container with the old vertical gap, as well as removing the
+  vertical gap: `style: { --lf-field-gap: 8px }`, or `--lf-field-gap-small` for small fields.
+
+### 3. Fix rows of labelled fields beside a button
+
+A row that puts fields with their label above the input beside a button, usually with
+`layout.align: bottom` (a search or filter row), now has 16px below each field, so the button
+sits 16px lower than the inputs. Set the variable to 0 on that row:
+
+```yaml
+- id: search_row
+  type: Box
+  layout:
+    gap: 8
+    align: bottom
+  style:
+    --lf-field-gap: 0
+  blocks:
+    - id: search_name
+      type: TextInput
+    - id: search_go
+      type: Button
+```
+
+Report each row you changed.
 
 ```yaml
 # Before
@@ -78,7 +112,7 @@ breakpoint object (`{ xs: 8, md: 16 }`).
 A form container whose gap comes from a `_ref` var or an operator: rewrite the value where it is
 set if every use is a form container, otherwise leave it and report it.
 
-### 3. Check the build and report
+### 4. Check the build and report
 
 Run `lowdefy build`. Nothing in this migration changes what builds.
 

@@ -22,7 +22,7 @@
         },
         {
           "id": "field-spacing",
-          "description": "Remove the vertical layout gap (gap, gutter, contentGap, contentGutter) from containers of stacked labelled input blocks, keeping the horizontal gap for fields side by side as [x, 0], keep a vertical gap under 12 or over 24 with the --lf-field-gap variable, and report containers it could not judge (mixed blocks, gaps from vars or operators).",
+          "description": "Remove the vertical layout gap (gap, gutter, contentGap, contentGutter) from containers of stacked labelled input blocks, keeping the horizontal gap for fields side by side as [x, 0], keep spacing the app chose on purpose with the --lf-field-gap variables, set --lf-field-gap: 0 on rows of labelled fields beside a button, and report containers it could not judge (mixed blocks, gaps from vars or operators).",
           "path": "v8-0-0/04-field-spacing.md"
         }
       ]
