@@ -451,3 +451,30 @@ test('runJourneyPool never reruns at a limit of 1', async () => {
   expect(runner.started).toEqual(['a', 'b']);
   expect(results[0].passed).toBe(false);
 });
+
+test('runJourneyPool runs no rerun when a callback throws while the rerun waits, and reports the first failure', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b', 'c', 'd'].map((name) => entry({ name }));
+  const finished = [];
+  const pool = runJourneyPool({
+    entries,
+    readLimit: () => 3,
+    run: runner.run,
+    onFinished: ({ result }) => {
+      finished.push([result.name, result.class, result.contended]);
+      if (result.name === 'b') throw new Error('progress failed');
+    },
+  });
+  const rejected = expect(pool).rejects.toThrow('progress failed');
+  await runner.finish('a', pageOpenTimeout());
+  // a waits for b and c; b's callback throws meanwhile.
+  await runner.finish('b');
+  await runner.finish('c');
+  await rejected;
+  expect(runner.started).toEqual(['a', 'b', 'c']);
+  expect(finished).toEqual([
+    ['b', 'PASS', undefined],
+    ['c', 'PASS', undefined],
+    ['a', 'FAIL', undefined],
+  ]);
+});
