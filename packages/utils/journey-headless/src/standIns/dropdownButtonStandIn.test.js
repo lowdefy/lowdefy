@@ -158,11 +158,13 @@ test('DropdownButton split main button closes its own open dropdown first', asyn
   ]);
 });
 
-test('DropdownButton open on an open dropdown fires nothing', async () => {
+test('DropdownButton open on an open dropdown fails, as the browser shows no new popup', async () => {
   const { log, result } = await runTestJourney({
     pages: [dropdownPage()],
     steps: [{ open: 'actions' }, { open: 'actions' }],
   });
-  expect(result.passed).toBe(true);
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(1);
+  expect(result.failure.message).toBe('Opening block "actions" showed no dropdown or popup.');
   expect(readLog(log)).toEqual([['onOpenChange', { open: true }]]);
 });

@@ -69,15 +69,38 @@ function leaveDropdown({ actor, block, state, targetBlock, trigger, onClosed }) 
 
 // A plain click on a dropdown's trigger, as rc-trigger answers it: a click dropdown toggles, a
 // hover dropdown opens as the mouse reaches it and stays open, and a contextMenu dropdown opens
-// only on a right click, so a left click does nothing.
+// only on a right click, so a left click does nothing. Resolves once an open's onOpenChange has
+// finished, since the mouse reaches a hover trigger before the click lands.
 function clickTrigger({ actor, block, state, trigger, onClosed }) {
   if (trigger === 'click' && state.open === true) {
     closeDropdown({ actor, block, state, onClosed });
-    return;
+    return Promise.resolve();
   }
   if (trigger === 'click' || trigger === 'hover') {
-    openDropdown({ actor, block, state });
+    return openDropdown({ actor, block, state });
   }
+  return Promise.resolve();
 }
 
-export { clickTrigger, closeDropdown, leaveDropdown, openDropdown, refuseDisabled };
+// An open step on a dropdown that is already open shows no popup the browser runner has not seen
+// already: hovering a hover dropdown opens nothing more, and clicking a click dropdown closes it.
+// The browser's step fails, so this one does, with its message.
+function refuseOpenAgain({ block, state }) {
+  if (state.open !== true) {
+    return;
+  }
+  const description = `block "${block.blockId}"`;
+  throw new HeadlessStepError(`Opening ${description} showed no dropdown or popup.`, {
+    actual: `${describeBlock(block)} was open already`,
+    expected: `a popup to open from ${description}`,
+  });
+}
+
+export {
+  clickTrigger,
+  closeDropdown,
+  leaveDropdown,
+  openDropdown,
+  refuseDisabled,
+  refuseOpenAgain,
+};

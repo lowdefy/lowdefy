@@ -37,6 +37,7 @@ const BLOCK_METAS = {
   antd_DropdownMenu: { category: 'container' },
   Box: { category: 'container' },
   Button: { category: 'display' },
+  ColorSelector: { category: 'input', valueType: 'string' },
   ConfirmModal: { category: 'container' },
   Drawer: { category: 'container' },
   DropdownButton: { category: 'display' },

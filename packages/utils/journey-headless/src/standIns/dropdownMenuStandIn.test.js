@@ -25,7 +25,9 @@ const LINKS = [
   { id: 'more', type: 'MenuGroup', links: [{ id: 'nested' }] },
 ];
 
-function menuPage({ properties = {} } = {}) {
+const LABEL = { id: 'label', type: 'Button', events: { onClick: [record('label')] } };
+
+function menuPage({ properties = {}, content = [LABEL], outside = [] } = {}) {
   return {
     id: 'home',
     blocks: [
@@ -38,9 +40,10 @@ function menuPage({ properties = {} } = {}) {
           onOpenChange: [record('onOpenChange')],
           onSelect: [record('onSelect')],
         },
-        blocks: [{ id: 'label', type: 'Button', events: { onClick: [record('label')] } }],
+        blocks: content,
       },
       { id: 'other', type: 'Button', events: { onClick: [record('other')] } },
+      ...outside,
     ],
   };
 }
@@ -162,7 +165,9 @@ test('DropdownMenu opens on hover by default and stays open for a step inside it
 
 test('DropdownMenu with a click trigger toggles on a click of the block', async () => {
   const { log, result } = await runTestJourney({
-    pages: [menuPage({ properties: { trigger: 'click' } })],
+    pages: [
+      menuPage({ properties: { trigger: 'click' }, content: [{ id: 'text', type: 'Paragraph' }] }),
+    ],
     steps: [{ click: 'menu' }, { click: 'menu' }],
   });
   expect(result.passed).toBe(true);
@@ -170,4 +175,160 @@ test('DropdownMenu with a click trigger toggles on a click of the block', async 
     ['onOpenChange', { open: true }],
     ['onOpenChange', { open: false }],
   ]);
+});
+
+test('DropdownMenu click on the block lands on its content button: the trigger answers, then its onClick', async () => {
+  const hover = await runTestJourney({
+    pages: [menuPage()],
+    steps: [{ click: 'menu' }, { click: 'menu' }],
+  });
+  expect(hover.result.passed).toBe(true);
+  expect(readLog(hover.log)).toEqual([['onOpenChange', { open: true }], ['label'], ['label']]);
+  const click = await runTestJourney({
+    pages: [menuPage({ properties: { trigger: 'click' } })],
+    steps: [{ click: 'menu' }, { click: 'menu' }],
+  });
+  expect(click.result.passed).toBe(true);
+  expect(readLog(click.log)).toEqual([
+    ['onOpenChange', { open: true }],
+    ['label'],
+    ['onOpenChange', { open: false }],
+    ['label'],
+  ]);
+});
+
+test('DropdownMenu click on the block lands on the first control in its content, children first', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      menuPage({
+        content: [
+          { id: 'text', type: 'Paragraph' },
+          { id: 'hidden', type: 'Button', visible: false, events: { onClick: [record('hidden')] } },
+          {
+            id: 'row',
+            type: 'Box',
+            events: { onClick: [record('row')] },
+            blocks: [{ id: 'inner', type: 'Button', events: { onClick: [record('inner')] } }],
+          },
+          LABEL,
+        ],
+      }),
+    ],
+    steps: [{ click: 'menu' }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['onOpenChange', { open: true }], ['inner']]);
+});
+
+test('DropdownMenu click on the block refuses when it lands on a disabled content button', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [menuPage({ content: [{ ...LABEL, properties: { disabled: true } }] })],
+    steps: [{ click: 'menu' }],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toBe(
+    'A click on DropdownMenu "menu" lands on block "label", which is disabled.'
+  );
+  expect(log).toEqual([]);
+});
+
+test('DropdownMenu click inside its closed content opens it first, then fires the onClick', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [menuPage()],
+    steps: [{ click: 'label' }, { click: 'label' }, { click: 'other' }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['onOpenChange', { open: true }],
+    ['label'],
+    ['label'],
+    ['onOpenChange', { open: false }],
+    ['other'],
+  ]);
+});
+
+test('DropdownMenu click inside its content toggles a click dropdown, as a click on its trigger', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [menuPage({ properties: { trigger: 'click' } })],
+    steps: [{ click: 'label' }, { click: 'label' }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['onOpenChange', { open: true }],
+    ['label'],
+    ['onOpenChange', { open: false }],
+    ['label'],
+  ]);
+});
+
+test('DropdownMenu click inside its content opens neither a contextMenu nor a disabled dropdown', async () => {
+  const contextMenu = await runTestJourney({
+    pages: [menuPage({ properties: { trigger: 'contextMenu' } })],
+    steps: [{ click: 'label' }],
+  });
+  expect(contextMenu.result.passed).toBe(true);
+  expect(readLog(contextMenu.log)).toEqual([['label']]);
+  const disabled = await runTestJourney({
+    pages: [menuPage({ properties: { disabled: true } })],
+    steps: [{ click: 'label' }],
+  });
+  expect(disabled.result.passed).toBe(true);
+  expect(readLog(disabled.log)).toEqual([['label']]);
+});
+
+test('DropdownMenu open on an open dropdown fails, as the browser shows no new popup', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [menuPage()],
+    steps: [{ open: 'menu' }, { open: 'menu' }],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(1);
+  expect(result.failure.message).toBe('Opening block "menu" showed no dropdown or popup.');
+  expect(readLog(log)).toEqual([['onOpenChange', { open: true }]]);
+});
+
+const COLOUR = {
+  id: 'colour',
+  type: 'ColorSelector',
+  events: { onChange: [record('onChange')] },
+};
+
+test('DropdownMenu closes on the Escape a ColorSelector fill presses, after the fill', async () => {
+  // The picker is in the hover dropdown's content, so its trigger click keeps the dropdown open.
+  const { log, result } = await runTestJourney({
+    pages: [menuPage({ content: [LABEL, COLOUR] })],
+    steps: [
+      { open: 'menu' },
+      { fill: { blockId: 'colour', value: '#1677ff' } },
+      { expect: { state: { path: 'colour', equals: '#1677ff' } } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['onOpenChange', { open: true }],
+    ['onChange'],
+    ['onOpenChange', { open: false }],
+  ]);
+});
+
+test('DropdownMenu closes when a ColorSelector fill clicks the picker outside it', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [menuPage({ properties: { trigger: 'click' }, outside: [COLOUR] })],
+    steps: [{ open: 'menu' }, { fill: { blockId: 'colour', value: '#1677ff' } }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['onOpenChange', { open: true }],
+    ['onOpenChange', { open: false }],
+    ['onChange'],
+  ]);
+});
+
+test('DropdownMenu stays open through a fill that is not a ColorSelector', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [menuPage({ outside: [{ id: 'name', type: 'TextInput' }] })],
+    steps: [{ open: 'menu' }, { fill: { blockId: 'name', value: 'Ada' } }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['onOpenChange', { open: true }]]);
 });

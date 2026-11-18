@@ -19,7 +19,9 @@ import { type } from '@lowdefy/helpers';
 
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import checkFillTarget from './checkFillTarget.js';
+import fillColorSelector from './fillColorSelector.js';
 import leaveDropdowns from './leaveDropdowns.js';
+import pointerClick from './pointerClick.js';
 import readStandInState from './readStandInState.js';
 import runHeadlessCall from './runHeadlessCall.js';
 import runHeadlessExpect from './runHeadlessExpect.js';
@@ -57,8 +59,9 @@ async function runStandIn({ actor, block, part, what, ...args }) {
 
 // A click on a block: a rowKey or control target, and a plain click a component answers itself
 // (a dropdown's trigger), go to the block's stand-in. Any other click fires the block's onClick
-// through the step runner; a block with none is left to the browser, where the click lands on a
-// control inside it. Resolves true when the click is done.
+// through the step runner, once the pointer has reached it (pointerClick: a click inside a
+// DropdownMenu's content opens a closed one first); a block with none is left to the browser,
+// where the click lands on a control inside it. Resolves true when the click is done.
 async function runBlockClick({ actor, step, stepTimeout }) {
   const target = step.click;
   const block = await waitForShownBlock({ actor, target, timeout: stepTimeout });
@@ -82,7 +85,7 @@ async function runBlockClick({ actor, step, stepTimeout }) {
     );
     return true;
   }
-  leaveDropdowns({ actor, targetBlock: block });
+  await pointerClick({ actor, block });
   return false;
 }
 
@@ -134,7 +137,8 @@ async function runRowExpect({ actor, step, stepTimeout }) {
 // (actor.browserOnly), naming the block and its type, as a click on a block with no onClick of its
 // own does, which in a browser lands on a control inside it. A click, open or select first closes
 // any other open dropdown (leaveDropdowns). A fill is refused where the browser's would be
-// (checkFillTarget). wait.request waits for a call made since the last interaction: `since` is
+// (checkFillTarget); a ColorSelector's fill clicks and presses Escape, as the browser's does
+// (fillColorSelector). wait.request waits for a call made since the last interaction: `since` is
 // the actor's call count when that window opened.
 async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout }) {
   const key = getStepKey(step);
@@ -150,6 +154,10 @@ async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout 
   if (key === 'fill') {
     const block = await waitForShownBlock({ actor, target: step.fill, timeout: stepTimeout });
     checkFillTarget({ block, value: step.fill.value });
+    if (block.type === 'ColorSelector') {
+      await fillColorSelector({ actor, block, step });
+      return undefined;
+    }
   }
   if (key === 'select') {
     const block = await waitForShownBlock({ actor, target: step.select, timeout: stepTimeout });

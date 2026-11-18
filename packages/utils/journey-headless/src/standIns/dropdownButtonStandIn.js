@@ -22,6 +22,7 @@ import {
   leaveDropdown,
   openDropdown,
   refuseDisabled,
+  refuseOpenAgain,
 } from './dropdown.js';
 import fireEvent from './fireEvent.js';
 import findOneControl from './findOneControl.js';
@@ -71,8 +72,14 @@ function clickBlock({ actor, block, state }) {
   clickTrigger({ actor, block, state, trigger: readTrigger(block) });
 }
 
+// Escape closes the dropdown (pressEscape).
+function escape({ actor, block, state }) {
+  closeDropdown({ actor, block, state });
+}
+
 function open({ actor, block, state }) {
   refuseDisabled({ block });
+  refuseOpenAgain({ block, state });
   openDropdown({ actor, block, state });
 }
 
@@ -80,4 +87,4 @@ function leave({ actor, block, state, targetBlock }) {
   leaveDropdown({ actor, block, state, targetBlock, trigger: readTrigger(block) });
 }
 
-export default { answersBlockClick, click, clickBlock, leave, open };
+export default { answersBlockClick, click, clickBlock, escape, leave, open };
