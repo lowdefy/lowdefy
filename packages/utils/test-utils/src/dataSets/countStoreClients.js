@@ -16,8 +16,9 @@
 
 // The connections to the store from any client but the keeper's own, which names itself with
 // `keeperAppName`. mongod's own threads have no client address and are not counted. A test
-// process holds its client from its first session until it exits, and a process that has exited,
-// however it ended, has no connection left, so a count of 0 means no test process uses the store.
+// process holds its client from its first session until it closes its test app (closeTestApp)
+// or exits, and a process that has exited, however it ended, has no connection left, so a count
+// of 0 means no test process uses the store.
 async function countStoreClients({ client, keeperAppName }) {
   const operations = await client
     .db('admin')

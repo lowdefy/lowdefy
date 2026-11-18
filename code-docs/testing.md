@@ -369,7 +369,8 @@ share one `mongod` (`getRunDataStore`), where the dev server has one per server 
   mongodb-memory-server's own helper.
 - **It also exits when nobody uses it.** Every second the keeper counts the store's clients
   other than its own (`countStoreClients`, from `$currentOp`). A test file holds its client from
-  its first session until it exits, so a count of 0 means no test process uses the store. After
+  its first session until it closes its test app or exits, so a count of 0 means no test process
+  uses the store. After
   30 s with none, whatever the owner pid says, the keeper removes the record, so no new process
   joins, and stops `mongod` at the next poll with no client. A process that joined in between
   keeps the store up until it leaves. The next join starts a new store through the claim. This
