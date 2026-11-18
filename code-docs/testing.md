@@ -359,9 +359,14 @@ share one `mongod` (`getRunDataStore`), where the dev server has one per server 
   The keeper starts `mongod` with `startDataStoreReplSet`, the same replica set and
   `--wiredTigerCacheSizeGB 0.25` cap as the dev server's store, and writes its URI to the record.
 - **How the rest join.** They find the record and wait for the URI. Each has its own client and
-  its own databases, named `ld_p<pid>_<hex>_<n>`. `sweepOrphanDatabases({ perRun: true })` drops
-  this process's orphans and the databases of test processes that have exited, never those of a
-  file still running.
+  its own databases, named `ld_p<pid>_<hex>_<n>`, or `ld_p<pid>t<threadId>_<hex>_<n>` from a
+  worker thread. `sweepOrphanDatabases({ perRun: true })` drops this thread's orphans and the
+  databases of test processes that have exited, never those of a file still running.
+- **Files in worker threads.** A runner that runs test files in worker threads of one process
+  (vitest's `pool: 'threads'`) gives them one owner pid, so they share a store, and each thread
+  has its own session registry. The sweep therefore leaves every database of another thread of
+  this process: a thread cannot tell whether another still runs. Those go once the process has
+  exited, with the store or at the next sweep of another process.
 - **How it exits.** The owner is the `node --test` runner (the parent of a process with
   `NODE_TEST_CONTEXT` set), or the process itself outside one. The keeper polls the owner's pid
   every 250 ms and stops `mongod`, removing its directory and the record, once the owner is

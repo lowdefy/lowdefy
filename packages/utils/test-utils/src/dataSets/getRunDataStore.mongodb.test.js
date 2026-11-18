@@ -22,6 +22,7 @@ import path from 'node:path';
 import { createInterface } from 'node:readline';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { pathToFileURL } from 'node:url';
+import { Worker } from 'node:worker_threads';
 
 import { type } from '@lowdefy/helpers';
 import { afterAll, expect, test, vi } from 'vitest';
@@ -272,6 +273,90 @@ test('a session on the run store names its databases after its process, and its 
   expect(await listDatabaseNames(store)).not.toContain(opened.session.databaseName);
   expect(dataSessionRegistry.has(opened.id)).toBe(false);
   await store.client.db(running).dropDatabase();
+});
+
+// A test file run in a worker thread (vitest's threads pool): it joins the run store, opens a
+// session with one document, reports its databases, and closes once told to.
+const threadFileScript = `
+import { parentPort } from 'node:worker_threads';
+const { default: getRunDataStore } = await import(process.env.RUN_STORE_MODULE);
+const { default: openDataSession } = await import(process.env.OPEN_SESSION_MODULE);
+const logger = { info() {}, warn() {} };
+const store = await getRunDataStore({ logger });
+const dataSet = {
+  name: 'sample',
+  fixtures: { rows: [{ _id: 'r1' }] },
+  generated: {},
+  indexes: {},
+  users: {},
+  collections: { rows: 'rows' },
+};
+const opened = await openDataSession({ dataSet, logger, store });
+parentPort.postMessage({ prefix: opened.session.prefix, databaseName: opened.session.databaseName });
+parentPort.once('message', async () => {
+  await opened.close();
+  await store.stop();
+  parentPort.postMessage('closed');
+});
+`;
+
+function startThreadFile(scriptPath) {
+  const worker = new Worker(scriptPath, {
+    env: {
+      ...process.env,
+      RUN_STORE_MODULE: pathToFileURL(path.join(import.meta.dirname, 'getRunDataStore.js')).href,
+      OPEN_SESSION_MODULE: pathToFileURL(path.join(import.meta.dirname, 'openDataSession.js')).href,
+    },
+  });
+  const opened = once(worker, 'message').then(([message]) => message);
+  async function close() {
+    worker.postMessage('close');
+    await once(worker, 'message');
+    await worker.terminate();
+  }
+  return { worker, opened, close };
+}
+
+test("a session opened in one worker thread leaves another thread's databases and documents in place", async () => {
+  const store = await join();
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-run-store-threads-'));
+  const scriptPath = path.join(directory, 'threadFile.mjs');
+  fs.writeFileSync(scriptPath, threadFileScript);
+  const first = startThreadFile(scriptPath);
+  let second;
+  try {
+    const firstOpened = await first.opened;
+    second = startThreadFile(scriptPath);
+    const secondOpened = await second.opened;
+
+    // Each thread names its databases after its process and its thread.
+    expect(firstOpened.prefix).toMatch(new RegExp(`^ld_p${process.pid}t\\d+_[0-9a-f]{12}$`));
+    expect(secondOpened.prefix).toMatch(new RegExp(`^ld_p${process.pid}t\\d+_[0-9a-f]{12}$`));
+    expect(secondOpened.prefix.split('_')[1]).not.toEqual(firstOpened.prefix.split('_')[1]);
+
+    // The second thread's open swept the store; the first thread's session is still whole.
+    const names = await listDatabaseNames(store);
+    expect(names).toContain(firstOpened.databaseName);
+    expect(names).toContain(secondOpened.databaseName);
+    const rows = await store.client
+      .db(firstOpened.databaseName)
+      .collection('rows')
+      .find({})
+      .toArray();
+    expect(rows).toEqual([{ _id: 'r1' }]);
+
+    // A session this thread opens leaves both threads' databases too.
+    const opened = await openDataSession({ dataSet: emptyDataSet, logger, store });
+    expect(opened.session.prefix).toMatch(new RegExp(`^ld_p${process.pid}_[0-9a-f]{12}$`));
+    const afterMainOpen = await listDatabaseNames(store);
+    expect(afterMainOpen).toContain(firstOpened.databaseName);
+    expect(afterMainOpen).toContain(secondOpened.databaseName);
+    await opened.close();
+  } finally {
+    await first.close();
+    await second?.close();
+    fs.rmSync(directory, { recursive: true, force: true });
+  }
 });
 
 test('the store stops, with its directory and record removed, once its owner process has exited', async () => {
