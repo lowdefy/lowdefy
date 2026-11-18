@@ -1,4 +1,5 @@
 ---
+'@lowdefy/api': patch
 '@lowdefy/node-utils': patch
 '@lowdefy/server-dev': patch
 ---
