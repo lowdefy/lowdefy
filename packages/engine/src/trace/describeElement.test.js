@@ -195,6 +195,27 @@ test('resolveTargetInDocument refuses a generated row key, as the runner does', 
   ).toBeNull();
 });
 
+test('resolveTargetInDocument refuses a row key several rows carry, but not a row split across pinned containers', () => {
+  document.body.innerHTML = `
+<div id="bl-grid">
+  <div class="ag-pinned-left-cols-container"><div class="ag-row" row-index="0" row-id="r1">
+    <div id="r1-first" class="ag-cell" col-id="a" aria-colindex="1">A</div>
+  </div></div>
+  <div class="ag-center-cols-container"><div class="ag-row" row-index="0" row-id="r1">
+    <div class="ag-cell" col-id="b" aria-colindex="2">B</div>
+  </div></div>
+</div>`;
+  const target = { block_id: 'grid', row_key: 'r1' };
+  expect(resolveTargetInDocument({ document, target })).toBe(select('#r1-first'));
+  document.body.innerHTML = `
+<div id="bl-grid">
+  <div class="ag-row" row-index="0" row-id="r1"><div class="ag-cell" col-id="a" aria-colindex="1">A</div></div>
+  <div class="ag-row" row-index="1" row-id="r1"><div class="ag-cell" col-id="a" aria-colindex="1">A</div></div>
+</div>`;
+  expect(resolveTargetInDocument({ document, target })).toBeNull();
+  expect(resolveTargetInDocument({ document, target: { ...target, column: 'a' } })).toBeNull();
+});
+
 test('describeElement names a modal button by its control and block type', () => {
   const lowdefy = createLowdefy();
   lowdefy.contexts['page:orders'] = {
