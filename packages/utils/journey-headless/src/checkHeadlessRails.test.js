@@ -196,3 +196,92 @@ test('a journey with no data set is not railed', async () => {
     'request:send_mail',
   ]);
 });
+
+// A headless press is Enter in the input filled last. The browser checks every block it can fire
+// events on, so headless checks the same: the input, the blocks around it up to an enclosing
+// Modal, and the blocks with a shortcut Enter fires.
+const PRESS_PAGE = {
+  id: 'home',
+  blocks: [
+    {
+      id: 'open_dialog',
+      type: 'Button',
+      events: {
+        onClick: [
+          {
+            id: 'open',
+            type: 'CallMethod',
+            params: { blockId: 'dialog', method: 'setOpen', args: [{ open: true }] },
+          },
+        ],
+      },
+    },
+    {
+      id: 'dialog',
+      type: 'Modal',
+      events: { onCancel: [record('dialogCancel'), UNDECLARED.request] },
+      blocks: [{ id: 'dialog_note', type: 'TextInput' }],
+    },
+    { id: 'plain_box', type: 'Box', blocks: [{ id: 'box_note', type: 'TextInput' }] },
+  ],
+};
+
+test('a data-set journey pressing Enter in an input in a modal whose onCancel reaches an undeclared connection is refused', async () => {
+  const step = { press: 'Enter' };
+  const { log, result } = await runTestJourney({
+    dataSet: DATA_SET,
+    pages: [PRESS_PAGE],
+    steps: [{ click: 'open_dialog' }, { fill: { blockId: 'dialog_note', value: 'Hi' } }, step],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual(
+    refusedFailure({
+      blockId: 'dialog',
+      index: 2,
+      step,
+      act: 'press a key that fires its events',
+      noun: 'a press',
+    })
+  );
+  expect(log).toEqual([]);
+});
+
+test('a data-set journey pressing Enter in an input in a plain box passes', async () => {
+  const { result } = await runTestJourney({
+    dataSet: DATA_SET,
+    pages: [PRESS_PAGE],
+    steps: [{ fill: { blockId: 'box_note', value: 'Hi' } }, { press: 'Enter' }],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+test('a data-set journey pressing Enter is refused when a shown block binds Enter to an event that reaches an undeclared connection', async () => {
+  const step = { press: 'Enter' };
+  const page = {
+    ...PRESS_PAGE,
+    blocks: [
+      ...PRESS_PAGE.blocks,
+      {
+        id: 'send',
+        type: 'Button',
+        events: { onClick: { try: [record('send'), UNDECLARED.request], shortcut: 'Enter' } },
+      },
+    ],
+  };
+  const { log, result } = await runTestJourney({
+    dataSet: DATA_SET,
+    pages: [page],
+    steps: [{ fill: { blockId: 'box_note', value: 'Hi' } }, step],
+  });
+  expect(result.failure).toEqual(
+    refusedFailure({
+      blockId: 'send',
+      index: 1,
+      step,
+      act: 'press a key that fires its events',
+      noun: 'a press',
+    })
+  );
+  expect(log).toEqual([]);
+});

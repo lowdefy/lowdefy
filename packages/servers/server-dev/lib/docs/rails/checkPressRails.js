@@ -15,10 +15,10 @@
 */
 
 import { journeyTargetSelectors, type } from '@lowdefy/helpers';
+import { pressFiresShortcut } from '@lowdefy/journey-headless';
 
 import { armAuthActionRecorder } from './checkAuthActionsRan.js';
 import { checkBlockRails } from './checkStepRails.js';
-import pressFiresShortcut from './pressFiresShortcut.js';
 
 const { blockWrapperPrefix, controlAttributes, portalClass } = journeyTargetSelectors;
 const PORTAL_PREFIX = portalClass('');

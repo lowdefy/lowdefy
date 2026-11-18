@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@lowdefy/blocks-antd": "7.4.0",
+    "@lowdefy/client": "7.4.0",
     "@lowdefy/client-core": "7.4.0",
     "@lowdefy/engine": "7.4.0",
     "@lowdefy/errors": "7.4.0",
@@ -46,7 +47,8 @@
     "@lowdefy/nunjucks": "7.4.0",
     "@lowdefy/test-utils": "7.4.0",
     "dompurify": "3.4.17",
-    "jsdom": "31.0.0"
+    "jsdom": "31.0.0",
+    "tinykeys": "4.0.1"
   },
   "devDependencies": {
     "@lowdefy/blocks-table": "7.4.0",

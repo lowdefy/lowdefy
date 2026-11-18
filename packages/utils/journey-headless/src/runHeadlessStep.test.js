@@ -144,10 +144,25 @@ test('A block type installed under a prefix has no stand-in', async () => {
 
 // A headless press presses Enter in the input the step runner filled last, which a journey's fill
 // step has already checked; the press is checked against that input as well, before it acts.
+// A page context holding one input, `note`, at its root.
+function createNoteContext() {
+  const note = {
+    id: 'block:home:note:0',
+    blockId: 'note',
+    type: 'TextInput',
+    Events: { events: {} },
+  };
+  return {
+    _internal: {
+      RootSlots: { map: { note }, slots: { content: { blocks: [note] } }, subSlots: {} },
+    },
+  };
+}
+
 test('a press is checked against the input it presses Enter in, before it acts', async () => {
   const run = vi.fn();
   const actor = {
-    page: { pageId: 'home' },
+    page: { pageId: 'home', context: createNoteContext() },
     stepRunner: { lastInputBlockId: () => 'note', run },
   };
   const refusal = vi.fn(() => ({ message: 'Refused.', actual: 'a press that reaches it' }));
@@ -170,7 +185,7 @@ test('a press with no input filled before it is left to the step runner, which r
     throw new Error('Press "Enter" needs an input filled before it.');
   });
   const actor = {
-    page: { pageId: 'home' },
+    page: { pageId: 'home', context: createNoteContext() },
     stepRunner: { lastInputBlockId: () => null, run },
   };
   const refusal = vi.fn(() => null);

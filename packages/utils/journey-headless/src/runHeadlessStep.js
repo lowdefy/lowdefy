@@ -18,6 +18,7 @@ import { getStepKey } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
+import checkHeadlessPressRails from './checkHeadlessPressRails.js';
 import checkHeadlessRails from './checkHeadlessRails.js';
 import checkFillTarget from './checkFillTarget.js';
 import fillColorSelector from './fillColorSelector.js';
@@ -165,7 +166,8 @@ async function runRowExpect({ actor, step, stepTimeout }) {
 // On a data-set journey (rails: the run's createDataSetRails, else null), a click, open, fill,
 // select or press is checked against the rails on the block it acts on before it acts, as the
 // browser runner checks it (checkHeadlessRails): a press on the input it presses Enter in, the
-// one filled last.
+// one filled last, the blocks around it and the blocks whose shortcut Enter fires
+// (checkHeadlessPressRails).
 async function runHeadlessStep({ actors, answer, host, rails, since, step, stepTimeout }) {
   const key = getStepKey(step);
   const actor = actors.current();
@@ -192,17 +194,15 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
     checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'select' });
     leaveDropdowns({ actor, targetBlock: block });
   }
-  // A press presses Enter in the input the step runner filled last, so the fill before it has
-  // already checked that block against every event it has; this check keeps a press railed should
-  // it ever reach an input its own step did not check. The step runner refuses a press with no
-  // input filled before it, saying so.
-  if (key === 'press' && actor.stepRunner.lastInputBlockId() !== null) {
-    checkHeadlessRails({
-      actor,
-      blockId: actor.stepRunner.lastInputBlockId(),
-      rails,
-      step: 'press',
-    });
+  // A press is Enter in the input the step runner filled last (classifyJourney leaves every other
+  // press to the browser). It is checked as the browser checks a press (checkHeadlessPressRails).
+  // With no input filled, or one no longer on the page, the step runner refuses the press itself,
+  // saying why.
+  if (key === 'press') {
+    const focused = actor.page.context._internal.RootSlots.map[actor.stepRunner.lastInputBlockId()];
+    if (!type.isNone(focused)) {
+      checkHeadlessPressRails({ actor, focused, key: step.press, rails });
+    }
   }
   if (key === 'wait' && type.isString(step.wait.request)) {
     await waitForRequestCall({

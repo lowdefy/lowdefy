@@ -73,7 +73,8 @@ function pressedEvent({ key, modifier }) {
 // itself on the shortcut the client binds (createShortcutManager's normalizeShortcut): the
 // binding's key matches the event's key (case ignored) or code, or its `(regex)` matches either;
 // its required modifiers are held and no others but its `[optional]` ones. `$mod` is `modifier`,
-// the page's platform modifier (getShortcutModifier), since tinykeys in Node reads no platform.
+// the page's platform modifier (the browser runner's getShortcutModifier), since tinykeys in Node
+// reads no platform.
 // A sequence (`g i`) fires on the press of its last chord, so that chord is matched: a press of
 // it alone refuses too much, never too little.
 function pressFiresShortcut({ key, shortcut, modifier }) {

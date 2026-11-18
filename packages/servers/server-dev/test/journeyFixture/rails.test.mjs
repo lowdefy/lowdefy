@@ -337,6 +337,29 @@ fixtureTest(
 
 // An open modal draws its dialog in a portal outside every block wrapper, and Escape there fires
 // its onCancel, so the rails check the block whose portal holds the focused element.
+// A headless press is Enter in the input filled last, so this one runs in both runners: Enter in
+// an input inside a modal can fire the modal's events, and both refuse it as the modal's.
+fixtureTest(
+  'a data-set journey pressing Enter in an input in a modal whose onCancel reaches an undeclared connection is refused',
+  async () => {
+    const result = await postJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [
+        { click: 'open_rails_escape_modal_button' },
+        { fill: { blockId: 'rails_escape_modal_note', value: 'Note' } },
+        { press: 'Enter' },
+      ],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(2);
+    expect(result.failure.message).toBe(
+      `Block "rails_escape_modal" reaches connection "rails_undeclared" ${UNDECLARED}, so a data-set journey cannot press a key that fires its events.`
+    );
+  }
+);
+
 fixtureTest(
   'a data-set journey pressing Escape in a modal whose onCancel reaches an undeclared connection is refused',
   async () => {

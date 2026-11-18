@@ -2675,9 +2675,6 @@ importers:
       tailwindcss:
         specifier: 4.3.5
         version: 4.3.5
-      tinykeys:
-        specifier: 4.0.1
-        version: 4.0.1
       vite:
         specifier: 8.3.8
         version: 8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1)
@@ -3309,6 +3306,9 @@ importers:
       '@lowdefy/blocks-antd':
         specifier: 7.4.0
         version: link:../../plugins/blocks/blocks-antd
+      '@lowdefy/client':
+        specifier: 7.4.0
+        version: link:../../client
       '@lowdefy/client-core':
         specifier: 7.4.0
         version: link:../../client-core
@@ -3336,6 +3336,9 @@ importers:
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
+      tinykeys:
+        specifier: 4.0.1
+        version: 4.0.1
     devDependencies:
       '@lowdefy/blocks-table':
         specifier: 7.4.0
