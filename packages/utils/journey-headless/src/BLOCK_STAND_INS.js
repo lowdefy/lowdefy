@@ -14,20 +14,23 @@
   limitations under the License.
 */
 
+import agGridStandIn from './standIns/agGridStandIn.js';
 import confirmModalStandIn from './standIns/confirmModalStandIn.js';
 import drawerStandIn from './standIns/drawerStandIn.js';
 import dropdownButtonStandIn from './standIns/dropdownButtonStandIn.js';
 import dropdownMenuStandIn from './standIns/dropdownMenuStandIn.js';
 import menuStandIn from './standIns/menuStandIn.js';
 import modalStandIn from './standIns/modalStandIn.js';
+import tableStandIn from './standIns/tableStandIn.js';
 
 // What a block's component does for the engine in the browser, done headless, by block type: a
 // headless page loads no block component. A stand-in fires the component's events in its order and
 // event shape, keeps the state it keeps, and refuses what the browser refuses. Each is an object
 // of optional parts, each called with { actor, block, state }, state being what the stand-in keeps
 // for the block on the shown page (readStandInState):
-// - registerMethods(): registers the block methods the component registers (setOpen, open), for
-//   CallMethod. Run when a page shows and after each step settles (registerBlockStandIns).
+// - registerMethods(): registers the block methods the component registers (setOpen, open, a
+//   grid's setFilterModel), for CallMethod. Run when a page shows and after each step settles
+//   (registerBlockStandIns).
 // - click({ target }): a click with rowKey or control (step.click), once the block shows.
 // - answersBlockClick() and clickBlock(): whether the component answers a plain click on the block
 //   itself (a dropdown's trigger), and the click when it does. Without them a plain click fires
@@ -41,12 +44,17 @@ import modalStandIn from './standIns/modalStandIn.js';
 // and its type (runHeadlessStep). The match is by exact type: a block installed under a type
 // prefix, or any other block, has no stand-in.
 const BLOCK_STAND_INS = {
+  AgGridAlpine: agGridStandIn,
+  AgGridBalham: agGridStandIn,
+  AgGridLowdefy: agGridStandIn,
+  AgGridMaterial: agGridStandIn,
   ConfirmModal: confirmModalStandIn,
   Drawer: drawerStandIn,
   DropdownButton: dropdownButtonStandIn,
   DropdownMenu: dropdownMenuStandIn,
   Menu: menuStandIn,
   Modal: modalStandIn,
+  Table: tableStandIn,
 };
 
 export default BLOCK_STAND_INS;

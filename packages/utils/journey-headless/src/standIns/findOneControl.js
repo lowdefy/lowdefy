@@ -27,7 +27,8 @@ function findOneControl({ block, control, controls, noun }) {
   }
   const description = describeBlock(block);
   if (matches.length === 0) {
-    const keys = controls.map((item) => item.key);
+    // A grid's controls repeat their keys across rows: each is named once.
+    const keys = [...new Set(controls.map((item) => item.key))];
     throw new HeadlessStepError(
       `${description} has no ${noun} keyed "${control}". ${
         keys.length === 0 ? `It has no ${noun}s.` : `Its ${noun} keys: ${keys.join(', ')}.`

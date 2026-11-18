@@ -3300,6 +3300,9 @@ importers:
 
   packages/utils/journey-headless:
     dependencies:
+      '@lowdefy/blocks-antd':
+        specifier: 7.4.0
+        version: link:../../plugins/blocks/blocks-antd
       '@lowdefy/client-core':
         specifier: 7.4.0
         version: link:../../client-core
@@ -3319,6 +3322,9 @@ importers:
         specifier: 7.4.0
         version: link:../test-utils
     devDependencies:
+      '@lowdefy/blocks-table':
+        specifier: 7.4.0
+        version: link:../../plugins/blocks/blocks-table
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)

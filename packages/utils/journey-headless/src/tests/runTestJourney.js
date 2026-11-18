@@ -15,7 +15,7 @@
 */
 
 import { UserError } from '@lowdefy/errors';
-import { type } from '@lowdefy/helpers';
+import { get, type } from '@lowdefy/helpers';
 
 import createErrorSink from '../createErrorSink.js';
 import runHeadlessJourney from '../runHeadlessJourney.js';
@@ -27,8 +27,13 @@ import runHeadlessJourney from '../runHeadlessJourney.js';
 //   for, so a test reads which events fired, in order, with their payloads.
 // - Refuse: fails the event with a UserError, an expected outcome (success: false).
 // - CallMethod and SetState, as actions-core's.
+// Its one operator is _state, as operators-js reads state with a path.
 
 const BLOCK_METAS = {
+  AgGridAlpine: { category: 'display' },
+  AgGridBalham: { category: 'display' },
+  AgGridLowdefy: { category: 'display' },
+  AgGridMaterial: { category: 'display' },
   antd_DropdownMenu: { category: 'container' },
   Box: { category: 'container' },
   Button: { category: 'display' },
@@ -40,6 +45,7 @@ const BLOCK_METAS = {
   Modal: { category: 'container' },
   Paragraph: { category: 'display' },
   Selector: { category: 'input', valueType: 'string' },
+  Table: { category: 'input-container', valueType: 'object' },
   TextInput: { category: 'input', valueType: 'string' },
 };
 
@@ -121,7 +127,7 @@ async function runTestJourney({ menus = [], pages, steps, stepTimeout = 300 }) {
       },
       blockMetas: BLOCK_METAS,
       jsMap: {},
-      operators: {},
+      operators: { _state: ({ params, state }) => get(state, params) },
     }),
     readArtifact: () => null,
     readPageConfig: async ({ pageId, path }) => {
