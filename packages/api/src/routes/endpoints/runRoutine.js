@@ -115,9 +115,11 @@ async function runRoutine(context, routineContext, { routine }) {
       return { status: 'error', error };
     }
     // handleError sets error.handled once it has logged, so a nested runRoutine
-    // re-throwing this error does not log it again.
+    // re-throwing this error does not log it again. `caught` tells the sink that a :catch of
+    // the routine handles this fault: it is reported all the same, and a sink that judges a
+    // call by its faults (a headless journey) can tell it from one that escaped the routine.
     if (!error.handled) {
-      await context.handleError(error);
+      await context.handleError(error, { caught: routineContext.caught === true });
     }
     return { status: 'error', error };
   }

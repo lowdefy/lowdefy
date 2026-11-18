@@ -44,6 +44,7 @@ function readJourney(name, index = 0) {
 const systemJourney = readJourney('system.yaml');
 const webhookJourney = readJourney('webhook.yaml');
 const failedWebhookJourney = readJourney('webhook.yaml', 1);
+const caughtWebhookJourney = readJourney('webhook.yaml', 2);
 
 let app;
 let host;
@@ -119,6 +120,29 @@ test('expect.error reads the forced message of a fail gate inside a webhook rout
   expect(result.steps.map((step) => step.status)).toEqual(
     failedWebhookJourney.steps.map(() => 'ok')
   );
+});
+
+test('a webhook whose routine catches a fault passes, judged by its answer', async () => {
+  const result = await run({ steps: caughtWebhookJourney.steps, user: caughtWebhookJourney.user });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(
+    caughtWebhookJourney.steps.map(() => 'ok')
+  );
+});
+
+test("a webhook's caught fault is still listed on its answer, marked caught", async () => {
+  host = await createBuildHost({ app, data: 'outside', user: 'operator' });
+  const answer = await host.webhook({
+    endpointId: 'caught_webhook',
+    headers: {},
+    query: {},
+    rawBody: '{}',
+  });
+  expect(answer.status).toEqual(200);
+  expect(answer.body).toEqual({ received: true });
+  expect(answer.faults).toHaveLength(1);
+  expect(answer.faults[0].caught).toBe(true);
 });
 
 test('a webhook step names an endpoint that is not a webhook', async () => {
