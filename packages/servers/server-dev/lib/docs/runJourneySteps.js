@@ -734,10 +734,25 @@ async function runClick({ journey, page, step, timeout }) {
       });
       const locator = await resolveClickLocator({ located, target, timeout });
       await rails.check(locator);
+      await restOnHoverDropdownItem({ page, target, locator, timeout });
       await locator.click({ timeout, clickCount: count });
     },
   });
   return { blockId: rails.blockId() };
+}
+
+// antd's Dropdown waits mouseEnterDelay (0.15 s; the blocks do not set it) after the pointer
+// enters a hover dropdown's popup, then opens the dropdown. A click on an item within that wait
+// closes the dropdown before the wait ends, and the dropdown opens again, with onOpenChange, under
+// a pointer that never moved. A person is never that quick, so a click on a hover dropdown's
+// control first rests on it past the wait.
+const HOVER_ENTER_WAIT_MS = 200;
+
+async function restOnHoverDropdownItem({ page, target, locator, timeout }) {
+  if (type.isUndefined(target.control) || !type.isUndefined(target.rowKey)) return;
+  if ((await readDropdownTrigger({ page, blockId: target.blockId })) !== 'hover') return;
+  await locator.hover({ timeout });
+  await page.waitForTimeout(HOVER_ENTER_WAIT_MS);
 }
 
 // Where a fill looks for the input. A block that renders its input in a portal (the Search
