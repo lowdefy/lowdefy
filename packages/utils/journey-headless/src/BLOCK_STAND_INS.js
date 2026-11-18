@@ -35,6 +35,9 @@ import tableStandIn from './standIns/tableStandIn.js';
 // - answersBlockClick() and clickBlock(): whether the component answers a plain click on the block
 //   itself (a dropdown's trigger), and the click when it does. Without them a plain click fires
 //   the block's onClick.
+// - clickLandsOn(): the block in this one's content a plain click on it lands on (a DropdownMenu's
+//   first content control), or null when it lands on the block itself. The data-set rails check
+//   that block with this one (runHeadlessStep's railClick), as the browser runner does.
 // - clickContent({ claimed }): a plain click on a block inside this one's content, which is its
 //   trigger (a DropdownMenu's), after that block's own click (pointerClick). claimed: a block on
 //   the way handled the click, so the engine skips this block's events for it (isClickClaimed).

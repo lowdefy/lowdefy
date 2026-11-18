@@ -62,6 +62,25 @@ const PAGE = {
       },
     },
     {
+      id: 'tools',
+      type: 'DropdownMenu',
+      properties: { trigger: 'click', links: [{ id: 'export' }] },
+      blocks: [
+        {
+          id: 'tools_button',
+          type: 'Button',
+          events: { onClick: [record('toolsButton'), UNDECLARED.request] },
+        },
+      ],
+    },
+    {
+      id: 'share',
+      type: 'DropdownMenu',
+      properties: { links: [{ id: 'copy' }] },
+      events: { onOpenChange: [record('shareOpenChange'), UNDECLARED.request] },
+      blocks: [{ id: 'share_label', type: 'Button', events: { onClick: [record('shareLabel')] } }],
+    },
+    {
       id: 'note',
       type: 'TextInput',
       events: { onChange: [record('note'), UNDECLARED.request] },
@@ -111,6 +130,23 @@ test('a data-set journey clicking an item control of a closed dropdown is refuse
   expect(result.passed).toBe(false);
   expect(result.failure).toEqual(
     refusedFailure({ blockId: 'more', index: 0, step, act: 'click it', noun: 'a click' })
+  );
+  expect(log).toEqual([]);
+});
+
+// A plain click on a DropdownMenu lands on the first control in its content, and a click in its
+// content reaches its trigger, which opens it: the browser checks the block the click lands on,
+// then the dropdown around it, so headless checks the same two.
+test.each([
+  ['on the dropdown is checked on the content control it lands on', 'tools', 'tools_button'],
+  ['on a content block is checked on the dropdown it opens', 'share_label', 'share'],
+  ['on the dropdown is checked on the dropdown its content control opens', 'share', 'share'],
+])('a data-set journey click %s', async (_, clicked, blockId) => {
+  const step = { click: clicked };
+  const { log, result } = await runTestJourney({ dataSet: DATA_SET, pages: [PAGE], steps: [step] });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual(
+    refusedFailure({ blockId, index: 0, step, act: 'click it', noun: 'a click' })
   );
   expect(log).toEqual([]);
 });

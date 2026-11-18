@@ -104,6 +104,12 @@ function answersBlockClick() {
   return true;
 }
 
+// The block a plain click on the block lands on: the first control in its content
+// (findContentControl), as the browser runner's click does, else the block itself (null).
+function clickLandsOn({ actor, block }) {
+  return findContentControl({ actor, block });
+}
+
 // The trigger is the block's own element, which a disabled dropdown leaves clickable: the click
 // lands and nothing opens. claimed: a block in the content handled the click (isClickClaimed).
 // Resolves once an open has fired its onOpenChange.
@@ -177,4 +183,12 @@ function leave({ actor, block, state, targetBlock }) {
   });
 }
 
-export default { answersBlockClick, click, clickBlock, clickContent, leave, open };
+export default {
+  answersBlockClick,
+  click,
+  clickBlock,
+  clickContent,
+  clickLandsOn,
+  leave,
+  open,
+};

@@ -23,9 +23,10 @@ function createPage() {
   return { evaluate: vi.fn(async () => 'rails') };
 }
 
-// The element a click resolved to, inside the block wrapper `wrapperId`.
-function createLocator(wrapperId) {
-  return { evaluate: vi.fn(async () => wrapperId) };
+// The element a click resolved to, inside the block wrapper `wrapperId`, in the content of the
+// DropdownMenu `triggerId` when given.
+function createLocator(wrapperId, triggerId = null) {
+  return { evaluate: vi.fn(async () => ({ blockId: wrapperId, triggerId })) };
 }
 
 function createJourney(refused) {
@@ -159,4 +160,48 @@ test('an element outside every block is checked against the block its target nam
       step: 'fill',
     })
   ).rejects.toThrow('Block "search" is refused.');
+});
+
+// A click in a DropdownMenu's content also reaches the dropdown's trigger, which opens it.
+test('a click in a DropdownMenu content is checked on the clicked block, then on the dropdown', async () => {
+  const journey = createJourney(['tools']);
+  await expect(
+    checkStepRails({
+      journey,
+      page: createPage(),
+      locator: createLocator('tools_button', 'tools'),
+      target: { blockId: 'tools' },
+      step: 'click',
+    })
+  ).rejects.toThrow('Block "tools" is refused.');
+  expect(journey.dataSetRails.refusal.mock.calls.map(([call]) => call.blockId)).toEqual([
+    'tools_button',
+    'tools',
+  ]);
+});
+
+test('a click in a DropdownMenu content names the clicked block when neither is refused', async () => {
+  const journey = createJourney([]);
+  await expect(
+    checkStepRails({
+      journey,
+      page: createPage(),
+      locator: createLocator('tools_button', 'tools'),
+      target: { blockId: 'tools_button' },
+      step: 'click',
+    })
+  ).resolves.toBe('tools_button');
+});
+
+test('a fill in a DropdownMenu content is checked on its own block only', async () => {
+  const journey = createJourney(['tools']);
+  await expect(
+    checkStepRails({
+      journey,
+      page: createPage(),
+      locator: createLocator('tools_search', 'tools'),
+      target: { blockId: 'tools_search' },
+      step: 'fill',
+    })
+  ).resolves.toBe('tools_search');
 });

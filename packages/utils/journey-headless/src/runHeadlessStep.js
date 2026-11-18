@@ -21,6 +21,7 @@ import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import checkHeadlessRails from './checkHeadlessRails.js';
 import checkFillTarget from './checkFillTarget.js';
 import fillColorSelector from './fillColorSelector.js';
+import findContentTrigger from './findContentTrigger.js';
 import leaveDropdowns from './leaveDropdowns.js';
 import pointerClick from './pointerClick.js';
 import readStandInState from './readStandInState.js';
@@ -58,13 +59,25 @@ async function runStandIn({ actor, block, part, what, ...args }) {
   await actor.settle();
 }
 
+// The blocks a plain click fires events on, checked against the rails as the browser runner checks
+// them (checkStepRails): the block the click lands on (a dropdown's content control, when the
+// dropdown's stand-in says where its click lands: clickLandsOn), then the dropdown whose content
+// holds it (findContentTrigger), whose trigger hears the click and opens.
+function railClick({ actor, landed, rails }) {
+  [landed, findContentTrigger({ actor, block: landed })]
+    .filter((block) => block !== null)
+    .forEach((block) =>
+      checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'click' })
+    );
+}
+
 // A click on a block: a rowKey or control target, and a plain click a component answers itself
 // (a dropdown's trigger), go to the block's stand-in. Any other click fires the block's onClick
 // through the step runner, as a pointer click (pointerClick: a block in a DropdownMenu's content
 // clicks its trigger too); a block with none is left to the browser, where the click lands on a
-// control inside it. On a data-set journey the block is checked against the rails before the
-// click acts, a dropdown's stand-in opening it included (checkHeadlessRails); a rowKey or control
-// target's block is the target's own. Resolves true when the click is done.
+// control inside it. On a data-set journey the click is checked against the rails before it acts,
+// a dropdown's stand-in opening it included (railClick); a rowKey or control target's block is the
+// target's own. Resolves true when the click is done.
 async function runBlockClick({ actor, rails, step, stepTimeout }) {
   const target = step.click;
   const block = await waitForShownBlock({ actor, target, timeout: stepTimeout });
@@ -80,7 +93,8 @@ async function runBlockClick({ actor, rails, step, stepTimeout }) {
     return true;
   }
   if (BLOCK_STAND_INS[block.type]?.answersBlockClick?.({ block }) === true) {
-    checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'click' });
+    const landed = BLOCK_STAND_INS[block.type].clickLandsOn?.({ actor, block }) ?? block;
+    railClick({ actor, landed, rails });
     await runStandIn({ actor, block, part: 'clickBlock', what: 'a click on the block' });
     return true;
   }
@@ -90,7 +104,7 @@ async function runBlockClick({ actor, rails, step, stepTimeout }) {
     );
     return true;
   }
-  checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'click' });
+  railClick({ actor, landed: block, rails });
   await pointerClick({ actor, block, click: () => actor.stepRunner.run({ step }) });
   await actor.settle();
   return true;

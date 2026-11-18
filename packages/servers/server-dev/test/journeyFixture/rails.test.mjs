@@ -164,6 +164,26 @@ fixtureTest(
   }
 );
 
+// A click on a DropdownMenu lands on the button in its content, and that click reaches the
+// dropdown's trigger, which opens it: the rails check the button, then the dropdown.
+fixtureTest(
+  'a data-set journey clicking a dropdown whose onOpenChange reaches an undeclared connection is refused before it opens',
+  async () => {
+    const result = await postJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [{ expect: { visible: 'rails_title' } }, { click: 'rails_menu' }],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(1);
+    expect(result.failure.message).toBe(
+      `Block "rails_menu" reaches connection "rails_undeclared" ${UNDECLARED}, so a data-set journey cannot click it.`
+    );
+    expect(result.state.rails_menu_opened ?? null).toBe(null);
+  }
+);
+
 fixtureTest(
   'a data-set journey filling an input whose onChange reaches an undeclared connection is refused',
   async () => {
