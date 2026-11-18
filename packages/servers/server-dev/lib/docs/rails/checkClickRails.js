@@ -19,11 +19,16 @@ import { type } from '@lowdefy/helpers';
 import JourneyStepError from '../JourneyStepError.js';
 import { armAuthActionRecorder } from './checkAuthActionsRan.js';
 
-// The Lowdefy block a click lands on: the nearest #bl-<blockId> wrapper of the
-// element the click resolved to, the element itself included. A `text` or
-// `containing` target has no blockId of its own, and a container target is
-// clicked on the control inside it, which may be a block of its own.
-async function readClickedBlockId({ locator }) {
+// The Lowdefy block a click lands on. A `control` target is a control its block draws, often
+// in a popup or modal footer outside every #bl- wrapper, and a `rowKey` target is a row of its
+// block's grid, so the block is the target's own. Otherwise it is the nearest #bl-<blockId>
+// wrapper of the element the click resolved to, the element itself included: a `text` or
+// `containing` target has no blockId of its own, and a container target is clicked on the
+// control inside it, which may be a block of its own.
+async function readClickedBlockId({ locator, target }) {
+  if (!type.isUndefined(target?.control) || !type.isUndefined(target?.rowKey)) {
+    return target.blockId;
+  }
   return locator.evaluate((element) => element.closest('[id^="bl-"]')?.id.slice(3) ?? null);
 }
 
@@ -33,13 +38,13 @@ async function readClickedBlockId({ locator }) {
 // actions the click runs (checkAuthActionsRan fails the step if one does).
 // Returns the clicked block's id, or null when it is not known. Journeys
 // without a data set click anything.
-async function checkClickRails({ journey, page, locator }) {
+async function checkClickRails({ journey, page, locator, target }) {
   if (type.isUndefined(journey.dataSetRails)) {
     return null;
   }
   await armAuthActionRecorder({ journey, page });
   const pageId = await page.evaluate(() => window.lowdefy?.pageId);
-  const blockId = await readClickedBlockId({ locator });
+  const blockId = await readClickedBlockId({ locator, target });
   if (type.isNone(pageId) || blockId === null) {
     return blockId;
   }

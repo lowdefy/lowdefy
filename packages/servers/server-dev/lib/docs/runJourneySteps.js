@@ -92,12 +92,24 @@ function capitalise(text) {
 // @lowdefy/helpers, where the engine's describe functions read them too.
 const {
   checkboxOption: CHECKBOX_OPTION,
+  controlSelector,
   dropdownOption: DROPDOWN_OPTION,
+  dropdownTrigger: DROPDOWN_TRIGGER,
   gridSelector,
   interactiveControl: INTERACTIVE_CONTROL,
+  isGeneratedRowKey,
   layers: LAYERS,
   radioOption: RADIO_OPTION,
 } = journeyTargetSelectors;
+
+// An element antd is animating out (a closing modal or dropdown popup carries its motion's
+// `-leave` classes until it is hidden): it is still visible, but no longer what a person acts on.
+const LEAVING = '[class*="-leave"]';
+
+// The cell a row-key target with no column or control clicks: the row's first cell. AG Grid draws
+// cells out of display order (ensureDomOrder is off), so it is the cell AG Grid and Table number
+// first, not the first cell element.
+const FIRST_CELL = '[aria-colindex="1"]';
 
 // A lazy block (createLazyBlock in @lowdefy/block-utils) shows its wrapper and
 // a fallback before its implementation, and counts itself in
@@ -162,6 +174,9 @@ function describeScopeParts(target) {
   if (!type.isUndefined(target.row)) {
     parts.push(`row ${target.row}`);
   }
+  if (!type.isUndefined(target.rowKey)) {
+    parts.push(`row key "${target.rowKey}"`);
+  }
   if (!type.isUndefined(target.column)) {
     parts.push(`column "${target.column}"`);
   }
@@ -175,6 +190,9 @@ function describeTarget(target) {
   if (!type.isUndefined(target.text)) {
     parts.push(`control "${target.text}"`);
   }
+  if (!type.isUndefined(target.control)) {
+    parts.push(`control key "${target.control}"`);
+  }
   if (!type.isUndefined(target.containing)) {
     parts.push(`text containing "${target.containing}"`);
   }
@@ -187,7 +205,8 @@ function describeTarget(target) {
 // The element the target's scope keys name: the block wrapper, narrowed to a
 // grid row (the row as displayed: ag-grid's `.ag-row[row-index]`, rendered once
 // per pinned/centre column container before AG Grid 36, or a Table's
-// `.lf-table-row[data-row-index]`)
+// `.lf-table-row[data-row-index]`; or the row by its key: ag-grid's
+// `.ag-row[row-id]`, a Table's `.lf-table-row[data-row-key]`)
 // and to a cell (ag-grid's `.ag-cell[col-id]` or a Table's
 // `.lf-table-gridcell[data-col-key]`: the column's field, colId or key). Undefined for a page-wide `text` target,
 // which has no scope narrower than the page.
@@ -198,6 +217,9 @@ function resolveScope({ page, target }) {
   let scope = getBlock(page, target.blockId);
   if (!type.isUndefined(target.row)) {
     scope = scope.locator(gridSelector({ kind: 'row', value: target.row }));
+  }
+  if (!type.isUndefined(target.rowKey)) {
+    scope = scope.locator(gridSelector({ kind: 'rowKey', value: target.rowKey }));
   }
   if (!type.isUndefined(target.column)) {
     scope = scope.locator(gridSelector({ kind: 'cell', value: target.column }));
@@ -213,6 +235,7 @@ function resolveMatchScope({ page, target }) {
   if (
     type.isUndefined(scope) ||
     !type.isUndefined(target.row) ||
+    !type.isUndefined(target.rowKey) ||
     !type.isUndefined(target.column)
   ) {
     return scope;
@@ -310,6 +333,13 @@ function plural({ count, word }) {
 // the front-most open layer is chosen (locatePageWideText) once the control is
 // showing, not before a dialog the previous step opened has rendered.
 async function resolveActionTarget({ page, target, timeout }) {
+  await refuseGeneratedRowKey({ page, target });
+  if (!type.isUndefined(target.control)) {
+    return locateControl({ page, target, timeout });
+  }
+  if (!type.isUndefined(target.rowKey)) {
+    await waitForOneKeyedRow({ page, target, timeout });
+  }
   if (!namesMatches(target)) {
     return resolveTarget({ page, target });
   }
@@ -338,16 +368,189 @@ async function resolveActionTarget({ page, target, timeout }) {
   return matches.first();
 }
 
-// A target that names a control (`text`, `nth`) or the words shown
+// A target that names a control (`text`, `nth`, `control`) or the words shown
 // (`containing`) is clicked as is - a click on a list row's text reaches the
 // row's own click handler, the way a person clicks the row; a target that
 // names a container (block, row, cell) is clicked on the first control inside
-// it, or on itself when it has none.
+// it, or on itself when it has none. A row named by key with no column is
+// clicked on its first cell, as that cell's own target would be.
 async function resolveClickLocator({ located, target, timeout }) {
-  if (namesMatches(target) || !type.isUndefined(target.nth)) {
+  if (namesMatches(target) || !type.isUndefined(target.nth) || !type.isUndefined(target.control)) {
     return located;
   }
+  if (!type.isUndefined(target.rowKey) && type.isUndefined(target.column)) {
+    return resolveClickTarget({ scope: located.locator(FIRST_CELL), timeout });
+  }
   return resolveClickTarget({ scope: located, timeout });
+}
+
+// A grid writes a generated key (`__row_<n>`) for a row whose data has none, and it changes
+// between renders, so a step that names a row by one fails before it acts, with the grid's fix.
+async function refuseGeneratedRowKey({ page, target }) {
+  if (type.isUndefined(target.rowKey) || !isGeneratedRowKey(target.rowKey)) {
+    return;
+  }
+  const { type: blockType } = (await readBlockFacts({ page, blockId: target.blockId })) ?? {};
+  const grid = type.isNone(blockType)
+    ? `block "${target.blockId}"`
+    : `block "${target.blockId}" (${blockType})`;
+  const fix =
+    blockType === 'Table'
+      ? 'give rows an `_id` or `id`, or set `rowKey`'
+      : 'give rows an `id` or set `rowId`';
+  throw new JourneyStepError(
+    `Row key "${target.rowKey}" is a key ${grid} generated for a row with no key of its own, and it changes between renders: ${fix}, and name the row by that key.`,
+    {
+      expected: `a row key the data of ${grid} holds`,
+      actual: `the generated row key "${target.rowKey}"`,
+    }
+  );
+}
+
+// The rows of the target's block with its row key. A row AG Grid splits across pinned containers
+// holds its first cell once, so the rows with a first cell count the rows.
+function keyedRows({ page, target }) {
+  return getBlock(page, target.blockId)
+    .locator(gridSelector({ kind: 'rowKey', value: target.rowKey }))
+    .filter({ has: page.locator(FIRST_CELL) });
+}
+
+// A row key names one row: waits for it to show, and fails when several rows carry the key, as a
+// `text` that matches several controls does. A key no row carries fails the wait.
+async function waitForOneKeyedRow({ page, target, timeout }) {
+  const rows = keyedRows({ page, target });
+  await rows.first().waitFor({ state: 'visible', timeout });
+  const count = await rows.count();
+  if (count > 1) {
+    const where = `block "${target.blockId}"`;
+    throw new JourneyStepError(
+      `Matched ${plural({ count, word: 'row' })} with key "${
+        target.rowKey
+      }" in ${where}; a row key names one row, so give each row its own key.`,
+      {
+        expected: `exactly one row with key "${target.rowKey}" in ${where}`,
+        actual: plural({ count, word: 'row' }),
+      }
+    );
+  }
+}
+
+// The dropdown triggers in a scope whose popup is not showing: antd marks an open trigger
+// `ant-dropdown-open`, and Table's cell menu sets aria-expanded.
+const CLOSED_DROPDOWN_TRIGGER = DROPDOWN_TRIGGER.split(',')
+  .map((selector) => `${selector.trim()}:not(.ant-dropdown-open):not([aria-expanded="true"])`)
+  .join(', ');
+
+// The dropdown popups antd draws in document.body. A cell's menu draws its items there, so a
+// control target with a column looks in the cell and in the open popups.
+const DROPDOWN_POPUP = '.ant-dropdown';
+
+// The visible elements marked with the target's block, control key and row key: page-wide (antd
+// draws modal footers, confirm dialogs and dropdown popups outside the block), or in the cell
+// and the open dropdown popups when a column is given. A closed popup antd leaves in the DOM is
+// hidden, and one still fading out is leaving, so neither matches.
+function controlMatches({ page, target }) {
+  const selector = `${controlSelector({
+    blockId: target.blockId,
+    control: target.control,
+    rowKey: target.rowKey,
+  })}:not(${LEAVING} *)`;
+  if (type.isUndefined(target.column)) {
+    return page.locator(selector).filter({ visible: true });
+  }
+  return resolveScope({ page, target })
+    .locator(selector)
+    .or(page.locator(DROPDOWN_POPUP).locator(selector))
+    .filter({ visible: true });
+}
+
+// Whether the block's dropdown opens on hover: DropdownMenu's default, or a block whose `trigger`
+// property is hover. A block the page does not hold opens on click.
+async function opensOnHover({ page, blockId }) {
+  const facts = await readBlockFacts({ page, blockId });
+  if (type.isNone(facts)) return false;
+  if (facts.trigger === 'hover') return true;
+  return facts.type === 'DropdownMenu' && type.isNone(facts.trigger);
+}
+
+// Opens a dropdown the way a person does: a hover dropdown by hovering its trigger, any other by
+// clicking it. Only the block's own trigger can open on hover; a row's or a cell's is a cell menu,
+// which opens on click.
+async function openDropdown({ page, target, trigger, timeout }) {
+  const isBlockScope =
+    !type.isUndefined(target.blockId) &&
+    type.isUndefined(target.row) &&
+    type.isUndefined(target.rowKey) &&
+    type.isUndefined(target.column);
+  if (isBlockScope && (await opensOnHover({ page, blockId: target.blockId }))) {
+    await trigger.hover({ timeout });
+    return;
+  }
+  await trigger.click({ timeout });
+}
+
+// The one visible control a `control` target names. When none shows it reveals the control as a
+// person would: it hovers the target's row (a Table's `showOn: hover` buttons mount only then),
+// then opens the first closed dropdown trigger in the scope (the cell, else the row, else the
+// block) and waits for its popup. Several visible matches fail with the count, as a `text` that
+// matches several controls does; none within the timeout fails naming what was tried.
+async function locateControl({ page, target, timeout }) {
+  const deadline = Date.now() + timeout;
+  const description = describeTarget(target);
+  const matches = controlMatches({ page, target });
+  const triggers = resolveScope({ page, target })
+    .locator(CLOSED_DROPDOWN_TRIGGER)
+    .filter({ visible: true });
+  await waitForLoadingBlocks({ page, timeout });
+  let hoveredRow = type.isUndefined(target.rowKey);
+  let openedOf = 0;
+  for (;;) {
+    const count = await matches.count();
+    if (count === 1) {
+      return matches.first();
+    }
+    if (count > 1) {
+      throw new JourneyStepError(
+        `Matched ${plural({
+          count,
+          word: 'visible control',
+        })} for ${description}; add a rowKey (and a column) to name one.`,
+        {
+          expected: `exactly one visible control for ${description}`,
+          actual: plural({ count, word: 'control' }),
+        }
+      );
+    }
+    const remaining = Math.max(deadline - Date.now(), 1);
+    if (!hoveredRow) {
+      const row = keyedRows({ page, target }).first();
+      if (await row.isVisible()) {
+        await row.hover({ timeout: remaining });
+        hoveredRow = true;
+        continue;
+      }
+    }
+    if (openedOf === 0 && (await triggers.count()) > 0) {
+      openedOf = await triggers.count();
+      await openDropdown({ page, target, trigger: triggers.first(), timeout: remaining });
+      continue;
+    }
+    if (Date.now() >= deadline) {
+      const tried =
+        openedOf > 1
+          ? ` The scope held ${openedOf} dropdown triggers and the first was opened; add a column to name the cell whose menu holds the control.`
+          : '';
+      throw new JourneyStepError(
+        `No visible control for ${description} showed within ${timeout} ms.${tried}`,
+        {
+          expected: `a visible control for ${description}`,
+          actual:
+            openedOf > 0 ? 'no visible control after opening its dropdown' : 'no visible control',
+        }
+      );
+    }
+    await page.waitForTimeout(50);
+  }
 }
 
 // The element a person clicks to open an input's popup: the trigger antd draws
@@ -378,19 +581,24 @@ const POPUP = [
 // Marks the popups already showing before an `open` step clicks, so the step
 // waits for a popup its own click opened: the dropdown a previous step opened
 // stays visible while it fades out, and would otherwise pass for the new one.
+// A popup fading out (LEAVING) is not showing: it is not marked, and never
+// counts as new, so a dropdown reopened while its popup fades (antd reuses the
+// element) is found once it shows again.
 const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
 
-const NEW_POPUP = POPUP.map((selector) => `${selector}:not([${SHOWING_BEFORE}])`).join(', ');
+const NEW_POPUP = POPUP.map(
+  (selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING})`
+).join(', ');
 
 async function markShowingPopups({ page }) {
   await page
     .locator(POPUP.join(', '))
     .evaluateAll(
-      (popups, attribute) =>
+      (popups, { attribute, leaving }) =>
         popups
-          .filter((popup) => popup.checkVisibility())
+          .filter((popup) => popup.checkVisibility() && !popup.matches(leaving))
           .forEach((popup) => popup.setAttribute(attribute, '')),
-      SHOWING_BEFORE
+      { attribute: SHOWING_BEFORE, leaving: LEAVING }
     );
 }
 
@@ -423,7 +631,7 @@ async function runOpen({ page, step, timeout }) {
         await trigger.or(located).first().waitFor({ state: 'visible', timeout });
         await waitForLoadingBlocks({ page, timeout });
         if ((await trigger.count()) > 0) {
-          await trigger.click({ timeout });
+          await openDropdown({ page, target, trigger, timeout });
         } else {
           await (await resolveClickLocator({ located, target, timeout })).click({ timeout });
         }
@@ -457,7 +665,7 @@ async function runClick({ journey, page, step, timeout }) {
     action: async () => {
       const located = await resolveActionTarget({ page, target, timeout });
       const locator = await resolveClickLocator({ located, target, timeout });
-      blockId = await checkClickRails({ journey, page, locator });
+      blockId = await checkClickRails({ journey, page, locator, target });
       await locator.click({ timeout, clickCount: count });
     },
   });
@@ -516,19 +724,25 @@ async function runFill({ journey, page, step, timeout }) {
   });
 }
 
-// The engine's type for the block a fill names, or null when the shown page does not
-// hold it or the tab is between pages.
-async function readBlockType({ page, blockId }) {
+// The engine's type for a block and its `trigger` property (how its dropdown opens), or null
+// when the shown page does not hold it or the tab is between pages.
+async function readBlockFacts({ page, blockId }) {
   try {
     return await page.evaluate((id) => {
       const lowdefy = window.lowdefy;
       if (!lowdefy?.pageId || lowdefy._devNavigating === true) return null;
       const shownKey = lowdefy.pageInstances?.[lowdefy.pageId]?.at(-1);
-      return lowdefy.contexts?.[shownKey]?._internal?.RootSlots?.map?.[id]?.type ?? null;
+      const block = lowdefy.contexts?.[shownKey]?._internal?.RootSlots?.map?.[id];
+      if (!block) return null;
+      return { type: block.type ?? null, trigger: block.eval?.properties?.trigger ?? null };
     }, blockId);
   } catch {
     return null;
   }
+}
+
+async function readBlockType({ page, blockId }) {
+  return (await readBlockFacts({ page, blockId }))?.type ?? null;
 }
 
 async function createNoInputError({ page, target, error }) {
@@ -902,6 +1116,7 @@ async function expectState({ page, params, timeout }) {
 async function expectVisible({ page, params, timeout }) {
   const target = normaliseTarget(params);
   const description = describeTarget(target);
+  await refuseGeneratedRowKey({ page, target });
   try {
     const located = await resolveTarget({ page, target });
     await located.waitFor({ state: 'visible', timeout });
@@ -919,6 +1134,7 @@ async function expectVisible({ page, params, timeout }) {
 async function expectHidden({ page, params, timeout }) {
   const target = normaliseTarget(params);
   const description = describeTarget(target);
+  await refuseGeneratedRowKey({ page, target });
   try {
     const located = await resolveTarget({ page, target });
     await located.filter({ visible: true }).first().waitFor({ state: 'hidden', timeout });
@@ -999,6 +1215,7 @@ async function tryReadTargetText({ page, target, timeout }) {
 async function expectText({ page, params, timeout }) {
   const { contains, ...target } = params;
   const description = describeTarget(target);
+  await refuseGeneratedRowKey({ page, target });
   const expected = `${description} text to contain "${contains}"`;
   const deadline = Date.now() + timeout;
   let read = await tryReadTargetText({ page, target, timeout });
