@@ -47,7 +47,12 @@ test('raceToPauseGate answers the gate the work reached, and the work settles on
     session,
     start: () => gated({ requestId: 'claim_run', endpointId: 'approve' }),
   });
-  expect(gate).toMatchObject({ requestId: 'claim_run', endpoint: 'approve', reached: true });
+  expect(gate).toMatchObject({
+    requestId: 'claim_run',
+    endpoint: 'approve',
+    reached: true,
+    reachedBy: { requestId: 'claim_run', endpointId: 'approve' },
+  });
   expect(resolver).not.toHaveBeenCalled();
   gate.release();
   expect(await work).toEqual('ran claim_run');

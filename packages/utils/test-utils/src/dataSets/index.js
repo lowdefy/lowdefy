@@ -30,6 +30,7 @@ import getRunDataStore from './getRunDataStore.js';
 import listUnansweredStubs from './listUnansweredStubs.js';
 import listUnfiredFailGates from './listUnfiredFailGates.js';
 import listUnreachedPauseGates from './listUnreachedPauseGates.js';
+import matchesRequestKey from './matchesRequestKey.js';
 import openDataSession from './openDataSession.js';
 import raceToPauseGate from './raceToPauseGate.js';
 import readDataSet from './readDataSet.js';
@@ -57,6 +58,7 @@ export {
   listUnansweredStubs,
   listUnfiredFailGates,
   listUnreachedPauseGates,
+  matchesRequestKey,
   openDataSession,
   raceToPauseGate,
   readDataSet,

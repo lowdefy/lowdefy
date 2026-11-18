@@ -36,6 +36,8 @@ function validatorAccepts(step) {
   }
   if (type.isObject(step) && type.isString(step.release)) {
     before = { hold: { requestId: step.release } };
+  } else if (type.isObject(step) && type.isObject(step.release)) {
+    before = { hold: step.release };
   }
   return type.isUndefined(validateJourneySteps({ steps: [before, step] }).error);
 }
@@ -215,7 +217,9 @@ const INVALID_STEPS = [
   { hold: { requestId: 'r', endpoint: 7 } },
   { hold: { requestId: 'r', times: 2 } },
   { release: '' },
-  { release: { requestId: 'r' } },
+  { release: { requestId: 'r', times: 2 } },
+  { release: { endpoint: 'e' } },
+  { release: ['r'] },
   { request: { pageId: 'orders', requestId: 'get_order', as: 'system' } },
   { webhook: 'payment_events' },
   { webhook: { endpoint: 'payment_events' } },

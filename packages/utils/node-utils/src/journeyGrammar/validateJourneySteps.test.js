@@ -728,8 +728,17 @@ test('validateJourneySteps rejects malformed hold and release steps', () => {
   expect(error({ hold: { requestId: 'r', times: 2 } })).toBe(
     'Step 0: Step "hold" has unknown key "times". Keys are: requestId, endpoint, pageId.'
   );
-  expect(error({ release: { requestId: 'r' } })).toBe(
-    'Step 0: Step "release" requires the requestId of a "hold" step before it. Received {"requestId":"r"}.'
+  expect(error({ release: ['r'] })).toBe(
+    'Step 0: Step "release" requires the requestId of a "hold" step before it, or { requestId, endpoint?, pageId? }. Received ["r"].'
+  );
+  expect(error({ release: { endpoint: 'e' } })).toBe(
+    'Step 0: Step "release" requires "requestId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ release: { requestId: 'r', pageId: '' } })).toBe(
+    'Step 0: Step "release" requires "pageId" to be a non-empty string. Received "".'
+  );
+  expect(error({ release: { requestId: 'r', times: 2 } })).toBe(
+    'Step 0: Step "release" has unknown key "times". Keys are: requestId, endpoint, pageId.'
   );
   expect(validateJourneySteps({ steps: [{ hold: [] }] }).error).toMatch(
     / Example: \{"hold":\{"requestId":"claim_order"\}\}/
@@ -762,6 +771,48 @@ test('validateJourneySteps rejects a release that names no gate a hold before it
     }).error
   ).toBe(
     'Step 2: Step "release" names request "claim_run", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.'
+  );
+});
+
+test('validateJourneySteps accepts a release naming one of two holds on one request id', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim', endpoint: 'approve' } },
+        { hold: { requestId: 'claim', endpoint: 'reject' } },
+        { call: { endpoint: 'approve' } },
+        { call: { endpoint: 'reject' } },
+        { release: { requestId: 'claim', endpoint: 'reject' } },
+        { expect: { status: 200 } },
+        { release: 'claim' },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects a release whose endpoint or pageId no hold before it has', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim', endpoint: 'approve' } },
+        { call: { endpoint: 'approve' } },
+        { release: { requestId: 'claim', endpoint: 'reject' } },
+      ],
+    }).error
+  ).toBe(
+    'Step 2: Step "release" names request "claim" with an endpoint or pageId that no "hold" of that request before it has. A release lets go of the call a hold parked.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim', endpoint: 'approve' } },
+        { release: { requestId: 'claim' } },
+        { release: { requestId: 'claim', endpoint: 'approve' } },
+      ],
+    }).error
+  ).toBe(
+    'Step 2: Step "release" names request "claim", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.'
   );
 });
 

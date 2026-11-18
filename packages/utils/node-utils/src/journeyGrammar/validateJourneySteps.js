@@ -344,6 +344,38 @@ function validateHold(params) {
   return undefined;
 }
 
+// release: <requestId>, or release: { requestId, endpoint?, pageId? } to name one of two holds
+// on one request id, as the hold named it.
+function validateRelease(params) {
+  if (type.isString(params) && params !== '') {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return `Step "release" requires the requestId of a "hold" step before it, or { requestId, endpoint?, pageId? }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'release',
+    params,
+    allowed: ['requestId', 'endpoint', 'pageId'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  const invalid = ['requestId', 'endpoint', 'pageId'].find(
+    (idKey) =>
+      (idKey === 'requestId' || !type.isUndefined(params[idKey])) &&
+      (!type.isString(params[idKey]) || params[idKey] === '')
+  );
+  if (!type.isUndefined(invalid)) {
+    return `Step "release" requires "${invalid}" to be a non-empty string. Received ${describe(
+      params[invalid]
+    )}.`;
+  }
+  return undefined;
+}
+
 function isStringMap(value) {
   return type.isObject(value) && Object.values(value).every((entry) => type.isString(entry));
 }
@@ -773,18 +805,37 @@ function findAnsweredCall({ steps, index }) {
   return undefined;
 }
 
-// A release lets go of a call a hold step before it parked, so it names the request of a hold
-// that no release before it has used.
+// A release is `release: <requestId>` or `release: { requestId, endpoint?, pageId? }`.
+function readReleaseKey(release) {
+  return type.isString(release) ? { requestId: release } : release;
+}
+
+// Whether a release could let go of the call a hold parked: the same request id, and no endpoint
+// or pageId that the two both give and give differently.
+function releaseFitsHold({ hold, key }) {
+  return ['requestId', 'endpoint', 'pageId'].every(
+    (field) => type.isNone(hold[field]) || type.isNone(key[field]) || hold[field] === key[field]
+  );
+}
+
+// A release lets go of a call a hold step before it parked, so a hold before it fits it, and the
+// holds before it on its request id outnumber the releases of that id before it. Which parked
+// call it lets go is matched when it runs (createJourneyRaces).
 function validateReleasePlacement({ steps, index }) {
-  const requestId = steps[index].release;
+  const key = readReleaseKey(steps[index].release);
+  const { requestId } = key;
   const before = steps.slice(0, index);
-  const holds = before.filter((step) => step.hold?.requestId === requestId).length;
-  const releases = before.filter((step) => step.release === requestId).length;
-  if (holds > releases) {
-    return undefined;
+  const holds = before.filter((step) => step.hold?.requestId === requestId);
+  const releases = before.filter(
+    (step) => readReleaseKey(step.release)?.requestId === requestId
+  ).length;
+  if (!holds.some((step) => releaseFitsHold({ hold: step.hold, key }))) {
+    return holds.length === 0
+      ? `Step "release" names request "${requestId}", which no "hold" step before it holds. A release lets go of the call a hold parked.`
+      : `Step "release" names request "${requestId}" with an endpoint or pageId that no "hold" of that request before it has. A release lets go of the call a hold parked.`;
   }
-  if (holds === 0) {
-    return `Step "release" names request "${requestId}", which no "hold" step before it holds. A release lets go of the call a hold parked.`;
+  if (holds.length > releases) {
+    return undefined;
   }
   return `Step "release" names request "${requestId}", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.`;
 }
@@ -911,12 +962,7 @@ function validateStepParams({ key, params }) {
     case 'hold':
       return validateHold(params);
     case 'release':
-      if (!type.isString(params) || params === '') {
-        return `Step "release" requires the requestId of a "hold" step before it. Received ${describe(
-          params
-        )}.`;
-      }
-      return undefined;
+      return validateRelease(params);
     case 'webhook':
       return validateWebhook(params);
     default:

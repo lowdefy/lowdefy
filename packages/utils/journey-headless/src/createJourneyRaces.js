@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import {
   addPauseGate,
   listUnreachedPauseGates,
+  matchesRequestKey,
   raceToPauseGate,
   releasePauseGates,
 } from '@lowdefy/test-utils/dataSets';
@@ -34,12 +35,48 @@ import HeadlessStepError from './HeadlessStepError.js';
  *   (raceToPauseGate). A call or request whose routine reaches a gate first is parked: the step
  *   passes and answers { parkedAt }, which the expect steps after it read nothing from. Any other
  *   step whose request reaches a gate fails: a page's double submit is the doubleSubmit variant's
- *   job. A release lets the call parked at its request go, waits for it to answer, and answers
+ *   job. A release lets the call parked at the request it names go (matched as a hold matches,
+ *   so endpoint and pageId pick between two holds on one request id), waits for it to answer, and answers
  *   with that answer; the call is recorded on its actor then, as runHeadlessCall records it.
  * - finish() releases every gate (releasePauseGates), waits for every held call to settle, and
  *   answers the journey's failure when a gate no call reached, or a call still parked, was left:
  *   { index, step, expected, actual, message }, or undefined.
  */
+// A release names the hold it lets go as `release: <requestId>`, or as
+// `release: { requestId, endpoint?, pageId? }` when two holds share the request id.
+function readReleaseKey(release) {
+  return type.isString(release) ? { requestId: release } : release;
+}
+
+function describeRequestKey({ endpoint, pageId, requestId }) {
+  const narrowed = [
+    type.isNone(endpoint) ? undefined : `endpoint "${endpoint}"`,
+    type.isNone(pageId) ? undefined : `page "${pageId}"`,
+  ].filter((part) => !type.isUndefined(part));
+  const base = `request "${requestId}"`;
+  return narrowed.length === 0 ? base : `${base} on ${narrowed.join(' and ')}`;
+}
+
+// Whether a release could name this gate: the same request id, and no endpoint or pageId on the
+// two that differ. A gate no call reached has no request to match against yet.
+function matchesHold({ gate, key }) {
+  return ['requestId', 'endpoint', 'pageId'].every(
+    (field) => type.isNone(gate[field]) || type.isNone(key[field]) || gate[field] === key[field]
+  );
+}
+
+// The release step that lets the call parked at a gate go, written as the gate's hold was.
+function writeRelease(gate) {
+  const { endpoint, pageId, requestId } = gate;
+  if (type.isNone(endpoint) && type.isNone(pageId)) {
+    return `release: ${requestId}`;
+  }
+  const fields = [`requestId: ${requestId}`];
+  if (!type.isNone(endpoint)) fields.push(`endpoint: ${endpoint}`);
+  if (!type.isNone(pageId)) fields.push(`pageId: ${pageId}`);
+  return `release: { ${fields.join(', ')} }`;
+}
+
 function createJourneyRaces({ host }) {
   const holds = [];
   const parked = [];
@@ -57,23 +94,29 @@ function createJourneyRaces({ host }) {
 
   function hold({ index, step }) {
     const { endpoint, pageId, requestId } = step.hold;
-    addPauseGate({ endpoint, pageId, requestId, session: readSession() });
-    holds.push({ index, step });
+    const session = readSession();
+    addPauseGate({ endpoint, pageId, requestId, session });
+    holds.push({ gate: session.pauseGates.at(-1), index, step });
   }
 
   async function release({ step }) {
-    const requestId = step.release;
+    const key = readReleaseKey(step.release);
+    const named = describeRequestKey(key);
     const session = readSession();
-    const at = parked.findIndex((entry) => entry.gate.requestId === requestId);
+    // A parked call is matched on the request it reached, as a hold matches a routine's request,
+    // so endpoint and pageId pick between two holds on one request id.
+    const at = parked.findIndex((entry) =>
+      matchesRequestKey({ entry: key, request: entry.gate.reachedBy })
+    );
     if (at === -1) {
-      const unreached = listUnreachedPauseGates({ session }).some(
-        (gate) => gate.requestId === requestId
+      const unreached = listUnreachedPauseGates({ session }).some((gate) =>
+        matchesHold({ gate, key })
       );
       throw new HeadlessStepError(
         unreached
-          ? `No call reached the gate on request "${requestId}", so no call is parked to release. A call or request step after the hold must reach it.`
-          : `No call is parked at the gate on request "${requestId}" to release.`,
-        { actual: 'no parked call', expected: `a call parked at request "${requestId}"` }
+          ? `No call reached the gate on ${named}, so no call is parked to release. A call or request step after the hold must reach it.`
+          : `No call is parked at the gate on ${named} to release.`,
+        { actual: 'no parked call', expected: `a call parked at ${named}` }
       );
     }
     const [entry] = parked.splice(at, 1);
@@ -89,10 +132,10 @@ function createJourneyRaces({ host }) {
     }
     parked.push({ ...entry, gate: outcome.gate });
     throw new HeadlessStepError(
-      `The call released from request "${requestId}" reached the gate on request "${outcome.gate.requestId}" before it answered: release that gate after this one.`,
+      `The call released from ${named} reached the gate on request "${outcome.gate.requestId}" before it answered: release that gate after this one.`,
       {
         actual: `parked at request "${outcome.gate.requestId}"`,
-        expected: `the call released from request "${requestId}" to answer`,
+        expected: `the call released from ${named} to answer`,
       }
     );
   }
@@ -133,7 +176,7 @@ function createJourneyRaces({ host }) {
   }
 
   function describeUnreached(gate) {
-    const { index, step } = holds.find((entry) => entry.step.hold.requestId === gate.requestId);
+    const { index, step } = holds.find((entry) => entry.gate === gate);
     return {
       index,
       step,
@@ -147,9 +190,9 @@ function createJourneyRaces({ host }) {
     return {
       index,
       step,
-      expected: `a "release: ${gate.requestId}" step to let the parked call go`,
+      expected: `a "${writeRelease(gate)}" step to let the parked call go`,
       actual: 'still parked when the journey ended',
-      message: `The call parked at the gate on request "${gate.requestId}" was still parked when the journey ended: release it with "release: ${gate.requestId}".`,
+      message: `The call parked at the gate on request "${gate.requestId}" was still parked when the journey ended: release it with "${writeRelease(gate)}".`,
     };
   }
 

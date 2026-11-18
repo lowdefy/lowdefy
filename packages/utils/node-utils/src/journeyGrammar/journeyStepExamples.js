@@ -48,7 +48,10 @@ const JOURNEY_STEP_EXAMPLES = {
     { hold: { requestId: 'claim_order' } },
     { hold: { requestId: 'claim_order', endpoint: 'orders-approve' } },
   ],
-  release: [{ release: 'claim_order' }],
+  release: [
+    { release: 'claim_order' },
+    { release: { requestId: 'claim_order', endpoint: 'orders-approve' } },
+  ],
   webhook: [
     {
       webhook: {
