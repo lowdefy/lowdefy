@@ -17,7 +17,14 @@
 # an open is refused before it hovers the menu and the state is never set;
 # rails_fill_input's and rails_selector's onChange call it too, so a fill or a
 # select is refused before it types or picks, a select on rails_choice_box (the
-# container around rails_selector) as rails_selector's.
+# container around rails_selector) as rails_selector's. rails_radio_box holds two
+# radio groups: a select on it checks the group the option is in, so Gamma
+# (rails_railed_radio, whose onChange calls the undeclared request) is refused
+# and Alpha (rails_safe_radio) is picked. A press is checked against the
+# focused block and every block whose shortcut it fires: mod+k fires
+# rails_shortcut_button's onClick, which calls the undeclared request, so the
+# press is refused; mod+j fires rails_safe_shortcut_button's, which only sets
+# state; Enter in rails_enter_logout_input runs Logout, so the auth rail fails it.
 id: rails
 type: Box
 requests:
@@ -199,3 +206,56 @@ blocks:
             - id: call_undeclared_on_select
               type: Request
               params: call_undeclared
+  - id: rails_radio_box
+    type: Box
+    blocks:
+      - id: rails_safe_radio
+        type: RadioSelector
+        properties:
+          title: Safe choice
+          options:
+            - Alpha
+            - Beta
+      - id: rails_railed_radio
+        type: RadioSelector
+        properties:
+          title: Railed choice
+          options:
+            - Gamma
+            - Delta
+        events:
+          onChange:
+            - id: call_undeclared_on_radio
+              type: Request
+              params: call_undeclared
+  - id: rails_shortcut_button
+    type: Button
+    properties:
+      title: Railed shortcut
+    events:
+      onClick:
+        shortcut: mod+k
+        try:
+          - id: call_undeclared_on_shortcut
+            type: Request
+            params: call_undeclared
+  - id: rails_safe_shortcut_button
+    type: Button
+    properties:
+      title: Safe shortcut
+    events:
+      onClick:
+        shortcut: mod+j
+        try:
+          - id: set_rails_shortcut_ran
+            type: SetState
+            params:
+              rails_shortcut_ran: true
+  - id: rails_enter_logout_input
+    type: TextInput
+    properties:
+      title: Sign out on enter
+    events:
+      onPressEnter:
+        - id: sign_out_on_enter
+          type: Logout

@@ -234,3 +234,81 @@ fixtureTest('a journey without a data set is not railed', async () => {
   });
   expect(result.failure?.actual ?? '').not.toMatch('auth action');
 });
+
+// A container can hold two radio groups. A select on it picks the option labelled with the
+// value in whichever group holds it, so the rails check that option's group, not the first.
+fixtureTest(
+  'a data-set journey selecting through a container is checked against the group the option is in',
+  async () => {
+    const refused = await postBrowserJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [{ select: { blockId: 'rails_radio_box', value: 'Gamma' } }],
+    });
+    expect(refused.passed).toBe(false);
+    expect(refused.failure.index).toBe(0);
+    expect(refused.failure.message).toBe(
+      `Block "rails_railed_radio" reaches connection "rails_undeclared" ${UNDECLARED}, so a data-set journey cannot select in it.`
+    );
+    expect(refused.state.rails_railed_radio ?? null).toBe(null);
+
+    const picked = await postBrowserJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [{ select: { blockId: 'rails_radio_box', value: 'Alpha' } }],
+    });
+    expect(picked.failure).toBeUndefined();
+    expect(picked.state.rails_safe_radio).toBe('Alpha');
+  }
+);
+
+// A press fires the events of the block a block's `shortcut` binds to the chord, and of the
+// focused block, so the rails check both before the key goes down.
+fixtureTest(
+  'a data-set journey pressing a shortcut whose onClick reaches an undeclared connection is refused',
+  async () => {
+    const result = await postBrowserJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [{ expect: { visible: 'rails_title' } }, { press: 'Mod+k' }],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(1);
+    expect(result.failure.message).toBe(
+      `Block "rails_shortcut_button" reaches connection "rails_undeclared" ${UNDECLARED}, so a data-set journey cannot press a key that fires its events.`
+    );
+    expect(result.failure.expected).toBe('a press a data-set journey can make');
+  }
+);
+
+fixtureTest('a data-set journey pressing a shortcut on an unrailed block passes', async () => {
+  const result = await postBrowserJourney({
+    pageId: 'rails',
+    data: 'rails',
+    user: 'member',
+    steps: [{ expect: { visible: 'rails_title' } }, { press: 'Mod+j' }],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.state.rails_shortcut_ran).toBe(true);
+});
+
+fixtureTest(
+  'a data-set journey pressing Enter in an input whose onPressEnter runs Logout fails at that step',
+  async () => {
+    const result = await postBrowserJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [{ fill: { blockId: 'rails_enter_logout_input', value: 'bye' } }, { press: 'Enter' }],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(1);
+    expect(result.failure.actual).toBe('a press that ran the auth action Logout');
+    expect(result.failure.message).toMatch(
+      /Block "rails_enter_logout_input" ran the auth action Logout/
+    );
+  }
+);

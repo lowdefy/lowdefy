@@ -38,9 +38,10 @@ async function readTargetBlockId({ locator, target }) {
   return wrapped ?? target?.blockId ?? null;
 }
 
-// On a data-set run (journey.dataSetRails), refuses a step (a click, open, fill or select, see
-// railedSteps) that would reach a connection whose type does not declare a data-set mode the
-// session can run (redirect or walled) before it acts, and starts recording the auth-engine
+// On a data-set run (journey.dataSetRails), refuses a step that acts on one element (a click,
+// open, fill or select, see railedSteps; a press is checkPressRails') that would reach a
+// connection whose type does not declare a data-set mode the session can run (redirect or
+// walled) before it acts, and starts recording the auth-engine
 // actions the step runs (checkAuthActionsRan fails the step if one does). Returns the block's
 // id, or null when it is not known. Journeys without a data set act on anything.
 async function checkStepRails({ journey, page, locator, target, step }) {
@@ -53,9 +54,16 @@ async function checkStepRails({ journey, page, locator, target, step }) {
   if (type.isNone(pageId) || blockId === null) {
     return blockId;
   }
+  checkBlockRails({ journey, pageId, blockId, step });
+  return blockId;
+}
+
+// Throws the refusal of a step on one block of the shown page, in that step's words, when the
+// data-set rails refuse it.
+function checkBlockRails({ journey, pageId, blockId, step }) {
   const refused = journey.dataSetRails.refusal({ pageId, blockId, step });
   if (refused === null) {
-    return blockId;
+    return;
   }
   throw new JourneyStepError(refused.message, {
     expected: `${RAILED_STEPS[step].step} a data-set journey can make`,
@@ -63,4 +71,5 @@ async function checkStepRails({ journey, page, locator, target, step }) {
   });
 }
 
+export { checkBlockRails };
 export default checkStepRails;

@@ -33,6 +33,7 @@ import { ANSWER_STEP_KEYS, getStepKey } from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
+import checkPressRails from './rails/checkPressRails.js';
 import checkStepRails from './rails/checkStepRails.js';
 import RAILED_STEPS from './rails/railedSteps.js';
 import checkStepReferences from './checkStepReferences.js';
@@ -889,27 +890,9 @@ async function fillColorPicker({ page, target, trigger, value, timeout }) {
     .catch(() => {});
 }
 
-// The options of a radio group, a button selector or a segmented control are
-// all on the page already: the one labelled `text` is clicked, no dropdown.
-async function selectRadioOption({ options, target, text, timeout }) {
-  const option = options
-    .filter({ hasText: exactText(text) })
-    .filter({ visible: true })
-    .first();
-  try {
-    await option.click({ timeout });
-  } catch (error) {
-    const description = describeTarget(target);
-    throw new JourneyStepError(`No option with text "${text}" in ${description}.`, {
-      expected: `option "${text}" in ${description}`,
-      actual: cleanMessage(error),
-    });
-  }
-}
-
-// A checkbox option is ticked, never toggled: clicking one already ticked would
-// untick it, so a step that selects it reads the same on a rerun.
-async function tickCheckboxOption({ options, target, text, timeout }) {
+// The visible option labelled exactly `text` among a radio or checkbox group's options. It
+// shows with the block, so a missing one fails the step at once with what was looked for.
+async function findShownOption({ options, target, text, timeout }) {
   const option = options
     .filter({ hasText: exactText(text) })
     .filter({ visible: true })
@@ -923,6 +906,24 @@ async function tickCheckboxOption({ options, target, text, timeout }) {
       actual: cleanMessage(error),
     });
   }
+  return option;
+}
+
+// The options of a radio group, a button selector or a segmented control are
+// all on the page already: the one labelled `text` is clicked, no dropdown. The rails check
+// the block of the option picked, since a container can hold several groups.
+async function selectRadioOption({ options, rails, target, text, timeout }) {
+  const option = await findShownOption({ options, target, text, timeout });
+  await rails.check(option);
+  await actOnTarget({ target, action: () => option.click({ timeout }) });
+}
+
+// A checkbox option is ticked, never toggled: clicking one already ticked would
+// untick it, so a step that selects it reads the same on a rerun. The rails check the block of
+// the option picked, as for a radio option.
+async function tickCheckboxOption({ options, rails, target, text, timeout }) {
+  const option = await findShownOption({ options, target, text, timeout });
+  await rails.check(option);
   if (await option.locator('input[type="checkbox"]').isChecked()) {
     return;
   }
@@ -950,8 +951,9 @@ async function runSelect({ journey, page, step, timeout }) {
       await scope.first().waitFor({ state: 'visible', timeout });
     },
   });
-  // Each way below is checked against the block of the element it picks in (a container
-  // target's scope holds the input block whose onChange the pick fires), before it picks.
+  // Each way below is checked against the block of the element it picks (a container target's
+  // scope holds the input block whose onChange the pick fires, and a radio or checkbox option
+  // may sit in a second group in it), before it picks.
   const native = scope.locator('select');
   if ((await native.count()) > 0) {
     await actOnTarget({
@@ -965,14 +967,12 @@ async function runSelect({ journey, page, step, timeout }) {
   }
   const radioOptions = scope.locator(RADIO_OPTION);
   if ((await radioOptions.count()) > 0) {
-    await rails.check(radioOptions.first());
-    await selectRadioOption({ options: radioOptions, target, text, timeout });
+    await selectRadioOption({ options: radioOptions, rails, target, text, timeout });
     return { blockId: rails.blockId() };
   }
   const checkboxOptions = scope.locator(CHECKBOX_OPTION);
   if ((await checkboxOptions.count()) > 0) {
-    await rails.check(checkboxOptions.first());
-    await tickCheckboxOption({ options: checkboxOptions, target, text, timeout });
+    await tickCheckboxOption({ options: checkboxOptions, rails, target, text, timeout });
     return { blockId: rails.blockId() };
   }
   await actOnTarget({
@@ -1012,13 +1012,15 @@ async function runSelect({ journey, page, step, timeout }) {
 }
 
 // `Mod` in a chord resolves to Meta or Control from the platform the page
-// reports, the way the app's own shortcut handling (tinykeys) does.
-async function runPress({ page, step }) {
+// reports, the way the app's own shortcut handling (tinykeys) does. The rails check the press
+// before it is pressed: the focused block and each block whose shortcut it fires.
+async function runPress({ journey, page, step }) {
   const modifier = await getShortcutModifier(page);
   const key = step.press
     .split('+')
     .map((part) => (part === 'Mod' ? modifier : part))
     .join('+');
+  const blockId = await checkPressRails({ journey, page, key, modifier });
   try {
     await page.keyboard.press(key);
   } catch (error) {
@@ -1027,6 +1029,7 @@ async function runPress({ page, step }) {
       actual: cleanMessage(error),
     });
   }
+  return { blockId };
 }
 
 // Goes back one entry in the browser history, the way the Back button does.
@@ -1517,8 +1520,7 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
     case 'select':
       return runSelect({ journey, page, step, timeout });
     case 'press':
-      await runPress({ page, step, timeout });
-      return;
+      return runPress({ journey, page, step });
     case 'back':
       await runBack({ page, timeout });
       return;

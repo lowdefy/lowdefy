@@ -1392,7 +1392,7 @@ test('runJourney reports a radio option that is not in the block by its text', a
       const inner = createLocator({ selector: `${selector} >> ${child}`, page });
       if (child === 'label:has(input[type="radio"])') {
         inner.count.mockResolvedValue(3);
-        inner.click.mockRejectedValue(new Error('locator.click: Timeout 5000ms exceeded.'));
+        inner.waitFor.mockRejectedValue(new Error('locator.waitFor: Timeout 5000ms exceeded.'));
       }
       return inner;
     });
@@ -1409,7 +1409,7 @@ test('runJourney reports a radio option that is not in the block by its text', a
   expect(result.failure).toMatchObject({
     index: 0,
     expected: 'option "Decade" in block "period"',
-    actual: 'locator.click: Timeout 5000ms exceeded.',
+    actual: 'locator.waitFor: Timeout 5000ms exceeded.',
     message: 'No option with text "Decade" in block "period".',
   });
 });
