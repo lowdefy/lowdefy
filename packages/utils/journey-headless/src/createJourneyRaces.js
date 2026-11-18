@@ -101,10 +101,6 @@ function readParkedReleaseKey({ gate, holds }) {
   };
 }
 
-function writeParkedRelease({ gate, holds }) {
-  return writeRelease(readParkedReleaseKey({ gate, holds }));
-}
-
 function ordinal(number) {
   const tens = number % 100;
   if (tens >= 11 && tens <= 13) return `${number}th`;
@@ -112,18 +108,18 @@ function ordinal(number) {
   return `${number}${suffix}`;
 }
 
-// The release that lets a parked call go, and, when another call in `parked` has the same
-// release, the hold this one waits at (`hold`; undefined while the release is its alone). Such
-// calls are told apart by the whole request each reached, endpoint and pageId both, when that
-// names only this call. Otherwise a release lets go the first parked call it names, so the hold
-// says which such release lets this call go.
+// The release that lets a parked call go, and, when that release names another call in `parked`
+// too, the hold this one waits at (`hold`; undefined while the release names it alone). A release
+// lets go the first parked call whose request it matches, so such calls are told apart by the
+// whole request each reached, endpoint and pageId both, when that names only this call.
+// Otherwise the hold says which such release lets this call go.
 function describeParkedRelease({ entry, holds, parked }) {
   const key = readParkedReleaseKey({ gate: entry.gate, holds });
   const release = writeRelease(key);
-  const sameRelease = parked.filter(
-    (other) => writeParkedRelease({ gate: other.gate, holds }) === release
+  const namedByKey = parked.filter((other) =>
+    matchesRequestKey({ entry: key, request: other.gate.reachedBy })
   );
-  if (sameRelease.length < 2) {
+  if (namedByKey.length < 2) {
     return { release };
   }
   const heldAt = `the hold at step ${holds.find((hold) => hold.gate === entry.gate).index}`;
@@ -135,9 +131,6 @@ function describeParkedRelease({ entry, holds, parked }) {
   if (namedByWholeKey.length === 1) {
     return { release: writeRelease(wholeKey), hold: heldAt };
   }
-  const namedByKey = parked.filter((other) =>
-    matchesRequestKey({ entry: key, request: other.gate.reachedBy })
-  );
   const order = ordinal(namedByKey.indexOf(entry) + 1);
   return { release, hold: `${heldAt}: the ${order} such release lets it go` };
 }

@@ -226,3 +226,23 @@ test('createJourneyRaces suggests the whole request when it tells two calls on o
     'The call parked at the gate on request "claim" was still parked when the journey ended: release it with "release: { requestId: claim, endpoint: approve }".'
   );
 });
+
+test('createJourneyRaces names the hold when a release would let an earlier call of another hint go', async () => {
+  const { races, request, run } = setUp();
+  await run({ hold: { requestId: 'claim' } });
+  await run({ hold: { requestId: 'claim' } });
+  expect(await request({ pageId: 'claims', endpointId: 'approve', label: 'routine' })).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, endpoint: approve }',
+  });
+  // `release: { requestId: claim, pageId: claims }` also names the routine's call, parked first.
+  expect(await request({ pageId: 'claims', label: 'page' })).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, pageId: claims }',
+    hold: 'the hold at step 1: the 2nd such release lets it go',
+  });
+  const release = { release: { requestId: 'claim', pageId: 'claims' } };
+  expect((await run(release)).label).toBe('routine');
+  expect((await run(release)).label).toBe('page');
+  expect(await races.finish()).toBeUndefined();
+});
