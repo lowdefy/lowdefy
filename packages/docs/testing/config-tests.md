@@ -79,7 +79,7 @@ A page whose [`path`](/page-paths) has placeholders, such as `controls/{control_
 | `stubs`       | No       | Answers for outside services and forced failures of any request, on the journey's data set. Needs `data`. See [Stubs and forced failures](#stubs-and-forced-failures).                                                                                                                                                                                                                                                                                        |
 | `cases`       | No       | A case table: the journey runs once per row. Each row needs a unique `name`. See [Case tables](#case-tables).                                                                                                                                                                                                                                                                                                                                                 |
 | `tags`        | No       | A list of tags naming the sections of the suite the journey belongs to, such as `[smoke, review]`. `lowdefy test --tag smoke` runs the journeys tagged `smoke`. Tags are lowercase letters, digits, `-` and `_`.                                                                                                                                                                                                                                              |
-| `serial`      | No       | `true` runs the journey with no other journey in flight. Mark a journey on a data set that depends on something outside its data session: the clock, a file, or an outside service that is not stubbed. `lowdefy test` runs journeys one at a time today, so it takes effect once journeys run side by side.                                                                                                                                                  |
+| `serial`      | No       | `true` runs the journey with no other journey in flight. Mark a journey on a data set that depends on something outside its data session: the clock, a file, or an outside service that is not stubbed. It takes effect when `lowdefy test --concurrency` runs journeys side by side: see [Journeys side by side](#journeys-side-by-side).                                                                                                                    |
 | `steps`       | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                                                                                                                                                                                                                                                                                                                                   |
 
 A journey also takes `timeout`, `deprecated`, `evidence` and `variant`, described below. Any other top-level key, such as a misspelt `seriel`, is refused: that journey fails as an invalid file, naming the key and listing the keys a journey takes, and the run's other journeys still run.
@@ -628,6 +628,7 @@ SKIP deprecated  member prints a ticket  0.4/day (3m)
 - `--tier <tier>`: Only run the journeys in this popularity tier of the selection: `common` (p50), `wide` (p80), `edge` (p95) or `full` (every journey, the default). See [Usage and tiers](#usage-and-tiers).
 - `--usage-window <months>`: The calendar months recent use is ranked over, for `--tier` and the `PASS` line, such as `6m`. The default is `3m`.
 - `--repeat <n>`: Run each journey `n` times in a row (1 to 10) and classify it, as described in [Replaying candidates](#replaying-candidates).
+- `--concurrency <n>`: Run up to `n` browser journeys at once (1 to 3). The default is 1, or the `LOWDEFY_JOURNEY_CONCURRENCY` environment variable. See [Journeys side by side](#journeys-side-by-side).
 - `--lint`: Check the journeys for the [lint rules](#lint) and run nothing.
 - `--headless`: Run only the journeys that need no browser, in Node, and list the rest as browser-only. On the development server, or on the production build with `--build`. See [headless runs](#headless-runs).
 - `--build`: With `--headless`, run on the production build in this process, for CI.
@@ -638,6 +639,19 @@ SKIP deprecated  member prints a ticket  0.4/day (3m)
 - `--url <url>`: Run against a development server that is already running instead of starting one, for example `lowdefy test --url http://localhost:3000` while `lowdefy dev` is open in another terminal. This is the fastest way to iterate on a journey.
 - `--port <port>`: The port to start the development server on. If it is in use the next free port is taken. The default is `3000`.
 - `--config-directory`, `--dev-directory`, `--ref-resolver`, `--log-level`, `--disable-telemetry`: As for [`lowdefy dev`](/cli#dev).
+
+### Journeys side by side
+
+By default `lowdefy test` runs one journey at a time, so a suite takes the sum of its journeys' times. `lowdefy test --concurrency 2` keeps two browser journeys in flight; on a small app that about halves a run. The `lowdefy_run_tests` agent tool takes the same limit as `concurrency`, and `LOWDEFY_JOURNEY_CONCURRENCY=2` sets it for both.
+
+- A journey on a [data set](/journey-data-sets) runs beside others, since each run has databases of its own.
+- A journey with no `data`, which runs against the database your app points at, and a journey marked `serial: true`, run alone with nothing else in flight, after the others.
+- Results, `.lowdefy/test/results.json` and the run's other files keep the order the journeys were selected in. The output prints the journeys that ran side by side first, then the ones that ran alone, each in selection order.
+- A `PASS` line shows the journey's own time, counted from when it got a browser. The wait for one is kept as `waitedMs` in the results file.
+- The run goes one at a time under `--repeat` above 1, since a journey that fails only beside another is the flakiness `--repeat` is asked to find, and while the operating system reports memory pressure.
+- Headless runs always go one at a time: `--concurrency` with `--headless` is refused.
+
+Every browser operation on the machine shares three browser slots: journeys, screenshots, state inspection and the other agent tools of every development server. At 2 or more, a screenshot or state inspection from another session can wait through several journeys for a free slot, up to its five-minute limit. With two test runs at 2 each on one machine, 7 of 13 screenshots taken during the runs waited over 60 seconds. Raise the limit when the machine is yours alone for the run.
 
 ### Exit codes
 
