@@ -104,3 +104,30 @@ test('a variant of a case-table journey keeps the table and runs once per row', 
   expect(runs[1].journey.steps[0]).toEqual({ fill: { blockId: 'order', value: 'o2' } });
   runs.forEach((run) => expect(checkJourneyItem({ item: run })).toBeUndefined());
 });
+
+test('a role variant of a case-table journey runs each row as the user it overrides with', () => {
+  const journey = {
+    name: 'saves',
+    pageId: 'orders',
+    data: 'orders',
+    user: { _case: 'user' },
+    cases: [
+      { name: 'admin', user: 'admin', order: 'o1' },
+      { name: 'clerk', user: 'clerk', order: 'o2' },
+    ],
+    steps: [{ fill: { blockId: 'order', value: { _case: 'order' } } }, { click: 'save' }],
+  };
+  const built = buildVariantJourney({
+    journey,
+    variant: {
+      kind: 'role',
+      detail: 'granted to viewer [viewer]',
+      overrides: { user: 'viewer' },
+      steps: journey.steps,
+    },
+  });
+  const runs = expandJourney({ item: { filePath: 'v.yaml', journeyIndex: 0, journey: built } });
+  expect(runs.map((run) => run.journey.user)).toEqual(['viewer', 'viewer']);
+  expect(runs.map((run) => run.journey.steps[0].fill.value)).toEqual(['o1', 'o2']);
+  runs.forEach((run) => expect(checkJourneyItem({ item: run })).toBeUndefined());
+});
