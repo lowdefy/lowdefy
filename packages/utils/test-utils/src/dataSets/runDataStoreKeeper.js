@@ -27,6 +27,10 @@ import writeRunStoreRecord from './writeRunStoreRecord.js';
 
 const OWNER_POLL_MS = 250;
 const CLIENT_POLL_MS = 1000;
+// A count mongod has not answered within this long is a failed check, counted again at the next
+// poll: the driver has no time limit of its own here, and a count left waiting would hold up
+// every later one.
+const COUNT_TIMEOUT_MS = 5000;
 const IDLE_STOP_MS = 30000;
 const KEEPER_APP_NAME = 'lowdefy-test-store-keeper';
 const SERVER_SELECTION_TIMEOUT_MS = 5000;
@@ -113,13 +117,29 @@ async function runDataStoreKeeper({ ownerPid, recordPath, token }) {
   let releasedRecord = false;
   let lastUsedAt = Date.now();
   let checkingClients = false;
+  async function countClientsInTime() {
+    let timer;
+    const timedOut = new Promise((resolve, reject) => {
+      timer = setTimeout(() => {
+        reject(new Error(`The store did not answer a count within ${COUNT_TIMEOUT_MS} ms.`));
+      }, COUNT_TIMEOUT_MS);
+    });
+    try {
+      return await Promise.race([
+        countStoreClients({ client, keeperAppName: KEEPER_APP_NAME }),
+        timedOut,
+      ]);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
   async function checkClients() {
     let clients;
     try {
-      clients = await countStoreClients({ client, keeperAppName: KEEPER_APP_NAME });
+      clients = await countClientsInTime();
     } catch (error) {
-      // mongod does not answer: the store is gone for every test process. Any other error
-      // leaves the store as it is, to be counted again at the next poll.
+      // A dead-store error means mongod is gone for every test process. Any other error, a
+      // count that timed out among them, leaves the store as it is, counted again next poll.
       if (isDataStoreGone(error)) await stopAndExit();
       return;
     }

@@ -18,16 +18,12 @@
 // `keeperAppName`. mongod's own threads have no client address and are not counted. A test
 // process holds its client from its first session until it closes its test app (closeTestApp)
 // or exits, and a process that has exited, however it ended, has no connection left, so a count
-// of 0 means no test process uses the store. The count gives up after COUNT_TIMEOUT_MS, so a
-// mongod that hangs cannot hold up the keeper's next count.
-const COUNT_TIMEOUT_MS = 5000;
-
+// of 0 means no test process uses the store. The driver gives no time limit here (timeoutMS is a
+// no-op in mongodb 7), so the keeper bounds the count itself (runDataStoreKeeper).
 async function countStoreClients({ client, keeperAppName }) {
   const operations = await client
     .db('admin')
-    .aggregate([{ $currentOp: { allUsers: true, idleConnections: true } }], {
-      timeoutMS: COUNT_TIMEOUT_MS,
-    })
+    .aggregate([{ $currentOp: { allUsers: true, idleConnections: true } }])
     .toArray();
   return operations.filter(
     (operation) => operation.client !== undefined && operation.appName !== keeperAppName

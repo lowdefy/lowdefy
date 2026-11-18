@@ -196,10 +196,25 @@ test('runDataStoreKeeper keeps the store when counting its clients fails for ano
   vi.useFakeTimers();
   startDataStoreReplSet.mockResolvedValue(replSet);
   countStoreClients.mockRejectedValue(
-    Object.assign(new Error('timed out'), { name: 'MongoOperationTimeoutError' })
+    Object.assign(new Error('connection closed'), { name: 'MongoNetworkError' })
   );
   await startKeeper();
   await vi.advanceTimersByTimeAsync(5000);
   expect(readRunStoreRecord({ recordPath }).uri).toEqual(uri);
   expect(replSet.stop).not.toHaveBeenCalled();
+});
+
+test('runDataStoreKeeper counts again after a count mongod never answers, and still stops once idle', async () => {
+  vi.useFakeTimers();
+  startDataStoreReplSet.mockResolvedValue(replSet);
+  // A hung mongod: the first count never settles. The ones after it find no client.
+  countStoreClients.mockReturnValueOnce(new Promise(() => {})).mockResolvedValue(0);
+  await startKeeper();
+  await vi.advanceTimersByTimeAsync(1000);
+  expect(countStoreClients).toHaveBeenCalledTimes(1);
+  await vi.advanceTimersByTimeAsync(IDLE_STOP_MS + 10000);
+  expect(countStoreClients.mock.calls.length).toBeGreaterThan(1);
+  expect(readRunStoreRecord({ recordPath })).toBeNull();
+  expect(replSet.stop).toHaveBeenCalledWith({ doCleanup: true });
+  expect(exit).toHaveBeenCalledWith(0);
 });
