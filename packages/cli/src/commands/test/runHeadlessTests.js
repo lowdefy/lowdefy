@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import formatBrowserOnly from './formatBrowserOnly.js';
 import formatJourneyResult from './formatJourneyResult.js';
 import runJourneyHeadless from './runJourneyHeadless.js';
+import runJourneyPool from './runJourneyPool.js';
 import runRepeated from './runRepeated.js';
 import summariseResults from './summariseResults.js';
 import writeHeadlessRun from './writeHeadlessRun.js';
@@ -36,27 +37,30 @@ async function runHeadlessTests({ app, context, selected, skipped, repeat }) {
     run: ({ item }) => runJourneyHeadless({ app, context, item }),
     format: formatJourneyResult,
   };
-  const results = [];
-  const browserOnly = [];
   const seen = new Set();
-  for (const { item, usage } of selected) {
-    const result = {
+  // One at a time: concurrent sessions on one test app are untested.
+  const pooled = await runJourneyPool({
+    entries: selected,
+    readLimit: () => 1,
+    run: async ({ item, usage }) => ({
       ...(await runRepeated({ suite: headlessSuite, context, item, repeat })),
       usage,
-    };
-    if (!type.isUndefined(result.browserOnly)) {
-      browserOnly.push(result);
-      context.logger.info(formatBrowserOnly({ result }));
-      continue;
-    }
-    results.push(result);
-    const lines = headlessSuite.format({ result, seen });
-    if (result.passed) {
-      lines.forEach((line) => context.logger.info(line));
-    } else {
-      lines.forEach((line) => context.logger.error(line));
-    }
-  }
+    }),
+    onReported: ({ result }) => {
+      if (!type.isUndefined(result.browserOnly)) {
+        context.logger.info(formatBrowserOnly({ result }));
+        return;
+      }
+      const lines = headlessSuite.format({ result, seen });
+      if (result.passed) {
+        lines.forEach((line) => context.logger.info(line));
+      } else {
+        lines.forEach((line) => context.logger.error(line));
+      }
+    },
+  });
+  const results = pooled.filter((result) => type.isUndefined(result.browserOnly));
+  const browserOnly = pooled.filter((result) => !type.isUndefined(result.browserOnly));
   writeHeadlessRun({ directories: context.directories, results, browserOnly, mode: 'build' });
   const summary = summariseResults({ results, skipped, browserOnly: browserOnly.length });
   if (summary.failed > 0) {
