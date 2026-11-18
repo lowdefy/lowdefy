@@ -99,18 +99,18 @@ afterEach(() => {
 
 test('a block whose request uses a MongoDBCollection connection, declaring redirect, may be clicked', () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'save_button' })).toBeNull();
+  expect(rails.refusal({ pageId: 'orders', blockId: 'save_button', step: 'click' })).toBeNull();
 });
 
 test('a block that reaches a plugin type declaring redirect or walled may be clicked', () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'archive_button' })).toBeNull();
-  expect(rails.refusal({ pageId: 'orders', blockId: 'accept_button' })).toBeNull();
+  expect(rails.refusal({ pageId: 'orders', blockId: 'archive_button', step: 'click' })).toBeNull();
+  expect(rails.refusal({ pageId: 'orders', blockId: 'accept_button', step: 'click' })).toBeNull();
 });
 
 test('a block that reaches a connection declaring external is refused, naming the declaration', () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'notify_button' })).toEqual({
+  expect(rails.refusal({ pageId: 'orders', blockId: 'notify_button', step: 'click' })).toEqual({
     message:
       'Block "notify_button" reaches connection "mailer" (AxiosHttp, dataSet: external), which reaches a real service, so a data-set journey cannot click it.',
     actual: 'a click that reaches connection "mailer" (AxiosHttp, dataSet: external)',
@@ -119,7 +119,7 @@ test('a block that reaches a connection declaring external is refused, naming th
 
 test('a block that reaches a connection whose type declares nothing is refused, saying so', () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'report_button' })).toEqual({
+  expect(rails.refusal({ pageId: 'orders', blockId: 'report_button', step: 'click' })).toEqual({
     message:
       'Block "report_button" reaches connection "sql" (Knex, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.',
     actual: 'a click that reaches connection "sql" (Knex, no dataSet declaration)',
@@ -128,7 +128,7 @@ test('a block that reaches a connection whose type declares nothing is refused, 
 
 test('a block that reaches a connection with no artifact is refused, saying so', () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'orphan_button' })).toEqual({
+  expect(rails.refusal({ pageId: 'orders', blockId: 'orphan_button', step: 'click' })).toEqual({
     message:
       'Block "orphan_button" reaches connection "gone" (no connection artifact), which a data set cannot redirect, so a data-set journey cannot click it.',
     actual: 'a click that reaches connection "gone" (no connection artifact)',
@@ -137,7 +137,7 @@ test('a block that reaches a connection with no artifact is refused, saying so',
 
 test('a block that reaches several refused connections names each with its declaration', () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'everything_button' })).toEqual({
+  expect(rails.refusal({ pageId: 'orders', blockId: 'everything_button', step: 'click' })).toEqual({
     message:
       'Block "everything_button" reaches connection "gone" (no connection artifact), which a data set cannot redirect, and connection "mailer" (AxiosHttp, dataSet: external), which reaches a real service, and connection "sql" (Knex, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.',
     actual:
@@ -148,26 +148,40 @@ test('a block that reaches several refused connections names each with its decla
 test('a MongoDBCollection connection is refused when the connection map does not declare it', () => {
   const { MongoDBCollection, ...withoutMongo } = connections;
   const rails = createDataSetRails({ buildDirectory, connections: withoutMongo });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'save_button' })?.actual).toBe(
+  expect(rails.refusal({ pageId: 'orders', blockId: 'save_button', step: 'click' })?.actual).toBe(
     'a click that reaches connection "orders_db" (MongoDBCollection, no dataSet declaration)'
   );
 });
 
 test('a list item block is matched through its template id', () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'rows.2.notify' })?.actual).toBe(
+  expect(rails.refusal({ pageId: 'orders', blockId: 'rows.2.notify', step: 'click' })?.actual).toBe(
     'a click that reaches connection "mailer" (AxiosHttp, dataSet: external)'
   );
 });
 
 test('a block that runs an auth action is not refused: the auth rail acts at runtime', () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'logout_button' })).toBeNull();
+  expect(rails.refusal({ pageId: 'orders', blockId: 'logout_button', step: 'click' })).toBeNull();
 });
 
 test("a page's lists are read once per run", () => {
   const rails = createDataSetRails({ buildDirectory, connections });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'save_button' })).toBeNull();
+  expect(rails.refusal({ pageId: 'orders', blockId: 'save_button', step: 'click' })).toBeNull();
   fs.rmSync(path.join(buildDirectory, 'pages'), { recursive: true });
-  expect(rails.refusal({ pageId: 'orders', blockId: 'notify_button' })).not.toBeNull();
+  expect(
+    rails.refusal({ pageId: 'orders', blockId: 'notify_button', step: 'click' })
+  ).not.toBeNull();
+});
+
+test.each([
+  ['open', 'open it', 'an open'],
+  ['fill', 'fill it', 'a fill'],
+  ['select', 'select in it', 'a select'],
+])('a refused %s step is named in its own words', (step, act, noun) => {
+  const rails = createDataSetRails({ buildDirectory, connections });
+  expect(rails.refusal({ pageId: 'orders', blockId: 'report_button', step })).toEqual({
+    message: `Block "report_button" reaches connection "sql" (Knex, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot ${act}.`,
+    actual: `${noun} that reaches connection "sql" (Knex, no dataSet declaration)`,
+  });
 });

@@ -18,6 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { normaliseBlockId } from '@lowdefy/node-utils';
 
 import findExternalBlocks from './findExternalBlocks.js';
+import RAILED_STEPS from './railedSteps.js';
 
 // A list item's block (`rows.2.delete`) is listed by its template id
 // (`rows.$.delete`).
@@ -43,14 +44,13 @@ function describeConnection(connection) {
   return `"${connection.connectionId}" (${describeDeclaration(connection)})`;
 }
 
-// The static rail of a data-set journey run: a click on a block whose events
-// reach a connection whose type declares meta.dataSet 'external', declares
-// nothing, or has no artifact would reach a real service or be refused by the
-// gate. Declarations are read from connections, the plugin connection map the
-// gate reads. refusal({ pageId, blockId }) says why such a click is refused, or
-// null when the block may be clicked. Each page's list is read from the build
-// once per run. (Auth-engine actions are a runtime rail: see
-// checkAuthActionsRan.)
+// The static rail of a data-set journey run: a step that acts on a block (a click, an open, a
+// fill or a select, see railedSteps) whose events reach a connection whose type declares
+// meta.dataSet 'external', declares nothing, or has no artifact would reach a real service or be
+// refused by the gate. Declarations are read from connections, the plugin connection map the
+// gate reads. refusal({ pageId, blockId, step }) says why such a step is refused, in that step's
+// words, or null when the block may be acted on. Each page's list is read from the build once
+// per run. (Auth-engine actions are a runtime rail: see checkAuthActionsRan.)
 function createDataSetRails({ buildDirectory, connections }) {
   const pages = new Map();
   function readPage(pageId) {
@@ -59,7 +59,8 @@ function createDataSetRails({ buildDirectory, connections }) {
     }
     return pages.get(pageId);
   }
-  function refusal({ pageId, blockId }) {
+  function refusal({ pageId, blockId, step }) {
+    const words = RAILED_STEPS[step];
     const refused = findListed({ blocks: readPage(pageId), blockId });
     if (!type.isUndefined(refused)) {
       const reasons = refused
@@ -70,8 +71,8 @@ function createDataSetRails({ buildDirectory, connections }) {
         .join(', and ');
       const named = refused.map(describeConnection).join(', ');
       return {
-        message: `Block "${blockId}" reaches ${reasons}, so a data-set journey cannot click it.`,
-        actual: `a click that reaches connection ${named}`,
+        message: `Block "${blockId}" reaches ${reasons}, so a data-set journey cannot ${words.act}.`,
+        actual: `${words.step} that reaches connection ${named}`,
       };
     }
     return null;

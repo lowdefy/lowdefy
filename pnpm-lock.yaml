@@ -2271,6 +2271,9 @@ importers:
       '@lowdefy/e2e-utils':
         specifier: 7.4.0
         version: link:../../../utils/e2e-utils
+      '@lowdefy/node-utils':
+        specifier: 7.4.0
+        version: link:../../../utils/node-utils
       '@playwright/test':
         specifier: 1.65.0
         version: 1.65.0

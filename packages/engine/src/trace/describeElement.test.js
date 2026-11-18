@@ -250,11 +250,37 @@ test('describeChain parses the chain and adds the page id and block type', () =>
     block_type: 'Button',
     row: null,
     column: null,
+    control: null,
     text: 'Save',
     nth: null,
     option: false,
     block_ids: ['save_button'],
   });
+});
+
+test('describeChain reads a marked cell control by its key and displayed row, with no row key', () => {
+  const lowdefy = createLowdefy();
+  lowdefy.contexts['page:orders'] = {
+    pageId: 'orders',
+    _internal: { RootSlots: { map: { invoices: { type: 'AgGridAlpine' } } } },
+  };
+  window.history.replaceState({}, '', '/orders');
+  const chain =
+    'span:text="Pay";button:attr__data-lf-block="invoices"attr__data-lf-control="onPay"attr__data-lf-row-key="inv-2"text="Pay";div.ag-cell:attr__class="ag-cell"attr__col-id="actions";div.ag-row:attr__class="ag-row"attr__row-id="inv-2"attr__row-index="1";div:attr__id="bl-invoices"attr_id="bl-invoices"';
+  const described = getTrace(lowdefy).describeChain(chain);
+  expect(described).toEqual({
+    page_id: 'orders',
+    block_id: 'invoices',
+    block_type: 'AgGridAlpine',
+    row: 1,
+    column: 'actions',
+    control: 'onPay',
+    text: null,
+    nth: null,
+    option: false,
+    block_ids: ['invoices'],
+  });
+  expect(described).not.toHaveProperty('row_key');
 });
 
 function rememberTicket(lowdefy) {

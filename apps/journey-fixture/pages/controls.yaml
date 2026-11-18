@@ -6,7 +6,9 @@ type: Box
 # did to state `last`. The grid's pinned column is listed last, so the row's first displayed cell
 # is not its first column in the config. plain_grid's rows carry no key, so the grid generates
 # one. tickets_table shows its reply button only while the row is hovered. Two of dupes_table's
-# rows share a key. notes_menu opens on a right click (trigger: contextMenu).
+# rows share a key. notes_menu opens on a right click (trigger: contextMenu). leave_modal's id
+# starts with "leave" and holiday_modal's own element (`.ant-modal`, above its footer buttons) has
+# the class annual-leave, so neither may pass for a modal antd is animating out.
 blocks:
   - id: controls_title
     type: Title
@@ -41,6 +43,54 @@ blocks:
         type: Paragraph
         properties:
           content: Edit the item
+  - id: open_leave_modal_button
+    type: Button
+    properties:
+      title: Open leave modal
+    events:
+      onClick:
+        - id: open_leave_modal
+          type: CallMethod
+          params:
+            blockId: leave_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: leave_modal
+    type: Modal
+    properties:
+      title: Request leave
+    events:
+      onOk:
+        - id: set_leave_ok
+          type: SetState
+          params:
+            last: leave-ok
+  - id: open_holiday_modal_button
+    type: Button
+    properties:
+      title: Open holiday modal
+    events:
+      onClick:
+        - id: open_holiday_modal
+          type: CallMethod
+          params:
+            blockId: holiday_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: holiday_modal
+    type: Modal
+    class:
+      .element: annual-leave
+    properties:
+      title: Book a holiday
+    events:
+      onOk:
+        - id: set_holiday_ok
+          type: SetState
+          params:
+            last: holiday-ok
   - id: open_confirm_dialog_button
     type: Button
     properties:

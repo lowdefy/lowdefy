@@ -17,7 +17,7 @@
 import UndeclaredFixtureEcho from './UndeclaredFixtureEcho/UndeclaredFixtureEcho.js';
 
 // A connection type that declares no meta.dataSet, as a plugin that reaches an outside database
-// would: a data-set journey's click rails refuse a click whose request uses it
+// would: a data-set journey's step rails refuse a click whose request uses it
 // (packages/servers/server-dev/test/journeyFixture/rails.test.mjs). Its request reaches nothing.
 export default {
   schema: {

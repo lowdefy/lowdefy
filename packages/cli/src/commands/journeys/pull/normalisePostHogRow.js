@@ -90,6 +90,7 @@ function normalisePostHogRow({ row }) {
     blockType: readString(row.lowdefy_block_type),
     row: readInt(row.lowdefy_row),
     column: readString(row.lowdefy_column),
+    control: readString(row.lowdefy_control),
     option: readBoolean(row.lowdefy_option),
     eventScope: readString(row.lowdefy_event_scope),
     eventName: readString(row.lowdefy_event_name),

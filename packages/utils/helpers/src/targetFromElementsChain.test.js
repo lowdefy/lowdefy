@@ -403,21 +403,44 @@ test('targetFromElementsChain gives no row key for a generated key or a pinned r
   expect(targetFromElementsChain(pinned)).toMatchObject({ row: null, row_key: null });
 });
 
-test('targetFromElementsChain with marks false reads a marked control by its text, as before', () => {
-  expect(targetFromElementsChain(modalOkChain, { marks: false })).toEqual({
-    block_id: null,
-    row: null,
-    column: null,
-    text: 'OK',
-    option: false,
-    block_ids: [],
+test('targetFromElementsChain with rowKey false reads a marked control by its key, with no row key', () => {
+  const { row_key: _rowKey, ...noRowKey } = EMPTY;
+  expect(targetFromElementsChain(modalOkChain, { rowKey: false })).toEqual({
+    ...noRowKey,
+    block_id: 'delete_modal',
+    control: 'ok',
+    block_ids: ['delete_modal'],
   });
-  expect(targetFromElementsChain(gridCellButtonChain('inv-2'), { marks: false })).toEqual({
+  expect(targetFromElementsChain(gridCellButtonChain('inv-2'), { rowKey: false })).toEqual({
+    ...noRowKey,
+    block_id: 'invoices',
+    row: 1,
+    column: 'actions',
+    control: 'onPay',
+    block_ids: ['invoices'],
+  });
+});
+
+test('targetFromElementsChain with rowKey false still reads a generated-key cell button by its text', () => {
+  const { row_key: _rowKey, ...noRowKey } = EMPTY;
+  expect(targetFromElementsChain(gridCellButtonChain('__row_1'), { rowKey: false })).toEqual({
+    ...noRowKey,
     block_id: 'invoices',
     row: 1,
     column: 'actions',
     text: 'Pay',
-    option: false,
     block_ids: ['invoices'],
   });
+});
+
+test('targetFromElementsChain with rowKey false gives no row key for a keyed row', () => {
+  const keyedRow = chain(
+    entry('div', {
+      classes: ['lf-table-row'],
+      attributes: { 'attr__data-row-index': '0', 'attr__data-row-key': 'a1' },
+    }),
+    wrapper('people')
+  );
+  expect(targetFromElementsChain(keyedRow)).toMatchObject({ row: 0, row_key: 'a1' });
+  expect(targetFromElementsChain(keyedRow, { rowKey: false })).not.toHaveProperty('row_key');
 });

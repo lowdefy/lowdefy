@@ -33,7 +33,8 @@ import { ANSWER_STEP_KEYS, getStepKey } from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
-import checkClickRails from './rails/checkClickRails.js';
+import checkStepRails from './rails/checkStepRails.js';
+import RAILED_STEPS from './rails/railedSteps.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
@@ -102,9 +103,29 @@ const {
   radioOption: RADIO_OPTION,
 } = journeyTargetSelectors;
 
-// An element antd is animating out (a closing modal or dropdown popup carries its motion's
-// `-leave` classes until it is hidden): it is still visible, but no longer what a person acts on.
-const LEAVING = '[class*="-leave"]';
+// An element antd is animating out: still visible, but no longer what a person acts on. antd's
+// motion (rc-motion) gives it the class `ant-<motion>-leave` until it is hidden, for the motions
+// antd 6 uses: Modal and ConfirmModal (zoom, their mask fade), Drawer (panel motions), dropdown,
+// select, cascader and picker popups (slides), ColorPicker's popover and a vertical Menu's
+// submenu popup (zoom-big), and an inline Menu's submenu (motion-collapse). Only whole class
+// names match, so a block id or class with "leave" in it (the portal class
+// `ldf-portal-leave_modal`, `annual-leave`) does not count as leaving.
+const LEAVING_MOTIONS = [
+  'zoom',
+  'zoom-big',
+  'fade',
+  'slide-up',
+  'slide-down',
+  'slide-left',
+  'slide-right',
+  'drawer-panel-motion-left',
+  'drawer-panel-motion-right',
+  'drawer-panel-motion-top',
+  'drawer-panel-motion-bottom',
+  'motion-collapse',
+];
+const LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave`).join(', ');
+const INSIDE_LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave *`).join(', ');
 
 // The cell a row-key target with no column or control clicks: the row's first cell. AG Grid draws
 // cells out of display order (ensureDomOrder is off), so it is the cell AG Grid and Table number
@@ -335,7 +356,7 @@ function plural({ count, word }) {
 //
 // beforeReveal runs once, before a `control` target hovers its row or opens a
 // dropdown to show the control: those act on the block too (a dropdown fires
-// onOpenChange), so a click's rails check must come first.
+// onOpenChange), so a click's step rails check must come first.
 async function resolveActionTarget({ page, target, timeout, beforeReveal }) {
   await refuseGeneratedRowKey({ page, target });
   if (!type.isUndefined(target.control)) {
@@ -458,7 +479,7 @@ function controlMatches({ page, target }) {
     blockId: target.blockId,
     control: target.control,
     rowKey: target.rowKey,
-  })}:not(${LEAVING} *)`;
+  })}:not(${INSIDE_LEAVING})`;
   if (type.isUndefined(target.column)) {
     return page.locator(selector).filter({ visible: true });
   }
@@ -502,7 +523,7 @@ async function openDropdown({ page, target, trigger, timeout }) {
 // then opens the first closed dropdown trigger in the scope (the cell, else the row, else the
 // block) and waits for its popup. Several visible matches fail with the count, as a `text` that
 // matches several controls does; none within the timeout fails naming what was tried.
-// beforeReveal (the click rails) runs once, before the first hover or open.
+// beforeReveal (a click's step rails) runs once, before the first hover or open.
 async function locateControl({ page, target, timeout, beforeReveal }) {
   const deadline = Date.now() + timeout;
   const description = describeTarget(target);
@@ -599,13 +620,14 @@ const POPUP = [
 // Marks the popups already showing before an `open` step clicks, so the step
 // waits for a popup its own click opened: the dropdown a previous step opened
 // stays visible while it fades out, and would otherwise pass for the new one.
-// A popup fading out (LEAVING) is not showing: it is not marked, and never
-// counts as new, so a dropdown reopened while its popup fades (antd reuses the
-// element) is found once it shows again.
+// A popup fading out (LEAVING, on the popup or, for ColorPicker's
+// `.ant-color-picker-inner`, on the popover around it) is not showing: it is
+// not marked, and never counts as new, so a dropdown reopened while its popup
+// fades (antd reuses the element) is found once it shows again.
 const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
 
 const NEW_POPUP = POPUP.map(
-  (selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING})`
+  (selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING}):not(${INSIDE_LEAVING})`
 ).join(', ');
 
 async function markShowingPopups({ page }) {
@@ -614,7 +636,7 @@ async function markShowingPopups({ page }) {
     .evaluateAll(
       (popups, { attribute, leaving }) =>
         popups
-          .filter((popup) => popup.checkVisibility() && !popup.matches(leaving))
+          .filter((popup) => popup.checkVisibility() && popup.closest(leaving) === null)
           .forEach((popup) => popup.setAttribute(attribute, '')),
       { attribute: SHOWING_BEFORE, leaving: LEAVING }
     );
@@ -631,12 +653,30 @@ async function unmarkPopups({ page }) {
     );
 }
 
+// The data-set rails of one step that acts on a block (see checkStepRails): checked once, before
+// the step first acts on the page. A `control` target is checked before its hover or open
+// reveals the control (its block is the target's own, so no element is needed), else on the
+// element the step acts on. blockId() is the block it checked, for checkAuthActionsRan.
+function createStepRails({ journey, page, target, step }) {
+  let checked = false;
+  let blockId = null;
+  return {
+    check: async (locator) => {
+      if (checked) return;
+      checked = true;
+      blockId = await checkStepRails({ journey, page, locator, target, step });
+    },
+    blockId: () => blockId,
+  };
+}
+
 // Opens the popup of the input the target names and waits until it shows, so
 // a screenshot or a `select`-less inspection sees the options. A block with no
 // popup trigger (a button) is clicked as `click` does; a block whose click
 // opens nothing fails the step, since `open` promises a popup.
-async function runOpen({ page, step, timeout }) {
+async function runOpen({ journey, page, step, timeout }) {
   const target = normaliseTarget(step.open);
+  const rails = createStepRails({ journey, page, target, step: 'open' });
   await markShowingPopups({ page });
   try {
     await actOnTarget({
@@ -648,10 +688,14 @@ async function runOpen({ page, step, timeout }) {
         // implementation has rendered); counted once either shows.
         await trigger.or(located).first().waitFor({ state: 'visible', timeout });
         await waitForLoadingBlocks({ page, timeout });
+        // Checked before the dropdown opens: opening it fires the block's onOpenChange.
         if ((await trigger.count()) > 0) {
+          await rails.check(trigger);
           await openDropdown({ page, target, trigger, timeout });
         } else {
-          await (await resolveClickLocator({ located, target, timeout })).click({ timeout });
+          const locator = await resolveClickLocator({ located, target, timeout });
+          await rails.check(locator);
+          await locator.click({ timeout });
         }
       },
     });
@@ -670,6 +714,7 @@ async function runOpen({ page, step, timeout }) {
   }
   // Popups animate in; a capture mid-animation is faded or offset.
   await page.waitForTimeout(250);
+  return { blockId: rails.blockId() };
 }
 
 // `count` clicks in quick succession through one Playwright click, as a
@@ -677,15 +722,7 @@ async function runOpen({ page, step, timeout }) {
 // double click is never turned into a second submit after the first settled.
 async function runClick({ journey, page, step, timeout }) {
   const { count = 1, ...target } = normaliseTarget(step.click);
-  let blockId = null;
-  // Checked once per click: before a control target's hover or open reveals the control (its
-  // block is the target's own, so no element is needed), else before the click.
-  let railsChecked = false;
-  const checkRails = async (locator) => {
-    if (railsChecked) return;
-    railsChecked = true;
-    blockId = await checkClickRails({ journey, page, locator, target });
-  };
+  const rails = createStepRails({ journey, page, target, step: 'click' });
   await actOnTarget({
     target,
     action: async () => {
@@ -693,14 +730,14 @@ async function runClick({ journey, page, step, timeout }) {
         page,
         target,
         timeout,
-        beforeReveal: () => checkRails(null),
+        beforeReveal: () => rails.check(null),
       });
       const locator = await resolveClickLocator({ located, target, timeout });
-      await checkRails(locator);
+      await rails.check(locator);
       await locator.click({ timeout, clickCount: count });
     },
   });
-  return { blockId };
+  return { blockId: rails.blockId() };
 }
 
 // Where a fill looks for the input. A block that renders its input in a portal (the Search
@@ -722,6 +759,7 @@ function fillScope({ page, target, located }) {
 // person types a one-time code from their inbox into the tab they started in.
 async function runFill({ journey, page, step, timeout }) {
   const { value: literal, fromEmail, ...target } = step.fill;
+  const rails = createStepRails({ journey, page, target, step: 'fill' });
   let value = literal;
   if (!type.isUndefined(fromEmail)) {
     value = await readJourneyEmailMatch({
@@ -747,12 +785,15 @@ async function runFill({ journey, page, step, timeout }) {
         throw await createNoInputError({ page, target, error });
       }
       if ((await input.count()) === 0 && (await colorTrigger.count()) > 0) {
+        await rails.check(colorTrigger);
         await fillColorPicker({ page, target, trigger: colorTrigger, value, timeout });
         return;
       }
+      await rails.check(input);
       await input.fill(String(value), { timeout });
     },
   });
+  return { blockId: rails.blockId() };
 }
 
 // The engine's type for a block and its `trigger` property (how its dropdown opens), or null
@@ -894,9 +935,10 @@ async function tickCheckboxOption({ options, target, text, timeout }) {
 // and the option with exactly `value` as text is clicked — Ant Design renders
 // options into a portal, so they are searched page-wide, restricted to visible
 // ones so the hidden accessibility list is never matched.
-async function runSelect({ page, step, timeout }) {
+async function runSelect({ journey, page, step, timeout }) {
   const { value, ...target } = step.select;
   const text = String(value);
+  const rails = createStepRails({ journey, page, target, step: 'select' });
   let scope;
   await actOnTarget({
     target,
@@ -908,28 +950,36 @@ async function runSelect({ page, step, timeout }) {
       await scope.first().waitFor({ state: 'visible', timeout });
     },
   });
+  // Each way below is checked against the block of the element it picks in (a container
+  // target's scope holds the input block whose onChange the pick fires), before it picks.
   const native = scope.locator('select');
   if ((await native.count()) > 0) {
     await actOnTarget({
       target,
-      action: () => native.first().selectOption({ label: text }, { timeout }),
+      action: async () => {
+        await rails.check(native.first());
+        await native.first().selectOption({ label: text }, { timeout });
+      },
     });
-    return;
+    return { blockId: rails.blockId() };
   }
   const radioOptions = scope.locator(RADIO_OPTION);
   if ((await radioOptions.count()) > 0) {
+    await rails.check(radioOptions.first());
     await selectRadioOption({ options: radioOptions, target, text, timeout });
-    return;
+    return { blockId: rails.blockId() };
   }
   const checkboxOptions = scope.locator(CHECKBOX_OPTION);
   if ((await checkboxOptions.count()) > 0) {
+    await rails.check(checkboxOptions.first());
     await tickCheckboxOption({ options: checkboxOptions, target, text, timeout });
-    return;
+    return { blockId: rails.blockId() };
   }
   await actOnTarget({
     target,
     action: async () => {
       const locator = await resolveClickLocator({ located: scope, target, timeout });
+      await rails.check(locator);
       await locator.click({ timeout });
     },
   });
@@ -958,6 +1008,7 @@ async function runSelect({ page, step, timeout }) {
     .first()
     .waitFor({ state: 'hidden', timeout: Math.min(timeout, 1000) })
     .catch(() => {});
+  return { blockId: rails.blockId() };
 }
 
 // `Mod` in a chord resolves to Meta or Control from the platform the page
@@ -1460,14 +1511,11 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
     case 'click':
       return runClick({ journey, page, step, timeout });
     case 'open':
-      await runOpen({ page, step, timeout });
-      return;
+      return runOpen({ journey, page, step, timeout });
     case 'fill':
-      await runFill({ journey, page, step, timeout });
-      return;
+      return runFill({ journey, page, step, timeout });
     case 'select':
-      await runSelect({ page, step, timeout });
-      return;
+      return runSelect({ journey, page, step, timeout });
     case 'press':
       await runPress({ page, step, timeout });
       return;
@@ -1571,11 +1619,12 @@ async function runJourneySteps({ journey, steps }) {
           timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
         });
       }
-      if (getStepKey(step) === 'click') {
+      if (Object.hasOwn(RAILED_STEPS, getStepKey(step))) {
         await checkAuthActionsRan({
           journey,
           page: journey.actors.current().page,
           blockId: ran?.blockId,
+          step: getStepKey(step),
         });
       }
       await journey.actors.sampleRendered();

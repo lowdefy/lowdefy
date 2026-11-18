@@ -51,6 +51,7 @@
   "devDependencies": {
     "@lowdefy/block-dev-e2e": "7.4.0",
     "@lowdefy/e2e-utils": "7.4.0",
+    "@lowdefy/node-utils": "7.4.0",
     "@playwright/test": "1.65.0",
     "@swc/cli": "0.8.2",
     "@swc/core": "1.16.22",

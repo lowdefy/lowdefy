@@ -20,13 +20,14 @@ import getGlobals from '../getGlobals.js';
 
 // The journey target a posthog-js `$elements_chain` describes as, for the PostHog before_send
 // hook, which holds the chain but not the element. The chain carries no sibling text, so nth is
-// always null. It reads the chain without the journey control marks, so the PostHog properties
-// keep the control's text and send no row key, which is the app's data.
+// always null. A marked control describes as its block's control, as describeElement does, so a
+// production click on it matches the dev recording of it. It reads no row key, which can be the
+// app's data: a cell control keeps its displayed row.
 function createDescribeChain({ findBlockType, lowdefy, pathEntryOf }) {
   return function describeChain(elementsChain) {
-    const { block_id, row, column, text, option, block_ids } = targetFromElementsChain(
+    const { block_id, row, column, control, text, option, block_ids } = targetFromElementsChain(
       elementsChain,
-      { marks: false }
+      { rowKey: false }
     );
     const entry = pathEntryOf(getGlobals(lowdefy).window.location.href);
     return {
@@ -35,6 +36,7 @@ function createDescribeChain({ findBlockType, lowdefy, pathEntryOf }) {
       block_type: findBlockType({ blockId: block_id, instanceKey: entry?.instanceKey }),
       row,
       column,
+      control,
       text,
       nth: null,
       option,
