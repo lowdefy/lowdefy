@@ -27,6 +27,7 @@ vi.doMock('../server/createLowdefyContext.js', () => ({
 }));
 const mockCallEndpoint = vi.fn();
 const mockRunWebhookEndpoint = vi.fn();
+const mockSendDetachedRequest = vi.fn();
 vi.doMock('@lowdefy/api', () => ({
   callEndpoint: mockCallEndpoint,
   callRequest: vi.fn(),
@@ -36,6 +37,7 @@ vi.doMock('@lowdefy/api', () => ({
   redactErrorResponse: (context, error) => ({ name: error.name, message: error.message }),
   runDetachedEndpoint: vi.fn(),
   runWebhookEndpoint: mockRunWebhookEndpoint,
+  sendDetachedRequest: mockSendDetachedRequest,
 }));
 vi.doMock('@lowdefy/journey-headless', () => ({
   createHeadlessHost: (host) => host,
@@ -68,6 +70,7 @@ beforeEach(() => {
   mockHandleError.mockClear();
   mockCallEndpoint.mockReset();
   mockRunWebhookEndpoint.mockReset();
+  mockSendDetachedRequest.mockReset();
 });
 
 test('the dev server host marks a fault a :catch handled caught on a webhook answer', async () => {
@@ -106,5 +109,48 @@ test('the dev server host marks a fault a :catch handled caught on a call answer
   expect(answer.faults.map(({ caught, message }) => ({ caught, message }))).toEqual([
     { caught: true, message: 'Caught on purpose' },
     { caught: undefined, message: 'Escaped on purpose' },
+  ]);
+});
+
+// A detached CallApi on the dev server is sent over its own /api/detached route, as always
+// (sendDetachedRequest), and listed on the answer once sent, as the build host lists the ones it
+// takes, so expect.calls reads them the same on either host.
+test('the dev server host sends a detached call for real and lists it on the answer', async () => {
+  mockCallEndpoint.mockImplementation(async (context) => {
+    context.sendDetached(context, {
+      endpointId: 'detached_log',
+      payload: { source: 'notify' },
+      step: { stepId: 'call_detached_log' },
+    });
+    return { success: true, response: { notified: true } };
+  });
+  const host = await createHost();
+  const answer = await host.call({ endpointId: 'notify', kind: 'endpoint', payload: {} });
+  expect(answer.response).toEqual({ notified: true });
+  expect(mockSendDetachedRequest).toHaveBeenCalledTimes(1);
+  expect(mockSendDetachedRequest.mock.calls[0][1]).toMatchObject({
+    endpointId: 'detached_log',
+    payload: { source: 'notify' },
+  });
+  expect(answer.detached).toEqual([{ endpointId: 'detached_log', payload: { source: 'notify' } }]);
+});
+
+test('the dev server host lists no detached call whose send failed', async () => {
+  mockSendDetachedRequest.mockImplementation(() => {
+    throw new Error('CallApi with "detached: true" requires the CRON_SECRET environment variable.');
+  });
+  mockCallEndpoint.mockImplementation(async (context) => {
+    try {
+      context.sendDetached(context, { endpointId: 'detached_log', payload: {}, step: {} });
+    } catch (error) {
+      await context.handleError(error);
+    }
+    return { success: true, response: { notified: false } };
+  });
+  const host = await createHost();
+  const answer = await host.call({ endpointId: 'notify', kind: 'endpoint', payload: {} });
+  expect(answer.detached).toEqual([]);
+  expect(answer.faults.map(({ message }) => message)).toEqual([
+    'CallApi with "detached: true" requires the CRON_SECRET environment variable.',
   ]);
 });

@@ -137,6 +137,64 @@ test('runJourneyHeadless runs on the dev host and answers in the browser runner 
   });
 });
 
+test('runJourneyHeadless keeps detached on a detached call it records, so variants can leave it out', async () => {
+  mockRunHeadlessJourney.mockResolvedValueOnce({
+    pageId: 'form',
+    passed: true,
+    steps: [],
+    state: {},
+    calls: [
+      {
+        actor: 'main',
+        kind: 'endpoint',
+        pageId: 'form',
+        endpointId: 'save',
+        payload: { _id: 'a' },
+        status: 200,
+        success: true,
+        response: { ok: true },
+      },
+      {
+        actor: 'main',
+        kind: 'endpoint',
+        endpointId: 'notify',
+        detached: true,
+        payload: { _id: 'a' },
+        status: null,
+        success: null,
+        response: null,
+        error: null,
+      },
+    ],
+  });
+  const result = await runJourneyHeadless({
+    origin,
+    pageId: 'form',
+    steps: [{ click: 'save' }],
+    readConfigFile,
+  });
+  expect(result.calls).toEqual([
+    {
+      actor: 'main',
+      kind: 'endpoint',
+      pageId: 'form',
+      endpointId: 'save',
+      payload: { _id: 'a' },
+      status: 200,
+      success: true,
+    },
+    {
+      actor: 'main',
+      kind: 'endpoint',
+      endpointId: 'notify',
+      payload: { _id: 'a' },
+      status: null,
+      success: null,
+      detached: true,
+    },
+  ]);
+});
+
 test('runJourneyHeadless answers a failure, and a browser-only step the runner reached', async () => {
   mockRunHeadlessJourney.mockResolvedValueOnce({
     pageId: 'form',

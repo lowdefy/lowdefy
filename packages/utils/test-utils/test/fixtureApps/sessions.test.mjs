@@ -27,8 +27,6 @@ import writeSessionFixtures from './writeSessionFixtures.mjs';
 // app does not have (writeSessionFixtures); `tenant` is apps/auth-reference-tenant.
 
 const auditor = { id: 'u_auditor', roles: ['auditor'] };
-const detachedMessage =
-  'CallApi with "detached: true" requires the CRON_SECRET environment variable — the /api/detached route fails closed without it.';
 
 let copy;
 let fixture;
@@ -70,6 +68,7 @@ test('a call as an allowed role writes to the session database, and the test rea
     error: null,
     body: { response: { logged: true }, status: 'success', success: true },
     faults: [],
+    detached: [],
   });
   const written = await readAll(session, 'fixture_db', { kind: 'activity' });
   expect(written).toHaveLength(1);
@@ -304,6 +303,7 @@ test('an external request is recorded in sunk and answers null, or what its stub
     error: null,
     body: { id: 'request:rails:call_external', success: true, type: 'AxiosHttp', response: null },
     faults: [],
+    detached: [],
   });
   const record = {
     connectionId: 'rails_external',
@@ -346,20 +346,21 @@ test('an agent call fails with its message: no agent type is loaded, so no model
   expect(session.sunk).toEqual([]);
 });
 
-test('a detached CallApi fails with its message, CRON_SECRET having been removed, and its target never runs', async () => {
+test('a detached CallApi is recorded on the answer, CRON_SECRET having been removed, and its target never runs', async () => {
   vi.stubEnv('CRON_SECRET', 'the-real-cron-secret');
   const app = await openTestApp(fixtureApps.journeyFixture);
   expect(process.env.CRON_SECRET).toBeUndefined();
   const session = await app.openSession({ data: 'explore' });
   const answer = await session.as('member').call('notify');
+  // The routine answers as on a server: the detached step continues at once.
   expect(answer.status).toEqual(200);
-  expect(answer.success).toBe(false);
-  expect(answer.faults).toHaveLength(1);
-  expect(answer.faults[0].message).toEqual(detachedMessage);
-  expect(answer.faults[0].source).toEqual('api/notify.yaml:12');
+  expect(answer.success).toBe(true);
+  expect(answer.response).toEqual({ notified: true });
+  expect(answer.faults).toEqual([]);
+  expect(answer.detached).toEqual([{ endpointId: 'detached_log', payload: {} }]);
   await session.settled();
-  // The step before the detached one ran; the detached target did not.
-  expect(await readAll(session, 'fixture_db', { kind: 'activity' })).toHaveLength(1);
+  // Both log_activity calls ran; the detached target did not.
+  expect(await readAll(session, 'fixture_db', { kind: 'activity' })).toHaveLength(2);
   expect(await readAll(session, 'fixture_db', { kind: 'detached' })).toEqual([]);
   await app.close();
 });
@@ -470,6 +471,7 @@ test('webhook sends an object body as JSON text, which a signature over it verif
     body: { received: true },
     contentType: 'application/json',
     faults: [],
+    detached: [],
   });
   expect(await readAll(session, 'fixture_db', { kind: 'payment_event' })).toEqual([
     { _id: 'evt_1', kind: 'payment_event', type: 'payment.succeeded' },
@@ -487,6 +489,7 @@ test('webhook with a wrong signature answers 401 and its routine never runs', as
     body: { error: { code: 'unauthorized', message: 'Webhook verification failed.' } },
     contentType: 'application/json',
     faults: [],
+    detached: [],
   });
   expect(await readAll(session, 'fixture_db', { kind: 'payment_event' })).toEqual([]);
 });
