@@ -48,7 +48,9 @@ function withoutZeros(counts) {
 // or flaky journey in full while there is room, then by name and message, then
 // the line of each journey a headless run left to a browser, the PASS line of
 // each passing journey and the line of each skipped one. `browserOnly` is in
-// the answer only when the run had any. `omitted` counts what did not fit:
+// the answer only when the run had any, and `contended` (how many journeys
+// passed only when rerun alone after failing beside others, runJourneyPool)
+// only when it is above 0. `omitted` counts what did not fit:
 // failedDetail (failures named without their report), failed, browserOnly,
 // passed and skipped (left out). The summary and the
 // result file cover all of them.
@@ -104,10 +106,12 @@ function compactTestResults({ results, browserOnly = [], skipped }) {
   const skippedLines = takeLines({ entries: skipped, count: 'skipped' });
 
   const left = withoutZeros(omitted);
+  const contended = results.filter((result) => result.contended === true).length;
   return {
     failed,
     ...(browserOnly.length === 0 ? {} : { browserOnly: browserOnlyLines }),
     passed,
+    ...(contended === 0 ? {} : { contended }),
     skipped: skippedLines,
     ...(Object.keys(left).length === 0 ? {} : { omitted: left }),
   };

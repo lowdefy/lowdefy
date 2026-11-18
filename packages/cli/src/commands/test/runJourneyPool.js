@@ -62,17 +62,60 @@ function thrownResult({ entry, error }) {
   };
 }
 
-// Runs the selected test items (`entries`, as selectTier gives them) with up to readLimit() in
+// Whether a failed result may come from running beside other journeys. A refusal (the route's 400
+// or an invalid file), a mutant listed against another build and a journey a headless run cannot
+// take would come back the same alone. A page-open timeout or a browser-slot wait that ran out
+// comes back as `{ message }` with no `failure`, and counts.
+function mayBeContended(result) {
+  return (
+    result.passed !== true &&
+    result.refused !== true &&
+    result.stale !== true &&
+    type.isUndefined(result.browserOnly)
+  );
+}
+
+// A contended failure that passed alone: the alone run's PASS, with the first attempt's failure
+// kept. Each result keeps the first attempt's `recorded` (its `passed: false`), since the alone
+// run records nothing, so measured coverage leaves the journey out of this run.
+function rerunResult({ first, alone }) {
+  const { recorded, ...aloneResult } = alone;
+  const kept = type.isUndefined(first.recorded) ? {} : { recorded: first.recorded };
+  if (alone.passed !== true) {
+    return { ...aloneResult, ...kept };
+  }
+  return {
+    ...aloneResult,
+    contended: true,
+    contendedFailure: {
+      ...(type.isUndefined(first.failure) ? {} : { failure: first.failure }),
+      message: first.message,
+    },
+    ...kept,
+  };
+}
+
+// Runs the selected test items (`entries`, as selectTier gives them) with up to the limit in
 // flight, and returns their results in selection order, whatever order they finish in. The
 // journeys that may overlap run first, then the alone ones one by one with nothing else in flight,
-// each group in selection order (splitSelection). readLimit() is read each time the pool would
-// start a journey beside one already in flight, so a limit that drops mid-run starts no more.
-// `run(entry)` runs one item (one runRepeated call); a run that throws fails that item only.
-// `onFinished({ entry, result, done, total })` is called as each item finishes, and
-// `onReported({ entry, result })` in run order: once an item and every item before it in run
-// order have finished, so an alone journey early in the selection never holds the rest back.
-// A callback that throws starts no more journeys: the pool waits for those in flight, so none
-// runs on past the caller's cleanup, and then throws the first such error.
+// each group in selection order (splitSelection). The limit is readLimit() less one for each
+// contended journey that passed alone, and at least 1. It is read each time the pool would start
+// a journey beside one already in flight, so a limit that drops mid-run starts no more.
+// `run(entry, { rerun })` runs one item (one runRepeated call); a run that throws fails that item
+// only.
+// A journey that fails while another of the run is in flight (a contended failure) is run again
+// alone, once, before it is reported, while the limit is above 1: the pool starts no new journey,
+// waits for those in flight and calls `run(entry, { rerun: true })`, which records nothing. Two
+// contended failures rerun one after the other. Passing alone, the item is PASS with
+// `contended: true` and the first attempt's `contendedFailure: { failure?, message }`, and the
+// limit drops by one for the rest of the run. Failing alone, it is the alone run's FAIL and the
+// limit stays.
+// `onFinished({ entry, result, done, total })` is called as each item finishes, its rerun
+// included, and `onReported({ entry, result })` in run order: once an item and every item before
+// it in run order have finished, so an alone journey early in the selection never holds the rest
+// back.
+// A callback that throws starts no more journeys and no reruns: the pool waits for those in
+// flight, so none runs on past the caller's cleanup, and then throws the first such error.
 async function runJourneyPool({ entries, readLimit, run, onFinished, onReported }) {
   const { overlapping, alone } = splitSelection({ entries });
   const runOrder = [...overlapping, ...alone];
@@ -83,6 +126,19 @@ async function runJourneyPool({ entries, readLimit, run, onFinished, onReported 
   let callbackError;
   // One report at a time, so an async onReported still sees the run order.
   let reporting = Promise.resolve();
+  // Contended journeys that passed alone, each taking one from the limit.
+  let narrowedBy = 0;
+  // The run calls executing now, by selection index, and the items that ran beside another.
+  const running = new Map();
+  const contended = new Set();
+  // Contended failures waiting for or running their rerun. While any is, no journey starts.
+  let reruns = 0;
+  // Reruns go one at a time, each after the one before it.
+  let rerunTurn = Promise.resolve();
+
+  function readNarrowedLimit() {
+    return Math.max(1, readLimit() - narrowedBy);
+  }
 
   async function report() {
     while (reported < runOrder.length && finished[runOrder[reported]]) {
@@ -94,13 +150,60 @@ async function runJourneyPool({ entries, readLimit, run, onFinished, onReported 
     }
   }
 
+  async function attempt({ index, rerun }) {
+    const entry = entries[index];
+    if (running.size > 0) {
+      contended.add(index);
+      running.forEach((_, other) => contended.add(other));
+    }
+    const call = (async () => {
+      try {
+        return await run(entry, { rerun });
+      } catch (error) {
+        return thrownResult({ entry, error });
+      }
+    })();
+    running.set(index, call);
+    try {
+      return await call;
+    } finally {
+      running.delete(index);
+    }
+  }
+
+  async function rerunAlone({ index, first }) {
+    reruns += 1;
+    const turn = rerunTurn.then(async () => {
+      while (running.size > 0) {
+        await Promise.race(running.values());
+      }
+      if (!type.isUndefined(callbackError)) {
+        return first;
+      }
+      const result = rerunResult({ first, alone: await attempt({ index, rerun: true }) });
+      if (result.contended === true) {
+        narrowedBy += 1;
+      }
+      return result;
+    });
+    rerunTurn = turn;
+    try {
+      return await turn;
+    } finally {
+      reruns -= 1;
+    }
+  }
+
   async function runOne(index) {
     const entry = entries[index];
-    let result;
-    try {
-      result = await run(entry);
-    } catch (error) {
-      result = thrownResult({ entry, error });
+    let result = await attempt({ index, rerun: false });
+    if (
+      contended.has(index) &&
+      mayBeContended(result) &&
+      readNarrowedLimit() > 1 &&
+      type.isUndefined(callbackError)
+    ) {
+      result = await rerunAlone({ index, first: result });
     }
     results[index] = result;
     finished[index] = true;
@@ -120,12 +223,16 @@ async function runJourneyPool({ entries, readLimit, run, onFinished, onReported 
 
   const inFlight = new Set();
   function start(index) {
-    const running = runOne(index).finally(() => inFlight.delete(running));
-    inFlight.add(running);
+    const item = runOne(index).finally(() => inFlight.delete(item));
+    inFlight.add(item);
   }
 
   for (const index of overlapping) {
-    while (type.isUndefined(callbackError) && inFlight.size > 0 && inFlight.size >= readLimit()) {
+    while (
+      type.isUndefined(callbackError) &&
+      inFlight.size > 0 &&
+      (reruns > 0 || inFlight.size >= readNarrowedLimit())
+    ) {
       await Promise.race(inFlight);
     }
     if (!type.isUndefined(callbackError)) break;

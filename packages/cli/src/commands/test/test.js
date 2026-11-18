@@ -331,14 +331,15 @@ async function testJourneys({
     const pooled = await runJourneyPool({
       entries: tiered.selected,
       readLimit,
-      run: async ({ suite, item, usage }) => ({
+      // A contended failure's rerun records nothing (runJourneyPool).
+      run: async ({ suite, item, usage }, { rerun }) => ({
         ...(await runRepeated({
           suite: headless ? headlessDevSuite({ suite }) : suite,
           context,
           item,
           url: server.url,
           repeat,
-          recording,
+          recording: rerun ? undefined : recording,
         })),
         usage,
       }),

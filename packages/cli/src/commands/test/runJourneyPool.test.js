@@ -33,23 +33,25 @@ function controlledRun() {
   const inFlightAtStart = [];
   let inFlight = 0;
   let maxInFlight = 0;
-  async function run({ item }) {
+  const options = [];
+  async function run({ item }, runOptions) {
     const name = item.journey.name;
     inFlight += 1;
     maxInFlight = Math.max(maxInFlight, inFlight);
     started.push(name);
     inFlightAtStart.push({ name, inFlight });
+    options.push({ name, ...runOptions });
     const result = await new Promise((resolve) => pending.set(name, resolve));
     inFlight -= 1;
     return result;
   }
-  async function finish(name, { passed = true } = {}) {
+  async function finish(name, { passed = true, ...fields } = {}) {
     while (!pending.has(name)) {
       await new Promise((resolve) => setImmediate(resolve));
     }
     const resolve = pending.get(name);
     pending.delete(name);
-    resolve({ name, passed, class: passed ? 'PASS' : 'FAIL' });
+    resolve({ name, passed, class: passed ? 'PASS' : 'FAIL', ...fields });
     await new Promise((resolve) => setImmediate(resolve));
   }
   return {
@@ -57,6 +59,7 @@ function controlledRun() {
     finish,
     started,
     inFlightAtStart,
+    options,
     get maxInFlight() {
       return maxInFlight;
     },
@@ -218,4 +221,233 @@ test('runJourneyPool waits for the journeys in flight when a callback throws, st
   await runner.finish('b');
   await rejected;
   expect(runner.started).toEqual(['a', 'b']);
+});
+
+function pageOpenTimeout() {
+  return {
+    passed: false,
+    message: 'The page did not open in 30000ms.',
+    recorded: { run: 'run-1', passed: false },
+  };
+}
+
+test('runJourneyPool reruns a contended failure alone, reports it PASS with the first failure kept, and drops the limit', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b', 'c', 'd'].map((name) => entry({ name }));
+  const pool = runJourneyPool({ entries, readLimit: () => 2, run: runner.run });
+  await runner.finish('a', pageOpenTimeout());
+  await runner.finish('b');
+  // a reran alone, with b finished and nothing else started.
+  expect(runner.started).toEqual(['a', 'b', 'a']);
+  await runner.finish('a');
+  await runner.finish('c');
+  await runner.finish('d');
+  const results = await pool;
+  expect(results[0]).toEqual({
+    name: 'a',
+    passed: true,
+    class: 'PASS',
+    contended: true,
+    contendedFailure: { message: 'The page did not open in 30000ms.' },
+    recorded: { run: 'run-1', passed: false },
+  });
+  // The limit dropped from 2 to 1, so c and d ran one at a time.
+  expect(runner.inFlightAtStart.slice(3)).toEqual([
+    { name: 'c', inFlight: 1 },
+    { name: 'd', inFlight: 1 },
+  ]);
+});
+
+test("runJourneyPool keeps the first attempt's step failure on a contended PASS", async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b'].map((name) => entry({ name }));
+  const failure = { index: 2, step: { click: 'save' }, message: 'save is disabled' };
+  const pool = runJourneyPool({ entries, readLimit: () => 2, run: runner.run });
+  await runner.finish('a', { passed: false, failure, message: 'save is disabled' });
+  await runner.finish('b');
+  await runner.finish('a');
+  const results = await pool;
+  expect(results[0].contendedFailure).toEqual({ failure, message: 'save is disabled' });
+});
+
+test("runJourneyPool reports a contended failure that fails alone as the alone run's FAIL and keeps the limit", async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b', 'c', 'd'].map((name) => entry({ name }));
+  const pool = runJourneyPool({ entries, readLimit: () => 2, run: runner.run });
+  await runner.finish('a', pageOpenTimeout());
+  await runner.finish('b');
+  await runner.finish('a', { passed: false, message: 'refund is hidden' });
+  await runner.finish('c');
+  await runner.finish('d');
+  const results = await pool;
+  expect(results[0]).toEqual({
+    name: 'a',
+    passed: false,
+    class: 'FAIL',
+    message: 'refund is hidden',
+    recorded: { run: 'run-1', passed: false },
+  });
+  expect(results[0].contended).toBeUndefined();
+  // The limit stayed at 2.
+  expect(runner.maxInFlight).toBe(2);
+  expect(runner.inFlightAtStart.find(({ name }) => name === 'd').inFlight).toBe(2);
+});
+
+test('runJourneyPool reports a failure with nothing else in flight at once, with no rerun', async () => {
+  const runner = controlledRun();
+  const entries = [entry({ name: 'a' }), entry({ name: 'alone', data: null })];
+  const pool = runJourneyPool({ entries, readLimit: () => 2, run: runner.run });
+  await runner.finish('a');
+  await runner.finish('alone', { passed: false, message: 'refund is hidden' });
+  const results = await pool;
+  expect(runner.started).toEqual(['a', 'alone']);
+  expect(results[1]).toEqual({
+    name: 'alone',
+    passed: false,
+    class: 'FAIL',
+    message: 'refund is hidden',
+  });
+});
+
+test('runJourneyPool does not rerun a failure that ran before any other journey started', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b'].map((name) => entry({ name }));
+  let limit = 1;
+  const pool = runJourneyPool({ entries, readLimit: () => limit, run: runner.run });
+  await new Promise((resolve) => setImmediate(resolve));
+  limit = 2;
+  await runner.finish('a', { passed: false, message: 'refund is hidden' });
+  await runner.finish('b');
+  const results = await pool;
+  expect(runner.started).toEqual(['a', 'b']);
+  expect(results[0].class).toBe('FAIL');
+});
+
+test('runJourneyPool never reruns refused, stale or browser-only results', async () => {
+  const runner = controlledRun();
+  const entries = ['refused', 'stale', 'browser', 'b'].map((name) => entry({ name }));
+  const pool = runJourneyPool({ entries, readLimit: () => 3, run: runner.run });
+  await runner.finish('refused', { passed: false, refused: true, message: 'invalid file' });
+  await runner.finish('stale', { passed: false, stale: true, message: 'another build' });
+  await runner.finish('browser', { passed: false, browserOnly: 'needs a browser' });
+  await runner.finish('b');
+  const results = await pool;
+  expect(runner.started).toEqual(['refused', 'stale', 'browser', 'b']);
+  expect(results.map((result) => result.contended)).toEqual([
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+  ]);
+});
+
+test('runJourneyPool waits for the journeys in flight before a rerun, and starts none meanwhile', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b', 'c', 'd'].map((name) => entry({ name }));
+  const pool = runJourneyPool({ entries, readLimit: () => 3, run: runner.run });
+  await new Promise((resolve) => setImmediate(resolve));
+  expect(runner.started).toEqual(['a', 'b', 'c']);
+  await runner.finish('a', pageOpenTimeout());
+  // b and c are in flight: a waits, and d does not start in a's place.
+  expect(runner.started).toEqual(['a', 'b', 'c']);
+  await runner.finish('b');
+  expect(runner.started).toEqual(['a', 'b', 'c']);
+  await runner.finish('c');
+  expect(runner.started).toEqual(['a', 'b', 'c', 'a']);
+  expect(runner.inFlightAtStart[3]).toEqual({ name: 'a', inFlight: 1 });
+  await runner.finish('a');
+  await runner.finish('d');
+  await pool;
+});
+
+test('runJourneyPool passes rerun: true on the rerun only, so it records nothing', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b'].map((name) => entry({ name }));
+  const pool = runJourneyPool({ entries, readLimit: () => 2, run: runner.run });
+  await runner.finish('a', pageOpenTimeout());
+  await runner.finish('b');
+  await runner.finish('a');
+  await pool;
+  expect(runner.options).toEqual([
+    { name: 'a', rerun: false },
+    { name: 'b', rerun: false },
+    { name: 'a', rerun: true },
+  ]);
+});
+
+test('runJourneyPool reruns two contended failures one after the other, and two alone passes bring a limit of 3 to 1', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b', 'c', 'd', 'e'].map((name) => entry({ name }));
+  const pool = runJourneyPool({ entries, readLimit: () => 3, run: runner.run });
+  await runner.finish('a', pageOpenTimeout());
+  await runner.finish('b', pageOpenTimeout());
+  await runner.finish('c');
+  // a reruns alone first; b waits for it.
+  expect(runner.started).toEqual(['a', 'b', 'c', 'a']);
+  await runner.finish('a');
+  expect(runner.started).toEqual(['a', 'b', 'c', 'a', 'b']);
+  expect(runner.inFlightAtStart[4]).toEqual({ name: 'b', inFlight: 1 });
+  await runner.finish('b');
+  await runner.finish('d');
+  await runner.finish('e');
+  const results = await pool;
+  expect(results.map((result) => [result.name, result.class, result.contended])).toEqual([
+    ['a', 'PASS', true],
+    ['b', 'PASS', true],
+    ['c', 'PASS', undefined],
+    ['d', 'PASS', undefined],
+    ['e', 'PASS', undefined],
+  ]);
+  // The limit is now 1: d and e ran one at a time.
+  expect(runner.inFlightAtStart.slice(5)).toEqual([
+    { name: 'd', inFlight: 1 },
+    { name: 'e', inFlight: 1 },
+  ]);
+});
+
+test('runJourneyPool does not rerun a contended failure once memory pressure has brought the limit to 1', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b'].map((name) => entry({ name }));
+  let limit = 2;
+  const pool = runJourneyPool({ entries, readLimit: () => limit, run: runner.run });
+  await new Promise((resolve) => setImmediate(resolve));
+  limit = 1;
+  await runner.finish('a', pageOpenTimeout());
+  await runner.finish('b');
+  const results = await pool;
+  expect(runner.started).toEqual(['a', 'b']);
+  expect(results[0]).toEqual({ name: 'a', class: 'FAIL', ...pageOpenTimeout() });
+});
+
+test('runJourneyPool reruns a contended thrown run like any other failure', async () => {
+  let calls = 0;
+  const entries = ['a', 'b'].map((name) => entry({ name }));
+  const results = await runJourneyPool({
+    entries,
+    readLimit: () => 2,
+    run: async ({ item }) => {
+      await new Promise((resolve) => setImmediate(resolve));
+      if (item.journey.name === 'a' && calls++ === 0) {
+        throw new Error('socket closed');
+      }
+      return { name: item.journey.name, passed: true, class: 'PASS' };
+    },
+  });
+  expect(results[0]).toMatchObject({
+    name: 'a',
+    class: 'PASS',
+    contended: true,
+    contendedFailure: { message: 'The journey run failed with an error: socket closed' },
+  });
+});
+
+test('runJourneyPool never reruns at a limit of 1', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b'].map((name) => entry({ name }));
+  const pool = runJourneyPool({ entries, readLimit: () => 1, run: runner.run });
+  await runner.finish('a', pageOpenTimeout());
+  await runner.finish('b');
+  const results = await pool;
+  expect(runner.started).toEqual(['a', 'b']);
+  expect(results[0].passed).toBe(false);
 });

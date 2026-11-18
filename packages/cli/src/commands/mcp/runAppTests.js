@@ -144,8 +144,16 @@ async function runAppTests({
   const pooled = await runJourneyPool({
     entries: tiered.selected,
     readLimit,
-    run: async ({ suite, item, usage }) => ({
-      ...(await runRepeated({ suite: runSuite({ suite }), context, item, url, repeat, recording })),
+    // A contended failure's rerun records nothing (runJourneyPool).
+    run: async ({ suite, item, usage }, { rerun }) => ({
+      ...(await runRepeated({
+        suite: runSuite({ suite }),
+        context,
+        item,
+        url,
+        repeat,
+        recording: rerun ? undefined : recording,
+      })),
       usage,
     }),
     onFinished: async ({ result, done, total }) => {

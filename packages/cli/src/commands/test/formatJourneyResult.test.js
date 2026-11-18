@@ -468,3 +468,41 @@ test('formatJourneyResult lists the app errors beside a left-origin failure', ()
     '      server-error  Unrecognized pipeline stage  pages/tickets.yaml:42'
   );
 });
+
+test('formatJourneyResult says a PASS came alone after an open failure beside other journeys', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'submits the form',
+        passed: true,
+        stepCount: 3,
+        durationMs: 1234,
+        contended: true,
+        contendedFailure: { message: 'The page did not open in 30000ms.' },
+      },
+    })
+  ).toEqual([
+    'PASS  submits the form  (3 steps, 1234ms)',
+    '      passed alone after failing beside other journeys: The page did not open in 30000ms.',
+  ]);
+});
+
+test('formatJourneyResult names the step a contended PASS first failed at', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'submits the form',
+        passed: true,
+        stepCount: 3,
+        durationMs: 1234,
+        contended: true,
+        contendedFailure: {
+          failure: { index: 2, step: { click: 'save' }, message: 'save is disabled' },
+          message: 'save is disabled',
+        },
+      },
+    })[1]
+  ).toBe(
+    '      passed alone after failing beside other journeys: step 2 (click "save"): save is disabled'
+  );
+});

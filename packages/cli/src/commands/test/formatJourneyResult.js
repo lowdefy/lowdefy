@@ -97,6 +97,19 @@ function withEvidence({ line, evidence, usage }) {
   return formatted === '' ? line : `${line}  ${formatted}`;
 }
 
+// A journey that failed beside others and passed when rerun alone (runJourneyPool) says so under
+// its PASS line, with what the first attempt failed on.
+function contendedLines({ result }) {
+  if (result.contended !== true) {
+    return [];
+  }
+  return [
+    `      passed alone after failing beside other journeys: ${failureDetail(
+      result.contendedFailure
+    )}`,
+  ];
+}
+
 function formatSingle({ result, seen }) {
   if (result.passed) {
     return [
@@ -105,6 +118,7 @@ function formatSingle({ result, seen }) {
         evidence: result.evidence,
         usage: result.usage,
       }),
+      ...contendedLines({ result }),
       ...formatJourneyDataSet({ result, seen }),
     ];
   }
@@ -156,7 +170,8 @@ function formatRepeated({ result, seen }) {
 }
 
 // Returns the lines to print for one journey result. Run once, a single PASS
-// line (with the journey's tier and evidence when it has them), or a FAIL
+// line (with the journey's tier and evidence when it has them, and the first
+// failure of a journey that passed only when rerun alone), or a FAIL
 // line followed by an indented explanation of what went wrong. Replayed
 // (--repeat above 1), the class - PASS, FLAKY or FAIL - with the runs that
 // passed, and each failing run's step. A data set and its warnings are
