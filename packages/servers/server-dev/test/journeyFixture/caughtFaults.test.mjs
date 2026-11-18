@@ -23,6 +23,30 @@ import { fixtureTest, postJourney, postJson } from './fixtureClient.mjs';
 // error's name, so the journey judges that answer. postJourney runs it in the browser and checks it
 // gives the same result headless on a production build (checkParity.mjs); the dev server's own
 // headless host is asked too.
+//
+// A fault the :catch passes on is not caught: rethrown_operator's :catch rethrows the same
+// OperatorError with `:throw: { _error: true }`, so a journey that calls it fails at that call, in
+// the browser and headless alike.
+
+const CALL_CAUGHT_OPERATOR = {
+  data: 'roles',
+  user: 'member',
+  steps: [{ call: { endpoint: 'caught_operator' } }, { expect: { status: 200 } }],
+};
+
+const CALL_RETHROWN_OPERATOR = {
+  data: 'roles',
+  user: 'member',
+  steps: [{ call: { endpoint: 'rethrown_operator' } }, { expect: { status: 200 } }],
+};
+
+function expectFailsAtRethrow(result) {
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual(
+    expect.objectContaining({ index: 0, kind: 'app-error', expected: 'no app error' })
+  );
+  expect(result.failure.errors.map((error) => error.kind)).toEqual(['server-error']);
+}
 
 const CAUGHT_OPERATOR = {
   pageId: 'caught_faults',
@@ -51,5 +75,30 @@ fixtureTest(
     expect(result.failure).toBeUndefined();
     expect(result.passed).toBe(true);
     expect(result.state).toEqual({ caught: 'OperatorError' });
+  }
+);
+
+fixtureTest('a journey call step passes when a routine catches an OperatorError', async () => {
+  const result = await postJourney(CALL_CAUGHT_OPERATOR);
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+fixtureTest(
+  'a journey call step fails in the browser when a :catch rethrows an OperatorError',
+  async () => {
+    expectFailsAtRethrow(await postJourney(CALL_RETHROWN_OPERATOR));
+  }
+);
+
+fixtureTest(
+  'a journey call step fails on the dev server headless when a :catch rethrows an OperatorError',
+  async () => {
+    const { status, body: result } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...CALL_RETHROWN_OPERATOR, headless: true },
+    });
+    expect(status).toBe(200);
+    expectFailsAtRethrow(result);
   }
 );

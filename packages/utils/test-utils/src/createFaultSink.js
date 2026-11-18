@@ -24,7 +24,7 @@ import { recordForcedFailure } from './dataSets/index.js';
 // `faults`, with its config location resolved from the build as the server's log line has it
 // (error.source, "<file>:<line>"). An expected outcome, such as a refusal or a UserError,
 // never gets here, as on a server. A fault a :catch of the routine handled is listed too, as
-// the server logs it too, marked `caught: true` (runRoutine says so when it reports it). A forced
+// the server logs it too, marked `caught: true` (controlTry says so when it reports it, once its :catch has run). A forced
 // failure (a fail gate's, branded by isForcedFailure's markForcedFailure) is the test's doing, not
 // a fault: it is recorded on the data session `session` by the call's request id instead
 // (recordForcedFailure), where a check reads its message.
