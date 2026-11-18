@@ -14,8 +14,10 @@
   limitations under the License.
 */
 
-import createRowKeyGetter from './createRowKeyGetter.js';
+import { journeyTargetSelectors } from '@lowdefy/helpers';
 import { expect, test } from 'vitest';
+
+import createRowKeyGetter from './createRowKeyGetter.js';
 
 test('createRowKeyGetter reads _id, then id', () => {
   const getRowKey = createRowKeyGetter();
@@ -38,4 +40,10 @@ test('createRowKeyGetter gives rows without an id a key stable for the same obje
 
 test('createRowKeyGetter serialises object ids', () => {
   expect(createRowKeyGetter()({ _id: { $oid: '1' } })).toBe('{"$oid":"1"}');
+});
+
+test('createRowKeyGetter generates keys every journey reader knows as generated', () => {
+  const key = createRowKeyGetter()({ name: 'a' });
+  expect(key.startsWith(journeyTargetSelectors.generatedRowKeyPrefix)).toBe(true);
+  expect(journeyTargetSelectors.isGeneratedRowKey(key)).toBe(true);
 });
