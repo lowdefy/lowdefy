@@ -1215,8 +1215,8 @@ const POPUPS = [
 const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
 
 // A popup antd is animating out carries its motion's `ant-<motion>-leave` class (LEAVING in the
-// runner).
-const LEAVING = [
+// runner), on the popup or on an ancestor (ColorPicker's popover).
+const LEAVING_MOTIONS = [
   'zoom',
   'zoom-big',
   'fade',
@@ -1228,19 +1228,22 @@ const LEAVING = [
   'drawer-panel-motion-right',
   'drawer-panel-motion-top',
   'drawer-panel-motion-bottom',
-]
-  .map((motion) => `.ant-${motion}-leave`)
-  .join(', ');
+  'motion-collapse',
+];
+const LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave`).join(', ');
+const INSIDE_LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave *`).join(', ');
 
-// A stand-in for a popup element: enough DOM for the open step's marking. matches() reads a list
-// of class selectors, as LEAVING is.
-function createPopup({ visible, classes = [] }) {
+// A stand-in for a popup element: enough DOM for the open step's marking. closest() reads a list
+// of class selectors, as LEAVING is, against the popup's classes and its ancestors'.
+function createPopup({ visible, classes = [], ancestorClasses = [] }) {
   const attributes = new Set();
+  const hasClass = (selector, list) =>
+    selector.split(', ').some((part) => list.includes(part.replace(/^\./, '')));
   return {
     attributes,
     checkVisibility: () => visible,
-    matches: (selector) =>
-      selector.split(', ').some((part) => classes.includes(part.replace(/^\./, ''))),
+    closest: (selector) =>
+      hasClass(selector, classes) || hasClass(selector, ancestorClasses) ? {} : null,
     setAttribute: (name) => attributes.add(name),
     removeAttribute: (name) => attributes.delete(name),
   };
@@ -1278,7 +1281,13 @@ test('runJourney open waits for a popup its own click opened, not one already sh
   const leaving = createPopup({ visible: true, classes: ['ant-dropdown', 'ant-slide-up-leave'] });
   // Showing, with "leave" in its block's portal class: not taken as fading out.
   const leaveNamed = createPopup({ visible: true, classes: ['ldf-portal-leave_menu'] });
-  const popups = [fading, closed, leaving, leaveNamed];
+  // ColorPicker's panel, whose popover around it is fading out: not showing either.
+  const leavingPanel = createPopup({
+    visible: true,
+    classes: ['ant-color-picker-inner'],
+    ancestorClasses: ['ant-popover', 'ant-zoom-big-leave'],
+  });
+  const popups = [fading, closed, leaving, leaveNamed, leavingPanel];
   page.elementsFor = (selector) => {
     if (selector === POPUPS.join(', ')) {
       return popups;
@@ -1291,12 +1300,14 @@ test('runJourney open waits for a popup its own click opened, not one already sh
   const markedWhenClicked = [];
   const markedLeavingWhenClicked = [];
   const markedLeaveNamedWhenClicked = [];
+  const markedLeavingPanelWhenClicked = [];
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
     locator.click.mockImplementation(async () => {
       markedWhenClicked.push(fading.attributes.has(SHOWING_BEFORE));
       markedLeavingWhenClicked.push(leaving.attributes.has(SHOWING_BEFORE));
       markedLeaveNamedWhenClicked.push(leaveNamed.attributes.has(SHOWING_BEFORE));
+      markedLeavingPanelWhenClicked.push(leavingPanel.attributes.has(SHOWING_BEFORE));
       page.clicks.push(selector);
     });
     return locator;
@@ -1308,9 +1319,12 @@ test('runJourney open waits for a popup its own click opened, not one already sh
   expect(markedWhenClicked).toEqual([true]);
   expect(markedLeavingWhenClicked).toEqual([false]);
   expect(markedLeaveNamedWhenClicked).toEqual([true]);
+  expect(markedLeavingPanelWhenClicked).toEqual([false]);
   expect(closed.attributes.has(SHOWING_BEFORE)).toBe(false);
   expect(page.waits).toContain(
-    POPUPS.map((selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING})`).join(', ')
+    POPUPS.map(
+      (selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING}):not(${INSIDE_LEAVING})`
+    ).join(', ')
   );
   // Unmarked once the step is done, so a later open of that input finds it.
   expect(fading.attributes.has(SHOWING_BEFORE)).toBe(false);

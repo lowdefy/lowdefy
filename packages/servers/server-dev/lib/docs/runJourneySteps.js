@@ -105,10 +105,11 @@ const {
 
 // An element antd is animating out: still visible, but no longer what a person acts on. antd's
 // motion (rc-motion) gives it the class `ant-<motion>-leave` until it is hidden, for the motions
-// antd's Modal and ConfirmModal (zoom, fade), Drawer (panel motions), dropdown and select popups
-// (slides) and ColorPicker's popover (zoom-big) use. Only whole class names match, so a block id
-// or class with "leave" in it (the portal class `ldf-portal-leave_modal`, `annual-leave`) does
-// not count as leaving.
+// antd 6 uses: Modal and ConfirmModal (zoom, their mask fade), Drawer (panel motions), dropdown,
+// select, cascader and picker popups (slides), ColorPicker's popover and a vertical Menu's
+// submenu popup (zoom-big), and an inline Menu's submenu (motion-collapse). Only whole class
+// names match, so a block id or class with "leave" in it (the portal class
+// `ldf-portal-leave_modal`, `annual-leave`) does not count as leaving.
 const LEAVING_MOTIONS = [
   'zoom',
   'zoom-big',
@@ -121,6 +122,7 @@ const LEAVING_MOTIONS = [
   'drawer-panel-motion-right',
   'drawer-panel-motion-top',
   'drawer-panel-motion-bottom',
+  'motion-collapse',
 ];
 const LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave`).join(', ');
 const INSIDE_LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave *`).join(', ');
@@ -618,13 +620,14 @@ const POPUP = [
 // Marks the popups already showing before an `open` step clicks, so the step
 // waits for a popup its own click opened: the dropdown a previous step opened
 // stays visible while it fades out, and would otherwise pass for the new one.
-// A popup fading out (LEAVING) is not showing: it is not marked, and never
-// counts as new, so a dropdown reopened while its popup fades (antd reuses the
-// element) is found once it shows again.
+// A popup fading out (LEAVING, on the popup or, for ColorPicker's
+// `.ant-color-picker-inner`, on the popover around it) is not showing: it is
+// not marked, and never counts as new, so a dropdown reopened while its popup
+// fades (antd reuses the element) is found once it shows again.
 const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
 
 const NEW_POPUP = POPUP.map(
-  (selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING})`
+  (selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING}):not(${INSIDE_LEAVING})`
 ).join(', ');
 
 async function markShowingPopups({ page }) {
@@ -633,7 +636,7 @@ async function markShowingPopups({ page }) {
     .evaluateAll(
       (popups, { attribute, leaving }) =>
         popups
-          .filter((popup) => popup.checkVisibility() && !popup.matches(leaving))
+          .filter((popup) => popup.checkVisibility() && popup.closest(leaving) === null)
           .forEach((popup) => popup.setAttribute(attribute, '')),
       { attribute: SHOWING_BEFORE, leaving: LEAVING }
     );
