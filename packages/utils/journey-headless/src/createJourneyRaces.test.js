@@ -56,8 +56,14 @@ function setUp() {
 async function holdBoth({ call, run }) {
   await run({ hold: { requestId: 'claim', endpoint: 'approve' } });
   await run({ hold: { requestId: 'claim', endpoint: 'reject' } });
-  expect(await call('approve')).toEqual({ parkedAt: 'claim' });
-  expect(await call('reject')).toEqual({ parkedAt: 'claim' });
+  expect(await call('approve')).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, endpoint: approve }',
+  });
+  expect(await call('reject')).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, endpoint: reject }',
+  });
 }
 
 test('createJourneyRaces releases two holds on one request id in different endpoints, the later first', async () => {
@@ -98,7 +104,10 @@ test('createJourneyRaces release by request id alone lets the first parked call 
 test('createJourneyRaces refuses a release whose endpoint no parked call reached', async () => {
   const { call, run, races } = setUp();
   await run({ hold: { requestId: 'claim', endpoint: 'approve' } });
-  expect(await call('approve')).toEqual({ parkedAt: 'claim' });
+  expect(await call('approve')).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, endpoint: approve }',
+  });
   await expect(run({ release: { requestId: 'claim', endpoint: 'reject' } })).rejects.toThrow(
     'No call is parked at the gate on request "claim" on endpoint "reject" to release.'
   );
@@ -112,11 +121,41 @@ test('createJourneyRaces names the hold whose gate no call reached when two shar
   const { call, run, races } = setUp();
   await run({ hold: { requestId: 'claim', endpoint: 'approve' } });
   await run({ hold: { requestId: 'claim', endpoint: 'reject' } });
-  expect(await call('reject')).toEqual({ parkedAt: 'claim' });
+  expect(await call('reject')).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, endpoint: reject }',
+  });
   expect(await run({ release: { requestId: 'claim', endpoint: 'reject' } })).toEqual({
     endpointId: 'reject',
   });
   const failure = await races.finish();
   expect(failure.index).toBe(0);
   expect(failure.step).toEqual({ hold: { requestId: 'claim', endpoint: 'approve' } });
+});
+
+test('createJourneyRaces names a parked call by its own endpoint when two bare holds share a request id', async () => {
+  const { call, run, races } = setUp();
+  await run({ hold: { requestId: 'claim' } });
+  await run({ hold: { requestId: 'claim' } });
+  expect(await call('approve')).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, endpoint: approve }',
+  });
+  expect(await call('reject')).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, endpoint: reject }',
+  });
+  expect(await run({ release: { requestId: 'claim', endpoint: 'reject' } })).toEqual({
+    endpointId: 'reject',
+  });
+  const failure = await races.finish();
+  expect(failure.message).toBe(
+    'The call parked at the gate on request "claim" was still parked when the journey ended: release it with "release: { requestId: claim, endpoint: approve }".'
+  );
+});
+
+test('createJourneyRaces names a parked call by its request id alone when its hold is the only one on it', async () => {
+  const { call, run } = setUp();
+  await run({ hold: { requestId: 'claim' } });
+  expect(await call('approve')).toEqual({ parkedAt: 'claim', release: 'release: claim' });
 });
