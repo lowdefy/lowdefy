@@ -17,7 +17,6 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { once } from 'node:events';
 import fs from 'node:fs';
-import net from 'node:net';
 import os from 'node:os';
 import path from 'node:path';
 import { createInterface } from 'node:readline';
@@ -391,12 +390,9 @@ test('a record whose keeper pid lives but whose URI does not answer is replaced 
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-run-store-stale-'));
   const { parent, startFile } = startParent();
   const reportPath = path.join(directory, 'report.json');
-  // A port nothing listens on: one a server had and gave back.
-  const server = net.createServer();
-  await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
-  const { port } = server.address();
-  await new Promise((resolve) => server.close(resolve));
-  const staleUri = `mongodb://127.0.0.1:${port}/?replicaSet=testset`;
+  // Port 1 is privileged and has no listener, so nothing answers on it. A port freed by this
+  // process could be taken at once by a mongod another test process starts.
+  const staleUri = 'mongodb://127.0.0.1:1/?replicaSet=testset';
   let report;
   try {
     await startFile({ RUN_STORE_REPORT: reportPath, RUN_STORE_STALE_URI: staleUri });

@@ -17,6 +17,7 @@
 import { MongoClient } from 'mongodb';
 
 import countStoreClients from './countStoreClients.js';
+import isDataStoreGone from './isDataStoreGone.js';
 import isProcessAlive from './isProcessAlive.js';
 import readRunStoreRecord from './readRunStoreRecord.js';
 import removeDataStoreFiles from './removeDataStoreFiles.js';
@@ -49,8 +50,10 @@ const STOP_SIGNALS = ['SIGTERM', 'SIGINT', 'SIGHUP'];
 // own, so a terminal's Ctrl+C reaches it only as the owner's exit. If the keeper itself is
 // killed, mongodb-memory-server's own helper process stops mongod.
 //
-// The record must still carry this keeper's claim token, at start and on every poll until it
-// lets the record go: a record that was replaced belongs to another keeper, and this one stops.
+// The record must carry this keeper's claim token when mongod has started: a record that was
+// replaced by then belongs to another keeper, and this one stops at once. A record removed or
+// replaced later (a join that could not connect, or a keeper pid that was reused) is let go as
+// an idle one is: the store serves the clients it has and stops once they have left.
 async function runDataStoreKeeper({ ownerPid, recordPath, token }) {
   function holdsRecord() {
     return readRunStoreRecord({ recordPath })?.token === token;
@@ -114,9 +117,10 @@ async function runDataStoreKeeper({ ownerPid, recordPath, token }) {
     let clients;
     try {
       clients = await countStoreClients({ client, keeperAppName: KEEPER_APP_NAME });
-    } catch {
-      // mongod does not answer: the store is gone for every test process.
-      await stopAndExit();
+    } catch (error) {
+      // mongod does not answer: the store is gone for every test process. Any other error
+      // leaves the store as it is, to be counted again at the next poll.
+      if (isDataStoreGone(error)) await stopAndExit();
       return;
     }
     if (clients > 0) {
@@ -130,8 +134,12 @@ async function runDataStoreKeeper({ ownerPid, recordPath, token }) {
   }
 
   setInterval(() => {
-    if (!isProcessAlive({ pid: ownerPid }) || (!releasedRecord && !holdsRecord())) {
+    if (!isProcessAlive({ pid: ownerPid })) {
       stopAndExit();
+    } else if (!releasedRecord && !holdsRecord()) {
+      // Another process removed or replaced the record: no new test process joins this store,
+      // and it stops once the ones on it have left, as after an idle release.
+      releasedRecord = true;
     }
   }, OWNER_POLL_MS);
   setInterval(async () => {

@@ -175,3 +175,31 @@ test('runDataStoreKeeper stops a store mongod no longer answers on', async () =>
   expect(replSet.stop).toHaveBeenCalled();
   expect(exit).toHaveBeenCalledWith(0);
 });
+
+test('runDataStoreKeeper serves the clients it has when another process removes its record, and stops once they leave', async () => {
+  vi.useFakeTimers();
+  startDataStoreReplSet.mockResolvedValue(replSet);
+  countStoreClients.mockResolvedValue(1);
+  await startKeeper();
+  // A join that could not connect in time removes the record.
+  fs.rmSync(recordPath);
+  await vi.advanceTimersByTimeAsync(IDLE_STOP_MS * 2);
+  expect(replSet.stop).not.toHaveBeenCalled();
+  expect(exit).not.toHaveBeenCalled();
+  countStoreClients.mockResolvedValue(0);
+  await vi.advanceTimersByTimeAsync(1000);
+  expect(replSet.stop).toHaveBeenCalled();
+  expect(exit).toHaveBeenCalledWith(0);
+});
+
+test('runDataStoreKeeper keeps the store when counting its clients fails for another reason than a dead mongod', async () => {
+  vi.useFakeTimers();
+  startDataStoreReplSet.mockResolvedValue(replSet);
+  countStoreClients.mockRejectedValue(
+    Object.assign(new Error('timed out'), { name: 'MongoOperationTimeoutError' })
+  );
+  await startKeeper();
+  await vi.advanceTimersByTimeAsync(5000);
+  expect(readRunStoreRecord({ recordPath }).uri).toEqual(uri);
+  expect(replSet.stop).not.toHaveBeenCalled();
+});
