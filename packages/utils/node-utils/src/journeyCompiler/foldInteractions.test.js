@@ -150,6 +150,16 @@ test('foldInteractions drops a focus click before a fill but keeps a labelled cl
   ]);
 });
 
+test('foldInteractions keeps clicks on two controls of one block apart', () => {
+  const folded = foldInteractions({
+    records: [
+      traceRecord({ at: 0, block: 'delete_modal', control: 'cancel' }),
+      traceRecord({ at: 0.3, block: 'delete_modal', control: 'ok' }),
+    ],
+  });
+  expect(folded.map((record) => record.target.control)).toEqual(['cancel', 'ok']);
+});
+
 test('foldInteractions collapses a double click and keeps its rage frustration', () => {
   const folded = foldInteractions({
     records: [

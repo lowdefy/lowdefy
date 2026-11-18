@@ -24,7 +24,7 @@ import { pageInstanceKey } from '@lowdefy/helpers';
 import getTrace from './getTrace.js';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-const TARGET_FIELDS = ['block_id', 'row', 'column', 'text', 'nth', 'option'];
+const TARGET_FIELDS = ['block_id', 'row', 'row_key', 'column', 'control', 'text', 'nth', 'option'];
 
 function targetFields(target) {
   return Object.fromEntries(TARGET_FIELDS.map((field) => [field, target[field]]));
@@ -142,6 +142,75 @@ test('describeElement skips hidden controls when it counts controls with the sam
     delete prototype.checkVisibility;
     delete prototype.getBoundingClientRect;
   }
+});
+
+const MODAL_FOOTERS = `
+<div class="ant-modal-root" style="display: none;">
+  <div role="dialog"><button data-lf-block="delete_modal" data-lf-control="ok">OK</button></div>
+</div>
+<div class="ant-modal-root">
+  <div role="dialog"><button id="open-ok" data-lf-block="delete_modal" data-lf-control="ok">OK</button></div>
+</div>`;
+
+test('resolveTargetInDocument skips a control the DOM hides, such as a closed modal', () => {
+  document.body.innerHTML = MODAL_FOOTERS;
+  expect(
+    resolveTargetInDocument({ document, target: { block_id: 'delete_modal', control: 'ok' } })
+  ).toBe(select('#open-ok'));
+});
+
+test('resolveTargetInDocument resolves no control when several visible elements match', () => {
+  document.body.innerHTML = MODAL_FOOTERS.replace(' style="display: none;"', '');
+  expect(
+    resolveTargetInDocument({ document, target: { block_id: 'delete_modal', control: 'ok' } })
+  ).toBeNull();
+});
+
+test('resolveTargetInDocument narrows a control to the cell of its column', () => {
+  document.body.innerHTML = `
+<div id="bl-grid"><div class="ag-row" row-index="0" row-id="r1">
+  <div class="ag-cell" col-id="a"><button id="in-a" data-lf-block="grid" data-lf-control="go" data-lf-row-key="r1">Go</button></div>
+  <div class="ag-cell" col-id="b"><button id="in-b" data-lf-block="grid" data-lf-control="go" data-lf-row-key="r1">Go</button></div>
+</div></div>`;
+  const target = { block_id: 'grid', row_key: 'r1', control: 'go' };
+  expect(resolveTargetInDocument({ document, target })).toBeNull();
+  expect(resolveTargetInDocument({ document, target: { ...target, column: 'b' } })).toBe(
+    select('#in-b')
+  );
+});
+
+test('resolveTargetInDocument refuses a generated row key, as the runner does', () => {
+  document.body.innerHTML = `
+<div id="bl-grid"><div class="ag-row" row-index="0" row-id="__row_0">
+  <div class="ag-cell" col-id="a" aria-colindex="1"><button data-lf-block="grid" data-lf-control="go" data-lf-row-key="__row_0">Go</button></div>
+</div></div>`;
+  expect(
+    resolveTargetInDocument({ document, target: { block_id: 'grid', row_key: '__row_0' } })
+  ).toBeNull();
+  expect(
+    resolveTargetInDocument({
+      document,
+      target: { block_id: 'grid', row_key: '__row_0', control: 'go' },
+    })
+  ).toBeNull();
+});
+
+test('describeElement names a modal button by its control and block type', () => {
+  const lowdefy = createLowdefy();
+  lowdefy.contexts['page:orders'] = {
+    pageId: 'orders',
+    _internal: { RootSlots: { map: { delete_modal: { type: 'Modal' } } } },
+  };
+  document.body.innerHTML = MODAL_FOOTERS;
+  window.history.replaceState({}, '', '/orders');
+  expect(getTrace(lowdefy).describeElement(select('#open-ok'))).toMatchObject({
+    page_id: 'orders',
+    block_id: 'delete_modal',
+    block_type: 'Modal',
+    control: 'ok',
+    text: null,
+    block_ids: ['delete_modal'],
+  });
 });
 
 test('describeChain parses the chain and adds the page id and block type', () => {

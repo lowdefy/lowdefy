@@ -20,11 +20,14 @@ import getGlobals from '../getGlobals.js';
 
 // The journey target a posthog-js `$elements_chain` describes as, for the PostHog before_send
 // hook, which holds the chain but not the element. The chain carries no sibling text, so nth is
-// always null.
+// always null. It reads the chain without the journey control marks, so the PostHog properties
+// keep the control's text and send no row key, which is the app's data.
 function createDescribeChain({ findBlockType, lowdefy, pathEntryOf }) {
   return function describeChain(elementsChain) {
-    const { block_id, row, column, text, option, block_ids } =
-      targetFromElementsChain(elementsChain);
+    const { block_id, row, column, text, option, block_ids } = targetFromElementsChain(
+      elementsChain,
+      { marks: false }
+    );
     const entry = pathEntryOf(getGlobals(lowdefy).window.location.href);
     return {
       page_id: entry?.pageId ?? null,

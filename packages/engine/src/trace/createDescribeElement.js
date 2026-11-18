@@ -23,14 +23,24 @@ import {
 
 import isElementVisible from './isElementVisible.js';
 
-const { blockWrapperPrefix, dropdownOption, gridPartSelector, gridRules, layers } =
-  journeyTargetSelectors;
+const {
+  blockWrapperPrefix,
+  controlAttributes,
+  dropdownOption,
+  gridPartSelector,
+  gridRules,
+  isGeneratedRowKey,
+  layers,
+} = journeyTargetSelectors;
 
-// Each grid's row and cell selectors, built once: describeElement runs on every traced click.
+// Each grid's row and cell selectors, built once: describeElement runs on every traced click. A
+// row also carries its rule's row-key part, read off the same element.
 const gridParts = {
-  row: gridRules.map(({ row }) => ({
+  row: gridRules.map(({ row, rowKey }) => ({
     attribute: row.attribute,
     selector: gridPartSelector({ part: row }),
+    keyAttribute: rowKey.attribute,
+    keySelector: gridPartSelector({ part: rowKey }),
   })),
   cell: gridRules.map(({ cell }) => ({
     attribute: cell.attribute,
@@ -49,10 +59,35 @@ function findGridPart({ kind, nodes }) {
   for (const node of nodes) {
     const part = gridParts[kind].find((candidate) => node.matches(candidate.selector));
     if (part) {
-      return { node, value: node.getAttribute(part.attribute) };
+      return { node, part, value: node.getAttribute(part.attribute) };
     }
   }
   return null;
+}
+
+// The row's own key, unless the grid generated it: a generated key changes between renders, so
+// the row keeps its displayed index alone.
+function rowKeyOf(row) {
+  if (row === null || !row.node.matches(row.part.keySelector)) return null;
+  const rowKey = row.node.getAttribute(row.part.keyAttribute);
+  return rowKey === '' || isGeneratedRowKey(rowKey) ? null : rowKey;
+}
+
+const markedControlSelector = `[${controlAttributes.blockId}]:not([${controlAttributes.blockId}=""])[${controlAttributes.control}]:not([${controlAttributes.control}=""])`;
+
+// The innermost marked control the element sits in, as the block and key it is marked with, else
+// null. A cell control in a row with a generated key is no control target: its key repeats in
+// every row and the row has no key to tell them apart.
+function findMarkedControl(element) {
+  const node = element.closest(markedControlSelector);
+  if (node === null) return null;
+  const rowKey = node.getAttribute(controlAttributes.rowKey);
+  if (rowKey !== null && rowKey !== '' && isGeneratedRowKey(rowKey)) return null;
+  return {
+    blockId: node.getAttribute(controlAttributes.blockId),
+    control: node.getAttribute(controlAttributes.control),
+    rowKey: rowKey === '' ? null : rowKey,
+  };
 }
 
 function ancestorsOf(element) {
@@ -105,6 +140,13 @@ function nthOf({ control, root, text }) {
 // interactive control inside the scope (cell, row, block, else page); a dropdown option stands
 // in for one and folds into a select step. An element that reached no control has no text: its
 // block alone targets it. It reads the element and the element's own document, never a global.
+//
+// An element inside a marked control (data-lf-block, data-lf-control) describes as that block's
+// control, with its row key when it sits in a keyed row and the column of its cell: no text or
+// nth, and the control's block leads block_ids, since a popup control sits in no block wrapper. A
+// row with a key the grid did not generate gives `row_key` beside `row`; the journey compiler
+// writes rowKey in place of row, and fill and select keep row. targetFromElementsChain reads a
+// posthog-js chain by the same rules.
 function createDescribeElement({ findBlockType, pathEntryOf }) {
   return function describeElement(element) {
     const { ownerDocument } = element;
@@ -134,13 +176,34 @@ function createDescribeElement({ findBlockType, pathEntryOf }) {
         ? null
         : nthOf({ control, root: scope ?? pageWideRoot({ ownerDocument, text }), text });
     const entry = pathEntryOf(ownerDocument.location.href);
+    const rowIndex = row === null ? null : parseRowIndex(row.value);
+    // The key of a pinned row (ag-grid `t-0`) names no journey row, as its index does not.
+    const rowKey = rowIndex === null ? null : rowKeyOf(row);
+    const marked = findMarkedControl(element);
+    if (marked !== null) {
+      return {
+        page_id: entry?.pageId ?? null,
+        block_id: marked.blockId,
+        block_type: findBlockType({ blockId: marked.blockId, instanceKey: entry?.instanceKey }),
+        row: rowIndex,
+        row_key: marked.rowKey,
+        column: cell === null ? null : cell.value,
+        control: marked.control,
+        text: null,
+        nth: null,
+        option: false,
+        block_ids: [marked.blockId, ...blockIds.filter((id) => id !== marked.blockId)],
+      };
+    }
     const blockId = blockIds[0] ?? null;
     return {
       page_id: entry?.pageId ?? null,
       block_id: blockId,
       block_type: findBlockType({ blockId, instanceKey: entry?.instanceKey }),
-      row: row === null ? null : parseRowIndex(row.value),
+      row: rowIndex,
+      row_key: rowKey,
       column: cell === null ? null : cell.value,
+      control: null,
       text,
       nth,
       option: optionElement !== null,

@@ -15,8 +15,9 @@
 */
 
 // Builds v1 trace records for the compiler's tests: `at` is seconds after a
-// fixed start, `block`, `text` and `token` fill the target. Everything else passes
-// through, so a test states only what its scenario is about.
+// fixed start; `block`, `text`, `token`, `rowKey` and `control` fill the
+// target. Everything else passes through, so a test states only what its
+// scenario is about.
 const START = Date.parse('2026-09-28T14:00:00.000Z');
 
 function traceRecord({
@@ -26,7 +27,9 @@ function traceRecord({
   token,
   option,
   row,
+  rowKey,
   column,
+  control,
   nth,
   blockType,
   kind = 'click',
@@ -63,6 +66,8 @@ function traceRecord({
       option: option ?? false,
     };
     if (token !== undefined) record.target.text_token = token;
+    if (rowKey !== undefined) record.target.row_key = rowKey;
+    if (control !== undefined) record.target.control = control;
   }
   if (source !== 'production') record.event = null;
   return { ...record, ...rest };

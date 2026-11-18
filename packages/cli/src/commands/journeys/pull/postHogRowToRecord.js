@@ -73,7 +73,8 @@ function resolveTarget({ values, salt }) {
       },
     };
   }
-  const chain = targetFromElementsChain(values.elementsChain);
+  // Without the journey control marks, as the PostHog enrichment reads it.
+  const chain = targetFromElementsChain(values.elementsChain, { marks: false });
   return {
     chainFallback: true,
     blockIds: chain.block_ids,

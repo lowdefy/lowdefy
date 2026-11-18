@@ -41,14 +41,14 @@ function chainOf(element) {
 }
 
 // The production event posthog-js captures for a click on the element, through enrichEvent with a
-// trace whose describeChain reads the chain as the engine's does, and `configTexts` as the page's
-// config text.
+// trace whose describeChain reads the chain as the engine's does (without the control marks), and
+// `configTexts` as the page's config text.
 function enrichedClick({ element, configTexts }) {
   resetPostHogState();
   postHogState.trace = createFakeTrace({
     configTexts,
     describeChain: (chain) => ({
-      ...targetFromElementsChain(chain),
+      ...targetFromElementsChain(chain, { marks: false }),
       page_id: 'orders',
       block_type: null,
       nth: null,
@@ -67,7 +67,9 @@ function chainTarget({ target, blockIds }) {
   return {
     block_id: target.block_id,
     row: target.row,
+    row_key: target.row_key,
     column: target.column,
+    control: target.control,
     text: target.text,
     option: target.option,
     block_ids: blockIds,
@@ -136,4 +138,22 @@ test('enrichEvent masks lowdefy_text as it masks $el_text', () => {
     configTexts: ['Save'],
   });
   expect(properties).not.toHaveProperty('lowdefy_text');
+});
+
+test('enrichEvent sends a marked control by its text and block wrappers, with no control key or row key', () => {
+  document.body.innerHTML = `
+<div id="bl-invoices"><div class="ag-row" row-index="1" row-id="inv-2"><div class="ag-cell" col-id="actions">
+  <button data-lf-block="invoices" data-lf-control="onPay" data-lf-row-key="inv-2"><span>Pay</span></button>
+</div></div></div>`;
+  const properties = enrichedClick({
+    element: document.querySelector('button span'),
+    configTexts: ['Pay'],
+  });
+  expect(properties).toMatchObject({
+    lowdefy_block_id: 'invoices',
+    lowdefy_row: 1,
+    lowdefy_column: 'actions',
+    lowdefy_text: 'Pay',
+  });
+  expect(Object.keys(properties).filter((key) => /control|row_key/.test(key))).toEqual([]);
 });
