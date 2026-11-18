@@ -96,7 +96,9 @@ test('maskEventText leaves a masked chain that still targets the block, row, col
   ).toEqual({
     block_id: 'grid',
     row: 4,
+    row_key: null,
     column: 'actions',
+    control: null,
     text: 'Assign',
     option: false,
     block_ids: ['grid'],
@@ -106,7 +108,9 @@ test('maskEventText leaves a masked chain that still targets the block, row, col
   ).toEqual({
     block_id: 'customer',
     row: null,
+    row_key: null,
     column: null,
+    control: null,
     text: null,
     option: true,
     block_ids: ['customer'],

@@ -19,20 +19,29 @@ import { type } from '@lowdefy/helpers';
 const TARGET_FIELDS = [
   ['block_id', 'blockId'],
   ['row', 'row'],
+  ['row_key', 'rowKey'],
   ['column', 'column'],
+  ['control', 'control'],
   ['text', 'text'],
   ['nth', 'nth'],
 ];
 
-// A recorded target as the journey grammar writes it: the blockId string when
-// the block is all there is, otherwise { blockId, row, column, text, nth } with
-// the unknown parts left out. `containing` is for hand-written list picks and
-// is never compiled.
+// A recorded click target as the journey grammar writes it: the blockId
+// string when the block is all there is, otherwise { blockId, row, rowKey,
+// column, control, text, nth } with the unknown parts left out. A row with its
+// own key is named by the key, not its displayed index, so the step runs
+// headless and stays put when the grid sorts; a control has no text or nth.
+// `containing` is for hand-written list picks and is never compiled.
 function compileTarget({ target }) {
   const compiled = {};
   TARGET_FIELDS.forEach(([recordKey, stepKey]) => {
     if (!type.isNone(target[recordKey])) compiled[stepKey] = target[recordKey];
   });
+  if (!type.isUndefined(compiled.rowKey)) delete compiled.row;
+  if (!type.isUndefined(compiled.control)) {
+    delete compiled.text;
+    delete compiled.nth;
+  }
   const keys = Object.keys(compiled);
   if (keys.length === 1 && keys[0] === 'blockId') return compiled.blockId;
   return compiled;

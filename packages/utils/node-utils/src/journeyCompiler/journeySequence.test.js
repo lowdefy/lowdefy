@@ -64,6 +64,18 @@ test('stepIdentity keeps the column and normalises list indices, but drops nth',
   ).toBe('["click","rows.$.grid","actions",null]');
 });
 
+test('stepIdentity tells controls of one block apart and keeps the old form without one', () => {
+  expect(stepIdentity({ step: { click: { blockId: 'delete_modal', control: 'ok' } } })).toBe(
+    '["click","delete_modal",null,null,"ok"]'
+  );
+  expect(stepIdentity({ step: { click: { blockId: 'delete_modal', control: 'ok' } } })).not.toBe(
+    stepIdentity({ step: { click: { blockId: 'delete_modal', control: 'cancel' } } })
+  );
+  expect(stepIdentity({ step: { click: { blockId: 'grid', rowKey: 'a', column: 'x' } } })).toBe(
+    stepIdentity({ step: { click: { blockId: 'grid', rowKey: 'b', column: 'x' } } })
+  );
+});
+
 test('stepIdentity tells press chords apart and gives back one identity', () => {
   expect(stepIdentity({ step: { press: 'Enter' } })).not.toBe(
     stepIdentity({ step: { press: 'Escape' } })

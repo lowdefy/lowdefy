@@ -39,6 +39,10 @@ function readTarget(params) {
 // built from values matches them by block and column, and no reader confirms
 // a production value that is not already in the repository. Without it the
 // text is read as written.
+//
+// A click on a control adds its key, since a modal's ok and cancel are
+// different actions on one block. A step with no control keeps the identity
+// it had before control targets existed.
 function readClickText({ target, isConfigText }) {
   if (!type.isString(target.text)) return null;
   if (!type.isUndefined(isConfigText) && !isConfigText(target.text)) return null;
@@ -59,6 +63,9 @@ function stepIdentity({ step, isConfigText }) {
   const blockId = type.isString(target.blockId) ? normaliseBlockId(target.blockId) : null;
   const column = type.isString(target.column) ? target.column : null;
   const text = verb === 'click' ? readClickText({ target, isConfigText }) : null;
+  if (verb === 'click' && type.isString(target.control)) {
+    return JSON.stringify([verb, blockId, column, text, target.control]);
+  }
   return JSON.stringify([verb, blockId, column, text]);
 }
 

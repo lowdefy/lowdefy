@@ -18,6 +18,8 @@
 */
 
 import { vi, afterEach, beforeEach, expect, test } from 'vitest';
+import { getTrace } from '@lowdefy/engine';
+import { formatSessionLog, validateTraceRecord } from '@lowdefy/node-utils';
 
 import createRecorder from './createRecorder.js';
 
@@ -315,4 +317,53 @@ test('a page shown with no pageview pending records nothing', async () => {
   recorder.pageShown(page('tickets'));
   await window.__lowdefyRecorder.flush();
   expect(fetch).not.toHaveBeenCalled();
+});
+
+test('a recorded click on a Modal OK button in its portal is a { blockId, control } click step', async () => {
+  window.history.replaceState({}, '', '/tickets');
+  document.body.innerHTML = `
+<div id="bl-page"><div id="bl-delete_modal"></div></div>
+<div class="ant-modal-root"><div role="dialog" class="ant-modal"><div class="ant-modal-footer">
+  <button data-lf-block="delete_modal" data-lf-control="cancel"><span>Cancel</span></button>
+  <button data-lf-block="delete_modal" data-lf-control="ok"><span id="ok">OK</span></button>
+</div></div></div>`;
+  const lowdefy = {
+    basePath: '',
+    contexts: {
+      'page:tickets': {
+        pageId: 'tickets',
+        _internal: { RootSlots: { map: { delete_modal: { type: 'Modal' } } } },
+      },
+    },
+    home: {},
+    user: { roles: [] },
+    _internal: { globals: { window } },
+  };
+  recorder = createRecorder({
+    basePath: '',
+    lowdefy,
+    recording: { enabled: true },
+    window,
+    getTrace,
+  });
+  recorder.pageview({ path: 'tickets' });
+  recorder.pageShown(page('tickets'));
+  document.getElementById('ok').click();
+  await window.__lowdefyRecorder.flush();
+  // The dev server stamps the source on each record it writes.
+  const records = sentBodies()[0].records.map((record) => ({ ...record, source: 'dev' }));
+  const click = records.find((record) => record.kind === 'click');
+  expect(click.target).toEqual({
+    block_id: 'delete_modal',
+    block_type: 'Modal',
+    row: null,
+    row_key: null,
+    column: null,
+    control: 'ok',
+    text: null,
+    nth: null,
+    option: false,
+  });
+  expect(validateTraceRecord({ record: click })).toEqual({});
+  expect(formatSessionLog({ records }).lines).toContain('click delete_modal control ok');
 });

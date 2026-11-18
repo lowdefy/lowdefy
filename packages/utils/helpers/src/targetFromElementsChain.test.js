@@ -20,7 +20,9 @@ import { expect, test } from 'vitest';
 const EMPTY = {
   block_id: null,
   row: null,
+  row_key: null,
   column: null,
+  control: null,
   text: null,
   option: false,
   block_ids: [],
@@ -77,7 +79,9 @@ test('targetFromElementsChain reads a button inside a block', () => {
   expect(targetFromElementsChain(value)).toEqual({
     block_id: 'save_button',
     row: null,
+    row_key: null,
     column: null,
+    control: null,
     text: 'Save',
     option: false,
     block_ids: ['save_button', 'page'],
@@ -151,9 +155,8 @@ test('targetFromElementsChain marks a dropdown option and keeps its block', () =
     wrapper('country')
   );
   expect(targetFromElementsChain(value)).toEqual({
+    ...EMPTY,
     block_id: 'country',
-    row: null,
-    column: null,
     text: 'Germany',
     option: true,
     block_ids: ['country'],
@@ -258,4 +261,153 @@ test('targetFromElementsChain reads a 1,000-entry chain', () => {
   const start = Date.now();
   expect(targetFromElementsChain(value).block_ids).toEqual(['deep']);
   expect(Date.now() - start).toBeLessThan(1000);
+});
+
+// The chain of a click on a Modal's OK button in its portal: no block wrapper, the button marked
+// with its block and key. The same case is a target fixture in @lowdefy/e2e-utils, which
+// describeElement is tested against.
+const modalOkChain = chain(
+  entry('span', { text: 'OK' }),
+  entry('button', {
+    attributes: { 'attr__data-lf-block': 'delete_modal', 'attr__data-lf-control': 'ok' },
+    text: 'OK',
+  }),
+  entry('div', { classes: ['ant-modal-footer'] }),
+  entry('div', { classes: ['ant-modal'], attributes: { attr__role: 'dialog' } }),
+  entry('div', { classes: ['ant-modal-root', 'ldf-portal-delete_modal'] })
+);
+
+test('targetFromElementsChain describes a marked Modal button in a portal as its control', () => {
+  expect(targetFromElementsChain(modalOkChain)).toEqual({
+    ...EMPTY,
+    block_id: 'delete_modal',
+    control: 'ok',
+    block_ids: ['delete_modal'],
+  });
+});
+
+test('targetFromElementsChain describes a marked menu item in a body popup as its control', () => {
+  const value = chain(
+    entry('span', { text: 'Archive' }),
+    entry('li', {
+      classes: ['ant-dropdown-menu-item'],
+      attributes: {
+        'attr__data-lf-block': 'actions',
+        'attr__data-lf-control': 'archive',
+        attr__role: 'menuitem',
+      },
+      text: 'Archive',
+    }),
+    entry('ul', { classes: ['ant-dropdown-menu'], attributes: { attr__role: 'menu' } }),
+    entry('div', { classes: ['ant-dropdown'] })
+  );
+  expect(targetFromElementsChain(value)).toEqual({
+    ...EMPTY,
+    block_id: 'actions',
+    control: 'archive',
+    block_ids: ['actions'],
+  });
+});
+
+function gridCellButtonChain(rowKey) {
+  return chain(
+    entry('span', { text: 'Pay' }),
+    entry('button', {
+      attributes: {
+        'attr__data-lf-block': 'invoices',
+        'attr__data-lf-control': 'onPay',
+        'attr__data-lf-row-key': rowKey,
+      },
+      text: 'Pay',
+    }),
+    entry('div', { classes: ['ag-cell'], attributes: { 'attr__col-id': 'actions' } }),
+    entry('div', {
+      classes: ['ag-row'],
+      attributes: { 'attr__row-index': '1', 'attr__row-id': rowKey },
+    }),
+    wrapper('invoices')
+  );
+}
+
+test('targetFromElementsChain describes a marked AgGrid cell button by control and row key', () => {
+  expect(targetFromElementsChain(gridCellButtonChain('inv-2'))).toEqual({
+    ...EMPTY,
+    block_id: 'invoices',
+    row: 1,
+    row_key: 'inv-2',
+    column: 'actions',
+    control: 'onPay',
+    block_ids: ['invoices'],
+  });
+});
+
+test('targetFromElementsChain describes a cell button in a generated-key row by row and text', () => {
+  expect(targetFromElementsChain(gridCellButtonChain('__row_1'))).toEqual({
+    ...EMPTY,
+    block_id: 'invoices',
+    row: 1,
+    column: 'actions',
+    text: 'Pay',
+    block_ids: ['invoices'],
+  });
+});
+
+test('targetFromElementsChain gives a Table row its key beside its index', () => {
+  const value = chain(
+    entry('div', {
+      classes: ['lf-table-gridcell'],
+      attributes: { 'attr__data-col-key': 'name', attr__role: 'gridcell' },
+    }),
+    entry('div', {
+      classes: ['lf-table-row'],
+      attributes: { 'attr__data-row-index': '0', 'attr__data-row-key': 'a1', attr__role: 'row' },
+    }),
+    wrapper('people')
+  );
+  expect(targetFromElementsChain(value)).toEqual({
+    ...EMPTY,
+    block_id: 'people',
+    row: 0,
+    row_key: 'a1',
+    column: 'name',
+    block_ids: ['people'],
+  });
+});
+
+test('targetFromElementsChain gives no row key for a generated key or a pinned row', () => {
+  const generated = chain(
+    entry('div', {
+      classes: ['lf-table-row'],
+      attributes: { 'attr__data-row-index': '2', 'attr__data-row-key': '__row_2' },
+    }),
+    wrapper('people')
+  );
+  expect(targetFromElementsChain(generated)).toMatchObject({ row: 2, row_key: null });
+  const pinned = chain(
+    entry('div', {
+      classes: ['ag-row'],
+      attributes: { 'attr__row-index': 't-0', 'attr__row-id': 't-0' },
+    }),
+    wrapper('grid')
+  );
+  expect(targetFromElementsChain(pinned)).toMatchObject({ row: null, row_key: null });
+});
+
+test('targetFromElementsChain with marks false reads a marked control by its text, as before', () => {
+  expect(targetFromElementsChain(modalOkChain, { marks: false })).toEqual({
+    block_id: null,
+    row: null,
+    column: null,
+    text: 'OK',
+    option: false,
+    block_ids: [],
+  });
+  expect(targetFromElementsChain(gridCellButtonChain('inv-2'), { marks: false })).toEqual({
+    block_id: 'invoices',
+    row: 1,
+    column: 'actions',
+    text: 'Pay',
+    option: false,
+    block_ids: ['invoices'],
+  });
 });
