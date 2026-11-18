@@ -3214,7 +3214,7 @@
       "files": [
         "plugins/plugins-actions.yaml"
       ],
-      "hash": "e325a650b977d8ff6a118dd88563d709cf303e5610d644af6ae2b1682ea90e74"
+      "hash": "608d6ed6fceefc6d56658c749dc571db60ff298213379bdfa2ea8dbe19b2e6a4"
     },
     "plugins/plugins-connections": {
       "files": [
@@ -3239,7 +3239,7 @@
       "files": [
         "plugins/PostHog.yaml"
       ],
-      "hash": "54ef91d2b8cb0d977dda85e0f73fabdd399b489df3fbfbd4681d14dfce0f9d96"
+      "hash": "b90fe3bbb97ac949f623d1e7e6002ae269d897e3fe058f14e417f5aa659015f0"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -5085,7 +5085,7 @@
         "actions/PostHogInit.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "37c86efeee835191f973bef8a9a198034bb9d2605e1bdaae1b98ee26dfb77d80"
+      "hash": "c699ed52e64af1f3460bd41166cbeba802b6e2e9eaa67f44935c33fa04cae3be"
     },
     "actions/posthogoptin": {
       "files": [
