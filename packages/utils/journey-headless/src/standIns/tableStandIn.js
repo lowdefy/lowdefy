@@ -22,7 +22,9 @@ import { journeyTargetSelectors, type } from '@lowdefy/helpers';
 import createGridStandIn from './createGridStandIn.js';
 import describeBlock from './describeBlock.js';
 import fireEvent from './fireEvent.js';
+import htmlHoldsCellControl from './htmlHoldsCellControl.js';
 import listTableControls from './listTableControls.js';
+import readHtmlCell from './readHtmlCell.js';
 import readTableColumns from './readTableColumns.js';
 import TABLE_PROPERTIES from './TABLE_PROPERTIES.js';
 
@@ -105,8 +107,21 @@ function findTableFeature(block) {
   return null;
 }
 
-function columnBrowserOnly({ block, column }) {
+// An html cell's html (HtmlCell) can hold a link or a data-event element, which a click on the
+// cell lands on. Plain formatted html leaves the click to the cell.
+async function htmlCellBrowserOnly({ block, column, entry }) {
+  const html = readHtmlCell({ column: column.column, row: entry.row });
+  if (html === null || !(await htmlHoldsCellControl(html))) {
+    return null;
+  }
+  return `Column "${column.id}" of ${describeBlock(block)} has an html cell holding a link or data-event, which the headless stand-in does not model: the step runs in a browser.`;
+}
+
+async function columnBrowserOnly({ block, column, entry }) {
   const cellType = column.column.type;
+  if (cellType === 'html') {
+    return htmlCellBrowserOnly({ block, column, entry });
+  }
   if (!LINK_CELL_TYPES.has(cellType)) {
     return null;
   }
@@ -157,7 +172,7 @@ function readGrid({ actor, block }) {
     browserOnly: null,
     rows: [],
     columns: [],
-    columnBrowserOnly: (column) => columnBrowserOnly({ block, column }),
+    columnBrowserOnly: ({ column, entry }) => columnBrowserOnly({ block, column, entry }),
     listControls: ({ column, entry }) => listTableControls({ actor, block, column, entry }),
     clickCell: ({ column, entry }) => clickCell({ actor, block, column, entry }),
   };

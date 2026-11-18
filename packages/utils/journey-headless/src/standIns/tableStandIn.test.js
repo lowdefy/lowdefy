@@ -354,6 +354,67 @@ test("Table link cells are the browser's", async () => {
   );
 });
 
+function htmlColumnPage(cell) {
+  return tablePage({ properties: { columns: [{ key: 'name', type: 'html', cell }] } });
+}
+
+test("Table html cell holding a link or data-event is the browser's", async () => {
+  const cells = [
+    { template: '<a href="/people/{{ row._id }}">{{ value }}</a>' },
+    { template: '<span data-event="onOpen">{{ value }}</span>' },
+  ];
+  for (const cell of cells) {
+    const { log, result } = await runTestJourney({
+      pages: htmlColumnPage(cell),
+      steps: [{ click: { blockId: 'people', rowKey: 'a1' } }],
+    });
+    expect(result.browserOnly.reason).toBe(
+      'Column "name" of Table "people" has an html cell holding a link or data-event, which the headless stand-in does not model: the step runs in a browser.'
+    );
+    expect(log).toEqual([]);
+  }
+});
+
+test("Table html cell value with a link is the browser's, read per row", async () => {
+  const rows = [
+    { _id: 'a1', name: '<a href="https://example.com">Ada</a>' },
+    { _id: 'b2', name: '<b>Grace</b>' },
+  ];
+  const pages = tablePage({ properties: { data: rows, columns: [{ key: 'name', type: 'html' }] } });
+  const linked = await runTestJourney({
+    pages,
+    steps: [{ click: { blockId: 'people', rowKey: 'a1' } }],
+  });
+  expect(linked.result.browserOnly.reason).toMatch(/^Column "name" of Table "people" has an html/);
+  const plain = await runTestJourney({
+    pages,
+    steps: [{ click: { blockId: 'people', rowKey: 'b2' } }],
+  });
+  expect(plain.result.passed).toBe(true);
+  expect(readLog(plain.log).map(([name]) => name)).toEqual(['onCellClick', 'onRowClick']);
+});
+
+test('Table plain html cell stays headless, as does a link the sanitiser strips', async () => {
+  const cells = [
+    { template: '<b>{{ value }}</b> <em>{{ row.last }}</em>' },
+    { template: '<a href="javascript:alert(1)">{{ value }}</a>' },
+  ];
+  for (const cell of cells) {
+    const { log, result } = await runTestJourney({
+      pages: htmlColumnPage(cell),
+      steps: [{ click: { blockId: 'people', rowKey: 'a1' } }],
+    });
+    expect(result.passed).toBe(true);
+    expect(readLog(log)).toEqual([
+      [
+        'onCellClick',
+        { row: ROWS[0], rowKey: 'a1', column: { key: 'name', field: 'name' }, value: 'Ada' },
+      ],
+      ['onRowClick', { row: ROWS[0], rowKey: 'a1', index: 0 }],
+    ]);
+  }
+});
+
 test('Table expect visible and hidden on a row by key and column', async () => {
   const { result } = await runTestJourney({
     pages: tablePage(),

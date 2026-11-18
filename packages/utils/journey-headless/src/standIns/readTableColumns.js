@@ -17,14 +17,9 @@
 import compileColumns from '@lowdefy/blocks-antd/table/compileColumns.js';
 import normalizeColumns from '@lowdefy/blocks-antd/table/normalizeColumns.js';
 import { type } from '@lowdefy/helpers';
+import { nunjucksFunction } from '@lowdefy/nunjucks';
 
 const PIN_ORDER = { start: 0, center: 1, end: 2 };
-
-// The stand-in draws no cell or tooltip text, so an html cell's or a tooltip's template compiles
-// to nothing, and the template compiler is never loaded.
-function compileNoTemplate() {
-  return () => '';
-}
 
 // Whether a column or group with `showWhen` shows, given whether the nearest collapsible group
 // above it is collapsed (null when there is none).
@@ -60,8 +55,8 @@ function collectShownKeys({ nodes, collapsed, keys }) {
 // A Table block's shown columns, in display order (pinned to the start, unpinned, pinned to the
 // end), each { id, column }: id is the column key, as its cells' data-col-key, and column the
 // column as blocks-table's useTableConfig compiles it, through blocks-antd's shared column core
-// (normalizeColumns, compileColumns), so `{ when }` conditions and formula values are the Table's
-// own.
+// (normalizeColumns, compileColumns) with the Table's template compiler (nunjucksFunction), so
+// `{ when }` conditions, formula values and an html cell's template are the Table's own.
 function readTableColumns(properties) {
   const normalized = normalizeColumns({
     columns: properties.columns,
@@ -71,7 +66,7 @@ function readTableColumns(properties) {
     columns: normalized.columns,
     columnsByKey: normalized.columnsByKey,
     user: properties.user ?? {},
-    compileTemplate: compileNoTemplate,
+    compileTemplate: nunjucksFunction,
   });
   const shownKeys = collectShownKeys({
     nodes: normalized.headerGroups,

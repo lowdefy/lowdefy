@@ -131,7 +131,7 @@ function readGrid({ actor, block, state }) {
       index,
     })),
     columns: columns.shown,
-    columnBrowserOnly: (column) => columnBrowserOnly({ block, column }),
+    columnBrowserOnly: ({ column }) => columnBrowserOnly({ block, column }),
     listControls: ({ column, entry }) => listAgGridControls({ actor, block, column, entry }),
     clickCell: ({ column, entry }) => clickCell({ actor, block, column, entry }),
   };
