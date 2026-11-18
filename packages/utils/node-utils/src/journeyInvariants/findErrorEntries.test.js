@@ -32,3 +32,15 @@ test("findErrorEntries finds client and server errors, and no finding for a test
     { kind: 'server-error', message: 'Bad config.', source: 'api/a.yaml:3' },
   ]);
 });
+
+test('findErrorEntries finds no finding for a server fault a :catch of the routine handled', () => {
+  expect(
+    findErrorEntries({
+      clientEntries: [],
+      serverEntries: [
+        { name: 'OperatorError', message: 'Caught operator fault.', caught: true },
+        { name: 'OperatorError', message: 'Escaped operator fault.', caught: false },
+      ],
+    })
+  ).toEqual([{ kind: 'server-error', message: 'Escaped operator fault.', source: null }]);
+});

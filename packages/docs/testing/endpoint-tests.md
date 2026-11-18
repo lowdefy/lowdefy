@@ -318,4 +318,4 @@ Who can reach which page and endpoint is checked by `tests/access.yaml`, which `
 
 ## Data store
 
-Under `node --test`, every test file of a run shares one in-memory `mongod`, each file on databases of its own. It stops when the runner exits, also when the runner is killed. Under another runner, each test process starts its own.
+Under `node --test`, every test file of a run shares one in-memory `mongod`, each file on databases of its own. It stops when the runner exits, also when the runner is killed. Under another runner, each test process starts its own. Test files a runner runs in worker threads of one process, as vitest's `pool: 'threads'` does, share that process's store, each on databases of its own, so no file's session touches another's.

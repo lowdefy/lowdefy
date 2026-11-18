@@ -1,0 +1,19 @@
+# A routine whose :catch handles an operator fault (caughtFaults.test.mjs in
+# packages/servers/server-dev/test/journeyFixture). `_date` cannot read "not a date", so the :try
+# step throws an OperatorError: a config fault, logged and stored all the same. The :catch handles
+# it, so the endpoint answers with the name of what it caught, and a journey judges that answer in
+# the browser and headless alike.
+id: caught_operator
+type: Api
+routine:
+  - ':try':
+      - ':set_state':
+          when:
+            _date: not a date
+    ':catch':
+      - ':set_state':
+          caught:
+            _error: name
+  - ':return':
+      caught:
+        _state: caught

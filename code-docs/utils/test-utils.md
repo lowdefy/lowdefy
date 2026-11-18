@@ -115,7 +115,7 @@ which runs one `@lowdefy/api` call in a context of its own, as a server runs one
 | `agents`       | Empty, so an agent call fails before it reaches a model provider.                                                                                                                                                                                                           |
 | `sendDetached` | `createDetachedRecorder`: a `detached: true` `CallApi` is listed on the answer's `detached` as `{ endpointId, payload }` and its target never runs. There is no origin and `CRON_SECRET` is gone, so `handleEndpointCall` takes this seam instead of `sendDetachedRequest`. |
 | `waitUntil`    | `trackSessionWork`, which `session.settled()` and `reset()` wait on.                                                                                                                                                                                                        |
-| `handleError`  | `createFaultSink`: lists the fault on the answer's `faults`, with its config `source`, and `caught: true` when a `:catch` of the routine handled it (`runRoutine` passes `{ caught }`).                                                                                     |
+| `handleError`  | `createFaultSink`: lists the fault on the answer's `faults`, with its config `source`, and `caught: true` when a `:catch` of the routine handled it without passing it on (`controlTry`'s `settleCaughtFaults` passes `{ caught }` once the `:catch` has run).              |
 
 The answer is `{ status, success, response, error, body, faults, detached }`:
 
