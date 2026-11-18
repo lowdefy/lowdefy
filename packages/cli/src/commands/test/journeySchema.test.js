@@ -680,14 +680,25 @@ test('journeySchema accepts every root key it lists', () => {
   );
 });
 
-test('a case row cannot bring in an unknown root key', () => {
-  const result = validateJourney({
-    journey: {
-      ...minimalJourney,
-      cases: [{ name: 'one', id: 'a' }],
-      seriel: true,
-    },
+test('an unknown root key on a case-table journey names the journey, not a case row', () => {
+  expect(
+    validateJourney({
+      journey: {
+        ...minimalJourney,
+        cases: [{ name: 'one', id: 'a' }],
+        seriel: true,
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey has an unknown key "seriel". Keys are: name, description, pageId, data, user, pathParams, urlQuery, tags, variant, timeout, deprecated, serial, evidence, cases, stubs, steps.',
   });
-  expect(result.valid).toBe(false);
-  expect(result.message).toContain('Journey has an unknown key "seriel"');
+});
+
+test('a case-table journey with an unknown root key is refused before its table is checked', () => {
+  const result = validateJourney({
+    journey: { ...minimalJourney, cases: [{ id: 'a' }], seriel: true },
+  });
+  expect(result.message).toMatch(/^Journey has an unknown key "seriel"\./);
 });
