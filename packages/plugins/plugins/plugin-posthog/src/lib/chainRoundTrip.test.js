@@ -200,12 +200,6 @@ test.each(
     const production = clickStepOf(pulledTarget(properties));
     expect(production.click.control).toBe(fixture.target.control);
     expect(stepIdentity({ step: production })).toBe(stepIdentity({ step: dev }));
-    // The pull reads the masked chain the same way for an event without lowdefy_block_id.
-    const fromChain = targetFromElementsChain(properties.$elements_chain, { rowKey: false });
-    expect(fromChain).toMatchObject({
-      block_id: properties.lowdefy_block_id,
-      control: properties.lowdefy_control,
-    });
     expect(JSON.stringify(properties)).not.toContain('data-lf-row-key');
   }
 );

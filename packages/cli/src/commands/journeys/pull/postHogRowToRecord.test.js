@@ -199,7 +199,9 @@ test('postHogRowToRecord reads a marked control from lowdefy_control, with no te
   expect(validateTraceRecord({ record })).toEqual({});
 });
 
-test('postHogRowToRecord reads a marked control from a masked chain, with no row key', () => {
+test('postHogRowToRecord reads a chain-only click on a control mark by its text, as the enrichment declined it', () => {
+  // A cell menu item in a row with a generated key: the enrichment declines its mark and sends no
+  // block id, and the masked chain no longer holds the row key that says why.
   const { record, chainFallback } = map({
     eventType: 'click',
     elText: 'OK',
@@ -207,12 +209,12 @@ test('postHogRowToRecord reads a marked control from a masked chain, with no row
   });
   expect(chainFallback).toBe(true);
   expect(record.target).toEqual({
-    block_id: 'delete_modal',
+    block_id: null,
     block_type: null,
     row: null,
     column: null,
-    control: 'ok',
-    text_token: null,
+    control: null,
+    text_token: tokenText({ salt, text: 'OK' }),
     nth: null,
     option: false,
   });

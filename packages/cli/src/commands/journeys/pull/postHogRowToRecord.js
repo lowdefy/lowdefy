@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { targetFromElementsChain, type } from '@lowdefy/helpers';
+import { filterElementsChain, targetFromElementsChain, type } from '@lowdefy/helpers';
 
 import hashId from './hashId.js';
 import normalisePostHogRow from './normalisePostHogRow.js';
@@ -56,8 +56,8 @@ function pathnameOf({ values }) {
 // The text is the control's (`lowdefy_text`), as the dev recorder reads it;
 // events captured before the plugin sent it fall back to `$el_text`, the
 // clicked element's own text. A click on a marked control is its block's
-// control (`lowdefy_control`, or the chain's data-lf-control) with no text,
-// as the dev recorder records it, and no row key, which PostHog never holds.
+// control (`lowdefy_control`) with no text, as the dev recorder records it,
+// and no row key, which PostHog never holds.
 function clickTarget({ blockId, blockType, row, column, control, option, textToken }) {
   const isControl = !type.isNone(control);
   return {
@@ -70,6 +70,14 @@ function clickTarget({ blockId, blockType, row, column, control, option, textTok
     nth: null,
     option: isControl ? false : option,
   };
+}
+
+function withoutControlMarks(chain) {
+  if (!type.isString(chain)) return chain;
+  return filterElementsChain({
+    chain,
+    filterAttribute: ({ key, value }) => (key === 'attr__data-lf-control' ? null : value),
+  });
 }
 
 function resolveTarget({ values, salt }) {
@@ -89,11 +97,13 @@ function resolveTarget({ values, salt }) {
       }),
     };
   }
-  // As the PostHog enrichment reads it: control marks, no row key. The masked
-  // chain holds no row key either, so a cell control in a row with a generated
-  // key would read as a control here, but such a click always has its grid's
-  // lowdefy_block_id, so it never falls back to the chain.
-  const chain = targetFromElementsChain(values.elementsChain, { rowKey: false });
+  // A control mark is read only through lowdefy_control. The enrichment sends
+  // a block id for every mark it accepts, so a mark that reaches this fallback
+  // is one it declined: a cell control in a row with a generated key, whose
+  // key the masked chain no longer holds to tell. It reads by text, as dev.
+  const chain = targetFromElementsChain(withoutControlMarks(values.elementsChain), {
+    rowKey: false,
+  });
   return {
     chainFallback: true,
     blockIds: chain.block_ids,
