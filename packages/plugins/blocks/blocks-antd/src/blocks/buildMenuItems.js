@@ -29,7 +29,8 @@ function defaultGetKey(link) {
 }
 
 // `blockId` is the menu block's id: each MenuLink item carries it and its key as journey control
-// marks.
+// marks. Left out, the items carry no marks: a menu drawn inside another block (a page layout's
+// nav, a header's profile menu) is no control target of its own.
 function buildMenuItems({
   blockId,
   links,

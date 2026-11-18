@@ -62,7 +62,7 @@ function writeSiderState({ methods, properties, open }) {
   }
 }
 
-const PageSiderMenu = ({
+function PageSiderMenu({
   basePath,
   blockId,
   classNames = {},
@@ -74,7 +74,7 @@ const PageSiderMenu = ({
   pageId,
   properties,
   styles = {},
-}) => {
+}) {
   const spacing = getPageSpacing({ padding: properties.padding });
   const [openSiderState, setSiderOpen] = useState(() =>
     getInitialSiderState({ methods, properties })
@@ -247,6 +247,7 @@ const PageSiderMenu = ({
                           >
                             <Menu
                               blockId={`${blockId}_menu`}
+                              journeyMarks={false}
                               components={{ Icon, Link, ShortcutBadge }}
                               basePath={basePath}
                               classNames={{ element: classNames.menu ?? 'hidden lg:block' }}
@@ -405,6 +406,6 @@ const PageSiderMenu = ({
       }}
     />
   );
-};
+}
 
 export default withBlockDefaults(withPageTheme(PageSiderMenu));

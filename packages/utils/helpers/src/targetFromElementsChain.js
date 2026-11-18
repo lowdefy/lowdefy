@@ -178,10 +178,12 @@ function targetFromElementsChain(chain, { marks = true } = {}) {
     const { row_key: _rowKey, control: _control, ...unmarked } = target;
     return unmarked;
   }
-  // The key of a pinned row (ag-grid `t-0`) names no journey row, as its index does not.
-  if (target.row !== null) target.row_key = rowKeyOf(row);
+  // The key of a pinned row (ag-grid `t-0`) names no journey row, as its index does not. A cell
+  // control in a pinned row is no control target either, so it describes by its text.
+  const inPinnedRow = row !== null && target.row === null;
+  if (!inPinnedRow) target.row_key = rowKeyOf(row);
   const marked = findMarkedControl(entries);
-  if (marked === null) return target;
+  if (marked === null || inPinnedRow) return target;
   return {
     ...target,
     block_id: marked.blockId,
