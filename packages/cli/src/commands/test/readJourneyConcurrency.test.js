@@ -75,6 +75,27 @@ test.each([['0'], ['4'], ['1.5'], ['two'], [''], [true]])(
   }
 );
 
+test('readJourneyConcurrency reads an empty LOWDEFY_JOURNEY_CONCURRENCY as unset', () => {
+  ['', '  '].forEach((value) => {
+    const read = readJourneyConcurrency({
+      name: '--concurrency',
+      repeat: 1,
+      env: { LOWDEFY_JOURNEY_CONCURRENCY: value },
+      readPressure: normal,
+    });
+    expect(read.error).toBeUndefined();
+    expect(read.readLimit()).toBe(1);
+  });
+  const typed = readJourneyConcurrency({
+    concurrency: 2,
+    name: '--concurrency',
+    repeat: 1,
+    env: { LOWDEFY_JOURNEY_CONCURRENCY: '' },
+    readPressure: normal,
+  });
+  expect(typed.readLimit()).toBe(2);
+});
+
 test('readJourneyConcurrency refuses an out-of-range LOWDEFY_JOURNEY_CONCURRENCY by name', () => {
   expect(
     readJourneyConcurrency({

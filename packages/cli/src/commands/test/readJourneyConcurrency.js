@@ -42,7 +42,8 @@ function parseConcurrency({ value, name }) {
 
 // How many browser journeys one test run keeps in flight: { readLimit } or { error }. The limit is
 // `concurrency` (named `name` in a refusal: --concurrency, or lowdefy_run_tests' concurrency),
-// else LOWDEFY_JOURNEY_CONCURRENCY, else 1, each 1 to 3. A --repeat run measures flakiness, so it
+// else LOWDEFY_JOURNEY_CONCURRENCY (an empty one, as `LOWDEFY_JOURNEY_CONCURRENCY=` leaves it, is
+// unset), else 1, each 1 to 3. A --repeat run measures flakiness, so it
 // runs one at a time: a journey that fails only beside another is the flakiness it was asked to
 // find. readLimit() reads memory pressure on each call (the pool calls it before starting a
 // second journey) and gives 1 while it is warn or critical. Headless runs do not call this: they
@@ -61,7 +62,7 @@ function readJourneyConcurrency({
       return { error: parsed.error };
     }
     concurrency = parsed.concurrency;
-  } else if (!type.isNone(env[ENV_NAME])) {
+  } else if (!type.isNone(env[ENV_NAME]) && env[ENV_NAME].trim() !== '') {
     const parsed = parseConcurrency({ value: env[ENV_NAME], name: ENV_NAME });
     if (!type.isUndefined(parsed.error)) {
       return { error: parsed.error };
