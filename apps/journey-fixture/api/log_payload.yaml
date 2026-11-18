@@ -1,0 +1,15 @@
+# Writes the payload it received, whole, so a test can read what reached the
+# endpoint (calls.test.mjs in packages/servers/server-dev/test/journeyFixture).
+id: log_payload
+type: Api
+routine:
+  - id: insert_payload
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    properties:
+      doc:
+        kind: payload
+        payload:
+          _payload: true
+  - ':return':
+      logged: true

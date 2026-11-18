@@ -110,6 +110,31 @@ fixtureTest('a _ref inside a posted payload reaches the endpoint as written', as
   expect(result.passed).toBe(true);
 });
 
+// A whole payload that is one _ref is data too: the endpoint receives the object as sent and
+// writes it whole (log_payload), through the real route and runner.
+fixtureTest('a posted payload that is a whole _ref reaches the endpoint as written', async () => {
+  const result = await postJourney({
+    data: 'roles',
+    user: 'member',
+    steps: [
+      { call: { endpoint: 'log_payload', payload: { _ref: 'x' } } },
+      { expect: { status: 200 } },
+      {
+        expect: {
+          db: {
+            collection: 'items',
+            connectionId: 'fixture_db',
+            match: { kind: 'payload' },
+            equals: [{ kind: 'payload', payload: { _ref: 'x' } }],
+          },
+        },
+      },
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
 fixtureTest(
   'expect.db fails at its step when the database does not hold what it expects',
   async () => {
