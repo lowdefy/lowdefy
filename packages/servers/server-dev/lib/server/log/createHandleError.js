@@ -45,8 +45,12 @@ function shouldStore(error) {
 // request's id (recordForcedFailure), where the journey's checks read its message, and is logged
 // at debug. Its entry goes to the journey run's error buffer marked `forced`, so the run knows the 500 it
 // answered was forced, and never counts it as an app error or shows it to the agent.
+//
+// `caught` is true when a :catch of the routine handles the fault (runRoutine says so). It is logged,
+// stored and sent to error tracking all the same, so a caught typo is still seen, and its entry is
+// stamped `caught` so a journey judges the routine by its answer, as a headless run does.
 function createHandleError({ context, dataSession }) {
-  return async function handleError(error) {
+  return async function handleError(error, { caught } = {}) {
     if (!type.isNone(dataSession) && isForcedFailure(error)) {
       error.handled = true;
       recordForcedFailure({ error, rid: context.rid, session: dataSession });
@@ -98,6 +102,7 @@ function createHandleError({ context, dataSession }) {
           name: error.name,
           // Agents read the store through build-status, after this request's scope has ended.
           message: scrubCredentials(error.message),
+          caught: caught === true,
           source: error.source ?? null,
           config: error.config ?? null,
           hint: error.hint ?? null,

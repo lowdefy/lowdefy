@@ -51,6 +51,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     '404',
     'app_errors',
     'app_errors_open',
+    'caught_faults',
     'containing_split',
     'explore',
     'explore_guarded',
@@ -74,6 +75,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
   expect(Object.keys(matrix.endpoints)).toEqual([
     'approve_run',
     'auditor_only',
+    'caught_operator',
     'caught_webhook',
     'close_runs',
     'detached_log',

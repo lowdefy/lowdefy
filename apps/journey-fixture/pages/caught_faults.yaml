@@ -1,0 +1,21 @@
+# A button whose CallAPI reaches caught_operator, a routine whose :catch handles an OperatorError
+# (caughtFaults.test.mjs in packages/servers/server-dev/test/journeyFixture). The journey that
+# clicks it passes in the browser and headless: a fault the routine caught is no app error.
+id: caught_faults
+type: Box
+blocks:
+  - id: caught_operator_button
+    type: Button
+    properties:
+      title: Call caught operator
+    events:
+      onClick:
+        - id: call_caught_operator
+          type: CallAPI
+          params:
+            endpointId: caught_operator
+        - id: set_caught
+          type: SetState
+          params:
+            caught:
+              _actions: call_caught_operator.response.caught

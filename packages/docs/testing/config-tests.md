@@ -154,7 +154,7 @@ A journey also fails at the step that causes an app error, even when every expec
 
 - an action that fails with an error, such as a `Request` or `CallAPI` whose request throws, or an operator that throws,
 - an uncaught exception in the page, or an error the page reports to the dev server,
-- a request or endpoint that throws on the server, or answers with a 5xx.
+- a request or endpoint that throws on the server, or answers with a 5xx. An error the routine's own `:catch` handled does not count: the journey is judged by the routine's answer. The server still logs it.
 
 Errors raised while the journey's first page opens (its `onInit` and `onMount` requests) fail the journey `on open`, before any step runs. Expected outcomes never fail a journey: a failed `Validate`, a `Throw` action or any other user error, and a 401 or 403 refusal. Only errors the journey's own browsers cause count: an error you raise in your own tab on the same dev server while journeys run does not fail them, and a journey's errors are reported in its result, not in the dev server's build status.
 
@@ -674,7 +674,7 @@ lowdefy test --headless --build
 lowdefy test --headless
 ```
 
-A headless run does not count a server error that the routine's own `:catch` handled: the routine dealt with it and answered, so the journey is judged by the answer and by what was written. An error that no `:catch` handles fails the journey at its step, as in a browser run.
+A headless run does not count a server error that the routine's own `:catch` handled, and neither does a browser run: the routine dealt with it and answered, so the journey is judged by the answer and by what was written. An error that no `:catch` handles fails the journey at its step.
 
 Without `--build`, a headless run uses the development server, as a plain `lowdefy test` does: it starts one, or uses the one `--url` names. Pages are built on demand, so a config edit needs no rebuild, and every journey runs on its own [data set](/journey-data-sets) session. A headless run starts no browser and takes no journey run slot, so it does not wait behind browser runs on the machine. What it exercised counts in `.lowdefy/test/exercised.json` for lint and `journeys harden`; it records no traces for session logs. The results are written to `.lowdefy/test/headless-run.json`.
 
