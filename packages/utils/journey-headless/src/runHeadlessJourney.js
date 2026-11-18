@@ -19,6 +19,7 @@ import {
   CALL_STEP_KEYS,
   claimExpectedErrors,
   classifyJourney,
+  createDataSetRails,
   findStepNeedingPage,
   getStepKey,
   INTERACTION_STEP_KEYS,
@@ -144,6 +145,12 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     user,
   });
   const races = createJourneyRaces({ host });
+  // A journey on a data set checks each step that acts on a block against the data-set rails, as
+  // the browser runner does; one with none acts on anything.
+  const rails =
+    host.dataSetName === null
+      ? null
+      : createDataSetRails({ readArtifact: host.readArtifact, connections: host.connections });
   const results = [];
   let failure;
   let browserOnly;
@@ -193,7 +200,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       const stepAnswer = await races.run({
         index,
         step,
-        start: () => runHeadlessStep({ actors, answer, host, since, step, stepTimeout }),
+        start: () => runHeadlessStep({ actors, answer, host, rails, since, step, stepTimeout }),
       });
       if (ANSWER_STEP_KEYS.includes(key)) {
         answer = stepAnswer;

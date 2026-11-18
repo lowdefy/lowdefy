@@ -18,6 +18,7 @@ import { getStepKey } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
+import checkHeadlessRails from './checkHeadlessRails.js';
 import checkFillTarget from './checkFillTarget.js';
 import fillColorSelector from './fillColorSelector.js';
 import leaveDropdowns from './leaveDropdowns.js';
@@ -61,11 +62,14 @@ async function runStandIn({ actor, block, part, what, ...args }) {
 // (a dropdown's trigger), go to the block's stand-in. Any other click fires the block's onClick
 // through the step runner, as a pointer click (pointerClick: a block in a DropdownMenu's content
 // clicks its trigger too); a block with none is left to the browser, where the click lands on a
-// control inside it. Resolves true when the click is done.
-async function runBlockClick({ actor, step, stepTimeout }) {
+// control inside it. On a data-set journey the block is checked against the rails before the
+// click acts, a dropdown's stand-in opening it included (checkHeadlessRails); a rowKey or control
+// target's block is the target's own. Resolves true when the click is done.
+async function runBlockClick({ actor, rails, step, stepTimeout }) {
   const target = step.click;
   const block = await waitForShownBlock({ actor, target, timeout: stepTimeout });
   if (isStandInTarget(target)) {
+    checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'click' });
     await runStandIn({
       actor,
       block,
@@ -76,6 +80,7 @@ async function runBlockClick({ actor, step, stepTimeout }) {
     return true;
   }
   if (BLOCK_STAND_INS[block.type]?.answersBlockClick?.({ block }) === true) {
+    checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'click' });
     await runStandIn({ actor, block, part: 'clickBlock', what: 'a click on the block' });
     return true;
   }
@@ -85,6 +90,7 @@ async function runBlockClick({ actor, step, stepTimeout }) {
     );
     return true;
   }
+  checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'click' });
   await pointerClick({ actor, block, click: () => actor.stepRunner.run({ step }) });
   await actor.settle();
   return true;
@@ -141,19 +147,26 @@ async function runRowExpect({ actor, step, stepTimeout }) {
 // (checkFillTarget); a ColorSelector's fill clicks its picker first, as the browser's does
 // (fillColorSelector). wait.request waits for a call made since the last interaction: `since` is
 // the actor's call count when that window opened.
-async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout }) {
+//
+// On a data-set journey (rails: the run's createDataSetRails, else null), a click, open, fill,
+// select or press is checked against the rails on the block it acts on before it acts, as the
+// browser runner checks it (checkHeadlessRails): a press on the input it presses Enter in, the
+// one filled last.
+async function runHeadlessStep({ actors, answer, host, rails, since, step, stepTimeout }) {
   const key = getStepKey(step);
   const actor = actors.current();
-  if (key === 'click' && (await runBlockClick({ actor, step, stepTimeout }))) {
+  if (key === 'click' && (await runBlockClick({ actor, rails, step, stepTimeout }))) {
     return undefined;
   }
   if (key === 'open') {
     const block = await waitForShownBlock({ actor, target: step.open, timeout: stepTimeout });
+    checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'open' });
     await runStandIn({ actor, block, part: 'open', what: 'open' });
     return undefined;
   }
   if (key === 'fill') {
     const block = await waitForShownBlock({ actor, target: step.fill, timeout: stepTimeout });
+    checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'fill' });
     checkFillTarget({ block, value: step.fill.value });
     if (block.type === 'ColorSelector') {
       await fillColorSelector({ actor, block, step });
@@ -162,7 +175,17 @@ async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout 
   }
   if (key === 'select') {
     const block = await waitForShownBlock({ actor, target: step.select, timeout: stepTimeout });
+    checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'select' });
     leaveDropdowns({ actor, targetBlock: block });
+  }
+  // The step runner refuses a press with no input filled before it, saying so.
+  if (key === 'press' && actor.stepRunner.lastInputBlockId() !== null) {
+    checkHeadlessRails({
+      actor,
+      blockId: actor.stepRunner.lastInputBlockId(),
+      rails,
+      step: 'press',
+    });
   }
   if (key === 'wait' && type.isString(step.wait.request)) {
     await waitForRequestCall({

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { fixtureTest, postBrowserJourney, postJourney } from './fixtureClient.mjs';
+import { fixtureTest, postJourney } from './fixtureClient.mjs';
 import { expect } from 'vitest';
 
 // The data-set rails: on a journey with a data set, a click that would reach a
@@ -142,14 +142,13 @@ fixtureTest(
 );
 
 // Open, fill and select act on a block and fire its events too (onOpenChange, onChange), so the
-// rails check them as they check a click, before they act. The headless runner has no data-set
-// rails yet (LDF-1093 adds them for every step), so these run in the browser only.
+// rails check them as they check a click, before they act, in the browser and headless.
 const UNDECLARED = '(UndeclaredFixture, no dataSet declaration), which a data set cannot redirect';
 
 fixtureTest(
   'a data-set journey opening a dropdown whose onOpenChange reaches an undeclared connection is refused before it opens',
   async () => {
-    const result = await postBrowserJourney({
+    const result = await postJourney({
       pageId: 'rails',
       data: 'rails',
       user: 'member',
@@ -168,7 +167,7 @@ fixtureTest(
 fixtureTest(
   'a data-set journey filling an input whose onChange reaches an undeclared connection is refused',
   async () => {
-    const result = await postBrowserJourney({
+    const result = await postJourney({
       pageId: 'rails',
       data: 'rails',
       user: 'member',
@@ -193,7 +192,7 @@ fixtureTest.each([
 ])(
   'a data-set journey selecting through %s, whose onChange reaches an undeclared connection, is refused',
   async (_, blockId) => {
-    const result = await postBrowserJourney({
+    const result = await postJourney({
       pageId: 'rails',
       data: 'rails',
       user: 'member',
@@ -212,7 +211,7 @@ fixtureTest.each([
 fixtureTest(
   'a journey without a data set opens, fills and selects on the railed blocks',
   async () => {
-    const result = await postBrowserJourney({
+    const result = await postJourney({
       pageId: 'rails',
       steps: [
         { open: 'rails_menu' },
