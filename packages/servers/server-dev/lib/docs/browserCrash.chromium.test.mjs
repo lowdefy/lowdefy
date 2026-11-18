@@ -14,143 +14,82 @@
   limitations under the License.
 */
 
-import { execFileSync } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 
 import { vi, afterAll, expect, test } from 'vitest';
 
-// A real Chromium whose renderer processes are killed as they start, so newPage answers
-// `Target crashed` while the browser process stays up and connected. openPage must say the
-// browser crashed, and the next getBrowser must hand out a new browser whose openPage works.
-// Skipped when no Chromium can be launched, and on Windows, which has no ps.
+// A real Chromium whose renderers exit as they start, so newPage answers `Target crashed` while
+// the browser process stays up and connected. openPage must say the browser crashed, and the next
+// getBrowser must hand out a new browser whose openPage works. The first browser launched runs
+// every renderer through a launcher that exits at once; the ones after it launch as usual.
+// Skipped when no Chromium can be launched, and on Windows, which runs no shell script.
 vi.doMock('../build/config.js', () => ({ default: {} }));
 
-const tag = `crash-test-${process.pid}`;
-process.env.LOWDEFY_BROWSER_TAG = tag;
+const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-browser-crash-'));
+const deadRenderer = path.join(directory, 'dead-renderer.sh');
+fs.writeFileSync(deadRenderer, '#!/bin/sh\nexit 1\n', { mode: 0o755 });
+
+const launched = [];
+vi.doMock('playwright-core', async (importOriginal) => {
+  const playwright = await importOriginal();
+  const chromium = new Proxy(playwright.chromium, {
+    get(target, property) {
+      if (property !== 'launch') {
+        return Reflect.get(target, property, target);
+      }
+      return async (options = {}) => {
+        const args =
+          launched.length === 0
+            ? [...(options.args ?? []), `--renderer-cmd-prefix=${deadRenderer}`]
+            : options.args;
+        const browser = await target.launch({ ...options, args });
+        launched.push(browser);
+        return browser;
+      };
+    },
+  });
+  return { ...playwright, chromium };
+});
 
 const { getBrowser, openPage } = await import('./getBrowser.js');
 
 const origin = 'http://127.0.0.1:4019';
 
-let browser = null;
+let crashing = null;
 if (process.platform !== 'win32') {
   try {
-    browser = await getBrowser({ origin });
+    crashing = await getBrowser({ origin });
   } catch {
-    browser = null;
+    crashing = null;
   }
 }
-const chromiumTest = browser === null ? test.skip : test;
-
-const opened = [];
+const chromiumTest = crashing === null ? test.skip : test;
 
 afterAll(async () => {
-  await Promise.all(opened.map((context) => context.close().catch(() => {})));
-  const current = await getBrowser({ origin }).catch(() => null);
-  await current?.close();
-  await browser?.close();
-}, 30000);
-
-// Synchronous, so a renderer dies within a few milliseconds of starting: soon enough to meet the
-// newPage that started it.
-function listProcesses() {
-  return execFileSync('ps', ['-axo', 'pid=,ppid=,command='], { maxBuffer: 16 * 1024 * 1024 })
-    .toString()
-    .split('\n')
-    .map((line) => line.trim().match(/^(\d+)\s+(\d+)\s+(.*)$/))
-    .filter(Boolean)
-    .map(([, pid, ppid, command]) => ({ pid: Number(pid), ppid: Number(ppid), command }));
-}
-
-// The renderers of every tagged browser (one closed after a stall may still be exiting): on Linux
-// they hang off its zygote, not the browser itself.
-function killRenderers() {
-  const processes = listProcesses();
-  const roots = processes.filter(
-    ({ command }) =>
-      / --lowdefy-browser-tag=(\S+)/.exec(command)?.[1] === tag && !command.includes('--type=')
-  );
-  const tree = new Set(roots.map(({ pid }) => pid));
-  let grew = true;
-  while (grew) {
-    grew = false;
-    for (const { pid, ppid } of processes) {
-      if (tree.has(ppid) && !tree.has(pid)) {
-        tree.add(pid);
-        grew = true;
-      }
-    }
-  }
-  for (const { pid, command } of processes) {
-    if (tree.has(pid) && command.includes('--type=renderer')) {
-      try {
-        process.kill(pid, 'SIGKILL');
-      } catch {
-        // Gone already.
-      }
-    }
-  }
-}
+  await Promise.all(launched.map((browser) => browser.close().catch(() => {})));
+  fs.rmSync(directory, { recursive: true, force: true });
+});
 
 chromiumTest(
   'a browser whose renderers crash is replaced, and the next openPage works',
   async () => {
-    let killing = true;
-    const killer = (async () => {
-      while (killing) {
-        killRenderers();
-        await new Promise((resolve) => setTimeout(resolve, 2));
-      }
-    })();
-    // Pageless openPage calls go as far as newPage; one of them meets a renderer killed while it
-    // starts. A try may instead open a page whose renderer dies later, which is no crash of
-    // newPage, or take the whole browser process down, which getBrowser already handles as a
-    // disconnect: either way the next try takes the browser getBrowser gives then. Under load
-    // Chromium can also stall on a killed renderer until it exits a minute later; a try that
-    // stalls closes its browser, which is that same disconnect sooner.
-    // Kept inside the test timeout, however many tries stall.
-    const deadline = Date.now() + 90000;
-    let crash = null;
-    let crashed = null;
-    try {
-      while (crash === null && Date.now() < deadline) {
-        const current = await getBrowser({ origin });
-        const opening = openPage({ browser: current, origin });
-        let timer;
-        const stalled = new Promise((resolve) => {
-          timer = setTimeout(() => resolve('stalled'), 10000);
-        });
-        try {
-          const result = await Promise.race([opening, stalled]);
-          if (result === 'stalled') {
-            opening.then((late) => opened.push(late.context)).catch(() => {});
-            await current.close().catch(() => {});
-            continue;
-          }
-          opened.push(result.context);
-        } catch (error) {
-          // Only the crash this test is after: another error of a killed renderer is no answer.
-          if (current.isConnected() && error.message.startsWith('The headless browser crashed')) {
-            crash = error;
-            crashed = current;
-          }
-        } finally {
-          clearTimeout(timer);
-        }
-      }
-    } finally {
-      killing = false;
-      await killer;
-    }
-
-    expect(crash?.message).toBe(
+    // A page-less openPage goes as far as newPage, whose renderer exits as it starts.
+    await expect(openPage({ browser: crashing, origin })).rejects.toThrow(
       'The headless browser crashed (browserContext.newPage: Target crashed); it is relaunched for the next call.'
     );
+    expect(crashing.isConnected()).toBe(true);
+
     const fresh = await getBrowser({ origin });
-    expect(fresh).not.toBe(crashed);
+    expect(fresh).not.toBe(crashing);
 
     const { context, page } = await openPage({ browser: fresh, origin });
-    opened.push(context);
-    expect(await page.evaluate(() => 1 + 1)).toBe(2);
+    try {
+      expect(await page.evaluate(() => 1 + 1)).toBe(2);
+    } finally {
+      await context.close();
+    }
   },
-  120000
+  10000
 );
