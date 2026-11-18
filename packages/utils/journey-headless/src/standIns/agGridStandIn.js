@@ -117,7 +117,7 @@ function clickCell({ actor, block, column, entry }) {
 
 function readGrid({ actor, block, state }) {
   const properties = block.eval.properties ?? {};
-  const columns = readAgGridColumns(properties);
+  const columns = readAgGridColumns(properties, { description: describeBlock(block) });
   const feature = findAgGridFeature({ columns: columns.all, properties, state });
   const rows = holdRows({ rowData: properties.rowData ?? [], state });
   return {

@@ -108,6 +108,11 @@ test.each([
     ],
     ['0', '1', '2', '4', '5', '6', '18', '19', '22'],
   ],
+  [
+    'a group whose children is not an array, which AG Grid still makes a group',
+    [{ headerName: 'A' }, { children: {} }, { children: 'ab' }, { headerName: 'B' }],
+    ['0', '3', '4', '5'],
+  ],
 ])('AgGrid column ids: %s', (_name, columnDefs, ids) => {
   expect(readAgGridColumns({ columnDefs }).all.map((column) => column.id)).toEqual(ids);
 });
@@ -123,3 +128,18 @@ test('AgGrid column ids come from the column, not defaultColDef or a column type
     ['1', 'q'],
   ]);
 });
+
+test.each([
+  ['null', [{ field: 'a' }, null], 'columnDefs.1'],
+  ['undefined', [{ children: [{ field: 'a' }, undefined] }], 'columnDefs.0.children.1'],
+])(
+  'A %s column entry fails the step, as the browser grid does not render',
+  (_name, columnDefs, path) => {
+    expect(() => readAgGridColumns({ columnDefs }, { description: 'AgGrid "grid"' })).toThrow(
+      expect.objectContaining({
+        name: 'HeadlessStepError',
+        message: expect.stringContaining(`AgGrid "grid" has a ${_name} column at ${path}`),
+      })
+    );
+  }
+);

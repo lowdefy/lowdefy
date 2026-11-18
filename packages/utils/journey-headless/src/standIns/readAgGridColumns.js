@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import HeadlessStepError from '../HeadlessStepError.js';
+
 const PIN_ORDER = { left: 0, center: 1, right: 2 };
 
 // AG Grid merges a column's definition over its column types and the grid's defaultColDef. The
@@ -47,8 +49,10 @@ function isShownInGroup({ col, group }) {
   return col.columnGroupShow === 'open' ? open : !open;
 }
 
+// AG Grid makes a group of any entry whose children is truthy (`if (childDefs)` in
+// _buildColumnTree), whatever its type.
 function isGroup(col) {
-  return type.isArray(col.children);
+  return Boolean(col.children);
 }
 
 // The base of a column's id: its own colId, else its own field. AG Grid reads them from the
@@ -150,13 +154,28 @@ function assignColumnIds(columnDefs) {
 }
 
 // The block's processColDefs spreads each entry into an object, so an entry that is not an object
-// (a string, or false from an _if) reaches AG Grid as a column with no key.
-function toColumnObjects(defs) {
-  return (defs ?? []).map((col) => {
+// (a string, or false from an _if) reaches AG Grid as a column with no key. A null or undefined
+// entry (an _if with else: null) makes processColDefs throw, so the grid does not render: the step
+// fails. A group's children that are not an array reach AG Grid as they are, and it reads them by
+// index: a string as one keyless column per character, anything else as no columns.
+function toColumnObjects({ defs, path, description }) {
+  return defs.map((col, index) => {
+    if (type.isNone(col)) {
+      throw new HeadlessStepError(
+        `${description} has a ${col} column at ${path}.${index}, so the grid does not render.`,
+        { actual: `a ${col} column at ${path}.${index}`, expected: `${description} rendered` }
+      );
+    }
     if (!type.isObject(col)) {
       return {};
     }
-    return isGroup(col) ? { ...col, children: toColumnObjects(col.children) } : col;
+    if (!isGroup(col)) {
+      return col;
+    }
+    const children = type.isArray(col.children)
+      ? toColumnObjects({ defs: col.children, path: `${path}.${index}.children`, description })
+      : Array.from(type.isString(col.children) ? col.children : [], () => ({}));
+    return { ...col, children };
   });
 }
 
@@ -185,8 +204,12 @@ function collectLeaves({ defs, group, properties, ids, leaves }) {
 // flattened, each { id, colDef, hidden, pinned }, id being the id AG Grid gives it (assignColumnIds),
 // its cells' col-id. `shown` is the columns a person sees, in display order: pinned left, then unpinned, then
 // pinned right, hidden ones left out.
-function readAgGridColumns(properties) {
-  const columnDefs = toColumnObjects(properties.columnDefs);
+function readAgGridColumns(properties, { description = 'The grid' } = {}) {
+  const columnDefs = toColumnObjects({
+    defs: properties.columnDefs ?? [],
+    path: 'columnDefs',
+    description,
+  });
   const ids = assignColumnIds(columnDefs);
   const all = collectLeaves({ defs: columnDefs, properties, ids, leaves: [] });
   const shown = all
