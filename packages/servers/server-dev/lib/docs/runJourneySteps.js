@@ -1361,10 +1361,11 @@ async function runJourneySteps({ journey, steps }) {
   if (!type.isUndefined(appErrors) && type.isUndefined(failure) && steps.length > 0) {
     failure = await appErrors.judgeDrain({ journey, steps, results });
   }
-  // A fail gate the journey's stubs set that no request reached fails it at its last step. A
-  // journey on no data set has no fail gates.
+  // A fail gate the journey's stubs set that no request reached, or an answer stub naming its
+  // request that never answered, fails it at its last step, once the session's background work
+  // has drained. A journey on no data set has no fail gates.
   if (type.isUndefined(failure) && steps.length > 0 && !type.isNone(journey.dataSession)) {
-    failure = findUnfiredFailGate({ session: journey.dataSession.session, steps });
+    failure = await findUnfiredFailGate({ session: journey.dataSession.session, steps });
     if (!type.isUndefined(failure)) {
       results[failure.index].status = 'failed';
     }

@@ -339,7 +339,7 @@ This runs `logs an activity from each source [form]`, `[import]` and `[api]`; `-
 
 Keep shared files under `tests/shared/`: every file under `tests/journeys/` is read as a journey. A changed shared file changes the hash of every journey that refers to it, so their [exercised](#hardening-journeys) entries go stale. [Data sets](/journey-data-sets) do not take `_ref`.
 
-The `lowdefy_run_journey` tool runs one inline journey, with no file to refer from, so it takes neither `cases` nor `_ref`. A `_case` or `_ref` where a file's would stand for part of the journey (a step, a step list, `cases`, a stub or the stub list, `user`, `data` or `pageId`) is refused, naming where it is. Inside a value, such as a payload, a stub's answer or a `match`, it is sent as written. Run a journey file that has them with `lowdefy test` or the `lowdefy_run_tests` tool.
+The `lowdefy_run_journey` tool runs one inline journey, with no file to refer from, so it takes neither `cases` nor `_ref`: a journey sent with `cases` is refused. A `_case` or `_ref` where a file's would stand for part of the journey (a step, a step list, a stub or the stub list, `user`, `data`, `pageId`, or `pathParams` and `urlQuery` or one of their values) is refused, naming where it is. Inside a value, such as a payload, a stub's answer or a `match`, it is sent as written. Run a journey file that has them with `lowdefy test` or the `lowdefy_run_tests` tool.
 
 ### Stubs and forced failures
 
@@ -374,7 +374,7 @@ steps:
 
 - **How often.** A failure fires on the next matching request, once, so a journey can fail a write and then retry it to show the routine recovers. `times: 3` fails the next 3, and `times: all` every one, for a routine that runs the request in a loop.
 - **A failure that never fired fails the journey**, naming it, so a check cannot pass while testing nothing.
-- **An answer stub that never answered fails the journey** too, naming its types and what narrows it: no request matched it, or an earlier stub answered first. Every answer stub must stand in for a request the journey makes.
+- **An answer stub that never answered fails the journey** too, naming its types and what narrows it: no request matched it, or an earlier stub answered first. Only a stub that names its request (`requestId`, `endpoint`, `pageId` or `match`) must answer; one keyed only by `connectionType` and `requestType` is a fallback, such as a shared stub list or a case whose branch makes no outside call, and may go unused.
 - **A forced failure is never an [app error](#app-errors).** A client only ever sees the generic message, so `expect: { error }` after the `call`, `request` or `webhook` reads the forced message from the server's record of the call. A webhook that fails answers its sender `500` with a fixed body, and `expect: { error }` still reads the forced message.
 - **An answer for a type the app does not have is refused.** An answer stub whose `connectionType` or `requestType` the app has no connection or request of would never answer, so the journey fails, naming the stub and the types the app has.
 - **`stubs` need `data`.** They live on the journey's data set session, and work the same headless, on the dev server and in the browser. So do `hold`, `release` and `expect: { sunk }`: a journey without `data` that uses them is refused, on every host. An answer computed from the request is a [test-utils test](/endpoint-tests)'s stub.
@@ -679,13 +679,15 @@ lowdefy build
 lowdefy test --headless --build
 ```
 
-`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run, and the app's real secrets are never read. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route. The results are written to `.lowdefy/test/headless-run.json`.
+`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run, and the app's real secrets are never read. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route, and neither can an auth step, since no auth engine runs: each fails as a config error. A routine that handles the failure in the `:catch` of its `:try` still passes, see below. The results are written to `.lowdefy/test/headless-run.json`.
 
 ### While you edit
 
 ```
 lowdefy test --headless
 ```
+
+A headless run does not count a server error that the routine's own `:catch` handled: the routine dealt with it and answered, so the journey is judged by the answer and by what was written. An error that no `:catch` handles fails the journey at its step, as in a browser run.
 
 Without `--build`, a headless run uses the development server, as a plain `lowdefy test` does: it starts one, or uses the one `--url` names. Pages are built on demand, so a config edit needs no rebuild, and every journey runs on its own [data set](/journey-data-sets) session. A headless run starts no browser and takes no journey run slot, so it does not wait behind browser runs on the machine. What it exercised counts in `.lowdefy/test/exercised.json` for lint and `journeys harden`; it records no traces for session logs. The results are written to `.lowdefy/test/headless-run.json`.
 

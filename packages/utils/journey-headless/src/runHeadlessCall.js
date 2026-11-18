@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import addServerFaults from './addServerFaults.js';
 import readAnswerError from './readAnswerError.js';
 import readForcedError from './readForcedError.js';
 
@@ -32,9 +33,9 @@ function callAs({ call, caller, host, payload }) {
 // the browser runner posts it to the route, as the step's `as` (actors.callerFor) or the current
 // actor. A refusal or an error is the answer, not a failure of the step: expect.status and
 // expect.error read it from the answer this returns ({ description, status, error }). The call is
-// recorded on the caller, for expect.calls, and the server's faults go to the error sink. A call a
-// fail gate failed answers with the forced message (readForcedError), not the generic one the
-// client sees.
+// recorded on the caller, for expect.calls, and the server's faults go to the error sink
+// (addServerFaults). A call a fail gate failed answers with the forced message (readForcedError),
+// not the generic one the client sees.
 async function runHeadlessCall({ actors, host, step }) {
   const isCall = !type.isUndefined(step.call);
   const params = isCall ? step.call : step.request;
@@ -44,7 +45,7 @@ async function runHeadlessCall({ actors, host, step }) {
     ? { endpointId: params.endpoint, kind: 'endpoint' }
     : { kind: 'request', pageId: params.pageId, requestId: params.requestId };
   const answer = await callAs({ call, caller, host, payload });
-  answer.faults.forEach((fault) => host.errorSink.add({ call, error: fault, source: 'server' }));
+  addServerFaults({ call, errorSink: host.errorSink, faults: answer.faults });
   caller.calls.push({
     ...call,
     payload,

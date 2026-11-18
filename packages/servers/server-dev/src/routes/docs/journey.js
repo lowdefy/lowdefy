@@ -43,8 +43,10 @@ async function docsJourneyHandler(c) {
     cases: body.cases,
     data: body.data,
     pageId,
+    pathParams,
     steps,
     stubs: body.stubs,
+    urlQuery,
     user: body.user,
   });
   if (placeholderError) {

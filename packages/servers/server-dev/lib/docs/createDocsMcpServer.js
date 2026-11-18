@@ -380,10 +380,29 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       exercised,
       device,
       headless,
+      cases,
     }) => {
-      const placeholderError = findSentPlaceholder({ data, pageId, steps, stubs, user });
+      const placeholderError = findSentPlaceholder({
+        cases,
+        data,
+        pageId,
+        pathParams,
+        steps,
+        stubs,
+        urlQuery,
+        user,
+      });
       if (placeholderError) {
         return notFoundResult(placeholderError);
+      }
+      // The schema takes any value, so a placeholder in one is refused by name above, not as a
+      // type mismatch; every other value must be a string, as the journey route requires.
+      if (!type.isNone(pathParams) && !Object.values(pathParams).every(type.isString)) {
+        return notFoundResult(
+          `The "pathParams" param must be an object of strings, one per path placeholder. Received ${JSON.stringify(
+            pathParams
+          )}.`
+        );
       }
       if (!type.isNone(device)) {
         const refused = deviceParamsError({

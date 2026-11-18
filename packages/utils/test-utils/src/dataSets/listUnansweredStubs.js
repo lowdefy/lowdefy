@@ -14,11 +14,26 @@
   limitations under the License.
 */
 
-// A journey's answer stubs no request reached, so a journey that set one can fail instead of
-// passing while its stub stood in for nothing. A test's session.stub counts no answers: it lasts
-// across a file's tests, so it is never reported.
+import { type } from '@lowdefy/helpers';
+
+// Whether an answer stub names the request it answers: a stub narrowed by requestId, endpoint,
+// pageId or match stands in for one request the journey must make. One keyed only by
+// connectionType and requestType (or an empty match, which matches any request) is a fallback, such as a shared stub list (one _ref many
+// journeys use) or a case table row whose branch makes no outside call, and may go unused.
+function namesTarget(stub) {
+  return (
+    !type.isNone(stub.requestId) ||
+    !type.isNone(stub.endpoint) ||
+    !type.isNone(stub.pageId) ||
+    (type.isObject(stub.match) && Object.keys(stub.match).length > 0)
+  );
+}
+
+// A journey's answer stubs that name their target and that no request reached, so a journey that
+// set one can fail instead of passing while its stub stood in for nothing. A test's session.stub
+// counts no answers: it lasts across a file's tests, so it is never reported.
 function listUnansweredStubs({ session }) {
-  return session.stubs.filter((stub) => stub.answered === 0);
+  return session.stubs.filter((stub) => stub.answered === 0 && namesTarget(stub));
 }
 
 export default listUnansweredStubs;

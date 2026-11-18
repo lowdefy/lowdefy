@@ -66,18 +66,39 @@ function checkEach({ value, at }) {
   return undefined;
 }
 
+function checkValues({ value, at }) {
+  if (!type.isObject(value)) return undefined;
+  for (const [key, entry] of Object.entries(value)) {
+    const found = checkAt({ value: entry, at: joinPath({ base: at, key }) });
+    if (!type.isUndefined(found)) return found;
+  }
+  return undefined;
+}
+
 // The places a journey file's `_ref` or `_case` stands for a part of the journey, rather than
-// for a value: a step list or one step, the case table, the stub list or one stub, and user,
-// data and pageId (a user list's entries too).
+// for a value: a step list or one step, the case table, the stub list or one stub, user, data
+// and pageId (a user list's entries too), and pathParams and urlQuery or one of their values.
 function findInParts({ journey }) {
   if (!type.isObject(journey)) return undefined;
-  for (const field of ['user', 'data', 'pageId', 'cases', 'stubs', 'steps']) {
+  for (const field of [
+    'user',
+    'data',
+    'pageId',
+    'pathParams',
+    'urlQuery',
+    'cases',
+    'stubs',
+    'steps',
+  ]) {
     const at = field;
-    const found =
-      checkAt({ value: journey[field], at }) ??
-      (['user', 'stubs', 'steps'].includes(field)
-        ? checkEach({ value: journey[field], at })
-        : undefined);
+    const value = journey[field];
+    let found = checkAt({ value, at });
+    if (type.isUndefined(found) && ['user', 'stubs', 'steps'].includes(field)) {
+      found = checkEach({ value, at });
+    }
+    if (type.isUndefined(found) && ['pathParams', 'urlQuery'].includes(field)) {
+      found = checkValues({ value, at });
+    }
     if (!type.isUndefined(found)) return found;
   }
   return undefined;

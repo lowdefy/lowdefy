@@ -3214,7 +3214,7 @@
       "files": [
         "plugins/plugins-actions.yaml"
       ],
-      "hash": "f030c7444d82598aa7f810562252002ed2c555c8cb6212ee9db338716bdb4be4"
+      "hash": "e325a650b977d8ff6a118dd88563d709cf303e5610d644af6ae2b1682ea90e74"
     },
     "plugins/plugins-connections": {
       "files": [
@@ -3343,7 +3343,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "821dde6976474935dc979ffd35206ead5171c8accdf7105f7032f99f2a3bbe0f"
+      "hash": "3ce34cf08ecc25d6122c2f0de9ac37d43214e52dcaca932bd83ee2b980c80348"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3357,7 +3357,7 @@
         "testing/endpoint-tests.md",
         "testing/endpoint-tests.yaml"
       ],
-      "hash": "8682303639ad7a66d2014213a5d2b0f945016f64b70c27892c84f7d438cb94c9"
+      "hash": "c3832c95d18412b01ebc16e7575447642e9e47d2a53bf4a000b2a32b9fac02ef"
     },
     "testing/access-table": {
       "files": [
