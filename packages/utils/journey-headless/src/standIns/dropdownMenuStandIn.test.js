@@ -16,7 +16,7 @@
 
 import { expect, test } from 'vitest';
 
-import runTestJourney, { readLog, record } from '../tests/runTestJourney.js';
+import runTestJourney, { methodButton, readLog, record } from '../tests/runTestJourney.js';
 
 const LINKS = [
   { id: 'reports', pageId: 'reports' },
@@ -347,4 +347,42 @@ test('DropdownMenu stays open through a fill that is not a ColorSelector', async
   });
   expect(result.passed).toBe(true);
   expect(readLog(log)).toEqual([['onOpenChange', { open: true }]]);
+});
+
+test('DropdownMenu click on the block that lands on an input in its content runs in a browser', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [menuPage({ content: [{ id: 'name', type: 'TextInput' }, LABEL] })],
+    steps: [{ click: 'menu' }],
+  });
+  expect(result.browserOnly.reason).toBe(
+    'A click on DropdownMenu "menu" lands on input "name" (TextInput) in its content, which a browser clicks: the step runs in a browser.'
+  );
+  expect(log).toEqual([]);
+});
+
+test('DropdownMenu hears no click inside a Modal in its content, which draws in a portal', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      menuPage({
+        content: [
+          {
+            id: 'dialog',
+            type: 'Modal',
+            blocks: [{ id: 'inner', type: 'Button', events: { onClick: [record('inner')] } }],
+          },
+        ],
+        outside: [
+          methodButton({
+            id: 'openDialog',
+            blockId: 'dialog',
+            method: 'setOpen',
+            args: [{ open: true }],
+          }),
+        ],
+      }),
+    ],
+    steps: [{ click: 'openDialog' }, { click: 'inner' }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['inner']]);
 });

@@ -16,18 +16,23 @@
 
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import collectBlockParents from './collectBlockParents.js';
+import POPUP_BLOCK_TYPES from './POPUP_BLOCK_TYPES.js';
 import isClickClaimed from './isClickClaimed.js';
 import leaveDropdowns from './leaveDropdowns.js';
 import readStandInState from './readStandInState.js';
 
 // The closest block holding `block` whose content is its trigger (its stand-in has clickContent:
-// a DropdownMenu), or null.
+// a DropdownMenu), or null. A Modal, Drawer or ConfirmModal draws its content in a portal outside
+// the blocks around it, so a click inside one never reaches a trigger further out.
 function findContentTrigger({ actor, block }) {
   const { parents } = collectBlockParents({ context: actor.page.context });
   let current = parents.get(block.id);
   while (current) {
     if (BLOCK_STAND_INS[current.type]?.clickContent) {
       return current;
+    }
+    if (POPUP_BLOCK_TYPES.has(current.type)) {
+      return null;
     }
     current = parents.get(current.id);
   }

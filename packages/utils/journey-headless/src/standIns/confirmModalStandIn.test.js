@@ -170,3 +170,29 @@ test('ConfirmModal with a disabled ok or cancel button refuses the click', async
   );
   expect(readLog(cancel.log)).not.toContainEqual(['onCancel']);
 });
+
+test('ConfirmModal content starts again on each open: a dropdown in it drops its selection', async () => {
+  const page = confirmPage();
+  page.blocks[1].blocks.push({
+    id: 'menu',
+    type: 'DropdownMenu',
+    properties: { selectable: true, links: [{ id: 'item' }] },
+    events: { onSelect: [record('onSelect')] },
+  });
+  const { log, result } = await runTestJourney({
+    pages: [page],
+    steps: [
+      { click: 'open' },
+      { click: { blockId: 'menu', control: 'item' } },
+      { click: { blockId: 'confirm', control: 'ok' } },
+      { click: 'open' },
+      { click: { blockId: 'menu', control: 'item' } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  // The menu kept its selection until the dialog closed and unmounted it, so the item selects again.
+  expect(readLog(log).filter(([name]) => name === 'onSelect')).toEqual([
+    ['onSelect', { key: 'item', selectedKeys: ['item'] }],
+    ['onSelect', { key: 'item', selectedKeys: ['item'] }],
+  ]);
+});

@@ -124,11 +124,18 @@ function clickOwnTrigger({ actor, block, state, claimed = false }) {
 // A plain click on the block lands on the first control in its content (findContentControl), as
 // the browser runner's does: that control fires its onClick, then the click reaches the trigger,
 // which the control's onClick may have handled. A disabled control takes no click, so the
-// browser's step fails.
+// browser's step fails. An input there changes its value on the click, which only a browser does.
 async function clickBlock({ actor, block, state }) {
   const control = findContentControl({ actor, block });
   if (control === null) {
     await clickOwnTrigger({ actor, block, state });
+    return;
+  }
+  const { blockMetas } = actor.page.context._internal.lowdefy._internal;
+  if (blockMetas[control.type]?.category === 'input') {
+    actor.browserOnly.push(
+      `A click on ${describeBlock(block)} lands on input "${control.blockId}" (${control.type}) in its content, which a browser clicks: the step runs in a browser.`
+    );
     return;
   }
   if (control.eval.properties?.disabled === true) {

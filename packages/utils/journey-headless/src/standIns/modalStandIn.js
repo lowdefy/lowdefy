@@ -32,7 +32,7 @@ function setModalOpen({ actor, block, open }) {
   if (!actor.setOpen({ block, open })) {
     return;
   }
-  if (!open && destroysContentOnHidden(block)) {
+  if (!open && destroysContentOnHidden({ block })) {
     unmountContent({ actor, block });
   }
   actor.track(

@@ -16,7 +16,7 @@
 
 // Whether antd unmounts a Modal's or Drawer's content when it closes: destroyOnHidden drops it once
 // it is hidden, unless forceRender keeps it drawn (rc-dialog's DialogWrap, rc-drawer's Drawer).
-function destroysContentOnHidden(block) {
+function destroysContentOnHidden({ block }) {
   const properties = block.eval.properties ?? {};
   return properties.destroyOnHidden === true && properties.forceRender !== true;
 }

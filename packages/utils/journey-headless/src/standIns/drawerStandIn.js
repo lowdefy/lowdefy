@@ -48,7 +48,7 @@ async function closeDrawer({ actor, block }) {
   if (!actor.setOpen({ block, open: false })) {
     return;
   }
-  if (destroysContentOnHidden(block)) {
+  if (destroysContentOnHidden({ block })) {
     unmountContent({ actor, block });
   }
   fireEvent({ actor, block, name: 'afterOpenChange', event: { drawerOpen: false, open: false } });

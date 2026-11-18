@@ -310,3 +310,13 @@ test('Drawer with destroyOnHidden mounts its content again on each open', async 
     ['onOpenChange', { open: true }],
   ]);
 });
+
+test('Modal with destroyOnHidden closed from inside a closed hover dropdown: the dropdown is gone', async () => {
+  // The click reaches the dropdown's trigger, but the close unmounts it before it can open.
+  const { log, result } = await runTestJourney({
+    pages: [remountPage({ properties: { destroyOnHidden: true } })],
+    steps: [{ click: 'open' }, { click: 'close' }, { expect: { hidden: 'inside' } }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['onMount']]);
+});
