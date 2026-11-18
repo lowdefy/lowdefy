@@ -95,6 +95,7 @@ async function createBuildHost({ app, data, stubs, user }) {
         user: caller ?? user,
       }),
     close: () => calls.close(),
+    connections: calls.connections,
     dataSetName: calls.dataSetName,
     dataSession: calls.dataSession,
     errorSink: createErrorSink(),

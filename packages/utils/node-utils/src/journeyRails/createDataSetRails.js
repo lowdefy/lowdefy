@@ -15,8 +15,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { normaliseBlockId } from '@lowdefy/node-utils';
 
+import normaliseBlockId from '../journeyGrammar/normaliseBlockId.js';
 import findExternalBlocks from './findExternalBlocks.js';
 import RAILED_STEPS from './railedSteps.js';
 
@@ -48,14 +48,18 @@ function describeConnection(connection) {
 // fill, a select or a press, see railedSteps) whose events reach a connection whose type declares
 // meta.dataSet 'external', declares nothing, or has no artifact would reach a real service or be
 // refused by the gate. Declarations are read from connections, the plugin connection map the
-// gate reads. refusal({ pageId, blockId, step }) says why such a step is refused, in that step's
-// words, or null when the block may be acted on. Each page's list is read from the build once
-// per run. (Auth-engine actions are a runtime rail: see checkAuthActionsRan.)
-function createDataSetRails({ buildDirectory, connections }) {
+// gate reads, and the build through readArtifact(name), a build artifact by its path in the build
+// ("pages/home.json"), deserialized, or null when the build has none. Both journey runners check
+// a step against it before it acts: the browser's (checkStepRails in @lowdefy/server-dev) and the
+// headless one (@lowdefy/journey-headless). refusal({ pageId, blockId, step }) says why such a
+// step is refused, in that step's words, or null when the block may be acted on. Each page's list
+// is read from the build once per run. (Auth-engine actions are a runtime rail: see
+// checkAuthActionsRan in @lowdefy/server-dev.)
+function createDataSetRails({ readArtifact, connections }) {
   const pages = new Map();
   function readPage(pageId) {
     if (!pages.has(pageId)) {
-      pages.set(pageId, findExternalBlocks({ buildDirectory, pageId, connections }).blocks);
+      pages.set(pageId, findExternalBlocks({ readArtifact, pageId, connections }).blocks);
     }
     return pages.get(pageId);
   }

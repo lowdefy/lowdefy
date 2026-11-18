@@ -15,8 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
-
-import readRoutineSteps from './readRoutineSteps.js';
+import { readRoutineSteps } from '@lowdefy/node-utils';
 
 // A request writes when its type declares meta.checkWrite: true. An endpoint
 // writes when a step of its routine has such a type, or when an endpoint it

@@ -88,6 +88,11 @@ import findStepNeedingPage from './journeyGrammar/findStepNeedingPage.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
 import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
+import createDataSetRails from './journeyRails/createDataSetRails.js';
+import isRoutineStep from './journeyRails/isRoutineStep.js';
+import pageBlocks from './journeyRails/pageBlocks.js';
+import RAILED_STEPS from './journeyRails/railedSteps.js';
+import readRoutineSteps from './journeyRails/readRoutineSteps.js';
 import normaliseJourneySteps from './journeyGrammar/normaliseJourneySteps.js';
 import journeyStepSchema, { JOURNEY_STEP_SCHEMAS } from './journeyGrammar/journeyStepSchema.js';
 import journeyStubSchema from './journeyGrammar/journeyStubSchema.js';
@@ -201,6 +206,11 @@ export {
   markCredential,
   matchPagePath,
   normaliseBlockId,
+  createDataSetRails,
+  isRoutineStep,
+  pageBlocks,
+  RAILED_STEPS,
+  readRoutineSteps,
   normaliseJourneySteps,
   normaliseClickText,
   parseIpRange,

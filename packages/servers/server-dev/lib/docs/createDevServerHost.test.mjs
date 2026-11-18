@@ -44,6 +44,7 @@ vi.doMock('@lowdefy/journey-headless', () => ({
 vi.doMock('@lowdefy/test-utils/dataSets', () => ({ findSessionDocuments: vi.fn() }));
 vi.doMock('../server/jitPageBuilder.js', () => ({ default: vi.fn() }));
 vi.doMock('./readBuildArtifact.js', () => ({ default: vi.fn() }));
+vi.doMock('./readConnectionPlugins.js', () => ({ default: vi.fn(async () => ({})) }));
 vi.doMock('../server/auth/resolveHeadlessUser.js', () => ({ default: vi.fn() }));
 
 const { default: createDevServerHost } = await import('./createDevServerHost.js');

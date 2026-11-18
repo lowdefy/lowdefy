@@ -21,24 +21,32 @@ import fireEvent from './fireEvent.js';
 import isInsideBlock from './isInsideBlock.js';
 
 // The open state of a dropdown block (DropdownButton, DropdownMenu), which antd's Dropdown keeps
-// and reports through onOpenChange { open }. state.open starts closed on every page.
+// and reports through onOpenChange { open }. state.open starts closed on every page. A change that
+// a click inside the block made, which a block on the way handled (claimed), fires nothing: the
+// engine skips the dropdown's onOpenChange for that click (isClickClaimed), though antd opens or
+// closes it.
 
-function openDropdown({ actor, block, state }) {
+function openDropdown({ actor, block, state, claimed = false }) {
   if (state.open === true) {
     return Promise.resolve();
   }
   state.open = true;
+  if (claimed) {
+    return Promise.resolve();
+  }
   return fireEvent({ actor, block, name: 'onOpenChange', event: { open: true } });
 }
 
 // onClosed runs once the dropdown has closed: a DropdownMenu with destroyOnClose drops the
 // selection its menu kept.
-function closeDropdown({ actor, block, state, onClosed }) {
+function closeDropdown({ actor, block, state, onClosed, claimed = false }) {
   if (state.open !== true) {
     return;
   }
   state.open = false;
-  fireEvent({ actor, block, name: 'onOpenChange', event: { open: false } });
+  if (!claimed) {
+    fireEvent({ actor, block, name: 'onOpenChange', event: { open: false } });
+  }
   onClosed?.();
 }
 
@@ -69,15 +77,43 @@ function leaveDropdown({ actor, block, state, targetBlock, trigger, onClosed }) 
 
 // A plain click on a dropdown's trigger, as rc-trigger answers it: a click dropdown toggles, a
 // hover dropdown opens as the mouse reaches it and stays open, and a contextMenu dropdown opens
-// only on a right click, so a left click does nothing.
-function clickTrigger({ actor, block, state, trigger, onClosed }) {
+// only on a right click, so a left click does nothing. claimed: a block inside the trigger handled
+// the click, which skips a click dropdown's onOpenChange; a hover dropdown opens on its
+// mouse-enter delay, outside the click, so it fires. Resolves once an open's onOpenChange has
+// finished.
+function clickTrigger({ actor, block, state, trigger, onClosed, claimed = false }) {
   if (trigger === 'click' && state.open === true) {
-    closeDropdown({ actor, block, state, onClosed });
-    return;
+    closeDropdown({ actor, block, state, onClosed, claimed });
+    return Promise.resolve();
   }
-  if (trigger === 'click' || trigger === 'hover') {
-    openDropdown({ actor, block, state });
+  if (trigger === 'click') {
+    return openDropdown({ actor, block, state, claimed });
   }
+  if (trigger === 'hover') {
+    return openDropdown({ actor, block, state });
+  }
+  return Promise.resolve();
 }
 
-export { clickTrigger, closeDropdown, leaveDropdown, openDropdown, refuseDisabled };
+// An open step on a dropdown that is already open shows no popup the browser runner has not seen
+// already: hovering a hover dropdown opens nothing more, and clicking a click dropdown closes it.
+// The browser's step fails, so this one does, with its message.
+function refuseOpenAgain({ block, state }) {
+  if (state.open !== true) {
+    return;
+  }
+  const description = `block "${block.blockId}"`;
+  throw new HeadlessStepError(`Opening ${description} showed no dropdown or popup.`, {
+    actual: `${describeBlock(block)} was open already`,
+    expected: `a popup to open from ${description}`,
+  });
+}
+
+export {
+  clickTrigger,
+  closeDropdown,
+  leaveDropdown,
+  openDropdown,
+  refuseDisabled,
+  refuseOpenAgain,
+};

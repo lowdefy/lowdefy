@@ -16,7 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
-import isRoutineStep from '../server/isRoutineStep.js';
+import isRoutineStep from './isRoutineStep.js';
 
 // Every step of an endpoint routine, at any depth: steps sit in arrays, and
 // control objects (`:if`, `:try`, `:parallel`, ...) hold more arrays of steps

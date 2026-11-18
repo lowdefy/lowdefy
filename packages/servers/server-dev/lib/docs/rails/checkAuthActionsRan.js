@@ -15,11 +15,11 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { RAILED_STEPS } from '@lowdefy/node-utils';
 
 import JourneyStepError from '../JourneyStepError.js';
 import authEngineMethods from './authEngineMethods.js';
 import installAuthActionRecorder from './installAuthActionRecorder.js';
-import RAILED_STEPS from './railedSteps.js';
 import readAuthActionRecorder from './readAuthActionRecorder.js';
 
 const RECORDER_KEY = '__lowdefyAuthActions';

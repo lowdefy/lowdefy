@@ -14,17 +14,11 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { serializer } from '@lowdefy/helpers';
-
-// A build artifact, deserialized, or null when the build wrote none.
-function readBuiltArtifact({ buildDirectory, name }) {
-  const filePath = path.join(buildDirectory, name);
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-  return serializer.deserialize(JSON.parse(fs.readFileSync(filePath, 'utf8')));
+// Whether antd unmounts a Modal's or Drawer's content when it closes: destroyOnHidden drops it once
+// it is hidden, unless forceRender keeps it drawn (rc-dialog's DialogWrap, rc-drawer's Drawer).
+function destroysContentOnHidden({ block }) {
+  const properties = block.eval.properties ?? {};
+  return properties.destroyOnHidden === true && properties.forceRender !== true;
 }
 
-export default readBuiltArtifact;
+export default destroysContentOnHidden;

@@ -22,10 +22,14 @@ import runHeadlessJourney from '../runHeadlessJourney.js';
 
 // A small headless app for unit tests: pages written as a person writes them (blocks, events as
 // action lists), turned into the shape the build writes (as blocks-native's test buildPage does),
-// run by runHeadlessJourney on a host with no server and no data. Its actions:
+// run by runHeadlessJourney on a host with no server. A run with `dataSet` ({ name, connections,
+// artifacts }) is a data-set journey on data set `name`: connections is the connection plugin
+// map, and artifacts the build artifacts beside the pages (requests, connections, endpoints), by
+// their path in the build. Its actions:
 // - Record: appends { blockId, name: params, event } to the run's log, the event the action ran
 //   for, so a test reads which events fired, in order, with their payloads.
 // - Refuse: fails the event with a UserError, an expected outcome (success: false).
+// - Request: appends { blockId, name: 'request:<requestId>' } to the log, and sends nothing.
 // - CallMethod and SetState, as actions-core's.
 // Its one operator is _state, as operators-js reads state with a path.
 
@@ -37,6 +41,7 @@ const BLOCK_METAS = {
   antd_DropdownMenu: { category: 'container' },
   Box: { category: 'container' },
   Button: { category: 'display' },
+  ColorSelector: { category: 'input', valueType: 'string' },
   ConfirmModal: { category: 'container' },
   Drawer: { category: 'container' },
   DropdownButton: { category: 'display' },
@@ -97,7 +102,7 @@ function buildPage(pageConfig) {
 
 // Runs `steps` on the first of `pages`, with the root config's `menus`. Resolves
 // { result, log }: the journey's result and the Record log.
-async function runTestJourney({ menus = [], pages, steps, stepTimeout = 300 }) {
+async function runTestJourney({ dataSet, menus = [], pages, steps, stepTimeout = 300 }) {
   const log = [];
   const built = Object.fromEntries(pages.map((page) => [page.id, buildPage(page)]));
   const rootConfig = {
@@ -110,8 +115,9 @@ async function runTestJourney({ menus = [], pages, steps, stepTimeout = 300 }) {
       throw new Error('The test app has no requests.');
     },
     close: () => undefined,
+    connections: dataSet?.connections ?? {},
     dataSession: null,
-    dataSetName: null,
+    dataSetName: dataSet?.name ?? null,
     errorSink: createErrorSink(),
     findDocuments: () => [],
     loadClientPlugins: async () => ({
@@ -123,13 +129,22 @@ async function runTestJourney({ menus = [], pages, steps, stepTimeout = 300 }) {
         Refuse: () => {
           throw new UserError('Refused.');
         },
+        Request: ({ methods, params }) => {
+          log.push({ blockId: methods.getBlockId(), name: `request:${params}` });
+        },
         SetState: ({ methods, params }) => methods.setState(params),
       },
       blockMetas: BLOCK_METAS,
       jsMap: {},
       operators: { _state: ({ params, state }) => get(state, params) },
     }),
-    readArtifact: () => null,
+    readArtifact: (name) => {
+      const pageId = name.match(/^pages\/([^/]+)\.json$/)?.[1];
+      if (!type.isUndefined(pageId) && Object.hasOwn(built, pageId)) {
+        return built[pageId];
+      }
+      return dataSet?.artifacts?.[name] ?? null;
+    },
     readPageConfig: async ({ pageId, path }) => {
       const id = pageId ?? path;
       if (!Object.hasOwn(built, id)) {

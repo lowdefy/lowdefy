@@ -29,13 +29,12 @@ import {
   findUnfiredFailGate,
   HeadlessStepError,
 } from '@lowdefy/journey-headless';
-import { ANSWER_STEP_KEYS, getStepKey } from '@lowdefy/node-utils';
+import { ANSWER_STEP_KEYS, getStepKey, RAILED_STEPS } from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
 import checkPressRails from './rails/checkPressRails.js';
 import checkStepRails from './rails/checkStepRails.js';
-import RAILED_STEPS from './rails/railedSteps.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';

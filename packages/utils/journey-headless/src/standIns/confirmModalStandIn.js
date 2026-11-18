@@ -14,13 +14,12 @@
   limitations under the License.
 */
 
-import collectBlockParents from '../collectBlockParents.js';
 import HeadlessStepError from '../HeadlessStepError.js';
 import describeBlock from './describeBlock.js';
 import fireEvent from './fireEvent.js';
 import findOneControl from './findOneControl.js';
-import isInsideBlock from './isInsideBlock.js';
 import readControlKey from './readControlKey.js';
+import unmountContent from './unmountContent.js';
 
 // What blocks-antd's ConfirmModal does (ConfirmModal.js): its open({ status }) method fires onOpen
 // and opens an antd modal.confirm dialog of that status (from args, else properties.status, else
@@ -42,14 +41,6 @@ function registerMethods({ actor, block, state }) {
     state.dialogs = [...(state.dialogs ?? []), { status }];
     actor.setOpen({ block, open: true });
   });
-}
-
-// A closed dialog unmounts its content, so the next open mounts it again and fires its onMount.
-function unmountContent({ actor, block }) {
-  const { blocks, parents } = collectBlockParents({ context: actor.page.context });
-  blocks
-    .filter((content) => isInsideBlock({ block: content, container: block, parents }))
-    .forEach((content) => actor.page.mounted.delete(content.id));
 }
 
 async function click({ actor, block, state, target }) {
@@ -81,6 +72,7 @@ async function click({ actor, block, state, target }) {
     return;
   }
   state.dialogs = dialogs.filter((open) => open !== dialog);
+  // A closed dialog unmounts its content, so the next open mounts it again.
   if (state.dialogs.length === 0) {
     actor.setOpen({ block, open: false });
     unmountContent({ actor, block });

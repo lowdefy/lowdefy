@@ -34,6 +34,7 @@ import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 import buildPageIfNeeded from '../server/jitPageBuilder.js';
 import createInProcessRequest from './createInProcessRequest.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import readConnectionPlugins from './readConnectionPlugins.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
@@ -370,6 +371,7 @@ async function createDevServerHost({
     call,
     // The data session belongs to the journey run, which closes it (runJourneyHeadless).
     close: async () => {},
+    connections: await readConnectionPlugins(),
     dataSetName: dataSet?.name ?? null,
     dataSession: session?.session ?? null,
     errorSink: createErrorSink(),

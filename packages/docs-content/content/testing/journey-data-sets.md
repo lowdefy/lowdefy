@@ -289,6 +289,8 @@ A data set journey checks every step that acts on a block and can fire its event
 
 - A click that runs an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time. Unlike the connection check, this one is made while the click runs: the step fails only if the action executes, and the message names the block and the action (`Block "logout_button" ran the auth action Logout, which a data-set journey cannot run: ...`). A click whose auth action is skipped works, so you can test the paths that stop before it: a `Validate` that throws on an empty form, an endpoint that refuses a duplicate, an action with a `skip:` condition that is true.
 
+Headless runs (`lowdefy test --headless`) refuse the same steps before they act. A headless `press` is Enter in the input filled last, and checks that input. A headless run stops at an auth action instead, and reports that the journey needs a browser.
+
 The block is the one the step acts on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. A `select` checks the block of the option it picks, and a `press` checks every block it can fire: the blocks around the focused element (an open modal or drawer included) and each block with a matching `shortcut`. Request and endpoint ids computed by operators are not followed by the connection check. Journeys without `data:` act on anything. Cover such controls with a journey that runs off data sets, against a test database.
 
 ## Requests to outside services are sunk

@@ -15,10 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { RAILED_STEPS } from '@lowdefy/node-utils';
 
 import JourneyStepError from '../JourneyStepError.js';
 import { armAuthActionRecorder } from './checkAuthActionsRan.js';
-import RAILED_STEPS from './railedSteps.js';
 
 // The Lowdefy block a step acts on. A `control` target is a control its block draws, often
 // in a popup or modal footer outside every #bl- wrapper, and a `rowKey` target is a row of its

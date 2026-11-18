@@ -22,6 +22,7 @@ import {
   leaveDropdown,
   openDropdown,
   refuseDisabled,
+  refuseOpenAgain,
 } from './dropdown.js';
 import fireEvent from './fireEvent.js';
 import findOneControl from './findOneControl.js';
@@ -73,6 +74,7 @@ function clickBlock({ actor, block, state }) {
 
 function open({ actor, block, state }) {
   refuseDisabled({ block });
+  refuseOpenAgain({ block, state });
   openDropdown({ actor, block, state });
 }
 
