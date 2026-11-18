@@ -118,7 +118,7 @@ const lifecycleTools = [
           minimum: 1,
           maximum: 3,
           description:
-            'Browser journeys in flight at once. Journeys with no data set, or marked `serial: true`, run alone after the rest. Default 1, or LOWDEFY_JOURNEY_CONCURRENCY. One at a time with repeat above 1 or while memory is short; refused with headless. At 2 or more, a screenshot or state inspection from another session can wait several journeys for a browser slot.',
+            "Browser journeys at once on data sets. Default 1. Refused with headless. Above 1, other sessions' screenshots can wait for a browser.",
         },
         usageWindow: {
           type: 'string',
