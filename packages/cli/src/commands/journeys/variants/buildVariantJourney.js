@@ -18,11 +18,12 @@ import { type } from '@lowdefy/helpers';
 
 // A variant as a journey of its own: the original's settings, with the
 // user or data set the variant runs as instead (`overrides`), named
-// `<original> — <kind>: <detail>`, with `variant` naming where it came from.
+// `<original> — <kind>: <detail>`, with `variant` naming where it came from. A
+// variant of a serial journey depends on the same outside things, so it stays serial.
 function buildVariantJourney({ journey, variant }) {
   const result = { name: `${journey.name} — ${variant.kind}: ${variant.detail}` };
   const settings = { ...journey, ...variant.overrides };
-  ['pageId', 'pathParams', 'user', 'urlQuery', 'timeout', 'data'].forEach((key) => {
+  ['pageId', 'pathParams', 'user', 'urlQuery', 'timeout', 'data', 'serial'].forEach((key) => {
     if (!type.isUndefined(settings[key])) {
       result[key] = settings[key];
     }

@@ -613,3 +613,76 @@ test('validateJourney accepts a case table and validates each run after its row 
     message: 'Journey case "bad": Journey "pageId" should be a string.',
   });
 });
+
+test.each([true, false])('journeySchema accepts serial: %j', (serial) => {
+  expect(validateJourney({ journey: { ...minimalJourney, serial } })).toEqual({ valid: true });
+});
+
+test('journeySchema refuses a serial flag that is not a boolean, naming the key', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, serial: 'yes' } })).toEqual({
+    valid: false,
+    message: 'Journey "serial" should be true or false.',
+  });
+});
+
+test('journeySchema refuses an unknown top-level key, naming it and listing the known keys', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, seriel: true } })).toEqual({
+    valid: false,
+    message:
+      'Journey has an unknown key "seriel". Keys are: name, description, pageId, data, user, pathParams, urlQuery, tags, variant, timeout, deprecated, serial, evidence, cases, stubs, steps.',
+  });
+});
+
+test('journeySchema names every unknown top-level key', () => {
+  const result = validateJourney({ journey: { ...minimalJourney, seriel: true, page: 'form' } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain('Journey has an unknown key "seriel", "page".');
+});
+
+test('journeySchema accepts every root key it lists', () => {
+  const journey = {
+    name: 'every key',
+    description: 'Uses every root key the schema lists.',
+    pageId: 'orders',
+    data: 'orders',
+    user: 'admin',
+    pathParams: { id: 'o1' },
+    urlQuery: { status: 'open' },
+    tags: ['smoke'],
+    variant: { of: 'opens an order', kind: 'double-submit', detail: 'double click "save"' },
+    timeout: 5000,
+    deprecated: false,
+    serial: true,
+    evidence: { mutation: { killed: 1, total: 2 } },
+    stubs: [{ requestId: 'save', fail: 'Down' }],
+    steps: [{ click: 'save' }],
+  };
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+  expect(
+    validateJourney({
+      journey: {
+        ...journey,
+        user: { _case: 'user' },
+        cases: [
+          { name: 'admin', user: 'admin' },
+          { name: 'member', user: 'member' },
+        ],
+      },
+    })
+  ).toEqual({ valid: true });
+  expect(Object.keys(journeySchema.properties).sort()).toEqual(
+    [...Object.keys(journey), 'cases'].sort()
+  );
+});
+
+test('a case row cannot bring in an unknown root key', () => {
+  const result = validateJourney({
+    journey: {
+      ...minimalJourney,
+      cases: [{ name: 'one', id: 'a' }],
+      seriel: true,
+    },
+  });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain('Journey has an unknown key "seriel"');
+});
