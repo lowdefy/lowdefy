@@ -309,7 +309,7 @@ test('targetFromElementsChain describes a marked menu item in a body popup as it
   });
 });
 
-function gridCellButtonChain(rowKey) {
+function gridCellButtonChain(rowKey, rowIndex = '1') {
   return chain(
     entry('span', { text: 'Pay' }),
     entry('button', {
@@ -323,7 +323,7 @@ function gridCellButtonChain(rowKey) {
     entry('div', { classes: ['ag-cell'], attributes: { 'attr__col-id': 'actions' } }),
     entry('div', {
       classes: ['ag-row'],
-      attributes: { 'attr__row-index': '1', 'attr__row-id': rowKey },
+      attributes: { 'attr__row-index': rowIndex, 'attr__row-id': rowKey },
     }),
     wrapper('invoices')
   );
@@ -346,6 +346,16 @@ test('targetFromElementsChain describes a cell button in a generated-key row by 
     ...EMPTY,
     block_id: 'invoices',
     row: 1,
+    column: 'actions',
+    text: 'Pay',
+    block_ids: ['invoices'],
+  });
+});
+
+test('targetFromElementsChain describes a cell button in a pinned row by text, with no row key', () => {
+  expect(targetFromElementsChain(gridCellButtonChain('t-0', 't-0'))).toEqual({
+    ...EMPTY,
+    block_id: 'invoices',
     column: 'actions',
     text: 'Pay',
     block_ids: ['invoices'],
