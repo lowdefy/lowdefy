@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["is an entry point"],
+      "errorContains": [
+        "MCP endpoint \"open_task\" view is an entry point, but its \"payloadSchema\" has required properties.",
+        "lowdefy.yaml:"
+      ]
+    }
+  ]
+}

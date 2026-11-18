@@ -264,8 +264,35 @@ test('a bearer host sends its token on requests and endpoint calls', async () =>
   ]);
 });
 
-test('a bearer host sends the build id on page requests and none on endpoint calls', async () => {
+// A native shell: a bearer host whose pages outlive a server build.
+function createShellHost(token) {
+  return { ...createBearerHost(token), callsEndpointsAcrossBuilds: true };
+}
+
+test('a bearer host that is not a shell sends the build id on page requests and endpoint calls', async () => {
   const host = createBearerHost('session.sig');
+  const { lowdefy } = createCore({ host });
+  await lowdefy._internal.callRequest({ pageId: 'home', requestId: 'list', payload: {} });
+  await lowdefy._internal.callAPI({ endpointId: 'save', payload: {} });
+  expect(host.fetch.mock.calls[0][1].headers['x-lowdefy-build']).toBe('build-1');
+  expect(host.fetch.mock.calls[1][1].headers['x-lowdefy-build']).toBe('build-1');
+});
+
+test('a bearer host that is not a shell has an endpoint call from an earlier build refused', async () => {
+  const host = createBearerHost('session.sig');
+  host.fetch.mockResolvedValue(
+    response({ status: 409, body: { message: 'Build changed.', buildId: 'build-2' } })
+  );
+  const { lowdefy } = createCore({ host });
+  const settled = vi.fn();
+  lowdefy._internal.callAPI({ endpointId: 'save', payload: {} }).then(settled, settled);
+  await new Promise((resolve) => setTimeout(resolve, 20));
+  expect(host.onBuildChanged).toHaveBeenCalledWith({ serverBuildId: 'build-2' });
+  expect(settled).not.toHaveBeenCalled();
+});
+
+test('a shell host sends the build id on page requests and none on endpoint calls', async () => {
+  const host = createShellHost('session.sig');
   const { lowdefy } = createCore({ host });
   await lowdefy._internal.callRequest({ pageId: 'home', requestId: 'list', payload: {} });
   await lowdefy._internal.callAPI({ endpointId: 'save', payload: {} });
@@ -273,8 +300,8 @@ test('a bearer host sends the build id on page requests and none on endpoint cal
   expect(host.fetch.mock.calls[1][1].headers).not.toHaveProperty('x-lowdefy-build');
 });
 
-test('a bearer host never has an endpoint call refused for a server build change', async () => {
-  const host = createBearerHost('session.sig');
+test('a shell host never has an endpoint call refused for a server build change', async () => {
+  const host = createShellHost('session.sig');
   host.fetch.mockResolvedValue(response({ body: { saved: true } }));
   const { lowdefy } = createCore({ host });
   await expect(lowdefy._internal.callAPI({ endpointId: 'save', payload: {} })).resolves.toEqual({

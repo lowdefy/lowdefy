@@ -24,6 +24,7 @@ import {
   placeholder,
   inputTitle,
   autoFocus,
+  autoOpen,
   allowClear,
   sizeSmallDefaultLarge,
 } from '../../schemas/inputProperties.js';
@@ -65,6 +66,7 @@ export default {
     properties: {
       allowClear: { ...allowClear, default: true },
       autoFocus,
+      autoOpen,
       bordered: {
         type: 'boolean',
         default: true,

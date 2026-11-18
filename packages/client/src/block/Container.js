@@ -59,6 +59,7 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
     >
       <Component
         methods={Object.assign(block.methods, {
+          fetchApi: lowdefy._internal.fetchApi,
           getAppStorageKey: lowdefy._internal.storage.appKey,
           getLocale: () => lowdefy.i18n?.active ?? lowdefy.i18n?.defaultLocale,
           getUserStorageKey: lowdefy._internal.storage.userKey,
@@ -67,6 +68,7 @@ const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
           translate: lowdefy._internal.translate,
           triggerEvent: block.triggerEvent,
         })}
+        apiBase={lowdefy.apiBase}
         basePath={lowdefy.basePath}
         blockId={block.blockId}
         classNames={classNames}

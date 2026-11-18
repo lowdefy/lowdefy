@@ -1,0 +1,66 @@
+# V6: _response Outside A View
+# ============================
+# Tests that _response is refused outside the pathParams and urlQuery of an
+# MCP endpoint view: in an endpoint routine and on a page. The view's own
+# _response builds.
+#
+# Expected errors:
+#   [Config Error] _response can only be used in the "pathParams" and "urlQuery" of an MCP endpoint "view". (twice)
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+  oauthProvider:
+    consentPage: consent
+
+api:
+  - id: open_task
+    type: Api
+    description: Open a task.
+    payloadSchema:
+      type: object
+      properties:
+        key:
+          type: string
+    routine:
+      - :return:
+          _response: key
+
+mcp:
+  endpoints:
+    - id: open_task
+      scope: mcp:read
+      view:
+        pageId: task
+        pathParams:
+          space:
+            _response: space.key
+          ref:
+            _payload: key
+
+pages:
+  - id: consent
+    type: Box
+    blocks:
+      - id: title
+        type: Title
+        properties:
+          content:
+            _response: title
+  - id: task
+    type: Box
+    path: '{space}/tasks/{ref}'

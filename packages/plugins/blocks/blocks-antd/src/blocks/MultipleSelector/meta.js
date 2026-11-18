@@ -21,6 +21,7 @@ import { data, html, valueKey, primaryKey } from '../../schemas/dataOptions.js';
 import {
   disabled,
   autoFocus,
+  autoOpen,
   bordered,
   allowClear,
   sizeSmallDefaultLarge,
@@ -88,6 +89,7 @@ export default {
         description: 'Whether the current search will be cleared on selecting an item.',
       },
       autoFocus,
+      autoOpen,
       bordered: {
         ...bordered,
         description:

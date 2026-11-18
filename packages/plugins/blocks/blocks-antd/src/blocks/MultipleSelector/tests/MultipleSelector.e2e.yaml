@@ -546,3 +546,32 @@ blocks:
       options:
         - A
         - B
+
+  # ============================================
+  # AUTO OPEN
+  # ============================================
+
+  # Shown by a click, as a field that swaps its value for the input does.
+  - id: multipleselector_show_auto_open
+    type: Button
+    properties:
+      title: Show auto open
+    events:
+      onClick:
+        - id: show_multipleselector_auto_open
+          type: SetState
+          params:
+            multipleselector_auto_open_shown: true
+
+  - id: multipleselector_auto_open
+    type: MultipleSelector
+    visible:
+      _eq:
+        - _state: multipleselector_auto_open_shown
+        - true
+    properties:
+      title: Auto Open
+      autoOpen: true
+      options:
+        - Apple
+        - Banana

@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import authorizeViewAgent from './authorizeViewAgent.js';
 import collectChatFiles from './collectChatFiles.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import prepareAgent from './prepareAgent.js';
@@ -44,6 +45,7 @@ async function callAgent(
   context.signal = undefined;
 
   logger.debug({ event: 'debug_agent', agentId, pageId });
+  await authorizeViewAgent(context, { agentId });
 
   const agentContext = {
     conversationId: conversationId ?? undefined,

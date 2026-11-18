@@ -51,9 +51,11 @@ import getHomeAndMenus from './routes/rootConfig/getHomeAndMenus.js';
 import getMobileRootConfig from './routes/mobile/getMobileRootConfig.js';
 import getPageConfig from './routes/page/getPageConfig.js';
 import getRootConfig from './routes/rootConfig/getRootConfig.js';
+import getViewHosts from './routes/mcp/getViewHosts.js';
 import isSameOriginRequest from './context/isSameOriginRequest.js';
 import isWebSocketOriginAllowed from './context/isWebSocketOriginAllowed.js';
 import logClientError from './routes/log/logClientError.js';
+import mintViewSession from './routes/auth/view/mintViewSession.js';
 import normalizeInjectedCaller from './context/normalizeInjectedCaller.js';
 import parseRequestBody from './context/parseRequestBody.js';
 import redactErrorResponse from './response/redactErrorResponse.js';
@@ -70,6 +72,9 @@ import runLinkEndpoint from './routes/endpoints/runLinkEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
 import sendDetachedRequest from './routes/endpoints/sendDetachedRequest.js';
+import darkModeScript from './html/darkModeScript.js';
+import layerOrderScript from './html/layerOrderScript.js';
+import logMcpViews from './routes/mcp/logMcpViews.js';
 
 export {
   addNonceToElements,
@@ -106,9 +111,11 @@ export {
   registerMcpResourceBinding,
   getPageConfig,
   getRootConfig,
+  getViewHosts,
   isSameOriginRequest,
   isWebSocketOriginAllowed,
   logClientError,
+  mintViewSession,
   normalizeInjectedCaller,
   parseRequestBody,
   redactErrorResponse,
@@ -124,4 +131,7 @@ export {
   runWebhookEndpoint,
   runScheduledEndpoint,
   sendDetachedRequest,
+  darkModeScript,
+  layerOrderScript,
+  logMcpViews,
 };

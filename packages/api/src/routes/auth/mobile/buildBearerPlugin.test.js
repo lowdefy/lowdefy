@@ -30,19 +30,28 @@ function ctxFor(headers) {
 }
 
 test('buildBearerPlugin is the bearer plugin requiring a signed token', () => {
-  const plugin = buildBearerPlugin();
+  const plugin = buildBearerPlugin({ sendTokenToNative: true });
   expect(plugin.id).toBe('bearer');
   expect(plugin.options).toEqual({ requireSignature: true });
   expect(plugin.hooks.before).toHaveLength(1);
 });
 
 test('buildBearerPlugin sends the session token header to a native request', () => {
-  const [hook] = buildBearerPlugin().hooks.after;
+  const [hook] = buildBearerPlugin({ sendTokenToNative: true }).hooks.after;
   expect(hook.matcher(ctxFor({}))).toBe(true);
 });
 
 test('buildBearerPlugin never sends the session token header to a browser', () => {
-  const [hook] = buildBearerPlugin().hooks.after;
+  const [hook] = buildBearerPlugin({ sendTokenToNative: true }).hooks.after;
   expect(hook.matcher(ctxFor({ origin: 'http://localhost' }))).toBe(false);
   expect(hook.matcher(ctxFor({ cookie: 'better-auth.session_token=tok.sig' }))).toBe(false);
+});
+
+test('buildBearerPlugin sends the session token header to nobody in an app with no mobile section', () => {
+  const plugin = buildBearerPlugin({ sendTokenToNative: false });
+  expect(plugin.options).toEqual({ requireSignature: true });
+  expect(plugin.hooks.before).toHaveLength(1);
+  const [hook] = plugin.hooks.after;
+  expect(hook.matcher(ctxFor({}))).toBe(false);
+  expect(hook.matcher(ctxFor({ origin: 'http://localhost' }))).toBe(false);
 });

@@ -18,7 +18,13 @@ import { createLink } from '@lowdefy/engine';
 import { ConfigError } from '@lowdefy/errors';
 
 import { createUrl } from './adapters/url.js';
+import showPopupBlocked from './showPopupBlocked.js';
 
+// In an MCP App view the window is the view host's (createViewHost): its
+// location is the view's address on the app's origin, and open and
+// location.assign ask the host to open the link in the browser. So a link to
+// a page navigates the view's router, and every other link leaves through the
+// host, with nothing here that knows it is in a view.
 function setupLink(lowdefy) {
   const { router } = lowdefy._internal;
   const { window } = lowdefy._internal.globals;
@@ -29,11 +35,7 @@ function setupLink(lowdefy) {
   const openNewTab = (target) => {
     const handle = window.open(target, '_blank');
     if (!handle) {
-      lowdefy._internal.displayMessage({
-        content: lowdefy._internal.translate('client.popupBlocked'),
-        status: 'info',
-        duration: 10,
-      });
+      showPopupBlocked({ lowdefy });
       return;
     }
     return handle.focus();

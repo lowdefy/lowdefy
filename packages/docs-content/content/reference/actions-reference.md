@@ -1,6 +1,6 @@
 # Actions
 
-Actions run in response to events — a button click, a page load, an input change. All 24 actions, grouped by purpose. See [Events and Actions](/events-and-actions) for how event chains work.
+Actions run in response to events — a button click, a page load, an input change. All 26 actions, grouped by purpose. See [Events and Actions](/events-and-actions) for how event chains work.
 
 State & validation
 

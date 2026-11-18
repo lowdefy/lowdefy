@@ -1735,6 +1735,11 @@
     },
     "configured": false,
     "hasPublicTool": false,
+    "views": {
+      "configured": false,
+      "pages": {},
+      "sources": []
+    },
     "~k": "5q"
   },
   "menus.json": {
@@ -7820,6 +7825,11 @@
               "default": false,
               "description": "Autofocus to the block on page load."
             },
+            "selectOnFocus": {
+              "type": "boolean",
+              "default": false,
+              "description": "Select the text when the input gets focus, autoFocus included, so typing replaces it."
+            },
             "bordered": {
               "type": "boolean",
               "default": true,
@@ -8649,6 +8659,28 @@
                   ],
                   "description": "Trigger action when the clear button is clicked."
                 },
+                "onEscape": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": {
+                    "description": "Trigger action when Escape is pressed while text input is focused.",
+                    "event": {
+                      "value": "The current input value."
+                    }
+                  }
+                },
                 "onFocus": {
                   "oneOf": [
                     {
@@ -9229,6 +9261,11 @@
               "type": "boolean",
               "default": false,
               "description": "Autofocus to the block on page load."
+            },
+            "selectOnFocus": {
+              "type": "boolean",
+              "default": false,
+              "description": "Select the text when the input gets focus, autoFocus included, so typing replaces it."
             },
             "changeOnWheel": {
               "type": "boolean",
@@ -10030,6 +10067,28 @@
                   ],
                   "description": {
                     "description": "Trigger action when number input is changed.",
+                    "event": {
+                      "value": "The current number value."
+                    }
+                  }
+                },
+                "onEscape": {
+                  "oneOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "object",
+                      "patternProperties": {
+                        "^_": {}
+                      },
+                      "additionalProperties": false,
+                      "minProperties": 1,
+                      "maxProperties": 1
+                    }
+                  ],
+                  "description": {
+                    "description": "Trigger actions when input is focused and Escape is pressed.",
                     "event": {
                       "value": "The current number value."
                     }

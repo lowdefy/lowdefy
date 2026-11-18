@@ -65,6 +65,9 @@ function sendDetachedRequest(context, { callContext, endpointId, payload, routin
           system: callContext.system === true,
           organizationId: callContext.boundOrganizationId ?? null,
           agent: routineContext.agent ?? null,
+          // A detached run of a view session is still that view session's: it is held to its
+          // grant's scopes as the dispatching run is.
+          viewSession: callContext.viewSession ?? null,
         },
         // The values this request marked with _credential, so the target's logs scrub them too:
         // the target runs as a new request with a scope of its own.
