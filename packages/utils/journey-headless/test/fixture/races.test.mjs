@@ -197,3 +197,18 @@ test('a release naming its hold by endpoint lets the call parked in that routine
   expect(result.passed).toBe(true);
   expect(host.dataSession.pauseGates).toEqual([]);
 });
+
+test('a release naming an endpoint the app has not fails the step, naming it', async () => {
+  const steps = raceJourney.steps.map((step) =>
+    step.release === 'claim_run'
+      ? { release: { requestId: 'claim_run', endpoint: 'approve_runs' } }
+      : step
+  );
+  const result = await run({ steps });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    step: { release: { requestId: 'claim_run', endpoint: 'approve_runs' } },
+    message: expect.stringContaining('The app has no endpoint "approve_runs".'),
+  });
+  expect(host.dataSession.pauseGates).toEqual([]);
+});
