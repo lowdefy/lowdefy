@@ -259,6 +259,23 @@ fixtureTest(
   }
 );
 
+// The third journey of tests/journeys/_headless/webhook.yaml: caught_webhook's routine catches a
+// database fault and answers 200. The dev server host marks the fault caught, so it fails no step.
+fixtureTest(
+  'a webhook whose routine catches a fault passes, headless on the dev server',
+  async () => {
+    const journey = readHeadlessJourney('webhook.yaml', 2);
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...journey, headless: true },
+    });
+    expect(status).toBe(200);
+    expect(body.failure).toBeUndefined();
+    expect(body.passed).toBe(true);
+    expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+  }
+);
+
 fixtureTest(
   'a fail gate that never fired fails the journey headless on the dev server',
   async () => {

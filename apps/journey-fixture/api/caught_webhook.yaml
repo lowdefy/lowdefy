@@ -1,0 +1,22 @@
+# A webhook whose routine catches a fault and answers (tests/journeys/_headless/webhook.yaml, its
+# third journey). The verify step is sent no raw body, so its request schema refuses it with a
+# ConfigError wherever it runs: a fault, not an expected outcome a :catch logs at debug. The :catch
+# handles it, so the webhook answers 200, and a headless journey judges it by that answer: the
+# fault is listed on the answer marked caught, and fails no step.
+id: caught_webhook
+type: Api
+webhook: true
+routine:
+  - ':try':
+      - id: verify_without_body
+        type: VerifyFixtureSignature
+        connectionId: fixture_signature
+        properties:
+          secret: fixture-secret
+          rawBody:
+            _payload: no_such_field
+    ':catch':
+      - ':log':
+          event: caught_webhook_fault
+  - ':return':
+      received: true
