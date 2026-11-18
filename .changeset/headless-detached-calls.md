@@ -3,6 +3,7 @@
 '@lowdefy/journey-headless': patch
 '@lowdefy/server-dev': patch
 '@lowdefy/test-utils': patch
+'lowdefy': patch
 ---
 
 feat(test-utils, journey-headless): The test host records a detached `CallApi` instead of failing it
@@ -13,3 +14,4 @@ On a production build (`lowdefy test --headless --build` and endpoint tests), a 
 - An endpoint test's answer lists them as `answer.detached`, `[{ endpointId, payload }]`.
 - A headless journey records each as a call to its target endpoint, on the person whose call made it, so `expect: { calls: { endpoint, count, payload } }` checks it. The dev server's headless host still sends the call for real and records it the same way.
 - Servers are unchanged: a detached call still needs `CRON_SECRET` and still fails without it. `@lowdefy/api` reads an optional `context.sendDetached`, which only the test hosts set, and exports the server's own dispatch as `sendDetachedRequest`.
+- The tenant call variant (`lowdefy journeys variants`) does not replay a recorded detached call: the page never sent it.

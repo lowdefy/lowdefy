@@ -35,8 +35,9 @@ function callAs({ call, caller, host, payload }) {
 // actor. A refusal or an error is the answer, not a failure of the step: expect.status and
 // expect.error read it from the answer this returns ({ description, status, error }). The call is
 // recorded on the caller, for expect.calls, with the detached calls its routine made after it
-// (recordDetachedCalls), and the server's faults go to the error sink (addServerFaults). A call a fail gate failed answers with the forced message (readForcedError),
-// not the generic one the client sees.
+// (recordDetachedCalls), and the server's faults go to the error sink (addServerFaults). A call a
+// fail gate failed answers with the forced message (readForcedError), not the generic one the
+// client sees.
 async function runHeadlessCall({ actors, host, step }) {
   const isCall = !type.isUndefined(step.call);
   const params = isCall ? step.call : step.request;
