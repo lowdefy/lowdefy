@@ -61,17 +61,15 @@ function listProcesses() {
     .map(([, pid, ppid, command]) => ({ pid: Number(pid), ppid: Number(ppid), command }));
 }
 
-// The renderers of the tagged browser: on Linux they hang off its zygote, not the browser itself.
+// The renderers of every tagged browser (one closed after a stall may still be exiting): on Linux
+// they hang off its zygote, not the browser itself.
 function killRenderers() {
   const processes = listProcesses();
-  const root = processes.find(
+  const roots = processes.filter(
     ({ command }) =>
       / --lowdefy-browser-tag=(\S+)/.exec(command)?.[1] === tag && !command.includes('--type=')
   );
-  if (root === undefined) {
-    return;
-  }
-  const tree = new Set([root.pid]);
+  const tree = new Set(roots.map(({ pid }) => pid));
   let grew = true;
   while (grew) {
     grew = false;
@@ -109,10 +107,12 @@ chromiumTest(
     // disconnect: either way the next try takes the browser getBrowser gives then. Under load
     // Chromium can also stall on a killed renderer until it exits a minute later; a try that
     // stalls closes its browser, which is that same disconnect sooner.
+    // Kept inside the test timeout, however many tries stall.
+    const deadline = Date.now() + 90000;
     let crash = null;
     let crashed = null;
     try {
-      for (let attempt = 0; attempt < 40 && crash === null; attempt += 1) {
+      while (crash === null && Date.now() < deadline) {
         const current = await getBrowser({ origin });
         const opening = openPage({ browser: current, origin });
         let timer;
@@ -128,7 +128,8 @@ chromiumTest(
           }
           opened.push(result.context);
         } catch (error) {
-          if (current.isConnected()) {
+          // Only the crash this test is after: another error of a killed renderer is no answer.
+          if (current.isConnected() && error.message.startsWith('The headless browser crashed')) {
             crash = error;
             crashed = current;
           }
