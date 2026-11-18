@@ -16,8 +16,9 @@
 
 // The elements in a Table html cell a click lands on instead of the cell: a link the browser
 // runner clicks first (journeyTargetSelectors.interactiveControl), and a data-event element, which
-// blocks-antd's isControlTarget keeps from the row and cell events.
-const CELL_CONTROL = 'a[href], [data-event]';
+// blocks-antd's isControlTarget keeps from the row and cell events. An <a data-page-id> is a link
+// too: HtmlComponent's link enhancer gives it its href after sanitising.
+const CELL_CONTROL = 'a[href], a[data-page-id], [data-event]';
 
 // A DOM to read cell html in, made on first use: jsdom takes a moment to load, and most journeys
 // click no html cell. DOMPurify sanitises the html as HtmlComponent does in the browser, so an

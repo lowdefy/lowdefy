@@ -362,6 +362,7 @@ test("Table html cell holding a link or data-event is the browser's", async () =
   const cells = [
     { template: '<a href="/people/{{ row._id }}">{{ value }}</a>' },
     { template: '<span data-event="onOpen">{{ value }}</span>' },
+    { template: '<a data-page-id="person">{{ value }}</a>' },
   ];
   for (const cell of cells) {
     const { log, result } = await runTestJourney({
