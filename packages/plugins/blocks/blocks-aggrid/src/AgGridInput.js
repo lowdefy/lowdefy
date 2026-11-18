@@ -33,7 +33,16 @@ if (process.env.NODE_ENV !== 'production') {
   enableDevValidations({ showOverlayOn: [] });
 }
 
-const AgGridInput = ({ components, events, loading, methods, properties, theme, value }) => {
+const AgGridInput = ({
+  blockId,
+  components,
+  events,
+  loading,
+  methods,
+  properties,
+  theme,
+  value,
+}) => {
   const {
     quickFilterValue,
     columnDefs,
@@ -52,7 +61,7 @@ const AgGridInput = ({ components, events, loading, methods, properties, theme, 
   const eventsRef = useRef(events);
   eventsRef.current = events;
 
-  const processedColDefs = useColDefs({ columnDefs, methods, components, gridRef });
+  const processedColDefs = useColDefs({ blockId, columnDefs, methods, components, gridRef });
 
   const getRowId = useCallback(
     (params) => {
