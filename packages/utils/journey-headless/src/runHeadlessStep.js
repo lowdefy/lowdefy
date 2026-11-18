@@ -97,7 +97,7 @@ async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout 
     case 'request':
       return runHeadlessCall({ actors, host, step });
     case 'webhook':
-      return runHeadlessWebhook({ host, step });
+      return runHeadlessWebhook({ actors, host, step });
     default:
       // The grammar admits nothing else; a step it gains is not passed unchecked.
       throw new Error(`The headless journey runner has no step "${key}".`);

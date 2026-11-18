@@ -17,9 +17,9 @@
 // Adds the faults of one server call to the error sink, where the runner's invariants read them
 // and fail the step. A fault a :catch of the routine handled (fault.caught, set by the host's
 // fault sink) is left out: the routine dealt with it and answered, so the journey judges the
-// answer. This is what lets a routine run where the build host cannot do what a server can: a
-// detached CallApi has no CRON_SECRET there and an auth step no auth engine, and a routine that
-// catches either still passes. A fault that escapes the routine has no :catch, and fails the step.
+// answer. This is what lets a routine run where the build host cannot do what a server can: an
+// auth step has no auth engine there, and a routine that catches the failure still passes. A fault
+// that escapes the routine has no :catch, and fails the step.
 function addServerFaults({ call, errorSink, faults }) {
   faults
     .filter((fault) => fault.caught !== true)

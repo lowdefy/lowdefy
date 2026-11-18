@@ -69,6 +69,7 @@ import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
 import runLinkEndpoint from './routes/endpoints/runLinkEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
+import sendDetachedRequest from './routes/endpoints/sendDetachedRequest.js';
 
 export {
   addNonceToElements,
@@ -122,4 +123,5 @@ export {
   runLinkEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,
+  sendDetachedRequest,
 };
