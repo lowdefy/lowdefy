@@ -33,7 +33,8 @@ import { ANSWER_STEP_KEYS, getStepKey } from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
-import checkClickRails from './rails/checkClickRails.js';
+import checkStepRails from './rails/checkStepRails.js';
+import RAILED_STEPS from './rails/railedSteps.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
@@ -631,27 +632,54 @@ async function unmarkPopups({ page }) {
     );
 }
 
+// The data-set rails of one step that acts on a block (see checkStepRails): checked once, before
+// the step first acts on the page. A `control` target is checked before its hover or open
+// reveals the control (its block is the target's own, so no element is needed), else on the
+// element the step acts on. blockId() is the block it checked, for checkAuthActionsRan.
+function createStepRails({ journey, page, target, step }) {
+  let checked = false;
+  let blockId = null;
+  return {
+    check: async (locator) => {
+      if (checked) return;
+      checked = true;
+      blockId = await checkStepRails({ journey, page, locator, target, step });
+    },
+    blockId: () => blockId,
+  };
+}
+
 // Opens the popup of the input the target names and waits until it shows, so
 // a screenshot or a `select`-less inspection sees the options. A block with no
 // popup trigger (a button) is clicked as `click` does; a block whose click
 // opens nothing fails the step, since `open` promises a popup.
-async function runOpen({ page, step, timeout }) {
+async function runOpen({ journey, page, step, timeout }) {
   const target = normaliseTarget(step.open);
+  const rails = createStepRails({ journey, page, target, step: 'open' });
   await markShowingPopups({ page });
   try {
     await actOnTarget({
       target,
       action: async () => {
-        const located = await resolveActionTarget({ page, target, timeout });
+        const located = await resolveActionTarget({
+          page,
+          target,
+          timeout,
+          beforeReveal: () => rails.check(null),
+        });
         const trigger = located.locator(POPUP_TRIGGER).first();
         // The input renders its trigger with the block (a lazy block once its
         // implementation has rendered); counted once either shows.
         await trigger.or(located).first().waitFor({ state: 'visible', timeout });
         await waitForLoadingBlocks({ page, timeout });
+        // Checked before the dropdown opens: opening it fires the block's onOpenChange.
         if ((await trigger.count()) > 0) {
+          await rails.check(trigger);
           await openDropdown({ page, target, trigger, timeout });
         } else {
-          await (await resolveClickLocator({ located, target, timeout })).click({ timeout });
+          const locator = await resolveClickLocator({ located, target, timeout });
+          await rails.check(locator);
+          await locator.click({ timeout });
         }
       },
     });
@@ -670,6 +698,7 @@ async function runOpen({ page, step, timeout }) {
   }
   // Popups animate in; a capture mid-animation is faded or offset.
   await page.waitForTimeout(250);
+  return { blockId: rails.blockId() };
 }
 
 // `count` clicks in quick succession through one Playwright click, as a
@@ -677,15 +706,7 @@ async function runOpen({ page, step, timeout }) {
 // double click is never turned into a second submit after the first settled.
 async function runClick({ journey, page, step, timeout }) {
   const { count = 1, ...target } = normaliseTarget(step.click);
-  let blockId = null;
-  // Checked once per click: before a control target's hover or open reveals the control (its
-  // block is the target's own, so no element is needed), else before the click.
-  let railsChecked = false;
-  const checkRails = async (locator) => {
-    if (railsChecked) return;
-    railsChecked = true;
-    blockId = await checkClickRails({ journey, page, locator, target });
-  };
+  const rails = createStepRails({ journey, page, target, step: 'click' });
   await actOnTarget({
     target,
     action: async () => {
@@ -693,14 +714,14 @@ async function runClick({ journey, page, step, timeout }) {
         page,
         target,
         timeout,
-        beforeReveal: () => checkRails(null),
+        beforeReveal: () => rails.check(null),
       });
       const locator = await resolveClickLocator({ located, target, timeout });
-      await checkRails(locator);
+      await rails.check(locator);
       await locator.click({ timeout, clickCount: count });
     },
   });
-  return { blockId };
+  return { blockId: rails.blockId() };
 }
 
 // Where a fill looks for the input. A block that renders its input in a portal (the Search
@@ -722,6 +743,7 @@ function fillScope({ page, target, located }) {
 // person types a one-time code from their inbox into the tab they started in.
 async function runFill({ journey, page, step, timeout }) {
   const { value: literal, fromEmail, ...target } = step.fill;
+  const rails = createStepRails({ journey, page, target, step: 'fill' });
   let value = literal;
   if (!type.isUndefined(fromEmail)) {
     value = await readJourneyEmailMatch({
@@ -747,12 +769,15 @@ async function runFill({ journey, page, step, timeout }) {
         throw await createNoInputError({ page, target, error });
       }
       if ((await input.count()) === 0 && (await colorTrigger.count()) > 0) {
+        await rails.check(colorTrigger);
         await fillColorPicker({ page, target, trigger: colorTrigger, value, timeout });
         return;
       }
+      await rails.check(input);
       await input.fill(String(value), { timeout });
     },
   });
+  return { blockId: rails.blockId() };
 }
 
 // The engine's type for a block and its `trigger` property (how its dropdown opens), or null
@@ -894,9 +919,10 @@ async function tickCheckboxOption({ options, target, text, timeout }) {
 // and the option with exactly `value` as text is clicked — Ant Design renders
 // options into a portal, so they are searched page-wide, restricted to visible
 // ones so the hidden accessibility list is never matched.
-async function runSelect({ page, step, timeout }) {
+async function runSelect({ journey, page, step, timeout }) {
   const { value, ...target } = step.select;
   const text = String(value);
+  const rails = createStepRails({ journey, page, target, step: 'select' });
   let scope;
   await actOnTarget({
     target,
@@ -906,6 +932,8 @@ async function runSelect({ page, step, timeout }) {
       // block; counted once it shows, so a late block does not fall through to
       // the dropdown.
       await scope.first().waitFor({ state: 'visible', timeout });
+      // Every way below picks an option in this block, firing its onChange.
+      await rails.check(scope.first());
     },
   });
   const native = scope.locator('select');
@@ -914,17 +942,17 @@ async function runSelect({ page, step, timeout }) {
       target,
       action: () => native.first().selectOption({ label: text }, { timeout }),
     });
-    return;
+    return { blockId: rails.blockId() };
   }
   const radioOptions = scope.locator(RADIO_OPTION);
   if ((await radioOptions.count()) > 0) {
     await selectRadioOption({ options: radioOptions, target, text, timeout });
-    return;
+    return { blockId: rails.blockId() };
   }
   const checkboxOptions = scope.locator(CHECKBOX_OPTION);
   if ((await checkboxOptions.count()) > 0) {
     await tickCheckboxOption({ options: checkboxOptions, target, text, timeout });
-    return;
+    return { blockId: rails.blockId() };
   }
   await actOnTarget({
     target,
@@ -958,6 +986,7 @@ async function runSelect({ page, step, timeout }) {
     .first()
     .waitFor({ state: 'hidden', timeout: Math.min(timeout, 1000) })
     .catch(() => {});
+  return { blockId: rails.blockId() };
 }
 
 // `Mod` in a chord resolves to Meta or Control from the platform the page
@@ -1460,14 +1489,11 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
     case 'click':
       return runClick({ journey, page, step, timeout });
     case 'open':
-      await runOpen({ page, step, timeout });
-      return;
+      return runOpen({ journey, page, step, timeout });
     case 'fill':
-      await runFill({ journey, page, step, timeout });
-      return;
+      return runFill({ journey, page, step, timeout });
     case 'select':
-      await runSelect({ page, step, timeout });
-      return;
+      return runSelect({ journey, page, step, timeout });
     case 'press':
       await runPress({ page, step, timeout });
       return;
@@ -1571,11 +1597,12 @@ async function runJourneySteps({ journey, steps }) {
           timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
         });
       }
-      if (getStepKey(step) === 'click') {
+      if (Object.hasOwn(RAILED_STEPS, getStepKey(step))) {
         await checkAuthActionsRan({
           journey,
           page: journey.actors.current().page,
           blockId: ran?.blockId,
+          step: getStepKey(step),
         });
       }
       await journey.actors.sampleRendered();

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { fixtureTest, postJourney } from './fixtureClient.mjs';
+import { fixtureTest, postBrowserJourney, postJourney } from './fixtureClient.mjs';
 import { expect } from 'vitest';
 
 // The data-set rails: on a journey with a data set, a click that would reach a
@@ -138,6 +138,88 @@ fixtureTest(
       'Block "rails_dropdown" reaches connection "rails_undeclared" (UndeclaredFixture, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.'
     );
     expect(result.state.rails_dropdown_opened ?? null).toBe(null);
+  }
+);
+
+// Open, fill and select act on a block and fire its events too (onOpenChange, onChange), so the
+// rails check them as they check a click, before they act. The headless runner has no data-set
+// rails yet (LDF-1093 adds them for every step), so these run in the browser only.
+const UNDECLARED = '(UndeclaredFixture, no dataSet declaration), which a data set cannot redirect';
+
+fixtureTest(
+  'a data-set journey opening a dropdown whose onOpenChange reaches an undeclared connection is refused before it opens',
+  async () => {
+    const result = await postBrowserJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [{ expect: { visible: 'rails_title' } }, { open: 'rails_menu' }],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(1);
+    expect(result.failure.message).toBe(
+      `Block "rails_menu" reaches connection "rails_undeclared" ${UNDECLARED}, so a data-set journey cannot open it.`
+    );
+    expect(result.failure.expected).toBe('an open a data-set journey can make');
+    expect(result.state.rails_menu_opened ?? null).toBe(null);
+  }
+);
+
+fixtureTest(
+  'a data-set journey filling an input whose onChange reaches an undeclared connection is refused',
+  async () => {
+    const result = await postBrowserJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [{ fill: { blockId: 'rails_fill_input', value: 'note' } }],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(0);
+    expect(result.failure.message).toBe(
+      `Block "rails_fill_input" reaches connection "rails_undeclared" ${UNDECLARED}, so a data-set journey cannot fill it.`
+    );
+    expect(result.failure.actual).toBe(
+      'a fill that reaches connection "rails_undeclared" (UndeclaredFixture, no dataSet declaration)'
+    );
+    expect(result.state.rails_fill_input ?? null).toBe(null);
+  }
+);
+
+fixtureTest(
+  'a data-set journey selecting in a selector whose onChange reaches an undeclared connection is refused',
+  async () => {
+    const result = await postBrowserJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [{ select: { blockId: 'rails_selector', value: 'Second' } }],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(0);
+    expect(result.failure.message).toBe(
+      `Block "rails_selector" reaches connection "rails_undeclared" ${UNDECLARED}, so a data-set journey cannot select in it.`
+    );
+    expect(result.state.rails_selector ?? null).toBe(null);
+  }
+);
+
+// The same steps on a journey with no data set act, so the refusals above are the rails'.
+fixtureTest(
+  'a journey without a data set opens, fills and selects on the railed blocks',
+  async () => {
+    const result = await postBrowserJourney({
+      pageId: 'rails',
+      steps: [
+        { open: 'rails_menu' },
+        { fill: { blockId: 'rails_fill_input', value: 'note' } },
+        { select: { blockId: 'rails_selector', value: 'Second' } },
+      ],
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.state.rails_menu_opened).toBe(true);
+    expect(result.state.rails_fill_input).toBe('note');
+    expect(result.state.rails_selector).toBe('Second');
   }
 );
 

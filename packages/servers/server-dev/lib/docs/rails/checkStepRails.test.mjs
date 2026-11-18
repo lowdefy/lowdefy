@@ -16,7 +16,7 @@
 
 import { vi, expect, test } from 'vitest';
 
-import checkClickRails from './checkClickRails.js';
+import checkStepRails from './checkStepRails.js';
 
 // The page answers every evaluate with the shown page id: arming the auth recorder ignores it.
 function createPage() {
@@ -44,7 +44,13 @@ test('a journey without a data set is not railed', async () => {
   const page = createPage();
   const locator = createLocator('save_button');
   await expect(
-    checkClickRails({ journey: {}, page, locator, target: { blockId: 'save_button' } })
+    checkStepRails({
+      journey: {},
+      page,
+      locator,
+      target: { blockId: 'save_button' },
+      step: 'click',
+    })
   ).resolves.toBe(null);
   expect(page.evaluate).not.toHaveBeenCalled();
   expect(locator.evaluate).not.toHaveBeenCalled();
@@ -54,15 +60,20 @@ test('a plain target is checked against the block wrapper around the clicked ele
   const journey = createJourney(['grid']);
   const locator = createLocator('grid');
   await expect(
-    checkClickRails({
+    checkStepRails({
       journey,
       page: createPage(),
       locator,
       target: { text: 'Delete' },
+      step: 'click',
     })
   ).rejects.toThrow('Block "grid" is refused.');
   expect(locator.evaluate).toHaveBeenCalledTimes(1);
-  expect(journey.dataSetRails.refusal).toHaveBeenCalledWith({ pageId: 'rails', blockId: 'grid' });
+  expect(journey.dataSetRails.refusal).toHaveBeenCalledWith({
+    pageId: 'rails',
+    blockId: 'grid',
+    step: 'click',
+  });
 });
 
 test.each([
@@ -74,7 +85,7 @@ test.each([
   // A modal footer or popup control sits outside every block wrapper.
   const locator = createLocator(null);
   await expect(
-    checkClickRails({ journey, page: createPage(), locator, target })
+    checkStepRails({ journey, page: createPage(), locator, target, step: 'click' })
   ).rejects.toMatchObject({
     message: 'Block "delete_modal" is refused.',
     actual: 'a refused click',
@@ -85,28 +96,67 @@ test.each([
 test('a control target is checked before it has an element', async () => {
   const journey = createJourney([]);
   await expect(
-    checkClickRails({
+    checkStepRails({
       journey,
       page: createPage(),
       locator: null,
       target: { blockId: 'actions', control: 'onArchive' },
+      step: 'click',
     })
   ).resolves.toBe('actions');
   expect(journey.dataSetRails.refusal).toHaveBeenCalledWith({
     pageId: 'rails',
     blockId: 'actions',
+    step: 'click',
   });
 });
 
 test('a click outside every block is not refused', async () => {
   const journey = createJourney([]);
   await expect(
-    checkClickRails({
+    checkStepRails({
       journey,
       page: createPage(),
       locator: createLocator(null),
       target: { text: 'OK' },
+      step: 'click',
     })
   ).resolves.toBe(null);
   expect(journey.dataSetRails.refusal).not.toHaveBeenCalled();
+});
+
+test.each([
+  ['open', 'an open a data-set journey can make'],
+  ['fill', 'a fill a data-set journey can make'],
+  ['select', 'a select a data-set journey can make'],
+])('%s is checked against its block, in its own words', async (step, expected) => {
+  const journey = createJourney(['menu']);
+  await expect(
+    checkStepRails({
+      journey,
+      page: createPage(),
+      locator: createLocator('menu'),
+      target: { blockId: 'menu' },
+      step,
+    })
+  ).rejects.toMatchObject({ message: 'Block "menu" is refused.', expected });
+  expect(journey.dataSetRails.refusal).toHaveBeenCalledWith({
+    pageId: 'rails',
+    blockId: 'menu',
+    step,
+  });
+});
+
+// The Search modal renders its input in a portal outside every block wrapper.
+test('an element outside every block is checked against the block its target names', async () => {
+  const journey = createJourney(['search']);
+  await expect(
+    checkStepRails({
+      journey,
+      page: createPage(),
+      locator: createLocator(null),
+      target: { blockId: 'search' },
+      step: 'fill',
+    })
+  ).rejects.toThrow('Block "search" is refused.');
 });

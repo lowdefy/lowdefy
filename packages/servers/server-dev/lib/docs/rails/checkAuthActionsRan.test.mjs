@@ -69,7 +69,7 @@ test('a click whose auth actions were skipped passes', async () => {
   const page = createPage(window);
   await armAuthActionRecorder({ journey, page });
   await expect(
-    checkAuthActionsRan({ journey, page, blockId: 'create_org' })
+    checkAuthActionsRan({ journey, page, blockId: 'create_org', step: 'click' })
   ).resolves.toBeUndefined();
 });
 
@@ -79,18 +79,18 @@ test('a click that ran an auth action fails, naming the block and the action', a
   await armAuthActionRecorder({ journey, page });
   await callAuth(window, 'setActiveOrganization', { organizationId: 'a' });
   await callAuth(window, 'updateSession');
-  await expect(checkAuthActionsRan({ journey, page, blockId: 'create_org' })).rejects.toMatchObject(
-    {
-      message: expect.stringMatching(
-        /^Block "create_org" ran the auth action SetActiveOrganization, UpdateSession, which a data-set journey cannot run: its users are injected and have no auth session\./
-      ),
-      expected: 'a click that runs no auth action',
-      actual: 'a click that ran the auth action SetActiveOrganization, UpdateSession',
-    }
-  );
+  await expect(
+    checkAuthActionsRan({ journey, page, blockId: 'create_org', step: 'click' })
+  ).rejects.toMatchObject({
+    message: expect.stringMatching(
+      /^Block "create_org" ran the auth action SetActiveOrganization, UpdateSession, which a data-set journey cannot run: its users are injected and have no auth session\./
+    ),
+    expected: 'a click that runs no auth action',
+    actual: 'a click that ran the auth action SetActiveOrganization, UpdateSession',
+  });
   // The recording is cleared once read.
   await expect(
-    checkAuthActionsRan({ journey, page, blockId: 'create_org' })
+    checkAuthActionsRan({ journey, page, blockId: 'create_org', step: 'click' })
   ).resolves.toBeUndefined();
 });
 
@@ -107,7 +107,7 @@ test('methods that are not auth-engine methods are not recorded', async () => {
   const page = createPage(window);
   await armAuthActionRecorder({ journey, page });
   await callAuth(window, 'notAuthEngine');
-  await expect(checkAuthActionsRan({ journey, page })).resolves.toBeUndefined();
+  await expect(checkAuthActionsRan({ journey, page, step: 'click' })).resolves.toBeUndefined();
 });
 
 test('the recording is read back after the document that made it is replaced', async () => {
@@ -118,7 +118,7 @@ test('the recording is read back after the document that made it is replaced', a
   const second = createWindow();
   second.sessionStorage = first.sessionStorage;
   await expect(
-    checkAuthActionsRan({ journey, page: createPage(second), blockId: 'sign_in' })
+    checkAuthActionsRan({ journey, page: createPage(second), blockId: 'sign_in', step: 'click' })
   ).rejects.toMatchObject({ actual: 'a click that ran the auth action Login' });
 });
 
@@ -127,8 +127,26 @@ test('a click with no known block says A click', async () => {
   const page = createPage(window);
   await armAuthActionRecorder({ journey, page });
   await callAuth(window, 'login', {});
-  await expect(checkAuthActionsRan({ journey, page, blockId: null })).rejects.toMatchObject({
+  await expect(
+    checkAuthActionsRan({ journey, page, blockId: null, step: 'click' })
+  ).rejects.toMatchObject({
     message: expect.stringMatching(/^A click ran the auth action Login,/),
+  });
+});
+
+test.each([
+  ['open', /^An open ran the auth action Login,.* An open that skips the action/, 'an open'],
+  ['fill', /^A fill ran the auth action Login,.* A fill that skips the action/, 'a fill'],
+  ['select', /^A select ran the auth action Login,.* A select that skips the action/, 'a select'],
+])('%s that ran an auth action fails in its own words', async (step, message, noun) => {
+  const window = createWindow();
+  const page = createPage(window);
+  await armAuthActionRecorder({ journey, page });
+  await callAuth(window, 'login', {});
+  await expect(checkAuthActionsRan({ journey, page, blockId: null, step })).rejects.toMatchObject({
+    message: expect.stringMatching(message),
+    expected: `${noun} that runs no auth action`,
+    actual: `${noun} that ran the auth action Login`,
   });
 });
 
@@ -138,12 +156,12 @@ test('a journey without a data set is not recorded or checked', async () => {
   await armAuthActionRecorder({ journey: {}, page });
   await callAuth(window, 'login', {});
   expect(window.sessionStorage.getItem('__lowdefyAuthActions')).toBeNull();
-  await expect(checkAuthActionsRan({ journey: {}, page })).resolves.toBeUndefined();
+  await expect(checkAuthActionsRan({ journey: {}, page, step: 'click' })).resolves.toBeUndefined();
 });
 
 test('a page with no auth methods records nothing and does not fail', async () => {
   const page = createPage({ lowdefy: {}, sessionStorage: createWindow().sessionStorage });
   await armAuthActionRecorder({ journey, page });
-  await expect(checkAuthActionsRan({ journey, page })).resolves.toBeUndefined();
+  await expect(checkAuthActionsRan({ journey, page, step: 'click' })).resolves.toBeUndefined();
   expect(Object.keys(authEngineMethods).length).toBeGreaterThan(0);
 });

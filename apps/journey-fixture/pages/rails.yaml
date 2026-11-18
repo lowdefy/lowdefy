@@ -12,6 +12,11 @@
 # refused as the modal's. rails_dropdown's item does the same, and its
 # onOpenChange sets rails_dropdown_opened: the rails refuse the click before the
 # runner opens the dropdown to show the item, so the state is never set.
+# The rails check open, fill and select steps the same way: rails_menu's
+# onOpenChange sets rails_menu_opened and then calls the undeclared request, so
+# an open is refused before it hovers the menu and the state is never set;
+# rails_fill_input's and rails_selector's onChange call it too, so a fill or a
+# select is refused before it types or picks.
 id: rails
 type: Box
 requests:
@@ -144,5 +149,48 @@ blocks:
             rails_dropdown_opened: true
       onCallUndeclared:
         - id: call_undeclared_from_dropdown
+          type: Request
+          params: call_undeclared
+  - id: rails_menu
+    type: DropdownMenu
+    properties:
+      links:
+        - id: rails_menu_settings
+          type: MenuLink
+          properties:
+            title: Settings
+    events:
+      onOpenChange:
+        - id: set_rails_menu_opened
+          type: SetState
+          params:
+            rails_menu_opened: true
+        - id: call_undeclared_on_open
+          type: Request
+          params: call_undeclared
+    blocks:
+      - id: rails_menu_label
+        type: Button
+        properties:
+          title: Rails menu
+  - id: rails_fill_input
+    type: TextInput
+    properties:
+      title: Rails note
+    events:
+      onChange:
+        - id: call_undeclared_on_fill
+          type: Request
+          params: call_undeclared
+  - id: rails_selector
+    type: Selector
+    properties:
+      title: Rails choice
+      options:
+        - First
+        - Second
+    events:
+      onChange:
+        - id: call_undeclared_on_select
           type: Request
           params: call_undeclared
