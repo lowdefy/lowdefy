@@ -17,10 +17,14 @@
 import { getStepKey } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
+import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import checkFillTarget from './checkFillTarget.js';
+import leaveDropdowns from './leaveDropdowns.js';
+import readStandInState from './readStandInState.js';
 import runHeadlessCall from './runHeadlessCall.js';
 import runHeadlessExpect from './runHeadlessExpect.js';
 import runHeadlessWebhook from './runHeadlessWebhook.js';
+import standInMissing from './standInMissing.js';
 import waitForRequestCall from './waitForRequestCall.js';
 import waitForShownBlock from './waitForShownBlock.js';
 
@@ -28,6 +32,90 @@ const STEP_RUNNER_KEYS = ['click', 'fill', 'select', 'press', 'wait'];
 
 function readGoto(goto) {
   return type.isString(goto) ? { pageId: goto } : goto;
+}
+
+// A target only a block's stand-in resolves: a grid row by key, or a control the block draws.
+function isStandInTarget(target) {
+  return (
+    type.isObject(target) && (Object.hasOwn(target, 'rowKey') || Object.hasOwn(target, 'control'))
+  );
+}
+
+// Runs a part of the block's stand-in (BLOCK_STAND_INS) with what it keeps for the block, after
+// the other open dropdowns hear the pointer leave them, then lets the page settle. A block whose
+// type has no such part leaves the step to the browser, naming the block and its type.
+async function runStandIn({ actor, block, part, what, ...args }) {
+  const standIn = BLOCK_STAND_INS[block.type];
+  if (!type.isFunction(standIn?.[part])) {
+    actor.browserOnly.push(standInMissing({ block, what }));
+    return;
+  }
+  leaveDropdowns({ actor, except: block, targetBlock: block });
+  await standIn[part]({ actor, block, state: readStandInState({ actor, block }), ...args });
+  await actor.settle();
+}
+
+// A click on a block: a rowKey or control target, and a plain click a component answers itself
+// (a dropdown's trigger), go to the block's stand-in. Any other click fires the block's onClick
+// through the step runner; a block with none is left to the browser, where the click lands on a
+// control inside it. Resolves true when the click is done.
+async function runBlockClick({ actor, step, stepTimeout }) {
+  const target = step.click;
+  const block = await waitForShownBlock({ actor, target, timeout: stepTimeout });
+  if (isStandInTarget(target)) {
+    await runStandIn({
+      actor,
+      block,
+      part: 'click',
+      target,
+      what: `a click on a ${Object.hasOwn(target, 'control') ? 'control' : 'rowKey'} target`,
+    });
+    return true;
+  }
+  if (BLOCK_STAND_INS[block.type]?.answersBlockClick?.({ block }) === true) {
+    await runStandIn({ actor, block, part: 'clickBlock', what: 'a click on the block' });
+    return true;
+  }
+  if (!Object.hasOwn(block.Events.events, 'onClick')) {
+    actor.browserOnly.push(
+      `Block "${block.blockId}" has no onClick: in a browser a click on it lands on a control inside it.`
+    );
+    return true;
+  }
+  leaveDropdowns({ actor, targetBlock: block });
+  return false;
+}
+
+// expect.visible or expect.hidden on a grid row by key goes to the grid's stand-in. A block that
+// is not on the page has no rows: the check reads it as runHeadlessExpect does. Resolves true when
+// the check is done.
+async function runRowExpect({ actor, step, stepTimeout }) {
+  const kind = getStepKey(step.expect);
+  const target = step.expect[kind];
+  if (!['visible', 'hidden'].includes(kind) || !type.isObject(target)) {
+    return false;
+  }
+  if (!Object.hasOwn(target, 'rowKey')) {
+    return false;
+  }
+  const block = actor.page?.context._internal.RootSlots.map[target.blockId];
+  if (type.isNone(block)) {
+    return false;
+  }
+  const standIn = BLOCK_STAND_INS[block.type];
+  if (!type.isFunction(standIn?.expect)) {
+    actor.browserOnly.push(standInMissing({ block, what: `expect.${kind} on a rowKey` }));
+    return true;
+  }
+  await standIn.expect({
+    actor,
+    block,
+    kind,
+    state: readStandInState({ actor, block }),
+    target,
+    timeout: stepTimeout,
+  });
+  return true;
 }
 
 // Runs one journey step headless on the current actor (actors.current()): block steps through
@@ -40,28 +128,32 @@ function readGoto(goto) {
 // request or webhook, and undefined for any other step.
 //
 // Before a block step acts, its block must be shown, as the browser waits for a visible target.
-// A click on a block with no onClick of its own is left to the browser, where it lands on a
-// control inside the block: the step marks the journey browser-only (actor.browserOnly). A fill
-// is refused where the browser's would be (checkFillTarget). wait.request waits for a call made
-// since the last interaction: `since` is the actor's call count when that window opened.
+// A click on a rowKey or control target, an open, a plain click a component answers itself (a
+// dropdown's trigger) and expect.visible or hidden on a rowKey go to the block's stand-in
+// (BLOCK_STAND_INS); a block with no stand-in for the step marks the journey browser-only
+// (actor.browserOnly), naming the block and its type, as a click on a block with no onClick of its
+// own does, which in a browser lands on a control inside it. A click, open or select first closes
+// any other open dropdown (leaveDropdowns). A fill is refused where the browser's would be
+// (checkFillTarget). wait.request waits for a call made since the last interaction: `since` is
+// the actor's call count when that window opened.
 async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout }) {
   const key = getStepKey(step);
   const actor = actors.current();
-  if (key === 'click') {
-    const block = await waitForShownBlock({ actor, target: step.click, timeout: stepTimeout });
-    if (!Object.hasOwn(block.Events.events, 'onClick')) {
-      actor.browserOnly.push(
-        `Block "${block.blockId}" has no onClick: in a browser a click on it lands on a control inside it.`
-      );
-      return undefined;
-    }
+  if (key === 'click' && (await runBlockClick({ actor, step, stepTimeout }))) {
+    return undefined;
+  }
+  if (key === 'open') {
+    const block = await waitForShownBlock({ actor, target: step.open, timeout: stepTimeout });
+    await runStandIn({ actor, block, part: 'open', what: 'open' });
+    return undefined;
   }
   if (key === 'fill') {
     const block = await waitForShownBlock({ actor, target: step.fill, timeout: stepTimeout });
     checkFillTarget({ block, value: step.fill.value });
   }
   if (key === 'select') {
-    await waitForShownBlock({ actor, target: step.select, timeout: stepTimeout });
+    const block = await waitForShownBlock({ actor, target: step.select, timeout: stepTimeout });
+    leaveDropdowns({ actor, targetBlock: block });
   }
   if (key === 'wait' && type.isString(step.wait.request)) {
     await waitForRequestCall({
@@ -91,6 +183,9 @@ async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout 
       await actors.current().settle();
       return;
     case 'expect':
+      if (await runRowExpect({ actor, step, stepTimeout })) {
+        return;
+      }
       await runHeadlessExpect({ actor, answer, host, step, timeout: stepTimeout });
       return;
     case 'call':

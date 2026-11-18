@@ -14,22 +14,25 @@
   limitations under the License.
 */
 
+import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import collectBlockParents from './collectBlockParents.js';
-import POPUP_BLOCK_TYPES from './POPUP_BLOCK_TYPES.js';
+import readStandInState from './readStandInState.js';
 
 const LIST_METHODS = ['moveItemDown', 'moveItemUp', 'pushItem', 'removeItem', 'unshiftItem'];
 
 // Registers the block methods a block's component registers in the browser, which CallMethod
-// calls, so a headless page answers them: a Modal's or Drawer's setOpen({ open }) and toggleOpen()
-// set its open state through setOpen, and a list block's item methods are its own engine methods,
-// as the List component registers them. A method no stand-in registers fails CallMethod, which
-// names the block and the method. Run again after the page changes, since list rows add blocks.
-function registerBlockStandIns({ context, openBlocks, setOpen }) {
+// calls, so a headless page answers them: a block's stand-in registers its own (a Modal's or
+// Drawer's setOpen and toggleOpen, a ConfirmModal's open; BLOCK_STAND_INS), and a list block's
+// item methods are its own engine methods, as the List component registers them. A method no
+// stand-in registers fails CallMethod, which names the block and the method. Run again after the
+// page changes, since list rows add blocks.
+function registerBlockStandIns({ actor }) {
+  const { context } = actor.page;
   const { blockMetas } = context._internal.lowdefy._internal;
   collectBlockParents({ context }).blocks.forEach((block) => {
-    if (POPUP_BLOCK_TYPES.has(block.type)) {
-      block.registerMethod('setOpen', ({ open } = {}) => setOpen({ block, open: Boolean(open) }));
-      block.registerMethod('toggleOpen', () => setOpen({ block, open: !openBlocks.has(block.id) }));
+    const standIn = BLOCK_STAND_INS[block.type];
+    if (standIn?.registerMethods) {
+      standIn.registerMethods({ actor, block, state: readStandInState({ actor, block }) });
       return;
     }
     if (blockMetas[block.type]?.category === 'list') {
