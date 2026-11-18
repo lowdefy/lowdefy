@@ -283,6 +283,37 @@ fixtureTest(
   }
 );
 
+fixtureTest(
+  'an answer stub that never answered fails the journey headless on the dev server',
+  async () => {
+    const journey = readHeadlessJourney('stubs.yaml');
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: {
+        ...journey,
+        stubs: [
+          journey.stubs[0],
+          {
+            connectionType: 'AxiosHttp',
+            requestType: 'AxiosHttp',
+            requestId: 'never_sent',
+            answer: null,
+          },
+        ],
+        steps: journey.steps.slice(3, 5),
+        headless: true,
+      },
+    });
+    expect(status).toBe(200);
+    expect(body.passed).toBe(false);
+    expect(body.failure).toMatchObject({
+      index: 1,
+      message:
+        'The AxiosHttp/AxiosHttp stub on request "never_sent" never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer.',
+    });
+  }
+);
+
 fixtureTest('the journey route refuses stubs with no data set', async () => {
   const journey = readHeadlessJourney('stubs.yaml');
   const { status, body } = await postJson({

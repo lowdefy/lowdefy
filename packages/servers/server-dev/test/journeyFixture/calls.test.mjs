@@ -212,6 +212,48 @@ fixtureTest('stubs answer and fail requests in a browser run, as headless', asyn
   expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
 });
 
+// An answer stub no request reaches fails a browser run at its last step, naming it, as headless:
+// the first stub answers every rate request, so the second, narrowed to USD, never answers.
+fixtureTest('an answer stub that never answered fails a browser run, naming it', async () => {
+  const file = path.join(
+    process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+    'tests',
+    'journeys',
+    '_headless',
+    'stubs.yaml'
+  );
+  const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
+  const result = await postJourney({
+    data: journey.data,
+    user: journey.user,
+    stubs: [
+      {
+        connectionType: 'AxiosHttp',
+        requestType: 'AxiosHttp',
+        answer: { status: 200, data: { rate: 1.5 } },
+      },
+      {
+        connectionType: 'AxiosHttp',
+        requestType: 'AxiosHttp',
+        endpoint: 'price_run',
+        match: { params: { currency: 'USD' } },
+        answer: { status: 200, data: { rate: 2 } },
+      },
+    ],
+    steps: [
+      { call: { endpoint: 'price_run', payload: { id: 'BR-1', currency: 'EUR' } } },
+      { expect: { status: 200 } },
+    ],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 1,
+    message:
+      'The AxiosHttp/AxiosHttp stub on endpoint "price_run" and match {"params":{"currency":"USD"}} never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer.',
+  });
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
+});
+
 // The second journey of tests/journeys/_headless/stubs.yaml in a browser run: the Save click's
 // save_item request fails at a fail gate. The page's failed Request action, the 500 the route
 // answered and the dev server's error entry are marked forced, so none is an app error.

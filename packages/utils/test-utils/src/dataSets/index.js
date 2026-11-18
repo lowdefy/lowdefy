@@ -20,12 +20,14 @@ import addPauseGate from './addPauseGate.js';
 import applyDataSetRedirect from './applyDataSetRedirect.js';
 import checkJourneyStubTargets from './checkJourneyStubTargets.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
+import describeAnswerStub from './describeAnswerStub.js';
 import describeFailGate from './describeFailGate.js';
 import createSessionConnections from './createSessionConnections.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
 import getRunDataStore from './getRunDataStore.js';
+import listUnansweredStubs from './listUnansweredStubs.js';
 import listUnfiredFailGates from './listUnfiredFailGates.js';
 import listUnreachedPauseGates from './listUnreachedPauseGates.js';
 import openDataSession from './openDataSession.js';
@@ -45,12 +47,14 @@ export {
   applyDataSetRedirect,
   checkJourneyStubTargets,
   createDataSetRefusal,
+  describeAnswerStub,
   describeFailGate,
   createSessionConnections,
   dataSessionRegistry,
   findSessionDocuments,
   getDataStore,
   getRunDataStore,
+  listUnansweredStubs,
   listUnfiredFailGates,
   listUnreachedPauseGates,
   openDataSession,

@@ -361,6 +361,7 @@ steps:
 
 - **How often.** A failure fires on the next matching request, once, so a journey can fail a write and then retry it to show the routine recovers. `times: 3` fails the next 3, and `times: all` every one, for a routine that runs the request in a loop.
 - **A failure that never fired fails the journey**, naming it, so a check cannot pass while testing nothing.
+- **An answer stub that never answered fails the journey** too, naming its types and what narrows it: no request matched it, or an earlier stub answered first. Every answer stub must stand in for a request the journey makes.
 - **A forced failure is never an [app error](#app-errors).** A client only ever sees the generic message, so `expect: { error }` after the `call`, `request` or `webhook` reads the forced message from the server's record of the call. A webhook that fails answers its sender `500` with a fixed body, and `expect: { error }` still reads the forced message.
 - **An answer for a type the app does not have is refused.** An answer stub whose `connectionType` or `requestType` the app has no connection or request of would never answer, so the journey fails, naming the stub and the types the app has.
 - **`stubs` need `data`.** They live on the journey's data set session, and work the same headless, on the dev server and in the browser. So do `hold`, `release` and `expect: { sunk }`: a journey without `data` that uses them is refused, on every host. An answer computed from the request is a [test-utils test](/endpoint-tests)'s stub.
