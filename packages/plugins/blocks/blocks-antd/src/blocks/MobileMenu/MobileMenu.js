@@ -23,7 +23,7 @@ import Drawer from '../Drawer/Drawer.js';
 import Menu from '../Menu/Menu.js';
 import { getDarkMode } from '../headerActions.js';
 
-const MobileMenu = ({
+function MobileMenu({
   basePath,
   blockId,
   classNames = {},
@@ -36,7 +36,7 @@ const MobileMenu = ({
   properties,
   rename,
   styles = {},
-}) => {
+}) {
   const [openState, setOpen] = useState(false);
   useEffect(() => {
     methods.registerMethod(get(rename, 'methods.toggleOpen', { default: 'toggleOpen' }), () => {
@@ -110,6 +110,7 @@ const MobileMenu = ({
                 basePath={basePath}
                 components={components}
                 blockId={`${blockId}_menu`}
+                journeyMarks={false}
                 methods={methods}
                 events={events}
                 menus={menus}
@@ -135,6 +136,6 @@ const MobileMenu = ({
       />
     </div>
   );
-};
+}
 
 export default withBlockDefaults(MobileMenu);

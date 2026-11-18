@@ -26,12 +26,12 @@ import useItemShortcuts from '../useItemShortcuts.js';
 import { buildMenuItems } from '../buildMenuItems.js';
 import './style.module.css';
 
-const getDefaultMenu = (menus, menuId = 'default', links) => {
+function getDefaultMenu(menus, menuId = 'default', links) {
   if (type.isArray(links)) return links;
   if (!type.isArray(menus)) return [];
   const menu = menus.find((item) => item.menuId === menuId) ?? menus[0] ?? {};
   return menu.links ?? [];
-};
+}
 
 function collectLinkShortcuts(links) {
   const result = [];
@@ -87,6 +87,7 @@ function MenuComp({
   classNames = {},
   components: { Icon, Link, ShortcutBadge },
   events,
+  journeyMarks = true,
   menus,
   methods,
   pageId,
@@ -114,8 +115,11 @@ function MenuComp({
   // standardises on `itemIcon`. Map either through so existing YAML keeps working.
   const itemsClassNames = { ...classNames, itemIcon: classNames.itemIcon ?? classNames.icon };
   const itemsStyles = { ...styles, itemIcon: styles.itemIcon ?? styles.icon };
+  // A page-layout block (and MobileMenu) draws this menu under a made-up id such as
+  // `<layout>_menu`, no block of that id exists, and the click fires on the layout block. Its
+  // items carry no journey marks, so a recorded nav click stays a text target on the layout.
   const items = buildMenuItems({
-    blockId,
+    blockId: journeyMarks ? blockId : undefined,
     links: menu,
     events,
     components: { Icon, Link, ShortcutBadge },
