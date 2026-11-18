@@ -104,8 +104,9 @@ function rerunResult({ first, alone }) {
 // `run(entry, { rerun })` runs one item (one runRepeated call); a run that throws fails that item
 // only.
 // A journey that fails while another of the run is in flight (a contended failure) is run again
-// alone, once, before it is reported, while the limit is above 1: the pool starts no new journey,
-// waits for those in flight and calls `run(entry, { rerun: true })`, which records nothing. Two
+// alone, once, before it is reported, whatever the limit is by then (memory pressure may have
+// brought it to 1 while the journey ran beside others): the pool starts no new journey, waits for
+// those in flight and calls `run(entry, { rerun: true })`, which records nothing. Two
 // contended failures rerun one after the other. Passing alone, the item is PASS with
 // `contended: true` and the first attempt's `contendedFailure: { failure?, message }`, and the
 // limit drops by one for the rest of the run. Failing alone, it is the alone run's FAIL and the
@@ -197,12 +198,7 @@ async function runJourneyPool({ entries, readLimit, run, onFinished, onReported 
   async function runOne(index) {
     const entry = entries[index];
     let result = await attempt({ index, rerun: false });
-    if (
-      contended.has(index) &&
-      mayBeContended(result) &&
-      readNarrowedLimit() > 1 &&
-      type.isUndefined(callbackError)
-    ) {
+    if (contended.has(index) && mayBeContended(result) && type.isUndefined(callbackError)) {
       result = await rerunAlone({ index, first: result });
     }
     results[index] = result;

@@ -405,7 +405,33 @@ test('runJourneyPool reruns two contended failures one after the other, and two 
   ]);
 });
 
-test('runJourneyPool does not rerun a contended failure once memory pressure has brought the limit to 1', async () => {
+test('runJourneyPool reruns a contended failure alone when memory pressure has brought the limit to 1', async () => {
+  const runner = controlledRun();
+  const entries = ['a', 'b', 'c'].map((name) => entry({ name }));
+  let limit = 2;
+  const pool = runJourneyPool({ entries, readLimit: () => limit, run: runner.run });
+  await new Promise((resolve) => setImmediate(resolve));
+  expect(runner.started).toEqual(['a', 'b']);
+  limit = 1;
+  await runner.finish('a', pageOpenTimeout());
+  // a ran beside b, so it waits for b and reruns alone, at a limit of 1.
+  await runner.finish('b');
+  expect(runner.started).toEqual(['a', 'b', 'a']);
+  expect(runner.inFlightAtStart[2]).toEqual({ name: 'a', inFlight: 1 });
+  await runner.finish('a');
+  await runner.finish('c');
+  const results = await pool;
+  expect(runner.options[2]).toEqual({ name: 'a', rerun: true });
+  expect(results[0]).toMatchObject({
+    name: 'a',
+    class: 'PASS',
+    contended: true,
+    contendedFailure: { message: pageOpenTimeout().message },
+  });
+  expect(runner.inFlightAtStart[3]).toEqual({ name: 'c', inFlight: 1 });
+});
+
+test('runJourneyPool reports the alone FAIL when a contended failure fails again at a limit of 1', async () => {
   const runner = controlledRun();
   const entries = ['a', 'b'].map((name) => entry({ name }));
   let limit = 2;
@@ -414,9 +440,16 @@ test('runJourneyPool does not rerun a contended failure once memory pressure has
   limit = 1;
   await runner.finish('a', pageOpenTimeout());
   await runner.finish('b');
+  await runner.finish('a', { passed: false, message: 'still broken' });
   const results = await pool;
-  expect(runner.started).toEqual(['a', 'b']);
-  expect(results[0]).toEqual({ name: 'a', class: 'FAIL', ...pageOpenTimeout() });
+  expect(runner.started).toEqual(['a', 'b', 'a']);
+  expect(results[0]).toEqual({
+    name: 'a',
+    passed: false,
+    class: 'FAIL',
+    message: 'still broken',
+    recorded: pageOpenTimeout().recorded,
+  });
 });
 
 test('runJourneyPool reruns a contended thrown run like any other failure', async () => {
