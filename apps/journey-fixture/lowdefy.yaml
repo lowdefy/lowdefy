@@ -74,6 +74,7 @@ auth:
       - payment_events
       - caught_webhook
       - price_run
+      - log_payload
     roles:
       auditor:
         - auditor_only
@@ -91,6 +92,7 @@ api:
   - _ref: api/payment_events.yaml
   - _ref: api/caught_webhook.yaml
   - _ref: api/price_run.yaml
+  - _ref: api/log_payload.yaml
 
 pages:
   - _ref: pages/home.yaml

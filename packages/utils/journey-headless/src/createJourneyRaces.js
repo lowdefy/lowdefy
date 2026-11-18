@@ -37,8 +37,9 @@ import HeadlessStepError from './HeadlessStepError.js';
  *   expect steps after it read nothing from but name in their message. Any other
  *   step whose request reaches a gate fails: a page's double submit is the doubleSubmit variant's
  *   job. A release lets the call parked at the request it names go (matched as a hold matches,
- *   so endpoint and pageId pick between two holds on one request id), waits for it to answer, and answers
- *   with that answer; the call is recorded on its actor then, as runHeadlessCall records it.
+ *   so endpoint and pageId pick between two holds on one request id), waits for it to answer,
+ *   and answers with that answer; the call is recorded on its actor then, as runHeadlessCall
+ *   records it.
  * - finish() releases every gate (releasePauseGates), waits for every held call to settle, and
  *   answers the journey's failure when a gate no call reached, or a call still parked, was left:
  *   { index, step, expected, actual, message }, or undefined.
