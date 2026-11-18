@@ -265,7 +265,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     steps.length > 0 &&
     !type.isNone(host.dataSession)
   ) {
-    failure = findUnfiredFailGate({ session: host.dataSession, steps });
+    failure = await findUnfiredFailGate({ session: host.dataSession, steps });
     if (!type.isUndefined(failure)) {
       results[failure.index].status = 'failed';
     }

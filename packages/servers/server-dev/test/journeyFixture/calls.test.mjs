@@ -249,7 +249,7 @@ fixtureTest('an answer stub that never answered fails a browser run, naming it',
   expect(result.failure).toMatchObject({
     index: 1,
     message:
-      'The AxiosHttp/AxiosHttp stub on endpoint "price_run" and match {"params":{"currency":"USD"}} never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer.',
+      'The AxiosHttp/AxiosHttp stub on endpoint "price_run" and match {"params":{"currency":"USD"}} never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer. A stub that names its request (requestId, endpoint, pageId or match) must answer; one keyed only by connectionType and requestType is a fallback and may go unused.',
   });
   expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
 });

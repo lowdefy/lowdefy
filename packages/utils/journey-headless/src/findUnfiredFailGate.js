@@ -18,15 +18,22 @@ import { type } from '@lowdefy/helpers';
 import {
   describeAnswerStub,
   describeFailGate,
+  drainSessionWork,
   listUnansweredStubs,
   listUnfiredFailGates,
 } from '@lowdefy/test-utils/dataSets';
 
-// A journey's failure when a fail gate its stubs set never fired, or else an answer stub never
-// answered, so a check can't pass while testing nothing: { index, step, expected, actual, message }
-// on its last step, as a journey's ending is judged there; undefined when every gate fired and
-// every stub answered. `session` is the data session.
-function findUnfiredFailGate({ session, steps }) {
+const DRAIN_TIMEOUT_MS = 30000;
+
+// A journey's failure when a fail gate its stubs set never fired, or else an answer stub that names
+// its target never answered, so a check can't pass while testing nothing: { index, step, expected,
+// actual, message } on its last step, as a journey's ending is judged there; undefined when every
+// gate fired and every such stub answered. A stub keyed only by connectionType and requestType is
+// a fallback and may go unused (listUnansweredStubs). `session` is the data session. Its background
+// work (context.waitUntil) is drained first, so a request only that work makes is counted. Work
+// still running after the wait (as when the session closes) is judged as it stands.
+async function findUnfiredFailGate({ session, steps }) {
+  await drainSessionWork({ work: session.work, timeoutMs: DRAIN_TIMEOUT_MS });
   const index = steps.length - 1;
   const [gate] = listUnfiredFailGates({ session });
   if (!type.isUndefined(gate)) {
@@ -47,7 +54,7 @@ function findUnfiredFailGate({ session, steps }) {
       step: steps[index],
       expected: `a request to be answered by the ${description}`,
       actual: 'no request reached it',
-      message: `The ${description} never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer.`,
+      message: `The ${description} never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer. A stub that names its request (requestId, endpoint, pageId or match) must answer; one keyed only by connectionType and requestType is a fallback and may go unused.`,
     };
   }
   return undefined;

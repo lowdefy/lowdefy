@@ -309,7 +309,7 @@ fixtureTest(
     expect(body.failure).toMatchObject({
       index: 1,
       message:
-        'The AxiosHttp/AxiosHttp stub on request "never_sent" never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer.',
+        'The AxiosHttp/AxiosHttp stub on request "never_sent" never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer. A stub that names its request (requestId, endpoint, pageId or match) must answer; one keyed only by connectionType and requestType is a fallback and may go unused.',
     });
   }
 );
