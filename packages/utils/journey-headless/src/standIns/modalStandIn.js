@@ -16,18 +16,24 @@
 
 import HeadlessStepError from '../HeadlessStepError.js';
 import describeBlock from './describeBlock.js';
+import destroysContentOnHidden from './destroysContentOnHidden.js';
 import fireEvent, { afterEvent } from './fireEvent.js';
 import findOneControl from './findOneControl.js';
 import readControlKey from './readControlKey.js';
+import unmountContent from './unmountContent.js';
 
 // What blocks-antd's Modal does (Modal.js, triggerSetOpen): setOpen and toggleOpen fire onOpen or
 // onClose on every call, then set the open state; once antd sees it change it fires, after its
 // animation, afterOpenChange { open: true } on an open, and afterClose then
-// afterOpenChange { open: false } on a close (rc-dialog's onDialogVisibleChanged).
+// afterOpenChange { open: false } on a close (rc-dialog's onDialogVisibleChanged). A close with
+// destroyOnHidden unmounts the content, so the next open mounts it again.
 function setModalOpen({ actor, block, open }) {
   const fired = fireEvent({ actor, block, name: open ? 'onOpen' : 'onClose' });
   if (!actor.setOpen({ block, open })) {
     return;
+  }
+  if (!open && destroysContentOnHidden(block)) {
+    unmountContent({ actor, block });
   }
   actor.track(
     afterEvent(fired).then(() => {

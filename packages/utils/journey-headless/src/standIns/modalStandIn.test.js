@@ -210,3 +210,103 @@ test('Modal toggleOpen closes an open modal with the full close', async () => {
     ['afterOpenChange', { open: false }],
   ]);
 });
+
+// A popup whose content counts its mounts, with a hover DropdownMenu that holds the close button,
+// so the dropdown is still open when the popup closes.
+function remountPage({ type = 'Modal', properties = {} } = {}) {
+  return {
+    id: 'home',
+    blocks: [
+      methodButton({ id: 'open', blockId: 'popup', method: 'setOpen', args: [{ open: true }] }),
+      {
+        id: 'popup',
+        type,
+        properties,
+        blocks: [
+          { id: 'inside', type: 'Paragraph', events: { onMount: [record('onMount')] } },
+          {
+            id: 'menu',
+            type: 'DropdownMenu',
+            properties: { links: [{ id: 'item' }] },
+            events: { onOpenChange: [record('onOpenChange')] },
+            blocks: [
+              methodButton({
+                id: 'close',
+                blockId: 'popup',
+                method: 'setOpen',
+                args: [{ open: false }],
+              }),
+            ],
+          },
+        ],
+      },
+    ],
+  };
+}
+
+const REMOUNT_STEPS = [
+  { click: 'open' },
+  { open: 'menu' },
+  { click: 'close' },
+  { expect: { hidden: 'inside' } },
+  { click: 'open' },
+  { open: 'menu' },
+];
+
+test('Modal with destroyOnHidden mounts its content again on each open, its dropdown closed', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [remountPage({ properties: { destroyOnHidden: true } })],
+    steps: REMOUNT_STEPS,
+  });
+  expect(result.passed).toBe(true);
+  // The dropdown unmounted while open, which fires nothing, and opens again from closed.
+  expect(readLog(log)).toEqual([
+    ['onMount'],
+    ['onOpenChange', { open: true }],
+    ['onMount'],
+    ['onOpenChange', { open: true }],
+  ]);
+});
+
+test('Modal without destroyOnHidden keeps its content mounted, its dropdown open', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [remountPage()],
+    steps: REMOUNT_STEPS,
+  });
+  expect(result.passed).toBe(true);
+  // The click on open lands outside the dropdown, which is still mounted and open.
+  expect(readLog(log)).toEqual([
+    ['onMount'],
+    ['onOpenChange', { open: true }],
+    ['onOpenChange', { open: false }],
+    ['onOpenChange', { open: true }],
+  ]);
+});
+
+test('Modal with destroyOnHidden and forceRender keeps its content mounted', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [remountPage({ properties: { destroyOnHidden: true, forceRender: true } })],
+    steps: REMOUNT_STEPS.slice(0, 5),
+  });
+  expect(result.passed).toBe(true);
+  // forceRender mounts the content with the page, before the first open.
+  expect(readLog(log)).toEqual([
+    ['onMount'],
+    ['onOpenChange', { open: true }],
+    ['onOpenChange', { open: false }],
+  ]);
+});
+
+test('Drawer with destroyOnHidden mounts its content again on each open', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [remountPage({ type: 'Drawer', properties: { destroyOnHidden: true } })],
+    steps: REMOUNT_STEPS,
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['onMount'],
+    ['onOpenChange', { open: true }],
+    ['onMount'],
+    ['onOpenChange', { open: true }],
+  ]);
+});

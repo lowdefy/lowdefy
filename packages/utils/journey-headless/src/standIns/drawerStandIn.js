@@ -14,12 +14,15 @@
   limitations under the License.
 */
 
+import destroysContentOnHidden from './destroysContentOnHidden.js';
 import fireEvent, { afterEvent } from './fireEvent.js';
+import unmountContent from './unmountContent.js';
 
 // What blocks-antd's Drawer does (Drawer.js): an open fires onOpen and sets the open state; a
 // close waits on onClose and closes only when it neither failed nor bounced; once antd sees the
 // state change it fires, after its animation, afterOpenChange { drawerOpen, open }, and
-// afterClose after it on a close. toggleOpen fires onToggle first.
+// afterClose after it on a close. toggleOpen fires onToggle first. A close with destroyOnHidden
+// unmounts the content, so the next open mounts it again.
 function openDrawer({ actor, block }) {
   const fired = fireEvent({ actor, block, name: 'onOpen' });
   if (!actor.setOpen({ block, open: true })) {
@@ -44,6 +47,9 @@ async function closeDrawer({ actor, block }) {
   }
   if (!actor.setOpen({ block, open: false })) {
     return;
+  }
+  if (destroysContentOnHidden(block)) {
+    unmountContent({ actor, block });
   }
   fireEvent({ actor, block, name: 'afterOpenChange', event: { drawerOpen: false, open: false } });
   fireEvent({ actor, block, name: 'afterClose' });
