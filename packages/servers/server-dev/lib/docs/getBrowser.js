@@ -31,6 +31,20 @@ async function getBrowser({ origin }) {
   return lifecycleForOrigin({ origin }).getBrowser();
 }
 
+// A browser can break while it stays connected: newContext and newPage then
+// answer `Target crashed` on every call. Such a browser is retired, so the
+// next getBrowser() launches a new one, and the call that hit it says so.
+function browserCrashError({ error, browser, lifecycle }) {
+  if (!type.isString(error?.message) || !error.message.includes('Target crashed')) {
+    return error;
+  }
+  lifecycle.retire(browser);
+  return new Error(
+    `The headless browser crashed (${error.message.trim()}); it is relaunched for the next call.`,
+    { cause: error }
+  );
+}
+
 // `origin` should already include any configured basePath prefix that the
 // caller can't derive itself (e.g. from a request URL) — here it's read from
 // build/config.json (the same source app.js uses to mount the app) so
@@ -96,8 +110,14 @@ async function openPage({
   }
   // colorScheme is what the page's `prefers-color-scheme` media query reports,
   // so an app following the system theme renders light or dark accordingly.
-  const context = await browser.newContext({ viewport: { width, height }, colorScheme });
-  launchedAs.lifecycle.trackContext(context);
+  const { lifecycle } = launchedAs;
+  let context;
+  try {
+    context = await browser.newContext({ viewport: { width, height }, colorScheme });
+  } catch (error) {
+    throw browserCrashError({ error, browser, lifecycle });
+  }
+  lifecycle.trackContext({ browser, context });
   // The URLs a data set journey's context tried to reach on another host of the dev server. None
   // left the browser; the journey runner fails the step that caused them.
   const leftOrigin = [];
@@ -173,7 +193,12 @@ async function openPage({
         origin,
       }),
     ]);
-    const page = await context.newPage();
+    let page;
+    try {
+      page = await context.newPage();
+    } catch (error) {
+      throw browserCrashError({ error, browser, lifecycle });
+    }
     if (url === null) {
       return { context, page, ready: true, url, leftOrigin };
     }

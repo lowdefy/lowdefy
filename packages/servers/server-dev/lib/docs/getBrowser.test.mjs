@@ -548,6 +548,55 @@ test('openPage counts a context on the lifecycle of the browser it opens in', as
   }
 });
 
+test('openPage retires a browser whose newPage answers Target crashed, and says so', async () => {
+  const origin = 'http://localhost:4007';
+  const { browser, context } = await launchFor(origin);
+  const crash = new Error('browserContext.newPage: Target crashed ');
+  context.newPage.mockRejectedValue(crash);
+
+  const error = await openPage({ browser, origin, pageId: 'home' }).catch((e) => e);
+
+  expect(error.message).toBe(
+    'The headless browser crashed (browserContext.newPage: Target crashed); it is relaunched for the next call.'
+  );
+  expect(error.cause).toBe(crash);
+  expect(context.close).toHaveBeenCalled();
+  // Still connected, yet the next call gets a new browser.
+  expect(browser.isConnected()).toBe(true);
+  for (let i = 0; i < 5; i += 1) {
+    await Promise.resolve();
+  }
+  expect(browser.close).toHaveBeenCalledTimes(1);
+  const { browser: fresh } = createBrowser();
+  fresh.isConnected = () => true;
+  mockLaunch.mockResolvedValueOnce(fresh);
+  expect(await getBrowser({ origin })).toBe(fresh);
+});
+
+test('openPage retires a browser whose newContext answers Target crashed', async () => {
+  const origin = 'http://localhost:4008';
+  const { browser } = await launchFor(origin);
+  browser.newContext.mockRejectedValue(new Error('browser.newContext: Target crashed'));
+
+  await expect(openPage({ browser, origin, pageId: 'home' })).rejects.toThrow(
+    'The headless browser crashed (browser.newContext: Target crashed); it is relaunched for the next call.'
+  );
+  const { browser: fresh } = createBrowser();
+  fresh.isConnected = () => true;
+  mockLaunch.mockResolvedValueOnce(fresh);
+  expect(await getBrowser({ origin })).toBe(fresh);
+});
+
+test('openPage keeps the browser on a newPage error that is no crash', async () => {
+  const origin = 'http://localhost:4009';
+  const { browser, context } = await launchFor(origin);
+  context.newPage.mockRejectedValue(new Error('Something else'));
+
+  await expect(openPage({ browser, origin, pageId: 'home' })).rejects.toThrow('Something else');
+  expect(browser.close).not.toHaveBeenCalled();
+  expect(await getBrowser({ origin })).toBe(browser);
+});
+
 test('openPage records, without routing, each data set journey request to the dev server port on another host', async () => {
   const { browser, context } = await launchFor('http://localhost:4004');
   const opened = await openPage({
