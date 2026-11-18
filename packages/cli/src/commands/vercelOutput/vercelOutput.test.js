@@ -36,7 +36,7 @@ afterEach(() => {
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-function writeServer({ config, schedules }) {
+function writeServer({ config, mcp, schedules }) {
   const serverDirectory = path.join(root, 'server');
   const files = {
     'src/index.js': '',
@@ -53,6 +53,17 @@ function writeServer({ config, schedules }) {
     'build/refMap.json.gz': 'gzipped ref map',
     'build/pages/home/keyMap.json': 'not the root key map',
     ...(schedules ? { 'build/schedules.json': JSON.stringify(schedules) } : {}),
+    // The Lowdefy build always writes mcp.json.
+    'build/mcp.json': JSON.stringify(
+      mcp ?? { views: { configured: false, pages: {}, sources: [] } }
+    ),
+    ...(mcp
+      ? {
+          'dist/client/fonts/inter.woff2': 'font',
+          'dist/client/logo (dark).png': 'logo',
+          'dist/client/api/openapi.json': '{}',
+        }
+      : {}),
   };
   Object.entries(files).forEach(([file, content]) => {
     fs.mkdirSync(path.dirname(path.join(serverDirectory, file)), { recursive: true });
@@ -61,9 +72,9 @@ function writeServer({ config, schedules }) {
   return serverDirectory;
 }
 
-async function runVercelOutput({ config, schedules }) {
+async function runVercelOutput({ config, mcp, schedules }) {
   const { default: vercelOutput } = await import('./vercelOutput.js');
-  const serverDirectory = writeServer({ config, schedules });
+  const serverDirectory = writeServer({ config, mcp, schedules });
   await vercelOutput({
     context: {
       directories: { server: serverDirectory, build: path.join(serverDirectory, 'build') },
@@ -140,9 +151,113 @@ test('vercelOutput ships the gzipped error maps and leaves the plain maps out', 
   expect(files).toEqual([
     'config.json',
     'keyMap.json.gz',
+    'mcp.json',
     'pages',
     'pages/home',
     'pages/home/keyMap.json',
     'refMap.json.gz',
   ]);
+});
+
+// The hit phase as Vercel applies it: once the filesystem phase has routed a request, its routes
+// are matched against the path it was routed to - the static file's own path when a file answers
+// it, else the function's path (the filesystem phase's dest). Returns whether the response
+// carries the CORS header.
+function sendsCorsHeader({ config, requestPath, staticDirectory }) {
+  const filesystemIndex = config.routes.findIndex((route) => route.handle === 'filesystem');
+  const hitIndex = config.routes.findIndex((route) => route.handle === 'hit');
+  const isFile =
+    fs.statSync(path.join(staticDirectory, requestPath), { throwIfNoEntry: false })?.isFile() ===
+    true;
+  const routedPath = isFile ? requestPath : config.routes[filesystemIndex + 1].dest;
+  return config.routes
+    .slice(hitIndex + 1)
+    .some(
+      (route) =>
+        route.headers?.['access-control-allow-origin'] === '*' &&
+        new RegExp(route.src).test(routedPath)
+    );
+}
+
+test.each([
+  { basePath: undefined, prefix: '' },
+  { basePath: '/tools/v1.2', prefix: '/tools/v1.2' },
+])(
+  'vercelOutput lets any origin read the static files of an app with a view under basePath $basePath',
+  async ({ basePath, prefix }) => {
+    const { config, staticDirectory } = await runVercelOutput({
+      config: { basePath },
+      mcp: { views: { configured: true, pages: {}, sources: [] } },
+    });
+
+    expect(config.routes[0].headers).toEqual({
+      'cache-control': 'public, max-age=31536000, immutable',
+    });
+    expect(config.routes.slice(1)).toEqual([
+      { handle: 'filesystem' },
+      { src: '/(.*)', dest: '/api' },
+      { handle: 'hit' },
+      {
+        src: '^(?!/api$).*$',
+        headers: { 'access-control-allow-origin': '*' },
+        continue: true,
+      },
+    ]);
+
+    // Files the CDN serves, a public folder named api among them.
+    [
+      '/assets/main-abc123.js',
+      '/icon.svg',
+      '/fonts/inter.woff2',
+      '/logo (dark).png',
+      '/api/openapi.json',
+    ].forEach((file) => {
+      expect(sendsCorsHeader({ config, requestPath: `${prefix}${file}`, staticDirectory })).toBe(
+        true
+      );
+    });
+    // Everything the function answers, whatever its path: an API route, a page, and a page under
+    // a public folder's name, which a route on the request path would have given the header.
+    [
+      '/api/request/home/get_data',
+      '/api/auth/get-session',
+      '/api/mcp',
+      '/api',
+      '/home',
+      '/',
+      '/fonts/catalogue',
+      '/assets/report',
+    ].forEach((route) => {
+      expect(sendsCorsHeader({ config, requestPath: `${prefix}${route}`, staticDirectory })).toBe(
+        false
+      );
+    });
+  }
+);
+
+test('vercelOutput adds no CORS route for an app without a view', async () => {
+  const { config } = await runVercelOutput({
+    config: {},
+    mcp: { views: { configured: false, pages: {}, sources: [] } },
+  });
+  expect(config.routes.slice(1)).toEqual([
+    { handle: 'filesystem' },
+    { src: '/(.*)', dest: '/api' },
+  ]);
+  expect(JSON.stringify(config)).not.toContain('access-control');
+});
+
+test('vercelOutput fails on a build directory without mcp.json, which every build writes', async () => {
+  const { default: vercelOutput } = await import('./vercelOutput.js');
+  const serverDirectory = writeServer({ config: {} });
+  fs.rmSync(path.join(serverDirectory, 'build/mcp.json'));
+  await expect(
+    vercelOutput({
+      context: {
+        directories: { server: serverDirectory, build: path.join(serverDirectory, 'build') },
+        logger: { info: vi.fn(), debug: vi.fn() },
+        sendTelemetry: vi.fn(),
+      },
+    })
+  ).rejects.toThrow(/mcp\.json/);
 });

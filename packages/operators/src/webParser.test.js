@@ -173,6 +173,7 @@ test('operator returns value with ~k present', () => {
           "lowdefyGlobal": {
             "global": true,
           },
+          "mcp": undefined,
           "menus": [
             {
               "menus": true,

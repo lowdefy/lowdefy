@@ -23,6 +23,12 @@ import { decodeJwt } from 'jose';
 
 import getBetterAuthConfig from './getBetterAuthConfig.js';
 
+// mcp.json as the build writes it for an app with no MCP views.
+const mcpJsonWithoutViews = {
+  configured: false,
+  views: { configured: false, pages: {}, sources: [] },
+};
+
 // Contract test against the installed @better-auth/oauth-provider release: a
 // real BetterAuth instance (memory adapter) serves the refresh_token grant for
 // an MCP grant, and the grant must stop minting once the user is no longer a
@@ -63,6 +69,7 @@ function createLogger() {
 async function createSeededAuth() {
   let auth;
   const options = getBetterAuthConfig({
+    mcpJson: mcpJsonWithoutViews,
     appMeta: { name: 'Test App', slug: 'test-app' },
     authJson: {
       configured: true,

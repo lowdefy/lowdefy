@@ -369,6 +369,30 @@ test.each([
   expect(internalAdapter.createVerificationValue).not.toHaveBeenCalled();
 });
 
+// The session an MCP App view signs in with: fifteen minutes long and capped by
+// its grant. It must not be traded for a phone session.
+function viewSession() {
+  const session = browserSession();
+  return { ...session, session: { ...session.session, view: true, viewClientId: 'client_1' } };
+}
+
+test('handleMobileSignIn refuses a confirmation post from a view session and mints nothing', async () => {
+  const { adapter, auth, internalAdapter } = createAuth({ session: viewSession() });
+  const response = await call({ auth, request: postRequest() });
+  expect(response.status).toBe(403);
+  expect(await response.text()).toBe('Sign in again from the app.');
+  expect(internalAdapter.createSession).not.toHaveBeenCalled();
+  expect(internalAdapter.createVerificationValue).not.toHaveBeenCalled();
+  expect(adapter.update).not.toHaveBeenCalled();
+});
+
+test('handleMobileSignIn sends a view session to the sign-in page as a signed-out person, with no confirmation page', async () => {
+  const { auth } = createAuth({ session: viewSession() });
+  const response = await call({ auth, request: getRequest(`/auth/mobile?${query}`) });
+  expect(response.status).toBe(302);
+  expect(response.headers.get('location')).toContain('/login?callbackUrl=');
+});
+
 test('handleMobileSignIn refuses a confirmation post with no session', async () => {
   const { auth, internalAdapter } = createAuth();
   const response = await call({ auth, request: postRequest() });

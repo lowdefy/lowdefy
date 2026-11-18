@@ -27,7 +27,7 @@ AddMember.meta = { authority: { scope: 'system' } };
 export default { AddMember };
 `;
 
-function writeEndpoint({ endpointId, routine, serverDirectory }) {
+function writeEndpoint({ endpointId, routine, serverDirectory, webhook }) {
   fs.writeFileSync(
     path.join(serverDirectory, 'build', 'api', `${endpointId}.json`),
     JSON.stringify({
@@ -36,17 +36,18 @@ function writeEndpoint({ endpointId, routine, serverDirectory }) {
       auth: { public: true },
       endpointId,
       routine,
+      ...(webhook === true ? { webhook: true } : {}),
     })
   );
 }
 
-function detachedStep({ endpointId }) {
+function detachedStep({ endpointId, payload }) {
   return {
     id: `endpoint:${endpointId}:call_detached_log`,
     type: 'CallApi',
     stepId: 'call_detached_log',
     endpointId,
-    properties: { endpointId: 'detached_log', detached: true },
+    properties: { endpointId: 'detached_log', detached: true, payload },
   };
 }
 
@@ -61,20 +62,26 @@ function authStep({ endpointId }) {
 }
 
 // What the build host cannot do, in routines that catch the failure and routines that do not,
-// written into a copy of the journey-fixture build: a detached CallApi (the host has no
-// CRON_SECRET) and an auth step (it has no auth engine). The app's own `notify` endpoint already
-// makes a detached call no :catch handles.
+// written into a copy of the journey-fixture build: an auth step (it has no auth engine). And
+// detached CallApi calls with a payload, from an endpoint and from a webhook, which the host
+// records instead of sending (the app's own `notify` sends one with none).
 function writeCaughtFaultEndpoints({ serverDirectory }) {
   fs.writeFileSync(path.join(serverDirectory, 'build', 'plugins', 'steps.js'), stepsModule);
   writeEndpoint({
-    endpointId: 'caught_detached',
+    endpointId: 'send_detached',
     serverDirectory,
     routine: [
-      {
-        ':try': [detachedStep({ endpointId: 'caught_detached' })],
-        ':catch': [{ ':log': { event: 'detached_call_refused' } }],
-      },
-      { ':return': { ok: true } },
+      detachedStep({ endpointId: 'send_detached', payload: { source: { _payload: 'source' } } }),
+      { ':return': { sent: { _step: 'call_detached_log' } } },
+    ],
+  });
+  writeEndpoint({
+    endpointId: 'detached_webhook',
+    serverDirectory,
+    webhook: true,
+    routine: [
+      detachedStep({ endpointId: 'detached_webhook', payload: { source: 'webhook' } }),
+      { ':return': { received: true } },
     ],
   });
   writeEndpoint({

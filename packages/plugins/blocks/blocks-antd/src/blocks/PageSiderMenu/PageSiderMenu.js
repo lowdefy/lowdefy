@@ -34,6 +34,7 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import getDefaultLogoUrl from '../getDefaultLogoUrl.js';
 import getPageSpacing from '../getPageSpacing.js';
 import withPageTheme from '../withPageTheme.js';
 
@@ -63,6 +64,7 @@ function writeSiderState({ methods, properties, open }) {
 }
 
 function PageSiderMenu({
+  apiBase,
   basePath,
   blockId,
   classNames = {},
@@ -149,6 +151,7 @@ function PageSiderMenu({
                         styles={{ element: styles.mobileMenu }}
                         blockId={`${blockId}_mobile_menu`}
                         components={{ Icon, Link, ShortcutBadge }}
+                        apiBase={apiBase}
                         basePath={basePath}
                         events={events}
                         methods={methods}
@@ -177,14 +180,14 @@ function PageSiderMenu({
                           media={`(min-width:${properties.logo?.breakpoint ?? 577}px)`}
                           srcSet={
                             properties.logo?.src ??
-                            `${basePath}/logo-${getDarkMode() ? 'dark' : 'light'}-theme.png`
+                            getDefaultLogoUrl({ apiBase, darkMode: getDarkMode(), square: false })
                           }
                         />
                         <img
                           src={
                             properties.logo?.srcMobile ??
                             properties.logo?.src ??
-                            `${basePath}/logo-square-${getDarkMode() ? 'dark' : 'light'}-theme.png`
+                            getDefaultLogoUrl({ apiBase, darkMode: getDarkMode(), square: true })
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
                           className={
@@ -249,6 +252,7 @@ function PageSiderMenu({
                               blockId={`${blockId}_menu`}
                               journeyMarks={false}
                               components={{ Icon, Link, ShortcutBadge }}
+                              apiBase={apiBase}
                               basePath={basePath}
                               classNames={{ element: classNames.menu ?? 'hidden lg:block' }}
                               events={events}
@@ -350,6 +354,7 @@ function PageSiderMenu({
                                     {!type.isNone(properties.breadcrumb) ? (
                                       <Breadcrumb
                                         blockId={`${blockId}_breadcrumb`}
+                                        apiBase={apiBase}
                                         basePath={basePath}
                                         components={{ Icon, Link, ShortcutBadge }}
                                         classNames={{ element: classNames.breadcrumb }}

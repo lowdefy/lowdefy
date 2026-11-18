@@ -15,6 +15,8 @@
 */
 
 import addStepResult from './addStepResult.js';
+import authorizeViewRequestProperties from '../auth/view/authorizeViewRequestProperties.js';
+import authorizeViewRequestResolver from '../auth/view/authorizeViewRequestResolver.js';
 import callRequestResolver from '../request/callRequestResolver.js';
 import checkConnectionRead from '../request/checkConnectionRead.js';
 import checkConnectionWrite from '../request/checkConnectionWrite.js';
@@ -40,6 +42,12 @@ async function handleRequest(context, routineContext, { request }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  // An endpoint's scope is declared, not derived: a routine tagged mcp:read is
+  // held to reading by its request steps, here.
+  authorizeViewRequestResolver(context, {
+    requestId: requestConfig.stepId ?? requestConfig.requestId,
+    requestResolver,
+  });
   const { tenant, tenantGuard } = resolveTenancy(context, {
     connection,
     connectionConfig,
@@ -51,6 +59,10 @@ async function handleRequest(context, routineContext, { request }) {
     connectionConfig,
     requestConfig,
     routineContext,
+  });
+  authorizeViewRequestProperties(context, {
+    requestId: requestConfig.stepId ?? requestConfig.requestId,
+    requestProperties,
   });
   checkConnectionRead(context, {
     connectionConfig,

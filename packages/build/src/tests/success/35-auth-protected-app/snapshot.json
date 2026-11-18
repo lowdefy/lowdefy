@@ -1511,6 +1511,11 @@
     },
     "configured": false,
     "hasPublicTool": false,
+    "views": {
+      "configured": false,
+      "pages": {},
+      "sources": []
+    },
     "~k": "4t"
   },
   "menus.json": {
@@ -5267,6 +5272,11 @@
               "type": "boolean",
               "default": false,
               "description": "Autofocus to the block on page load."
+            },
+            "autoOpen": {
+              "type": "boolean",
+              "default": false,
+              "description": "Open the dropdown (the calendar on a date picker) and focus the block when it mounts, for a field that shows its input only after the value is clicked. It closes as usual on a pick, a click outside or Escape."
             },
             "bordered": {
               "type": "boolean",

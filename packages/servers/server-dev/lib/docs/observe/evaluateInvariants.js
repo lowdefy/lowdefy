@@ -27,14 +27,17 @@ function describeTarget(target) {
   return parts.join(' ');
 }
 
+// A fault a :catch of the routine handled (`caught`) explains no 5xx: the routine went on and
+// answered, so a 5xx from the same call came from something else.
 function isExplained({ response, serverEntries, basePath }) {
   const called = parseAppApiUrl({ url: response.url, basePath });
   return serverEntries.some(
     (entry) =>
-      (!type.isNone(called?.requestId) &&
+      entry.caught !== true &&
+      ((!type.isNone(called?.requestId) &&
         entry.requestId === called.requestId &&
         entry.pageId === called.pageId) ||
-      (!type.isNone(called?.endpointId) && entry.endpointId === called.endpointId)
+        (!type.isNone(called?.endpointId) && entry.endpointId === called.endpointId))
   );
 }
 

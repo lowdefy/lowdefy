@@ -110,13 +110,13 @@ test('a built page opens in Node with its onMount run, and a click sends its Req
   expect(host.errorSink.errors).toEqual([]);
 });
 
-test("a CallAPI runs its endpoint in process, and the endpoint's fault reaches the error sink", async () => {
+test('a CallAPI runs its endpoint in process, and its detached CallApi is recorded after it', async () => {
   const page = await openHeadlessPage({ host, pageId: 'home' });
   await waitForSettled(page);
   await page.context._internal.RootSlots.map.notify_button.triggerEvent({ name: 'onClick' });
   await waitForSettled(page);
-  // notify's detached CallApi has no CRON_SECRET in a test, as in test-utils' sessions: the
-  // endpoint answers with success false and the server logs the fault.
+  // notify's detached CallApi is taken by the build host, which has no CRON_SECRET: recorded as
+  // a call to its target, which never runs, and the endpoint answers as on a server.
   expect(page.calls).toEqual([
     expect.objectContaining({
       kind: 'endpoint',
@@ -124,16 +124,22 @@ test("a CallAPI runs its endpoint in process, and the endpoint's fault reaches t
       pageId: 'home',
       blockId: 'notify_button',
       status: 200,
-      success: false,
+      success: true,
+      response: { notified: true },
     }),
+    {
+      kind: 'endpoint',
+      endpointId: 'detached_log',
+      detached: true,
+      payload: {},
+      status: null,
+      success: null,
+      response: null,
+      error: null,
+    },
   ]);
-  const serverFaults = host.errorSink.errors.filter((entry) => entry.source === 'server');
-  expect(serverFaults.map((entry) => entry.error.message)).toEqual([
-    'CallApi with "detached: true" requires the CRON_SECRET environment variable — the /api/detached route fails closed without it.',
-  ]);
-  // The failed CallAPI stopped the chain before set_notified, and the client reported it.
-  expect(page.context.state.notified).toBeUndefined();
-  expect(host.errorSink.errors.some((entry) => entry.source === 'client')).toBe(true);
+  expect(host.errorSink.errors).toEqual([]);
+  expect(page.context.state.notified).toBe(true);
 });
 
 // One app serves a run's journeys: each host is a fresh session of its data set on it, and a

@@ -1814,6 +1814,22 @@
       "typeName": "MagicLinkVerify"
     },
     {
+      "slug": "actions/mcpopenlink",
+      "title": "McpOpenLink",
+      "section": "Actions",
+      "path": "content/actions/mcpopenlink.md",
+      "kind": "action",
+      "typeName": "McpOpenLink"
+    },
+    {
+      "slug": "actions/mcpsendmessage",
+      "title": "McpSendMessage",
+      "section": "Actions",
+      "path": "content/actions/mcpsendmessage.md",
+      "kind": "action",
+      "typeName": "McpSendMessage"
+    },
+    {
       "slug": "actions/pdfmake",
       "title": "PdfMake",
       "section": "Actions",
@@ -2374,6 +2390,14 @@
       "typeName": "_math"
     },
     {
+      "slug": "operators/_mcp",
+      "title": "_mcp",
+      "section": "Operators",
+      "path": "content/operators/_mcp.md",
+      "kind": "operator",
+      "typeName": "_mcp"
+    },
+    {
       "slug": "operators/_media",
       "title": "_media",
       "section": "Operators",
@@ -2524,6 +2548,14 @@
       "path": "content/operators/_request_details.md",
       "kind": "operator",
       "typeName": "_request_details"
+    },
+    {
+      "slug": "operators/_response",
+      "title": "_response",
+      "section": "Operators",
+      "path": "content/operators/_response.md",
+      "kind": "operator",
+      "typeName": "_response"
     },
     {
       "slug": "operators/_secret",
@@ -3295,7 +3327,7 @@
       "files": [
         "users/mcp-oauth.yaml"
       ],
-      "hash": "1e947ccf9392df54707941bad19634ce9ddfae4ced981c3a15b12515ae1a4edb"
+      "hash": "a2069545cf3443fe4ce170e21c3120b6e8b42e865d72b28cc2e03870e54a2aa5"
     },
     "user-authentication/user-object": {
       "files": [
@@ -3343,7 +3375,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "3ce34cf08ecc25d6122c2f0de9ac37d43214e52dcaca932bd83ee2b980c80348"
+      "hash": "5a410a674717b47797c543d4d2684846c9b4d92d1645e47067dbb87c76ab0bd9"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -3357,7 +3389,7 @@
         "testing/endpoint-tests.md",
         "testing/endpoint-tests.yaml"
       ],
-      "hash": "c3832c95d18412b01ebc16e7575447642e9e47d2a53bf4a000b2a32b9fac02ef"
+      "hash": "92eadc18b6f42149aafe203f8f65133948f4e28248cf857b5da75e3b93dd78dc"
     },
     "testing/access-table": {
       "files": [
@@ -3401,7 +3433,7 @@
         "blocks/input/AutoComplete.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "f964cd4cc8fd7c027c8ebaf25776515f673752f57951e5c2ea2122f5634054ab"
+      "hash": "8813ec9648a61e4d9af74890969b164fad7d6445d1e2447a1bf160398404a069"
     },
     "input-blocks/buttonselector": {
       "files": [
@@ -3417,7 +3449,7 @@
         "blocks/input/ButtonSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "4cba50cdc7b586735ae7a06d4af0d531938929df080b9711970f1ea4bac12b2f"
+      "hash": "387ffb4a4d5eaddf9a064d08cb363dd79cbc23dc7f50fd7148eed5beb417c24a"
     },
     "input-blocks/captcha": {
       "files": [
@@ -3442,7 +3474,7 @@
         "blocks/input/CheckboxSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "a678b0f54da6d150a0367940d65fd7a24c4ce1378d19f5e735922826587fe065"
+      "hash": "4dd31cbdd58ae5feffdfbccde0fd13aba492226e58373f424acf71f4cc7a77ba"
     },
     "input-blocks/checkboxswitch": {
       "files": [
@@ -3468,7 +3500,7 @@
         "blocks/input/ColorSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "fc0989d231880e002388a5c667003f40e8b779875e6e295e92828b1ea2449fb9"
+      "hash": "6dc376e0a4c4ac1afab1550c8700b30d32a9ceaf030dd40741c67438bac75d7e"
     },
     "input-blocks/daterangeselector": {
       "files": [
@@ -3487,7 +3519,7 @@
         "blocks/input/DateRangeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "5a4fb7c0050be5ae9917c1c42462e2f2d626c40556cf8f06b96d400f5568956d"
+      "hash": "45d51b36211591a951b363c3374a66e2c4c0bb261d462778f0ce5b4094f6502f"
     },
     "input-blocks/dateselector": {
       "files": [
@@ -3506,7 +3538,7 @@
         "blocks/input/DateSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "2b7ccc9788c3f24bbb6b57f95c26d90d261496a5f410cd49a13fda70de52f763"
+      "hash": "2d702e0f57354fe34474aca12cd20c237f7cbdbc4a469ba68438087158d4533e"
     },
     "input-blocks/datetimeselector": {
       "files": [
@@ -3525,7 +3557,7 @@
         "blocks/input/DateTimeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "646923f6a4a07a0c39eddcb996979cc4c5ceff36193aa963f7d2e5cfc532cc34"
+      "hash": "6bc245d8229fae4d86e88d0d361690504a454ab18ec8a707aa5cece0a97271c5"
     },
     "input-blocks/intentinput": {
       "files": [
@@ -3554,7 +3586,7 @@
         "blocks/input/MonthSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "722994a7538b75ae562b3b904f7ccd3127dd27db96d1abba208730c037480298"
+      "hash": "6d83a405d2c9235d27f423bd129dccccba37daef97e9d531935f647d34d22247"
     },
     "input-blocks/multipleselector": {
       "files": [
@@ -3571,7 +3603,7 @@
         "blocks/input/MultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "eacf4eed58ad5de7f5f00b1db7b757074d522356d21ffdeb548fc438785a4bbe"
+      "hash": "1e43761c595735c1b9a1f7382a8ff45fdf585512aef8c0e830d9a6418c93f901"
     },
     "input-blocks/numberinput": {
       "files": [
@@ -3586,7 +3618,7 @@
         "blocks/input/NumberInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "a29ca6cbc4406547fae58a5d16fb9ea1260e7934f39eb87b3b68195121c8e057"
+      "hash": "a8d858e449ec47cd13b52e821167d9a18255e01c16840bebee76ed7a5c155cc7"
     },
     "input-blocks/pagination": {
       "files": [
@@ -3621,7 +3653,7 @@
         "blocks/input/PasswordInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "c95b9118f619c4cd0081b0d811475e172ff65fba09e2c14222da55fcce81d30f"
+      "hash": "62d67fadc73772e3904b1b11f50d6305c09f3854a22b355c27ddb06f66165f68"
     },
     "input-blocks/phonenumberinput": {
       "files": [
@@ -3636,7 +3668,7 @@
         "blocks/input/PhoneNumberInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "23b12ce1ca8d6a237e79276d519f7295e5f1ad31ff39ddf947deb77751350b75"
+      "hash": "16371e4bc47b397738b5762afd78201fbe4285d8783c60e509e960e2acca56ec"
     },
     "input-blocks/placesautocomplete": {
       "files": [
@@ -3661,7 +3693,7 @@
         "blocks/input/RadioSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "d5941c2c6430d03365b1c82cf863165b4fa4adf65c88917c4c175ce365e94995"
+      "hash": "43db8fe3624d7cf1177fa7f3c9cf0b044ba083f3007ce9108680ddba6896bcf8"
     },
     "input-blocks/ratingslider": {
       "files": [
@@ -3676,7 +3708,7 @@
         "blocks/input/RatingSlider.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "f52c19b663d984b6d0c2d517603d3a8b21fd925563a9eba96790f6687b012dc5"
+      "hash": "3c1d74160c1a4e928946fc6ccea5e17bb74e436a64bec8a686126e8ad1086942"
     },
     "input-blocks/segmentedselector": {
       "files": [
@@ -3692,7 +3724,7 @@
         "blocks/input/SegmentedSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "b1403207dc83dc9369d3c6249d2eeb14e8c955b13db66eafc536d1f4c220f353"
+      "hash": "8543263dd2a12a59a33c3ca584f2f8763d7fa498183e2502d657fe0bf82878c7"
     },
     "input-blocks/s3uploadbutton": {
       "files": [
@@ -3772,7 +3804,7 @@
         "blocks/input/Selector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "b2e6df0f9f7be0c2a2239f973cc09fafd511dcfd0f14d21464db2c8dae7bb703"
+      "hash": "dc84773e063484a3e0f0f0b7f9de00b8d6a7c70e8e604d00606ca93b69eab568"
     },
     "input-blocks/switch": {
       "files": [
@@ -3787,7 +3819,7 @@
         "blocks/input/Switch.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "5a33d5810960d2cd34626ac2d08c98cab7118fde649325aec58089d95ff31a55"
+      "hash": "9379a5e50e5adda6b6df28acd76d89f3e72db6f17e7431c8993c2df42dbee17b"
     },
     "input-blocks/tableinput": {
       "files": [
@@ -3812,7 +3844,7 @@
         "blocks/input/TagMultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "44e390034948f31dc5f799420bf355cc54ec1af2b7241cc3e0000a7686d668b9"
+      "hash": "02beb86eb0f4291a0248d7ac2f14a3e774282d8c8675380d3e3336d1ec606267"
     },
     "input-blocks/tagselector": {
       "files": [
@@ -3826,7 +3858,7 @@
         "blocks/input/TagSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "d87fe83c184973e0abcc5c6e8f16fcb4e84e466dbde87a137421ac8ae360e3a8"
+      "hash": "eee42823c178d2555b94dd10c945d0687678af65c4991cfaac98cc57f516f0be"
     },
     "input-blocks/textarea": {
       "files": [
@@ -3840,7 +3872,7 @@
         "blocks/input/TextArea.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "bc03a21064f16a6096bfa2724cb74c9456a3477b2517f5564c4c2f14fb987240"
+      "hash": "6d440571c6dabc7e697d615869ab2406c73e78589d3474bb2ff540b07d060e62"
     },
     "input-blocks/textinput": {
       "files": [
@@ -3855,7 +3887,7 @@
         "blocks/input/TextInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "398b92e552a6c57235a6f80644d82ba1e294b38fb36b8af76079cba2bd32769e"
+      "hash": "c5624cbf70bbe784f4f8f15efe99f141f6e0e16711f8ba2f318d9eed5a1d91cf"
     },
     "input-blocks/tiptapinput": {
       "files": [
@@ -3897,7 +3929,7 @@
         "blocks/input/TreeInput.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "3de7437ad30adb484e4f6d2f872d1b7b2143973c759c0346dd05c991cd319e47"
+      "hash": "f54ed6ef04d85b94b0ebe4f7e0589d82269889bdb166b5b6fb692e24e6cc1816"
     },
     "input-blocks/treemultipleselector": {
       "files": [
@@ -3917,7 +3949,7 @@
         "blocks/input/TreeMultipleSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "c221f8838ea7d54f5b938b685500b573df1ca371c2b87fa593c4d10113abbb85"
+      "hash": "b624c0d92db47c93126d8fdf949d2eeaaf28c2bd16f1b0b81f07bc5d25b5a4cd"
     },
     "input-blocks/treeselector": {
       "files": [
@@ -3937,7 +3969,7 @@
         "blocks/input/TreeSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "c41617d01d25a5d50d5e43c934142aa3954dc61c8e9311bbf1991e8fcf6a0f47"
+      "hash": "337817f57d41c5b792d6483407f3c040a980876a7c02ae8930410b28df754aa9"
     },
     "input-blocks/weekselector": {
       "files": [
@@ -3956,7 +3988,7 @@
         "blocks/input/WeekSelector.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "1505d60941f45a52e8b2504bb6457cdbd515cbe952ca9aa54a2ca5b24aea1012"
+      "hash": "0b8cc78d82a609739de380574140ff15c94b7362c59ca6c6c508429a3f0837b1"
     },
     "display-blocks/aggrid": {
       "files": [
@@ -5015,7 +5047,7 @@
         "actions/Login.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "bcae9bda90900fadbc151a6f51aa515cb7d56240bdcadcb60a5f7a9df8576ebf"
+      "hash": "a911caaee4ab0a79f4e4b5f3f2a2e7d8b8a1bdb8cc47da16469e3ede2e2033f1"
     },
     "actions/logout": {
       "files": [
@@ -5030,6 +5062,20 @@
         "templates/actions.yaml.njk"
       ],
       "hash": "ecf3316cbba51d8a218eb785a96e5d64ba0e1a819fafa57720e055ce07b91f9d"
+    },
+    "actions/mcpopenlink": {
+      "files": [
+        "actions/McpOpenLink.yaml",
+        "templates/actions.yaml.njk"
+      ],
+      "hash": "2b6376608d3568020a6560a71a037ce3eb8cd0b47496ebfd63871526eb709617"
+    },
+    "actions/mcpsendmessage": {
+      "files": [
+        "actions/McpSendMessage.yaml",
+        "templates/actions.yaml.njk"
+      ],
+      "hash": "870969765a209cc15e47eba394083a4f90214d643e2edc1f4a18f98e455afaac"
     },
     "actions/pdfmake": {
       "files": [
@@ -5521,6 +5567,13 @@
       ],
       "hash": "e89b41418e2ff8f6348f9b2d932be48e6b5f6c54bbe20f1d41576a23fdaffa91"
     },
+    "operators/_mcp": {
+      "files": [
+        "operators/_mcp.yaml",
+        "templates/operators.yaml.njk"
+      ],
+      "hash": "d86b5827270d77194a581ba3af516688035f4482ac9f95f48b0f8b77e4b11266"
+    },
     "operators/_media": {
       "files": [
         "operators/_media.yaml",
@@ -5654,6 +5707,13 @@
         "templates/operators.yaml.njk"
       ],
       "hash": "a02456570a6b333523b6f916d6942e567f429e18c35c6a9092a6472beb4ab093"
+    },
+    "operators/_response": {
+      "files": [
+        "operators/_response.yaml",
+        "templates/operators.yaml.njk"
+      ],
+      "hash": "c4fe7e800def4ff3fc5018b3c0b9116bd88ffc8ff86943b18e2be33f00983805"
     },
     "operators/_secret": {
       "files": [
@@ -5905,13 +5965,13 @@
       "files": [
         "operators/index.yaml"
       ],
-      "hash": "738538a2d24d81751f42a18b1f80720f5e994e4433565b48e496ca39e58d765c"
+      "hash": "1b25d0a43827d87da53465e85b34f9a3e3664719f193dd10e9db543e268eaf3a"
     },
     "reference/actions-reference": {
       "files": [
         "actions/index.yaml"
       ],
-      "hash": "af95f653c4419bb2a1ef82fffb937ea7a4e92569e2b3780914dfc8c74b599f69"
+      "hash": "4aba918db4a3eacc5983c08ced06f946fe3034e2044e413553e216c16d769e74"
     },
     "reference/connections-reference": {
       "files": [

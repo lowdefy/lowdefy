@@ -264,3 +264,33 @@ blocks:
     properties:
       title: Change On Wheel
       changeOnWheel: true
+
+  # ============================================
+  # CLICK-TO-EDIT
+  # ============================================
+
+  - id: numberinput_select_on_focus
+    type: NumberInput
+    properties:
+      title: Select On Focus
+      selectOnFocus: true
+
+  - id: numberinput_onescape
+    type: NumberInput
+    properties:
+      title: OnEscape Test
+    events:
+      onEscape:
+        - id: set_numberinput_onescape
+          type: SetState
+          params:
+            numberinput_onescape_value:
+              _event: value
+
+  - id: numberinput_onescape_display
+    type: Span
+    properties:
+      content:
+        _if_none:
+          - _state: numberinput_onescape_value
+          - Not fired

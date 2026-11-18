@@ -370,3 +370,29 @@ blocks:
     properties:
       title: No Today Button
       showToday: false
+
+  # ============================================
+  # AUTO OPEN
+  # ============================================
+
+  # Shown by a click, as a field that swaps its value for the input does.
+  - id: dateselector_show_auto_open
+    type: Button
+    properties:
+      title: Show auto open
+    events:
+      onClick:
+        - id: show_dateselector_auto_open
+          type: SetState
+          params:
+            dateselector_auto_open_shown: true
+
+  - id: dateselector_auto_open
+    type: DateSelector
+    visible:
+      _eq:
+        - _state: dateselector_auto_open_shown
+        - true
+    properties:
+      title: Auto Open
+      autoOpen: true

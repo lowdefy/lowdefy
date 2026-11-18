@@ -15,13 +15,36 @@
 */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolRequestSchema,
+  ListResourcesRequestSchema,
+  ListToolsRequestSchema,
+  McpError,
+  ReadResourceRequestSchema,
+} from '@modelcontextprotocol/sdk/types.js';
 import { cleanBuildArtifact, serializer, type } from '@lowdefy/helpers';
 import { isExpectedError } from '@lowdefy/errors';
 
 import formatErrorForAgent from '../../response/formatErrorForAgent.js';
+import mintViewSession from '../auth/view/mintViewSession.js';
 import callEndpoint from '../endpoints/callEndpoint.js';
+import getLowdefyTheme from '../rootConfig/getLowdefyTheme.js';
+import getMcpViews from './getMcpViews.js';
+import getViewResourceMeta from './getViewResourceMeta.js';
+import getViewToolMeta from './getViewToolMeta.js';
+import {
+  VIEW_ADDRESS_META_KEY,
+  VIEW_RESOURCE_MIME_TYPE,
+  VIEW_RESOURCE_URI,
+  VIEW_SESSION_META_KEY,
+  VIEW_SESSION_TOOL,
+} from './mcpViewNames.js';
+import renderViewLoader from './renderViewLoader.js';
+import resolveViewAddress from './resolveViewAddress.js';
 import runAfterToolCall from './runAfterToolCall.js';
+
+// The MCP error code for a resource that does not exist.
+const RESOURCE_NOT_FOUND = -32002;
 
 // LLM-safe tool names use the same rule as buildAgents tool naming.
 function toToolName(id) {
@@ -54,11 +77,26 @@ function scopeCovers({ grantedScopes, endpointScope }) {
 // checks before dispatch - callEndpoint re-authorizes roles inside, but the
 // scope filter exists only on this surface. Returns null when no mcp block
 // is configured.
+//
+// When the app has a view (getMcpViews), a tool with one points at the view
+// resource and its result carries the address of the page to show, the server
+// serves that resource - one fixed loader for every view - and lists the
+// built-in tool a view calls for its session. All of it is for a caller who
+// can see at least one tool with a view; anyone else gets the answers an app
+// with no view gives.
 async function createMcpServer({ context }) {
   const mcpConfig = await context.readConfigFile('mcp.json');
   if (type.isNone(mcpConfig) || mcpConfig.configured !== true) {
     return null;
   }
+
+  const views = getMcpViews({
+    config: context.config,
+    logger: context.logger,
+    mcpConfig,
+    mode: context.mode,
+    secrets: context.secrets,
+  });
 
   async function readVisibleEndpointConfig({ id, scope }) {
     const endpointConfig = await context.readConfigFile(`api/${id}.json`);
@@ -76,6 +114,21 @@ async function createMcpServer({ context }) {
     return endpointConfig;
   }
 
+  // Asked by tools/list, by a session tool call and by both resource handlers
+  // of one request at most, so the answer is not kept.
+  async function canSeeViewTool() {
+    for (const { id, scope, view } of mcpConfig.endpoints) {
+      if (type.isNone(view)) {
+        continue;
+      }
+      const endpointConfig = await readVisibleEndpointConfig({ id, scope });
+      if (!type.isNone(endpointConfig)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   // serverInfo doubles as the connector card in clients such as claude.ai:
   // title, websiteUrl and icons are optional branding the app may configure,
   // and are omitted (not sent as undefined) when it does not. icons is config
@@ -91,6 +144,9 @@ async function createMcpServer({ context }) {
     serverInfo.icons = cleanBuildArtifact(mcpConfig.icons);
   }
   const serverOptions = { capabilities: { tools: {} } };
+  if (views !== null) {
+    serverOptions.capabilities.resources = {};
+  }
   if (!type.isNone(mcpConfig.instructions)) {
     serverOptions.instructions = mcpConfig.instructions;
   }
@@ -98,7 +154,8 @@ async function createMcpServer({ context }) {
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const tools = [];
-    for (const { id, scope, annotations } of mcpConfig.endpoints) {
+    let hasViewTool = false;
+    for (const { id, scope, annotations, view } of mcpConfig.endpoints) {
       const endpointConfig = await readVisibleEndpointConfig({ id, scope });
       if (type.isNone(endpointConfig)) {
         continue;
@@ -111,10 +168,89 @@ async function createMcpServer({ context }) {
       if (!type.isNone(annotations)) {
         tool.annotations = cleanBuildArtifact(annotations);
       }
+      if (views !== null && !type.isNone(view)) {
+        tool._meta = getViewToolMeta({ view });
+        hasViewTool = true;
+      }
       tools.push(tool);
+    }
+    // Listed for the view, which calls it through the host: visibility 'app'
+    // asks the host to keep it from the model. That is the host's courtesy, not
+    // a control - what the session may do is limited where it is minted and
+    // used.
+    if (hasViewTool) {
+      tools.push({
+        name: VIEW_SESSION_TOOL,
+        description: 'Signs an open view in. Called by the view, not by the model.',
+        inputSchema: { type: 'object', properties: {} },
+        _meta: { ui: { visibility: ['app'] } },
+      });
     }
     return { tools };
   });
+
+  // The session tool never reaches an endpoint, so afterToolCall does not run:
+  // the hook observes the app's tools, and a view signing in is not one. The
+  // mint writes its own log line. The token goes in _meta, which a host does
+  // not show the model, and content stays empty so it is in no transcript.
+  async function callViewSessionTool() {
+    try {
+      const { expiresAt, token } = await mintViewSession(context);
+      return {
+        content: [],
+        _meta: { [VIEW_SESSION_META_KEY]: { token, expiresAt: expiresAt.toISOString() } },
+      };
+    } catch (error) {
+      if (isExpectedError(error)) {
+        context.logger.warn(`Refused MCP tool call: ${VIEW_SESSION_TOOL} - ${error.message}`);
+      } else {
+        await context.handleError(error);
+      }
+      return {
+        content: [{ type: 'text', text: formatErrorForAgent(context, error) }],
+        isError: true,
+      };
+    }
+  }
+
+  // The view's address goes beside the result, and the response is also sent
+  // as structuredContent, which must be an object. A call whose address cannot
+  // be built still answers: the caller gets the plain text result, and the
+  // host shows it as it would for a tool with no view.
+  async function addViewAddress({ endpoint, payload, reply, response }) {
+    const logFields = {
+      event: 'warn_mcp_view_address',
+      endpointId: endpoint.id,
+      pageId: endpoint.view.pageId,
+    };
+    let address;
+    try {
+      address = await resolveViewAddress(context, { payload, response, view: endpoint.view });
+    } catch (error) {
+      // A failed operator is a fault in the app's config: it goes to the error
+      // sink, and its message, which can hold evaluated values, stays out of
+      // this line whatever class the operator threw.
+      context.logger.warn(
+        logFields,
+        `MCP tool "${endpoint.id}" answered without its view: an operator in its view config failed.`
+      );
+      await context.handleError(error);
+      return reply;
+    }
+    const { path, refusal } = address;
+    if (type.isString(refusal)) {
+      context.logger.warn(
+        logFields,
+        `MCP tool "${endpoint.id}" answered without its view: ${refusal}`
+      );
+      return reply;
+    }
+    return {
+      ...reply,
+      structuredContent: type.isObject(response) ? response : { response },
+      _meta: { [VIEW_ADDRESS_META_KEY]: { path } },
+    };
+  }
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const { name, arguments: args } = request.params;
@@ -128,6 +264,13 @@ async function createMcpServer({ context }) {
       content: [{ type: 'text', text: `Unknown tool "${name}".` }],
       isError: true,
     };
+
+    if (views !== null && name === VIEW_SESSION_TOOL) {
+      if (!(await canSeeViewTool())) {
+        return unknownTool;
+      }
+      return callViewSessionTool();
+    }
 
     const endpoint = (mcpConfig.endpoints ?? []).find(({ id }) => toToolName(id) === name);
     if (type.isNone(endpoint)) {
@@ -154,6 +297,14 @@ async function createMcpServer({ context }) {
       let reply;
       if (success) {
         reply = { content: [{ type: 'text', text: JSON.stringify(deserializedResponse) }] };
+        if (views !== null && !type.isNone(endpoint.view)) {
+          reply = await addViewAddress({
+            endpoint,
+            payload,
+            reply,
+            response: deserializedResponse,
+          });
+        }
       } else {
         const deserialized = serializer.deserialize(error);
         // The wire error is generic for every reader. The dev server also attaches the full
@@ -205,6 +356,42 @@ async function createMcpServer({ context }) {
       };
     }
   });
+
+  if (views !== null) {
+    // An unknown resource and a caller who can see no tool with a view get the
+    // same answer, as a hidden tool answers like an unknown one.
+    server.setRequestHandler(ListResourcesRequestSchema, async () => {
+      if (!(await canSeeViewTool())) {
+        return { resources: [] };
+      }
+      return {
+        resources: [{ uri: VIEW_RESOURCE_URI, name: 'view', mimeType: VIEW_RESOURCE_MIME_TYPE }],
+      };
+    });
+
+    server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+      const { uri } = request.params;
+      if (uri !== VIEW_RESOURCE_URI || !(await canSeeViewTool())) {
+        throw new McpError(RESOURCE_NOT_FOUND, 'Resource not found.', { uri });
+      }
+      const themeConfig = await getLowdefyTheme({ readConfigFile: context.readConfigFile });
+      return {
+        contents: [
+          {
+            uri: VIEW_RESOURCE_URI,
+            mimeType: VIEW_RESOURCE_MIME_TYPE,
+            text: renderViewLoader({
+              appOrigin: views.appOrigin,
+              basePath: views.basePath,
+              slug: context.appMeta.slug,
+              themeConfig,
+            }),
+            _meta: getViewResourceMeta({ views }),
+          },
+        ],
+      };
+    });
+  }
 
   return server;
 }

@@ -22,6 +22,7 @@ import {
   disabled,
   inputTitle,
   autoFocus,
+  autoOpen,
   bordered,
   allowClear,
   sizeSmallDefaultLarge,
@@ -79,6 +80,7 @@ export default {
         description: 'Allow the user to clear the selected value, sets the value to null.',
       },
       autoFocus,
+      autoOpen,
       bordered: {
         ...bordered,
         description:

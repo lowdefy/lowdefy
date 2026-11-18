@@ -22,6 +22,7 @@ import {
   placeholder,
   inputTitle,
   autoFocus,
+  selectOnFocus,
   variant,
   allowClear,
   sizeSmallMiddleLarge,
@@ -46,6 +47,10 @@ export default {
       event: { value: 'The current input value.' },
     },
     onClear: 'Trigger action when the clear button is clicked.',
+    onEscape: {
+      description: 'Trigger action when Escape is pressed while text input is focused.',
+      event: { value: 'The current input value.' },
+    },
     onFocus: 'Trigger action when text input gets focus.',
     onPressEnter: 'Trigger action when enter is pressed while text input is focused.',
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
@@ -63,6 +68,7 @@ export default {
           "The type of input, (see <a href='https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types'>MDN</a>).",
       },
       autoFocus,
+      selectOnFocus,
       bordered: {
         type: 'boolean',
         default: true,

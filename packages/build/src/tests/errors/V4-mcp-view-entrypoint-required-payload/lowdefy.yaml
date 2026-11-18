@@ -1,0 +1,55 @@
+# V4: MCP View Entry Point With Required Payload
+# ==============================================
+# Tests that an entry point view cannot sit on an endpoint whose payloadSchema
+# has required properties, since an entry point is called with no arguments.
+#
+# Expected errors:
+#   [Config Error] MCP endpoint "open_task" view is an entry point, but its "payloadSchema" has required properties. ...
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+  oauthProvider:
+    consentPage: consent
+
+api:
+  - id: open_task
+    type: Api
+    description: Open a task.
+    payloadSchema:
+      type: object
+      properties:
+        key:
+          type: string
+      required:
+        - key
+    routine: []
+
+mcp:
+  endpoints:
+    - id: open_task
+      scope: mcp:read
+      view:
+        pageId: consent
+        entrypoint: true
+
+pages:
+  - id: consent
+    type: Box
+  - id: task
+    type: Box
+    path: '{space}/tasks/{ref}'

@@ -25,6 +25,7 @@ import {
 } from '@lowdefy/test-utils/dataSets';
 
 import HeadlessStepError from './HeadlessStepError.js';
+import quoteParkedRelease from './quoteParkedRelease.js';
 
 /**
  * The races of one headless journey, on the pause gates of the host's data session
@@ -33,7 +34,8 @@ import HeadlessStepError from './HeadlessStepError.js';
  * - run({ index, step, start }) runs one step: start() runs it (runHeadlessStep). A hold sets a
  *   pause gate. Once a gate is set, every other step races start() against the open gates
  *   (raceToPauseGate). A call or request whose routine reaches a gate first is parked: the step
- *   passes and answers { parkedAt, release }, release being the step that lets it go, which the
+ *   passes and answers { parkedAt, release, hold? }, release being the step that lets it go and
+ *   hold, when another parked call has the same release, the hold it waits at, which the
  *   expect steps after it read nothing from but name in their message. Any other
  *   step whose request reaches a gate fails: a page's double submit is the doubleSubmit variant's
  *   job. A release lets the call parked at the request it names go (matched as a hold matches,
@@ -67,9 +69,8 @@ function matchesHold({ gate, key }) {
   );
 }
 
-// The release step that lets the call parked at a gate go, written as the gate's hold was.
-function writeRelease(gate) {
-  const { endpoint, pageId, requestId } = gate;
+// The release step that names a request key `{ requestId, endpoint?, pageId? }`.
+function writeRelease({ endpoint, pageId, requestId }) {
   if (type.isNone(endpoint) && type.isNone(pageId)) {
     return `release: ${requestId}`;
   }
@@ -79,25 +80,67 @@ function writeRelease(gate) {
   return `release: { ${fields.join(', ')} }`;
 }
 
-// The release step that lets a parked call go. A hold narrowed by endpoint or pageId is named as
-// it was written. A bare hold whose request id another hold shares is named by the routine the
-// parked call reached it in (gate.reachedBy), since `release: <requestId>` lets the first call
-// parked at that id go, which may be the other routine's.
-function writeParkedRelease({ gate, holds }) {
+// The key of the release that lets a parked call go. A hold narrowed by endpoint or pageId is
+// named as it was written. A bare hold whose request id another hold shares is named by the
+// routine the parked call reached it in (gate.reachedBy), since `release: <requestId>` lets the
+// first call parked at that id go, which may be the other routine's.
+function readParkedReleaseKey({ gate, holds }) {
   const shared =
     holds.filter((entry) => entry.gate.requestId === gate.requestId).length > 1 &&
     type.isNone(gate.endpoint) &&
     type.isNone(gate.pageId) &&
     !type.isNone(gate.reachedBy);
   if (!shared) {
-    return writeRelease(gate);
+    return { requestId: gate.requestId, endpoint: gate.endpoint, pageId: gate.pageId };
   }
   const { endpointId, pageId } = gate.reachedBy;
-  return writeRelease({
+  return {
     requestId: gate.requestId,
     endpoint: endpointId,
     pageId: type.isNone(endpointId) ? pageId : undefined,
-  });
+  };
+}
+
+// The calls parked ahead of a call on its release, named by their steps: `the call at step 3`,
+// `the calls at steps 3 and 4`.
+function describeAhead(ahead) {
+  const steps = ahead.map((entry) => entry.index);
+  if (steps.length === 1) return `the call at step ${steps[0]}`;
+  return `the calls at steps ${steps.slice(0, -1).join(', ')} and ${steps.at(-1)}`;
+}
+
+// The release that lets a parked call go, and, when that release names another call in `parked`
+// too, the hold this one waits at (`hold`; undefined while the release names it alone). A release
+// lets go the first parked call whose request it matches, so such calls are told apart by the
+// whole request each reached, endpoint and pageId both, when that names only this call.
+// Otherwise the hold names the calls parked before this one that the release would let go first,
+// whichever release lets them go: an ordinal would hold only while every release used this form.
+function describeParkedRelease({ entry, holds, parked }) {
+  const key = readParkedReleaseKey({ gate: entry.gate, holds });
+  const release = writeRelease(key);
+  const namedByKey = parked.filter((other) =>
+    matchesRequestKey({ entry: key, request: other.gate.reachedBy })
+  );
+  if (namedByKey.length < 2) {
+    return { release };
+  }
+  const heldAt = `the hold at step ${holds.find((hold) => hold.gate === entry.gate).index}`;
+  const { endpointId, pageId, requestId } = entry.gate.reachedBy;
+  const wholeKey = { requestId, endpoint: endpointId, pageId };
+  const namedByWholeKey = parked.filter((other) =>
+    matchesRequestKey({ entry: wholeKey, request: other.gate.reachedBy })
+  );
+  if (namedByWholeKey.length === 1) {
+    return { release: writeRelease(wholeKey), hold: heldAt };
+  }
+  const ahead = namedByKey.slice(0, namedByKey.indexOf(entry));
+  if (ahead.length === 0) {
+    return { release, hold: heldAt };
+  }
+  return {
+    release,
+    hold: `${heldAt}, once ${describeAhead(ahead)} ${ahead.length === 1 ? 'is' : 'are'} let go`,
+  };
 }
 
 function createJourneyRaces({ host }) {
@@ -171,8 +214,9 @@ function createJourneyRaces({ host }) {
     const key = getStepKey(step);
     const { gate, work } = outcome;
     if (CALL_STEP_KEYS.includes(key)) {
-      parked.push({ gate, index, step, work });
-      return { parkedAt: gate.requestId, release: writeParkedRelease({ gate, holds }) };
+      const entry = { gate, index, step, work };
+      parked.push(entry);
+      return { parkedAt: gate.requestId, ...describeParkedRelease({ entry, holds, parked }) };
     }
     stranded.push(work);
     throw new HeadlessStepError(
@@ -209,14 +253,17 @@ function createJourneyRaces({ host }) {
     };
   }
 
-  function describeParked({ gate, index, step }) {
-    const releaseStep = writeParkedRelease({ gate, holds });
+  // A call left parked, named among the calls left parked with it (`left`).
+  function describeParked({ entry, left }) {
+    const { gate, index, step } = entry;
+    const described = describeParkedRelease({ entry, holds, parked: left });
+    const quoted = quoteParkedRelease(described);
     return {
       index,
       step,
-      expected: `a "${releaseStep}" step to let the parked call go`,
+      expected: `a "${described.release}" step to let the parked call go`,
       actual: 'still parked when the journey ended',
-      message: `The call parked at the gate on request "${gate.requestId}" was still parked when the journey ended: release it with "${releaseStep}".`,
+      message: `The call parked at the gate on request "${gate.requestId}" was still parked when the journey ended: release it with ${quoted}.`,
     };
   }
 
@@ -235,7 +282,7 @@ function createJourneyRaces({ host }) {
       return describeUnreached(unreached[0]);
     }
     if (left.length > 0) {
-      return describeParked(left[0]);
+      return describeParked({ entry: left[0], left });
     }
     return undefined;
   }

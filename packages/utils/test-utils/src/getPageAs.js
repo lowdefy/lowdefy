@@ -31,6 +31,7 @@ async function getPageAs({ path, testSession, user }) {
     );
   }
   const context = createCallContext({
+    detached: [],
     faults: [],
     req: { url: path, method: 'GET', hostname: 'localhost' },
     testSession,

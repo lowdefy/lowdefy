@@ -41,7 +41,10 @@ const CALLER_CHECK_FAILED_CODE = 1011;
 // a record ends that subscription within a minute.
 function createWebSocketConnection(context, { closeSocket, headers, registry, send, strategies }) {
   const { logger } = context;
-  const callerFingerprint = getCallerFingerprint({ user: context.user });
+  const callerFingerprint = getCallerFingerprint({
+    user: context.user,
+    viewSession: context.viewSession,
+  });
   // websocketId → the tail of that feed's frame queue. A feed's frames are
   // handled one at a time, in the order they arrive. A subscribe awaits its
   // channel preparation, so without this an unsubscribe sent right after it
@@ -97,9 +100,9 @@ function createWebSocketConnection(context, { closeSocket, headers, registry, se
   // A check that can not complete closes the socket too: the caller can not be
   // vouched for, and the client's reconnect authenticates afresh.
   async function checkCaller() {
-    let user;
+    let caller;
     try {
-      user = await resolveWebsocketCaller(context, { headers, strategies });
+      caller = await resolveWebsocketCaller(context, { headers, strategies });
     } catch (error) {
       if (!closed) {
         context.handleError(error);
@@ -110,7 +113,7 @@ function createWebSocketConnection(context, { closeSocket, headers, registry, se
     if (closed) {
       return false;
     }
-    if (getCallerFingerprint({ user }) !== callerFingerprint) {
+    if (getCallerFingerprint(caller) !== callerFingerprint) {
       logger.info({ event: 'ws_caller_changed' }, 'WebSocket caller changed - closing.');
       closeWith({ code: CALLER_CHANGED_CODE, reason: 'caller-changed' });
       return false;
@@ -134,6 +137,12 @@ function createWebSocketConnection(context, { closeSocket, headers, registry, se
         send(JSON.stringify({ type: 'unsubscribed', websocketId }));
         return;
       case 'publish':
+        // A view session's publish is allowed by its grant's scopes, which can
+        // be narrowed while the socket is open, so the caller is resolved again
+        // first. Other callers publish on their roles, checked once a minute.
+        if (!type.isNone(context.viewSession) && !(await checkCaller())) {
+          return;
+        }
         await registry.publish(context, { websocketId, payload });
         send(JSON.stringify({ type: 'published', websocketId, requestId }));
         return;

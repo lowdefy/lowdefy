@@ -58,6 +58,10 @@ async function runDetachedEndpoint(
   // upstream and built server-side, never from user input. A stale principal
   // (roles changed between dispatch and run) is acceptable for at-most-once
   // fire-and-forget - no re-resolution.
+  // A run a view session dispatched stays held to that session's grant, whichever
+  // identity it runs with: the request steps of the routine read it
+  // (authorizeViewRequestResolver).
+  context.viewSession = principal?.viewSession ?? null;
   if (principal?.system === true) {
     // The dispatcher was a trusted system context (cron, hook, or a verified
     // webhook) - the detached run inherits it and blanket-passes, bound to the

@@ -31,10 +31,12 @@ import {
   registerDarkModeMethod,
   registerLocaleMethod,
 } from '../headerActions.js';
+import getDefaultLogoUrl from '../getDefaultLogoUrl.js';
 import getPageSpacing from '../getPageSpacing.js';
 import withPageTheme from '../withPageTheme.js';
 
 function PageHeaderMenu({
+  apiBase,
   basePath,
   blockId,
   classNames = {},
@@ -89,14 +91,14 @@ function PageHeaderMenu({
                           media={`(min-width:${properties.logo?.breakpoint ?? 577}px)`}
                           srcSet={
                             properties.logo?.src ??
-                            `${basePath}/logo-${getDarkMode() ? 'dark' : 'light'}-theme.png`
+                            getDefaultLogoUrl({ apiBase, darkMode: getDarkMode(), square: false })
                           }
                         />
                         <img
                           src={
                             properties.logo?.srcMobile ??
                             properties.logo?.src ??
-                            `${basePath}/logo-square-${getDarkMode() ? 'dark' : 'light'}-theme.png`
+                            getDefaultLogoUrl({ apiBase, darkMode: getDarkMode(), square: true })
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
                           className={
@@ -112,6 +114,7 @@ function PageHeaderMenu({
                         <Menu
                           blockId={`${blockId}_menu`}
                           journeyMarks={false}
+                          apiBase={apiBase}
                           basePath={basePath}
                           components={{ Icon, Link, ShortcutBadge }}
                           classNames={{ element: classNames.menu }}
@@ -179,6 +182,7 @@ function PageHeaderMenu({
                         }}
                         styles={{ element: styles.mobileMenu }}
                         blockId={`${blockId}_mobile_menu`}
+                        apiBase={apiBase}
                         basePath={basePath}
                         components={{ Icon, Link, ShortcutBadge }}
                         events={events}
@@ -223,6 +227,7 @@ function PageHeaderMenu({
                     {!type.isNone(properties.breadcrumb) ? (
                       <Breadcrumb
                         blockId={`${blockId}_breadcrumb`}
+                        apiBase={apiBase}
                         basePath={basePath}
                         components={{ Icon, Link, ShortcutBadge }}
                         classNames={{ element: classNames.breadcrumb }}

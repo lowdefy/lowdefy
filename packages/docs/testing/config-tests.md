@@ -154,7 +154,7 @@ A journey also fails at the step that causes an app error, even when every expec
 
 - an action that fails with an error, such as a `Request` or `CallAPI` whose request throws, or an operator that throws,
 - an uncaught exception in the page, or an error the page reports to the dev server,
-- a request or endpoint that throws on the server, or answers with a 5xx.
+- a request or endpoint that throws on the server, or answers with a 5xx. An error the routine's own `:catch` handled does not count: the journey is judged by the routine's answer. The server still logs it in the terminal.
 
 Errors raised while the journey's first page opens (its `onInit` and `onMount` requests) fail the journey `on open`, before any step runs. Expected outcomes never fail a journey: a failed `Validate`, a `Throw` action or any other user error, and a 401 or 403 refusal. Only errors the journey's own browsers cause count: an error you raise in your own tab on the same dev server while journeys run does not fail them, and a journey's errors are reported in its result, not in the dev server's build status.
 
@@ -264,7 +264,7 @@ steps:
   - expect: { error: API Endpoint "auditor_only" does not exist. }
 ```
 
-`expect: { db }` proves what a write stored, or that a refused one stored nothing. With `expect: { calls }`, a [headless run](#headless-runs) also checks the payload the page sent and the response it got, as partial matches on the last call. `expect: { calls }` counts the calls of the person acting when it runs; a call made `as` another user counts on that user.
+`expect: { db }` proves what a write stored, or that a refused one stored nothing. With `expect: { calls }`, a [headless run](#headless-runs) also checks the payload the page sent and the response it got, as partial matches on the last call. `expect: { calls }` counts the calls of the person acting when it runs; a call made `as` another user counts on that user. In a headless run, a `CallApi` with `detached: true` counts as a call to its endpoint, with the payload its step built, on the person whose call made it (on the person acting for a `webhook` step). A browser run does not see it.
 
 ```yaml
 name: a member saves an item with the name they typed
@@ -679,7 +679,7 @@ lowdefy build
 lowdefy test --headless --build
 ```
 
-`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run, and the app's real secrets are never read. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route, and neither can an auth step, since no auth engine runs: each fails as a config error. A routine that handles the failure in the `:catch` of its `:try` still passes, see below. The results are written to `.lowdefy/test/headless-run.json`.
+`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run, and the app's real secrets are never read. A `CallApi` with `detached: true` is recorded instead of sent, since it dispatches through the server's own route: the routine carries on as on a server, the endpoint it starts never runs, and `expect: { calls }` reads it as a call to that endpoint, with its payload. An auth step cannot run on a build, since no auth engine runs: it fails as a config error. A routine that handles the failure in the `:catch` of its `:try` still passes, see below. The results are written to `.lowdefy/test/headless-run.json`.
 
 ### While you edit
 
@@ -687,7 +687,7 @@ lowdefy test --headless --build
 lowdefy test --headless
 ```
 
-A headless run does not count a server error that the routine's own `:catch` handled: the routine dealt with it and answered, so the journey is judged by the answer and by what was written. An error that no `:catch` handles fails the journey at its step, as in a browser run.
+A headless run does not count a server error that the routine's own `:catch` handled, and neither does a browser run: the routine dealt with it and answered, so the journey is judged by the answer and by what was written. An error that no `:catch` handles fails the journey at its step, and so does one the `:catch` passes on, as `:throw: { _error: true }` does.
 
 Without `--build`, a headless run uses the development server, as a plain `lowdefy test` does: it starts one, or uses the one `--url` names. Pages are built on demand, so a config edit needs no rebuild, and every journey runs on its own [data set](/journey-data-sets) session. A headless run starts no browser and takes no journey run slot, so it does not wait behind browser runs on the machine. What it exercised counts in `.lowdefy/test/exercised.json` for lint and `journeys harden`; it records no traces for session logs. The results are written to `.lowdefy/test/headless-run.json`.
 

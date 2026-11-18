@@ -450,3 +450,15 @@ test.describe('MultipleSelector Block', () => {
     await expect(selector.locator('.ant-select-prefix svg')).toBeVisible();
   });
 });
+
+test.describe('MultipleSelector autoOpen', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'multiple_selector');
+  });
+
+  test('autoOpen opens the dropdown when the block mounts', async ({ page }) => {
+    await getBlock(page, 'multipleselector_show_auto_open').locator('button').click();
+    await expect(getOption(page, 'multipleselector_auto_open', 0)).toBeVisible();
+    await expect(getOption(page, 'multipleselector_auto_open', 1)).toBeVisible();
+  });
+});

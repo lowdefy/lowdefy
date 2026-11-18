@@ -86,6 +86,8 @@ import { type } from '@lowdefy/helpers';
  * @property {*} error
  * @property {Object} body The JSON the server sends.
  * @property {Array} faults The errors the server would log at error level.
+ * @property {Array<{ endpointId: string, payload: * }>} detached The detached CallApi calls the
+ *   call's routine made, in order: recorded for expect.calls (recordDetachedCalls).
  */
 
 /**
@@ -94,6 +96,7 @@ import { type } from '@lowdefy/helpers';
  * @property {*} body The JSON the route sends, or the text of a text/plain answer.
  * @property {string} contentType "application/json" or "text/plain".
  * @property {Array} faults The errors the server would log at error level.
+ * @property {Array<{ endpointId: string, payload: * }>} detached As a HostAnswer's.
  * @property {string} rid The call's request id: a routine that failed answers with no request id,
  *   so the message of a forced failure is read by this one (readForcedError).
  */

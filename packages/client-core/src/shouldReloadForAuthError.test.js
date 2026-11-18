@@ -92,3 +92,20 @@ test('a second auth reload within the reload interval is refused', () => {
   expect(shouldReloadForAuthError(args)).toBe(true);
   expect(shouldReloadForAuthError(args)).toBe(false);
 });
+
+test('a write refused to a read-only view never reloads, for a request or an endpoint', () => {
+  [true, false].forEach((reloadOnAuthorizationError) => {
+    const error = new AuthorizationError(
+      'This connection is read-only. Reconnect with write access to make changes.'
+    );
+    error.code = 'view_write_required';
+    expect(
+      shouldReloadForAuthError({
+        error,
+        reloadOnAuthorizationError,
+        user,
+        sessionStorage: createMemoryStore(),
+      })
+    ).toBe(false);
+  });
+});

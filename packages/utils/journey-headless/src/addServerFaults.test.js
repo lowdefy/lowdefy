@@ -38,7 +38,7 @@ test('addServerFaults leaves out a fault a :catch of the routine handled', () =>
 
 test('addServerFaults adds the escaped fault of a call that also has a caught one', () => {
   const errorSink = createErrorSink();
-  const caught = new Error('CallApi with "detached: true" requires CRON_SECRET.');
+  const caught = new Error('Connection "ledger" does not exist.');
   caught.caught = true;
   const escaped = new Error('Operator "_stat" is not defined.');
   addServerFaults({ call, errorSink, faults: [caught, escaped] });
