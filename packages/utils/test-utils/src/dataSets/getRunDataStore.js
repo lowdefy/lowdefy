@@ -19,6 +19,8 @@ import { MongoClient } from 'mongodb';
 import announceDataStoreDownload from './announceDataStoreDownload.js';
 import getRunOwnerPid from './getRunOwnerPid.js';
 import getRunStoreRecordPath from './getRunStoreRecordPath.js';
+import isDataStoreGone from './isDataStoreGone.js';
+import removeRunStoreRecord from './removeRunStoreRecord.js';
 import waitForRunStoreRecord from './waitForRunStoreRecord.js';
 
 // The store is a local mongod: a client that cannot reach it within this long is looking at a
@@ -26,15 +28,37 @@ import waitForRunStoreRecord from './waitForRunStoreRecord.js';
 const SERVER_SELECTION_TIMEOUT_MS = 5000;
 const START_TIMEOUT_MS = 120000;
 const DOWNLOAD_TIMEOUT_MS = 900000;
+// A record can name a store that is gone while its keeper pid still lives: the pid was reused,
+// or the keeper is stopping. Each such record is replaced; three in a row is a store that keeps
+// dying, which is thrown.
+const JOIN_ATTEMPTS = 3;
+
+async function connectToRunStore({ ownerPid, recordPath, timeoutMs }) {
+  for (let attempt = 1; ; attempt += 1) {
+    const record = await waitForRunStoreRecord({ ownerPid, recordPath, timeoutMs });
+    const client = new MongoClient(record.uri, {
+      serverSelectionTimeoutMS: SERVER_SELECTION_TIMEOUT_MS,
+    });
+    try {
+      await client.connect();
+      return { client, record };
+    } catch (error) {
+      await client.close().catch(() => {});
+      if (!isDataStoreGone(error) || attempt === JOIN_ATTEMPTS) throw error;
+      removeRunStoreRecord({ recordPath, token: record.token });
+    }
+  }
+}
 
 // The data store of a test run: one in-memory MongoDB replica set for every test process of the
 // run, where the dev server's store (getDataStore) is one per server process. The first test
 // process to ask starts it, in a keeper process of its own (runDataStoreKeeper), and the rest
 // join it; each opens data sessions with databases of its own (openDataSession({ store })). It
 // holds the same cache cap as the dev server's store (startDataStoreReplSet), and there is one
-// per run however many test files run at once. It stops when the run's owner process is gone:
-// the `node --test` runner, or this process when it has no runner above it or its runner is
-// gone (getRunOwnerPid).
+// per run however many test files run at once. It stops when the run's owner process is gone
+// (the `node --test` runner, or this process when it has no runner above it or its runner is
+// gone: getRunOwnerPid), or when no test process has used it for a while (runDataStoreKeeper).
+// A record whose store does not answer is replaced, so the next join starts a new store.
 //
 // Returns this caller's own client on the store, with stop() to close it; the store stays up
 // for the run's other test processes. `logger` is told when the MongoDB binary still has to be
@@ -42,15 +66,11 @@ const DOWNLOAD_TIMEOUT_MS = 900000;
 async function getRunDataStore({ logger }) {
   const downloading = await announceDataStoreDownload({ logger, purpose: 'endpoint tests' });
   const ownerPid = getRunOwnerPid();
-  const record = await waitForRunStoreRecord({
+  const { client, record } = await connectToRunStore({
     ownerPid,
     recordPath: getRunStoreRecordPath({ ownerPid }),
     timeoutMs: downloading ? DOWNLOAD_TIMEOUT_MS : START_TIMEOUT_MS,
   });
-  const client = new MongoClient(record.uri, {
-    serverSelectionTimeoutMS: SERVER_SELECTION_TIMEOUT_MS,
-  });
-  await client.connect();
   const store = {
     client,
     keeperPid: record.keeperPid,

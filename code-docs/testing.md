@@ -366,12 +366,26 @@ share one `mongod` (`getRunDataStore`), where the dev server has one per server 
   `NODE_TEST_CONTEXT` set), or the process itself outside one. The keeper polls the owner's pid
   every 250 ms and stops `mongod`, removing its directory and the record, once the owner is
   gone: finished, interrupted or killed. A killed keeper's `mongod` is stopped by
-  mongodb-memory-server's own helper, and the next join replaces a record whose keeper is gone.
+  mongodb-memory-server's own helper.
+- **It also exits when nobody uses it.** Every second the keeper counts the store's clients
+  other than its own (`countStoreClients`, from `$currentOp`). A test file holds its client from
+  its first session until it exits, so a count of 0 means no test process uses the store. After
+  30 s with none, whatever the owner pid says, the keeper removes the record, so no new process
+  joins, and stops `mongod` at the next poll with no client. A process that joined in between
+  keeps the store up until it leaves. The next join starts a new store through the claim. This
+  is what stops a store whose owner never exits: a file adopted by a subreaper before it loaded
+  the harness names the subreaper as its owner. A store whose `mongod` stops answering is
+  stopped too.
+- **A dead record is replaced.** The next join replaces a record whose keeper is gone, and one
+  whose URI does not answer although its keeper pid lives (the pid was reused, or the keeper is
+  stopping): the join that cannot connect removes the record, if it still carries the same
+  token, and claims a new one. Three dead stores in a row are thrown.
 - **A test file whose runner is gone owns its store.** A killed runner leaves its test files
   running under another parent (process 1, or a process that adopts orphans), which never
   exits. A file whose parent has changed since the harness loaded, or is process 1, is
   therefore its own owner (`pickRunOwnerPid`), and the store it starts stops when it does. So a
   run whose `node --test` is itself process 1, as a container's command, has a store per file.
+  A file adopted before it loaded the harness cannot tell; the idle stop covers it.
 
 A run therefore holds one `mongod` and one keeper however many files run at once, and none
 after it. After any run that starts one, `pgrep -fl 'mongod-|mongod '` shows what is left; the

@@ -36,6 +36,6 @@ Run it with `lowdefy build --no-client-build && node --test --test-concurrency=4
 - Connections follow what their type declares, as under a journey: MongoDB reads and writes the session's databases, a request to an outside service is recorded in `session.sunk` and answers `null`, and a type that declares nothing is refused. `session.stub(connectionType, requestType, fn)` answers a request type instead; on an undeclared type it lets only that request type through.
 - Real secrets are never read: `LOWDEFY_SECRET_*` and `CRON_SECRET` are removed from the test process's environment when the app opens, and every secret the build names gets the value `test-secret-<NAME>`, which `openTestApp({ secrets })` replaces by name. Agents are not loaded, so an agent call fails, and a `detached: true` `CallApi` fails for want of `CRON_SECRET`.
 - `session.collection(connectionId)` and `session.seed(connectionId, docs)` reach a connection's collection through the MongoDB driver. `session.pauseBefore(stepId)` holds a routine before a request step, for a test of two calls that race, and `session.settled()` waits for `async: true` work.
-- One `mongod` serves every test file of a run and stops when the runner does, also when it is killed.
+- One `mongod` serves every test file of a run and stops when the runner does, also when it is killed, or once no test process has used it for 30 s.
 
 `@lowdefy/test-utils/assert` adds `assertEquals`, `assertMatches` and the matchers `any`, `anything`, `objectContaining`, `arrayContaining` and `stringMatching`, with no dependencies.
