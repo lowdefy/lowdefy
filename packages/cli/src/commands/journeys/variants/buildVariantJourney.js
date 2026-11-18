@@ -20,6 +20,10 @@ import { type } from '@lowdefy/helpers';
 // user or data set the variant runs as instead (`overrides`), named
 // `<original> — <kind>: <detail>`, with `variant` naming where it came from. A
 // variant of a serial journey depends on the same outside things, so it stays serial.
+// It keeps the original's stubs, so its outside calls are answered and its forced
+// failures fail as the original's do. A variant of a case-table journey keeps the
+// table: its steps come from the journey as written, `_case` placeholders and all, so
+// it runs once per row as the original does.
 function buildVariantJourney({ journey, variant }) {
   const result = { name: `${journey.name} — ${variant.kind}: ${variant.detail}` };
   const settings = { ...journey, ...variant.overrides };
@@ -29,6 +33,11 @@ function buildVariantJourney({ journey, variant }) {
     }
   });
   result.variant = { of: journey.name, kind: variant.kind, detail: variant.detail };
+  ['cases', 'stubs'].forEach((key) => {
+    if (!type.isUndefined(settings[key])) {
+      result[key] = settings[key];
+    }
+  });
   result.steps = variant.steps;
   return result;
 }
