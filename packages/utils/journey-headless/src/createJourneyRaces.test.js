@@ -20,7 +20,7 @@ import createJourneyRaces from './createJourneyRaces.js';
 
 // A data session's pause gates, reached as a gated resolver reaches them (test-utils'
 // holdAtPauseGate): the first open gate the request matches holds the routine until released.
-function reach({ session, requestId, endpointId }) {
+function reach({ session, requestId, endpointId, pageId }) {
   const gate = session.pauseGates.find(
     (entry) =>
       !entry.reached &&
@@ -30,7 +30,7 @@ function reach({ session, requestId, endpointId }) {
   );
   if (gate === undefined) return Promise.resolve();
   gate.reached = true;
-  gate.reachedBy = { requestId, endpointId, pageId: undefined };
+  gate.reachedBy = { requestId, endpointId, pageId };
   gate.arrive();
   return gate.whenReleased;
 }
@@ -50,7 +50,14 @@ function setUp() {
       return { endpointId };
     });
   }
-  return { call, races, run, session };
+  // A request on pageId (a routine of endpointId, when given), answering with label.
+  function request({ pageId, endpointId, label }) {
+    return run({ request: { requestId: 'claim', pageId } }, async () => {
+      await reach({ session, requestId: 'claim', endpointId, pageId });
+      return { pageId, endpointId, label };
+    });
+  }
+  return { call, races, request, run, session };
 }
 
 async function holdBoth({ call, run }) {
@@ -158,4 +165,64 @@ test('createJourneyRaces names a parked call by its request id alone when its ho
   const { call, run } = setUp();
   await run({ hold: { requestId: 'claim' } });
   expect(await call('approve')).toEqual({ parkedAt: 'claim', release: 'release: claim' });
+});
+
+test('createJourneyRaces names the hold of each of two calls parked on one page at two bare holds', async () => {
+  const { races, request, run } = setUp();
+  await run({ hold: { requestId: 'claim' } });
+  await run({ hold: { requestId: 'claim' } });
+  // The first call's release is its own until the second call parks on the same one.
+  expect(await request({ pageId: 'new-claim' })).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, pageId: new-claim }',
+  });
+  const second = await request({ pageId: 'new-claim' });
+  expect(second).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, pageId: new-claim }',
+    hold: 'the hold at step 1: the 2nd such release lets it go',
+  });
+  const failure = await races.finish();
+  expect(failure.index).toBe(2);
+  expect(failure.expected).toBe(
+    'a "release: { requestId: claim, pageId: new-claim }" step to let the parked call go'
+  );
+  expect(failure.message).toBe(
+    'The call parked at the gate on request "claim" was still parked when the journey ended: release it with "release: { requestId: claim, pageId: new-claim }" (the hold at step 0: the 1st such release lets it go).'
+  );
+  expect(failure.message).not.toContain(second.hold);
+});
+
+test('createJourneyRaces lets the calls parked at two bare holds on one page go in the order they parked', async () => {
+  const { races, request, run } = setUp();
+  await run({ hold: { requestId: 'claim' } });
+  await run({ hold: { requestId: 'claim' } });
+  await request({ pageId: 'new-claim', label: 'first' });
+  await request({ pageId: 'new-claim', label: 'second' });
+  const release = { release: { requestId: 'claim', pageId: 'new-claim' } };
+  expect((await run(release)).label).toBe('first');
+  expect((await run(release)).label).toBe('second');
+  expect(await races.finish()).toBeUndefined();
+});
+
+test('createJourneyRaces suggests the whole request when it tells two calls on one release apart', async () => {
+  const { races, request, run } = setUp();
+  await run({ hold: { requestId: 'claim' } });
+  await run({ hold: { requestId: 'claim' } });
+  expect(await request({ pageId: 'approvals', endpointId: 'approve' })).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, endpoint: approve }',
+  });
+  expect(await request({ pageId: 'claims', endpointId: 'approve' })).toEqual({
+    parkedAt: 'claim',
+    release: 'release: { requestId: claim, endpoint: approve, pageId: claims }',
+    hold: 'the hold at step 1',
+  });
+  expect(
+    await run({ release: { requestId: 'claim', endpoint: 'approve', pageId: 'claims' } })
+  ).toEqual({ pageId: 'claims', endpointId: 'approve', label: undefined });
+  const failure = await races.finish();
+  expect(failure.message).toBe(
+    'The call parked at the gate on request "claim" was still parked when the journey ended: release it with "release: { requestId: claim, endpoint: approve }".'
+  );
 });
