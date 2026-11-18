@@ -22,8 +22,10 @@ import {
   getRootConfig,
   parseRequestBody,
   redactErrorResponse,
+  runDetachedEndpoint,
+  runWebhookEndpoint,
 } from '@lowdefy/api';
-import { expectedAnswers, isExpectedError } from '@lowdefy/errors';
+import { expectedAnswers, isExpectedError, isForcedFailure } from '@lowdefy/errors';
 import { buildPagePath, serializer, type } from '@lowdefy/helpers';
 import { createHeadlessHost, loadClientPlugins } from '@lowdefy/journey-headless';
 import { matchPagePath } from '@lowdefy/node-utils';
@@ -48,37 +50,43 @@ function createErrorSink() {
   };
 }
 
+// The answer to a call that threw, as the server's error handler answers it: an expected outcome
+// with its status and { name, message }, or a fault, logged and answered 500.
+async function answerError({ context, error, faults }) {
+  if (isExpectedError(error)) {
+    const { status } = expectedAnswers[error.name] ?? expectedAnswers.UserError;
+    const refusal = new Error(error.message);
+    refusal.name = error.name;
+    return {
+      status,
+      success: false,
+      response: null,
+      error: refusal,
+      body: { name: error.name, message: error.message },
+      faults,
+    };
+  }
+  await context.handleError(error);
+  const text = JSON.stringify(redactErrorResponse(context, error));
+  return {
+    status: 500,
+    success: false,
+    response: null,
+    error: serializer.deserializeFromString(text),
+    body: JSON.parse(text),
+    faults,
+  };
+}
+
 // The answer a call gets, as the server's routes and error handler answer it (and as
-// @lowdefy/test-utils' answerCall answers for a build): a 200 with the call's result, an expected
-// outcome with its status and { name, message }, or a fault, logged and answered 500.
+// @lowdefy/test-utils' answerCall answers for a build): a 200 with the call's result, or what
+// answerError answers when it threw.
 async function answer({ context, faults, run }) {
   let result;
   try {
     result = await run(context);
   } catch (error) {
-    if (isExpectedError(error)) {
-      const { status } = expectedAnswers[error.name] ?? expectedAnswers.UserError;
-      const refusal = new Error(error.message);
-      refusal.name = error.name;
-      return {
-        status,
-        success: false,
-        response: null,
-        error: refusal,
-        body: { name: error.name, message: error.message },
-        faults,
-      };
-    }
-    await context.handleError(error);
-    const text = JSON.stringify(redactErrorResponse(context, error));
-    return {
-      status: 500,
-      success: false,
-      response: null,
-      error: serializer.deserializeFromString(text),
-      body: JSON.parse(text),
-      faults,
-    };
+    return answerError({ context, error, faults });
   }
   const text = JSON.stringify(result);
   const read = serializer.deserializeFromString(text);
@@ -169,10 +177,12 @@ async function createDevServerHost({
     });
     // The faults the call logs at error level, as answerCall's faults: what a browser journey's
     // server error entries hold for the run's invariants. One a :catch of the routine handled
-    // is marked `caught: true`, as createFaultSink in @lowdefy/test-utils marks it.
+    // is marked `caught: true`, as createFaultSink in @lowdefy/test-utils marks it. A forced
+    // failure (a fail gate's) is no fault: the dev server's handleError records it on the data
+    // session instead.
     const handleError = context.handleError;
     context.handleError = async (error, options) => {
-      if (!isExpectedError(error)) {
+      if (!isExpectedError(error) && !isForcedFailure(error)) {
         if (options?.caught === true) {
           error.caught = true;
         }
@@ -266,6 +276,66 @@ async function createDevServerHost({
     });
   }
 
+  // A call `as: system`: the endpoint runs as POST /api/detached runs it for a cron or a system
+  // dispatcher, through runDetachedEndpoint with a system principal, so there is no user and an
+  // InternalApi endpoint is callable. In process, so the route's CRON_SECRET gate is not crossed.
+  async function system({ endpointId, payload }) {
+    const requestPath = `/api/detached/${endpointId}`;
+    counter.recordCall({ url: `${origin}${requestPath}`, method: 'POST' });
+    const parsed = parseRequestBody({ text: JSON.stringify({ payload }) });
+    const { context, faults } = await createContext({
+      callUser: 'none',
+      method: 'POST',
+      requestPath,
+    });
+    return answer({
+      context,
+      faults,
+      run: (callContext) =>
+        runDetachedEndpoint(callContext, {
+          endpointId,
+          payload: parsed.payload,
+          principal: { system: true },
+        }),
+    });
+  }
+
+  // A webhook step: posted as the endpoints route runs a webhook endpoint, through
+  // runWebhookEndpoint with no caller, so its verify gate runs against rawBody. Answers what the
+  // route sends, { status, body, contentType, faults, rid }, as @lowdefy/test-utils' callWebhook
+  // does: rid is the call's request id, by which a forced failure's message is read.
+  async function webhook({ endpointId, headers, query, rawBody }) {
+    const requestPath = `/api/endpoints/${endpointId}`;
+    counter.recordCall({ url: `${origin}${requestPath}`, method: 'POST' });
+    const { context, faults } = await createContext({
+      callUser: 'none',
+      method: 'POST',
+      requestPath,
+    });
+    try {
+      const sent = await runWebhookEndpoint(context, { endpointId, headers, query, rawBody });
+      if (sent.contentType === 'text/plain') {
+        return {
+          status: sent.status,
+          body: sent.body,
+          contentType: 'text/plain',
+          faults,
+          rid: context.rid,
+        };
+      }
+      return {
+        status: sent.status,
+        body: JSON.parse(JSON.stringify(sent.body)),
+        contentType: 'application/json',
+        faults,
+        rid: context.rid,
+      };
+    } catch (error) {
+      const { body, status } = await answerError({ context, error, faults });
+      return { status, body, contentType: 'application/json', faults, rid: context.rid };
+    }
+  }
+
   async function findDocuments({ collection, connectionId, match }) {
     if (type.isUndefined(session)) {
       throw new Error(
@@ -301,7 +371,7 @@ async function createDevServerHost({
     // The data session belongs to the journey run, which closes it (runJourneyHeadless).
     close: async () => {},
     dataSetName: dataSet?.name ?? null,
-    dataSession: session ?? null,
+    dataSession: session?.session ?? null,
     errorSink: createErrorSink(),
     findDocuments,
     loadClientPlugins: () => {
@@ -312,7 +382,9 @@ async function createDevServerHost({
     readPageConfig,
     resolveUser,
     rootConfig,
+    system,
     userNames: Object.keys(users),
+    webhook,
   });
 }
 

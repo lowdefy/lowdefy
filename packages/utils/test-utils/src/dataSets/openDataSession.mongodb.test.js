@@ -21,7 +21,9 @@ import { vi, afterAll, afterEach, beforeAll, beforeEach, describe, expect, test 
 import { Decimal128, MongoClient, ObjectId } from 'mongodb';
 import { parseDataSet } from '@lowdefy/node-utils';
 
+import addPauseGate from './addPauseGate.js';
 import applyDataSetRedirect from './applyDataSetRedirect.js';
+import holdAtPauseGate from './holdAtPauseGate.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
@@ -498,6 +500,19 @@ test('close() waits for background work added to the session', async () => {
   release();
   await closing;
   expect(closed).toBe(true);
+});
+
+test('close() lets go of a routine held at a pause gate and removes the gates', async () => {
+  const { session, close } = await openDataSession({
+    dataSet: makeDataSet({}),
+    logger: mockLogger,
+  });
+  addPauseGate({ requestId: 'claim_run', session });
+  addPauseGate({ requestId: 'read_run', session });
+  const held = holdAtPauseGate({ args: { requestId: 'claim_run' }, session });
+  await close();
+  await held;
+  expect(session.pauseGates).toEqual([]);
 });
 
 test('close() drops after 30 s with a warning when background work never settles', async () => {

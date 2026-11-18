@@ -16,6 +16,7 @@
 
 import { decodeErrorBody } from '@lowdefy/client-core';
 import { serializer, type } from '@lowdefy/helpers';
+import { readForcedError } from '@lowdefy/journey-headless';
 
 // The route a call or request step posts to and how its answer is named, with the body the
 // client's createCallAPI and createCallRequest send.
@@ -73,7 +74,9 @@ function readRoutineError(body) {
 // who the step calls as (journey.actors.callerFor), so the call carries that actor's session,
 // data set and recording cookies, as the page's own calls do. A refusal or an error is the
 // answer, not a failure of the step: expect.status and expect.error read it from
-// journey.lastAnswer. The call is counted for expect.calls and the exercised paths.
+// journey.lastAnswer. The call is counted for expect.calls and the exercised paths. A call a fail
+// gate failed answers with the forced message the dev server recorded on the journey's data
+// session (readForcedError), not the generic one the route sent.
 async function runJourneyCall({ journey, step, timeout }) {
   const { as, body, description, url } = describeCall({ journey, step });
   const { context, counter } = await journey.actors.callerFor(as);
@@ -86,13 +89,14 @@ async function runJourneyCall({ journey, step, timeout }) {
   const status = response.status();
   const text = await response.text();
   const answerBody = parseJson(text);
-  journey.lastAnswer = {
-    description,
-    status,
-    error: response.ok()
+  const forced = readForcedError({ body: answerBody, session: journey.dataSession?.session });
+  let error = forced;
+  if (forced === null) {
+    error = response.ok()
       ? readRoutineError(answerBody)
-      : readAnswerError({ body: answerBody, status, text }),
-  };
+      : readAnswerError({ body: answerBody, status, text });
+  }
+  journey.lastAnswer = { description, status, error };
   return journey.lastAnswer;
 }
 

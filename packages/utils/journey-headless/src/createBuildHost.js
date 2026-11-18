@@ -17,8 +17,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { buildPagePath, serializer } from '@lowdefy/helpers';
-import { openTestApp } from '@lowdefy/test-utils';
+import { buildPagePath, serializer, type } from '@lowdefy/helpers';
+import { addJourneyStubs, checkJourneyStubTargets } from '@lowdefy/test-utils/dataSets';
 import { headlessCalls } from '@lowdefy/test-utils/headless';
 
 import createErrorSink from './createErrorSink.js';
@@ -27,24 +27,29 @@ import loadClientPlugins from './loadClientPlugins.js';
 
 const NOT_FOUND_PATH = '404';
 
-// A headless host on a production build, through @lowdefy/test-utils: the build is checked
-// (missing, another Lowdefy version, older than the config) and the app's secrets are taken out of
-// the environment as openTestApp does, and a session is opened on data set `data` (or none), so
-// requests and endpoint calls run in process on the run's data store. `user` is who the page
-// is opened as by default: a user of the data set by name, a user object, or "none".
-async function createBuildHost({ configDirectory, data, secrets, serverDirectory, user }) {
-  const app = await openTestApp({ configDirectory, secrets, serverDirectory });
-  let session;
-  let calls;
+// A headless host for one journey on a production build that @lowdefy/test-utils' openTestApp
+// opened: a session is opened on data set `data` (or none), so requests and endpoint calls run in
+// process on a fresh copy of it on the run's data store. `user` is who the page is opened as by
+// default: a user of the data set by name, a user object, or "none". `stubs` are the journey's
+// own (answer stubs and fail gates), set on the session before any call; an answer stub on a
+// connection or request type the app does not have is refused (checkJourneyStubTargets). The app is opened once and
+// serves every journey of a run (openTestApp checks the build and takes the app's secrets out of
+// the environment); the host's close() ends only its session, and the app's close() ends the app.
+async function createBuildHost({ app, data, stubs, user }) {
+  const session = await app.openSession({ data });
+  const calls = headlessCalls(session);
   let rootConfig;
-  // The caller closes only a host it got back, so an app whose session or root config is refused
-  // (an unknown data set or user) is closed here.
+  // The caller closes only a host it got back, so a session whose stubs or root config are
+  // refused (an unknown user) is closed here.
   try {
-    session = await app.openSession({ data });
-    calls = headlessCalls(session);
+    const stubsError = checkJourneyStubTargets({ connections: calls.connections, stubs });
+    if (!type.isUndefined(stubsError)) {
+      throw new Error(stubsError);
+    }
+    addJourneyStubs({ session: calls.dataSession, stubs });
     rootConfig = await calls.readRootConfig({ user });
   } catch (error) {
-    await app.close();
+    await calls.close();
     throw error;
   }
   let clientPlugins = null;
@@ -89,9 +94,9 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
         requestId,
         user: caller ?? user,
       }),
-    close: () => app.close(),
+    close: () => calls.close(),
     dataSetName: calls.dataSetName,
-    dataSession: session,
+    dataSession: calls.dataSession,
     errorSink: createErrorSink(),
     findDocuments: calls.findDocuments,
     loadClientPlugins: () => {
@@ -102,7 +107,10 @@ async function createBuildHost({ configDirectory, data, secrets, serverDirectory
     readPageConfig,
     resolveUser: (pageUser) => calls.resolveUser(pageUser ?? user),
     rootConfig,
+    system: ({ endpointId, payload }) => calls.system({ endpointId, payload }),
     userNames: calls.userNames,
+    webhook: ({ endpointId, headers, query, rawBody }) =>
+      calls.webhook({ endpointId, headers, query, rawBody }),
   });
 }
 

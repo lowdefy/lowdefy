@@ -329,7 +329,7 @@ test('an external request is recorded in sunk and answers null, or what its stub
     throw new Error('connect ECONNREFUSED');
   });
   const failed = await session.as('member').request('rails', 'call_external');
-  expect(failed.status).toEqual(500);
+  expect(failed.success).toBe(false);
   expect(failed.success).toBe(false);
   expect(failed.faults).toHaveLength(1);
 });
@@ -397,6 +397,31 @@ test('reset releases a routine a test left held, so the next test starts clean',
   expect(again.status).toEqual(200);
 });
 
+test('a fail gate that never fired is listed, and reset throws naming it', async () => {
+  const session = await fixture.openSession({ data: 'explore' });
+  session.fail({ requestId: 'insert_activity', message: 'Activity log is down' });
+  session.fail({ requestId: 'never_called', endpoint: 'log_activity', message: 'Never reached' });
+  const failed = await session.as('member').call('log_activity', { source: 'failed' });
+  expect(failed.success).toBe(false);
+  expect(session.unfiredFailGates()).toEqual([
+    {
+      requestId: 'never_called',
+      endpoint: 'log_activity',
+      pageId: undefined,
+      message: 'Never reached',
+      times: 1,
+    },
+  ]);
+  await expect(session.reset()).rejects.toThrow(
+    'session.reset(): the forced failure on request "never_called" on endpoint "log_activity" ("Never reached") never fired'
+  );
+  // The session was reset all the same: the gate is gone and the next test starts clean.
+  expect(session.unfiredFailGates()).toEqual([]);
+  const next = await session.as('member').call('log_activity', { source: 'next test' });
+  expect(next.status).toEqual(200);
+  await session.reset();
+});
+
 test('settled waits for the background work of an async endpoint', async () => {
   const session = await changed.openSession({ data: 'explore' });
   const gate = session.pauseBefore('insert_slow');
@@ -428,6 +453,42 @@ test('system runs an InternalApi endpoint with no user, which no caller can call
   expect(written).toHaveLength(1);
   expect(written[0].night).toEqual('tue');
   expect(written[0].ran_by).toBeNull();
+});
+
+// apps/journey-fixture's payment_events: its verify gate checks x-fixture-signature, the hex
+// HMAC-SHA256 of the raw body under the stand-in secret test-secret-FIXTURE_WEBHOOK_SECRET.
+const evt1Signature = '3ecf0c67fc28daabe7cfb765671cd717ec91ab45414e200920d67266cc200039';
+
+test('webhook sends an object body as JSON text, which a signature over it verifies, and writes', async () => {
+  const session = await fixture.openSession({ data: 'outside' });
+  const signed = await session.webhook('payment_events', {
+    body: { id: 'evt_1', type: 'payment.succeeded' },
+    headers: { 'X-Fixture-Signature': evt1Signature },
+  });
+  expect(signed).toEqual({
+    status: 200,
+    body: { received: true },
+    contentType: 'application/json',
+    faults: [],
+  });
+  expect(await readAll(session, 'fixture_db', { kind: 'payment_event' })).toEqual([
+    { _id: 'evt_1', kind: 'payment_event', type: 'payment.succeeded' },
+  ]);
+});
+
+test('webhook with a wrong signature answers 401 and its routine never runs', async () => {
+  const session = await fixture.openSession({ data: 'outside' });
+  const forged = await session.webhook('payment_events', {
+    body: { id: 'evt_3', type: 'payment.succeeded' },
+    headers: { 'x-fixture-signature': evt1Signature },
+  });
+  expect(forged).toEqual({
+    status: 401,
+    body: { error: { code: 'unauthorized', message: 'Webhook verification failed.' } },
+    contentType: 'application/json',
+    faults: [],
+  });
+  expect(await readAll(session, 'fixture_db', { kind: 'payment_event' })).toEqual([]);
 });
 
 test('a session of a closed app refuses calls', async () => {

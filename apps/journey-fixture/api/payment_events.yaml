@@ -1,0 +1,31 @@
+# A webhook a payment provider would post to (tests/journeys/_headless/webhook.yaml, run headless
+# by packages/utils/journey-headless/test/fixture/outside.test.mjs). Its verify gate checks the
+# x-fixture-signature header, the hex HMAC-SHA256 of the raw body under FIXTURE_WEBHOOK_SECRET.
+# A test run's stand-in for that secret is test-secret-FIXTURE_WEBHOOK_SECRET, which the journey's
+# signatures are computed with; the fixture dev server is given the same value.
+id: payment_events
+type: Api
+webhook:
+  verify:
+    connectionId: fixture_signature
+    type: VerifyFixtureSignature
+    properties:
+      secret:
+        _secret: FIXTURE_WEBHOOK_SECRET
+      rawBody:
+        _payload: rawBody
+      signature:
+        _payload: headers.x-fixture-signature
+routine:
+  - id: record
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    properties:
+      doc:
+        _id:
+          _payload: body.id
+        kind: payment_event
+        type:
+          _payload: body.type
+  - ':return':
+      received: true

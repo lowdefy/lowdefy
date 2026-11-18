@@ -15,7 +15,13 @@
 */
 
 import { vi, beforeEach, expect, test } from 'vitest';
-import { ConfigError, LowdefyInternalError, UserError } from '@lowdefy/errors';
+import {
+  ConfigError,
+  LowdefyInternalError,
+  ServiceError,
+  UserError,
+  markForcedFailure,
+} from '@lowdefy/errors';
 import { markCredential, runInCredentialScope } from '@lowdefy/node-utils';
 
 vi.doMock('../../docs/serverErrorStore.js', () => ({
@@ -257,4 +263,56 @@ test('handleError stores a message with the credentials the request marked redac
     await handleError(new ConfigError('Upstream refused runtime-made-app-key-0001.'));
   });
   expect(serverErrorStore.push.mock.calls[0][0].message).toBe('Upstream refused [REDACTED].');
+});
+
+test('handleError records a forced failure on the data session and logs no fault, marking its run entry forced', async () => {
+  const context = {
+    ...testContext(),
+    rid: 'rid-1',
+    requestId: 'save_price',
+    logger: { error: vi.fn(), debug: vi.fn() },
+  };
+  const dataSession = { forced: [] };
+  const handleError = createHandleError({ context, dataSession });
+  const error = markForcedFailure(new ServiceError('Write failed on purpose'));
+
+  await handleError(error);
+
+  expect(error.handled).toBe(true);
+  expect(dataSession.forced).toEqual([{ rid: 'rid-1', message: 'Write failed on purpose' }]);
+  expect(serverErrorStore.push).toHaveBeenCalledWith(
+    expect.objectContaining({
+      name: 'ServiceError',
+      message: 'Write failed on purpose',
+      forced: true,
+      requestId: 'save_price',
+    })
+  );
+  expect(context.logger.error).not.toHaveBeenCalled();
+  expect(context.readConfigFile).not.toHaveBeenCalled();
+});
+
+test('handleError logs a plain error that carries forced: true as a fault, not a forced failure', async () => {
+  const context = { ...testContext(), rid: 'rid-1', logger: { error: vi.fn(), debug: vi.fn() } };
+  const dataSession = { forced: [] };
+  const handleError = createHandleError({ context, dataSession });
+  const error = new ServiceError('Upstream timed out');
+  error.forced = true;
+
+  await handleError(error);
+
+  expect(dataSession.forced).toEqual([]);
+  expect(context.logger.error).toHaveBeenCalledWith(error);
+  expect(serverErrorStore.push.mock.calls[0][0]).not.toHaveProperty('forced');
+});
+
+test('handleError with no data session logs a forced failure as a fault and does not throw', async () => {
+  const context = { ...testContext(), rid: 'rid-1', logger: { error: vi.fn(), debug: vi.fn() } };
+  const handleError = createHandleError({ context });
+  const error = markForcedFailure(new ServiceError('Write failed on purpose'));
+
+  await expect(handleError(error)).resolves.toBeUndefined();
+
+  expect(error.handled).toBe(true);
+  expect(context.logger.error).toHaveBeenCalledWith(error);
 });

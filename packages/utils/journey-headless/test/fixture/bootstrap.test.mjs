@@ -20,18 +20,23 @@ import path from 'node:path';
 
 import { afterAll, beforeAll, beforeEach, expect, test } from 'vitest';
 
+import { openTestApp } from '@lowdefy/test-utils';
+
 import createBuildHost from '../../src/createBuildHost.js';
 import openHeadlessPage from '../../src/openHeadlessPage.js';
+import runHeadlessJourney from '../../src/runHeadlessJourney.js';
 import journeyFixture from './journeyFixture.mjs';
 
 // The bootstrap proof: a production build of apps/journey-fixture runs on the client engine in
 // Node, with the build's own client plugins and no DOM or React, and a click sends the page's
 // real Request, which runs in process on the data set's database.
 
+let app;
 let host;
 
 beforeAll(async () => {
-  host = await createBuildHost({ ...journeyFixture, data: 'harden', user: 'member' });
+  app = await openTestApp(journeyFixture);
+  host = await createBuildHost({ app, data: 'harden', user: 'member' });
 });
 
 beforeEach(() => {
@@ -40,6 +45,7 @@ beforeEach(() => {
 
 afterAll(async () => {
   await host?.close();
+  await app?.close();
 });
 
 // The rules of the shell's isContextSettled: the init events are done, no block event is running
@@ -99,12 +105,8 @@ test('a built page opens in Node with its onMount run, and a click sends its Req
   expect(context._internal.RootSlots.map.save_success.eval.visible).toBe(true);
 
   // The write landed on the data set's database, beside its fixture.
-  const items = await host.dataSession
-    .collection('fixture_db')
-    .find({ kind: 'item' })
-    .sort({ name: 1 })
-    .toArray();
-  expect(items.map((item) => item.name)).toEqual(['Harden item', 'Headless item']);
+  const items = await host.findDocuments({ collection: 'items', match: { kind: 'item' } });
+  expect(items.map((item) => item.name).sort()).toEqual(['Harden item', 'Headless item']);
   expect(host.errorSink.errors).toEqual([]);
 });
 
@@ -134,14 +136,63 @@ test("a CallAPI runs its endpoint in process, and the endpoint's fault reaches t
   expect(host.errorSink.errors.some((entry) => entry.source === 'client')).toBe(true);
 });
 
+// One app serves a run's journeys: each host is a fresh session of its data set on it, and a
+// host's close() ends only that session.
+test('hosts on one app each get a fresh session, and closing one leaves the app serving the next', async () => {
+  const saveJourney = {
+    pageId: 'home',
+    steps: [
+      { fill: { blockId: 'name_input', value: 'Saved on the first host' } },
+      { click: 'save_button' },
+      { wait: { request: 'save_item' } },
+      { expect: { state: { path: 'saved', equals: true } } },
+    ],
+  };
+  const savedItem = {
+    collection: 'items',
+    connectionId: 'fixture_db',
+    match: { name: 'Saved on the first host' },
+  };
+  const first = await createBuildHost({ app, data: 'harden', user: 'member' });
+  try {
+    const result = await runHeadlessJourney({ host: first, journey: saveJourney });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+    expect(await first.findDocuments(savedItem)).toHaveLength(1);
+  } finally {
+    await first.close();
+  }
+  await expect(async () => first.findDocuments(savedItem)).rejects.toThrow(/session is closed/);
+  const second = await createBuildHost({ app, data: 'harden', user: 'member' });
+  try {
+    expect(await second.findDocuments(savedItem)).toEqual([]);
+  } finally {
+    await second.close();
+  }
+});
+
+test('an unknown data set or user refuses that host alone, and the app serves the next', async () => {
+  await expect(createBuildHost({ app, data: 'no-such-data-set', user: 'member' })).rejects.toThrow(
+    /no-such-data-set/
+  );
+  await expect(createBuildHost({ app, data: 'harden', user: 'no_such_user' })).rejects.toThrow(
+    /no_such_user/
+  );
+  const next = await createBuildHost({ app, data: 'harden', user: 'member' });
+  try {
+    expect(next.dataSetName).toBe('harden');
+  } finally {
+    await next.close();
+  }
+});
+
 test('a missing build is refused with the message openTestApp gives', async () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-headless-'));
   try {
     await expect(
-      createBuildHost({
+      openTestApp({
         configDirectory: journeyFixture.configDirectory,
         serverDirectory: path.join(directory, 'server'),
-        user: 'member',
       })
     ).rejects.toThrow(/^No Lowdefy build found at ".*". Run "lowdefy build/);
   } finally {
@@ -173,9 +224,9 @@ test('a build older than its config is refused with the message openTestApp give
     );
     const later = new Date(Date.now() + 60000);
     fs.utimesSync(path.join(configDirectory, 'pages', 'home.yaml'), later, later);
-    await expect(
-      createBuildHost({ configDirectory, serverDirectory, user: 'member' })
-    ).rejects.toThrow(/is older than config file "pages\/home.yaml"/);
+    await expect(openTestApp({ configDirectory, serverDirectory })).rejects.toThrow(
+      /is older than config file "pages\/home.yaml"/
+    );
   } finally {
     fs.rmSync(directory, { recursive: true, force: true });
   }

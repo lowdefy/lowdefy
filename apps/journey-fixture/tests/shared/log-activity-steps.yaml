@@ -1,0 +1,14 @@
+# The steps of the case-table journey (tests/journeys/_headless/cases.yaml), referred to with
+# _ref. Each { _case: source } is filled in from the row when tests are found.
+- call: { endpoint: log_activity, payload: { source: { _case: source } } }
+- expect: { status: 200 }
+- expect:
+    db:
+      collection: items
+      match: { kind: activity, source: { _case: source } }
+      count: 1
+- expect:
+    db:
+      collection: items
+      match: { kind: activity }
+      count: 2

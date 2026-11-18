@@ -48,6 +48,7 @@ async function runJourney({ context, item, url, recordRun, mutant, headless = fa
     pageId: journey.pageId,
     pathParams: journey.pathParams,
     data: journey.data,
+    stubs: journey.stubs,
     steps: journey.steps,
     user: journey.user,
     urlQuery: journey.urlQuery,

@@ -16,6 +16,8 @@
 
 import { STEP_KEYS } from '@lowdefy/node-utils';
 
+import casesSchema from './casesSchema.js';
+
 const DAY = '^\\d{4}-\\d{2}-\\d{2}$';
 const WINDOW = '^\\d{4}-\\d{2}-\\d{2}/\\d{4}-\\d{2}-\\d{2}$';
 
@@ -344,6 +346,15 @@ const journeySchema = {
       errorMessage: 'Journey "deprecated" should be true or false.',
     },
     evidence: evidenceSchema,
+    // expandCases expands the table before a run is validated, so a run never carries it.
+    cases: casesSchema,
+    // validateJourney checks each entry with validateJourneyStub.
+    stubs: {
+      type: 'array',
+      description:
+        'Answers for outside requests and forced failures of any request, set on the data session the journey runs on. Each entry is an answer { connectionType, requestType, answer, requestId?, endpoint?, pageId?, match? } or a forced failure { requestId, endpoint?, pageId?, fail, times? }.',
+      errorMessage: 'Journey "stubs" should be a list of answer and forced failure stubs.',
+    },
     steps: {
       type: 'array',
       minItems: 1,

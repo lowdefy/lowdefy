@@ -15,6 +15,7 @@
 */
 
 import {
+  ANSWER_STEP_KEYS,
   CALL_STEP_KEYS,
   claimExpectedErrors,
   classifyJourney,
@@ -32,18 +33,21 @@ import { type } from '@lowdefy/helpers';
 import createAppErrorWindows from './createAppErrorWindows.js';
 import checkStepReferences from './checkStepReferences.js';
 import createHeadlessActors from './createHeadlessActors.js';
+import createJourneyRaces from './createJourneyRaces.js';
+import findUnfiredFailGate from './findUnfiredFailGate.js';
 import runHeadlessStep from './runHeadlessStep.js';
 import toJsonValue from './toJsonValue.js';
 import toStepFailure from './toStepFailure.js';
 import usesSearchStage from './usesSearchStage.js';
 
-// A call or request names its caller by a data set user's name, "none" or a user object. A name
-// that is not in the data set fails the journey before any call, with the data set's users.
+// A call or request names its caller by a data set user's name, "none" or a user object, and a
+// call also "system". A name that is not in the data set fails the journey before any call, with
+// the data set's users.
 function findUnknownCaller({ host, steps }) {
   for (const step of steps) {
     const key = getStepKey(step);
     const as = CALL_STEP_KEYS.includes(key) ? step[key].as : undefined;
-    if (type.isString(as) && as !== 'none') {
+    if (type.isString(as) && as !== 'none' && as !== 'system') {
       try {
         host.resolveUser(as);
       } catch (error) {
@@ -75,6 +79,13 @@ const REQUEST_WINDOW_STEP_KEYS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
  * and state the final page state through JSON. It also carries calls (every request and endpoint
  * call, with the actor that made it) and messages (what displayMessage showed).
  *
+ * hold and release race two calls (createJourneyRaces): a call or request that reaches a held
+ * request is parked, and a release lets it go and answers with it. A gate no call reached, or a
+ * call still parked when the journey ends, fails the journey; the gates are released either way.
+ *
+ * A fail gate the journey's stubs set (on the host's data session) that no request reached fails
+ * the journey at its last step, when nothing failed before.
+ *
  * A journey whose steps need a browser (classifyJourney) is not run: it answers
  * { pageId, browserOnly: { index, step, reason }, steps: [] }. One that reaches an action only a
  * browser can carry out stops there and answers browserOnly for that step, with no `passed` and
@@ -82,8 +93,9 @@ const REQUEST_WINDOW_STEP_KEYS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
  *
  * journey: { pageId?, pathParams?, urlQuery?, user?, steps }; user defaults to the host's. A
  * journey with no pageId opens no page, and every step must run without one (call, request, as,
- * wait ms, and expect error, status, calls on an endpoint or a named page, db). A call or request
- * naming a caller the data set does not have is refused before any call.
+ * hold, release, webhook, wait ms, and expect error, status, calls on an endpoint or a named page,
+ * db). A call or request naming a caller the data set does not have is refused before any call; a
+ * call `as: system` runs the endpoint as the system (host.system).
  * stepTimeout bounds each step's wait for a block or a check to hold. onTrace, when given, also
  * takes every completed event's trace payload, as a host that records what a journey exercised
  * reads it.
@@ -131,12 +143,14 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     stepTimeout,
     user,
   });
+  const races = createJourneyRaces({ host });
   const results = [];
   let failure;
   let browserOnly;
   // The app errors of an interaction or call an expect.error step follows, for that step to claim.
   let held = null;
-  // The answer of the last call or request step, which only the expect steps after it read.
+  // The answer of the last call, request, release or webhook step, which only the expect steps
+  // after it read.
   let answer;
   // Each actor's call count when the current wait.request window opened.
   let since = new Map();
@@ -167,7 +181,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     const started = Date.now();
     const triedBefore = countBrowserOnly(actors);
     const key = getStepKey(step);
-    if (!['expect', ...CALL_STEP_KEYS].includes(key)) {
+    if (!['expect', ...ANSWER_STEP_KEYS].includes(key)) {
       answer = undefined;
     }
     if (REQUEST_WINDOW_STEP_KEYS.includes(key)) {
@@ -176,8 +190,12 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     let stepFailure;
     try {
       checkStepReferences({ actor: actors.current(), host, journeyPageId: pageId, step });
-      const stepAnswer = await runHeadlessStep({ actors, answer, host, since, step, stepTimeout });
-      if (CALL_STEP_KEYS.includes(key)) {
+      const stepAnswer = await races.run({
+        index,
+        step,
+        start: () => runHeadlessStep({ actors, answer, host, since, step, stepTimeout }),
+      });
+      if (ANSWER_STEP_KEYS.includes(key)) {
         answer = stepAnswer;
       }
     } catch (error) {
@@ -208,7 +226,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       continue;
     }
     if (type.isUndefined(stepFailure) && isClaimedLater({ index, steps })) {
-      held = { answered: CALL_STEP_KEYS.includes(key), findings, index, step };
+      held = { answered: ANSWER_STEP_KEYS.includes(key), findings, index, step };
       continue;
     }
     if (findings.length === 0) {
@@ -227,6 +245,29 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     if (findings.length > 0) {
       results[index].status = 'failed';
       failure = toAppErrorFailure({ findings, index, step: steps[index] });
+    }
+  }
+  // Every gate is released whatever happened; one left unreached, or a call left parked, is the
+  // journey's failure when nothing failed before it.
+  const raceFailure = await races.finish();
+  if (
+    type.isUndefined(failure) &&
+    type.isUndefined(browserOnly) &&
+    !type.isUndefined(raceFailure)
+  ) {
+    results[raceFailure.index].status = 'failed';
+    failure = raceFailure;
+  }
+  // A journey on no data session has no fail gates.
+  if (
+    type.isUndefined(failure) &&
+    type.isUndefined(browserOnly) &&
+    steps.length > 0 &&
+    !type.isNone(host.dataSession)
+  ) {
+    failure = findUnfiredFailGate({ session: host.dataSession, steps });
+    if (!type.isUndefined(failure)) {
+      results[failure.index].status = 'failed';
     }
   }
 

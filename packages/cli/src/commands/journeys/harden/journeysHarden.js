@@ -72,7 +72,7 @@ function selectJourneys({ context }) {
     ...new Set(
       withoutDataSet.map(
         (item) =>
-          `Left out "${(item.personaOf ?? item.journey).name}" (${relativePosixPath({
+          `Left out "${(item.expandedFrom ?? item.journey).name}" (${relativePosixPath({
             from: context.directories.config,
             to: item.filePath,
           })}): it has no data set, so its mutant runs would write to your database. Give it a data set (data:) to harden it.`

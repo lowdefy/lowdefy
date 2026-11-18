@@ -2,9 +2,20 @@ Config tests let you test a Lowdefy app in the same language you build it in. A 
 
 Journeys need no JavaScript, no Playwright setup and no separate test build. The runner boots your app's development server headless, drives each journey through the dev server's [journey route](/ai-agent-docs) (the same one the `lowdefy_run_journey` MCP tool uses), and prints a pass/fail line per journey. Because the format is declarative, an AI coding agent can write a journey for a page it just changed, run it, and read the failing step.
 
-> Config tests run against the **development server**. For tests against a production build, or tests that need custom browser code, use the Playwright based [e2e testing](/e2e-introduction) toolkit instead.
+Each kind of test has one way to write it:
 
-> A journey that targets blocks by `blockId` and checks state, calls and the database needs no browser: a [headless run](#headless-runs) runs the page's own events in Node, and `lowdefy test --headless --build` runs it on a build. Write logic, calculations, permissions and writes that way, or as `call` and `request` steps in a [page-less journey](#calls-requests-and-the-database), and keep `expect.text` for what only a browser shows. [Endpoint tests](/endpoint-tests) hold what YAML cannot say, such as table-driven cases and stubbed services, and the [access table](/access-table), `tests/access.yaml`, replaces a journey per role over every page.
+| What you test                                                                                                                 | How                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| A page's logic and state, what it sends and writes                                                                            | A journey that targets blocks by `blockId`, run [headless](#headless-runs). It may end in `expect: { db }`.         |
+| Endpoint and server logic: data scope, prices and totals, races, forced failures, cron and internal endpoints, webhooks       | A [page-less journey](#page-less-journeys), run headless.                                                           |
+| What the page shows                                                                                                           | A journey in the browser, with `expect.text`.                                                                       |
+| A payload's shape, such as an id that is not a string                                                                         | The endpoint's `payloadSchema`, and one journey that checks it is enforced. Case tables test data scope, not shape. |
+| How an outside service answers                                                                                                | The journey's own [`stubs`](#stubs-and-forced-failures).                                                            |
+| Who can reach which page and endpoint                                                                                         | The [access table](/access-table), `tests/access.yaml`, never a journey per role over every page.                   |
+| Library, plugin and Lambda code                                                                                               | Unit tests.                                                                                                         |
+| What a journey cannot say: a value computed in code, an answer computed from the request, thousands of rows generated in code | A [test-utils test](/endpoint-tests), whose file says why a journey can't express it.                               |
+
+`lowdefy test` runs journeys on the development server, and `lowdefy test --headless --build` runs the ones that need no browser on a production build, for CI. An app with Playwright specs on `@lowdefy/e2e-utils` moves them to journeys: see [Moving from e2e-utils](/e2e-utils-migration).
 
 ## Layout
 
@@ -60,11 +71,13 @@ A page whose [`path`](/page-paths) has placeholders, such as `controls/{control_
 | ------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `name`        | Yes      | A short name, at most 100 characters. `--filter` matches against it, and it is printed in the results.                                                                                                                                                                                                                                                                                                                                                        |
 | `description` | No       | What the journey proves, its goal, in at most 60 words. It is for people and agents reading the suite; `lowdefy test` does not print it.                                                                                                                                                                                                                                                                                                                      |
-| `pageId`      | Yes      | The page to open.                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `pageId`      | No       | The page to open. Leave it out for a [page-less journey](#page-less-journeys), which only calls the server.                                                                                                                                                                                                                                                                                                                                                   |
 | `user`        | No       | The user to act as, as an inline user object such as `{ sub: u1, roles: [admin] }`. Leave it out to run as the default roleless headless user, or as `auth.dev.mockUser` when one is active; a `user` given here wins over the mock user. On a journey with `data`, the name of one of the data set's users, such as `member`, or a list of them, such as `[admin, member]`, to [run the journey once as each](/journey-data-sets#one-journey-several-users). |
 | `data`        | No       | A [data set](/journey-data-sets) name. The journey runs against a fresh in-memory MongoDB database of its own, loaded with the data set, so it may write freely.                                                                                                                                                                                                                                                                                              |
 | `urlQuery`    | No       | An object appended to the page URL as a query string, for pages that read `_url_query`.                                                                                                                                                                                                                                                                                                                                                                       |
 | `pathParams`  | No       | An object of strings, one per placeholder of the page's [`path`](/page-paths), for pages that read `_path_params`. Leave it out for a page whose path has no placeholders.                                                                                                                                                                                                                                                                                    |
+| `stubs`       | No       | Answers for outside services and forced failures of any request, on the journey's data set. Needs `data`. See [Stubs and forced failures](#stubs-and-forced-failures).                                                                                                                                                                                                                                                                                        |
+| `cases`       | No       | A case table: the journey runs once per row. Each row needs a unique `name`. See [Case tables](#case-tables).                                                                                                                                                                                                                                                                                                                                                 |
 | `tags`        | No       | A list of tags naming the sections of the suite the journey belongs to, such as `[smoke, review]`. `lowdefy test --tag smoke` runs the journeys tagged `smoke`. Tags are lowercase letters, digits, `-` and `_`.                                                                                                                                                                                                                                              |
 | `steps`       | Yes      | At least one step. Each step is an object with exactly one key from the step grammar below.                                                                                                                                                                                                                                                                                                                                                                   |
 
@@ -118,11 +131,15 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 | `expect: { text: { blockId, contains } }` | The block's rendered text (or a grid row's or cell's) contains the string.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `expect: { url: { contains } }`           | The browser URL contains the string. It checks where the browser landed and never names a page: open a page with `pageId` or `goto`, with its `pathParams`.                                                                                                                                                                                                                                                                                                                                                  |
 | `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back. After a `call` or `request`, the error of its answer contains `text`.                                                                                                                                                                                                                                                                      |
-| `call: { endpoint, payload, as }`         | Call an endpoint directly, with `payload` as given, as the journey's user or the data set user `as` names (`none` for signed out). See [calls, requests and the database](#calls-requests-and-the-database).                                                                                                                                                                                                                                                                                                 |
+| `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back. After a `call`, `request`, `webhook` or `release`, the error of its answer contains `text`, or the message of a [forced failure](#stubs-and-forced-failures).                                                                                                                                                                              |
+| `call: { endpoint, payload, as }`         | Call an endpoint directly, with `payload` as given, as the journey's user or the data set user `as` names (`none` for signed out, `system` for a [cron or internal endpoint](#system-calls-and-webhooks)). See [calls, requests and the database](#calls-requests-and-the-database).                                                                                                                                                                                                                         |
 | `request: { pageId, requestId, payload }` | Call a page's request directly, with `payload` as given, as for `call`.                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| `expect: { status: code }`                | The answer to the `call` or `request` before it has this HTTP status (`200`, `401`, `403`). Only `expect` steps may sit between them.                                                                                                                                                                                                                                                                                                                                                                        |
+| `webhook: { endpoint, body }`             | Post to a webhook endpoint as the service that sends it does, so its `verify` gate runs. `query` and `headers` are optional. See [system calls and webhooks](#system-calls-and-webhooks).                                                                                                                                                                                                                                                                                                                    |
+| `hold: { requestId }`                     | Hold the next routine that reaches the request, just before it runs, for a [race](#races). `endpoint` or `pageId` narrows it.                                                                                                                                                                                                                                                                                                                                                                                |
+| `release: requestId`                      | Let the call held at that request go, and read its answer in the `expect` steps after it.                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `expect: { status: code }`                | The answer to the `call`, `request`, `webhook` or `release` before it has this HTTP status (`200`, `401`, `403`). Only `expect` steps may sit between them.                                                                                                                                                                                                                                                                                                                                                  |
 | `expect: { db: { collection, match } }`   | The journey's data set database holds what the step expects in `collection`: `count` documents matching `match`, or `equals`, a list each matching document holds, in `_id` order. `connectionId` names the connection when the app writes to several databases.                                                                                                                                                                                                                                             |
+| `expect: { sunk: { requestId, count } }`  | The journey asked an outside service: `count` requests matching `connectionType`, `requestType` and `requestId`, and with `match`, the last one's properties hold it. See [stubs and forced failures](#stubs-and-forced-failures).                                                                                                                                                                                                                                                                           |
 | `expect: { effect: true }`                | The interaction just before it did something. Must directly follow a click, open, fill, select, press or back.                                                                                                                                                                                                                                                                                                                                                                                               |
 
 `expect.calls` takes `{ request: requestId, pageId, count }`: request ids are scoped to a page, and two pages often share one such as `save`, so `pageId` names the page; it defaults to the page the person is on when the step runs. It compares once, without waiting for the count to change, because "not called" can only be judged after the moment has passed.
@@ -130,47 +147,6 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 Before a step runs, every block, request, endpoint and `goto` page it names is checked against the app's build, and so is an `as` name on a journey with `data`. A misspelt one fails the step and names it, so `expect: { hidden: nosuchblock }` or `expect: { calls: { request: nosuchrequest, count: 0 } }` cannot pass by finding nothing. Blocks and requests are looked for on the page the person is on, and blocks also on the page the journey opened, so a step on a page that sent the person elsewhere still fails as not visible. A block inside a List matches by its `$` id, so `rows.0.name` matches `rows.$.name`, and a block of [dynamic page content](/dynamic-page-content) matches once the page shows it; `expect.state` paths are not checked.
 
 `expect.effect` fails when the interaction before it ran no event, changed nothing on the page, called no request or endpoint and left the URL as it was. It reads what the runner saw during that interaction, so it does not wait. After a click that should do something and does not, it makes the journey fail until the control does something.
-
-### Calls, requests and the database
-
-A `call` or `request` step calls the server directly, as a page would never call it: another organization's ids, an operator object, a wrong type, a caller without the role. A refusal or an error is the step's answer, not a failure: `expect: { status }` and `expect: { error }` read it. `as` picks the caller for that call only and does not switch who the journey acts as. A request a page sends is reached through its own event instead, so the payload is the one the page's config builds.
-
-A journey with no `pageId` opens no page. Its steps may only be `call`, `request`, `as`, `wait: { ms }` and the checks that need no page: `expect` on `error`, `status`, `db` and `calls` (for a request, with its `pageId`). This is where negative endpoint tests live:
-
-```yaml
-name: a member is refused the auditor endpoint
-data: roles
-user: member
-steps:
-  - call: { endpoint: auditor_only }
-  - expect: { status: 403 }
-  - expect: { error: API Endpoint "auditor_only" does not exist. }
-```
-
-`expect: { db }` proves what a write stored, or that a refused one stored nothing. With `expect: { calls }`, a [headless run](#headless-runs) also checks the payload the page sent and the response it got, as partial matches on the last call:
-
-```yaml
-name: a member saves an item with the name they typed
-pageId: home
-data: harden
-user: member
-steps:
-  - fill: { blockId: name_input, value: Docs item }
-  - click: save_button
-  - wait: { request: save_item }
-  - expect: { calls: { request: save_item, count: 1, payload: { name: Docs item } } }
-  - expect: { db: { collection: items, match: { name: Docs item }, count: 1 } }
-```
-
-`expect: { db }` reads documents as a MongoDB request answers with them: an ObjectId as its hex string, a date as its ISO string, and a [decimal](/_decimal) as `{ '~dec': '0.30' }`, with the string as MongoDB prints it. `match` takes the markers a [fixture](/journey-data-sets) does, `{ _oid: '<hex>' }`, `{ '~d': '<ISO date>' }` and `{ '~dec': '<decimal>' }`, so it can find a document by an ObjectId, a date or an exact decimal. MongoDB compares decimals by value, so `match: { total: { '~dec': '0.3' } }` finds a stored `0.30`:
-
-```yaml
-- expect:
-    db:
-      collection: invoices
-      match: { total: { '~dec': '0.3' } }
-      equals: [{ total: { '~dec': '0.30' } }]
-```
 
 ### App errors
 
@@ -254,6 +230,228 @@ Some rows are neither a block nor a control, such as the cards of a `ListSelecto
 `fill`, `select` and `expect.text` always need a `blockId`; a value is typed into a block's input, never into a page-wide control. A target with a key the grammar does not know (`colum`) is rejected before the browser opens, so a typo cannot pass as a step that happened to find nothing.
 
 A `Search` block keeps its input in a modal outside its own element. Open it with `click: <blockId>`, then `fill: { blockId, value }` types the query, and `click: { text: <result title> }` picks a result and fires `onSelect`. The result title is the text of the row when the search has no `description` mapped; with a description, pick it with `containing`.
+
+## Page-less journeys
+
+A journey with no `pageId` opens no page: it tests endpoint and server logic by calling the server directly. Its steps may only be `call`, `request`, `webhook`, `hold`, `release`, `as`, `wait: { ms }` and the checks that need no page: `expect` on `error`, `status`, `db`, `sunk` and `calls` (for a request, with its `pageId`). Run it headless: `lowdefy test --headless --build` in CI, or `lowdefy test --headless` and the `lowdefy_run_journey` tool with `headless: true` while you edit.
+
+Nothing in a journey is evaluated with operators while it runs. Payloads, headers, `match` and expected values are sent and compared as written, so a payload can carry an operator object a page never would. A value a check would compute, such as a price or a total, is written into the journey, or into a row of its [case table](#case-tables).
+
+### Calls, requests and the database
+
+A `call` or `request` step calls the server as a page would never call it: another organization's ids, an operator object, a caller without the role. A refusal or an error is the step's answer, not a failure: `expect: { status }` and `expect: { error }` read it. `as` picks the caller for that call only and does not switch who the journey acts as. A request a page sends is reached through its own event instead, so the payload is the one the page's config builds.
+
+```yaml
+name: a member is refused the auditor endpoint
+data: roles
+user: member
+steps:
+  - call: { endpoint: auditor_only }
+  - expect: { status: 403 }
+  - expect: { error: API Endpoint "auditor_only" does not exist. }
+```
+
+`expect: { db }` proves what a write stored, or that a refused one stored nothing. With `expect: { calls }`, a [headless run](#headless-runs) also checks the payload the page sent and the response it got, as partial matches on the last call. `expect: { calls }` counts the calls of the person acting when it runs; a call made `as` another user counts on that user.
+
+```yaml
+name: a member saves an item with the name they typed
+pageId: home
+data: harden
+user: member
+steps:
+  - fill: { blockId: name_input, value: Docs item }
+  - click: save_button
+  - wait: { request: save_item }
+  - expect: { calls: { request: save_item, count: 1, payload: { name: Docs item } } }
+  - expect: { db: { collection: items, match: { name: Docs item }, count: 1 } }
+```
+
+`expect: { db }` reads documents as a MongoDB request answers with them: an ObjectId as its hex string, a date as its ISO string, and a [decimal](/_decimal) as `{ '~dec': '0.30' }`, with the string as MongoDB prints it. `match` takes the markers a [fixture](/journey-data-sets) does, `{ _oid: '<hex>' }`, `{ '~d': '<ISO date>' }` and `{ '~dec': '<decimal>' }`, so it can find a document by an ObjectId, a date or an exact decimal. MongoDB compares decimals by value, so `match: { total: { '~dec': '0.3' } }` finds a stored `0.30`:
+
+```yaml
+- expect:
+    db:
+      collection: invoices
+      match: { total: { '~dec': '0.3' } }
+      equals: [{ total: { '~dec': '0.30' } }]
+```
+
+### Case tables
+
+Many cases of one check are one journey with a `cases` table. The journey runs once per row, named `<journey> [<row name>]`, each run on a fresh session of its data set. `{ _case: <key> }` anywhere in the journey, `user`, `data` and `pageId` included, reads that key of the row. Each row needs a `name`, unique in the table:
+
+```yaml
+# tests/journeys/cases.yaml
+- name: logs an activity from each source
+  data: cases
+  user: member
+  cases:
+    _ref: tests/shared/activity-sources.yaml
+  steps:
+    _ref: tests/shared/log-activity-steps.yaml
+```
+
+Here the rows and the steps live in [shared files](#shared-files); either can sit in the journey instead. The rows:
+
+```yaml
+# tests/shared/activity-sources.yaml
+- { name: form, source: form }
+- { name: import, source: import }
+- { name: api, source: api }
+```
+
+The steps each row runs, with `source` read from the row:
+
+```yaml
+# tests/shared/log-activity-steps.yaml
+- call: { endpoint: log_activity, payload: { source: { _case: source } } }
+- expect: { status: 200 }
+- expect:
+    db:
+      collection: items
+      match: { kind: activity, source: { _case: source } }
+      count: 1
+- expect:
+    db:
+      collection: items
+      match: { kind: activity }
+      count: 2
+```
+
+This runs `logs an activity from each source [form]`, `[import]` and `[api]`; `--filter "[api]"` picks one. A row runs as one user: a journey with `cases` and a `user` list is refused, so write a row per user, with `user: { _case: user }`. An empty table, two rows with one name and a `_case` naming a key its row lacks are refused, and so is a `_case` in a journey with no `cases` table, or inside a row's value, since it would be sent as written.
+
+### Shared files
+
+`_ref` anywhere in a journey file reads another file into it when tests are found: a case table, a list of steps, one step or a stub. Its path is from the config root, as everywhere in a Lowdefy app, and it takes the plain forms only: `_ref: <path>` or `_ref: { path }`, to a `.yaml`, `.yml` or `.json` file. `vars`, resolvers, transformers and `.njk` templates are refused, as is a `_ref` with other keys beside it. A referred file may refer on; a loop fails the file.
+
+Keep shared files under `tests/shared/`: every file under `tests/journeys/` is read as a journey. A changed shared file changes the hash of every journey that refers to it, so their [exercised](#hardening-journeys) entries go stale. [Data sets](/journey-data-sets) do not take `_ref`.
+
+The `lowdefy_run_journey` tool runs one inline journey, with no file to refer from, so it takes neither `cases` nor `_ref`: a `_case` or `_ref` in a journey sent to it is refused, naming where it is. Run a journey file that has them with `lowdefy test` or the `lowdefy_run_tests` tool.
+
+### Stubs and forced failures
+
+Under a data set, a request to an outside service (an HTTP API, email, payments) is recorded and answers `null`, and nothing is sent. A journey's `stubs` give the answers a routine needs, and force a failure of any request, to show the routine handles it:
+
+```yaml
+name: a run is priced at the rate service's rate, after a failed write stores nothing
+data: stubs
+user: finance
+stubs:
+  - connectionType: AxiosHttp
+    requestType: AxiosHttp
+    endpoint: price_run
+    answer: { status: 200, data: { rate: 1.5 } }
+  - requestId: save_price
+    endpoint: price_run
+    fail: Price write failed on purpose
+steps:
+  - call: { endpoint: price_run, payload: { id: BR-1, currency: EUR } }
+  - expect: { error: Price write failed on purpose }
+  - expect: { db: { collection: items, match: { kind: price }, count: 0 } }
+  - call: { endpoint: price_run, payload: { id: BR-1, currency: EUR } }
+  - expect: { status: 200 }
+  - expect: { db: { collection: items, match: { kind: price, run: BR-1, rate: 1.5 }, count: 1 } }
+  - expect: { sunk: { requestId: fetch_rate, count: 2, match: { params: { currency: EUR } } } }
+```
+
+| Stub      | Fields                                                                                          | What it does                                                                                                                                                                                                                                                  |
+| --------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| An answer | `connectionType`, `requestType`, `answer`; `requestId`, `endpoint`, `pageId`, `match` narrow it | The request answers `answer` in place of `null`. The first stub that matches answers, so one service can answer different requests differently. `match` is a partial match on the request's properties. The request is still recorded for `expect: { sunk }`. |
+| A failure | `requestId`, `fail`; `endpoint`, `pageId` narrow it; `times`                                    | The request throws with the `fail` message before it runs, on any connection, MongoDB included, as an outage would, so the routine's own error handling runs. Every other request runs for real.                                                              |
+
+- **How often.** A failure fires on the next matching request, once, so a journey can fail a write and then retry it to show the routine recovers. `times: 3` fails the next 3, and `times: all` every one, for a routine that runs the request in a loop.
+- **A failure that never fired fails the journey**, naming it, so a check cannot pass while testing nothing.
+- **A forced failure is never an [app error](#app-errors).** A client only ever sees the generic message, so `expect: { error }` after the `call`, `request` or `webhook` reads the forced message from the server's record of the call. A webhook that fails answers its sender `500` with a fixed body, and `expect: { error }` still reads the forced message.
+- **An answer for a type the app does not have is refused.** An answer stub whose `connectionType` or `requestType` the app has no connection or request of would never answer, so the journey fails, naming the stub and the types the app has.
+- **`stubs` need `data`.** They live on the journey's data set session, and work the same headless, on the dev server and in the browser. So do `hold`, `release` and `expect: { sunk }`: a journey without `data` that uses them is refused, on every host. An answer computed from the request is a [test-utils test](/endpoint-tests)'s stub.
+
+`expect: { sunk: { connectionType, requestType, requestId, count, match } }` checks what outside services were asked, stubbed requests included. `count` counts the matching requests; `match` is a partial match on the last one's properties.
+
+### Races
+
+`hold` stops the next routine that reaches a request, just before it runs, so a second call can run in between:
+
+```yaml
+name: two approvals race and only one claims the run
+data: races
+user: finance
+steps:
+  - hold: { requestId: claim_run }
+  - call: { endpoint: approve_run, payload: { id: BR-1 } }
+  - call: { endpoint: approve_run, payload: { id: BR-1 }, as: other_finance }
+  - expect: { status: 200 }
+  - release: claim_run
+  - expect: { status: 200 }
+  - expect: { error: Run already approved. }
+  - expect:
+      db:
+        collection: items
+        match: { _id: BR-1, approved_by: u_other_finance }
+        count: 1
+```
+
+- A `call` or `request` that reaches the held request is parked, and its step passes; the steps after it run. `expect` steps right after a parked call read nothing from it.
+- `release` lets the parked call go, waits for it to answer, and makes its answer the one the next `expect` steps read.
+- A `hold` no call reached, or a call still parked when the journey ends, fails the journey.
+- `hold` takes `requestId`, a request step's id in an endpoint routine or a page request's id, and `endpoint` or `pageId` when two routines share the id. Only `call` and `request` steps are parked: a click whose request reaches a held request fails the step. A page's double submit is the [`doubleSubmit` variant](#variants-lowdefy-journeys-variants)'s to test.
+- Check the outcome in the database, as above. An `Api` endpoint's `:reject` answers `200` with the reject message as its error.
+
+### System calls and webhooks
+
+`call` with `as: system` runs an endpoint as a scheduled run does: no user, the endpoint's `auth` is not checked, and an `InternalApi` endpoint can be called. A data set user cannot be named `system`.
+
+```yaml
+name: only a system call closes the runs
+data: outside
+user: operator
+steps:
+  - call: { endpoint: close_runs, as: none }
+  - expect: { status: 401 }
+  - expect:
+      db:
+        collection: items
+        match: { kind: run, closed: true }
+        count: 0
+  - call: { endpoint: close_runs, as: system }
+  - expect: { status: 200 }
+  - expect:
+      db:
+        collection: items
+        match: { kind: run, closed: true }
+        count: 2
+```
+
+`webhook` posts to an endpoint with a `webhook` gate, as the service that sends it does, so its `verify` step runs against the raw body. `body` is sent as raw text: a string as written, anything else as JSON. A signature header is a literal: compute it once with the secret the app's verifier reads. On a build, every secret reads `test-secret-<NAME>` ([Secrets](/endpoint-tests#secrets)); give the secret that value on the dev server too, so one signature holds on both.
+
+```yaml
+name: a signed webhook writes its event and a wrong signature is refused
+data: outside
+user: operator
+steps:
+  - webhook:
+      endpoint: payment_events
+      body: { id: evt_1, type: payment.succeeded }
+      headers:
+        x-fixture-signature: 3ecf0c67fc28daabe7cfb765671cd717ec91ab45414e200920d67266cc200039
+  - expect: { status: 200 }
+  - webhook:
+      endpoint: payment_events
+      body: { id: evt_3, type: payment.succeeded }
+      headers:
+        x-fixture-signature: 3ecf0c67fc28daabe7cfb765671cd717ec91ab45414e200920d67266cc200039
+  - expect: { status: 401 }
+  - expect: { error: Webhook verification failed. }
+  - expect:
+      db:
+        collection: items
+        match: { kind: payment_event }
+        equals:
+          - { _id: evt_1, type: payment.succeeded }
+```
+
+A verifier that refuses an old timestamp needs a clock a journey cannot set: test it with [test-utils](/endpoint-tests).
+
+`hold`, `release` and `as: system` run headless only: a browser run posts its calls over HTTP, so it can neither keep a call parked nor run an endpoint as the system. A browser run refuses them before it opens a page, naming the step.
 
 ## Testing sign-up and sign-in
 
@@ -443,8 +641,10 @@ Nothing in a journey says which kind it is. Its steps decide: a journey runs hea
 | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
 | `click`, `fill`, `select`, `press: Enter`, `wait` (`ms`, `request`, `state`), `goto`, `back`, `as` | `screenshot`, `email`, `open`, `press` other than `Enter`, a `fill` from an email, a double click |
 | Targets by `blockId`                                                                               | Targets by `text`, `containing`, `row`, `column` or `nth`                                         |
-| `expect`: `state`, `visible`, `hidden`, `calls`, `error`, `url`, `status`, `db`                    | `expect`: `text`, `title`, `effect`                                                               |
-| `call`, `request`                                                                                  |                                                                                                   |
+| `expect`: `state`, `visible`, `hidden`, `calls`, `error`, `url`, `status`, `db`, `sunk`            | `expect`: `text`, `title`, `effect`                                                               |
+| `call`, `request`, `webhook`, `hold`, `release`                                                    |                                                                                                   |
+
+`hold`, `release` and a `call` `as: system` run only headless; a browser run refuses them. A journey's `stubs` work in both.
 
 A headless run lists every other journey as browser-only, with the first step that needs a browser, and neither passes nor fails it:
 

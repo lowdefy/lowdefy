@@ -15,7 +15,7 @@
 */
 
 import crypto from 'crypto';
-import { stableStringify } from '@lowdefy/helpers';
+import { stableStringify, type } from '@lowdefy/helpers';
 
 // The fields that decide what a journey run does. The name keys the
 // exercised.json entry; evidence, tags and the rest describe the journey
@@ -24,12 +24,19 @@ import { stableStringify } from '@lowdefy/helpers';
 const runFields = ['pageId', 'steps', 'user', 'data', 'pathParams', 'urlQuery'];
 
 // Identifies one version of a journey's run: an exercised.json entry whose
-// hash no longer matches describes a journey whose run has since changed.
+// hash no longer matches describes a journey whose run has since changed. It
+// hashes the run as expanded, `_ref` and `_case` filled in, so a changed
+// shared file or case row changes it. `stubs` is hashed only when the journey
+// has them, so the hash of a journey without stubs is the one it had before
+// journeys took stubs and its exercised.json entry stays current.
 function hashJourney(journey) {
   const run = {};
   runFields.forEach((field) => {
     run[field] = journey[field] ?? null;
   });
+  if (!type.isUndefined(journey.stubs)) {
+    run.stubs = journey.stubs;
+  }
   return crypto.createHash('sha1').update(stableStringify(run)).digest('hex');
 }
 

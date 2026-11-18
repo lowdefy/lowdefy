@@ -17,6 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { expect } from 'vitest';
+import YAML from 'yaml';
 
 import { fixtureTest, listMutants, postJourney, postJson } from './fixtureClient.mjs';
 
@@ -177,3 +178,156 @@ fixtureTest('headless must be true or false', async () => {
   expect(status).toBe(400);
   expect(body.error).toBe('The "headless" param must be true or false. Received "yes".');
 });
+
+// A journey of tests/journeys/_headless, as the journey route takes it: the file's first, or the
+// one at `index`.
+function readHeadlessJourney(name, index = 0) {
+  const file = path.join(
+    process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+    'tests',
+    'journeys',
+    '_headless',
+    name
+  );
+  const journey = YAML.parse(fs.readFileSync(file, 'utf8'))[index];
+  return {
+    pageId: journey.pageId,
+    data: journey.data,
+    user: journey.user,
+    stubs: journey.stubs,
+    steps: journey.steps,
+  };
+}
+
+// tests/journeys/_headless/race.yaml: hold parks the first approve_run call before claim_run, the
+// other user's call claims the run, and release answers with the parked call. A browser run
+// refuses hold and release before any browser opens.
+function readRaceJourney() {
+  return readHeadlessJourney('race.yaml');
+}
+
+fixtureTest(
+  'the race journey parks the held call and releases it, headless on the dev server',
+  async () => {
+    const race = readRaceJourney();
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...race, headless: true },
+    });
+    expect(status).toBe(200);
+    expect(body.failure).toBeUndefined();
+    expect(body.passed).toBe(true);
+    expect(body.steps.map((step) => step.status)).toEqual(race.steps.map(() => 'ok'));
+  }
+);
+
+// tests/journeys/_headless/system.yaml and webhook.yaml: the InternalApi close_runs answers only a
+// call as system, and payment_events' verify gate passes the signed bodies and refuses the wrong
+// signature (the dev server is given the test secret the signatures are computed with).
+// stubs.yaml: an answer stub stands in for the rate service and fail gates fail writes once, twice
+// and every time; expect.error reads each forced message the dev server recorded.
+fixtureTest.each([['system.yaml'], ['webhook.yaml'], ['stubs.yaml']])(
+  'the %s journey passes headless on the dev server',
+  async (name) => {
+    const journey = readHeadlessJourney(name);
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...journey, headless: true },
+    });
+    expect(status).toBe(200);
+    expect(body.failure).toBeUndefined();
+    expect(body.passed).toBe(true);
+    expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+  }
+);
+
+// The second journey of tests/journeys/_headless/webhook.yaml: a fail gate fails the event write
+// inside payment_events, whose 500 names no request id; expect.error reads the forced message by
+// the request id the dev server host answers the webhook with.
+fixtureTest(
+  'expect.error reads a forced failure inside a webhook, headless on the dev server',
+  async () => {
+    const journey = readHeadlessJourney('webhook.yaml', 1);
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...journey, headless: true },
+    });
+    expect(status).toBe(200);
+    expect(body.failure).toBeUndefined();
+    expect(body.passed).toBe(true);
+    expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+  }
+);
+
+fixtureTest(
+  'a fail gate that never fired fails the journey headless on the dev server',
+  async () => {
+    const journey = readHeadlessJourney('stubs.yaml');
+    const steps = journey.steps.slice(0, 2);
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: {
+        ...journey,
+        stubs: [...journey.stubs, { requestId: 'insert_activity', fail: 'Never reached' }],
+        steps,
+        headless: true,
+      },
+    });
+    expect(status).toBe(200);
+    expect(body.passed).toBe(false);
+    expect(body.failure).toMatchObject({
+      index: 1,
+      message:
+        'The forced failure on request "claim_run" on endpoint "approve_run" ("Claim failed on purpose") never fired: no request the journey made matched it, so nothing tested what it fails.',
+    });
+  }
+);
+
+fixtureTest('the journey route refuses stubs with no data set', async () => {
+  const journey = readHeadlessJourney('stubs.yaml');
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: { stubs: journey.stubs, steps: journey.steps, headless: true },
+  });
+  expect(status).toBe(400);
+  expect(body.error).toBe(
+    'Journey "stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".'
+  );
+});
+
+fixtureTest('a browser run refuses the race journey, pointing to a headless run', async () => {
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: readRaceJourney(),
+  });
+  expect(status).toBe(400);
+  expect(body.error).toBe(
+    'Step 0: step "hold" needs the headless runner, which keeps a held call parked in its own process. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).'
+  );
+});
+
+fixtureTest('a browser run refuses the system journey, pointing to a headless run', async () => {
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: readHeadlessJourney('system.yaml'),
+  });
+  expect(status).toBe(400);
+  expect(body.error).toBe(
+    'Step 3: step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).'
+  );
+});
+
+fixtureTest(
+  'a page request a click fires and a fail gate fails is no app error, headless on the dev server',
+  async () => {
+    const journey = readHeadlessJourney('stubs.yaml', 1);
+    const { status, body } = await postJson({
+      path: '/lowdefy-docs/journey',
+      body: { ...journey, headless: true },
+    });
+    expect(status).toBe(200);
+    expect(body.failure).toBeUndefined();
+    expect(body.passed).toBe(true);
+    expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+  }
+);

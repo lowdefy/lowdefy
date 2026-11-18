@@ -17,13 +17,17 @@
 import { validate } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
 import {
+  findJourneyPlaceholder,
   findStepNeedingPage,
+  validateJourneyDataSession,
+  validateJourneyStubs,
   validateJourneySteps,
   validateJourneyTags,
   validateJourneyUser,
 } from '@lowdefy/node-utils';
 
 import describeStep from './lint/describeStep.js';
+import expandCases from './expandCases.js';
 import journeySchema from './journeySchema.js';
 
 // ajv cannot compare two fields, so the one cross-field rule of the evidence
@@ -42,10 +46,38 @@ function checkPageId({ journey }) {
   if (type.isUndefined(found)) return undefined;
   return `Journey should have required property "pageId": ${describeStep(
     found
-  )} needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.`;
+  )} needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.`;
+}
+
+// A journey with a `cases` table is valid when its table is and each of its runs is, validated
+// after its row is filled in, under the name as written.
+function validateCases({ journey }) {
+  const { runs, error } = expandCases({ journey });
+  if (!type.isUndefined(error)) {
+    return { valid: false, message: error };
+  }
+  for (const [index, run] of runs.entries()) {
+    const validation = validateJourney({ journey: { ...run, name: journey.name } });
+    if (!validation.valid) {
+      return {
+        valid: false,
+        message: `Journey case "${journey.cases[index].name}": ${validation.message}`,
+      };
+    }
+  }
+  return { valid: true };
 }
 
 function validateJourney({ journey }) {
+  if (type.isObject(journey) && !type.isUndefined(journey.cases)) {
+    return validateCases({ journey });
+  }
+  // Refs are read and rows filled in by now, so a placeholder left would be sent as a literal
+  // object: a _case in a journey with no "cases", or one inside a row's value.
+  const { error: placeholderError } = findJourneyPlaceholder({ journey });
+  if (!type.isUndefined(placeholderError)) {
+    return { valid: false, message: placeholderError };
+  }
   try {
     validate({ schema: journeySchema, data: journey });
   } catch (error) {
@@ -54,6 +86,10 @@ function validateJourney({ journey }) {
   const mutationError = checkMutationCounts({ evidence: journey.evidence });
   if (!type.isUndefined(mutationError)) {
     return { valid: false, message: mutationError };
+  }
+  const { error: stubsError } = validateJourneyStubs({ stubs: journey.stubs });
+  if (!type.isUndefined(stubsError)) {
+    return { valid: false, message: stubsError };
   }
   const { error: userError } = validateJourneyUser({ user: journey.user, data: journey.data });
   if (!type.isUndefined(userError)) {
@@ -70,6 +106,14 @@ function validateJourney({ journey }) {
   const { error } = validateJourneySteps({ steps: journey.steps });
   if (!type.isUndefined(error)) {
     return { valid: false, message: error };
+  }
+  const { error: dataSessionError } = validateJourneyDataSession({
+    data: journey.data,
+    steps: journey.steps,
+    stubs: journey.stubs,
+  });
+  if (!type.isUndefined(dataSessionError)) {
+    return { valid: false, message: dataSessionError };
   }
   const pageIdError = checkPageId({ journey });
   if (!type.isUndefined(pageIdError)) {

@@ -17,7 +17,7 @@
 import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 import {
-  CALL_STEP_KEYS,
+  ANSWER_STEP_KEYS,
   claimExpectedErrors,
   getStepKey,
   isClaimedLater,
@@ -187,7 +187,7 @@ function createJourneyAppErrors({ origin, basePath, recording, configDirectory }
       return claim;
     }
     if (type.isUndefined(failure) && isClaimedLater({ steps, index })) {
-      held = { index, step, findings, answered: CALL_STEP_KEYS.includes(getStepKey(step)) };
+      held = { index, step, findings, answered: ANSWER_STEP_KEYS.includes(getStepKey(step)) };
       return undefined;
     }
     if (findings.length === 0) {

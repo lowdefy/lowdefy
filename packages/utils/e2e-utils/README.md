@@ -1,6 +1,11 @@
 # @lowdefy/e2e-utils
 
-Playwright testing utilities for Lowdefy applications with a polymorphic block API.
+Playwright testing utilities with a polymorphic block API. Lowdefy keeps it for its own block e2e
+suites, which test block components.
+
+Apps do not test with this package: they test pages and endpoints with
+[journeys](https://docs.lowdefy.com/config-tests). To move an app's Playwright specs to journeys,
+see [Moving from e2e-utils](https://docs.lowdefy.com/e2e-utils-migration).
 
 ## Installation
 
@@ -9,20 +14,7 @@ pnpm add -D @lowdefy/e2e-utils @playwright/test
 npx playwright install chromium
 ```
 
-## Quick Start
-
-Initialize e2e testing in your Lowdefy app:
-
-```bash
-npx lowdefy-e2e init
-```
-
-This creates:
-
-- `e2e/playwright.config.js` - Pre-configured Playwright config
-- `e2e/example.spec.js` - Starter test to copy from
-
-Run tests:
+Run a suite:
 
 ```bash
 pnpm e2e        # Run tests

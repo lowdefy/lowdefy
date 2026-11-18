@@ -1,0 +1,4 @@
+# The verifier of the payment_events webhook (api/payment_events.yaml): it computes the signature
+# in process and reaches nothing.
+id: fixture_signature
+type: FixtureSignature

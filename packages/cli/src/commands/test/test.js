@@ -17,7 +17,7 @@
 import path from 'path';
 import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
 
-import collapsePersonas from './collapsePersonas.js';
+import collapseRuns from './collapseRuns.js';
 import formatDevServerAccessNote from './access/formatDevServerAccessNote.js';
 import fetchBuildId from './fetchBuildId.js';
 import formatBrowserOnly from './formatBrowserOnly.js';
@@ -27,6 +27,7 @@ import hashBuild from './hashBuild.js';
 import headlessDevSuite from './headlessDevSuite.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
+import openBuildApp from './openBuildApp.js';
 import parseRepeat from './parseRepeat.js';
 import parseTestSelection from './parseTestSelection.js';
 import parseTier from '../journeys/usage/parseTier.js';
@@ -59,10 +60,20 @@ function refuse({ context, message }) {
 
 // `lowdefy test --access` and `--update-access`: the access step alone, on the production build.
 async function testAccessAlone({ context, updateAccess }) {
-  const step = await runAccessStep({ context, mode: updateAccess ? 'update' : 'access' });
-  if (!type.isUndefined(step.refused)) {
-    refuse({ context, message: step.refused });
+  const opened = await openBuildApp({ context });
+  if (!type.isUndefined(opened.refused)) {
+    refuse({ context, message: opened.refused });
     return;
+  }
+  let step;
+  try {
+    step = await runAccessStep({
+      app: opened.app,
+      context,
+      mode: updateAccess ? 'update' : 'access',
+    });
+  } finally {
+    await opened.app.close();
   }
   if (step.failed) {
     process.exitCode = 1;
@@ -116,16 +127,58 @@ async function test({ context }) {
     paths = resolved.files;
   }
 
+  const lint = context.options.lint === true;
+  const options = {
+    build,
+    filters,
+    givenPaths,
+    headless,
+    lint,
+    paths,
+    repeat,
+    tags,
+    tier,
+    usageWindow,
+  };
+  if (!headless || !build || lint) {
+    await testJourneys({ context, ...options });
+    return;
+  }
+  // A run on the production build opens it once: the access step and every headless journey use
+  // the one app, which is closed once, after the last journey, also when one throws.
+  const opened = await openBuildApp({ context });
+  if (!type.isUndefined(opened.refused)) {
+    refuse({ context, message: opened.refused });
+    return;
+  }
+  try {
+    await testJourneys({ app: opened.app, context, ...options });
+  } finally {
+    await opened.app.close();
+  }
+}
+
+// Selects the run's journeys and runs them: headless on the production build's app (`app`, given
+// for --headless --build), or on a dev server.
+async function testJourneys({
+  app,
+  build,
+  context,
+  filters,
+  givenPaths,
+  headless,
+  lint,
+  paths,
+  repeat,
+  tags,
+  tier,
+  usageWindow,
+}) {
   // The access step runs on every run that reads the production build, before journeys are
   // selected, so an app with no journeys is checked too, and it checks the whole table whatever
   // the run selects. A difference fails the run, and the journeys still run.
-  const lint = context.options.lint === true;
-  if (headless && build && !lint) {
-    const step = await runAccessStep({ context, mode: 'check' });
-    if (!type.isUndefined(step.refused)) {
-      refuse({ context, message: step.refused });
-      return;
-    }
+  if (!type.isUndefined(app)) {
+    const step = await runAccessStep({ app, context, mode: 'check' });
     if (step.failed) {
       process.exitCode = 1;
     }
@@ -158,10 +211,10 @@ async function test({ context }) {
 
   if (lint) {
     // Lints read a journey, not a run of it: a journey with a list of users
-    // is linted once.
+    // or a case table is linted once.
     const linted = await lintJourneys({
       context,
-      items: collapsePersonas({ items: selected.map(({ item }) => item) }),
+      items: collapseRuns({ items: selected.map(({ item }) => item) }),
     });
     if (linted.failed) {
       process.exitCode = 1;
@@ -190,6 +243,7 @@ async function test({ context }) {
 
   if (headless && build) {
     const ran = await runHeadlessTests({
+      app,
       context,
       selected: tiered.selected,
       skipped: tiered.skipped.length,

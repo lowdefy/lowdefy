@@ -1,0 +1,25 @@
+# Two approvals race (hold and release), run headless by `lowdefy test --headless --build` and the
+# @lowdefy/journey-headless fixture suite (packages/utils/journey-headless/test/fixture/
+# races.test.mjs). A browser run refuses hold and release. In a folder starting with "_" so the
+# browser suites leave it out; they name journeys by path or not at all.
+- name: two approvals race and only one claims the run
+  data: races
+  user: finance
+  steps:
+    - hold: { requestId: claim_run }
+    - call: { endpoint: approve_run, payload: { id: BR-1 } }
+    - call: { endpoint: approve_run, payload: { id: BR-1 }, as: other_finance }
+    - expect: { status: 200 }
+    - release: claim_run
+    - expect: { status: 200 }
+    - expect: { error: Run already approved. }
+    - expect:
+        db:
+          collection: items
+          match: { _id: BR-1, approved_by: u_other_finance }
+          count: 1
+    - expect:
+        db:
+          collection: items
+          match: { kind: run, approved_by: { $ne: null } }
+          count: 1

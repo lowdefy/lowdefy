@@ -62,13 +62,23 @@ test.each(journeySkills)('$name gives each kind of check one home', ({ text }) =
   expect(text).toContain(testLevel());
   expect(text).toContain('## Where each check lives');
   expect(text).toContain('A write journey ends with\n  `expect: { db }` on what was stored');
-  expect(text).toContain('a journey with\n  no `pageId` and `call` or `request` steps');
+  expect(text).toContain('a journey with\n  no `pageId` and `call`, `request` or `webhook` steps');
   expect(text).toContain(
     'call the request or endpoint with `lowdefy_run_request` or\n  `lowdefy_run_endpoint`, passing `user` and `data`.'
   );
-  expect(text).toContain('an endpoint test (`tests/endpoints/`), never a journey per case');
   expect(text).toContain('which cells changed and why.');
 });
+
+test.each(journeySkills)(
+  '$name sends cases, stubs, races and cron to page-less journeys',
+  ({ text }) => {
+    expect(text).toContain('journey with a `cases` table');
+    expect(text).toContain('outside services and forced failures are its `stubs`');
+    expect(text).toContain('races are\n  `hold` and `release`');
+    expect(text).toContain('cron and internal endpoints are `call` with `as: system`');
+    expect(text).toContain('(`tests/endpoints/`), and the file says why.');
+  }
+);
 
 test('journeys-autopilot leaves who can open which page to the access table', () => {
   const autopilot = skills.find((skill) => skill.name === 'journeys-autopilot').render();

@@ -1,0 +1,8 @@
+# The data set the race journey runs on (tests/journeys/_headless/race.yaml): one run nobody has
+# approved, and two users who may approve it. Change it only together with that journey.
+fixtures:
+  fixture_db:
+    - { _id: BR-1, kind: run }
+users:
+  finance: { id: u_finance, roles: [finance] }
+  other_finance: { id: u_other_finance, roles: [finance] }

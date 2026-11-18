@@ -284,7 +284,7 @@ const devToolDefinitions = {
 
   lowdefy_run_journey: {
     description:
-      'Drive a page of the running dev server headless through declarative steps and assert what happens - the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. A step that fails stops the journey and comes back as data (passed: false, failure with index, step, expected, actual and message, later steps skipped), never as a tool error. A journey also fails at the step that raises an app error (an action error that is not a user error, an uncaught page error, a server error or 5xx): failure.kind "app-error" with errors [{kind, message, source, configKey}]. failure.kind "dev-server" means the dev server lost its web server and the request got no answer, so the result says nothing about the app: check the dev server log and run it again. A failed Validate, a Throw action and 401/403 refusals never count; {"expect": {"error": text}} straight after an interaction claims an intended error. Returns the final page state (see state) and any screenshots, as images after the JSON.' +
+      'Drive a page of the running dev server headless through declarative steps and assert what happens - the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. A step that fails stops the journey and comes back as data (passed: false, failure with index, step, expected, actual and message, later steps skipped), never as a tool error. A journey also fails at the step that raises an app error (an action error that is not a user error, an uncaught page error, a server error or 5xx): failure.kind "app-error" with errors [{kind, message, source, configKey}]. failure.kind "dev-server" means the dev server lost its web server and the request got no answer, so the result says nothing about the app: check the dev server log and run it again. A failed Validate, a Throw action and 401/403 refusals never count; {"expect": {"error": text}} straight after an interaction claims an intended error. Returns the final page state (see state) and any screenshots, as images after the JSON. It takes no cases or _ref: run a journey file with them through lowdefy_run_tests.' +
       CALLER_NOTE,
     inputSchema: {
       pageId: z
@@ -300,7 +300,7 @@ const devToolDefinitions = {
       steps: z
         .array(z.record(z.string(), z.any()))
         .describe(
-          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request. lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. On a phone (device) only click, fill, select, press, wait, screenshot and expect state run.'
+          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook (hold, release and a call as: system headless only). lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. On a phone (device) only click, fill, select, press, wait, screenshot and expect state run.'
         ),
       device: deviceSchema.describe('A phone to run on instead, by tab id.'),
       user: z
@@ -319,6 +319,12 @@ const devToolDefinitions = {
         .optional()
         .describe(
           'A data set in tests/data/<name>.yaml: the journey runs on a fresh in-memory MongoDB database loaded with it, so it may write freely, and user and "as" can name its users. Format: lowdefy_get_doc testing/journey-data-sets.'
+        ),
+      stubs: z
+        .array(z.record(z.string(), z.any()))
+        .optional()
+        .describe(
+          'Needs data; literal, no _ref. {connectionType, requestType, answer, requestId?, endpoint?, pageId?, match?} answers an outside request; {requestId, endpoint?, pageId?, fail, times?} fails matching requests (once, n or "all") with that message, which expect.error reads.'
         ),
       pathParams: z
         .record(z.string(), z.string())

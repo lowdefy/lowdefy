@@ -19,9 +19,12 @@ import { beforeEach, expect, test } from 'vitest';
 import stubRequest from './stubRequest.js';
 
 let testSession;
+let session;
 beforeEach(() => {
+  session = { stubs: [] };
   testSession = {
     closed: false,
+    dataSession: { session },
     runtime: {
       connections: {
         AxiosHttp: { requests: { AxiosHttp: async () => null } },
@@ -31,7 +34,6 @@ beforeEach(() => {
         Mcp: {},
       },
     },
-    stubs: new Map(),
   };
 });
 
@@ -39,9 +41,13 @@ test('stubRequest keeps the stub by connection type and request type, and a seco
   const first = () => 1;
   const second = () => 2;
   stubRequest({ connectionType: 'AxiosHttp', fn: first, requestType: 'AxiosHttp', testSession });
-  expect(testSession.stubs.get('AxiosHttp').get('AxiosHttp')).toBe(first);
+  expect(session.stubs).toEqual([
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', fn: first },
+  ]);
   stubRequest({ connectionType: 'AxiosHttp', fn: second, requestType: 'AxiosHttp', testSession });
-  expect(testSession.stubs.get('AxiosHttp').get('AxiosHttp')).toBe(second);
+  expect(session.stubs).toEqual([
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', fn: second },
+  ]);
 });
 
 test('stubRequest refuses a connection type the app does not use, naming the ones it does', () => {

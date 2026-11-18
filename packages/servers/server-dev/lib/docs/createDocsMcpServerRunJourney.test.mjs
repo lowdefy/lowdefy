@@ -146,3 +146,67 @@ test('MCP lowdefy_run_journey applies exercised to every run of a user list', as
   const full = await callWith({ exercised: true }, ['admin', 'member']);
   full.runs.forEach((run) => expect(run.exercised).toEqual(fullExercised));
 });
+
+test('MCP lowdefy_run_journey passes literal stubs with a data set to the run', async () => {
+  const client = await connectClient();
+  const stubs = [
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+    { requestId: 'save_price', fail: 'Write failed on purpose', times: 2 },
+  ];
+
+  await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { steps: [{ call: { endpoint: 'price_run' } }], data: 'stubs', stubs },
+  });
+
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ data: 'stubs', stubs }));
+  await client.close();
+});
+
+test('MCP lowdefy_run_journey refuses a _ref or _case left in the journey, pointing to lowdefy test', async () => {
+  const client = await connectClient();
+
+  const ref = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      steps: [{ call: { endpoint: 'price_run' } }],
+      data: 'stubs',
+      stubs: [{ _ref: 'tests/shared/stubs/rates.yaml' }],
+    },
+  });
+  expect(ref.isError).toBe(true);
+  expect(ref.content[0].text).toContain(
+    'Journey "stubs[0]" is a _ref, {"_ref":"tests/shared/stubs/rates.yaml"}, that was not read'
+  );
+  expect(ref.content[0].text).toContain('runs through lowdefy test (lowdefy_run_tests)');
+
+  const placeholder = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { steps: [{ call: { endpoint: { _case: 'endpoint' } } }] },
+  });
+  expect(placeholder.isError).toBe(true);
+  expect(placeholder.content[0].text).toContain(
+    'Journey "steps[0].call.endpoint" is a _case placeholder, {"_case":"endpoint"}'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  await client.close();
+});
+
+test('MCP lowdefy_run_journey refuses a bad stub before running', async () => {
+  const client = await connectClient();
+
+  const badStub = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      steps: [{ call: { endpoint: 'price_run' } }],
+      data: 'stubs',
+      stubs: [{ requestId: 'save_price', fail: 'Down', times: 0 }],
+    },
+  });
+  expect(badStub.isError).toBe(true);
+  expect(badStub.content[0].text).toContain(
+    'Journey "stubs[0]": Journey stub "times" should be a whole number above 0 or "all".'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  await client.close();
+});

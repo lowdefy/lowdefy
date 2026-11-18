@@ -15,9 +15,12 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { toWebhookBody } from '@lowdefy/node-utils';
 
 import callSystemEndpoint from './callSystemEndpoint.js';
+import callWebhook from './callWebhook.js';
 import createSessionCaller from './createSessionCaller.js';
+import failRequest from './failRequest.js';
 import getSessionCollection from './getSessionCollection.js';
 import getSessionStore from './getSessionStore.js';
 import loadSessionRuntime from './loadSessionRuntime.js';
@@ -28,6 +31,7 @@ import settleSession from './settleSession.js';
 import storeLogger from './storeLogger.js';
 import stubRequest from './stubRequest.js';
 import testSessions from './testSessions.js';
+import unfiredFailGates from './unfiredFailGates.js';
 import { openDataSession, readDataSet } from './dataSets/index.js';
 import readConnectionArtifacts from './dataSets/readConnectionArtifacts.js';
 import readEmptyDataSet from './dataSets/readEmptyDataSet.js';
@@ -68,15 +72,9 @@ async function openSession({ data, testApp }) {
     connectionArtifacts,
     dataSession,
     dataSet,
-    // Pause gates no routine has reached yet, by step id (pauseBefore).
-    gates: new Map(),
-    // The release of each gate a routine is held at.
-    held: new Set(),
     named,
     runtime,
     store,
-    // Stubbed request types: connection type -> request type -> function (stubRequest).
-    stubs: new Map(),
     testApp,
   };
   testApp.sessions.add(testSession);
@@ -84,6 +82,7 @@ async function openSession({ data, testApp }) {
   const session = {
     as: (user) => createSessionCaller({ testSession, user }),
     collection: (connectionId) => getSessionCollection({ connectionId, testSession }),
+    fail: (gate) => failRequest({ gate, testSession }),
     pauseBefore: (stepId) => pauseBefore({ stepId, testSession }),
     reset: () => resetSession({ testSession }),
     seed: (connectionId, docs) => seedSession({ connectionId, docs, testSession }),
@@ -95,6 +94,21 @@ async function openSession({ data, testApp }) {
     system: () => ({
       call: (endpointId, payload) => callSystemEndpoint({ endpointId, payload, testSession }),
     }),
+    // The fail gates fail() set that no request has reached yet; reset() throws on any left.
+    unfiredFailGates: () => unfiredFailGates({ testSession }),
+    // Posts to a webhook endpoint as its sender does: body is sent as raw text, a string as
+    // written and anything else as JSON, so a signature header computed over it verifies. Answers
+    // { status, body, contentType, faults }; the request id the journey hosts read is left out.
+    webhook: async (endpointId, { body, headers, query } = {}) => {
+      const { rid, ...answer } = await callWebhook({
+        endpointId,
+        headers,
+        query,
+        rawBody: toWebhookBody(body),
+        testSession,
+      });
+      return answer;
+    },
   };
   testSessions.set(session, testSession);
   return session;

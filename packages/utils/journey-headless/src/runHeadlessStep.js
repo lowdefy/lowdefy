@@ -20,6 +20,7 @@ import { type } from '@lowdefy/helpers';
 import checkFillTarget from './checkFillTarget.js';
 import runHeadlessCall from './runHeadlessCall.js';
 import runHeadlessExpect from './runHeadlessExpect.js';
+import runHeadlessWebhook from './runHeadlessWebhook.js';
 import waitForRequestCall from './waitForRequestCall.js';
 import waitForShownBlock from './waitForShownBlock.js';
 
@@ -33,9 +34,10 @@ function readGoto(goto) {
 // client-core's step runner, then the page settles, a navigation it started included; goto is a
 // full page load, back goes back one page, as switches person (opening the journey's first page
 // for one met for the first time); call and request go to the server directly, as the step's
-// `as` or the current actor, and resolve the answer the expect steps after them read; expect
-// checks the engine, the answer or the data (runHeadlessExpect). Resolves the answer of a call or
-// request, and undefined for any other step.
+// `as` or the current actor, and a webhook as its sender posts it, and resolve the answer the
+// expect steps after them read; expect
+// checks the engine, the answer or the data (runHeadlessExpect). Resolves the answer of a call,
+// request or webhook, and undefined for any other step.
 //
 // Before a block step acts, its block must be shown, as the browser waits for a visible target.
 // A click on a block with no onClick of its own is left to the browser, where it lands on a
@@ -94,6 +96,8 @@ async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout 
     case 'call':
     case 'request':
       return runHeadlessCall({ actors, host, step });
+    case 'webhook':
+      return runHeadlessWebhook({ host, step });
     default:
       // The grammar admits nothing else; a step it gains is not passed unchecked.
       throw new Error(`The headless journey runner has no step "${key}".`);

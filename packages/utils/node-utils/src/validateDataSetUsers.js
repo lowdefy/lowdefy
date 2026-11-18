@@ -27,6 +27,11 @@ function validateDataSetUsers({ users, fail }) {
     if (userName === 'none') {
       fail('users key "none" is reserved: `user: none` means signed out.');
     }
+    if (userName === 'system') {
+      fail(
+        'users key "system" is reserved: `as: system` on a call runs the endpoint as a cron or internal run does, with no user.'
+      );
+    }
     if (userName.startsWith('_')) {
       fail(`users key "${userName}" looks like an operator; data sets are plain YAML.`);
     }

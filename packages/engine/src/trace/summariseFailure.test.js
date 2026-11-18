@@ -30,6 +30,7 @@ test('summariseFailure reads the action and the error of a failed action', () =>
     actionType: 'CallAPI',
     configKey: 'key-error',
     errorName: 'RequestError',
+    forced: false,
     invalidBlocks: [],
   });
 });
@@ -58,6 +59,14 @@ test('summariseFailure gives null action fields for a control-flow parser error'
     actionType: null,
     configKey: 'key-if',
     errorName: 'OperatorError',
+    forced: false,
     invalidBlocks: [],
   });
+});
+
+test("summariseFailure marks a failure a test's fail gate forced on the server", () => {
+  const error = new Error('An error occurred.');
+  error.name = 'ServiceError';
+  error.forced = true;
+  expect(summariseFailure({ error, action: { id: 'save', type: 'Request' } }).forced).toBe(true);
 });

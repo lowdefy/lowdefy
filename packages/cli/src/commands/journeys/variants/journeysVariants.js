@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 import { classifyJourney, relativePosixPath } from '@lowdefy/node-utils';
 
 import discoverJourneys from '../../test/discoverJourneys.js';
-import expandPersonas from '../../test/expandPersonas.js';
+import expandJourney from '../../test/expandJourney.js';
 import fetchBuildId from '../../test/fetchBuildId.js';
 import fetchVariantInputs from './fetchVariantInputs.js';
 import formatJourneyResult from '../../test/formatJourneyResult.js';
@@ -102,13 +102,13 @@ function isHeadless(journey) {
 }
 
 // The journey's newest measured path, or a fresh baseline run's. A journey
-// with a list of users is measured by its first user's persona run. When the
+// with a list of users or a case table is measured by its first run. When the
 // tenant call form can use them (`withCalls`: the tenant kind, a data set and
 // a journey that needs no browser), the journey is run afresh, headless: that
 // run records the calls its pages made with their payloads (calls). One the
 // runner then finds needs a browser is read as below.
 async function readOrMeasure({ context, item: journeyItem, url, withCalls }) {
-  const [item] = expandPersonas({ item: journeyItem });
+  const [item] = expandJourney({ item: journeyItem });
   if (withCalls && isHeadless(item.journey)) {
     const headless = await runJourney({ item, url, headless: true });
     if (type.isUndefined(headless.browserOnly)) {
@@ -214,15 +214,15 @@ async function replay({ context, written, url, sourceHeadless }) {
       );
       continue;
     }
-    // A variant of a journey with a list of users keeps the list, so it
-    // replays once per user.
+    // A variant of a journey with a list of users or a case table keeps it, so
+    // it replays once per user or row.
     const [variantItem] = discoverJourneys({ context, paths: [file.path] });
     const headless =
       type.isObject(variantItem.journey) &&
       isHeadless(variantItem.journey) &&
       (sourceHeadless || type.isUndefined(variantItem.journey.pageId));
     const suite = { run: replayRun({ headless }) };
-    for (const item of expandPersonas({ item: variantItem })) {
+    for (const item of expandJourney({ item: variantItem })) {
       const result = await runRepeated({ suite, context, item, url, repeat: REPLAYS });
       const log = result.passed ? context.logger.info : context.logger.error;
       formatJourneyResult({ result }).forEach((line) => log(line));

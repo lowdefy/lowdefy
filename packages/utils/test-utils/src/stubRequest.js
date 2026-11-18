@@ -17,13 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import checkSessionOpen from './checkSessionOpen.js';
-
-function listNames(names) {
-  return names
-    .sort()
-    .map((name) => `"${name}"`)
-    .join(', ');
-}
+import checkStubTarget from './dataSets/checkStubTarget.js';
 
 // Gives the requests of one request type an answer of the test's own, for the rest of the
 // session: `fn` is called with the request as the session records it in `sunk`
@@ -32,6 +26,7 @@ function listNames(names) {
 // failure. Without a stub a request to an outside service answers null, which breaks a routine
 // that reads the answer. A stub on a connection type that does not say how it runs under a
 // data session lets that request type through, and only that one (createSessionConnections).
+// The stub is kept on the data session; a second stub for the same request type takes its place.
 function stubRequest({ connectionType, fn, requestType, testSession }) {
   checkSessionOpen({ testSession });
   if (typeof fn !== 'function') {
@@ -41,27 +36,24 @@ function stubRequest({ connectionType, fn, requestType, testSession }) {
       )} for ${connectionType} ${requestType}.`
     );
   }
-  const { connections } = testSession.runtime;
-  if (type.isNone(connections[connectionType])) {
-    throw new Error(
-      `Connection type ${JSON.stringify(
-        connectionType
-      )} is not used by this app. Its connection types are ${listNames(Object.keys(connections))}.`
-    );
+  const error = checkStubTarget({
+    connections: testSession.runtime.connections,
+    connectionType,
+    requestType,
+  });
+  if (!type.isUndefined(error)) {
+    throw new Error(error);
   }
-  const requests = connections[connectionType].requests ?? {};
-  if (type.isNone(requests[requestType])) {
-    throw new Error(
-      `Request type ${JSON.stringify(
-        requestType
-      )} is not a request of connection type "${connectionType}". Its request types are ${listNames(
-        Object.keys(requests)
-      )}.`
-    );
+  const { stubs } = testSession.dataSession.session;
+  const stub = { connectionType, requestType, fn };
+  const index = stubs.findIndex(
+    (entry) => entry.connectionType === connectionType && entry.requestType === requestType
+  );
+  if (index === -1) {
+    stubs.push(stub);
+    return;
   }
-  const stubs = testSession.stubs.get(connectionType) ?? new Map();
-  stubs.set(requestType, fn);
-  testSession.stubs.set(connectionType, stubs);
+  stubs[index] = stub;
 }
 
 export default stubRequest;

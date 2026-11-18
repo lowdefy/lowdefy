@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import path from 'node:path';
 import { expect } from 'vitest';
+import YAML from 'yaml';
 
 import { fixtureTest, postJourney, postJson } from './fixtureClient.mjs';
 
@@ -135,5 +138,103 @@ fixtureTest(
     expect(body.error).toBe(
       'Step 0: expect.calls with "payload" or "response" needs a headless run (the browser runner does not record payloads yet).'
     );
+  }
+);
+
+// tests/journeys/_headless/webhook.yaml in a browser run: each webhook posts through the dev
+// server's endpoints route, signed-out and on the journey's data set, so payment_events' verify
+// gate passes the signed bodies and refuses the wrong signature. postJourney runs it headless on a
+// build too and compares the two.
+fixtureTest('a webhook posts through the endpoints route, where its verify gate runs', async () => {
+  const file = path.join(
+    process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+    'tests',
+    'journeys',
+    '_headless',
+    'webhook.yaml'
+  );
+  const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
+  const result = await postJourney({
+    data: journey.data,
+    user: journey.user,
+    steps: journey.steps,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+});
+
+// The second journey of tests/journeys/_headless/webhook.yaml in a browser run: a fail gate fails
+// the event write inside payment_events. The route's 500 names no request id in its body, so
+// expect.error reads the forced message by the request id the dev server's endpoints route names in
+// a header for a call on a journey's data session.
+fixtureTest('expect.error reads a forced failure inside a webhook in a browser run', async () => {
+  const file = path.join(
+    process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+    'tests',
+    'journeys',
+    '_headless',
+    'webhook.yaml'
+  );
+  const journey = YAML.parse(fs.readFileSync(file, 'utf8'))[1];
+  const result = await postJourney({
+    data: journey.data,
+    user: journey.user,
+    stubs: journey.stubs,
+    steps: journey.steps,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+});
+
+// tests/journeys/_headless/stubs.yaml in a browser run: the journey route sets its stubs on the
+// data session the browser's calls resolve on in the dev server process, so the rate service is
+// answered and the writes fail on purpose; expect.error reads each forced message the dev server
+// recorded on that session. postJourney runs it headless on a build too and compares the two.
+fixtureTest('stubs answer and fail requests in a browser run, as headless', async () => {
+  const file = path.join(
+    process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+    'tests',
+    'journeys',
+    '_headless',
+    'stubs.yaml'
+  );
+  const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
+  const result = await postJourney({
+    data: journey.data,
+    user: journey.user,
+    stubs: journey.stubs,
+    steps: journey.steps,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+});
+
+// The second journey of tests/journeys/_headless/stubs.yaml in a browser run: the Save click's
+// save_item request fails at a fail gate. The page's failed Request action, the 500 the route
+// answered and the dev server's error entry are marked forced, so none is an app error.
+fixtureTest(
+  'a page request a click fires and a fail gate fails is no app error in a browser run',
+  async () => {
+    const file = path.join(
+      process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+      'tests',
+      'journeys',
+      '_headless',
+      'stubs.yaml'
+    );
+    const journey = YAML.parse(fs.readFileSync(file, 'utf8'))[1];
+    const result = await postJourney({
+      pageId: journey.pageId,
+      data: journey.data,
+      user: journey.user,
+      stubs: journey.stubs,
+      steps: journey.steps,
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+    expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
   }
 );

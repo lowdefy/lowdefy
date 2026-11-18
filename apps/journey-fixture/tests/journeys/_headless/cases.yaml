@@ -1,0 +1,11 @@
+# A case table whose rows and steps live in shared files under tests/shared (_ref): one run per
+# row, named "<name> [<row name>]", each on a fresh session of its data set, so each row sees the
+# seeded activity and its own write only. Run headless by `lowdefy test --headless --build`. In a
+# folder starting with "_" so the browser suites leave it out.
+- name: logs an activity from each source
+  data: cases
+  user: member
+  cases:
+    _ref: tests/shared/activity-sources.yaml
+  steps:
+    _ref: tests/shared/log-activity-steps.yaml

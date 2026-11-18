@@ -24,6 +24,7 @@ import groupDataSetByCollection from './groupDataSetByCollection.js';
 import isDataStoreGone from './isDataStoreGone.js';
 import listSessionDatabases from './listSessionDatabases.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
+import releasePauseGates from './releasePauseGates.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
 
@@ -39,6 +40,9 @@ function createClose({ session, client, logger }) {
   let closing;
   async function close() {
     session.state = 'closing';
+    // A routine held at a pause gate is let go, so a run that ended between a hold and its release
+    // leaves nothing waiting on this session.
+    releasePauseGates({ session });
     const drained = await drainSessionWork({ work: session.work, timeoutMs: DRAIN_TIMEOUT_MS });
     if (!drained) {
       logger.warn(
@@ -64,8 +68,9 @@ function createClose({ session, client, logger }) {
 // data set and registered under a random id. They are named <prefix>_<n> under the session's own
 // prefix (ld_<hex>), so the orphan sweep and close() find them all; the first, <prefix>_0, is also
 // the database a target computed per request reads. `cookie` is the id, the payload
-// openPage({ dataCookie }) writes into each actor's lowdefy_journey_data cookie. close() waits for
-// the session's background work (context.waitUntil), then drops the databases. `logger` is the
+// openPage({ dataCookie }) writes into each actor's lowdefy_journey_data cookie. close() releases
+// its pause gates, waits for the session's background work (context.waitUntil), then drops the
+// databases. `logger` is the
 // caller's own: close() warns on it when that work outlives the wait.
 //
 // `store` is a test run's store (getRunDataStore), which the endpoint test harness passes; the
@@ -92,8 +97,19 @@ async function openDataSession({ dataSet, logger, store: runStore }) {
     // readDataSession serves only open and closing sessions.
     state: 'loading',
     work: new Set(),
-    // Requests sunk instead of sent to an outside service (see sinkExternalConnections).
+    // Requests sunk instead of sent to an outside service (see sinkExternalConnections), and
+    // stubbed requests.
     sunk: [],
+    // Stand-in answers for outside requests, in order: the first that matches a request answers
+    // it (createStubResolver).
+    stubs: [],
+    // Requests that throw a forced failure before they run (addFailGate).
+    failGates: [],
+    // Requests a routine is held at until the test releases it (addPauseGate).
+    pauseGates: [],
+    // Forced failures that reached the server's error sink, by the call they failed
+    // (recordForcedFailure), so a check reads the message the client never sees.
+    forced: [],
   };
   dataSessionRegistry.set(id, session);
   try {
