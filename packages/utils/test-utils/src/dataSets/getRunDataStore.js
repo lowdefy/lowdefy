@@ -14,41 +14,13 @@
   limitations under the License.
 */
 
-import { MongoClient } from 'mongodb';
-
 import announceDataStoreDownload from './announceDataStoreDownload.js';
+import connectToRunStore from './connectToRunStore.js';
 import getRunOwnerPid from './getRunOwnerPid.js';
 import getRunStoreRecordPath from './getRunStoreRecordPath.js';
-import isDataStoreGone from './isDataStoreGone.js';
-import removeRunStoreRecord from './removeRunStoreRecord.js';
-import waitForRunStoreRecord from './waitForRunStoreRecord.js';
 
-// The store is a local mongod: a client that cannot reach it within this long is looking at a
-// dead store.
-const SERVER_SELECTION_TIMEOUT_MS = 5000;
 const START_TIMEOUT_MS = 120000;
 const DOWNLOAD_TIMEOUT_MS = 900000;
-// A record can name a store that is gone while its keeper pid still lives: the pid was reused,
-// or the keeper is stopping. Each such record is replaced; three in a row is a store that keeps
-// dying, which is thrown.
-const JOIN_ATTEMPTS = 3;
-
-async function connectToRunStore({ ownerPid, recordPath, timeoutMs }) {
-  for (let attempt = 1; ; attempt += 1) {
-    const record = await waitForRunStoreRecord({ ownerPid, recordPath, timeoutMs });
-    const client = new MongoClient(record.uri, {
-      serverSelectionTimeoutMS: SERVER_SELECTION_TIMEOUT_MS,
-    });
-    try {
-      await client.connect();
-      return { client, record };
-    } catch (error) {
-      await client.close().catch(() => {});
-      if (!isDataStoreGone(error) || attempt === JOIN_ATTEMPTS) throw error;
-      removeRunStoreRecord({ recordPath, token: record.token });
-    }
-  }
-}
 
 // The data store of a test run: one in-memory MongoDB replica set for every test process of the
 // run, where the dev server's store (getDataStore) is one per server process. The first test
