@@ -79,7 +79,7 @@ function CellEditor({ api, session }) {
   });
   const [draft, setDraftState] = useState(initial);
   const [search, setSearch] = useState(() =>
-    kind === 'select' || kind === 'multiSelect' ? session.seed ?? '' : ''
+    kind === 'select' || kind === 'multiSelect' ? (session.seed ?? '') : ''
   );
   const wrapperRef = useRef(null);
   const seedPending = useRef(session.seed !== undefined);

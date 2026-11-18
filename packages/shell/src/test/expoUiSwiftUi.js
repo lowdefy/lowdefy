@@ -17,7 +17,7 @@
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-// Stand-ins for the @expo/ui SwiftUI views the blocks use, which need native modules Jest does not
+// Stand-ins for the @expo/ui SwiftUI views the blocks use, which need native modules a test does not
 // have. ContextMenu draws its trigger, and its items as pressable buttons with the props the
 // block passes, so a test can press an item.
 

@@ -21,7 +21,7 @@ import decideWithStructuredOutput from './decideWithStructuredOutput.js';
 // a model the caller already holds. The Decide request resolver runs this
 // with its connection's provider; code with no connection or request calls it
 // with a model of its own.
-//   evaluation         an evaluation model (provider.evaluationModel(id));
+//   evaluation         an evaluation model (provider.decisionModel(id));
 //   structured-output  any language model (provider(id)).
 // providerMetadata is the AI SDK result's, which carries gateway.cost when
 // the AI Gateway reports it.

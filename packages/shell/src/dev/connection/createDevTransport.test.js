@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createDevShellConfig from './createDevShellConfig.js';
 import createDevTransport from './createDevTransport.js';
@@ -30,7 +30,7 @@ class FakeWebSocket {
 }
 
 test('a paired server gets the pairing token on every call and websocket upgrade', async () => {
-  const fetch = jest.fn(async () => ({ status: 200 }));
+  const fetch = vi.fn(async () => ({ status: 200 }));
   const transport = createDevTransport({ fetch, pair: 'k3x9q', WebSocket: FakeWebSocket });
   await transport.fetch('http://192.168.1.20:3000/api/mobile/root', { headers: { a: '1' } });
   expect(fetch.mock.calls[0][1].headers).toEqual({ a: '1', 'x-lowdefy-pair': 'k3x9q' });
@@ -42,13 +42,13 @@ test('a paired server gets the pairing token on every call and websocket upgrade
     Authorization: 'Bearer t',
     'x-lowdefy-pair': 'k3x9q',
   });
-  const streamFetch = jest.fn(async () => ({ status: 200 }));
+  const streamFetch = vi.fn(async () => ({ status: 200 }));
   await transport.wrapFetch(streamFetch)('http://192.168.1.20:3000/api/reload');
   expect(streamFetch.mock.calls[0][1].headers).toEqual({ 'x-lowdefy-pair': 'k3x9q' });
 });
 
 test('a server on this device gets the platform fetch and WebSocket, with no token', () => {
-  const fetch = jest.fn();
+  const fetch = vi.fn();
   const transport = createDevTransport({ fetch, pair: null, WebSocket: FakeWebSocket });
   expect(transport.fetch).toBe(fetch);
   expect(transport.WebSocket).toBe(FakeWebSocket);
@@ -56,7 +56,7 @@ test('a server on this device gets the platform fetch and WebSocket, with no tok
 
 test('each dev server is its own app, at its url', () => {
   const config = createDevShellConfig({
-    fetch: jest.fn(),
+    fetch: vi.fn(),
     server: { url: 'http://192.168.1.20:3000', host: '192.168.1.20:3000', pair: 'k3x9q' },
     shell,
     WebSocket: FakeWebSocket,

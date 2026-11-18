@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import redirectDevLink from './redirectDevLink.js';
 
-jest.mock('../config/getShellConfig.js', () => () => ({ scheme: 'lowdefy-dev' }));
+vi.mock('../config/getShellConfig.js', () => ({ default: () => ({ scheme: 'lowdefy-dev' }) }));
 
 const { getShellVariant } = require('../../shellVariant.js');
 

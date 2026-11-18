@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getBreakpoint from './getBreakpoint.js';
 
 test('getBreakpoint uses the shorter side on a phone, so landscape keeps the portrait layout', () => {

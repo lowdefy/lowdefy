@@ -199,7 +199,6 @@ describe('es6 features', () => {
   });
 
   test('should work for template strings', () => {
-    /* eslint quotes: 0 */
     const name = 'Foo';
     expect(type.typeOf(`Welcome ${name} buddy`)).toEqual('string');
   });

@@ -14,15 +14,16 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
 import callEndpoint from '../native/callEndpoint.js';
 import unregisterPushToken from './unregisterPushToken.js';
 
-jest.mock('../native/callEndpoint.js', () => jest.fn(async () => null));
-jest.mock('expo-notifications', () => ({
-  getDevicePushTokenAsync: jest.fn(async () => ({ data: 'device-token' })),
+vi.mock('../native/callEndpoint.js', () => ({ default: vi.fn(async () => null) }));
+vi.mock('expo-notifications', () => ({
+  getDevicePushTokenAsync: vi.fn(async () => ({ data: 'device-token' })),
 }));
 
 function createApp({ token = 'session-token' } = {}) {

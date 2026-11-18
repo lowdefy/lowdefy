@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 // expo-secure-store over a Map, keyed as the native module keys items: by key and by whether the
 // item is behind biometrics (a protected item is a different Keychain service on iOS).
@@ -27,11 +27,11 @@ function createFakeSecureStore() {
     items,
     AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY: 'AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY',
     WHEN_UNLOCKED_THIS_DEVICE_ONLY: 'WHEN_UNLOCKED_THIS_DEVICE_ONLY',
-    getItemAsync: jest.fn(async (key, options) => items.get(itemKey(key, options))?.value ?? null),
-    setItemAsync: jest.fn(async (key, value, options) => {
+    getItemAsync: vi.fn(async (key, options) => items.get(itemKey(key, options))?.value ?? null),
+    setItemAsync: vi.fn(async (key, value, options) => {
       items.set(itemKey(key, options), { value, options });
     }),
-    deleteItemAsync: jest.fn(async (key, options) => {
+    deleteItemAsync: vi.fn(async (key, options) => {
       items.delete(itemKey(key, options));
     }),
   };

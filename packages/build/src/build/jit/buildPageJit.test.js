@@ -1064,7 +1064,7 @@ blocks:
   }
   expect(error.message).toBe('Page "home" build failed with 1 error(s).');
   expect(error.buildErrors[0].message).toMatch(
-    /^Icon "AiOutlineDelete" is a react-icons name\. Lowdefy 7 uses Lucide icons\. Use "delete" \(or "Trash"\)\./
+    /^Icon "AiOutlineDelete" is a react-icons name\. Lowdefy uses Lucide icons\. Use "delete" \(or "Trash"\)\./
   );
 });
 

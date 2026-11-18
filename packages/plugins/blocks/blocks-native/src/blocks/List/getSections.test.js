@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSections from './getSections.js';
 
 test('getSections groups neighbouring items with the same key', () => {

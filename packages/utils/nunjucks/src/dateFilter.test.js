@@ -24,6 +24,7 @@
 
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
+import 'dayjs/locale/fr.js';
 import nunjucks from 'nunjucks';
 import dateFilter from './dateFilter.js';
 import { describe, expect, test } from 'vitest';
@@ -177,5 +178,18 @@ describe('dateFilter - edge cases', () => {
     expect(dateFilter(-1)).toEqual(dayjs(-1).format());
     expect(dateFilter(0.1)).toEqual(dayjs(0.1).format());
     expect(dateFilter(-0.1)).toEqual(dayjs(-0.1).format());
+  });
+});
+
+describe('dateFilter - locale', () => {
+  // The bundle keeps dayjs external, so the filter formats with the app's dayjs and its locale.
+  test('dateFilter formats with the locale set on the shared dayjs', () => {
+    const previousLocale = dayjs.locale();
+    dayjs.locale('fr');
+    try {
+      expect(dateFilter('2015-03-21T12:00:00Z', 'MMMM dddd')).toEqual('mars samedi');
+    } finally {
+      dayjs.locale(previousLocale);
+    }
   });
 });

@@ -27,7 +27,6 @@ function createOpenFilter(api) {
   return function openFilter(params) {
     const key = type.isObject(params) ? params.key : undefined;
     if (!api.config.toolbar?.filter || type.isUndefined(api.filterButton)) {
-      // eslint-disable-next-line no-console
       console.warn(
         `Table "${api.blockId}" openFilter needs the toolbar's filter item (toolbar: { filter: true }), so it did nothing.`
       );

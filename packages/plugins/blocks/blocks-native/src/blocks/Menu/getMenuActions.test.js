@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getMenuActions from './getMenuActions.js';
 
 test('items become menu actions with their SF Symbols and attributes', () => {

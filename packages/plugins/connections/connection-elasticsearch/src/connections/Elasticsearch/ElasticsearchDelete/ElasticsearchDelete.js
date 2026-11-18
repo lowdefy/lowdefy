@@ -19,16 +19,18 @@ import schema from './schema.js';
 
 async function ElasticsearchDelete({ request, connection }) {
   const client = new Client(connection);
-
-  const { body: response } = await client.delete({
-    ...request,
-    index: request.index || connection.index,
-  });
-
-  return {
-    id: response._id,
-    response,
-  };
+  try {
+    const response = await client.delete({
+      ...request,
+      index: request.index || connection.index,
+    });
+    return {
+      id: response._id,
+      response,
+    };
+  } finally {
+    await client.close();
+  }
 }
 
 ElasticsearchDelete.schema = schema;

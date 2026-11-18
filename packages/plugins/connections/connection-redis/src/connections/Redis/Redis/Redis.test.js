@@ -40,9 +40,10 @@ test('redis command with connection as an object', async () => {
     GET: vi.fn().mockImplementation(function () {
       return Promise.resolve(response);
     }),
-    quit: vi.fn().mockImplementation(function () {
+    close: vi.fn().mockImplementation(function () {
       return Promise.resolve();
     }),
+    destroy: vi.fn(),
   };
   mockedCreateClient.mockImplementationOnce(function () {
     return client;
@@ -65,10 +66,22 @@ test('redis command with connection as an object', async () => {
     },
   };
   const res = await Redis({ request, connection });
-  expect(mockedCreateClient.mock.calls).toEqual([[connection.connection]]);
+  expect(mockedCreateClient.mock.calls).toEqual([
+    [
+      {
+        password: 'password',
+        socket: {
+          reconnectStrategy: false,
+          host: 'host',
+          port: 1,
+        },
+      },
+    ],
+  ]);
   expect(client.connect).toHaveBeenCalledTimes(1);
   expect(client.GET.mock.calls).toEqual([['key', { A: true, B: false }]]);
-  expect(client.quit).toHaveBeenCalledTimes(1);
+  expect(client.close).toHaveBeenCalledTimes(1);
+  expect(client.destroy).not.toHaveBeenCalled();
   expect(res).toEqual(response);
 });
 
@@ -83,9 +96,10 @@ test('redis command with connection as a string', async () => {
     GET: vi.fn().mockImplementation(function () {
       return Promise.resolve(response);
     }),
-    quit: vi.fn().mockImplementation(function () {
+    close: vi.fn().mockImplementation(function () {
       return Promise.resolve();
     }),
+    destroy: vi.fn(),
   };
   mockedCreateClient.mockImplementationOnce(function () {
     return client;
@@ -102,21 +116,21 @@ test('redis command with connection as a string', async () => {
     },
   };
   const res = await Redis({ request, connection });
-  expect(mockedCreateClient.mock.calls).toEqual([[{ url: connection.connection }]]);
+  expect(mockedCreateClient.mock.calls).toEqual([
+    [{ url: connection.connection, socket: { reconnectStrategy: false } }],
+  ]);
   expect(client.connect).toHaveBeenCalledTimes(1);
   expect(client.GET.mock.calls).toEqual([['key', { A: true, B: false }]]);
-  expect(client.quit).toHaveBeenCalledTimes(1);
+  expect(client.close).toHaveBeenCalledTimes(1);
+  expect(client.destroy).not.toHaveBeenCalled();
   expect(res).toEqual(response);
 });
 
-test('connection error', async () => {
+test('connection error rejects with the error connect() rejects with', async () => {
   const Redis = (await import('./Redis.js')).default;
   const client = {
-    on: vi.fn(function (event, cb) {
-      if (event === 'error') {
-        cb(new Error('connection error'));
-      }
-    }),
+    on: vi.fn(),
+    GET: vi.fn(),
     connect: vi.fn().mockImplementation(function () {
       return Promise.reject(new Error('connection error'));
     }),
@@ -142,6 +156,7 @@ test('connection error', async () => {
     },
   };
   await expect(Redis({ request, connection })).rejects.toThrow('connection error');
+  expect(client.GET).not.toHaveBeenCalled();
 });
 
 test('invalid command', async () => {
@@ -173,6 +188,7 @@ test('invalid command', async () => {
     },
   };
   await expect(Redis({ request, connection })).rejects.toThrow('Invalid redis command "get".');
+  expect(client.connect).not.toHaveBeenCalled();
 });
 
 test('invalid parameters type', async () => {
@@ -209,6 +225,7 @@ test('invalid parameters type', async () => {
   await expect(Redis({ request, connection })).rejects.toThrow(
     'Invalid parameters, command "get" parameters should be an array.'
   );
+  expect(client.connect).not.toHaveBeenCalled();
 });
 
 test('invalid parameters number', async () => {
@@ -221,9 +238,10 @@ test('invalid parameters number', async () => {
     SET: vi.fn().mockImplementation(function () {
       return Promise.reject(new Error('SET error'));
     }),
-    quit: vi.fn().mockImplementation(function () {
+    close: vi.fn().mockImplementation(function () {
       return Promise.resolve();
     }),
+    destroy: vi.fn(),
   };
   mockedCreateClient.mockImplementationOnce(function () {
     return client;
@@ -246,6 +264,35 @@ test('invalid parameters number', async () => {
     },
   };
   await expect(Redis({ request, connection })).rejects.toThrow('SET error');
+  expect(client.destroy).toHaveBeenCalledTimes(1);
+  expect(client.close).not.toHaveBeenCalled();
+});
+
+test('error listener swallows client error events so they do not crash the process', async () => {
+  const Redis = (await import('./Redis.js')).default;
+  const client = {
+    on: vi.fn(),
+    connect: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
+    GET: vi.fn().mockImplementation(function () {
+      return Promise.resolve('value');
+    }),
+    close: vi.fn().mockImplementation(function () {
+      return Promise.resolve();
+    }),
+    destroy: vi.fn(),
+  };
+  mockedCreateClient.mockImplementationOnce(function () {
+    return client;
+  });
+  const connection = { connection: 'redis://localhost:6379' };
+  const request = { command: 'get', parameters: ['key'], modifiers: {} };
+  await Redis({ request, connection });
+  expect(client.on.mock.calls.length).toBe(1);
+  const [event, listener] = client.on.mock.calls[0];
+  expect(event).toEqual('error');
+  expect(() => listener(new Error('socket closed'))).not.toThrow();
 });
 
 test('valid request schema, with url', async () => {

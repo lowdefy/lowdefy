@@ -34,7 +34,8 @@
   --lf-avatar-font-size: var(--ant-font-size-sm, 12px);
 }
 
-.antdTheme :global(.ag-overlay-no-rows-wrapper) {
+.antdTheme :global(.ag-overlay-no-rows-wrapper),
+.antdTheme :global(.ag-overlay-no-matching-rows-wrapper) {
   color: var(--ant-color-text-secondary);
 }
 

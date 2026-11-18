@@ -18,9 +18,15 @@ import { buildPagePath, type, urlQuery } from '@lowdefy/helpers';
 
 import pageContextExpression from './instanceKey.js';
 
+// The page instance on screen is ready once its onInit has finished. Its context exists earlier:
+// the engine creates it while the page first renders, before onInit runs, and the page shows no
+// blocks and holds no onInit state until onInit is done.
 async function waitForReady(page) {
-  // Wait for the context of the page instance on screen to exist.
-  await page.waitForFunction(`Boolean(${pageContextExpression})`, undefined, { timeout: 30000 });
+  await page.waitForFunction(
+    `${pageContextExpression}?._internal?.onInitDone === true`,
+    undefined,
+    { timeout: 30000 }
+  );
 }
 
 // A target is a URL path, or { basePath, pageId, path, pathParams, urlQuery } where `path` is
@@ -40,8 +46,8 @@ function createPageUrl(target) {
 
 async function goto(page, target) {
   const path = createPageUrl(target);
-  // domcontentloaded is sufficient — waitForReady gates on the Lowdefy client
-  // context, which is a stronger readiness signal than the browser 'load' event.
+  // domcontentloaded is sufficient — waitForReady gates on the page's onInit
+  // having finished, which is a stronger readiness signal than the browser 'load' event.
   // Using 'load' can hang when pages have WebSocket connections or slow resources.
   await page.goto(path, { waitUntil: 'domcontentloaded' });
   await waitForReady(page);

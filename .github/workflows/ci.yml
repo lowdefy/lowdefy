@@ -3,7 +3,7 @@ name: CI
 # Tests run on demand, not on every push. Agents and developers run the tests a change
 # needs before they push and list them in the pull request.
 #
-# - `ci` label on a pull request: the fast path (test-fast.yml), one ubuntu / Node 24 job
+# - `ci` label on a pull request: the fast path (test-fast.yml), one ubuntu / Node 26 job
 #   testing only the affected packages. It runs when the label is added and again on
 #   every push while the label stays.
 # - `ci-full` label on a pull request: the complete path (test-complete.yml) once, when
@@ -21,7 +21,7 @@ on:
   workflow_dispatch:
     inputs:
       full:
-        description: Run the complete path (Node 24 and 26, MongoDB, journey fixtures, block e2e)
+        description: Run the complete path (Node 26, MongoDB, journey fixtures, block e2e)
         type: boolean
         default: false
 

@@ -28,9 +28,8 @@ vi.doMock('../../context/createReadConfigFile.js', () => ({
 }));
 
 const { default: getConnectionConfig } = await import('./getConnectionConfig.js');
-const { default: resolveTenantPreflight, getTenantIntegrityStatus } = await import(
-  './resolveTenantPreflight.js'
-);
+const { default: resolveTenantPreflight, getTenantIntegrityStatus } =
+  await import('./resolveTenantPreflight.js');
 const mockProbe = vi.fn();
 
 const logger = {

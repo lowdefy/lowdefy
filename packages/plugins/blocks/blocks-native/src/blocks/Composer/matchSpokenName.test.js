@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import indexSpokenNames from './indexSpokenNames.js';
 import matchSpokenName from './matchSpokenName.js';
 

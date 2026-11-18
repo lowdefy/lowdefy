@@ -105,7 +105,6 @@ class Block {
     if (!type.isNone(slots)) {
       this.slotsLayout = {};
       Object.keys(slots).forEach((key) => {
-        // eslint-disable-next-line no-unused-vars
         const { blocks, ...slotLayout } = slots[key];
         this.slotsLayout[key] = { ...slotLayout };
       });

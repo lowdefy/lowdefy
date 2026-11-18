@@ -24,8 +24,8 @@ vi.doMock('@lowdefy/node-utils', () => {
   };
 });
 
-vi.doMock('uuid', () => ({
-  v4: () => 'uuidv4',
+vi.doMock('node:crypto', () => ({
+  randomUUID: () => 'uuidv4',
 }));
 
 const configDirectory = process.cwd();

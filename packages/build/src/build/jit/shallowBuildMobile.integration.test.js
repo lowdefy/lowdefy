@@ -49,9 +49,8 @@ vi.doMock('../copyAgentFileSystems.js', () => ({
 
 const { default: shallowBuild } = await import('./shallowBuild.js');
 const { default: buildPageJit } = await import('./buildPageJit.js');
-const { snapshotTypesMap, snapshotTypesMapMobile } = await import(
-  '../../test-utils/runBuildForSnapshots.js'
-);
+const { snapshotTypesMap, snapshotTypesMapMobile } =
+  await import('../../test-utils/runBuildForSnapshots.js');
 
 // A shell plugin's native block, as the servers' createCustomPluginTypesMap
 // adds it.

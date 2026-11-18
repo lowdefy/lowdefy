@@ -41,7 +41,6 @@ function createTraceRegistry({ lowdefy }) {
     } catch (error) {
       if (!warnedListeners.has(listener)) {
         warnedListeners.add(listener);
-        // eslint-disable-next-line no-console
         console.warn('A Lowdefy trace listener threw an error.', error);
       }
     }

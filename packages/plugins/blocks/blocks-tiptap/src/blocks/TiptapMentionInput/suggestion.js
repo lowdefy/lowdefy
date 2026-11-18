@@ -16,8 +16,8 @@
 
 import { ReactRenderer } from '@tiptap/react';
 import { type } from '@lowdefy/helpers';
-import tippy from 'tippy.js';
 
+import createPopupMiddleware from './createPopupMiddleware.js';
 import MentionList from './MentionList.js';
 import itemSection from './itemSection.js';
 
@@ -27,6 +27,13 @@ function suggestion({ methods, char = '@', allowSpaces = true, limit = 5 }) {
     // on its options.suggestion, replacing the extension's default `@`.
     char,
     allowSpaces,
+    // The suggestion plugin positions the list with Floating UI once `render` mounts it: 10px
+    // below the caret, flipping and shifting as createPopupMiddleware sets out. Its own flip has no
+    // padding, so it is replaced.
+    placement: 'bottom-start',
+    offset: { mainAxis: 10 },
+    flip: false,
+    floatingUi: { middleware: createPopupMiddleware() },
     items: ({ query, editor }) => {
       const itemsList = editor.options.editorProps.items ?? [];
       const filtered = itemsList.filter((item) => {
@@ -54,7 +61,7 @@ function suggestion({ methods, char = '@', allowSpaces = true, limit = 5 }) {
 
     render: () => {
       let component;
-      let popup;
+      let unmount;
       let current;
 
       const start = (props) => {
@@ -62,41 +69,21 @@ function suggestion({ methods, char = '@', allowSpaces = true, limit = 5 }) {
         component = new ReactRenderer(MentionList, {
           props: { ...props, methods },
           editor: props.editor,
+          className: 'tiptap-mention-popup',
         });
-
-        if (!props.clientRect) return;
-
-        popup = tippy('body', {
-          getReferenceClientRect: props.clientRect,
-          appendTo: () => document.body,
-          content: component.element,
-          showOnCreate: true,
-          interactive: true,
-          trigger: 'manual',
-          placement: 'bottom-start',
-        });
+        // Mounts the list into document.body, keeps it placed while the page scrolls or
+        // resizes, and ends the suggestion on a press outside the list and the editor.
+        unmount = props.mount(component.element);
       };
 
       const exit = () => {
-        // Tear down in this order — React portal first, tippy popup after —
-        // to avoid "NotFoundError: Failed to execute 'removeChild'" when the
-        // user navigates away (e.g. clicks another item) while the mention
-        // popup is open. MentionList is rendered as a React portal into
-        // component.element, which tippy relocates into document.body.
-        // Destroying tippy first detaches that container out from under
-        // React's portal teardown; destroying the component first lets React
-        // remove the MentionList DOM cleanly while the container is still
-        // attached. The tippy teardown is then deferred to a microtask so it
-        // never runs synchronously inside React's own unmount commit.
+        // Destroying the renderer removes the list's element from the page, while it is still
+        // the parent of the React content, so React's later portal teardown never fails to remove
+        // a child. unmount then stops the positioning and the outside-press listener.
         component?.destroy();
         component = undefined;
-        const instance = popup?.[0];
-        popup = undefined;
-        if (instance && !instance.state.isDestroyed) {
-          queueMicrotask(() => {
-            if (!instance.state.isDestroyed) instance.destroy();
-          });
-        }
+        unmount?.();
+        unmount = undefined;
       };
 
       return {
@@ -104,9 +91,8 @@ function suggestion({ methods, char = '@', allowSpaces = true, limit = 5 }) {
 
         onUpdate(props) {
           // A suggestion that moves to a new trigger with a new query (e.g. a
-          // second "@" typed while the first was open) restarted in TipTap v2,
-          // which also showed a popup that an outside click had hidden. v3
-          // reports it as an update, so restart it here.
+          // second "@" typed while the first was open) restarted in TipTap v2.
+          // v3 reports it as an update, so restart it here.
           if (props.range.from !== current?.from && props.query !== current?.query) {
             exit();
             start(props);
@@ -114,15 +100,10 @@ function suggestion({ methods, char = '@', allowSpaces = true, limit = 5 }) {
           }
           current = { from: props.range.from, query: props.query };
           component?.updateProps(props);
-          if (!props.clientRect) return;
-          popup?.[0]?.setProps({ getReferenceClientRect: props.clientRect });
         },
 
+        // Escape ends the suggestion in the plugin itself, which calls onExit.
         onKeyDown(props) {
-          if (props.event.key === 'Escape') {
-            popup?.[0]?.hide();
-            return true;
-          }
           return component?.ref?.onKeyDown(props) ?? false;
         },
 

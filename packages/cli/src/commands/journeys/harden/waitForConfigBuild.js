@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import axios from 'axios';
+import httpFetch from '../../../utils/httpFetch.js';
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -22,8 +22,11 @@ function sleep(ms) {
 
 async function readBuildStatus({ url }) {
   try {
-    const response = await axios.get(`${url}/lowdefy-docs/build-status`, { timeout: 5000 });
-    return response.data;
+    const response = await httpFetch({ url: `${url}/lowdefy-docs/build-status`, timeoutMs: 5000 });
+    if (!response.ok) {
+      return null;
+    }
+    return await response.json();
   } catch {
     return null;
   }

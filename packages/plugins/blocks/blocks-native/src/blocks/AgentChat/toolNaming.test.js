@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getToolIcon from './getToolIcon.js';
 import humanizeToolName from './humanizeToolName.js';
 import summarizeToolInput from './summarizeToolInput.js';

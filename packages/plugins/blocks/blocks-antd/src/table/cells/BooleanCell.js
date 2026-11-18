@@ -24,7 +24,7 @@ function BooleanCell({ value, column, components }) {
   if (type.isNone(value)) return <EmptyCell />;
   const { cell } = column;
   const truthy = Boolean(value);
-  const label = truthy ? cell.trueLabel ?? 'Yes' : cell.falseLabel ?? 'No';
+  const label = truthy ? (cell.trueLabel ?? 'Yes') : (cell.falseLabel ?? 'No');
   const icon = truthy ? cell.trueIcon : cell.falseIcon;
   const customColor = truthy ? cell.trueColor : cell.falseColor;
   const color = resolveToneColor({ color: customColor, text: true });

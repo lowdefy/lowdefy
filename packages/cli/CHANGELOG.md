@@ -1,5 +1,59 @@
 # Change Log
 
+## 7.4.0
+
+### Patch Changes
+
+- 94458a7: fix(server-dev): MCP instructions follow the test level rules
+
+  The dev MCP server's instructions told agents to verify every change with a journey, and `lowdefy_run_tests` told them to widen to the edge tier before calling a change done, after the rules `lowdefy agent-setup` writes had stopped saying both. Called with no arguments, `lowdefy_run_tests` runs the full suite, so agents that followed it ran every journey for one change, and several agents building one change each did so on the same machine. The instructions now send logic to `lowdefy_run_endpoint` and keep `lowdefy_run_journey` for what only a browser shows, once the change is done. `lowdefy_run_tests` asks for the journeys of the pages a change touches and keeps the full suite for when a person asks. When several agents share a change, the agent that merges their work runs the journeys and `lowdefy_check` once, after the last merge.
+
+- 32689ce: fix(cli): lowdefy_run_tests answers with a summary an agent can always read
+
+  The `lowdefy_run_tests` agent tool answered with every journey's measured path (the pages, requests, events and blocks it touched), up to thousands of entries a journey. A suite of 40 journeys gave an answer of about 500 KB, which agents' clients refuse, so the agent waited for the whole run and then saw nothing. On one machine over a month, 37 of 104 runs ended that way.
+
+  The tool now answers with `summary`, `failed` (each failing or flaky journey with its report and failing step), `passed` and `skipped` (one line per journey) and `resultFile`. The answer stays under 25,000 characters for any suite: when not everything fits, failures are named before passing lines, and `omitted` counts what was left out. Every journey of the run is written to `.lowdefy/test/results.json`, which `resultFile` names. The measured path is no longer in the answer; `.lowdefy/test/exercised.json` holds it as before.
+
+  An answer that used `results` should read `failed` and `passed`, or the result file.
+
+  The tool also sends an MCP progress notification as each journey finishes when the client passes a progress token, so a long run is not silent. `lowdefy test` in a terminal is unchanged.
+
+- c4ac73d: fix(server): Websockets on Vercel reconnect at once when the function's time limit ends them
+
+  On Vercel every websocket ends when the function reaches `config.vercel.maxDuration`. Vercel stops the function without closing the connection, so the browser only noticed about 10 to 12 seconds later, and pages heard no live updates in that gap: about 9% of the time with a 120-second limit. Changes made in the gap never reached the page. The server now closes each websocket 5 seconds before the limit (at half the limit when it is under 10 seconds), and the client reconnects and resubscribes straight away. The Node server is unchanged.
+
+- Updated dependencies [098fcfb]
+  - @lowdefy/node-utils@7.4.0
+  - @lowdefy/ajv@7.4.0
+  - @lowdefy/errors@7.4.0
+  - @lowdefy/helpers@7.4.0
+  - @lowdefy/logger@7.4.0
+
+## 7.3.0
+
+### Patch Changes
+
+- 886901e: feat(cli): Agent rules say which level of test to use
+
+  The rules `lowdefy agent-setup` writes told agents to verify every change by running journeys and to widen to `tier: edge` before calling it done. Journeys run a real browser, so agents spent long stretches checking logic and permissions that a direct call would cover, and journeys with no production counts run in every tier, so the wider tier could mean nearly the full suite. The rules now send logic, permissions and writes to a request or endpoint call and keep journeys for what needs a browser. Agents run only the journey they changed while fixing, the journeys a change touches before calling it done, and the full suite only when a person asks or in the app's scheduled run. Agents run each journey once: only the journey skills repeat a journey, and only one they wrote. journeys-autopilot now runs a developer's existing suite once instead of three times.
+
+- 9f56354: fix(deps): Security updates to dependencies
+
+  Updates `@hono/node-server`, `zod`, `postal-mime`, `@azure/identity` (and the `@azure/msal-node` it
+  uses), `serialize-javascript` and `@expo/cli` to releases that fix security advisories.
+
+- d4a0023: fix(server-dev): Journeys no longer fail on dropped dev server connections
+
+  Journeys failed now and then with the app error "Lowdefy dev server connection dropped.", and passed when run again. Synchronous work in the dev server's web server process, such as building a large page, can block its event loop for several seconds. A request the proxy had already sent on a reused connection was then lost, because Node's idle connection timer ran before the socket was read and closed the connection. The web server process now leaves idle connections open for the proxy to close, so the request waits for the block to end and is answered.
+
+  If the proxy still cannot reach the web server, for example because it crashed, the journey fails with `failure.kind: "dev-server"` and a `dev-server` line instead of an app error, since the result says nothing about the app. The proxy still does not replay a POST that may already have run.
+
+  - @lowdefy/ajv@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+  - @lowdefy/logger@7.3.0
+  - @lowdefy/node-utils@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

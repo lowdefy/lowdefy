@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import normalizeSearchText from './normalizeSearchText.js';
 
 test('normalizeSearchText drops case, accents and surrounding space', () => {

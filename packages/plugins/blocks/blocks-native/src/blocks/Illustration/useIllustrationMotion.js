@@ -53,7 +53,6 @@ function useIllustrationMotion({ animations, focused, reduceMotion, scale, viewB
   const motion = useMemo(
     () => createIllustrationMotion({ animations, scale, viewBox }),
     // animations and viewBox are read when their keys change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [animationsKey, scale, viewBoxKey]
   );
   useEffect(() => {

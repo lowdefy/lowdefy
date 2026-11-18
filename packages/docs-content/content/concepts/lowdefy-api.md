@@ -42,7 +42,7 @@ The schema for a Lowdefy API is:
 ###### API definition example:
 
 ```yaml
-lowdefy: '7.2.0'
+lowdefy: '7.4.0'
 
 connections:
   - id: users
@@ -77,7 +77,7 @@ Lowdefy APIs use the same [authorization configuration](/protected-pages-apis) a
 Unlike requests which are defined on a specific page and inherit the authorization of the page they are defined on, API endpoints can be called from any page in the app. Thus they do not inherit the authorization of the page they are called from, and authorization should be configured separately.
 
 ```yaml
-lowdefy: '7.2.0'
+lowdefy: '7.4.0'
 
 auth:
   # Configure which APIs require authentication
@@ -197,6 +197,8 @@ api:
             quantity:
               _payload: quantity
 ```
+
+The schema runs on the same Ajv instance as [`ValidateSchema` steps](#validating-data-as-a-routine-step), with the same formats and keywords.
 
 A payload that does not match is refused before the routine runs, with a message naming the endpoint, the failing location and the reason, for example:
 
@@ -815,7 +817,7 @@ API routines can validate any value against a JSON Schema using `ValidateSchema`
 
 `ValidateSchema` is a built-in step. It requires no `connectionId` and no plugin install. It runs against the shared Ajv instance used by the rest of Lowdefy, so all standard JSON Schema features are available:
 
-- All formats from [ajv-formats](https://ajv.js.org/packages/ajv-formats.html) (`email`, `uri`, `uuid`, `date`, `date-time`, `ipv4`, `ipv6`, …).
+- All formats from [ajv-formats](https://ajv.js.org/packages/ajv-formats.html) (`email`, `uri`, `uuid`, `date`, `date-time`, `ipv4`, `ipv6`, …). `date-time` and `time` require a timezone, as RFC 3339 does: `2026-05-13T10:00:00Z` and `2026-05-13T10:00:00+02:00` are valid, `2026-05-13T10:00:00` is not. Use `iso-date-time` or `iso-time` to also accept a value without a timezone.
 - The `instanceof`, `transform`, and `regexp` keywords from [ajv-keywords](https://ajv.js.org/packages/ajv-keywords.html).
 - The `errorMessage` keyword from [ajv-errors](https://ajv.js.org/packages/ajv-errors.html) for custom error messages.
 
@@ -1235,7 +1237,7 @@ blocks:
 Here's a comprehensive example showing various features:
 
 ```yaml
-lowdefy: '7.2.0'
+lowdefy: '7.4.0'
 auth:
   api:
     protected: true

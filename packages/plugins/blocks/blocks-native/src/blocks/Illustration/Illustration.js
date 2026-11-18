@@ -76,7 +76,6 @@ function Illustration({ blockId, properties, styles = {} }) {
       nodes: colorNodes({ colors, nodes: drawing.nodes }),
     });
     // colors and colorsDark are read when their key changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [colorsKey, drawing, isDark, tokens]);
   const targetsKey = animations.map((animation) => animation.target).join(' ');
   const layers = useMemo(
@@ -86,7 +85,6 @@ function Illustration({ blockId, properties, styles = {} }) {
         targets: new Set(animations.map((animation) => animation.target)),
       }),
     // animations are read when their targets change.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [colored, targetsKey]
   );
   const box = getIllustrationBox({

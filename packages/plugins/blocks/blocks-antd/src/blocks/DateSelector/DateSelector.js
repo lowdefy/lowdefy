@@ -70,9 +70,10 @@ const DateSelector = ({
                   ),
                 }
               }
-              autoFocus={properties.autoFocus}
+              autoFocus={properties.autoFocus || properties.autoOpen}
+              defaultOpen={properties.autoOpen}
               variant={
-                properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+                properties.bordered === false ? 'borderless' : (properties.variant ?? undefined)
               }
               className={classNames.element}
               classNames={{ popup: { root: classNames.popup } }}

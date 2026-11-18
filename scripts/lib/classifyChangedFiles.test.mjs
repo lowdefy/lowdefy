@@ -42,7 +42,7 @@ test('classifyChangedFiles falls back to every package for root config, workflow
     'turbo.json',
     'pnpm-workspace.yaml',
     '.swcrc',
-    '.eslintrc.yaml',
+    'eslint.config.mjs',
     '.github/workflows/test-fast.yml',
     'scripts/lib/startJourneyFixture.mjs',
     'apps/journey-fixture/lowdefy.yaml',

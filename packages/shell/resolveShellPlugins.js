@@ -99,7 +99,9 @@ function resolveShellPlugins({ shell, require }) {
   return (shell.plugins ?? []).map(({ name, version, typePrefix, options }) => {
     const loaded = loadEntry({ name, require });
     const plugins =
-      typeof loaded?.plugins === 'function' ? loaded.plugins(options ?? {}) : loaded?.plugins ?? [];
+      typeof loaded?.plugins === 'function'
+        ? loaded.plugins(options ?? {})
+        : (loaded?.plugins ?? []);
     const entry = isObject(loaded) ? { ...loaded, plugins } : loaded;
     checkEntry({ entry, name });
     return { name, version, typePrefix, options, entry };

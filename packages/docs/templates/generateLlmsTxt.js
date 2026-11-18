@@ -40,7 +40,10 @@ function generateLlmsTxt() {
 
   const groupedSections = groupDocsBySection(manifest.docs);
   fs.writeFileSync(path.join(publicDir, 'llms.txt'), buildLlmsTxt(groupedSections));
-  fs.writeFileSync(path.join(publicDir, 'llms-full.txt'), buildLlmsFullTxt({ manifest, contentDir }));
+  fs.writeFileSync(
+    path.join(publicDir, 'llms-full.txt'),
+    buildLlmsFullTxt({ manifest, contentDir })
+  );
 }
 
 export default generateLlmsTxt;

@@ -27,7 +27,7 @@ const viewOrigin = 'https://0123456789abcdef0123456789abcdef.claudemcpcontent.co
 vi.doMock('../lib/getViewOrigins.js', () => ({ default: () => [viewOrigin] }));
 
 const { default: getAuthenticationHeaders } = await import('../lib/getAuthenticationHeaders.js');
-const { default: websocketHandler } = await import('./websocket.js');
+const { default: createWebsocketHandler } = await import('./websocket.js');
 
 let server;
 let port;
@@ -45,7 +45,7 @@ function viewProtocols(token) {
 // The production wiring (src/index.js): a Hono app under the app's basePath,
 // served by @hono/node-server with a ws server for upgrades. The Vercel
 // function runs the same app through the same upgrade support.
-beforeAll(async () => {
+function serveApp(websocketHandler) {
   const app = new Hono().basePath('/app');
   app.use('*', async (c, next) => {
     // The caller the upgrade resolved: signed in when the test says so.
@@ -70,12 +70,15 @@ beforeAll(async () => {
   });
   app.get('/api/websocket', websocketHandler);
   const wss = new WebSocketServer({ noServer: true });
-  await new Promise((resolve) => {
-    server = serve({ fetch: app.fetch, port: 0, websocket: { server: wss } }, (info) => {
-      port = info.port;
-      resolve();
+  return new Promise((resolve) => {
+    const served = serve({ fetch: app.fetch, port: 0, websocket: { server: wss } }, (info) => {
+      resolve({ server: served, port: info.port });
     });
   });
+}
+
+beforeAll(async () => {
+  ({ server, port } = await serveApp(createWebsocketHandler()));
 });
 
 afterAll(() => {
@@ -184,4 +187,70 @@ test('a browser upgrade with a cookie and a phone upgrade with a header open as 
   expect(
     await openView({ headers: { authorization: 'Bearer phone-session' }, protocols: [] })
   ).toEqual({ opened: true, protocol: '' });
+});
+
+function openUntilClosed({ port: socketPort }) {
+  const socket = new WebSocket(`ws://127.0.0.1:${socketPort}/app/api/websocket`, {
+    headers: { host: 'app.test' },
+  });
+  const closed = new Promise((resolve) => {
+    socket.once('close', (code, reason) => resolve({ code, reason: reason.toString() }));
+  });
+  const opened = new Promise((resolve) => socket.once('open', resolve));
+  return { socket, opened, closed };
+}
+
+test('a websocket on a function with a maxDuration of 120 s is closed with 1001 at 115 s', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  const limited = await serveApp(createWebsocketHandler({ maxDurationMs: 120 * 1000 }));
+  try {
+    const { socket, opened, closed } = openUntilClosed(limited);
+    await opened;
+    let closedAt = null;
+    closed.then(() => {
+      closedAt = 'closed';
+    });
+
+    await vi.advanceTimersByTimeAsync(115 * 1000 - 1);
+    expect(closedAt).toBe(null);
+    expect(socket.readyState).toBe(WebSocket.OPEN);
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(await closed).toEqual({ code: 1001, reason: 'max-duration' });
+  } finally {
+    vi.useRealTimers();
+    limited.server.close();
+  }
+});
+
+test('a websocket on a function with a maxDuration under 10 s is closed at half of it', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  const limited = await serveApp(createWebsocketHandler({ maxDurationMs: 4 * 1000 }));
+  try {
+    const { socket, opened, closed } = openUntilClosed(limited);
+    await opened;
+
+    await vi.advanceTimersByTimeAsync(2 * 1000 - 1);
+    expect(socket.readyState).toBe(WebSocket.OPEN);
+
+    await vi.advanceTimersByTimeAsync(1);
+    expect(await closed).toEqual({ code: 1001, reason: 'max-duration' });
+  } finally {
+    vi.useRealTimers();
+    limited.server.close();
+  }
+});
+
+test('a websocket on a server with no maxDuration stays open', async () => {
+  vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+  try {
+    const { socket, opened } = openUntilClosed({ port });
+    await opened;
+
+    await vi.advanceTimersByTimeAsync(10 * 60 * 1000);
+    expect(socket.readyState).toBe(WebSocket.OPEN);
+    socket.close();
+  } finally {
+    vi.useRealTimers();
+  }
 });

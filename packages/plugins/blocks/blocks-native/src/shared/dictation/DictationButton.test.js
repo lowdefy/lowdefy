@@ -14,9 +14,9 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
-import { jest } from '@jest/globals';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { translate as translateMessage } from '@lowdefy/helpers';
 
@@ -32,7 +32,7 @@ function translate(key) {
 }
 
 test('DictationButton shows the microphone while idle and starts dictation on press', async () => {
-  const onPress = jest.fn();
+  const onPress = vi.fn();
   await render(
     <DictationButton
       colors={colors}
@@ -55,7 +55,7 @@ test('DictationButton shows a red stop while listening or stopping', async () =>
     <DictationButton
       colors={colors}
       components={components}
-      onPress={jest.fn()}
+      onPress={vi.fn()}
       status="listening"
       testID="mic"
       translate={translate}
@@ -72,7 +72,7 @@ test('DictationButton shows a red stop while listening or stopping', async () =>
     <DictationButton
       colors={colors}
       components={components}
-      onPress={jest.fn()}
+      onPress={vi.fn()}
       status="stopping"
       testID="mic"
       translate={translate}

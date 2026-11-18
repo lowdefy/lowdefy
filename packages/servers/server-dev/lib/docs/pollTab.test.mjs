@@ -17,9 +17,8 @@
 import { afterEach, expect, test } from 'vitest';
 
 const { default: pollTab, closePolledTabs } = await import('./pollTab.js');
-const { findPageInstance, listTabs, requestFromTab, updateTabPage } = await import(
-  './tabChannel.js'
-);
+const { findPageInstance, listTabs, requestFromTab, updateTabPage } =
+  await import('./tabChannel.js');
 
 const origin = { source: 'dev', automated: false };
 

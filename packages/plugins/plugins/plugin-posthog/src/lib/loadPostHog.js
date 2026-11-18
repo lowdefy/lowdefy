@@ -27,7 +27,6 @@ async function loadPostHog({ apiKey, config, superProperties = {} }) {
     // The SDK chunk failed to download, for example on a flaky network.
     // Analytics must never break an app, so the other actions become no-ops.
     postHogState.status = 'failed';
-    // eslint-disable-next-line no-console
     console.warn('PostHogInit could not load posthog-js. PostHog actions will do nothing.', error);
     return;
   }

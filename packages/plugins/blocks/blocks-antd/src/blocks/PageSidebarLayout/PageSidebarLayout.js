@@ -88,7 +88,6 @@ const PageSidebarLayout = ({
   // available.
   useEffect(() => {
     setSiderOpen(getInitialSiderState({ methods, properties }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     registerDarkModeMethod(methods);
@@ -274,19 +273,19 @@ const PageSidebarLayout = ({
                         <img
                           src={
                             openSiderState
-                              ? properties.logo?.src ??
+                              ? (properties.logo?.src ??
                                 getDefaultLogoUrl({
                                   apiBase,
                                   darkMode: getDarkMode(),
                                   square: false,
-                                })
-                              : properties.logo?.srcMobile ??
+                                }))
+                              : (properties.logo?.srcMobile ??
                                 properties.logo?.src ??
                                 getDefaultLogoUrl({
                                   apiBase,
                                   darkMode: getDarkMode(),
                                   square: true,
-                                })
+                                }))
                           }
                           alt={properties.logo?.alt ?? 'Lowdefy'}
                           className={classNames.logo}

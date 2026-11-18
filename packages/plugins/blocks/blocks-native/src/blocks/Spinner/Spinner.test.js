@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import { ios, page, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
 test('a Spinner shows the activity indicator at the web sizes', async () => {
@@ -28,7 +30,10 @@ test('a Spinner shows the activity indicator at the web sizes', async () => {
   const indicators = ['default', 'large', 'sized'].map((id) =>
     screen.getByTestId(`${id}_indicator`)
   );
-  expect(indicators.map((indicator) => styleOf(indicator).transform[0].scale)).toEqual([1, 1.6, 2]);
+  // React Native's ActivityIndicator draws its style on a View around the native indicator.
+  expect(indicators.map((indicator) => styleOf(indicator.parent).transform[0].scale)).toEqual([
+    1, 1.6, 2,
+  ]);
   expect(indicators[0].props.color).toBe(ios.light.colorSecondaryLabel);
   expect(screen.getAllByRole('progressbar')).toHaveLength(3);
 });

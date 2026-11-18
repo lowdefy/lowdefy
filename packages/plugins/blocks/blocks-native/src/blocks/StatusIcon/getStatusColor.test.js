@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getStatusColor from './getStatusColor.js';
 import theme from '../../test/theme.json';
 

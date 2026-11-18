@@ -42,7 +42,7 @@ function normalizeTree({ tree, server }) {
     childrenField: type.isString(childrenField) ? childrenField : null,
     parentField: type.isString(parentField) ? parentField : null,
     lazy,
-    hasChildrenField: lazy ? tree.hasChildrenField ?? 'hasChildren' : null,
+    hasChildrenField: lazy ? (tree.hasChildrenField ?? 'hasChildren') : null,
     indent: tree.indent ?? DEFAULT_INDENT,
   };
 }

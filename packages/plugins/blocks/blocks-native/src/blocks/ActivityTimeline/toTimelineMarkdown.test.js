@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import createMentionPattern from '../Composer/createMentionPattern.js';
 import parseTimelineHref from './parseTimelineHref.js';
 import toPlainText from './toPlainText.js';

@@ -28,14 +28,28 @@ _ref:
       }): void
       ```
     description: |
-      The `PdfMake` action is used to generate and download a PDF file from a set of defined content using the [pdfMake](https://github.com/bpampuch/pdfmake) open-source library.
+      The `PdfMake` action is used to generate and download a PDF file from a set of defined content using the [pdfMake](https://github.com/bpampuch/pdfmake) open-source library, version 0.3. The PDF is built in the user's browser. The action finishes once the file has been handed to the browser to download, so actions after it run after the download starts, and an error while building the PDF (such as a missing font or an image URL that fails to load) fails the action and runs its `catch` actions.
+
+      The [Roboto](https://fonts.google.com/specimen/Roboto) font is bundled with the action and is the default font.
+
+      #### Fonts and images loaded from URLs
+      Font files in `fonts`, and entries in the `docDefinition.images` dictionary, can be `http://` or `https://` URLs. The user's browser downloads them while it builds the PDF, so the server that hosts them must allow cross-origin requests from your app (CORS), unless it is your app's own origin. An image can also be given as a data URL (`data:image/png;base64,...`), which needs no download. The download runs with the user's own network access, so the action does not restrict which URLs a document may load. Only put URLs you trust in a document: a URL taken from data another user entered makes the browser of whoever generates the PDF request it.
+
+      #### Page break rules
+      `docDefinition.pageBreakBefore` can be a [`_function`](/_function) that returns `true` to start a new page before a node. The function is called with these arguments:
+        - `_args: 0`: The node being placed, with `headlineLevel`, `id`, `text`, `pageNumbers`, `startPosition` and the other properties pdfMake describes.
+        - `_args: 1`: The nodes after it on the same page.
+        - `_args: 2`: The nodes on the next page.
+        - `_args: 3`: The nodes before it on the same page.
+
+      pdfMake 0.3 passes a single object with getter methods as the second argument instead of these three lists. Operators cannot call methods, so the `PdfMake` action calls them and passes the lists as before.
     params: |
       ###### object
-        - `docDefinition: object`: __Required__ - The document definition object which includes styling, columns, tables etc.
-        - `tableLayouts: object`: The table layouts for the generated PDF file.
+        - `docDefinition: object`: __Required__ - The document definition object which includes styling, columns, tables etc. It is passed to pdfMake as it is, so every document definition feature of pdfMake 0.3 can be used, including `section` nodes, `snakingColumns`, `verticalAlignment` on table cells, `tableAlignment`, `outline` bookmarks and styles that `extends` other styles.
+        - `tableLayouts: object`: Custom table layouts, by name. A table uses one with `layout: <name>`.
         - `filename: string`: __Required__ - The name for the generated PDF file.
-        - `fonts: object`: The fonts for the generated PDF file.
-      ###### See the [pdfMake docs](https://pdfmake.github.io/docs) for more info on these properties.
+        - `fonts: object`: Font definitions, by font name, each with `normal`, `bold`, `italics` and `bolditalics` font file URLs. These are added to the bundled `Roboto` font, which stays available unless `fonts` defines a font called `Roboto`.
+      ###### See the [pdfMake 0.3 docs](https://pdfmake.github.io/docs/0.3/) for more info on these properties.
     examples: |
       ###### Generate a PDF (simple example):
       ```yaml
@@ -58,6 +72,51 @@ _ref:
                   content:
                     - text: This pdf has been generated with Lowdefy and pdfMake.
                       bold: true
+      ```
+
+      ###### Use a custom font loaded from a URL:
+      ```yaml
+      - id: make_pdf
+        type: PdfMake
+        params:
+          filename: custom_font.pdf
+          fonts:
+            Lora:
+              normal: https://example.com/fonts/Lora-Regular.ttf
+              bold: https://example.com/fonts/Lora-Bold.ttf
+              italics: https://example.com/fonts/Lora-Italic.ttf
+              bolditalics: https://example.com/fonts/Lora-BoldItalic.ttf
+          docDefinition:
+            defaultStyle:
+              font: Lora
+            content:
+              - text: This text uses Lora.
+              - text: This line still uses the bundled Roboto font.
+                font: Roboto
+      ```
+
+      ###### Keep headlines with the text that follows them:
+      ```yaml
+      - id: make_pdf
+        type: PdfMake
+        params:
+          filename: report.pdf
+          docDefinition:
+            pageBreakBefore:
+              _function:
+                __and:
+                  - __eq:
+                      - __args: 0.headlineLevel
+                      - 1
+                  - __eq:
+                      - __array.length:
+                          __args: 1
+                      - 0
+            content:
+              - text: Introduction
+                headlineLevel: 1
+                style: header
+              - text: Some long text of variable length ...
       ```
 
       ###### Generate a PDF (detailed example):

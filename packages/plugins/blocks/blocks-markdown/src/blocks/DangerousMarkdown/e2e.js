@@ -17,7 +17,9 @@
 import { createBlockHelper, escapeId } from '@lowdefy/e2e-utils';
 import { expect } from '@playwright/test';
 
-const locator = (page, blockId) => page.locator(`#${escapeId(blockId)} .markdown-body`);
+function locator(page, blockId) {
+  return page.locator(`#${escapeId(blockId)} .markdown-body`);
+}
 
 export default createBlockHelper({
   locator,

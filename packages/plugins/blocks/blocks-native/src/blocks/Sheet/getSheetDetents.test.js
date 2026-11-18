@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSheetDetents from './getSheetDetents.js';
 
 test('both detents are the system medium and large detents on iOS', () => {

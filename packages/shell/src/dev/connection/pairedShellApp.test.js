@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
+import { fetch as expoFetch } from 'expo/fetch';
 
 import createDevShellConfig from './createDevShellConfig.js';
 import createFakeServer, { header } from '../../test/createFakeServer.js';
@@ -22,24 +23,23 @@ import createShellApp from '../../createShellApp.js';
 import { createPages, createRoot } from '../../test/fixtures.js';
 
 // createShellApp as the app runs it, over in-memory stores.
-jest.mock('expo-sqlite', () => ({ openDatabaseSync: () => ({}) }));
-jest.mock('../../cache/createSqliteCacheStore.js', () =>
-  jest.requireActual('../../test/createMemoryCacheStore.js')
+vi.mock('expo-sqlite', () => ({ openDatabaseSync: () => ({}) }));
+vi.mock(
+  '../../cache/createSqliteCacheStore.js',
+  () => import('../../test/createMemoryCacheStore.js')
 );
-jest.mock('../../host/createDeviceStore.js', () =>
-  jest.requireActual('../../host/createMemoryStore.js')
+vi.mock('../../host/createDeviceStore.js', () => import('../../host/createMemoryStore.js'));
+vi.mock('expo-secure-store', async () =>
+  (await import('../../test/createFakeSecureStore.js')).default()
 );
-jest.mock('expo-secure-store', () =>
-  jest.requireActual('../../test/createFakeSecureStore.js').default()
-);
-jest.mock('expo-crypto', () => ({}));
-jest.mock('expo-web-browser', () => ({}));
-jest.mock('expo-local-authentication', () => ({}));
-jest.mock('expo-network', () => ({ addNetworkStateListener: () => ({ remove: () => undefined }) }));
-jest.mock('expo-router', () => ({ router: {} }));
-jest.mock('expo-clipboard', () => ({}));
-jest.mock('expo/fetch', () => ({
-  fetch: jest.fn(async () => ({ status: 200, headers: { get: () => null } })),
+vi.mock('expo-crypto', () => ({ randomUUID: vi.fn() }));
+vi.mock('expo-web-browser', () => ({}));
+vi.mock('expo-local-authentication', () => ({}));
+vi.mock('expo-network', () => ({ addNetworkStateListener: () => ({ remove: () => undefined }) }));
+vi.mock('expo-router', () => ({ router: {} }));
+vi.mock('expo-clipboard', () => ({}));
+vi.mock('expo/fetch', () => ({
+  fetch: vi.fn(async () => ({ status: 200, headers: { get: () => null } })),
 }));
 
 class FakeWebSocket {
@@ -69,7 +69,7 @@ test('every call of an app on a paired dev server carries the pairing token', as
     WebSocket: FakeWebSocket,
   });
   const { auth, host, session } = await createShellApp({
-    onSignedOut: jest.fn(),
+    onSignedOut: vi.fn(),
     shell: devShell,
   });
   await session.sync();
@@ -90,7 +90,6 @@ test('every call of an app on a paired dev server carries the pairing token', as
     expect(header(init, 'x-lowdefy-shell')).toBe('7.0.0');
   });
   // A block's streamed call (AgentChat's chat stream) goes through expo/fetch, sent the same way.
-  const { fetch: expoFetch } = jest.requireMock('expo/fetch');
   await host.streamFetch('http://192.168.1.20:3000/api/agent/chat/assistant', { method: 'POST' });
   expect(server.fetch).toHaveBeenCalledTimes(calls.length);
   const [[streamUrl, streamInit]] = expoFetch.mock.calls;

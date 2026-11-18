@@ -35,7 +35,8 @@ test('createGetLineNumber counts a newline at the offset as part of the line it 
 });
 
 test('createGetLineNumber matches counting newlines for every offset of mixed content', () => {
-  const content = '\n\nid: page\r\nblocks:\n  - id: a\n\n    type: Box\n    text: |\n      x\n\n      y\n';
+  const content =
+    '\n\nid: page\r\nblocks:\n  - id: a\n\n    type: Box\n    text: |\n      x\n\n      y\n';
   const getLineNumber = createGetLineNumber(content);
   for (let offset = 0; offset <= content.length + 2; offset += 1) {
     expect(getLineNumber(offset)).toBe(countLines(content, offset));

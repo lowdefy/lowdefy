@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import toPixels from './toPixels.js';
 
 test('toPixels reads numbers, px and em lengths', () => {

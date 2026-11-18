@@ -25,7 +25,7 @@ import decideSchema from './DecideSchema.js';
 // (designs/10x #9 — AI decisions as typed config). One interface, two
 // backends; `backends` lists what the connection offers, the first being
 // the default:
-//   evaluation         provider.evaluationModel(id) — the AI Gateway's
+//   evaluation         provider.decisionModel(id) — the AI Gateway's
 //                      evaluation models (TypeSafe's Jev);
 //   structured-output  provider(id) — any language model.
 function createDecide({ createProvider, backends = ['structured-output'] }) {
@@ -37,9 +37,7 @@ function createDecide({ createProvider, backends = ['structured-output'] }) {
     if (!type.isNone(request.providerOptions)) options.providerOptions = request.providerOptions;
     const { answers, usage } = await decide({
       model:
-        backend === 'evaluation'
-          ? provider.evaluationModel(request.model)
-          : provider(request.model),
+        backend === 'evaluation' ? provider.decisionModel(request.model) : provider(request.model),
       backend,
       state: request.state,
       questions: request.questions,

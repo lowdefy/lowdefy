@@ -23,8 +23,8 @@ function toUnixPath(filePath) {
   return path.sep === '\\' ? normalized.replace(/\\/g, '/') : normalized;
 }
 
-// chokidar 4 matches a string in `ignored` only as an exact path, where chokidar 3 read it as a
-// glob, and a plain path as that path and everything under it. This compiles the string ignores
+// chokidar 4 and later match a string in `ignored` only as an exact path, where chokidar 3 read it
+// as a glob, and a plain path as that path and everything under it. This compiles the string ignores
 // into one function that matches them as chokidar 3 did, so '**/node_modules/**' and the app's
 // watchIgnore globs still apply. Paths and patterns are compared with forward slashes, as
 // chokidar 3 compared them.

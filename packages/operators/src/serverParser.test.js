@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable max-classes-per-file */
 import { vi, expect, test } from 'vitest';
 
 import { ConfigError, OperatorError } from '@lowdefy/errors';

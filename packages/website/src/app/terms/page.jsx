@@ -227,7 +227,7 @@ function Section({ title, children }) {
       <h2 className="text-xl font-semibold text-slate-900 dark:text-white mb-4 font-mono">
         {title}
       </h2>
-      <div className="space-y-3 text-slate-600 dark:text-slate-400 leading-relaxed [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-slate-800 [&_h3]:dark:text-slate-200 [&_h3]:mt-4 [&_h3]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_a]:text-primary-500 [&_a]:hover:text-primary-400 [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-colors">
+      <div className="space-y-3 text-slate-600 dark:text-slate-400 leading-relaxed [&_h3]:text-base [&_h3]:font-semibold [&_h3]:text-slate-800 dark:[&_h3]:text-slate-200 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_a]:text-primary-500 hover:[&_a]:text-primary-400 [&_a]:underline [&_a]:underline-offset-2 [&_a]:transition-colors">
         {children}
       </div>
     </section>

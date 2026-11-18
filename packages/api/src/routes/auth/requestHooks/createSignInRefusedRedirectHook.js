@@ -43,11 +43,11 @@ function createSignInRefusedRedirectHook() {
       return undefined;
     }
     // Truthiness, as the endpoint reads them: an empty errorCallbackURL= falls
-    // back to callbackURL, and an empty callbackURL= to '/'.
-    const callbackURL = ctx.query.callbackURL ? decodeURIComponent(ctx.query.callbackURL) : '/';
-    const errorCallbackURL = ctx.query.errorCallbackURL
-      ? decodeURIComponent(ctx.query.errorCallbackURL)
-      : callbackURL;
+    // back to callbackURL, and an empty callbackURL= to '/'. The endpoint uses
+    // the query values as parsed, without decoding them a second time (since
+    // better-auth 1.7.8), so neither does this.
+    const callbackURL = ctx.query.callbackURL || '/';
+    const errorCallbackURL = ctx.query.errorCallbackURL || callbackURL;
     // The endpoint's origin checks are its own middleware, so their failures
     // reach this hook too, and when errorCallbackURL (or the callbackURL it
     // falls back to) is the URL that failed, the destination is untrusted. The

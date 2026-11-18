@@ -17,7 +17,7 @@
 // Builds the hello fixture app with the Lowdefy build and checks what a shell would sync: two tabs,
 // the first with its icon's data, the Screen page and every page's type set carried by this
 // shell's type manifest, and the app events' and Screen page's _js as module text. That text must
-// match hello.jsEntries.json, which the shell's Jest tests evaluate; run with
+// match hello.jsEntries.json, which the shell's vitest tests evaluate; run with
 // LOWDEFY_UPDATE_FIXTURES=1 to rewrite it after a change to the build's _js module.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';

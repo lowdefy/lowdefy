@@ -14,14 +14,14 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import isNetworkError from './isNetworkError.js';
 import withNetworkErrors from './withNetworkErrors.js';
 
 test('a call the platform fetch rejects is marked as a network failure', async () => {
   const failure = new TypeError('Network request failed');
-  const fetch = withNetworkErrors(jest.fn(async () => Promise.reject(failure)));
+  const fetch = withNetworkErrors(vi.fn(async () => Promise.reject(failure)));
   const error = await fetch('https://app.example.com/api/user', {}).catch((caught) => caught);
   expect(error).toBe(failure);
   expect(isNetworkError(error)).toBe(true);
@@ -29,7 +29,7 @@ test('a call the platform fetch rejects is marked as a network failure', async (
 
 test('expo/fetch failures, which are not TypeErrors, are marked too', async () => {
   const failure = new Error('fetch failed: The Internet connection appears to be offline.');
-  const fetch = withNetworkErrors(jest.fn(async () => Promise.reject(failure)));
+  const fetch = withNetworkErrors(vi.fn(async () => Promise.reject(failure)));
   const error = await fetch('https://app.example.com/api/agent', {}).catch((caught) => caught);
   expect(isNetworkError(error)).toBe(true);
 });
@@ -38,7 +38,7 @@ test('a call the caller aborted is not a network failure', async () => {
   const controller = new AbortController();
   controller.abort();
   const failure = new Error('The operation was aborted.');
-  const fetch = withNetworkErrors(jest.fn(async () => Promise.reject(failure)));
+  const fetch = withNetworkErrors(vi.fn(async () => Promise.reject(failure)));
   const error = await fetch('https://app.example.com/api/agent', {
     signal: controller.signal,
   }).catch((caught) => caught);
@@ -47,7 +47,7 @@ test('a call the caller aborted is not a network failure', async () => {
 
 test('a TypeError thrown after the answer arrived is not a network failure', async () => {
   const response = { ok: true, status: 200 };
-  const fetch = withNetworkErrors(jest.fn(async () => response));
+  const fetch = withNetworkErrors(vi.fn(async () => response));
   const res = await fetch('https://app.example.com/api/user', {});
   expect(res).toBe(response);
   let fault;

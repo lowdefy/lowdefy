@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { beforeEach, expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
 import createMemoryStore from '../host/createMemoryStore.js';
@@ -23,11 +23,11 @@ import DevShell from './DevShell.js';
 
 // The opened app is recorded, not built: its auth, session and screens have their own tests.
 const mockOpened = [];
-jest.mock('../components/AppProvider.js', () => {
+vi.mock('../components/AppProvider.js', async () => {
+  const { Text: MockText } = await import('react-native');
   function AppProvider({ children, shell }) {
     const { app } = shell;
     mockOpened.push({ app, shell });
-    const { Text: MockText } = jest.requireActual('react-native');
     return (
       <>
         <MockText testID="opened-app">{app.urls.dev}</MockText>
@@ -35,27 +35,31 @@ jest.mock('../components/AppProvider.js', () => {
       </>
     );
   }
-  return AppProvider;
+  return { default: AppProvider };
 });
-jest.mock('../components/Frame.js', () => () => null);
-jest.mock('./tab/DevTabClient.js', () => () => null);
-jest.mock('../host/createDeviceStore.js', () => () => {
-  throw new Error('The tests pass a device store.');
-});
-jest.mock('../config/getShellConfig.js', () => () => {
-  throw new Error('The tests pass the shell config.');
-});
-jest.mock('expo-splash-screen', () => ({ hideAsync: jest.fn() }));
-jest.mock('expo-network', () => ({
+vi.mock('../components/Frame.js', () => ({ default: () => null }));
+vi.mock('./tab/DevTabClient.js', () => ({ default: () => null }));
+vi.mock('../host/createDeviceStore.js', () => ({
+  default: () => {
+    throw new Error('The tests pass a device store.');
+  },
+}));
+vi.mock('../config/getShellConfig.js', () => ({
+  default: () => {
+    throw new Error('The tests pass the shell config.');
+  },
+}));
+vi.mock('expo-splash-screen', () => ({ hideAsync: vi.fn() }));
+vi.mock('expo-network', () => ({
   addNetworkStateListener: () => ({ remove: () => undefined }),
   getNetworkStateAsync: async () => ({ isConnected: true, isInternetReachable: true }),
 }));
-jest.mock('expo-sensors', () => ({ Accelerometer: {} }));
-jest.mock('expo-camera', () => ({
+vi.mock('expo-sensors', () => ({ Accelerometer: {} }));
+vi.mock('expo-camera', () => ({
   CameraView: () => null,
-  useCameraPermissions: () => [{ granted: true }, jest.fn()],
+  useCameraPermissions: () => [{ granted: true }, vi.fn()],
 }));
-jest.mock('react-native-safe-area-context', () => ({
+vi.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }),
 }));
 
@@ -71,7 +75,7 @@ const shell = {
 function createLinking(initialUrl = null) {
   const listeners = new Set();
   return {
-    getInitialURL: jest.fn(async () => initialUrl),
+    getInitialURL: vi.fn(async () => initialUrl),
     addEventListener: (event, listener) => {
       listeners.add(listener);
       return { remove: () => listeners.delete(listener) };
@@ -83,7 +87,7 @@ function createLinking(initialUrl = null) {
 function createAccelerometer() {
   let listener = null;
   return {
-    setUpdateInterval: jest.fn(),
+    setUpdateInterval: vi.fn(),
     addListener: (fn) => {
       listener = fn;
       return { remove: () => undefined };
@@ -132,7 +136,7 @@ test('the opened app sends the pairing token on every call', async () => {
   });
   const { app, shell: devShell } = mockOpened.at(-1);
   expect(app.id).toBe('dev-192.168.1.20_3000');
-  const fetch = jest.fn(async () => ({ status: 200 }));
+  const fetch = vi.fn(async () => ({ status: 200 }));
   const pairedFetch = devShell.transport.wrapFetch(fetch);
   await pairedFetch('http://192.168.1.20:3000/api/mobile/root');
   expect(fetch.mock.calls[0][1].headers).toEqual({ 'x-lowdefy-pair': 'k3x9q' });
@@ -212,7 +216,7 @@ test('a menu link opens the dev menu, and switch server goes back to the connect
 });
 
 test('the dev menu shows the shell logs and the block gallery entry', async () => {
-  jest.spyOn(console, 'info').mockImplementation(() => undefined);
+  vi.spyOn(console, 'info').mockImplementation(() => undefined);
   const { linking } = await renderDevShell();
   await act(async () => {
     linking.open('lowdefy-dev://menu');

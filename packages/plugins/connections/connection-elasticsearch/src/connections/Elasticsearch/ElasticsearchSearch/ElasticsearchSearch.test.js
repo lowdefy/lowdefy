@@ -23,7 +23,9 @@ const mockElasticsearchClient = vi.fn(function () {
 mockElasticsearchClient.search = vi.fn(function () {
   return mockElasticsearchClient;
 });
-
+mockElasticsearchClient.close = vi.fn(function () {
+  return Promise.resolve();
+});
 vi.doMock('@elastic/elasticsearch', () => ({
   Client: vi.fn().mockImplementation(function () {
     return mockElasticsearchClient;
@@ -46,24 +48,23 @@ test('valid request schema', async () => {
     version: false,
     _source_excludes: ['age'],
     _source_includes: ['name'],
-    body: {
-      aggs: {
-        nameAggregation: {
-          terms: {
-            field: 'name',
-          },
+    sort: ['name', { age: 'desc' }],
+    aggs: {
+      nameAggregation: {
+        terms: {
+          field: 'name',
         },
       },
-      query: {
-        boolean: {
-          should: [
-            {
-              term: {
-                name: 'foo',
-              },
+    },
+    query: {
+      bool: {
+        should: [
+          {
+            term: {
+              name: 'foo',
             },
-          ],
-        },
+          },
+        ],
       },
     },
   };
@@ -77,71 +78,79 @@ test('valid empty request schema', async () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
+test('request with body is rejected', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
+  const schema = ElasticsearchSearch.schema;
+  const request = {
+    body: {
+      query: {
+        match_all: {},
+      },
+    },
+  };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'was removed in Lowdefy 8 (Elasticsearch client 9).'
+  );
+});
+
+test('request with type is rejected', async () => {
+  const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
+  const schema = ElasticsearchSearch.schema;
+  const request = {
+    type: 'article',
+  };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'was removed in Elasticsearch 8. Mapping types no longer exist'
+  );
+});
+
 test('ElasticsearchSearch with match_all query', async () => {
   const { Client } = await import('@elastic/elasticsearch');
   const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
 
   const responseData = {
-    body: {
-      took: 1234,
-      timed_out: false,
-      _shards: {},
-      aggregations: {
-        nameAggregation: {
-          doc_count_error_upper_bound: 0,
-          sum_other_doc_count: 0,
-          buckets: [],
-        },
-      },
-      hits: {
-        total: {
-          value: 10000,
-          relation: 'gte',
-        },
-        max_score: 1,
-        hits: [
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '1',
-            _score: 1,
-            _source: {
-              name: 'foo',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '2',
-            _score: 1,
-            _source: {
-              name: 'bar',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '3',
-            _score: 1,
-            _source: {
-              name: 'baz',
-            },
-          },
-        ],
+    took: 1234,
+    timed_out: false,
+    _shards: {},
+    aggregations: {
+      nameAggregation: {
+        doc_count_error_upper_bound: 0,
+        sum_other_doc_count: 0,
+        buckets: [],
       },
     },
-    statusCode: 200,
-    headers: {
-      'content-type': 'application/json; charset=UTF-8',
-      'content-length': '1234567',
-    },
-    meta: {
-      context: null,
-      request: {},
-      name: 'elasticsearch-js',
-      connection: {},
-      attempts: 0,
-      aborted: false,
+    hits: {
+      total: {
+        value: 10000,
+        relation: 'gte',
+      },
+      max_score: 1,
+      hits: [
+        {
+          _index: 'test',
+          _id: '1',
+          _score: 1,
+          _source: {
+            name: 'foo',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '2',
+          _score: 1,
+          _source: {
+            name: 'bar',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '3',
+          _score: 1,
+          _source: {
+            name: 'baz',
+          },
+        },
+      ],
     },
   };
   mockElasticsearchClient.search.mockImplementationOnce(function () {
@@ -149,17 +158,15 @@ test('ElasticsearchSearch with match_all query', async () => {
   });
   const request = {
     size: 3,
-    body: {
-      aggs: {
-        nameAggregation: {
-          terms: {
-            field: 'name',
-          },
+    aggs: {
+      nameAggregation: {
+        terms: {
+          field: 'name',
         },
       },
-      query: {
-        match_all: {},
-      },
+    },
+    query: {
+      match_all: {},
     },
   };
   const res = await ElasticsearchSearch({ request, connection });
@@ -174,15 +181,13 @@ test('ElasticsearchSearch with match_all query', async () => {
   expect(mockElasticsearchClient.search.mock.calls).toEqual([
     [
       {
-        body: {
-          query: {
-            match_all: {},
-          },
-          aggs: {
-            nameAggregation: {
-              terms: {
-                field: 'name',
-              },
+        query: {
+          match_all: {},
+        },
+        aggs: {
+          nameAggregation: {
+            terms: {
+              field: 'name',
             },
           },
         },
@@ -205,7 +210,6 @@ test('ElasticsearchSearch with match_all query', async () => {
           _id: '1',
           _index: 'test',
           _score: 1,
-          _type: '_doc',
         },
         name: 'foo',
       },
@@ -214,7 +218,6 @@ test('ElasticsearchSearch with match_all query', async () => {
           _id: '2',
           _index: 'test',
           _score: 1,
-          _type: '_doc',
         },
         name: 'bar',
       },
@@ -223,7 +226,6 @@ test('ElasticsearchSearch with match_all query', async () => {
           _id: '3',
           _index: 'test',
           _score: 1,
-          _type: '_doc',
         },
         name: 'baz',
       },
@@ -247,7 +249,6 @@ test('ElasticsearchSearch with match_all query', async () => {
             _source: {
               name: 'foo',
             },
-            _type: '_doc',
           },
           {
             _id: '2',
@@ -256,7 +257,6 @@ test('ElasticsearchSearch with match_all query', async () => {
             _source: {
               name: 'bar',
             },
-            _type: '_doc',
           },
           {
             _id: '3',
@@ -265,7 +265,6 @@ test('ElasticsearchSearch with match_all query', async () => {
             _source: {
               name: 'baz',
             },
-            _type: '_doc',
           },
         ],
         max_score: 1,
@@ -282,71 +281,54 @@ test('ElasticsearchSearch with match_all query', async () => {
       value: 10000,
     },
   });
+  expect(mockElasticsearchClient.close).toHaveBeenCalledTimes(1);
 });
 
 test('ElasticsearchSearch exposes total results', async () => {
   const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
-    body: {
-      took: 1234,
-      timed_out: false,
-      _shards: {},
-      aggregations: {
-        nameAggregation: {
-          doc_count_error_upper_bound: 0,
-          sum_other_doc_count: 0,
-          buckets: [],
-        },
-      },
-      hits: {
-        total: {
-          value: 1234,
-          relation: 'eq',
-        },
-        max_score: 1,
-        hits: [
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '1',
-            _score: 1,
-            _source: {
-              name: 'foo',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '2',
-            _score: 1,
-            _source: {
-              name: 'bar',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '3',
-            _score: 1,
-            _source: {
-              name: 'baz',
-            },
-          },
-        ],
+    took: 1234,
+    timed_out: false,
+    _shards: {},
+    aggregations: {
+      nameAggregation: {
+        doc_count_error_upper_bound: 0,
+        sum_other_doc_count: 0,
+        buckets: [],
       },
     },
-    statusCode: 200,
-    headers: {
-      'content-type': 'application/json; charset=UTF-8',
-      'content-length': '1234567',
-    },
-    meta: {
-      context: null,
-      request: {},
-      name: 'elasticsearch-js',
-      connection: {},
-      attempts: 0,
-      aborted: false,
+    hits: {
+      total: {
+        value: 1234,
+        relation: 'eq',
+      },
+      max_score: 1,
+      hits: [
+        {
+          _index: 'test',
+          _id: '1',
+          _score: 1,
+          _source: {
+            name: 'foo',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '2',
+          _score: 1,
+          _source: {
+            name: 'bar',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '3',
+          _score: 1,
+          _source: {
+            name: 'baz',
+          },
+        },
+      ],
     },
   };
   mockElasticsearchClient.search.mockImplementationOnce(function () {
@@ -354,17 +336,15 @@ test('ElasticsearchSearch exposes total results', async () => {
   });
   const request = {
     size: 3,
-    body: {
-      aggs: {
-        nameAggregation: {
-          terms: {
-            field: 'name',
-          },
+    aggs: {
+      nameAggregation: {
+        terms: {
+          field: 'name',
         },
       },
-      query: {
-        match_all: {},
-      },
+    },
+    query: {
+      match_all: {},
     },
   };
   const res = await ElasticsearchSearch({ request, connection });
@@ -374,66 +354,48 @@ test('ElasticsearchSearch exposes total results', async () => {
 test('ElasticsearchSearch exposes total results over 10k as Infinity', async () => {
   const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
-    body: {
-      took: 1234,
-      timed_out: false,
-      _shards: {},
-      aggregations: {
-        nameAggregation: {
-          doc_count_error_upper_bound: 0,
-          sum_other_doc_count: 0,
-          buckets: [],
-        },
-      },
-      hits: {
-        total: {
-          value: 10000,
-          relation: 'gte',
-        },
-        max_score: 1,
-        hits: [
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '1',
-            _score: 1,
-            _source: {
-              name: 'foo',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '2',
-            _score: 1,
-            _source: {
-              name: 'bar',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '3',
-            _score: 1,
-            _source: {
-              name: 'baz',
-            },
-          },
-        ],
+    took: 1234,
+    timed_out: false,
+    _shards: {},
+    aggregations: {
+      nameAggregation: {
+        doc_count_error_upper_bound: 0,
+        sum_other_doc_count: 0,
+        buckets: [],
       },
     },
-    statusCode: 200,
-    headers: {
-      'content-type': 'application/json; charset=UTF-8',
-      'content-length': '1234567',
-    },
-    meta: {
-      context: null,
-      request: {},
-      name: 'elasticsearch-js',
-      connection: {},
-      attempts: 0,
-      aborted: false,
+    hits: {
+      total: {
+        value: 10000,
+        relation: 'gte',
+      },
+      max_score: 1,
+      hits: [
+        {
+          _index: 'test',
+          _id: '1',
+          _score: 1,
+          _source: {
+            name: 'foo',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '2',
+          _score: 1,
+          _source: {
+            name: 'bar',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '3',
+          _score: 1,
+          _source: {
+            name: 'baz',
+          },
+        },
+      ],
     },
   };
   mockElasticsearchClient.search.mockImplementationOnce(function () {
@@ -441,17 +403,15 @@ test('ElasticsearchSearch exposes total results over 10k as Infinity', async () 
   });
   const request = {
     size: 3,
-    body: {
-      aggs: {
-        nameAggregation: {
-          terms: {
-            field: 'name',
-          },
+    aggs: {
+      nameAggregation: {
+        terms: {
+          field: 'name',
         },
       },
-      query: {
-        match_all: {},
-      },
+    },
+    query: {
+      match_all: {},
     },
   };
   const res = await ElasticsearchSearch({ request, connection });
@@ -461,66 +421,48 @@ test('ElasticsearchSearch exposes total results over 10k as Infinity', async () 
 test('ElasticsearchSearch exposes maximum score', async () => {
   const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
-    body: {
-      took: 1234,
-      timed_out: false,
-      _shards: {},
-      aggregations: {
-        nameAggregation: {
-          doc_count_error_upper_bound: 0,
-          sum_other_doc_count: 0,
-          buckets: [],
-        },
-      },
-      hits: {
-        total: {
-          value: 10000,
-          relation: 'gte',
-        },
-        max_score: 42,
-        hits: [
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '1',
-            _score: 1,
-            _source: {
-              name: 'foo',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '2',
-            _score: 1,
-            _source: {
-              name: 'bar',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '3',
-            _score: 1,
-            _source: {
-              name: 'baz',
-            },
-          },
-        ],
+    took: 1234,
+    timed_out: false,
+    _shards: {},
+    aggregations: {
+      nameAggregation: {
+        doc_count_error_upper_bound: 0,
+        sum_other_doc_count: 0,
+        buckets: [],
       },
     },
-    statusCode: 200,
-    headers: {
-      'content-type': 'application/json; charset=UTF-8',
-      'content-length': '1234567',
-    },
-    meta: {
-      context: null,
-      request: {},
-      name: 'elasticsearch-js',
-      connection: {},
-      attempts: 0,
-      aborted: false,
+    hits: {
+      total: {
+        value: 10000,
+        relation: 'gte',
+      },
+      max_score: 42,
+      hits: [
+        {
+          _index: 'test',
+          _id: '1',
+          _score: 1,
+          _source: {
+            name: 'foo',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '2',
+          _score: 1,
+          _source: {
+            name: 'bar',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '3',
+          _score: 1,
+          _source: {
+            name: 'baz',
+          },
+        },
+      ],
     },
   };
   mockElasticsearchClient.search.mockImplementationOnce(function () {
@@ -528,17 +470,15 @@ test('ElasticsearchSearch exposes maximum score', async () => {
   });
   const request = {
     size: 3,
-    body: {
-      aggs: {
-        nameAggregation: {
-          terms: {
-            field: 'name',
-          },
+    aggs: {
+      nameAggregation: {
+        terms: {
+          field: 'name',
         },
       },
-      query: {
-        match_all: {},
-      },
+    },
+    query: {
+      match_all: {},
     },
   };
   const res = await ElasticsearchSearch({ request, connection });
@@ -548,66 +488,48 @@ test('ElasticsearchSearch exposes maximum score', async () => {
 test('ElasticsearchSearch exposes aggregations', async () => {
   const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
-    body: {
-      took: 1234,
-      timed_out: false,
-      _shards: {},
-      aggregations: {
-        nameAggregation: {
-          doc_count_error_upper_bound: 0,
-          sum_other_doc_count: 0,
-          buckets: [],
-        },
-      },
-      hits: {
-        total: {
-          value: 10000,
-          relation: 'gte',
-        },
-        max_score: 1,
-        hits: [
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '1',
-            _score: 1,
-            _source: {
-              name: 'foo',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '2',
-            _score: 1,
-            _source: {
-              name: 'bar',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '3',
-            _score: 1,
-            _source: {
-              name: 'baz',
-            },
-          },
-        ],
+    took: 1234,
+    timed_out: false,
+    _shards: {},
+    aggregations: {
+      nameAggregation: {
+        doc_count_error_upper_bound: 0,
+        sum_other_doc_count: 0,
+        buckets: [],
       },
     },
-    statusCode: 200,
-    headers: {
-      'content-type': 'application/json; charset=UTF-8',
-      'content-length': '1234567',
-    },
-    meta: {
-      context: null,
-      request: {},
-      name: 'elasticsearch-js',
-      connection: {},
-      attempts: 0,
-      aborted: false,
+    hits: {
+      total: {
+        value: 10000,
+        relation: 'gte',
+      },
+      max_score: 1,
+      hits: [
+        {
+          _index: 'test',
+          _id: '1',
+          _score: 1,
+          _source: {
+            name: 'foo',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '2',
+          _score: 1,
+          _source: {
+            name: 'bar',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '3',
+          _score: 1,
+          _source: {
+            name: 'baz',
+          },
+        },
+      ],
     },
   };
   mockElasticsearchClient.search.mockImplementationOnce(function () {
@@ -615,17 +537,15 @@ test('ElasticsearchSearch exposes aggregations', async () => {
   });
   const request = {
     size: 3,
-    body: {
-      aggs: {
-        nameAggregation: {
-          terms: {
-            field: 'name',
-          },
+    aggs: {
+      nameAggregation: {
+        terms: {
+          field: 'name',
         },
       },
-      query: {
-        match_all: {},
-      },
+    },
+    query: {
+      match_all: {},
     },
   };
   const res = await ElasticsearchSearch({ request, connection });
@@ -641,66 +561,48 @@ test('ElasticsearchSearch exposes aggregations', async () => {
 test('ElasticsearchSearch exposes original response body', async () => {
   const ElasticsearchSearch = (await import('./ElasticsearchSearch.js')).default;
   const responseData = {
-    body: {
-      took: 1234,
-      timed_out: false,
-      _shards: {},
-      aggregations: {
-        nameAggregation: {
-          doc_count_error_upper_bound: 0,
-          sum_other_doc_count: 0,
-          buckets: [],
-        },
-      },
-      hits: {
-        total: {
-          value: 10000,
-          relation: 'gte',
-        },
-        max_score: 1,
-        hits: [
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '1',
-            _score: 1,
-            _source: {
-              name: 'foo',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '2',
-            _score: 1,
-            _source: {
-              name: 'bar',
-            },
-          },
-          {
-            _index: 'test',
-            _type: '_doc',
-            _id: '3',
-            _score: 1,
-            _source: {
-              name: 'baz',
-            },
-          },
-        ],
+    took: 1234,
+    timed_out: false,
+    _shards: {},
+    aggregations: {
+      nameAggregation: {
+        doc_count_error_upper_bound: 0,
+        sum_other_doc_count: 0,
+        buckets: [],
       },
     },
-    statusCode: 200,
-    headers: {
-      'content-type': 'application/json; charset=UTF-8',
-      'content-length': '1234567',
-    },
-    meta: {
-      context: null,
-      request: {},
-      name: 'elasticsearch-js',
-      connection: {},
-      attempts: 0,
-      aborted: false,
+    hits: {
+      total: {
+        value: 10000,
+        relation: 'gte',
+      },
+      max_score: 1,
+      hits: [
+        {
+          _index: 'test',
+          _id: '1',
+          _score: 1,
+          _source: {
+            name: 'foo',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '2',
+          _score: 1,
+          _source: {
+            name: 'bar',
+          },
+        },
+        {
+          _index: 'test',
+          _id: '3',
+          _score: 1,
+          _source: {
+            name: 'baz',
+          },
+        },
+      ],
     },
   };
   mockElasticsearchClient.search.mockImplementationOnce(function () {
@@ -708,21 +610,19 @@ test('ElasticsearchSearch exposes original response body', async () => {
   });
   const request = {
     size: 3,
-    body: {
-      aggs: {
-        nameAggregation: {
-          terms: {
-            field: 'name',
-          },
+    aggs: {
+      nameAggregation: {
+        terms: {
+          field: 'name',
         },
       },
-      query: {
-        match_all: {},
-      },
+    },
+    query: {
+      match_all: {},
     },
   };
   const res = await ElasticsearchSearch({ request, connection });
-  expect(res.response).toMatchObject(responseData.body);
+  expect(res.response).toEqual(responseData);
 });
 
 test('checkRead should be true', async () => {

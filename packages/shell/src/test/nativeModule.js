@@ -14,20 +14,60 @@
   limitations under the License.
 */
 
-// A stand-in for a native module Jest has no native side for (expo-haptics, expo-location,
-// expo-maps, react-native-nfc-manager, ...): every export is a function that resolves to
-// undefined, so the shell's device features can be built in tests. Tests that exercise a feature
-// install their own fakes in the device registry.
+// A stand-in for the native modules a test has no native side for (expo-haptics, expo-location,
+// expo-maps, react-native-nfc-manager, ...): each export the shell reads from them is a function
+// that resolves to undefined, so the shell's device features can be built in tests. Tests that
+// exercise a feature install their own fakes in the device registry. An ES module names its
+// exports, so a name the shell starts to read from one of these modules is added here.
 function stub() {
   return Promise.resolve(undefined);
 }
 
-module.exports = new Proxy(
-  {},
-  {
-    get(target, key) {
-      if (key === '__esModule') return true;
-      return stub;
-    },
-  }
-);
+export {
+  stub as Accuracy,
+  stub as activateKeepAwakeAsync,
+  stub as AppleMaps,
+  stub as clearSharedPayloads,
+  stub as Contact,
+  stub as ContactField,
+  stub as createEventInCalendarAsync,
+  stub as createWidget,
+  stub as deactivateKeepAwake,
+  stub as Directory,
+  stub as File,
+  stub as GeofencingEventType,
+  stub as getCalendars,
+  stub as getCurrentPositionAsync,
+  stub as getDocumentAsync,
+  stub as getResolvedSharedPayloadsAsync,
+  stub as GoogleMaps,
+  stub as hasStartedGeofencingAsync,
+  stub as hasStartedLocationUpdatesAsync,
+  stub as impactAsync,
+  stub as ImpactFeedbackStyle,
+  stub as launchCameraAsync,
+  stub as launchImageLibraryAsync,
+  stub as listEvents,
+  stub as Ndef,
+  stub as NfcError,
+  stub as NfcTech,
+  stub as notificationAsync,
+  stub as NotificationFeedbackType,
+  stub as Paths,
+  stub as requestBackgroundPermissionsAsync,
+  stub as requestCalendarPermissions,
+  stub as requestForegroundPermissionsAsync,
+  stub as ResponseType,
+  stub as restoreSystemBrightnessAsync,
+  stub as selectionAsync,
+  stub as setBrightnessAsync,
+  stub as shareAsync,
+  stub as speak,
+  stub as startGeofencingAsync,
+  stub as startLocationUpdatesAsync,
+  stub as stop,
+  stub as stopGeofencingAsync,
+  stub as stopLocationUpdatesAsync,
+};
+
+export default stub;

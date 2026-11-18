@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import { ios, page, press, record, renderPage, screen, styleOf } from '../../test/renderPage.js';
 
 const text = (id, content) => ({ id, type: 'Box', properties: { content } });

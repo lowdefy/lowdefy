@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import createAppSession from '../session/createAppSession.js';
 import createFakeServer, { header } from '../test/createFakeServer.js';
 import createMemoryCacheStore from '../test/createMemoryCacheStore.js';

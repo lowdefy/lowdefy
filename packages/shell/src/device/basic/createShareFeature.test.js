@@ -14,11 +14,15 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
+
+import * as Sharing from 'expo-sharing';
+
 import createShareFeature from './createShareFeature.js';
 
-// expo-file-system and expo-sharing both map to the native stand-in (jest.config.js), so one mock
+// expo-file-system and expo-sharing both map to the native stand-in (vitest.config.js), so one mock
 // serves both.
-jest.mock('expo-file-system', () => ({
+vi.mock('expo-file-system', () => ({
   Paths: { cache: 'file:///cache' },
   File: class {
     constructor(directory, name) {
@@ -28,10 +32,8 @@ jest.mock('expo-file-system', () => ({
     create() {}
     write() {}
   },
-  shareAsync: jest.fn(async () => undefined),
+  shareAsync: vi.fn(async () => undefined),
 }));
-
-const Sharing = require('expo-sharing');
 
 async function shareNamed(name) {
   await createShareFeature()({ base64: 'aGk=', name });

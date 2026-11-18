@@ -16,11 +16,13 @@
 
 import { vi, expect, test } from 'vitest';
 
-vi.doMock('axios', () => ({
-  default: {
-    request: vi.fn(),
-  },
-}));
+const mockFetch = vi.fn(async () => new Response(null, { status: 204 }));
+vi.stubGlobal('fetch', mockFetch);
+
+function sentRequest(index = 0) {
+  const [url, init] = mockFetch.mock.calls[index];
+  return { url, method: init.method, headers: init.headers, data: JSON.parse(init.body) };
+}
 
 const appId = 'appId';
 const cliVersion = 'cliVersion';
@@ -28,7 +30,6 @@ const lowdefyVersion = 'lowdefyVersion';
 
 test('disable telemetry', async () => {
   const getSendTelemetry = (await import('./getSendTelemetry.js')).default;
-  const axios = (await import('axios')).default;
   const sendTelemetry = getSendTelemetry({
     appId,
     cliVersion,
@@ -38,12 +39,11 @@ test('disable telemetry', async () => {
     lowdefyVersion,
   });
   await sendTelemetry({ data: { x: 1 } });
-  expect(axios.request.mock.calls).toEqual([]);
+  expect(mockFetch.mock.calls).toEqual([]);
 });
 
 test('send telemetry', async () => {
   const getSendTelemetry = (await import('./getSendTelemetry.js')).default;
-  const axios = (await import('axios')).default;
   const sendTelemetry = getSendTelemetry({
     appId,
     cliVersion,
@@ -51,29 +51,32 @@ test('send telemetry', async () => {
     options: {},
   });
   await sendTelemetry({ data: { x: 1 } });
-  expect(axios.request.mock.calls).toEqual([
-    [
-      {
-        data: {
-          app_id: 'appId',
-          cli_version: 'cliVersion',
-          lowdefy_version: 'lowdefyVersion',
-          x: 1,
-        },
-        headers: {
-          'User-Agent': 'Lowdefy CLI vcliVersion',
-        },
-        method: 'post',
-        url: 'https://api.lowdefy.net/v4/telemetry/cli',
-      },
-    ],
-  ]);
+  expect(sentRequest()).toEqual({
+    data: {
+      app_id: 'appId',
+      cli_version: 'cliVersion',
+      lowdefy_version: 'lowdefyVersion',
+      x: 1,
+    },
+    headers: {
+      'Content-Type': 'application/json',
+      'User-Agent': 'Lowdefy CLI vcliVersion',
+    },
+    method: 'POST',
+    url: 'https://api.lowdefy.net/v4/telemetry/cli',
+  });
+});
+
+test('send telemetry does not throw on an error status', async () => {
+  const getSendTelemetry = (await import('./getSendTelemetry.js')).default;
+  mockFetch.mockResolvedValueOnce(new Response('Bad gateway', { status: 502 }));
+  const sendTelemetry = getSendTelemetry({ appId, cliVersion, lowdefyVersion, options: {} });
+  await expect(sendTelemetry({ data: { x: 1 } })).resolves.toBe(undefined);
 });
 
 test('send telemetry should not throw', async () => {
   const getSendTelemetry = (await import('./getSendTelemetry.js')).default;
-  const axios = (await import('axios')).default;
-  axios.request.mockImplementation(() => {
+  mockFetch.mockImplementationOnce(() => {
     throw new Error('Test error');
   });
   const sendTelemetry = getSendTelemetry({
@@ -82,6 +85,5 @@ test('send telemetry should not throw', async () => {
     lowdefyVersion,
     options: {},
   });
-  await sendTelemetry({ data: { x: 1 } });
-  expect(true).toBe(true);
+  await expect(sendTelemetry({ data: { x: 1 } })).resolves.toBe(undefined);
 });

@@ -55,7 +55,9 @@ const NumberInput = ({
             autoComplete="off"
             autoFocus={properties.autoFocus}
             changeOnWheel={properties.changeOnWheel}
-            variant={properties.bordered === false ? 'borderless' : properties.variant ?? undefined}
+            variant={
+              properties.bordered === false ? 'borderless' : (properties.variant ?? undefined)
+            }
             className={classNames.element}
             style={{ width: '100%', ...styles.element }}
             controls={
@@ -127,8 +129,14 @@ const NumberInput = ({
             onBlur={() => {
               methods.triggerEvent({ name: 'onBlur' });
             }}
-            onFocus={() => {
+            onFocus={(event) => {
+              if (properties.selectOnFocus) event.target.select();
               methods.triggerEvent({ name: 'onFocus' });
+            }}
+            onKeyDown={(event) => {
+              // Escape while an IME is composing cancels the composition, not the field.
+              if (event.key !== 'Escape' || event.nativeEvent.isComposing) return;
+              methods.triggerEvent({ name: 'onEscape', event: { value } });
             }}
             value={value}
           />

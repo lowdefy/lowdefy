@@ -15,12 +15,12 @@
 */
 
 import {
-  Experimental_EvaluationMockModelV4 as EvaluationMockModel,
+  Experimental_DecisionMockModelV4 as DecisionMockModel,
   MockLanguageModelV4,
 } from 'ai/test';
 
 import decide from './decide.js';
-import { expect, test } from 'vitest';
+import { expect, test, vi } from 'vitest';
 
 const questions = {
   next: { choice: 'Which control next', options: { c0: 'click "Assign"', c1: 'fill "Title"' } },
@@ -62,8 +62,8 @@ test('decide on the structured-output backend returns answers, usage and provide
 });
 
 test('decide on the evaluation backend returns answers, usage and providerMetadata', async () => {
-  const model = new EvaluationMockModel({
-    doEvaluate: async () => ({
+  const model = new DecisionMockModel({
+    doDecide: async () => ({
       answers: {
         next: { type: 'choice', choice: 'c0', probabilities: { c0: 0.9, c1: 0.1 } },
         relevance: { type: 'score', score: 1.7, probabilities: { 0: 0.1, 1: 0.1, 2: 0.8 } },
@@ -78,6 +78,21 @@ test('decide on the evaluation backend returns answers, usage and providerMetada
   expect(result.answers.relevance.level).toBe('exercises');
   expect(result.usage).toMatchObject({ inputTokens: 40, outputTokens: 2 });
   expect(result.providerMetadata).toEqual(gatewayMetadata);
+});
+
+test('decide on the evaluation backend sends an array state as one json state part', async () => {
+  const doDecide = vi.fn(async () => ({
+    answers: {
+      next: { type: 'choice', choice: 'c0', probabilities: { c0: 0.9, c1: 0.1 } },
+      relevance: { type: 'score', score: 2, probabilities: { 0: 0, 1: 0, 2: 1 } },
+    },
+    usage: { inputTokens: 40, outputTokens: 2 },
+    warnings: [],
+  }));
+  const model = new DecisionMockModel({ doDecide });
+  const arrayState = [{ pageId: 'tickets' }, { pageId: 'users' }];
+  await decide({ model, backend: 'evaluation', state: arrayState, questions });
+  expect(doDecide.mock.calls[0][0].state).toEqual([{ type: 'json', value: arrayState }]);
 });
 
 test('decide passes call options through to the model', async () => {

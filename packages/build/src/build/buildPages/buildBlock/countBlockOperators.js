@@ -17,13 +17,11 @@
 import countOperators from '../../../utils/countOperators.js';
 
 function countBlockOperators(block, { typeCounters }) {
-  // eslint-disable-next-line no-unused-vars
   const { requests, slots, blocks, ...webBlock } = block;
   countOperators(webBlock, { counter: typeCounters.operators.client });
   // The engine evaluates each slot's config (less its blocks) as the block's
   // slotsLayout, in the browser.
   Object.values(slots ?? {}).forEach((slot) => {
-    // eslint-disable-next-line no-unused-vars
     const { blocks: slotBlocks, ...slotLayout } = slot;
     countOperators(slotLayout, { counter: typeCounters.operators.client });
   });

@@ -35,7 +35,7 @@ function getAggregateText({ fn, value, column }) {
     return formatNumber({ value, config: { format: 'percent', maxDecimals: 1, locale } });
   }
   if (CELL_TYPE_FAMILIES[column.type] === 'number' && !FORMATTED_NUMBER_TYPES.has(column.type)) {
-    const suffix = column.type === 'progress' ? column.cell.suffix ?? '%' : '';
+    const suffix = column.type === 'progress' ? (column.cell.suffix ?? '%') : '';
     return `${formatNumber({ value, config: { maxDecimals: 1, locale } })}${suffix}`;
   }
   return getCellText({ column, value, row: {} });

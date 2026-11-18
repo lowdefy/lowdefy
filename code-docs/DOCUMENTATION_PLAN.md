@@ -92,7 +92,6 @@ Framework Version: 4.4.0
 - [x] code-docs/plugins/operators/diff.md
 - [x] code-docs/plugins/operators/uuid.md
 - [x] code-docs/plugins/operators/yaml.md
-- [x] code-docs/plugins/operators/jsonata.md
 
 ### Actions (packages/plugins/actions/)
 
@@ -136,7 +135,6 @@ Framework Version: 4.4.0
 - [x] code-docs/utils/node-utils.md
 - [x] code-docs/utils/ajv.md
 - [x] code-docs/utils/block-utils.md
-- [x] code-docs/utils/block-dev.md
 - [x] code-docs/utils/nunjucks.md
 - [x] code-docs/utils/vite-yaml-plugin.md
 

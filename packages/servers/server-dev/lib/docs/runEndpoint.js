@@ -160,7 +160,7 @@ async function runEndpointInContext({
   context.logger.info({
     event: 'agent_run_endpoint',
     endpointId,
-    user: type.isObject(user) ? user.id ?? null : user,
+    user: type.isObject(user) ? (user.id ?? null) : user,
     system,
   });
 

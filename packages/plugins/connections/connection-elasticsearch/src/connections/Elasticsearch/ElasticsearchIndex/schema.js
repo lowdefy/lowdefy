@@ -20,7 +20,7 @@ export default {
   type: 'object',
   description:
     'Adds a JSON document to the specified data stream or index and makes it searchable. If the target is an index and the document already exists, the request updates the document and increments its version.',
-  required: ['body'],
+  required: ['document'],
   properties: {
     id: {
       anyOf: [
@@ -52,17 +52,23 @@ export default {
       description:
         'Set to create to only index the document if it does not already exist (put if absent). If a document with the specified _id already exists, the indexing operation will fail. Same as using the <index>/_create endpoint. Valid values: index, create. If document id is specified, it defaults to index. Otherwise, it defaults to create. If the request targets a data stream, an op_type of create is required. See Add documents to a data stream.',
       enum: ['index', 'create'],
-      default: 'create',
     },
     pipeline: {
       type: 'string',
       description: 'ID of the pipeline to use to preprocess incoming documents.',
     },
     refresh: {
-      type: 'string',
+      anyOf: [
+        {
+          type: 'string',
+        },
+        {
+          type: 'boolean',
+        },
+      ],
       description:
         'If true, Elasticsearch refreshes the affected shards to make this operation visible to search, if wait_for then wait for a refresh to make this operation visible to search, if false do nothing with refreshes. Valid values: true, false, wait_for. Default: false.',
-      enum: ['true', 'false', 'wait_for'],
+      enum: ['true', 'false', true, false, 'wait_for'],
       default: false,
     },
     routing: {
@@ -85,8 +91,8 @@ export default {
       description: 'Specific version type: external, external_gte.',
       enum: ['internal', 'external', 'external_gte'],
     },
-    wait_for_active_shard: {
-      type: 'string',
+    wait_for_active_shards: {
+      type: ['string', 'integer'],
       description:
         'The number of shard copies that must be active before proceeding with the operation. Set to all or any positive integer up to the total number of shards in the index (number_of_replicas+1). Default: 1, the primary shard.',
       default: '1',
@@ -96,16 +102,21 @@ export default {
       description: 'If true, the destination must be an index alias. Defaults to false.',
       default: false,
     },
-    body: {
+    document: {
       type: 'object',
-      description: 'Request body contains the JSON source for the document data.',
+      description: 'The JSON source of the document to index.',
       additionalProperties: true,
+    },
+    body: {
+      not: {},
+      errorMessage:
+        'was renamed to "document" in Lowdefy 8 (Elasticsearch client 9). Move the document to "document"',
     },
   },
   errorMessage: {
     type: 'ElasticsearchIndex request properties should be an object.',
     required: {
-      body: 'ElasticsearchIndex request should have required property "body".',
+      document: 'ElasticsearchIndex request should have required property "document".',
     },
   },
 };

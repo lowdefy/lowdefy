@@ -111,7 +111,7 @@ export default function About() {
             <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 dark:text-white mb-6 font-mono">
               Building the config webstack <span className="text-gradient">for everyone</span>
             </h1>
-            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed sm:leading-7">
               Lowdefy is an open-source framework that makes it possible to build web apps using
               simple YAML or JSON configuration. A higher-order language between code and natural
               language, designed for both humans and AI.
@@ -201,7 +201,7 @@ export default function About() {
               <div className="space-y-8">
                 {milestones.map((milestone) => (
                   <div key={milestone.year} className="flex items-start gap-6 relative">
-                    <div className="w-[15px] h-[15px] rounded-full bg-cyan-500/20 border-2 border-cyan-500 flex-shrink-0 mt-1 z-10" />
+                    <div className="w-[15px] h-[15px] rounded-full bg-cyan-500/20 border-2 border-cyan-500 shrink-0 mt-1 z-10" />
                     <div>
                       <span className="text-sm font-mono font-bold text-cyan-500">
                         {milestone.year}
@@ -228,7 +228,7 @@ export default function About() {
               {team.map((member) => (
                 <div key={member.name} className="group text-center w-[100px] sm:w-[110px]">
                   <div className="relative mx-auto mb-3">
-                    <div className="w-[88px] h-[88px] sm:w-[100px] sm:h-[100px] rounded-full overflow-hidden ring-2 ring-slate-200 dark:ring-slate-800 group-hover:ring-cyan-500/50 transition-all duration-300 mx-auto">
+                    <div className="w-[88px] h-[88px] sm:w-[100px] sm:h-[100px] rounded-full overflow-hidden ring-2 ring-slate-200 dark:ring-slate-800 group-hover:ring-cyan-500/50 dark:group-hover:ring-cyan-500/50 transition-all duration-300 mx-auto">
                       <img
                         src={member.image}
                         alt={member.name}

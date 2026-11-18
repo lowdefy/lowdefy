@@ -16,7 +16,7 @@
 
 import { ToolLoopAgent, tool, jsonSchema, isStepCount } from 'ai';
 import { createMCPClient } from '@ai-sdk/mcp';
-import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
+import { StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
 import {
   cleanBuildArtifact,
@@ -130,7 +130,7 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
     try {
       let transport;
       if (evaluatedSource.transport === 'stdio') {
-        transport = new Experimental_StdioMCPTransport({
+        transport = new StdioMCPTransport({
           command: evaluatedSource.command,
           args: evaluatedSource.args,
           env: { ...process.env, ...(evaluatedSource.env ?? {}) },

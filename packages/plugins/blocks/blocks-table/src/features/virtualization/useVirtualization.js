@@ -26,7 +26,7 @@ const AUTO_COLUMN_THRESHOLD = 20;
 // rows (wrapped or multi-line columns) turn column virtualisation off, as a row's height depends
 // on every cell in it. Items of other heights (measured rows, detail rows) are placed by
 // `rowOffsets` (useRowOffsets), which also rules out the bench's positioned strategy
-// (positionedRowsFeature). The rows are placed by one translated window.
+// (bench/app/positionedRows). The rows are placed by one translated window.
 function useVirtualization(ctx) {
   const { api, config, headerHeight, layout, rowHeight, rowHeights, rows, scrollerRef, viewport } =
     ctx;

@@ -14,8 +14,46 @@
   limitations under the License.
 */
 
-import { createPageUrl } from './navigation.js';
+import { type } from '@lowdefy/helpers';
+
+import { createPageUrl, waitForReady } from './navigation.js';
 import { expect, test } from 'vitest';
+
+// waitForReady hands Playwright an expression that runs in the browser. This page evaluates it
+// once, against a window holding what the client sets on window.lowdefy for the ticket on screen.
+async function isReady({ context }) {
+  let ready;
+  const page = {
+    async waitForFunction(expression) {
+      global.window = {
+        location: { pathname: '/tickets/1' },
+        lowdefy: {
+          pathMemory: new Map([['tickets/1', { instanceKey: 'page:ticket#tickets/1' }]]),
+          contexts: type.isNone(context) ? {} : { 'page:ticket#tickets/1': context },
+        },
+      };
+      try {
+        ready = new Function(`return ${expression}`)();
+      } finally {
+        delete global.window;
+      }
+    },
+  };
+  await waitForReady(page);
+  return ready;
+}
+
+test('waitForReady waits while the page context exists but its onInit has not finished', async () => {
+  expect(await isReady({ context: { state: {}, _internal: {} } })).toBe(false);
+});
+
+test('waitForReady is ready once the onInit of the page on screen has finished', async () => {
+  expect(await isReady({ context: { state: {}, _internal: { onInitDone: true } } })).toBe(true);
+});
+
+test('waitForReady waits while the page on screen has no context', async () => {
+  expect(await isReady({ context: null })).toBe(false);
+});
 
 test('createPageUrl returns a string target unchanged', () => {
   expect(createPageUrl('/items?a=1')).toBe('/items?a=1');

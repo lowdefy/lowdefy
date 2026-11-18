@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import applyDisplayEdit from './applyDisplayEdit.js';
 import snapSelection from './snapSelection.js';
 import { toDisplay, toValue } from './segmentText.js';

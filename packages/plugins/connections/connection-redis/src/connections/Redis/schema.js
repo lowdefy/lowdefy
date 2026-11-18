@@ -27,8 +27,11 @@ export default {
       },
     },
   },
-  require: ['connection'],
+  required: ['connection'],
   errorMessage: {
     type: 'Redis connection properties should be an object.',
+    required: {
+      connection: 'Redis connection should have required property "connection".',
+    },
   },
 };

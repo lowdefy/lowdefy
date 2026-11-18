@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { Linking } from 'react-native';
 
 import { StyleSheet } from 'react-native';
@@ -109,7 +109,7 @@ test('a closable Tag fires onClose and is removed', async () => {
 });
 
 test('a Tag with onClick or an absolute href is pressable; a disabled one is not', async () => {
-  const openURL = jest.spyOn(Linking, 'openURL').mockImplementation(async () => true);
+  const openURL = vi.spyOn(Linking, 'openURL').mockImplementation(async () => true);
   const { calls } = await renderPage({
     pageConfig: page([
       {

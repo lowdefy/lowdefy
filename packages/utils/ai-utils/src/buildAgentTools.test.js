@@ -46,7 +46,7 @@ vi.doMock('@ai-sdk/mcp', () => ({
 }));
 
 vi.doMock('@ai-sdk/mcp/mcp-stdio', () => ({
-  Experimental_StdioMCPTransport: class MockStdio {
+  StdioMCPTransport: class MockStdio {
     constructor(config) {
       this.config = config;
     }

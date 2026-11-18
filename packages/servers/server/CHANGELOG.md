@@ -1,5 +1,85 @@
 # @lowdefy/server-enterprise
 
+## 7.4.0
+
+### Patch Changes
+
+- c4ac73d: fix(server): Websockets on Vercel reconnect at once when the function's time limit ends them
+
+  On Vercel every websocket ends when the function reaches `config.vercel.maxDuration`. Vercel stops the function without closing the connection, so the browser only noticed about 10 to 12 seconds later, and pages heard no live updates in that gap: about 9% of the time with a 120-second limit. Changes made in the gap never reached the page. The server now closes each websocket 5 seconds before the limit (at half the limit when it is under 10 seconds), and the client reconnects and resubscribes straight away. The Node server is unchanged.
+
+- Updated dependencies [bd56850]
+- Updated dependencies [098fcfb]
+- Updated dependencies [dfba080]
+  - @lowdefy/api@7.4.0
+  - @lowdefy/node-utils@7.4.0
+  - @lowdefy/connection-anthropic@7.4.0
+  - @lowdefy/actions-core@7.4.0
+  - @lowdefy/blocks-antd@7.4.0
+  - @lowdefy/operators-js@7.4.0
+  - @lowdefy/operators-nunjucks@7.4.0
+  - @lowdefy/blocks-aggrid@7.4.0
+  - @lowdefy/blocks-antd-x@7.4.0
+  - @lowdefy/blocks-basic@7.4.0
+  - @lowdefy/blocks-echarts@7.4.0
+  - @lowdefy/blocks-files@7.4.0
+  - @lowdefy/blocks-loaders@7.4.0
+  - @lowdefy/blocks-markdown@7.4.0
+  - @lowdefy/blocks-table@7.4.0
+  - @lowdefy/blocks-tiptap@7.4.0
+  - @lowdefy/websockets-core@7.4.0
+  - @lowdefy/client@7.4.0
+  - @lowdefy/layout@7.4.0
+  - @lowdefy/blocks-captcha@7.4.0
+  - @lowdefy/plugin-better-auth@7.4.0
+  - @lowdefy/block-utils@7.4.0
+  - @lowdefy/errors@7.4.0
+  - @lowdefy/helpers@7.4.0
+  - @lowdefy/logger@7.4.0
+
+## 7.3.0
+
+### Patch Changes
+
+- 9f56354: fix(deps): Security updates to dependencies
+
+  Updates `@hono/node-server`, `zod`, `postal-mime`, `@azure/identity` (and the `@azure/msal-node` it
+  uses), `serialize-javascript` and `@expo/cli` to releases that fix security advisories.
+
+- 980b181: fix: A request that runs past `config.requestTimeout` no longer reports a second error when its handler finally returns. The 504 still goes out on time, now with no body. The middleware that ran on the late result set a header on the 504 that had already been sent, and rebuilding it from its already-read body threw `TypeError: Response body object should not be disturbed or locked` (seen under `compress`). That error was logged and sent to Sentry under the request's route, hiding the timeout behind a misleading title. A real fault the handler raises after the timeout is still reported as before.
+- Updated dependencies [0631e60]
+- Updated dependencies [a56b359]
+- Updated dependencies [ad4f4dd]
+- Updated dependencies [0fc5a83]
+- Updated dependencies [4434a0e]
+- Updated dependencies [e68364d]
+- Updated dependencies [023cb67]
+  - @lowdefy/api@7.3.0
+  - @lowdefy/client@7.3.0
+  - @lowdefy/plugin-better-auth@7.3.0
+  - @lowdefy/blocks-antd@7.3.0
+  - @lowdefy/blocks-table@7.3.0
+  - @lowdefy/blocks-tiptap@7.3.0
+  - @lowdefy/blocks-aggrid@7.3.0
+  - @lowdefy/blocks-antd-x@7.3.0
+  - @lowdefy/blocks-basic@7.3.0
+  - @lowdefy/blocks-echarts@7.3.0
+  - @lowdefy/blocks-files@7.3.0
+  - @lowdefy/blocks-loaders@7.3.0
+  - @lowdefy/blocks-markdown@7.3.0
+  - @lowdefy/websockets-core@7.3.0
+  - @lowdefy/layout@7.3.0
+  - @lowdefy/actions-core@7.3.0
+  - @lowdefy/blocks-captcha@7.3.0
+  - @lowdefy/connection-anthropic@7.3.0
+  - @lowdefy/operators-js@7.3.0
+  - @lowdefy/operators-nunjucks@7.3.0
+  - @lowdefy/block-utils@7.3.0
+  - @lowdefy/errors@7.3.0
+  - @lowdefy/helpers@7.3.0
+  - @lowdefy/logger@7.3.0
+  - @lowdefy/node-utils@7.3.0
+
 ## 7.2.0
 
 ### Minor Changes

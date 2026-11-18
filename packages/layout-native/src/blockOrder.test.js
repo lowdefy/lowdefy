@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import blockOrder from './blockOrder.js';
 
 test('blockOrder resolves a grid block order per breakpoint, top-level order from md', () => {

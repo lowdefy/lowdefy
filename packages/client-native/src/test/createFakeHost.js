@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 import createMemoryStore from './createMemoryStore.js';
 import createNativeGlobals from '../globals/createNativeGlobals.js';
@@ -32,22 +32,22 @@ function jsonResponse(body, { status = 200, headers = {} } = {}) {
 // `response`, and the route is held in `route.path`.
 function createFakeHost({ path = '/home', response = {} } = {}) {
   const route = { path };
-  const fetch = jest.fn(async () => jsonResponse(response));
+  const fetch = vi.fn(async () => jsonResponse(response));
   const host = {
     fetch,
     globals: createNativeGlobals({
-      assign: jest.fn(),
+      assign: vi.fn(),
       fetch,
       getPath: () => route.path,
       origin: 'https://app.lowdefy.test',
     }),
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
-    router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
+    onBuildChanged: vi.fn(),
+    onCallerChanged: vi.fn(),
+    router: { back: vi.fn(), push: vi.fn(), replace: vi.fn() },
     sessionStorage: createMemoryStore(),
     storage: createMemoryStore(),
-    streamFetch: jest.fn(async () => jsonResponse(response)),
-    WebSocket: jest.fn(),
+    streamFetch: vi.fn(async () => jsonResponse(response)),
+    WebSocket: vi.fn(),
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),
   };
   return { host, route };

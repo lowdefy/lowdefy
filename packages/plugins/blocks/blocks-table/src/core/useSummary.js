@@ -54,7 +54,7 @@ function useSummary({ api, config, state, summaryRow, table }) {
     resolved.forEach(({ key, fn }) => {
       const column = config.columnsByKey.get(key);
       const value = store
-        ? serverAggregates?.[key] ?? null
+        ? (serverAggregates?.[key] ?? null)
         : computeClientValue({ column, fn, rows });
       aggregates.set(key, { fn, text: getAggregateText({ fn, value, column }) });
     });

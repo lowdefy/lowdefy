@@ -78,12 +78,7 @@ const column = {
   },
 };
 
-const {
-  onCellEdit, // eslint-disable-line no-unused-vars
-  onChange, // eslint-disable-line no-unused-vars
-  onRowMove, // eslint-disable-line no-unused-vars
-  ...tableEvents
-} = tableMeta.events;
+const { onCellEdit, onChange, onRowMove, ...tableEvents } = tableMeta.events;
 const ENRICHMENT_EVENTS = [
   'onColumnAdd',
   'onColumnUpdate',
@@ -98,7 +93,7 @@ const ENRICHMENT_METHODS = ['openColumnPicker', 'openCellDetails', 'openImport']
 
 // TableInput is an input, not an input-container: it renders no slots (no toolbar, bulk action
 // or empty slot blocks), so it does not take Table's.
-const { slots, ...inputMeta } = tableMeta; // eslint-disable-line no-unused-vars
+const { slots, ...inputMeta } = tableMeta;
 
 export default {
   ...inputMeta,

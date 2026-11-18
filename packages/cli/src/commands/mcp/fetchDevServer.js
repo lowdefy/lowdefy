@@ -107,6 +107,10 @@ function answerWhenDropped({ body, requestId }) {
 // out the whole tool call timeout: the MCP SDK resumes a dropped stream only
 // when the server sent event ids, which the dev server does not, and reports
 // the drop to onerror alone, never to the pending request.
+// It calls the global fetch, not httpFetch: it is the fetch the MCP SDK calls, so it keeps fetch's
+// contract - the SDK's own abort signal, event streams that stay open for the whole session (no
+// timeout), and fetch's TypeError for an unreachable server, which the shim's
+// describeForwardError reads.
 async function fetchDevServer(url, init) {
   const response = await fetch(url, init);
   const requestId = readRequestId(init);

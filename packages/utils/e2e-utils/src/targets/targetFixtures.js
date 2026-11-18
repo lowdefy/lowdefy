@@ -43,7 +43,7 @@ function target(fields) {
 
 const grid = `
 <div id="bl-tasks" class="ag-theme-quartz">
-  <div class="ag-center-cols-container">
+  <div class="ag-grid-scrolling-container">
     <div class="ag-row" row-index="0">
       <div class="ag-cell" col-id="name">Write report</div>
       <div class="ag-cell" col-id="done"><div class="ag-checkbox"><input type="checkbox" class="ag-checkbox-input" /></div></div>
@@ -340,7 +340,7 @@ const targetFixtures = [
     name: 'pinned grid row',
     html: `
 <div id="bl-totals">
-  <div class="ag-floating-top">
+  <div class="ag-grid-pinned-top-rows-container">
     <div class="ag-row ag-row-pinned" row-index="t-0">
       <div class="ag-cell" col-id="total"><button><span>Recalculate</span></button></div>
     </div>

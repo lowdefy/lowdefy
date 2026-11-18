@@ -14,10 +14,21 @@
   limitations under the License.
 */
 
-import fs from 'fs-extra';
+import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
-import { expect, test } from 'vitest';
+import { afterEach, beforeEach, expect, test } from 'vitest';
+
+let base;
+
+beforeEach(() => {
+  base = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-copy-'));
+});
+
+afterEach(() => {
+  fs.rmSync(base, { recursive: true, force: true });
+});
 
 test('copy directory', async () => {
   const dirPathFrom = path.resolve(process.cwd(), 'test/copyDirectory/from/');
@@ -47,4 +58,41 @@ test('copy file', async () => {
 
   await copyFileOrDirectory(filePathFrom, filePathTo);
   expect(fs.existsSync(filePathTo)).toBe(true);
+});
+
+test('copy directory merges into an existing directory and overwrites files', async () => {
+  const dirPathFrom = path.resolve(base, 'from');
+  const dirPathTo = path.resolve(base, 'to');
+  fs.mkdirSync(path.resolve(dirPathFrom, 'nested'), { recursive: true });
+  fs.mkdirSync(dirPathTo, { recursive: true });
+  fs.writeFileSync(path.resolve(dirPathFrom, 'shared.txt'), 'from');
+  fs.writeFileSync(path.resolve(dirPathFrom, 'nested', 'deep.txt'), 'deep');
+  fs.writeFileSync(path.resolve(dirPathTo, 'shared.txt'), 'to');
+  fs.writeFileSync(path.resolve(dirPathTo, 'kept.txt'), 'kept');
+
+  await copyFileOrDirectory(dirPathFrom, dirPathTo);
+  expect(fs.readFileSync(path.resolve(dirPathTo, 'shared.txt'), 'utf8')).toBe('from');
+  expect(fs.readFileSync(path.resolve(dirPathTo, 'kept.txt'), 'utf8')).toBe('kept');
+  expect(fs.readFileSync(path.resolve(dirPathTo, 'nested', 'deep.txt'), 'utf8')).toBe('deep');
+});
+
+test('copy file creates missing parent directories', async () => {
+  const filePathFrom = path.resolve(base, 'from.txt');
+  const filePathTo = path.resolve(base, 'a', 'b', 'to.txt');
+  fs.writeFileSync(filePathFrom, 'parents');
+
+  await copyFileOrDirectory(filePathFrom, filePathTo);
+  expect(fs.readFileSync(filePathTo, 'utf8')).toBe('parents');
+});
+
+test('copy directory keeps a relative symlink relative', async () => {
+  const dirPathFrom = path.resolve(base, 'from');
+  const dirPathTo = path.resolve(base, 'to');
+  fs.mkdirSync(dirPathFrom, { recursive: true });
+  fs.writeFileSync(path.resolve(dirPathFrom, 'target.txt'), 'target');
+  fs.symlinkSync('target.txt', path.resolve(dirPathFrom, 'link.txt'));
+
+  await copyFileOrDirectory(dirPathFrom, dirPathTo);
+  expect(fs.readlinkSync(path.resolve(dirPathTo, 'link.txt'))).toBe('target.txt');
+  expect(fs.readFileSync(path.resolve(dirPathTo, 'link.txt'), 'utf8')).toBe('target');
 });

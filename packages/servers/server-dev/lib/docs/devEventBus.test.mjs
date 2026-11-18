@@ -259,8 +259,6 @@ test('the watcher closes when the last subscriber leaves so a later write publis
   const { watcher } = watchers.at(-1);
   await watcherReady();
   unsubscribe();
-  // The bus closes its watcher once the current event is handled.
-  await new Promise((resolve) => setImmediate(resolve));
   expect(watcher.closed).toBe(true);
 
   fs.writeFileSync(statusPath, JSON.stringify({ status: 'ok', errors: [], warnings: [] }));

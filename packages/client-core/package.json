@@ -1,6 +1,6 @@
 {
   "name": "@lowdefy/client-core",
-  "version": "7.2.0",
+  "version": "7.4.0",
   "license": "Apache-2.0",
   "description": "Lowdefy Client Core - the platform-free half of the Lowdefy client, shared by its renderers",
   "homepage": "https://lowdefy.com",
@@ -39,16 +39,16 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@lowdefy/engine": "7.2.0",
-    "@lowdefy/errors": "7.2.0",
-    "@lowdefy/helpers": "7.2.0",
-    "@lowdefy/logger": "7.2.0"
+    "@lowdefy/engine": "7.4.0",
+    "@lowdefy/errors": "7.4.0",
+    "@lowdefy/helpers": "7.4.0",
+    "@lowdefy/logger": "7.4.0"
   },
   "devDependencies": {
-    "@swc/cli": "0.8.1",
-    "@swc/core": "1.15.32",
-    "jsdom": "19.0.0",
-    "vitest": "4.1.12"
+    "@swc/cli": "0.8.2",
+    "@swc/core": "1.16.22",
+    "jsdom": "31.0.0",
+    "vitest": "5.1.0"
   },
   "publishConfig": {
     "access": "public"

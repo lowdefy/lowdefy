@@ -21,9 +21,13 @@ import path from 'path';
 
 const mockPost = vi.fn();
 const mockGet = vi.fn();
-vi.doMock('axios', () => ({
-  default: { post: mockPost, get: mockGet },
-}));
+// The dev server as these tests see it: mockGet(url) and mockPost(url, body) answer
+// { status, data }, or reject as a network failure would.
+vi.stubGlobal('fetch', async (url, init = {}) => {
+  const { status = 200, data } =
+    init.method === 'POST' ? await mockPost(url, JSON.parse(init.body)) : await mockGet(url);
+  return Response.json(data ?? null, { status });
+});
 
 const mockStartDevServer = vi.fn();
 vi.doMock('../../test/startDevServer.js', () => ({

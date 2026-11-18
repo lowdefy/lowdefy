@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getDateMenuActions from './getDateMenuActions.js';
 
 const today = new Date(Date.UTC(2026, 9, 19));

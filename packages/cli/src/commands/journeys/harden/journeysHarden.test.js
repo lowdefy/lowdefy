@@ -23,9 +23,13 @@ import path from 'path';
 
 const mockPost = vi.fn();
 const mockGet = vi.fn();
-vi.doMock('axios', () => ({
-  default: { post: mockPost, get: mockGet },
-}));
+// The dev server as these tests see it: mockGet(url) and mockPost(url, body) answer
+// { status, data }, or reject as a network failure would.
+vi.stubGlobal('fetch', async (url, init = {}) => {
+  const { status = 200, data } =
+    init.method === 'POST' ? await mockPost(url, JSON.parse(init.body)) : await mockGet(url);
+  return Response.json(data ?? null, { status });
+});
 
 const mockStartDevServer = vi.fn();
 vi.doMock('../../test/startDevServer.js', () => ({
@@ -340,9 +344,7 @@ test('journeysHarden leaves out a journey whose baseline fails, and says to repl
 test('journeysHarden says the dev server needs a newer Lowdefy when it has no mutants route', async () => {
   mockPost.mockImplementation(async (target, body) => {
     if (target === `${url}/lowdefy-docs/mutants`) {
-      const error = new Error('Not found');
-      error.response = { status: 404, data: {} };
-      throw error;
+      return { status: 404, data: {} };
     }
     return { data: { passed: true, exercised: exercisedFor(body.pageId) } };
   });
@@ -522,12 +524,10 @@ test('journeysHarden keeps an earlier mutant on a page that now fails to build, 
   const listMutants = mockPost.getMockImplementation();
   mockPost.mockImplementation(async (target, body) => {
     if (target === `${url}/lowdefy-docs/mutants` && body.pages.includes('orders')) {
-      const error = new Error('Request failed with status code 422');
-      error.response = {
+      return {
         status: 422,
         data: { error: 'Page "orders" fails to build, so its mutants cannot be listed.' },
       };
-      throw error;
     }
     return listMutants(target, body);
   });

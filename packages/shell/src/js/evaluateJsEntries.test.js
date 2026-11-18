@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import evaluateJsEntries from './evaluateJsEntries.js';
 import helloJsEntries from '../../fixtures/hello.jsEntries.json';
 

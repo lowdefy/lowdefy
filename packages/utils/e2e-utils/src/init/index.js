@@ -16,12 +16,13 @@
   limitations under the License.
 */
 
-/* eslint-disable no-console */
-
 import fs from 'fs';
 import path from 'path';
-import prompts from 'prompts';
 
+import askConfirm from './prompts/askConfirm.js';
+import askMultiselect from './prompts/askMultiselect.js';
+import askSelect from './prompts/askSelect.js';
+import createAsk from './prompts/createAsk.js';
 import detectApps from './detectApps.js';
 import generateFiles from './generateFiles.js';
 import updateGitignore from './updateGitignore.js';
@@ -37,8 +38,14 @@ function detectPackageManager(cwd) {
   return 'npm';
 }
 
+function cancelSetup() {
+  console.log('\nSetup cancelled.');
+  process.exit(0);
+}
+
 async function init() {
   const cwd = process.cwd();
+  const output = process.stdout;
 
   console.log('Setting up Lowdefy e2e testing...\n');
 
@@ -54,59 +61,39 @@ async function init() {
     process.exit(1);
   }
 
+  const { ask, close } = createAsk({ input: process.stdin, output, onInterrupt: cancelSetup });
+
   // Step 2: Select apps if multiple found
   let selectedApps = apps;
 
   if (apps.length > 1) {
     console.log(`Found ${apps.length} Lowdefy app(s):\n`);
-    for (const app of apps) {
-      console.log(`  - ${app.name} (${app.path})`);
-    }
-    console.log('');
-
-    const appResponse = await prompts({
-      type: 'multiselect',
-      name: 'apps',
+    selectedApps = await askMultiselect({
+      ask,
+      output,
       message: 'Which apps do you want to set up e2e testing for?',
-      choices: apps.map((app) => ({
-        title: `${app.name} (${app.path})`,
-        value: app,
-        selected: true,
-      })),
-      min: 1,
+      choices: apps.map((app) => ({ title: `${app.name} (${app.path})`, value: app })),
     });
-
-    // Handle Ctrl+C
-    if (!appResponse.apps) {
-      console.log('\nSetup cancelled.');
-      process.exit(0);
-    }
-
-    selectedApps = appResponse.apps;
+    if (selectedApps === null) cancelSetup();
+    console.log('');
   } else {
     console.log(`Found Lowdefy app: ${apps[0].name} (${apps[0].path})\n`);
   }
 
   // Step 3: Ask about MongoDB support
-  const mongoResponse = await prompts({
-    type: 'confirm',
-    name: 'useMongoDB',
+  const useMongoDB = await askConfirm({
+    ask,
+    output,
     message: 'Would you like to add MongoDB testing support?',
     initial: false,
   });
-
-  // Handle Ctrl+C
-  if (mongoResponse.useMongoDB === undefined) {
-    console.log('\nSetup cancelled.');
-    process.exit(0);
-  }
-
-  const useMongoDB = mongoResponse.useMongoDB;
+  if (useMongoDB === null) cancelSetup();
+  console.log('');
 
   // Step 4: Ask about version preference
-  const versionResponse = await prompts({
-    type: 'select',
-    name: 'version',
+  const version = await askSelect({
+    ask,
+    output,
     message: 'Which version do you want to install?',
     choices: [
       { title: 'Stable (recommended for production)', value: 'stable' },
@@ -116,14 +103,10 @@ async function init() {
       },
     ],
   });
+  if (version === null) cancelSetup();
+  close();
 
-  // Handle Ctrl+C
-  if (!versionResponse.version) {
-    console.log('\nSetup cancelled.');
-    process.exit(0);
-  }
-
-  const useExperimental = versionResponse.version === 'experimental';
+  const useExperimental = version === 'experimental';
 
   // Step 5: Generate files and write dependencies to package.json
   for (const app of selectedApps) {

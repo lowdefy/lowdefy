@@ -72,8 +72,8 @@ test.each([
   async (_, build) => {
     context.lowdefyBuild.mockImplementation(build);
     watcher = await envWatcher(context);
-    // chokidar 4 watches with fs.watch, which on macOS can miss a write made
-    // right after ready.
+    // chokidar watches with fs.watch, which on macOS can miss a write made
+    // right after ready (see flushFsEvents).
     await flushFsEvents();
 
     fs.writeFileSync(path.join(configDir, '.env'), 'LOWDEFY_SECRET_A=two\n');

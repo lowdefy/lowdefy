@@ -28,7 +28,6 @@ function createImplementationMethods({ blockId, declaredMethods, methods, queue,
     }
     if (process.env.NODE_ENV !== 'production' && !warnedMethods.has(method)) {
       warnedMethods.add(method);
-      // eslint-disable-next-line no-console
       console.warn(
         `Lazy block "${blockId}" registered method "${method}", which is not declared in its meta.methods. Calls to "${method}" before the block loads will fail. Add "${method}" to meta.methods.`
       );

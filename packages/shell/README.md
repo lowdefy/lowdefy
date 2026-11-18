@@ -103,6 +103,12 @@ profile carries them. `getShellProfile` folds them in, the runtime version names
 - **Links.** `<scheme>://shortcut/<id>` (App Shortcuts) and `<scheme>://expo-sharing` (the share
   extension) go to their services; `https://<app url>/<path>` opens its page (universal links and
   App Links: `appLinks.js` writes the associated domain and the Android filter).
+- **Share-in** (`src/native/startShareIn.js`). expo-sharing deletes its copies of shared files when
+  its payloads are cleared, so the shell first copies each file into its own folder in the app's
+  cache (`lowdefy-share/<uuid>/<name>`, `copySharedFiles.js`), and the share page and `onShare`
+  get the copies. The share folder is emptied when the app opens, including after a sign-out, not
+  at the next share, so a page still uploading an earlier file keeps it. Lowdefy Dev's injected
+  files are passed on as they are.
 - **Background.** Background fetch (`src/native/backgroundFetch.js`) and tracking
   (`src/device/tracking`) define their tasks when the bundle loads and post to the app's endpoints
   with the session token; tracking keeps failed posts for the next wake (`createBacklog.js`).
@@ -359,7 +365,7 @@ session` lists and prints phone sessions as it does browser ones.
 ## Checks
 
 ```bash
-pnpm --filter=@lowdefy/shell test         # Jest, and the hello fixture build
+pnpm --filter=@lowdefy/shell test         # vitest, then the node:test suites (the hello fixture build)
 pnpm --filter=@lowdefy/shell export:ios     # Metro and Hermes bundle, no simulator needed
 pnpm --filter=@lowdefy/shell export:android
 pnpm --filter=@lowdefy/shell check:release-bundle   # each release profile links only its modules

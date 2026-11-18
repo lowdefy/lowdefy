@@ -1,0 +1,22 @@
+{
+  "tests": [
+    {
+      "mode": "dev",
+      "warnings": ["_jsonata"],
+      "warningContains": [
+        "Operator type \"_jsonata\" was used but is not defined.",
+        "lowdefy.yaml:21"
+      ],
+      "noErrors": ["_jsonata"]
+    },
+    {
+      "mode": "prod",
+      "warnings": ["_jsonata"],
+      "warningContains": [
+        "Operator type \"_jsonata\" was used but is not defined.",
+        "lowdefy.yaml:21"
+      ],
+      "noErrors": ["_jsonata"]
+    }
+  ]
+}

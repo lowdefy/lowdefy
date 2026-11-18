@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getPickerSheetRows, { CREATE_KEY, NO_VALUE_KEY } from './getPickerSheetRows.js';
 
 const options = [

@@ -64,13 +64,13 @@
         inactiveByDefault: true
         fps: 30
 
-- title: Disable Flip
+- title: Continuous Scanning
   blocks:
-    - id: qr_scanner_no_flip
+    - id: qr_scanner_continuous
       type: QRScanner
       properties:
         inactiveByDefault: true
-        disableFlip: true
+        continuous: true
 
 - title: Specific Barcode Formats
   blocks:
@@ -78,26 +78,26 @@
       type: QRScanner
       properties:
         inactiveByDefault: true
-        formatsToSupport:
-          - QR_CODE
+        types:
+          - qr
     - id: qr_scanner_ean_codes
       type: QRScanner
       properties:
         inactiveByDefault: true
-        formatsToSupport:
-          - EAN_13
-          - EAN_8
-          - UPC_A
-          - UPC_E
+        types:
+          - ean13
+          - ean8
+          - upc_a
+          - upc_e
     - id: qr_scanner_all_1d
       type: QRScanner
       properties:
         inactiveByDefault: true
-        formatsToSupport:
-          - CODABAR
-          - CODE_39
-          - CODE_93
-          - CODE_128
-          - ITF
-          - EAN_13
-          - EAN_8
+        types:
+          - codabar
+          - code39
+          - code93
+          - code128
+          - itf14
+          - ean13
+          - ean8

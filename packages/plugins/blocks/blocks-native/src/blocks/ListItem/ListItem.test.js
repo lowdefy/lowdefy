@@ -14,10 +14,18 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 
 import { renderPage, styleOf, theme } from '../../test/renderPage.js';
+
+function findAll(node, predicate, found = []) {
+  if (typeof node === 'string') return found;
+  if (predicate(node)) found.push(node);
+  node.children.forEach((child) => findAll(child, predicate, found));
+  return found;
+}
 
 function itemPage(item) {
   return { id: 'form', type: 'Box', blocks: [item] };
@@ -201,13 +209,17 @@ test('a ListItem context menu item fires onContextMenu with its id', async () =>
     }),
   });
   await screen.findByText('Fix sign in');
-  const copy = screen.getByTestId('expo-ui-button-Copy key');
-  expect(copy.props.systemImage).toEqual('doc.on.doc');
-  const remove = screen.getByTestId('expo-ui-button-Delete');
-  expect(remove.props.role).toEqual('destructive');
+  // ListItemContextMenu requires @expo/ui/swift-ui as it draws, which the config's aliases do not
+  // reach, so the menu is @expo/ui's own SwiftUI Buttons: native views with the props they pass.
+  const [copy, remove] = findAll(
+    screen.getByTestId('task_menu'),
+    (node) => node.props.onButtonPress !== undefined
+  );
+  expect(copy.props).toMatchObject({ label: 'Copy key', systemImage: 'doc.on.doc' });
+  expect(remove.props).toMatchObject({ label: 'Delete', role: 'destructive' });
   expect(remove.props.systemImage).toBeUndefined();
   await act(async () => {
-    fireEvent.press(copy);
+    fireEvent(copy, 'buttonPress');
   });
   expect(record).toEqual(['copy']);
 });

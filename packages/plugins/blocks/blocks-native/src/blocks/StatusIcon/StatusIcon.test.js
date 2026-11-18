@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { processColor } from 'react-native';
 
 import { findAllOfType, page, renderPage, screen, styleOf, theme } from '../../test/renderPage.js';

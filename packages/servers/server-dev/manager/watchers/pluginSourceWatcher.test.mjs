@@ -44,11 +44,14 @@ function writeLowdefyYaml(pluginNames) {
   );
 }
 
-// Otherwise the fixture writes can reach the watcher as edits and rebuild
-// before the edit under test.
+// The flush before the start keeps the fixture writes from reaching the
+// watcher as edits and rebuilding before the edit under test. The flush after
+// it waits out the FSEvents stream restart the watcher's new directories cause
+// on macOS, which loses an edit made during it (see flushFsEvents).
 async function startWatcher() {
   await flushFsEvents();
   watcher = await pluginSourceWatcher(context);
+  await flushFsEvents();
 }
 
 function addLinkedPackage(name) {

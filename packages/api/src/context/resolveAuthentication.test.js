@@ -30,7 +30,7 @@ function mockAuth({ session, member, memberRows = [], count, passkey, invitation
     ? [{ organizationId: session?.session?.activeOrganizationId, ...member }]
     : [];
   const findMany = vi.fn(async ({ model }) =>
-    model === 'member' ? [...activeRows, ...memberRows] : invitations ?? []
+    model === 'member' ? [...activeRows, ...memberRows] : (invitations ?? [])
   );
   const auth = {
     api: { getSession: vi.fn().mockResolvedValue(session ?? null) },

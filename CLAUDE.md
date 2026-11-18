@@ -147,8 +147,8 @@ Use `createCheckDuplicateId` utility: `createCheckDuplicateId({ message: 'Duplic
 ## Code Style
 
 - **ES Modules** with `.js` extension in all imports
-- **Prettier**: 100 char width, single quotes, 2-space tabs, ES5 trailing commas
-- **ESLint**: `no-nested-ternary: warn`, `no-console: warn`
+- **Prettier**: 100 char width, single quotes, 2-space tabs, ES5 trailing commas. It runs on its own, not through ESLint: `pnpm format` writes, `pnpm format:check` checks. The repo is Prettier clean; keep it so.
+- **ESLint**: run `pnpm exec eslint <files you changed>` (add `--fix` for the fixable rules) and fix what it reports; `pnpm lint` checks the whole repo. Every rule is an error, there are no warnings, and the messages say what to write instead. The repo is not lint clean yet and CI does not run it. To silence a rule for one line, give the reason: `// eslint-disable-next-line <rule> -- <why>`. Rules, globals per runtime and the local rules: `code-docs/linting.md`.
 - **Import order**: External packages → `@lowdefy/*` packages → Local imports (with `.js`)
 
 ### Required License Header
@@ -362,7 +362,7 @@ See `code-docs/architecture/error-tracing.md` for the complete error system.
 - Test files: `{name}.test.js` co-located with source, run by vitest. Import `test`, `expect`, `vi` and the hooks from `'vitest'`: there are no globals
 - **Do not create tests for blocks** (currently disabled)
 - **NEVER run `pnpm vitest` or `npx vitest` directly** — always use `pnpm test`
-- **CI does not test pull requests by default** — run the tests your change needs before you push (`code-docs/testing.md`, "Before pushing") and list them in the PR body. The `ci` label runs the fast affected-only job on a PR, `ci-full` the complete matrix with the MongoDB, journey fixture and block e2e suites; pushes to `main` always run the complete path.
+- **CI does not test pull requests by default** — run the tests your change needs before you push (`code-docs/testing.md`, "Before pushing") and list them in the PR body. A builder whose branch another agent merges does not push: it runs only the test files for what it changed (`pnpm --filter=<package> test <file>`), once its change is complete, not after each edit, and the merging agent runs `pnpm build` and the package suites once, after the last merge. The `ci` label runs the fast affected-only job on a PR, `ci-full` the complete matrix with the MongoDB, journey fixture and block e2e suites; pushes to `main` always run the complete path.
 
 ### Running Tests
 

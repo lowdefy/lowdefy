@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import findTrigger from './findTrigger.js';
 
 const text = (value) => [{ kind: 'text', text: value }];

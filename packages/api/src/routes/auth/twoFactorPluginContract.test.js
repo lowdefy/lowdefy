@@ -65,7 +65,7 @@ test('twoFactor plugin sign-in matcher only covers email, username and phone-num
 });
 
 test('twoFactor plugin version matches the pinned better-auth dependency', () => {
-  // Pinned in packages/api/package.json as "better-auth": "1.7.7". This is
+  // Pinned in packages/api/package.json as "better-auth": "1.7.20". This is
   // the assertion that catches drift nothing else here can see: the
   // `2fa-`/`2fa-attempts-` identifier prefixes are inline template
   // literals with no exported constant, and TWO_FACTOR_COOKIE_NAME /
@@ -77,7 +77,7 @@ test('twoFactor plugin version matches the pinned better-auth dependency', () =>
   // available for internals this deeply private. On failure, re-read
   // requestHooks/beginTwoFactorChallenge.js against the new plugin
   // source before touching the string.
-  expect(twoFactor().version).toBe('1.7.7');
+  expect(twoFactor().version).toBe('1.7.20');
 });
 
 test('allowPasswordless relaxes the enable-two-factor body, required without it', () => {

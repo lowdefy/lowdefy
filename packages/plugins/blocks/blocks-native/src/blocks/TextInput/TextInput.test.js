@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import { TextInput } from 'react-native';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 
@@ -190,6 +191,7 @@ test('a search TextInput is a search field with a clear button and Cancel while 
 });
 
 test('the row variant is a Settings row: the title at the left, the text right-aligned', async () => {
+  const focus = vi.spyOn(TextInput.prototype, 'focus');
   const { calls } = await renderPage({
     pageConfig: formPage([
       {
@@ -213,7 +215,7 @@ test('the row variant is a Settings row: the title at the left, the text right-a
   await act(async () => {
     fireEvent.press(screen.getByTestId('name_row'));
   });
-  expect(TextInput.prototype.focus).toHaveBeenCalledTimes(1);
+  expect(focus).toHaveBeenCalledTimes(1);
   await act(async () => {
     fireEvent(screen.getByTestId('name_input'), 'focus');
     fireEvent.changeText(screen.getByTestId('name_input'), 'Ada');

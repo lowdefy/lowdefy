@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { readUIMessageStream } from 'ai';
 
 import createAgentTransport from './createAgentTransport.js';
@@ -35,8 +35,8 @@ function sse(chunks) {
 }
 
 function setup({ answer = [], sharedState = null, sharedStateReadOnly = false, ...rest } = {}) {
-  const streamFetch = jest.fn(async () => sse(answer));
-  const onRequest = jest.fn();
+  const streamFetch = vi.fn(async () => sse(answer));
+  const onRequest = vi.fn();
   const transport = createAgentTransport({
     agentId: 'support/assistant',
     conversationId: 'acme_1 2',

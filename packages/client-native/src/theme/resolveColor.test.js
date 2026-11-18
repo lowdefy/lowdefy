@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import resolveColor from './resolveColor.js';
 
 const light = {

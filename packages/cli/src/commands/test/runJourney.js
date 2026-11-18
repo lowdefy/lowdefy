@@ -14,21 +14,17 @@
   limitations under the License.
 */
 
-import axios from 'axios';
 import { type } from '@lowdefy/helpers';
 import { findPlaceholderStep } from '@lowdefy/node-utils';
 
+import httpFetch from '../../utils/httpFetch.js';
+import readResponseBody from '../../utils/readResponseBody.js';
 import recordingJourneyName from './recordingJourneyName.js';
 import validateJourney from './validateJourney.js';
 
-function describeHttpError(error) {
-  if (type.isNone(error.response)) {
-    return `Could not reach the dev server: ${error.message}`;
-  }
-  const body = type.isString(error.response.data)
-    ? error.response.data
-    : JSON.stringify(error.response.data);
-  return `POST /lowdefy-docs/journey responded ${error.response.status}: ${body}`;
+function describeErrorResponse({ status, data }) {
+  const body = type.isString(data) ? data : JSON.stringify(data);
+  return `POST /lowdefy-docs/journey responded ${status}: ${body}`;
 }
 
 // Runs one discovered journey against the dev server's REST journey route and
@@ -75,46 +71,68 @@ async function runJourney({ context, item, url, recordRun, mutant }) {
     return { name, filePath, passed: false, stepCount, durationMs: 0, message: placeholderError };
   }
   const start = Date.now();
-  let response;
-  try {
-    const body = {
-      pageId: journey.pageId,
-      pathParams: journey.pathParams,
-      data: journey.data,
-      steps: journey.steps,
-      user: journey.user,
-      urlQuery: journey.urlQuery,
-      timeout: journey.timeout,
-      mutant,
+  const body = {
+    pageId: journey.pageId,
+    pathParams: journey.pathParams,
+    data: journey.data,
+    steps: journey.steps,
+    user: journey.user,
+    urlQuery: journey.urlQuery,
+    timeout: journey.timeout,
+    mutant,
+  };
+  if (!type.isNone(recordRun)) {
+    body.recording = {
+      run: recordRun,
+      journey: recordingJourneyName({
+        configDirectory: context.directories.config,
+        filePath,
+        journey,
+      }),
     };
-    if (!type.isNone(recordRun)) {
-      body.recording = {
-        run: recordRun,
-        journey: recordingJourneyName({
-          configDirectory: context.directories.config,
-          filePath,
-          journey,
-        }),
-      };
-    }
-    response = await axios.post(`${url}/lowdefy-docs/journey`, body);
+  }
+  let response;
+  let result;
+  try {
+    // No timeout: the dev server bounds every step of the journey, and a journey's length grows
+    // with its steps, so any fixed limit here would cut off a long journey that is still passing.
+    response = await httpFetch({
+      url: `${url}/lowdefy-docs/journey`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      timeoutMs: 0,
+    });
+    result = await readResponseBody(response);
   } catch (error) {
+    return {
+      name,
+      filePath,
+      passed: false,
+      refused: false,
+      stale: false,
+      stepCount,
+      durationMs: Date.now() - start,
+      message: `Could not reach the dev server: ${error.message}`,
+    };
+  }
+  const durationMs = Date.now() - start;
+  if (!response.ok) {
     return {
       name,
       filePath,
       passed: false,
       // The route refuses a journey it cannot run (a 400) before any browser
       // opens; every repeat would be refused the same way.
-      refused: error.response?.status === 400,
+      refused: response.status === 400,
       // The mutant was listed against another build.
-      stale: error.response?.data?.stale === true,
+      stale: result?.stale === true,
       stepCount,
-      durationMs: Date.now() - start,
-      message: describeHttpError(error),
+      durationMs,
+      message: describeErrorResponse({ status: response.status, data: result }),
     };
   }
-  const durationMs = Date.now() - start;
-  const result = response.data ?? {};
+  result = result ?? {};
   if (!type.isNone(result.error)) {
     return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
   }

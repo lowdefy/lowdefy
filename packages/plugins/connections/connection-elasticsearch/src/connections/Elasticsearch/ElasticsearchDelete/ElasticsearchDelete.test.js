@@ -23,6 +23,9 @@ const mockElasticsearchClient = vi.fn(function () {
 mockElasticsearchClient.delete = vi.fn(function () {
   return mockElasticsearchClient;
 });
+mockElasticsearchClient.close = vi.fn(function () {
+  return Promise.resolve();
+});
 vi.doMock('@elastic/elasticsearch', () => ({
   Client: vi.fn().mockImplementation(function () {
     return mockElasticsearchClient;
@@ -76,16 +79,13 @@ test('ElasticsearchDelete', async () => {
   const { Client } = await import('@elastic/elasticsearch');
   const ElasticsearchDelete = (await import('./ElasticsearchDelete.js')).default;
   const responseData = {
-    body: {
-      _index: 'test',
-      _type: '_doc',
-      _id: '42',
-      _version: 1,
-      result: 'deleted',
-      _shards: { total: 2, successful: 1, failed: 0 },
-      _seq_no: 1,
-      _primary_term: 1,
-    },
+    _index: 'test',
+    _id: '42',
+    _version: 1,
+    result: 'deleted',
+    _shards: { total: 2, successful: 1, failed: 0 },
+    _seq_no: 1,
+    _primary_term: 1,
   };
   mockElasticsearchClient.delete.mockImplementationOnce(function () {
     return Promise.resolve(responseData);
@@ -114,7 +114,6 @@ test('ElasticsearchDelete', async () => {
     id: '42',
     response: {
       _index: 'test',
-      _type: '_doc',
       _id: '42',
       _version: 1,
       result: 'deleted',
@@ -123,4 +122,17 @@ test('ElasticsearchDelete', async () => {
       _primary_term: 1,
     },
   });
+  expect(mockElasticsearchClient.close).toHaveBeenCalledTimes(1);
+});
+
+test('ElasticsearchDelete closes the client when the request fails', async () => {
+  const ElasticsearchDelete = (await import('./ElasticsearchDelete.js')).default;
+  mockElasticsearchClient.close.mockClear();
+  mockElasticsearchClient.delete.mockImplementationOnce(function () {
+    return Promise.reject(new Error('document_missing_exception'));
+  });
+  await expect(ElasticsearchDelete({ request: { id: 42 }, connection })).rejects.toThrow(
+    'document_missing_exception'
+  );
+  expect(mockElasticsearchClient.close).toHaveBeenCalledTimes(1);
 });

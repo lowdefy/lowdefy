@@ -15,7 +15,11 @@
 */
 
 import fs from 'fs';
-import yaml from 'js-yaml';
+import YAML from 'yaml';
+
+// Mock files were written for js-yaml 4, which merged `<<` keys and loaded unquoted dates as Date
+// objects. The yaml package's default YAML 1.2 core schema does neither, so both are turned on.
+const MOCKS_OPTIONS = { merge: true, customTags: ['timestamp'] };
 
 function loadStaticMocks(mocksFile) {
   if (!mocksFile || !fs.existsSync(mocksFile)) {
@@ -23,7 +27,19 @@ function loadStaticMocks(mocksFile) {
   }
 
   const content = fs.readFileSync(mocksFile, 'utf8');
-  const parsed = yaml.load(content);
+  // parseAllDocuments, to name the mocks file when it has more than one document. An empty mocks
+  // file, or one with only comments, has none and declares no mocks.
+  const documents = YAML.parseAllDocuments(content, MOCKS_OPTIONS);
+  if (documents.length > 1) {
+    throw new Error(
+      `Mocks file "${mocksFile}" has ${documents.length} YAML documents. Put all mocks in one document.`
+    );
+  }
+  const [document] = documents;
+  if (document?.errors.length > 0) {
+    throw document.errors[0];
+  }
+  const parsed = document?.toJS();
 
   return {
     requests: parsed?.requests ?? [],

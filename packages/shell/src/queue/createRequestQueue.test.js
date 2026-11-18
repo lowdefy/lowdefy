@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createNetworkError from '../test/createNetworkError.js';
 import createRequestQueue from './createRequestQueue.js';
@@ -62,10 +62,10 @@ function response(status, body = {}) {
   return { ok: status >= 200 && status < 300, status, json: async () => body };
 }
 
-function setup({ online = true, fetch = jest.fn(async () => response(200)) } = {}) {
+function setup({ online = true, fetch = vi.fn(async () => response(200)) } = {}) {
   let next = 0;
   const networkStatus = createNetwork(online);
-  const triggerAppEvent = jest.fn();
+  const triggerAppEvent = vi.fn();
   const queue = createRequestQueue({
     appId: 'acme',
     fetch,
@@ -88,7 +88,7 @@ const call = (requestId) => ({
 
 test('an offline request is kept and answers { queued: true, id }', async () => {
   const { queue, triggerAppEvent } = setup({ online: false });
-  const send = jest.fn();
+  const send = vi.fn();
   await expect(queue.send({ ...call('save'), send })).resolves.toEqual({
     response: { queued: true, id: 'q1', message: 'Queued until the phone is back online.' },
   });
@@ -133,8 +133,8 @@ test('a fault in the send path is thrown, not queued as waiting for the network'
 
 test('the queue replays in order when the phone comes back online, with the stored body and build', async () => {
   const { fetch, networkStatus, queue, triggerAppEvent } = setup({ online: false });
-  await queue.send({ ...call('first'), send: jest.fn() });
-  await queue.send({ ...call('second'), send: jest.fn() });
+  await queue.send({ ...call('first'), send: vi.fn() });
+  await queue.send({ ...call('second'), send: vi.fn() });
   queue.start();
   networkStatus.set(true);
   await queue.replay();
@@ -156,13 +156,13 @@ test('the queue replays in order when the phone comes back online, with the stor
 });
 
 test('a refused request is marked failed with the server message, and the replay moves on', async () => {
-  const fetch = jest
+  const fetch = vi
     .fn()
     .mockResolvedValueOnce(response(409, { message: 'The job was closed.' }))
     .mockResolvedValueOnce(response(200));
   const { networkStatus, queue } = setup({ online: false, fetch });
-  await queue.send({ ...call('close'), send: jest.fn() });
-  await queue.send({ ...call('note'), send: jest.fn() });
+  await queue.send({ ...call('close'), send: vi.fn() });
+  await queue.send({ ...call('note'), send: vi.fn() });
   networkStatus.set(true);
   await queue.replay();
   const summary = await queue.get();
@@ -174,13 +174,13 @@ test('a refused request is marked failed with the server message, and the replay
 });
 
 test('a refused request keeps the message of the server error it carries', async () => {
-  const fetch = jest.fn().mockResolvedValueOnce(
+  const fetch = vi.fn().mockResolvedValueOnce(
     response(400, {
       '~e': { name: 'RequestError', message: 'The job is closed.', isLowdefyError: true },
     })
   );
   const { networkStatus, queue } = setup({ online: false, fetch });
-  await queue.send({ ...call('close'), send: jest.fn() });
+  await queue.send({ ...call('close'), send: vi.fn() });
   networkStatus.set(true);
   await queue.replay();
   expect((await queue.get()).items[0]).toEqual(
@@ -189,20 +189,20 @@ test('a refused request keeps the message of the server error it carries', async
 });
 
 test('a network failure during the replay stops it and keeps the request pending', async () => {
-  const fetch = jest.fn(async () => {
+  const fetch = vi.fn(async () => {
     throw createNetworkError();
   });
   const { networkStatus, queue } = setup({ online: false, fetch });
-  await queue.send({ ...call('save'), send: jest.fn() });
+  await queue.send({ ...call('save'), send: vi.fn() });
   networkStatus.set(true);
   await queue.replay();
   expect((await queue.get()).pending).toBe(1);
 });
 
 test('retry sends failed requests again, and discard removes them', async () => {
-  const fetch = jest.fn().mockResolvedValue(response(400, { message: 'Bad' }));
+  const fetch = vi.fn().mockResolvedValue(response(400, { message: 'Bad' }));
   const { networkStatus, queue } = setup({ online: false, fetch });
-  await queue.send({ ...call('save'), send: jest.fn() });
+  await queue.send({ ...call('save'), send: vi.fn() });
   networkStatus.set(true);
   await queue.replay();
   expect((await queue.get()).failed).toBe(1);

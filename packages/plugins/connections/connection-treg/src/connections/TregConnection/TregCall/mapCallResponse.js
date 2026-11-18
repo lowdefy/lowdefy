@@ -31,8 +31,8 @@ function mapCallResponse({ response, routed }) {
   const treg = type.isObject(body) && type.isObject(body._treg) ? body._treg : {};
   const routedBody = routed && type.isObject(body);
   return {
-    output: routedBody ? body.output ?? null : omitTreg(body),
-    raw: routedBody ? body.raw ?? null : body,
+    output: routedBody ? (body.output ?? null) : omitTreg(body),
+    raw: routedBody ? (body.raw ?? null) : body,
     cost: parseCost(headers.get('x-treg-cost-micro')),
     callId: headers.get('x-treg-call-id') ?? null,
     servedBy: headers.get('x-treg-served-by') ?? treg.served_by ?? null,

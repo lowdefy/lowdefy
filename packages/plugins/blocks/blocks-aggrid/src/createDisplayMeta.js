@@ -326,10 +326,6 @@ function createDisplayMeta(blockName, { size = false } = {}) {
                     description:
                       'Link: row-data path for the visible label (falls back to cell value).',
                   },
-                  format: {
-                    type: 'string',
-                    description: 'Date: dayjs format string. Default `YYYY-MM-DD HH:mm`.',
-                  },
                   relative: {
                     type: 'boolean',
                     description: 'Date: render as relative time (e.g. "3 hours ago").',

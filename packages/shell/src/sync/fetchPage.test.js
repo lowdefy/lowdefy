@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { LowdefyInternalError, RequestError, UserError } from '@lowdefy/errors';
 
 import fetchPage from './fetchPage.js';
@@ -31,7 +31,7 @@ function answer({ status = 200, body, headers = {} }) {
 }
 
 function fetchWith(res) {
-  return jest.fn(async () => res);
+  return vi.fn(async () => res);
 }
 
 test('a page answer is returned with its build and etag', async () => {

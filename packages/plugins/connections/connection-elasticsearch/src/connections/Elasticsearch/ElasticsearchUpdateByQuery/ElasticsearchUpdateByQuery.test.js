@@ -23,6 +23,9 @@ const mockElasticsearchClient = vi.fn(function () {
 mockElasticsearchClient.updateByQuery = vi.fn(function () {
   return mockElasticsearchClient;
 });
+mockElasticsearchClient.close = vi.fn(function () {
+  return Promise.resolve();
+});
 vi.doMock('@elastic/elasticsearch', () => ({
   Client: vi.fn().mockImplementation(function () {
     return mockElasticsearchClient;
@@ -45,11 +48,42 @@ test('valid request schema', async () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
+test('valid request schema, query and script', async () => {
+  const ElasticsearchUpdateByQuery = (await import('./ElasticsearchUpdateByQuery.js')).default;
+  const schema = ElasticsearchUpdateByQuery.schema;
+  const request = {
+    query: {
+      term: {
+        color: 'red',
+      },
+    },
+    script: {
+      source: 'ctx._source.out_of_stock = true',
+    },
+  };
+  expect(validate({ schema, data: request })).toEqual({ valid: true });
+});
+
 test('valid request schema, no query', async () => {
   const ElasticsearchUpdateByQuery = (await import('./ElasticsearchUpdateByQuery.js')).default;
   const schema = ElasticsearchUpdateByQuery.schema;
   const request = {};
   expect(validate({ schema, data: request })).toEqual({ valid: true });
+});
+
+test('request with body is rejected', async () => {
+  const ElasticsearchUpdateByQuery = (await import('./ElasticsearchUpdateByQuery.js')).default;
+  const schema = ElasticsearchUpdateByQuery.schema;
+  const request = {
+    body: {
+      query: {
+        match_all: {},
+      },
+    },
+  };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'was removed in Lowdefy 8 (Elasticsearch client 9).'
+  );
 });
 
 test('checkRead should be false', async () => {
@@ -68,21 +102,19 @@ test('ElasticsearchUpdateByQuery', async () => {
   const { Client } = await import('@elastic/elasticsearch');
   const ElasticsearchUpdateByQuery = (await import('./ElasticsearchUpdateByQuery.js')).default;
   const responseData = {
-    body: {
-      took: 147,
-      timed_out: false,
-      total: 119,
-      updated: 112,
-      deleted: 7,
-      batches: 1,
-      version_conflicts: 0,
-      noops: 0,
-      retries: { bulk: 0, search: 0 },
-      throttled_millis: 0,
-      requests_per_second: -1.0,
-      throttled_until_millis: 0,
-      failures: [],
-    },
+    took: 147,
+    timed_out: false,
+    total: 119,
+    updated: 112,
+    deleted: 7,
+    batches: 1,
+    version_conflicts: 0,
+    noops: 0,
+    retries: { bulk: 0, search: 0 },
+    throttled_millis: 0,
+    requests_per_second: -1.0,
+    throttled_until_millis: 0,
+    failures: [],
   };
   mockElasticsearchClient.updateByQuery.mockImplementationOnce(function () {
     return Promise.resolve(responseData);
@@ -93,6 +125,10 @@ test('ElasticsearchUpdateByQuery', async () => {
         foo: 'bar',
       },
     },
+    script: {
+      source: 'ctx._source.count++',
+    },
+    conflicts: 'proceed',
   };
   const res = await ElasticsearchUpdateByQuery({ request, connection });
   expect(Client.mock.calls).toEqual([
@@ -112,6 +148,10 @@ test('ElasticsearchUpdateByQuery', async () => {
             foo: 'bar',
           },
         },
+        script: {
+          source: 'ctx._source.count++',
+        },
+        conflicts: 'proceed',
       },
     ],
   ]);
@@ -132,4 +172,5 @@ test('ElasticsearchUpdateByQuery', async () => {
       failures: [],
     },
   });
+  expect(mockElasticsearchClient.close).toHaveBeenCalledTimes(1);
 });

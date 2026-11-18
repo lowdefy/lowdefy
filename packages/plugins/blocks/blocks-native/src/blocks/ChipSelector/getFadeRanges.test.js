@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getFadeRanges from './getFadeRanges.js';
 
 test('getFadeRanges fades the leading edge in and the trailing edge out over the fade width', () => {

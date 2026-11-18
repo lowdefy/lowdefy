@@ -2,7 +2,7 @@
 
 exports[`custom props 1`] = `
 <div
-  style="height: 100vh; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; margin: 0px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0px 24px;"
+  style="height: 100vh; font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif; margin: 0px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0px 24px;"
 >
   <div
     style="font-size: 4.3em; font-weight: 100; margin-bottom: 16px;"
@@ -39,7 +39,7 @@ exports[`custom props 1`] = `
 
 exports[`default 1`] = `
 <div
-  style="height: 100vh; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; margin: 0px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0px 24px;"
+  style="height: 100vh; font-family: system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif; margin: 0px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0px 24px;"
 >
   <div
     style="font-size: 4.3em; font-weight: 100; margin-bottom: 16px;"

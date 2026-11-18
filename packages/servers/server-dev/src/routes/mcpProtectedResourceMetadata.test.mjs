@@ -21,9 +21,8 @@ vi.doMock('../../lib/build/config.js', () => ({
   default: { basePath: '' },
 }));
 
-const { default: mcpProtectedResourceMetadataHandler } = await import(
-  './mcpProtectedResourceMetadata.js'
-);
+const { default: mcpProtectedResourceMetadataHandler } =
+  await import('./mcpProtectedResourceMetadata.js');
 
 const originalBetterAuthUrl = process.env.BETTER_AUTH_URL;
 

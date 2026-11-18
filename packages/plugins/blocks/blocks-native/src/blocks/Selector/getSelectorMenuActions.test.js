@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSelectorMenuActions from './getSelectorMenuActions.js';
 
 const options = [

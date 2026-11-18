@@ -88,7 +88,6 @@ const createLinkComponent = (lowdefy, Link) => {
   }) => {
     if (newTab) {
       return (
-        // eslint-disable-next-line react/jsx-no-target-blank
         <a
           id={id}
           aria-label={ariaLabel}

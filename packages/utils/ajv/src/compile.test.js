@@ -75,12 +75,57 @@ test('compile honours errorMessage keyword from ajv-errors', () => {
   expect(result.errors[0].message).toBe('Custom error message.');
 });
 
-test('format date-time accepts ISO 8601 strings', () => {
+test('format date-time accepts RFC 3339 strings with a timezone', () => {
   const validator = compile({
     schema: { type: 'string', format: 'date-time' },
   });
   expect(validator('2026-05-13T10:00:00Z').valid).toBe(true);
+  expect(validator('2026-05-13T10:00:00.123+02:00').valid).toBe(true);
   expect(validator('not a date').valid).toBe(false);
+});
+
+test('format date-time rejects a date-time without a timezone', () => {
+  const validator = compile({
+    schema: { type: 'string', format: 'date-time' },
+  });
+  expect(validator('2026-05-13T10:00:00').valid).toBe(false);
+});
+
+test('format iso-date-time accepts a date-time with or without a timezone', () => {
+  const validator = compile({
+    schema: { type: 'string', format: 'iso-date-time' },
+  });
+  expect(validator('2026-05-13T10:00:00').valid).toBe(true);
+  expect(validator('2026-05-13 10:00:00').valid).toBe(true);
+  expect(validator('2026-05-13T10:00:00Z').valid).toBe(true);
+  expect(validator('not a date').valid).toBe(false);
+});
+
+test('format time requires a timezone', () => {
+  const validator = compile({
+    schema: { type: 'string', format: 'time' },
+  });
+  expect(validator('10:00:00Z').valid).toBe(true);
+  expect(validator('10:00:00+02:00').valid).toBe(true);
+  expect(validator('10:00:00').valid).toBe(false);
+});
+
+test('format iso-time accepts a time with or without a timezone', () => {
+  const validator = compile({
+    schema: { type: 'string', format: 'iso-time' },
+  });
+  expect(validator('10:00:00').valid).toBe(true);
+  expect(validator('10:00:00Z').valid).toBe(true);
+  expect(validator('25:00:00').valid).toBe(false);
+});
+
+test('formatMinimum on date-time compares the instants the timezones give', () => {
+  const validator = compile({
+    schema: { type: 'string', format: 'date-time', formatMinimum: '2026-05-13T10:00:00Z' },
+  });
+  // 11:30 at +02:00 is 09:30 UTC, before the minimum.
+  expect(validator('2026-05-13T11:30:00+02:00').valid).toBe(false);
+  expect(validator('2026-05-13T10:30:00Z').valid).toBe(true);
 });
 
 test('format email validates email addresses', () => {

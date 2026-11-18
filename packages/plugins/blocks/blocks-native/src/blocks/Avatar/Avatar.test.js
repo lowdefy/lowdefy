@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { act, fireEvent } from '@testing-library/react-native';
 
 import { findAllOfType, page, press, renderPage, screen, styleOf } from '../../test/renderPage.js';

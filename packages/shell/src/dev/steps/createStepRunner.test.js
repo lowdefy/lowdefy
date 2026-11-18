@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { Pressable, Text, View } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { createNativeGlobals, LowdefyPage } from '@lowdefy/client-native';
@@ -131,21 +131,21 @@ const rootConfig = {
 };
 
 async function renderForm() {
-  const fetch = jest.fn();
+  const fetch = vi.fn();
   const host = {
     fetch,
     globals: createNativeGlobals({
-      assign: jest.fn(),
+      assign: vi.fn(),
       fetch,
       getPath: () => '/form',
       origin: 'https://app.lowdefy.test',
     }),
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
-    router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
+    onBuildChanged: vi.fn(),
+    onCallerChanged: vi.fn(),
+    router: { back: vi.fn(), push: vi.fn(), replace: vi.fn() },
     sessionStorage: createMemoryStore(),
     storage: createMemoryStore(),
-    WebSocket: jest.fn(),
+    WebSocket: vi.fn(),
     websocketUrl: (apiPath) => apiPath,
   };
   const lowdefy = {};
@@ -165,7 +165,7 @@ async function renderForm() {
     />
   );
   await screen.findByText('Save');
-  const capture = jest.fn(async () => 'iVBORw0KGgo=');
+  const capture = vi.fn(async () => 'iVBORw0KGgo=');
   const runner = createStepRunner({ capture, getLowdefy: () => lowdefy, timeout: 300 });
   const state = () => lowdefy.contexts['page:form'].state;
   async function run(step) {

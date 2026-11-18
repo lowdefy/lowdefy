@@ -14,30 +14,28 @@
   limitations under the License.
 */
 
+import { afterEach, expect, onTestFinished, test, vi } from 'vitest';
 import { createHash } from 'node:crypto';
-import { jest } from '@jest/globals';
 import { Platform } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
+import * as Crypto from 'expo-crypto';
 
 import getSheetReturnUrl from './getSheetReturnUrl.js';
 import isSheetReturnLink from './isSheetReturnLink.js';
 import parseQuery from './parseQuery.js';
 import signInWithSheet from './signInWithSheet.js';
 
-jest.mock('expo-crypto', () => {
-  const nodeCrypto = jest.requireActual('node:crypto');
+vi.mock('expo-crypto', async () => {
+  const nodeCrypto = await import('node:crypto');
   return {
     CryptoDigestAlgorithm: { SHA256: 'SHA-256' },
-    digest: jest.fn(async (algorithm, data) =>
-      nodeCrypto.createHash('sha256').update(data).digest()
-    ),
-    getRandomBytes: jest.fn((count) => new Uint8Array(nodeCrypto.randomBytes(count))),
-    randomUUID: jest.fn(() => 'state-1'),
+    digest: vi.fn(async (algorithm, data) => nodeCrypto.createHash('sha256').update(data).digest()),
+    getRandomBytes: vi.fn((count) => new Uint8Array(nodeCrypto.randomBytes(count))),
+    randomUUID: vi.fn(() => 'state-1'),
   };
 });
 
-jest.mock('expo-web-browser', () => ({ openAuthSessionAsync: jest.fn() }));
-
-const WebBrowser = jest.requireMock('expo-web-browser');
+vi.mock('expo-web-browser', () => ({ openAuthSessionAsync: vi.fn() }));
 
 const apiBase = 'https://field.example.com';
 const shell = { id: 'field', scheme: 'com.example.field' };
@@ -47,15 +45,19 @@ function base64Url(buffer) {
 }
 
 function createAuthApi() {
-  return { exchangeToken: jest.fn(async () => ({ status: 'signedIn' })) };
+  return { exchangeToken: vi.fn(async () => ({ status: 'signedIn' })) };
 }
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  vi.restoreAllMocks();
 });
 
 function onAndroid() {
-  jest.replaceProperty(Platform, 'OS', 'android');
+  const os = Platform.OS;
+  Platform.OS = 'android';
+  onTestFinished(() => {
+    Platform.OS = os;
+  });
 }
 
 test('the sheet opens /auth/mobile ephemeral, with the shell, a state, an S256 challenge and the platform', async () => {
@@ -95,7 +97,6 @@ test('each sign-in makes a new verifier, which stays in the call that made it', 
   const [first, second] = authApi.exchangeToken.mock.calls.map(([params]) => params.codeVerifier);
   expect(first).not.toBe(second);
   // No call out of the sign-in but the exchange carries the verifier: not the sheet, not storage.
-  const Crypto = jest.requireMock('expo-crypto');
   const otherCalls = JSON.stringify([
     WebBrowser.openAuthSessionAsync.mock.calls,
     Crypto.randomUUID.mock.calls,

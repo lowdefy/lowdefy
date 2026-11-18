@@ -31,6 +31,7 @@ import checkDependenciesInstalled from './checkDependenciesInstalled.js';
 import createCheckoutGuard from './createCheckoutGuard.js';
 import createHubConnection from './createHubConnection.js';
 import createInstanceConnections from './createInstanceConnections.js';
+import createProgressSender from './createProgressSender.js';
 import describeVersionMismatch from './describeVersionMismatch.js';
 import fetchBuildSummary from './fetchBuildSummary.js';
 import findApps from './findApps.js';
@@ -328,7 +329,7 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
     const forwardedContent =
       name === 'lowdefy_build_status'
         ? dropNotedAgentFiles({ app, content: result.content ?? [] })
-        : result.content ?? [];
+        : (result.content ?? []);
     const content = [{ type: 'text', text: `${app.label} · ${instance.url}` }, ...forwardedContent];
     // The handlers come from the dev server, whose version follows the app,
     // so a tool or option this CLI lists can differ from the server's.
@@ -460,7 +461,12 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
     return { app: app.label, ...result };
   }
 
-  async function runTests({ directory, filter, tags, paths, repeat, tier, usageWindow }) {
+  // A suite can run for many minutes, so each finished journey is reported as
+  // progress: a client that sees none takes the call for dead and ends it.
+  async function runTests(
+    { directory, filter, tags, paths, repeat, tier, usageWindow },
+    { sendProgress }
+  ) {
     const app = await resolve({ directory });
     const instance = await ensureRunning(app);
     const result = await runAppTests({
@@ -472,6 +478,8 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
       repeat,
       tier,
       usageWindow,
+      onProgress: ({ done, total, name, class: journeyClass }) =>
+        sendProgress({ progress: done, total, message: `${journeyClass} ${name}` }),
     });
     return { app: app.label, url: instance.url, ...result };
   }
@@ -512,11 +520,12 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
     tools: [...lifecycleTools, ...[...forwarded.values()].map(({ tool }) => tool)],
   }));
 
-  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+  server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
     const { name } = request.params;
     const args = request.params.arguments ?? {};
     const startedAt = Date.now();
-    const result = await handleCall({ name, args });
+    const sendProgress = createProgressSender({ request, extra });
+    const result = await handleCall({ name, args, sendProgress });
     await logToolCall({
       name,
       directory: args.directory,
@@ -527,10 +536,10 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
     return result;
   });
 
-  async function handleCall({ name, args }) {
+  async function handleCall({ name, args, sendProgress }) {
     try {
       if (lifecycleHandlers[name]) {
-        return textResult(await lifecycleHandlers[name](args));
+        return textResult(await lifecycleHandlers[name](args, { sendProgress }));
       }
       if (forwarded.has(name)) {
         return await callDevTool({ name, args });

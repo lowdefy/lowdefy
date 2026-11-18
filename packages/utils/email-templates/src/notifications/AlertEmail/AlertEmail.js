@@ -15,9 +15,9 @@
 */
 
 import React from 'react';
-import { Heading } from '@react-email/components';
 import { type } from '@lowdefy/helpers';
 
+import Heading from '../../reactEmail/Heading.js';
 import CtaButton from '../../components/CtaButton.js';
 import EmailLayout from '../../components/EmailLayout.js';
 import MarkdownContent from '../../components/MarkdownContent.js';

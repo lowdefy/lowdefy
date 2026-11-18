@@ -92,3 +92,23 @@ allowBuilds:
   allowDependencyBuild({ cwd: '/repo', appPath: 'app', dependency: 'mongodb-memory-server' });
   expect(fs.writeFileSync).not.toHaveBeenCalled();
 });
+
+test('allowDependencyBuild treats an empty workspace root pnpm-workspace.yaml as an empty config', async () => {
+  const { default: fs } = await import('fs');
+  const { default: allowDependencyBuild } = await import('./allowDependencyBuild.js');
+  fs.existsSync.mockImplementation(
+    (filePath) => filePath === path.join('/repo', 'pnpm-workspace.yaml')
+  );
+  fs.readFileSync.mockReturnValue('# Workspace config\n');
+  allowDependencyBuild({ cwd: '/repo', appPath: 'app', dependency: 'mongodb-memory-server' });
+  expect(fs.writeFileSync.mock.calls).toEqual([
+    [
+      path.join('/repo', 'pnpm-workspace.yaml'),
+      `onlyBuiltDependencies:
+  - mongodb-memory-server
+allowBuilds:
+  mongodb-memory-server: true
+`,
+    ],
+  ]);
+});

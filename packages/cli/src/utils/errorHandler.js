@@ -14,26 +14,27 @@
   limitations under the License.
 */
 
-import axios from 'axios';
 import createCliLogger from '@lowdefy/logger/cli';
 
+import httpFetch from './httpFetch.js';
 import redactTelemetryError from './redactTelemetryError.js';
 
 async function logError({ error, context = {} }) {
   try {
-    await axios.request({
-      method: 'post',
+    await httpFetch({
       url: 'https://api.lowdefy.net/errors',
+      method: 'POST',
       headers: {
+        'Content-Type': 'application/json',
         'User-Agent': `Lowdefy CLI v${context.cliVersion}`,
       },
-      data: {
+      body: JSON.stringify({
         source: 'cli',
         cliVersion: context.cliVersion,
         command: context.command,
         lowdefyVersion: context.lowdefyVersion,
         ...redactTelemetryError(error),
-      },
+      }),
     });
   } catch (_) {
     // pass

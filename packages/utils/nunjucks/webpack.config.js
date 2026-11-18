@@ -1,5 +1,4 @@
 import path from 'path';
-import { CleanWebpackPlugin } from 'clean-webpack-plugin';
 
 export default {
   entry: './src/index.js',
@@ -7,11 +6,12 @@ export default {
     filename: 'index.js',
     path: path.resolve('./dist'),
     libraryTarget: 'module',
+    clean: true,
   },
   mode: 'production',
   target: 'web',
   node: false,
-  externals: ['@lowdefy/helpers', 'moment'],
+  externals: ['@lowdefy/helpers', 'dayjs', /^dayjs\/plugin\//],
   module: {
     rules: [
       {
@@ -39,6 +39,5 @@ export default {
       },
     ],
   },
-  plugins: [new CleanWebpackPlugin()],
   experiments: { outputModule: true },
 };

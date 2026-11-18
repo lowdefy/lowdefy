@@ -83,14 +83,10 @@ function startWatcher() {
   // reloadClients() creates the file after the build completes.
 }
 
-// The close waits until the event being handled is done, for the reason
-// devEventBus.js gives: chokidar 4 registers a new file's watch handle only
-// after its add event returns, so a close made inside it would leave that
-// handle open for the next watcher of build/reload to share.
 function stopWatcher() {
   const stopping = watcher;
   watcher = null;
-  return new Promise((resolve) => setImmediate(resolve)).then(() => stopping.close());
+  return stopping.close();
 }
 
 function subscribeToReload(notify) {

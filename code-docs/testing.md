@@ -46,6 +46,34 @@ Never pass `--` before vitest arguments, and never call `pnpm vitest` or `npx vi
 Packages import each other from `dist/`, so run `pnpm build` after changing more than one
 package.
 
+### React Native tests
+
+`@lowdefy/client-native`, `@lowdefy/blocks-native` and `@lowdefy/shell` test with
+[vitest-native](https://github.com/danfry1/vitest-native)'s native engine: React Native's own
+JavaScript, Flow stripped with `@react-native/babel-preset`, over a mocked native side, with
+`@testing-library/react-native`. The real `react-native-svg` runs (`presets: { svg: false }`), and
+each package's `src/test/resetColorScheme.js` puts the device in light mode before each test,
+since a page's ThemeProvider sets the app's colour scheme. Native-only Expo modules (`@expo/ui`,
+`expo-image`, the shell's device features) are aliased to stand-ins in `src/test/`.
+
+`patches/vitest-native@0.14.1.patch` makes the native side report what React Native's Jest preset
+reported: `isDisableAnimations: false`, so `Animated` runs real animations, not `AnimatedMock`
+(which ends each one as it starts), and a native-driven animation ends a frame after it starts,
+not inside `start()`. A vitest-native update carries the patch over.
+
+What runs is React Native, not the Jest preset's mocks:
+
+- `Text` adds `overflow: 'hidden'` to its style, and passes an array: flatten a style
+  (`StyleSheet.flatten`) before reading it.
+- Component methods are real: spy on what a test checks (`vi.spyOn(TextInput.prototype,
+  'focus')`, `vi.spyOn(Linking, 'openSettings')`). ScrollView's `scrollTo` is per instance, so a
+  test spies on the native command it sends (`ScrollViewCommands.scrollTo`).
+- `ActivityIndicator` draws its style on a View around the native indicator.
+- An iOS `Modal` stays mounted until the native side dismisses it, which never happens in a test.
+- `vi.mock` reaches imports, not a `require()` (a lazily required module, a test's own
+  `require`): import what a test mocks. A factory gives the module's exports, so a default
+  export is `{ default: ... }`.
+
 ## Dependency check
 
 `pnpm test` starts with `pnpm test:dependencies` (one to three seconds). It parses every source
@@ -61,9 +89,9 @@ install, so only the published package (or a later lockfile change) breaks.
   webpack-bundled `@lowdefy/nunjucks`, listed in `scripts/lib/findUndeclaredImports.mjs`.
 - Tests import `vitest`, which every package with tests declares as a devDependency.
 
-The check reads what is declared, not what resolves: ESLint's
-`import/no-extraneous-dependencies` skips any import it cannot resolve, which in a pnpm
-workspace is most undeclared imports.
+The check reads what is declared, not what resolves: in a pnpm workspace most undeclared
+imports still resolve, so a resolver-based check (such as the ESLint import plugin the repo
+no longer uses) misses them. Lint and format checks are in [Linting](./linting.md).
 
 ## MongoDB tests
 
@@ -322,7 +350,7 @@ The labels are a click in the pull request's sidebar. GitHub offers "Run workflo
 workflow on the default branch (`main`); `gh workflow run ci.yml --ref <branch> -f full=true`
 runs it on any branch once `ci.yml` is there.
 
-**Fast path** (`.github/workflows/test-fast.yml`): one job on ubuntu with Node 24.
+**Fast path** (`.github/workflows/test-fast.yml`): one job on ubuntu with Node 26.
 
 1. `scripts/ci-scope.mjs` diffs the pull request against its base branch (the first parent
    of its merge commit). A changed file outside `packages/` (the lockfile, the root
@@ -344,7 +372,7 @@ A new push to a pull request cancels its run in progress.
 
 **Complete path** (`.github/workflows/test-complete.yml`): the unit tests (`pnpm build`, the
 dependency check and every package's tests, not stopping at the first failing package) on
-ubuntu with Node 24 and 26 (Lowdefy servers are deployed on Linux, so CI runs no Windows
+ubuntu with Node 26 (Lowdefy servers are deployed on Linux, so CI runs no Windows
 jobs); `pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
 `@lowdefy/server-dev` and `lowdefy`, which must pass tests, not skip them for want of
 Chromium); and every block e2e suite (`test-block-e2e.yml`). No coverage is collected: jest's
@@ -378,8 +406,17 @@ commands in the pull request body:
 | `connection-mongodb`, tenancy, auth adapters   | `pnpm test:mongodb`                                                                                                             |
 | the journey runner, journey cookies or mutants | both `test:fixture` suites                                                                                                      |
 | blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                            |
+| any JavaScript file                            | `pnpm exec eslint <changed files>` and `pnpm format:check` ([Linting](./linting.md))                                            |
 
 The developer may add the `ci` or `ci-full` label to run them again in CI.
+
+These runs are for whoever pushes the branch. When several agents build one change in their
+own worktrees and another agent merges their branches, a builder that does not push runs only
+the test files for what it changed (`pnpm --filter=<package> test <file>`), once its change is
+complete, not after each edit. The agent that merges runs `pnpm build` and the rows of the table above
+that the merged change touches once, after the last merge, and sends each failure back to the builder whose change caused it.
+Builders share one machine, so a package suite that each builder runs after every edit queues
+behind the others' and multiplies the wait.
 
 ## Dev server and hub
 
@@ -387,10 +424,16 @@ The developer may add the `ci` or `ci-full` label to run them again in CI.
   `LOWDEFY_HOME` at a temporary directory in tests so they never touch the real hub.
 - A running dev server records itself in `<app>/.lowdefy/instance.json`; tests that start
   one should stop it and remove the file.
-- server-dev's watchers use chokidar 4, which watches with `fs.watch`. On macOS, Node restarts
-  its one FSEvents stream whenever a watcher is added or closed, and a write made during the
-  restart is never reported. Watcher tests call `flushFsEvents()` (`test-utils/`) after a
-  watcher is ready and before the first edit, or repeat the edit until it is seen.
+- server-dev's watchers use chokidar 6, which watches with `fs.watch` (recursive on macOS). On
+  macOS, Node restarts its one FSEvents stream whenever a watch handle is added or closed, and a
+  write made during the restart is never reported. chokidar 6 shares a directory's handle
+  between watchers, but a watcher of a new directory still adds one, and so does a single file
+  watched in a directory nothing watched yet: chokidar 6 watches a file through its directory,
+  where chokidar 4 gave each file a kqueue handle of its own that no restart touched. Watcher
+  tests call `flushFsEvents()` (`test-utils/`) after a watcher is ready and before the first
+  edit, or repeat the edit until it is seen; without it they miss writes, most often on a busy
+  machine. A file added to a running watcher has no ready to wait for, so a test waits until it
+  is listed as watched and repeats the edit.
 - Hub tests pass a port range of their own (`portRange` to `createHub`, `range` to
   `allocatePorts`), away from the real hub's 4100–4999, which hubs started by agents in other
   worktrees bind.

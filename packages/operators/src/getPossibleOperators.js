@@ -27,7 +27,6 @@ function canVanish({ key, value, operators }) {
     key === '__proto__' ||
     type.isUndefined(value) ||
     type.isFunction(value) ||
-    // eslint-disable-next-line no-use-before-define
     getPossibleOperators({ value, operators }).length > 0
   );
 }

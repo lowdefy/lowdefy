@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getThreadEndpoints from './getThreadEndpoints.js';
 
 test('getThreadEndpoints names every ai-assistant endpoint of the module entry', () => {

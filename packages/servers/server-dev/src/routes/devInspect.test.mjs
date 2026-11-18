@@ -20,9 +20,8 @@ import { Hono } from 'hono';
 import { vi, afterEach, expect, test } from 'vitest';
 import { serializer } from '@lowdefy/helpers';
 
-const { listTabs, registerTab, requestFromTab, unregisterTab, updateTabPage } = await import(
-  '../../lib/docs/tabChannel.js'
-);
+const { listTabs, registerTab, requestFromTab, unregisterTab, updateTabPage } =
+  await import('../../lib/docs/tabChannel.js');
 const { default: devInspectHandler } = await import('./devInspect.js');
 const { default: inspectStateFromTab } = await import('../../lib/docs/inspectStateFromTab.js');
 const { default: isTabAnswer } = await import('../lib/isTabAnswer.js');

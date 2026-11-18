@@ -19,15 +19,17 @@ import schema from './schema.js';
 
 async function ElasticsearchDeleteByQuery({ request, connection }) {
   const client = new Client(connection);
-
-  const { body: response } = await client.deleteByQuery({
-    ...request,
-    index: request.index || connection.index,
-  });
-
-  return {
-    response,
-  };
+  try {
+    const response = await client.deleteByQuery({
+      ...request,
+      index: request.index || connection.index,
+    });
+    return {
+      response,
+    };
+  } finally {
+    await client.close();
+  }
 }
 
 ElasticsearchDeleteByQuery.schema = schema;

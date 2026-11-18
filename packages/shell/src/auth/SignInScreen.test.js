@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { afterEach, expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
 import createNetworkError from '../test/createNetworkError.js';
@@ -25,9 +25,9 @@ const NEUTRAL = 'If this email can sign in, a code is on its way.';
 
 function createAuth(overrides = {}) {
   return {
-    sendCode: jest.fn(async () => ({ status: 'sent' })),
-    signInWithCode: jest.fn(async () => ({ status: 'signedIn' })),
-    signInWithSheet: jest.fn(async () => ({ status: 'cancelled' })),
+    sendCode: vi.fn(async () => ({ status: 'sent' })),
+    signInWithCode: vi.fn(async () => ({ status: 'signedIn' })),
+    signInWithSheet: vi.fn(async () => ({ status: 'cancelled' })),
     ...overrides,
   };
 }
@@ -49,7 +49,7 @@ function isDisabled(testID) {
 }
 
 afterEach(() => {
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 test('the screen shows the app name and an email field, with the sheet as the other way in', async () => {
@@ -93,7 +93,7 @@ test('the sixth digit of the code signs in', async () => {
 
 test('a wrong code says so and clears the field', async () => {
   const auth = await renderScreen({
-    auth: createAuth({ signInWithCode: jest.fn(async () => ({ status: 'invalid' })) }),
+    auth: createAuth({ signInWithCode: vi.fn(async () => ({ status: 'invalid' })) }),
   });
   await enterEmail();
   await fireEvent.changeText(screen.getByTestId('sign-in-code'), '000000');
@@ -105,17 +105,17 @@ test('a wrong code says so and clears the field', async () => {
 });
 
 test('Resend waits 30 seconds, then sends another code', async () => {
-  jest.useFakeTimers();
+  vi.useFakeTimers();
   const auth = await renderScreen();
   await enterEmail();
   expect(isDisabled('sign-in-resend')).toBe(true);
   expect(screen.getByText('Resend in 30s')).toBeTruthy();
   for (let second = 0; second < 29; second += 1) {
-    await act(async () => jest.advanceTimersByTime(1000));
+    await act(async () => vi.advanceTimersByTime(1000));
   }
   expect(isDisabled('sign-in-resend')).toBe(true);
   expect(screen.getByText('Resend in 1s')).toBeTruthy();
-  await act(async () => jest.advanceTimersByTime(1000));
+  await act(async () => vi.advanceTimersByTime(1000));
   expect(isDisabled('sign-in-resend')).toBe(false);
   await fireEvent.press(screen.getByTestId('sign-in-resend'));
   expect(auth.sendCode).toHaveBeenCalledTimes(2);
@@ -132,7 +132,7 @@ test('Change email goes back to the email field', async () => {
 
 test('a person with a second factor finishes in the sheet', async () => {
   const auth = await renderScreen({
-    auth: createAuth({ signInWithCode: jest.fn(async () => ({ status: 'twoFactor' })) }),
+    auth: createAuth({ signInWithCode: vi.fn(async () => ({ status: 'twoFactor' })) }),
   });
   await enterEmail();
   await fireEvent.changeText(screen.getByTestId('sign-in-code'), '123456');
@@ -141,7 +141,7 @@ test('a person with a second factor finishes in the sheet', async () => {
 
 test('Other ways to sign in opens the sheet, and says so when it did not finish', async () => {
   const auth = await renderScreen({
-    auth: createAuth({ signInWithSheet: jest.fn(async () => ({ status: 'failed' })) }),
+    auth: createAuth({ signInWithSheet: vi.fn(async () => ({ status: 'failed' })) }),
   });
   await fireEvent.press(screen.getByTestId('sign-in-other'));
   expect(auth.signInWithSheet).toHaveBeenCalledTimes(1);
@@ -160,14 +160,14 @@ test('an app without email codes opens the sheet at once, with a button to open 
 
 test('a server without the email code route sends the person to the sheet', async () => {
   const auth = await renderScreen({
-    auth: createAuth({ sendCode: jest.fn(async () => ({ status: 'unavailable' })) }),
+    auth: createAuth({ sendCode: vi.fn(async () => ({ status: 'unavailable' })) }),
   });
   await enterEmail();
   expect(auth.signInWithSheet).toHaveBeenCalledTimes(1);
 });
 
 test('too many codes asks for the newest code already sent', async () => {
-  const sendCode = jest.fn().mockResolvedValueOnce({ status: 'rateLimited' });
+  const sendCode = vi.fn().mockResolvedValueOnce({ status: 'rateLimited' });
   await renderScreen({ auth: createAuth({ sendCode }) });
   await enterEmail();
   expect(screen.getByTestId('sign-in-code')).toBeTruthy();
@@ -178,7 +178,7 @@ test('too many codes asks for the newest code already sent', async () => {
 });
 
 test('no connection says so', async () => {
-  const sendCode = jest.fn().mockRejectedValueOnce(createNetworkError());
+  const sendCode = vi.fn().mockRejectedValueOnce(createNetworkError());
   await renderScreen({ auth: createAuth({ sendCode }) });
   await enterEmail();
   expect(screen.getByTestId('sign-in-error')).toHaveTextContent(

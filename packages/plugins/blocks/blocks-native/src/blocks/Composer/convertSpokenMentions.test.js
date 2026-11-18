@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { describe, expect, test } from 'vitest';
+
 import convertSpokenMentions from './convertSpokenMentions.js';
 import { toDisplay, toValue } from './segmentText.js';
 

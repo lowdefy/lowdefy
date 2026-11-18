@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import SetFocus from './SetFocus.js';
 
@@ -29,13 +29,13 @@ function createGlobals(elements) {
 const methods = { getPageId: () => 'home' };
 
 test('SetFocus focuses the input the block registered on the page', () => {
-  const input = { focus: jest.fn() };
+  const input = { focus: vi.fn() };
   SetFocus({ globals: createGlobals({ 'input:home:name': input }), methods, params: 'name' });
   expect(input.focus).toHaveBeenCalledTimes(1);
 });
 
 test('SetFocus leaves a block with nothing to focus alone', () => {
-  const other = { focus: jest.fn() };
+  const other = { focus: vi.fn() };
   expect(() =>
     SetFocus({ globals: createGlobals({ 'input:other:name': other }), methods, params: 'name' })
   ).not.toThrow();

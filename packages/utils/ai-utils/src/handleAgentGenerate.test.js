@@ -54,7 +54,7 @@ class MockStdioMCPTransport {
   }
 }
 vi.doMock('@ai-sdk/mcp/mcp-stdio', () => ({
-  Experimental_StdioMCPTransport: MockStdioMCPTransport,
+  StdioMCPTransport: MockStdioMCPTransport,
 }));
 
 const GENERATE_RESULT = {

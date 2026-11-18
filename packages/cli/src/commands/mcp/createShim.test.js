@@ -400,13 +400,91 @@ test('lowdefy_run_tests offers tier and usageWindow and passes them through to t
   const runTests = tools.find((tool) => tool.name === 'lowdefy_run_tests');
   expect(runTests.inputSchema.properties.tier.enum).toEqual(['common', 'wide', 'edge', 'full']);
   expect(runTests.inputSchema.properties.usageWindow.pattern).toBe('^[1-9][0-9]*m$');
-  expect(runTests.description).toContain('run tier "common" first');
+  expect(runTests.description).toContain('no arguments runs the full suite');
+  expect(runTests.description).toContain('only when a person asks');
+  expect(runTests.description).not.toContain('widen');
   const result = await client.callTool({
     name: 'lowdefy_run_tests',
     arguments: { usageWindow: '6d' },
   });
   expect(result.isError).toBe(true);
   expect(text(result)).toContain('Received "6d".');
+});
+
+test('lowdefy_run_tests sends progress per journey and answers with a summary and the result file', async () => {
+  const app = makeApp('.');
+  fs.mkdirSync(path.join(app, 'tests', 'journeys'), { recursive: true });
+  ['orders', 'refunds'].forEach((pageId) => {
+    fs.writeFileSync(
+      path.join(app, 'tests', 'journeys', `${pageId}.yaml`),
+      JSON.stringify({ name: `${pageId} page`, pageId, steps: [{ wait: { ms: 1 } }] })
+    );
+  });
+  // Stands in for the dev server's journey route: orders passes, refunds fails.
+  const devServer = http.createServer((req, res) => {
+    let body = '';
+    req.on('data', (chunk) => {
+      body += chunk;
+    });
+    req.on('end', () => {
+      res.setHeader('Content-Type', 'application/json');
+      if (req.url === '/lowdefy-docs/build-status') {
+        res.end(JSON.stringify({ buildId: 'build-1' }));
+        return;
+      }
+      const { pageId } = JSON.parse(body);
+      res.end(
+        JSON.stringify(
+          pageId === 'orders'
+            ? { passed: true, exercised: { pages: [{ pageId: 'orders' }] } }
+            : { passed: false, failure: { index: 0, step: {}, message: 'refund is hidden' } }
+        )
+      );
+    });
+  });
+  await new Promise((resolve) => devServer.listen(0, '127.0.0.1', resolve));
+  fs.mkdirSync(path.join(app, '.lowdefy'));
+  fs.writeFileSync(
+    path.join(app, '.lowdefy', 'instance.json'),
+    JSON.stringify({
+      pid: process.pid,
+      configDirectory: app,
+      owner: 'terminal',
+      state: 'ready',
+      url: `http://127.0.0.1:${devServer.address().port}`,
+    })
+  );
+  await connect({ cwd: root });
+  const progress = [];
+  try {
+    const result = JSON.parse(
+      text(
+        await client.callTool({ name: 'lowdefy_run_tests', arguments: {} }, undefined, {
+          onprogress: (event) => progress.push(event),
+        })
+      )
+    );
+    expect(progress).toEqual([
+      { progress: 1, total: 2, message: 'PASS orders page' },
+      { progress: 2, total: 2, message: 'FAIL refunds page' },
+    ]);
+    expect(result.summary).toEqual('1 passed, 1 failed of 2 journeys');
+    expect(result.passed).toHaveLength(1);
+    expect(result.failed).toHaveLength(1);
+    expect(result.failed[0].report).toContain('refund is hidden');
+    expect(result.resultFile).toEqual(path.join(app, '.lowdefy', 'test', 'results.json'));
+    expect(JSON.stringify(result)).not.toContain('exercised');
+
+    // A call without a progress token gets its answer and no notifications.
+    progress.length = 0;
+    const quiet = JSON.parse(
+      text(await client.callTool({ name: 'lowdefy_run_tests', arguments: {} }))
+    );
+    expect(quiet.summary).toEqual('1 passed, 1 failed of 2 journeys');
+    expect(progress).toEqual([]);
+  } finally {
+    await new Promise((resolve) => devServer.close(resolve));
+  }
 });
 
 test('lowdefy_dev_stop refuses a dev server the user runs in a terminal', async () => {

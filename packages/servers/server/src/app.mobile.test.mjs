@@ -131,7 +131,7 @@ vi.doMock('./routes/mountOauthDiscovery.js', () => ({ default: () => {} }));
 vi.doMock('./routes/request.js', () => ({ default: handler }));
 vi.doMock('./routes/usage.js', () => ({ default: handler }));
 vi.doMock('./routes/user.js', () => ({ default: handler }));
-vi.doMock('./routes/websocket.js', () => ({ default: handler }));
+vi.doMock('./routes/websocket.js', () => ({ default: () => handler }));
 vi.doMock('./html/renderPage.js', () => ({
   default: (c) => c.html('<html></html>'),
 }));

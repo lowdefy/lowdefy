@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getPickerSheetScrollIndex from './getPickerSheetScrollIndex.js';
 
 const windowHeight = 844;

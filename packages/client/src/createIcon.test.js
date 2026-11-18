@@ -23,11 +23,13 @@ import { LucideProvider } from 'lucide-react/dist/esm/context.mjs';
 // Icon, it renders `component` inside <span role="img" class="anticon">.
 vi.doMock('@ant-design/icons', () => ({
   __esModule: true,
-  default: React.forwardRef(({ className, component: Component, children }, ref) => (
-    <span ref={ref} role="img" className={['anticon', className].filter(Boolean).join(' ')}>
-      <Component>{children}</Component>
-    </span>
-  )),
+  default: function Icon({ className, component: Component, children, ref }) {
+    return (
+      <span ref={ref} role="img" className={['anticon', className].filter(Boolean).join(' ')}>
+        <Component>{children}</Component>
+      </span>
+    );
+  },
 }));
 
 const { default: createIcon } = await import('./createIcon.js');
@@ -59,7 +61,7 @@ const Icons = {
       ['path', { d: 'M2 2h4' }],
     ],
   },
-  'react-icons:AiOutlineUser': {
+  'brands:FilledUser': {
     node: [['path', { d: 'M858.5 763.6' }]],
     size: 1024,
     attrs: { fill: 'currentColor', stroke: 'none' },
@@ -315,16 +317,12 @@ test('Icon generates titles from semantic, set and qualified names', () => {
     <>
       <IconComponent blockId="a" methods={methods} properties={{ name: 'more-vertical' }} />
       <IconComponent blockId="b" methods={methods} properties={{ name: 'Pencil' }} />
-      <IconComponent
-        blockId="c"
-        methods={methods}
-        properties={{ name: 'react-icons:AiOutlineUser' }}
-      />
+      <IconComponent blockId="c" methods={methods} properties={{ name: 'brands:FilledUser' }} />
     </>
   );
   expect(document.querySelector('#a title').textContent).toBe('More vertical');
   expect(document.querySelector('#b title').textContent).toBe('Pencil');
-  expect(document.querySelector('#c title').textContent).toBe('Ai outline user');
+  expect(document.querySelector('#c title').textContent).toBe('Filled user');
 });
 
 test('Icon spin renders the spinning loading icon', () => {
@@ -537,11 +535,7 @@ test('Icon never waits for names that are in the page icons', () => {
 test('Icon uses the data size as a square viewBox', () => {
   const IconComponent = createIcon({ icons: Icons });
   const { container } = render(
-    <IconComponent
-      blockId="square"
-      methods={methods}
-      properties={{ name: 'react-icons:AiOutlineUser' }}
-    />
+    <IconComponent blockId="square" methods={methods} properties={{ name: 'brands:FilledUser' }} />
   );
   expect(getSvg(container).getAttribute('viewBox')).toBe('0 0 1024 1024');
 });
@@ -560,7 +554,7 @@ test('Icon applies the data root attrs for fill-based icons', () => {
     <IconComponent
       blockId="filled"
       methods={methods}
-      properties={{ name: 'react-icons:AiOutlineUser', color: 'green' }}
+      properties={{ name: 'brands:FilledUser', color: 'green' }}
     />
   );
   const svg = getSvg(container);

@@ -17,9 +17,10 @@ async function logHTML(url, selector, label, mode = 'innerHTML') {
       console.log(`  >>> Element NOT FOUND: ${selector}`);
       return;
     }
-    const html = mode === 'outerHTML'
-      ? await el.evaluate((e) => e.outerHTML)
-      : await el.evaluate((e) => e.innerHTML);
+    const html =
+      mode === 'outerHTML'
+        ? await el.evaluate((e) => e.outerHTML)
+        : await el.evaluate((e) => e.innerHTML);
     console.log(html);
   } catch (err) {
     console.log(`  >>> ERROR: ${err.message}`);
@@ -33,7 +34,12 @@ await logHTML('http://localhost:3002/splitter_block', '#bl-sp_basic', 'Splitter 
 await logHTML('http://localhost:3002/watermark_block', '#bl-wm_text', 'Watermark');
 
 // 3. QR Code
-await logHTML('http://localhost:3002/qr_code', '#bl-qr_bordered .ant-qrcode', 'QR Code', 'outerHTML');
+await logHTML(
+  'http://localhost:3002/qr_code',
+  '#bl-qr_bordered .ant-qrcode',
+  'QR Code',
+  'outerHTML'
+);
 
 // 4. Float Button
 await logHTML('http://localhost:3002/float_button', '#bl-fb_click', 'Float Button');
@@ -68,7 +74,11 @@ try {
 }
 
 // 7. Config Provider
-await logHTML('http://localhost:3002/config_provider', '#bl-cp_disabled_btn', 'ConfigProvider disabled btn');
+await logHTML(
+  'http://localhost:3002/config_provider',
+  '#bl-cp_disabled_btn',
+  'ConfigProvider disabled btn'
+);
 
 await browser.close();
 console.log('\nDone.');

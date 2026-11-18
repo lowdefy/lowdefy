@@ -18,25 +18,79 @@ export default {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Lowdefy Request Schema - ElasticsearchSearch',
   type: 'object',
+  description: 'Returns the documents that match the query defined in the request.',
   properties: {
-    body: {
+    query: {
+      $ref: '#/definitions/Query',
+    },
+    aggs: {
+      description:
+        'The aggregations to run as part of the search. See https://www.elastic.co/docs/explore-analyze/query-filter/aggregations.',
       type: 'object',
-      description: 'The search definition using the Query DSL.',
-      properties: {
-        query: {
-          $ref: '#/definitions/Query',
-        },
-        aggs: {
-          description: 'The aggregations to request for the search.',
-          type: 'object',
-        },
-      },
+    },
+    aggregations: {
+      description: 'Alias of "aggs".',
+      type: 'object',
+    },
+    post_filter: {
+      description:
+        'A query that filters the hits after aggregations are calculated. Uses the Query DSL.',
+      type: 'object',
+    },
+    highlight: {
+      description: 'Highlight matches in one or more fields of the hits.',
+      type: 'object',
+    },
+    collapse: {
+      description: 'Collapse the hits by the values of a field.',
+      type: 'object',
+    },
+    search_after: {
+      description: 'Page through hits using the sort values of the last hit of the previous page.',
+      type: 'array',
+    },
+    fields: {
+      description:
+        'Field names or patterns to return in the "fields" property of each hit, as formatted by the field mapping.',
+      type: 'array',
+    },
+    knn: {
+      description: 'Approximate k-nearest neighbor search on a dense vector field.',
+      type: ['object', 'array'],
+    },
+    min_score: {
+      description: 'Only return hits with a score of at least this value.',
+      type: 'number',
+    },
+    runtime_mappings: {
+      description: 'Runtime fields defined for this search.',
+      type: 'object',
+    },
+    script_fields: {
+      description: 'Fields calculated with a script for each hit.',
+      type: 'object',
+    },
+    suggest: {
+      description: 'Suggest terms or phrases similar to the given text.',
+      type: 'object',
+    },
+    pit: {
+      description: 'Search a point in time (PIT). A point in time search cannot set "index".',
+      type: 'object',
+    },
+    body: {
+      not: {},
+      errorMessage:
+        'was removed in Lowdefy 8 (Elasticsearch client 9). Move the keys in "body" (like "query" and "aggs") to the top level of the request properties',
     },
     _source: {
       description:
-        'True or false to return the _source field or not, or a list of fields to return.',
-      examples: [['id', 'name'], 'name', true, false],
+        'True or false to return the _source field or not, a list of fields to return, or an object with "includes" and "excludes" lists.',
+      examples: [['id', 'name'], 'name', true, false, { excludes: ['body'] }],
       anyOf: [
+        {
+          type: 'object',
+        },
         {
           items: {
             type: 'string',
@@ -51,38 +105,8 @@ export default {
         },
       ],
     },
-    _source_exclude: {
-      description: 'A list of fields to exclude from the returned _source field.',
-      examples: [['id', 'name'], 'name'],
-      anyOf: [
-        {
-          items: {
-            type: 'string',
-          },
-          type: 'array',
-        },
-        {
-          type: 'string',
-        },
-      ],
-    },
     _source_excludes: {
       description: 'A list of fields to exclude from the returned _source field.',
-      examples: [['id', 'name'], 'name'],
-      anyOf: [
-        {
-          items: {
-            type: 'string',
-          },
-          type: 'array',
-        },
-        {
-          type: 'string',
-        },
-      ],
-    },
-    _source_include: {
-      description: 'A list of fields to extract and return from the _source field.',
       examples: [['id', 'name'], 'name'],
       anyOf: [
         {
@@ -232,11 +256,6 @@ export default {
       type: 'number',
       default: 5,
     },
-    min_compatible_shard_node: {
-      description:
-        'The minimum compatible version that all shards involved in search should have for this request to be successful.',
-      type: 'string',
-    },
     pre_filter_shard_size: {
       description:
         'A threshold that enforces a pre-filter roundtrip to prefilter search shards based on query rewriting if the number of shards the search request expands to exceeds the threshold. This filter roundtrip can limit the number of shards significantly if for instance a shard can not match any documents based on its rewrite method ie. if date filters are mandatory to match but the shard bounds and the query are disjoint.',
@@ -300,24 +319,35 @@ export default {
       default: 10,
     },
     sort: {
-      description: 'A comma-separated list of <field>:<direction> pairs.',
-      examples: ['name:asc', ['rating:asc', 'created_at:desc']],
+      description:
+        'How to sort the hits, in the Elasticsearch sort syntax: a field name, or an array of field names and objects like { timestamp: desc }. A single "field:direction" string is also accepted.',
+      examples: [
+        'name',
+        ['name', { timestamp: 'desc' }],
+        { rating: { order: 'asc' } },
+        'rating:asc',
+      ],
       anyOf: [
-        {
-          items: {
-            type: 'string',
-          },
-          type: 'array',
-        },
         {
           type: 'string',
         },
+        {
+          type: 'object',
+        },
+        {
+          type: 'array',
+          items: {
+            anyOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'object',
+              },
+            ],
+          },
+        },
       ],
-    },
-    source: {
-      description:
-        'The URL-encoded request definition. Useful for libraries that do not accept a request body for non-POST requests.',
-      type: 'string',
     },
     stats: {
       description: 'Specific tag of the request for logging and statistical purposes',
@@ -379,23 +409,9 @@ export default {
       type: 'boolean',
     },
     track_total_hits: {
-      description: 'Indicate if the number of documents that match the query should be tracked.',
-      type: 'boolean',
-    },
-    type: {
       description:
-        'A comma-separated list of document types to search; leave empty to perform the operation on all types.',
-      anyOf: [
-        {
-          items: {
-            type: 'string',
-          },
-          type: 'array',
-        },
-        {
-          type: 'string',
-        },
-      ],
+        'Whether to count the hits that match the query accurately (true), not at all (false), or accurately up to a number. Defaults to 10000.',
+      type: ['boolean', 'integer'],
     },
     typed_keys: {
       description:
@@ -406,11 +422,32 @@ export default {
       description: 'Specify whether to return document version as part of a hit',
       type: 'boolean',
     },
+    type: {
+      not: {},
+      errorMessage: 'was removed in Elasticsearch 8. Mapping types no longer exist',
+    },
+    _source_include: {
+      not: {},
+      errorMessage: 'is not supported by Elasticsearch 9. Use "_source_includes"',
+    },
+    _source_exclude: {
+      not: {},
+      errorMessage: 'is not supported by Elasticsearch 9. Use "_source_excludes"',
+    },
+    source: {
+      not: {},
+      errorMessage:
+        'is not supported by Elasticsearch 9. Set the search definition as top level request properties, like "query" and "aggs"',
+    },
+    min_compatible_shard_node: {
+      not: {},
+      errorMessage: 'is not supported by Elasticsearch 9',
+    },
   },
   definitions: {
     Query: {
       description:
-        'A query expressed in the Elasticsearch query DSL. See https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html.',
+        'A query expressed in the Elasticsearch query DSL. See https://www.elastic.co/docs/explore-analyze/query-filter/languages/querydsl.',
       type: 'object',
       additionalProperties: true,
     },

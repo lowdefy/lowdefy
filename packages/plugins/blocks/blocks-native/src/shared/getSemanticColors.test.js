@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSemanticColors from './getSemanticColors.js';
 import theme from '../test/theme.json';
 

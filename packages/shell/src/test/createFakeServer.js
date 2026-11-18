@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 
 function createResponse({ body = null, headers = {}, status = 200 }) {
   const lowerHeaders = Object.fromEntries(
@@ -44,7 +44,7 @@ function header(init, name) {
  */
 function createFakeServer(initial) {
   const state = { buildId: 'build-1', caller: '', user: null, ...initial };
-  const fetch = jest.fn(async (url, init) => {
+  const fetch = vi.fn(async (url, init) => {
     const { pathname } = new URL(url);
     const callerHeaders = { 'x-lowdefy-caller': state.caller };
     if (pathname === '/api/mobile/root') {

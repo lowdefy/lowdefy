@@ -19,17 +19,18 @@ import schema from './schema.js';
 
 async function ElasticsearchIndex({ request, connection }) {
   const client = new Client(connection);
-  const body = {
-    ...request,
-    index: request.index || connection.index,
-  };
-
-  const { body: response } = await client.index(body);
-
-  return {
-    response,
-    id: response._id,
-  };
+  try {
+    const response = await client.index({
+      ...request,
+      index: request.index || connection.index,
+    });
+    return {
+      id: response._id,
+      response,
+    };
+  } finally {
+    await client.close();
+  }
 }
 
 ElasticsearchIndex.schema = schema;

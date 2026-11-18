@@ -24,7 +24,6 @@ import resolveClassNames from './resolveClassNames.js';
 const Container = ({ block, Blocks, Component, context, loading, lowdefy }) => {
   const classNames = resolveClassNames(block.eval.class);
   const content = {};
-  // eslint-disable-next-line prefer-destructuring
   const slots = Blocks.subSlots[block.id][0].slots;
   Object.keys(slots).forEach((slotKey, i) => {
     if (slots[slotKey].blocks.length === 0) return;

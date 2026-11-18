@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable no-param-reassign */
-
 import { isMap, isSeq, isPair, isScalar } from 'yaml';
 
 import setNonEnumerableProperty from '../../utils/setNonEnumerableProperty.js';

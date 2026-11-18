@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { getTrace } from '@lowdefy/engine';
 
 import getBlockMethods from './getBlockMethods.js';
@@ -23,16 +23,16 @@ function createBlock(blockId) {
   return {
     blockId,
     methods: {},
-    registerEvent: jest.fn(),
-    registerMethod: jest.fn(),
-    setValue: jest.fn(),
-    triggerEvent: jest.fn(async () => ({ success: true })),
+    registerEvent: vi.fn(),
+    registerMethod: vi.fn(),
+    setValue: vi.fn(),
+    triggerEvent: vi.fn(async () => ({ success: true })),
   };
 }
 
 function createLowdefy() {
   return {
-    _internal: { storage: { appKey: jest.fn(), userKey: jest.fn() }, translate: jest.fn() },
+    _internal: { storage: { appKey: vi.fn(), userKey: vi.fn() }, translate: vi.fn() },
   };
 }
 

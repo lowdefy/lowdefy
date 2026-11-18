@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { vi } from 'vitest';
 import { createNativeGlobals } from '@lowdefy/client-native';
 
 import createMemoryStore from './createMemoryStore.js';
@@ -33,28 +33,28 @@ function jsonResponse(body) {
 // until a test gives it an answer. A cookie host by default; a 'bearer' host holds `token`, as a
 // signed-in shell does.
 function createFakeHost({ authTransport, path, token = null }) {
-  const fetch = jest.fn(async () => jsonResponse({}));
-  const streamFetch = jest.fn(async () => new Response(''));
+  const fetch = vi.fn(async () => jsonResponse({}));
+  const streamFetch = vi.fn(async () => new Response(''));
   const auth =
     authTransport === 'bearer'
-      ? { authTransport, tokenStore: { clear: jest.fn(), get: () => token, set: jest.fn() } }
+      ? { authTransport, tokenStore: { clear: vi.fn(), get: () => token, set: vi.fn() } }
       : {};
   return {
     ...auth,
     fetch,
     globals: createNativeGlobals({
-      assign: jest.fn(),
+      assign: vi.fn(),
       fetch,
       getPath: () => path,
       origin: 'https://app.lowdefy.test',
     }),
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
-    router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
+    onBuildChanged: vi.fn(),
+    onCallerChanged: vi.fn(),
+    router: { back: vi.fn(), push: vi.fn(), replace: vi.fn() },
     sessionStorage: createMemoryStore(),
     storage: createMemoryStore(),
     streamFetch,
-    WebSocket: jest.fn(),
+    WebSocket: vi.fn(),
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),
   };
 }

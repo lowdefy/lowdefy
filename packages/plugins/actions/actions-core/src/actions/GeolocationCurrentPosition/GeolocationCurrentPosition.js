@@ -38,7 +38,6 @@ async function GeolocationCurrentPosition({ globals, params }) {
       timestamp: position.timestamp,
     };
   } catch (error) {
-    // eslint-disable-next-line no-undef
     if (error.constructor.name === 'GeolocationPositionError') {
       return { code: error.code, error: codes[error.code], message: error.message };
     }

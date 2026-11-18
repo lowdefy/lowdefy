@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import createDeviceInjections from './createDeviceInjections.js';
 import createFakeNetwork from '../../test/createFakeNetwork.js';
 import createNetworkStatus from '../../host/createNetworkStatus.js';

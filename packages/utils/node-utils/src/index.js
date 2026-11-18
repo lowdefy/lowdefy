@@ -52,6 +52,7 @@ import linkDependenciesToWorkspace from './linkDependenciesToWorkspace.js';
 import linkWorkspaceDependencies from './linkWorkspaceDependencies.js';
 import countDataSetDocuments from './countDataSetDocuments.js';
 import listDataSets from './listDataSets.js';
+import loadDotEnvFile from './loadDotEnvFile.js';
 import matchPagePath from './matchPagePath.js';
 import parseDataSet from './parseDataSet.js';
 import parseIpRange from './parseIpRange.js';
@@ -158,6 +159,7 @@ export {
   linkDependenciesToWorkspace,
   linkWorkspaceDependencies,
   listDataSets,
+  loadDotEnvFile,
   parseDataSet,
   listFailurePaths,
   listRecordingFiles,

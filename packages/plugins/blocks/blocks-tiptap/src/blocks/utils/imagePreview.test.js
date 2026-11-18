@@ -29,9 +29,8 @@ const { Editor } = await import('@tiptap/core');
 const { closeHistory } = await import('@tiptap/pm/history');
 const { default: buildExtensions } = await import('./buildExtensions.js');
 const { default: useTiptapState } = await import('../TiptapInput/useTiptapState.js');
-const { default: useTiptapMentionState } = await import(
-  '../TiptapMentionInput/useTiptapMentionState.js'
-);
+const { default: useTiptapMentionState } =
+  await import('../TiptapMentionInput/useTiptapMentionState.js');
 
 let objectUrlCount = 0;
 const editors = [];

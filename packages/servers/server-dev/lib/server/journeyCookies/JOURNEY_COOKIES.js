@@ -14,10 +14,11 @@
   limitations under the License.
 */
 
-// Every cookie the dev server's own headless browser sets on a journey
-// context. Each value is "<journeyActorToken>.<payload>", so only that browser
-// can set one: a cookie from anywhere else fails verification and is ignored.
-// The production server never reads any of them.
+// Every cookie the dev server's own headless browser sets on its browser
+// contexts (screenshots, journeys and the other headless tools). Each value is
+// "<journeyActorToken>.<payload>", so only that browser can set one: a cookie
+// from anywhere else fails verification and is ignored. The production server
+// never reads any of them.
 //
 // kind: an inline cookie carries its whole meaning in the payload (an actor's
 // client address); a registry cookie carries the id of an entry the dev server
@@ -25,10 +26,17 @@
 //
 // loopback: a detached CallApi loops back through /api/detached/* as a fresh
 // request, so a cookie whose state must reach that request (the data set, the
-// mutant) is forwarded on it - see forwardJourneyCookies. The actor and
-// recording cookies describe the browser, not the work, and stay behind.
+// mutant) is forwarded on it - see forwardJourneyCookies. The actor, headless
+// user and recording cookies describe the browser, not the work, and stay
+// behind.
+//
+// headlessUser carries the caller the headless context acts as (getBrowser.js
+// writes it, getHeadlessUser.js reads it). Its signature is what keeps a
+// request from outside the dev server's own browser from naming its own user
+// and roles.
 const JOURNEY_COOKIES = {
   actor: { name: 'lowdefy_journey_actor', kind: 'inline', loopback: false },
+  headlessUser: { name: 'lowdefy_headless_user', kind: 'inline', loopback: false },
   recording: { name: 'lowdefy_recording', kind: 'inline', loopback: false },
   data: { name: 'lowdefy_journey_data', kind: 'registry', loopback: true },
   mutant: { name: 'lowdefy_journey_mutant', kind: 'registry', loopback: true },

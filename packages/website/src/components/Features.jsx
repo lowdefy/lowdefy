@@ -71,7 +71,7 @@ export default function Features() {
               rel="noopener noreferrer"
               className="flex items-start gap-4 group"
             >
-              <div className="w-12 h-12 rounded-lg bg-primary-100 group-hover:bg-primary-200 flex items-center justify-center flex-shrink-0 transition-colors">
+              <div className="w-12 h-12 rounded-lg bg-primary-100 group-hover:bg-primary-200 flex items-center justify-center shrink-0 transition-colors">
                 <feature.icon style={{ fontSize: 24, color: '#0077f2' }} />
               </div>
               <div>

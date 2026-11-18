@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-/* eslint-disable max-classes-per-file */
 import { vi, afterAll, beforeEach, expect, test } from 'vitest';
 import _log from './log.js';
 

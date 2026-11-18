@@ -60,7 +60,7 @@ const AutoCompleteInput = ({
               getPopupContainer={() => document.getElementById(`${blockId}_${elementId}_popup`)}
               backfill={properties.backfill}
               variant={
-                properties.bordered === false ? 'borderless' : properties.variant ?? undefined
+                properties.bordered === false ? 'borderless' : (properties.variant ?? undefined)
               }
               className={classNames.element}
               classNames={{ content: classNames.selector, popup: { root: classNames.popup } }}

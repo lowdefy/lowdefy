@@ -62,7 +62,7 @@ function projectNode(error, scrub, seen) {
     handled: error.handled,
     // A ServiceError's Retry-After (seconds, or an HTTP date), so a routine can wait as long
     // as the service asked before retrying, such as an enrichment worker's backoff.
-    retryAfter: error.name === 'ServiceError' ? error.retryAfter ?? undefined : undefined,
+    retryAfter: error.name === 'ServiceError' ? (error.retryAfter ?? undefined) : undefined,
   };
   for (const [key, value] of Object.entries(fields)) {
     if (!type.isUndefined(value)) projected[key] = value;

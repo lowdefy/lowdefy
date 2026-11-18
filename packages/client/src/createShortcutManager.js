@@ -95,42 +95,46 @@ function collectShortcuts(context) {
   return entries;
 }
 
+// A shortcut with a modifier (mod+S) is meant to work while the user is typing, so it fires in
+// form fields too. It still skips a held key's repeats, so holding mod+S does not save over and
+// over, and key presses that are part of IME composition.
+function ignoreModifierShortcutEvent(event) {
+  return event.repeat || event.isComposing;
+}
+
 function createShortcutManager() {
-  let unsubscribe = null;
+  let unsubscribers = [];
 
   function init(context) {
     const entries = collectShortcuts(context);
     if (entries.length === 0) return;
 
-    const shortcutMap = {};
+    const modifierShortcuts = {};
+    const plainShortcuts = {};
     // Last entry wins for duplicates
     entries.forEach(({ block, eventName, shortcut }) => {
       const normalized = normalizeShortcut(shortcut);
-      const modded = hasModifier(normalized);
-      shortcutMap[normalized] = (event) => {
-        // Visibility gating
+      const shortcuts = hasModifier(normalized) ? modifierShortcuts : plainShortcuts;
+      shortcuts[normalized] = (event) => {
         if (block.visibleEval && block.visibleEval.output === false) return;
-        // Input field suppression for non-modifier shortcuts
-        if (!modded) {
-          const tag = event.target?.tagName;
-          if (tag === 'INPUT' || tag === 'TEXTAREA' || event.target?.isContentEditable) {
-            return;
-          }
-        }
         event.preventDefault();
         block.triggerEvent({ name: eventName });
       };
     });
 
     const win = context._internal.lowdefy._internal.globals.window;
-    unsubscribe = tinykeys(win, shortcutMap);
+    unsubscribers = [
+      tinykeys(win, modifierShortcuts, { ignore: ignoreModifierShortcutEvent }),
+      // A shortcut without a modifier (/, Escape, g i) would fire while the user types, so it
+      // uses tinykeys' default filter: it skips key presses in inputs, textareas, selects and
+      // editable content, a held key's repeats and IME composition.
+      tinykeys(win, plainShortcuts),
+    ];
   }
 
   function destroy() {
-    if (unsubscribe) {
-      unsubscribe();
-      unsubscribe = null;
-    }
+    unsubscribers.forEach((unsubscribe) => unsubscribe());
+    unsubscribers = [];
   }
 
   return { init, destroy };

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getLevelBars from './getLevelBars.js';
 
 test('getLevelBars draws eight low bars in silence', () => {

@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createSqliteCacheStore from './createSqliteCacheStore.js';
 
@@ -23,12 +23,12 @@ function createFakeDb() {
   const roots = new Map();
   const pages = new Map();
   return {
-    execAsync: jest.fn(async () => undefined),
-    getFirstAsync: jest.fn(async (sql, [cacheKey]) => roots.get(cacheKey) ?? null),
-    getAllAsync: jest.fn(async (sql, [cacheKey]) =>
+    execAsync: vi.fn(async () => undefined),
+    getFirstAsync: vi.fn(async (sql, [cacheKey]) => roots.get(cacheKey) ?? null),
+    getAllAsync: vi.fn(async (sql, [cacheKey]) =>
       [...pages.values()].filter((row) => row.cache_key === cacheKey)
     ),
-    runAsync: jest.fn(async (sql, params) => {
+    runAsync: vi.fn(async (sql, params) => {
       if (sql.startsWith('INSERT OR REPLACE INTO roots')) {
         const [cacheKey, root, rootEtag, user] = params;
         roots.set(cacheKey, { root, root_etag: rootEtag, user });

@@ -21,7 +21,6 @@ import collectHtmlPageLinks from '../../../utils/collectHtmlPageLinks.js';
 // with data-path-params. Child blocks are collected when buildBlock visits
 // them.
 function collectBlockHtmlLinks(block, { linkActionRefs, pageId }) {
-  // eslint-disable-next-line no-unused-vars
   const { areas, blocks, slots, ...ownConfig } = block;
   collectHtmlPageLinks({ json: JSON.stringify(ownConfig) }).forEach((link) => {
     linkActionRefs.push({

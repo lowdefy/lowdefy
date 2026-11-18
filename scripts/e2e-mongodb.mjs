@@ -45,7 +45,6 @@ const replSet = await MongoMemoryReplSet.create({
   // or mongodb-memory-server's killer process if the script is killed.
   replSet: { count: 1, spawn: { detached: true } },
 });
-// eslint-disable-next-line no-console
 console.log(`MongoDB replica set ready at ${replSet.getUri()}`);
 
 let stopping = false;

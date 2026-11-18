@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -346,7 +344,7 @@ function validateRedact(agent, context) {
     index += 1;
     if (getOperatorType(entry) !== null) continue;
     const location = `redact.patterns[${index}]`;
-    const { name, pattern, flags } = type.isString(entry) ? { pattern: entry } : entry ?? {};
+    const { name, pattern, flags } = type.isString(entry) ? { pattern: entry } : (entry ?? {});
     if (!type.isString(entry) && !type.isObject(entry)) {
       return fail(`Agent "${agent.id}" "${location}" should be a string or an object.`, entry);
     }

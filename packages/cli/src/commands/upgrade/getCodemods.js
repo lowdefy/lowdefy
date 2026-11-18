@@ -16,26 +16,32 @@
 
 import fs from 'fs';
 import path from 'path';
-import axios from 'axios';
 import { cleanDirectory, readFile } from '@lowdefy/node-utils';
 import fetchNpmTarball from '../../utils/fetchNpmTarball.js';
+import httpFetch from '../../utils/httpFetch.js';
+
+// A package document lists every version's metadata: the upgrade waits longer than the default
+// for it on a slow network.
+const REGISTRY_TIMEOUT_MS = 30000;
 
 async function getCodemods({ directory, logger }) {
   const packageJsonPath = path.join(directory, 'package.json');
 
   // Query npm for the latest version
-  let latestVersion;
-  try {
-    const packageInfo = await axios.get('https://registry.npmjs.org/@lowdefy/codemods');
-    latestVersion = packageInfo.data['dist-tags']?.latest;
-  } catch (error) {
-    if (error.response?.status === 404) {
-      throw new Error(
-        'No @lowdefy/codemods package found on npm. Upgrade manually using the migration guide.'
-      );
-    }
-    throw error;
+  const response = await httpFetch({
+    url: 'https://registry.npmjs.org/@lowdefy/codemods',
+    timeoutMs: REGISTRY_TIMEOUT_MS,
+  });
+  if (response.status === 404) {
+    throw new Error(
+      'No @lowdefy/codemods package found on npm. Upgrade manually using the migration guide.'
+    );
   }
+  if (!response.ok) {
+    throw new Error(`Request failed with status code ${response.status}`);
+  }
+  const packageInfo = await response.json();
+  const latestVersion = packageInfo['dist-tags']?.latest;
 
   if (!latestVersion) {
     throw new Error('Could not determine latest @lowdefy/codemods version.');

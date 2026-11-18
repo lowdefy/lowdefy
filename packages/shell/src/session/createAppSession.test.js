@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { describe, expect, test, vi } from 'vitest';
 
 import createAppSession from './createAppSession.js';
 import createFakeServer, { header } from '../test/createFakeServer.js';
@@ -139,7 +139,7 @@ describe('cache keying', () => {
     await createSession({ server, cacheStore, kv }).session.start();
 
     let answer;
-    const offline = { fetch: jest.fn(() => new Promise((resolve) => (answer = resolve))) };
+    const offline = { fetch: vi.fn(() => new Promise((resolve) => (answer = resolve))) };
     const { session } = createSession({ server: offline, cacheStore, kv });
     const started = session.start();
     await new Promise((resolve) => setTimeout(resolve, 0));
@@ -158,10 +158,10 @@ describe('cache keying', () => {
     const kv = createMemoryStore();
     await createSession({ server, cacheStore, kv }).session.start();
     const offline = {
-      fetch: jest.fn(async () => Promise.reject(createNetworkError())),
+      fetch: vi.fn(async () => Promise.reject(createNetworkError())),
     };
     const { session } = createSession({ server: offline, cacheStore, kv });
-    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     await session.start();
     expect(session.getState().status).toBe('ready');
     expect(Object.keys(session.getState().pages)).toHaveLength(3);
@@ -176,7 +176,7 @@ describe('cache keying', () => {
     const kv = createMemoryStore();
     await createSession({ server, cacheStore, kv }).session.start();
     const failing = {
-      fetch: jest.fn(async () => ({
+      fetch: vi.fn(async () => ({
         ok: false,
         status: 500,
         headers: { get: () => null },
@@ -184,7 +184,7 @@ describe('cache keying', () => {
       })),
     };
     const { session } = createSession({ server: failing, cacheStore, kv });
-    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     await session.start();
     expect(session.getState().status).toBe('ready');
     // No page has made a core yet, so the report goes to the device console.
@@ -196,7 +196,7 @@ describe('cache keying', () => {
 
   test('with no signal and no cache the app shows the error', async () => {
     const offline = {
-      fetch: jest.fn(async () => Promise.reject(createNetworkError())),
+      fetch: vi.fn(async () => Promise.reject(createNetworkError())),
     };
     const { session } = createSession({ server: offline });
     await session.start();
@@ -213,7 +213,7 @@ describe('cache keying', () => {
       json: async () => ({}),
     }));
     const { session } = createSession({ server });
-    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
     await session.start();
     expect(session.getState().error.message).toBe('This app has no mobile pages.');
     expect(consoleError).toHaveBeenCalledWith(session.getState().error);

@@ -1,5 +1,3 @@
-/* eslint-disable prefer-promise-reject-errors */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 

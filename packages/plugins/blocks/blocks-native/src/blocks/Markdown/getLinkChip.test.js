@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getLinkChip from './getLinkChip.js';
 
 const linkChips = [

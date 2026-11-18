@@ -14,10 +14,13 @@
   limitations under the License.
 */
 
-import fsExtra from 'fs-extra';
+import { cp } from 'node:fs/promises';
 
+// fs.cp rewrites a relative symlink to an absolute one unless verbatimSymlinks is set; fs-extra
+// copied links as they were, so a copied tree moved elsewhere (a Docker or Vercel output) keeps
+// working links.
 async function copyFileOrDirectory(dirPathFrom, dirPathTo, options) {
-  await fsExtra.copy(dirPathFrom, dirPathTo, options);
+  await cp(dirPathFrom, dirPathTo, { recursive: true, verbatimSymlinks: true, ...options });
 }
 
 export default copyFileOrDirectory;

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSemanticTokens from './getSemanticTokens.js';
 
 const light = { colorPrimary: '#6366f1', colorText: 'rgba(0,0,0,0.88)' };

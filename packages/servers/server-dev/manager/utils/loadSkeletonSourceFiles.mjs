@@ -19,10 +19,7 @@ import path from 'path';
 
 function loadSkeletonSourceFiles(buildDirectory) {
   try {
-    const content = fs.readFileSync(
-      path.join(buildDirectory, 'skeletonSourceFiles.json'),
-      'utf8'
-    );
+    const content = fs.readFileSync(path.join(buildDirectory, 'skeletonSourceFiles.json'), 'utf8');
     return new Set(JSON.parse(content));
   } catch {
     return new Set();

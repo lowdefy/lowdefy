@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getKeyframeRange from './getKeyframeRange.js';
 
 test('getKeyframeRange draws a linear segment as its two ends', () => {

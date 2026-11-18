@@ -15,9 +15,10 @@
 */
 
 import React from 'react';
-import { Section, Text } from '@react-email/components';
 import { type } from '@lowdefy/helpers';
 
+import Section from '../reactEmail/Section.js';
+import Text from '../reactEmail/Text.js';
 import defaultTheme from '../defaultTheme.js';
 
 const titleStyle = {

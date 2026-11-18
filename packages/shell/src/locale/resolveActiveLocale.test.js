@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import resolveActiveLocale from './resolveActiveLocale.js';
 
 const i18n = {

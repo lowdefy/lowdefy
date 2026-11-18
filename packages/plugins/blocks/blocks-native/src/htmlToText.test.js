@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import htmlToText from './htmlToText.js';
 
 test('htmlToText turns line breaks and paragraph ends into new lines', () => {

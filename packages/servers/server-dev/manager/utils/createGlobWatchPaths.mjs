@@ -39,9 +39,10 @@ function isDirectory({ filePath, stats }) {
   }
 }
 
-// chokidar 4 watches paths only, where chokidar 3 also took globs, which `lowdefy dev --watch`
-// documents. A glob is watched from the directory it starts at (picomatch's scan base), and the
-// returned ignore function drops the files under that directory the glob does not match.
+// chokidar 4 and later watch paths only, where chokidar 3 also took globs, which
+// `lowdefy dev --watch` documents. A glob is watched from the directory it starts at (picomatch's
+// scan base), and the returned ignore function drops the files under that directory the glob does
+// not match.
 // Directories are never dropped, so chokidar still walks into those that can hold a match.
 // Paths are compared with forward slashes, as chokidar 3 compared them.
 function createGlobWatchPaths(watchPaths) {

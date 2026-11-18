@@ -21,7 +21,10 @@ function parseAcceptLanguage(header) {
   return header
     .split(',')
     .map((entry) => {
-      const [code, ...params] = entry.trim().split(';').map((s) => s.trim());
+      const [code, ...params] = entry
+        .trim()
+        .split(';')
+        .map((s) => s.trim());
       const qParam = params.find((p) => p.startsWith('q='));
       const q = qParam ? parseFloat(qParam.slice(2)) : 1;
       return { code, q: Number.isFinite(q) ? q : 0 };
@@ -35,9 +38,7 @@ function pickBest(candidates, supported) {
   for (const candidate of candidates) {
     if (supported.includes(candidate)) return candidate;
     const primary = candidate.split('-')[0].toLowerCase();
-    const match = supported.find(
-      (code) => code.split('-')[0].toLowerCase() === primary
-    );
+    const match = supported.find((code) => code.split('-')[0].toLowerCase() === primary);
     if (match) return match;
   }
   return undefined;

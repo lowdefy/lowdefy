@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { AppState, Dimensions } from 'react-native';
 import { LowdefyInternalError } from '@lowdefy/errors';
 
@@ -22,8 +22,8 @@ import createNativeGlobals from './createNativeGlobals.js';
 
 function setup({ network } = {}) {
   const route = { path: '/orders/42?status=open#notes' };
-  const assign = jest.fn();
-  const fetch = jest.fn();
+  const assign = vi.fn();
+  const fetch = vi.fn();
   const globals = createNativeGlobals({
     assign,
     fetch,
@@ -61,7 +61,7 @@ test('location.assign goes to the host and fetch is the host fetch', () => {
 
 test('createNativeGlobals throws a LowdefyInternalError on an origin that is not a URL origin', () => {
   const create = () =>
-    createNativeGlobals({ assign: jest.fn(), fetch: jest.fn(), getPath: () => '/', origin: 'app' });
+    createNativeGlobals({ assign: vi.fn(), fetch: vi.fn(), getPath: () => '/', origin: 'app' });
   expect(create).toThrow('Native host origin is not a URL origin. Received "app".');
   expect(create).toThrow(LowdefyInternalError);
 });
@@ -71,9 +71,9 @@ test('the window size comes from Dimensions, and resize follows Dimensions chang
   const { width, height } = Dimensions.get('window');
   expect(globals.window.innerWidth).toBe(width);
   expect(globals.window.innerHeight).toBe(height);
-  const remove = jest.fn();
-  const addSpy = jest.spyOn(Dimensions, 'addEventListener').mockReturnValue({ remove });
-  const listener = jest.fn();
+  const remove = vi.fn();
+  const addSpy = vi.spyOn(Dimensions, 'addEventListener').mockReturnValue({ remove });
+  const listener = vi.fn();
   globals.window.addEventListener('resize', listener);
   addSpy.mock.calls[0][1]({ window: { width: 1, height: 2 } });
   expect(listener).toHaveBeenCalledTimes(1);
@@ -90,9 +90,9 @@ test('visibilityState follows AppState, and visibilitychange follows its changes
   AppState.currentState = 'background';
   expect(globals.document.visibilityState).toBe('hidden');
   AppState.currentState = current;
-  const remove = jest.fn();
-  const addSpy = jest.spyOn(AppState, 'addEventListener').mockReturnValue({ remove });
-  const listener = jest.fn();
+  const remove = vi.fn();
+  const addSpy = vi.spyOn(AppState, 'addEventListener').mockReturnValue({ remove });
+  const listener = vi.fn();
   globals.document.addEventListener('visibilitychange', listener);
   expect(addSpy.mock.calls[0][0]).toBe('change');
   addSpy.mock.calls[0][1]('background');
@@ -104,15 +104,15 @@ test('visibilityState follows AppState, and visibilitychange follows its changes
 
 test('online and offline follow the host network, when it gives one', () => {
   let networkListener;
-  const remove = jest.fn();
+  const remove = vi.fn();
   const network = {
-    addListener: jest.fn((listener) => {
+    addListener: vi.fn((listener) => {
       networkListener = listener;
       return remove;
     }),
   };
   const { globals } = setup({ network });
-  const onOffline = jest.fn();
+  const onOffline = vi.fn();
   globals.window.addEventListener('offline', onOffline);
   networkListener(true);
   expect(onOffline).not.toHaveBeenCalled();
@@ -124,7 +124,7 @@ test('online and offline follow the host network, when it gives one', () => {
 
 test('an event the host has no source for is not listened to', () => {
   const { globals } = setup();
-  const listener = jest.fn();
+  const listener = vi.fn();
   globals.window.addEventListener('online', listener);
   globals.window.addEventListener('focus', listener);
   globals.window.removeEventListener('focus', listener);

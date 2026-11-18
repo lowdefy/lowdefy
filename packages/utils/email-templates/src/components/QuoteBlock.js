@@ -15,8 +15,9 @@
 */
 
 import React from 'react';
-import { Text } from '@react-email/components';
 import { type } from '@lowdefy/helpers';
+
+import Text from '../reactEmail/Text.js';
 
 const quoteContainerStyle = {
   borderLeft: '3px solid #d9d9d9',

@@ -22,7 +22,10 @@ function getAction(action) {
     title: action.title,
     endpointId: action.endpointId ?? null,
     input: type.isObject(action.input)
-      ? { placeholder: action.input.placeholder ?? null, buttonTitle: action.input.buttonTitle ?? null }
+      ? {
+          placeholder: action.input.placeholder ?? null,
+          buttonTitle: action.input.buttonTitle ?? null,
+        }
       : null,
     snooze: action.snooze ?? null,
     destructive: action.destructive ?? false,

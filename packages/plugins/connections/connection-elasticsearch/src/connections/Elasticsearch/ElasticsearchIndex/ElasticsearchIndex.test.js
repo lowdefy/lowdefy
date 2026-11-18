@@ -23,6 +23,9 @@ const mockElasticsearchClient = vi.fn(function () {
 mockElasticsearchClient.index = vi.fn(function () {
   return mockElasticsearchClient;
 });
+mockElasticsearchClient.close = vi.fn(function () {
+  return Promise.resolve();
+});
 vi.doMock('@elastic/elasticsearch', () => ({
   Client: vi.fn().mockImplementation(function () {
     return mockElasticsearchClient;
@@ -39,7 +42,7 @@ test('valid request schema', async () => {
   const schema = ElasticsearchIndex.schema;
   const request = {
     id: '42',
-    body: {
+    document: {
       foo: 'bar',
     },
   };
@@ -50,7 +53,7 @@ test('valid request schema, numeric ID', async () => {
   const schema = ElasticsearchIndex.schema;
   const request = {
     id: 42,
-    body: {
+    document: {
       foo: 'bar',
     },
   };
@@ -61,7 +64,7 @@ test('valid request schema, no ID', async () => {
   const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
   const schema = ElasticsearchIndex.schema;
   const request = {
-    body: {
+    document: {
       foo: 'bar',
     },
   };
@@ -72,17 +75,30 @@ test('valid request schema, empty document', async () => {
   const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
   const schema = ElasticsearchIndex.schema;
   const request = {
-    body: {},
+    document: {},
   };
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
-test('request no body', async () => {
+test('request no document', async () => {
   const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
   const schema = ElasticsearchIndex.schema;
   const request = {};
   expect(() => validate({ schema, data: request })).toThrow(
-    'ElasticsearchIndex request should have required property "body".'
+    'ElasticsearchIndex request should have required property "document".'
+  );
+});
+
+test('request with body is rejected', async () => {
+  const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
+  const schema = ElasticsearchIndex.schema;
+  const request = {
+    body: {
+      foo: 'bar',
+    },
+  };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'was renamed to "document" in Lowdefy 8 (Elasticsearch client 9).'
   );
 });
 
@@ -102,27 +118,24 @@ test('ElasticsearchIndex', async () => {
   const { Client } = await import('@elastic/elasticsearch');
   const ElasticsearchIndex = (await import('./ElasticsearchIndex.js')).default;
   const responseData = {
-    body: {
-      _index: 'test',
-      _type: '_doc',
-      _id: '42',
-      _version: 1,
-      result: 'created',
-      _shards: {
-        total: 2,
-        successful: 1,
-        failed: 0,
-      },
-      _seq_no: 1,
-      _primary_term: 1,
+    _index: 'test',
+    _id: '42',
+    _version: 1,
+    result: 'created',
+    _shards: {
+      total: 2,
+      successful: 1,
+      failed: 0,
     },
+    _seq_no: 1,
+    _primary_term: 1,
   };
   mockElasticsearchClient.index.mockImplementationOnce(function () {
     return Promise.resolve(responseData);
   });
   const request = {
     id: 42,
-    body: {
+    document: {
       foo: 'bar',
     },
   };
@@ -138,7 +151,7 @@ test('ElasticsearchIndex', async () => {
   expect(mockElasticsearchClient.index.mock.calls).toEqual([
     [
       {
-        body: {
+        document: {
           foo: 'bar',
         },
         index: 'test',
@@ -150,7 +163,6 @@ test('ElasticsearchIndex', async () => {
     id: '42',
     response: {
       _index: 'test',
-      _type: '_doc',
       _id: '42',
       _version: 1,
       result: 'created',
@@ -163,4 +175,5 @@ test('ElasticsearchIndex', async () => {
       _primary_term: 1,
     },
   });
+  expect(mockElasticsearchClient.close).toHaveBeenCalledTimes(1);
 });

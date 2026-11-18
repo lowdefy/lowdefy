@@ -41,9 +41,8 @@ async function linkPlugins({ parentWorkspace, serverPackageJson }) {
 }
 
 test('linkWorkspacePlugins links plugins to the parent packages it was given', async () => {
-  const { linkDependenciesToWorkspace, readFile, writeFileIfChanged } = await import(
-    '@lowdefy/node-utils'
-  );
+  const { linkDependenciesToWorkspace, readFile, writeFileIfChanged } =
+    await import('@lowdefy/node-utils');
   const { default: linkWorkspacePlugins } = await import('./linkWorkspacePlugins.js');
   readFile.mockResolvedValue(
     JSON.stringify({

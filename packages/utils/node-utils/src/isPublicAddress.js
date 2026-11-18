@@ -24,9 +24,11 @@ const notPublicIPv4 = [
   ['10.0.0.0', 8], // private
   ['100.64.0.0', 10], // carrier-grade NAT
   ['127.0.0.0', 8], // loopback
+  ['168.63.129.16', 32], // Azure platform endpoint (WireServer)
   ['169.254.0.0', 16], // link-local, cloud metadata
   ['172.16.0.0', 12], // private
   ['192.0.0.0', 24], // IETF protocol assignments
+  ['192.88.99.0', 24], // deprecated 6to4 relay anycast
   ['192.168.0.0', 16], // private
   ['198.18.0.0', 15], // benchmarking
   ['224.0.0.0', 4], // multicast
@@ -42,14 +44,19 @@ function sixToFourNetwork(network) {
 const notPublic = new BlockList();
 notPublicIPv4.forEach(([network, prefix]) => {
   notPublic.addSubnet(network, prefix, 'ipv4');
-  // An IPv6 address that embeds one of these IPv4 addresses: a NAT64 gateway (64:ff9b::/96)
-  // or a 6to4 relay forwards it to that IPv4 address.
+  // An IPv6 address that embeds one of these IPv4 addresses: a NAT64 gateway (64:ff9b::/96), a
+  // stateless IP/ICMP translator (IPv4-translated, ::ffff:0:0:0/96) or a 6to4 relay forwards it to
+  // that IPv4 address.
   notPublic.addSubnet(`64:ff9b::${network}`, 96 + prefix, 'ipv6');
+  notPublic.addSubnet(`::ffff:0:${network}`, 96 + prefix, 'ipv6');
   notPublic.addSubnet(sixToFourNetwork(network), 16 + prefix, 'ipv6');
 });
 [
   ['::', 96], // unspecified, loopback, IPv4-compatible
   ['64:ff9b:1::', 48], // local-use IPv4/IPv6 translation
+  // Teredo hides the IPv4 it reaches (obfuscated, in the last 32 bits) in a form a prefix
+  // cannot match, and is no longer used, so the whole prefix is refused.
+  ['2001::', 32], // Teredo
   ['fc00::', 7], // unique local
   ['fe80::', 10], // link-local
   ['fec0::', 10], // site-local

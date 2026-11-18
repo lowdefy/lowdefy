@@ -23,6 +23,9 @@ const mockElasticsearchClient = vi.fn(function () {
 mockElasticsearchClient.deleteByQuery = vi.fn(function () {
   return mockElasticsearchClient;
 });
+mockElasticsearchClient.close = vi.fn(function () {
+  return Promise.resolve();
+});
 vi.doMock('@elastic/elasticsearch', () => ({
   Client: vi.fn().mockImplementation(function () {
     return mockElasticsearchClient;
@@ -52,6 +55,21 @@ test('valid request schema, no query', async () => {
   expect(validate({ schema, data: request })).toEqual({ valid: true });
 });
 
+test('request with body is rejected', async () => {
+  const ElasticsearchDeleteByQuery = (await import('./ElasticsearchDeleteByQuery.js')).default;
+  const schema = ElasticsearchDeleteByQuery.schema;
+  const request = {
+    body: {
+      query: {
+        match_all: {},
+      },
+    },
+  };
+  expect(() => validate({ schema, data: request })).toThrow(
+    'was removed in Lowdefy 8 (Elasticsearch client 9).'
+  );
+});
+
 test('checkRead should be false', async () => {
   const ElasticsearchDeleteByQuery = (await import('./ElasticsearchDeleteByQuery.js')).default;
   const { checkRead } = ElasticsearchDeleteByQuery.meta;
@@ -69,20 +87,18 @@ test('ElasticsearchDeleteByQuery', async () => {
   const ElasticsearchDeleteByQuery = (await import('./ElasticsearchDeleteByQuery.js')).default;
 
   const responseData = {
-    body: {
-      took: 147,
-      timed_out: false,
-      total: 119,
-      deleted: 119,
-      batches: 1,
-      version_conflicts: 0,
-      noops: 0,
-      retries: { bulk: 0, search: 0 },
-      throttled_millis: 0,
-      requests_per_second: -1.0,
-      throttled_until_millis: 0,
-      failures: [],
-    },
+    took: 147,
+    timed_out: false,
+    total: 119,
+    deleted: 119,
+    batches: 1,
+    version_conflicts: 0,
+    noops: 0,
+    retries: { bulk: 0, search: 0 },
+    throttled_millis: 0,
+    requests_per_second: -1.0,
+    throttled_until_millis: 0,
+    failures: [],
   };
   mockElasticsearchClient.deleteByQuery.mockImplementationOnce(function () {
     return Promise.resolve(responseData);
@@ -131,4 +147,5 @@ test('ElasticsearchDeleteByQuery', async () => {
       failures: [],
     },
   });
+  expect(mockElasticsearchClient.close).toHaveBeenCalledTimes(1);
 });

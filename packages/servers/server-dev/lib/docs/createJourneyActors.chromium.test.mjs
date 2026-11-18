@@ -169,9 +169,8 @@ chromiumTest(
 chromiumTest(
   'recording actors carry a recording cookie with their actor name and flush before closing',
   async () => {
-    const { default: readRecordingCookie } = await import(
-      '../server/recording/readRecordingCookie.js'
-    );
+    const { default: readRecordingCookie } =
+      await import('../server/recording/readRecordingCookie.js');
     const actors = createJourneyActors({
       browser,
       origin,

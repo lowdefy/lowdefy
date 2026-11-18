@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getOverscrollSwipe from './getOverscrollSwipe.js';
 
 // A strip 400pt wide holding 700pt of chips scrolls from 0 to 300.

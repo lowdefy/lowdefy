@@ -20,33 +20,36 @@ import schema from './schema.js';
 
 async function ElasticsearchSearch({ request, connection }) {
   const client = new Client(connection);
+  try {
+    const response = await client.search({
+      ...request,
+      index: request.index || connection.index,
+    });
 
-  const { body: response } = await client.search({
-    ...request,
-    index: request.index || connection.index,
-  });
+    const rawHits = get(response, 'hits.hits', { default: [] });
 
-  const rawHits = get(response, 'hits.hits', { default: [] });
+    // Return the actual documents as hits.
+    // Map the documents to a more useful representation in our context:
+    // We return the results in the _source field as the main results
+    // and return all other fields in the _meta field.
+    const hits = rawHits.map((hit) => {
+      const { _source, ..._meta } = hit;
+      return {
+        ..._source,
+        _meta,
+      };
+    });
 
-  // Return the actual documents as hits.
-  // Map the documents to a more useful representation in our context:
-  // We return the results in the _source field as the main results
-  // and return all other fields in the _meta field.
-  const hits = rawHits.map((hit) => {
-    const { _source, ..._meta } = hit;
     return {
-      ..._source,
-      _meta,
+      response,
+      hits,
+      total: get(response, 'hits.total', { default: {} }),
+      maxScore: get(response, 'hits.max_score', { default: 0 }),
+      aggregations: get(response, 'aggregations', { default: {} }),
     };
-  });
-
-  return {
-    response,
-    hits,
-    total: get(response, 'hits.total', { default: {} }),
-    maxScore: get(response, 'hits.max_score', { default: 0 }),
-    aggregations: get(response, 'aggregations', { default: {} }),
-  };
+  } finally {
+    await client.close();
+  }
 }
 
 ElasticsearchSearch.schema = schema;

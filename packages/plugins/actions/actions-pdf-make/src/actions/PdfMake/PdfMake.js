@@ -14,13 +14,36 @@
   limitations under the License.
 */
 
-import pdfMake from 'pdfmake';
+import pdfMake from 'pdfmake/build/pdfmake.js';
+import { type } from '@lowdefy/helpers';
+
+import adaptPageBreakBefore from './adaptPageBreakBefore.js';
 import vfs from '../../fonts/vfs_fonts.js';
+
+const robotoFonts = {
+  Roboto: {
+    normal: 'Roboto-Regular.ttf',
+    bold: 'Roboto-Medium.ttf',
+    italics: 'Roboto-Italic.ttf',
+    bolditalics: 'Roboto-MediumItalic.ttf',
+  },
+};
+
+pdfMake.addVirtualFileSystem(vfs);
 
 async function PdfMake({ params }) {
   const { docDefinition, tableLayouts, filename, fonts } = params;
-  await pdfMake.createPdf(docDefinition, tableLayouts, fonts, vfs).download(filename);
-  return;
+  // pdfMake is a module-level singleton, so fonts and table layouts are set on every call rather
+  // than added, which would carry one call's fonts and layouts into the next.
+  pdfMake.setFonts({ ...robotoFonts, ...fonts });
+  pdfMake.setTableLayouts(tableLayouts ?? {});
+  const definition = type.isFunction(docDefinition.pageBreakBefore)
+    ? {
+        ...docDefinition,
+        pageBreakBefore: adaptPageBreakBefore(docDefinition.pageBreakBefore),
+      }
+    : docDefinition;
+  await pdfMake.createPdf(definition).download(filename);
 }
 
 export default PdfMake;

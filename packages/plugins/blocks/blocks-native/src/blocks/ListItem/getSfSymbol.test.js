@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSfSymbol from './getSfSymbol.js';
 
 test('getSfSymbol passes SF Symbol names through', () => {

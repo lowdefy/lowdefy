@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import ScrollTo from './ScrollTo.js';
 
@@ -26,10 +26,10 @@ function createPage({ withView = true } = {}) {
   const scrollView = {
     getInnerViewRef: () => innerView,
     getNativeScrollRef: () => ({ measure: (callback) => callback(0, 0, 400, 600) }),
-    scrollTo: jest.fn(),
+    scrollTo: vi.fn(),
   };
   const view = {
-    measureLayout: jest.fn((relativeTo, onSuccess) => onSuccess(0, 1000, 400, 100)),
+    measureLayout: vi.fn((relativeTo, onSuccess) => onSuccess(0, 1000, 400, 100)),
   };
   const registered = {
     'scroll:home:': scrollView,

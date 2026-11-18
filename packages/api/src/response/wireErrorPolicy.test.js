@@ -42,12 +42,10 @@ let createChannelRegistry;
 let createWebSocketConnection;
 
 beforeAll(async () => {
-  ({ default: createChannelRegistry } = await import(
-    '../routes/websocket/createChannelRegistry.js'
-  ));
-  ({ default: createWebSocketConnection } = await import(
-    '../routes/websocket/createWebSocketConnection.js'
-  ));
+  ({ default: createChannelRegistry } =
+    await import('../routes/websocket/createChannelRegistry.js'));
+  ({ default: createWebSocketConnection } =
+    await import('../routes/websocket/createWebSocketConnection.js'));
 });
 
 const GENERIC_MESSAGE = 'Something went wrong.';

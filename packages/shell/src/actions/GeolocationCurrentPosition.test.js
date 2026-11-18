@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 import { installDevice } from '@lowdefy/blocks-native/device';
 
 import createDeviceInjections from '../dev/inject/createDeviceInjections.js';
@@ -69,7 +69,7 @@ test('GeolocationCurrentPosition throws when the shell carries no location and n
 });
 
 test('GeolocationCurrentPosition reads the location feature when nothing was injected', async () => {
-  const current = jest.fn(async () => ({ coords: { latitude: 1, longitude: 2 }, timestamp: 5 }));
+  const current = vi.fn(async () => ({ coords: { latitude: 1, longitude: 2 }, timestamp: 5 }));
   const removeDevice = installDevice({ location: { current } });
   await expect(
     GeolocationCurrentPosition({ params: { enableHighAccuracy: true } })

@@ -179,6 +179,22 @@ test.describe('AgGridLowdefy Block', () => {
     await expect(rows).toHaveCount(1);
   });
 
+  test('a date filter gives date-only values in the onFilterChanged filter model', async ({
+    page,
+  }) => {
+    const block = getBlock(page, 'aggridlowdefy_date_filter');
+    const header = block.locator('.ag-header-cell[col-id="joined"]');
+    await header.hover();
+    await header.locator('.ag-header-cell-menu-button').click();
+    const filterPopup = page.locator('.ag-popup .ag-filter');
+    await expect(filterPopup).toBeVisible();
+    await filterPopup.locator('input[type="date"]').first().fill('2024-01-15');
+
+    const display = getBlock(page, 'aggridlowdefy_date_filter_display');
+    await expect(display).toHaveText('dateFrom=2024-01-15');
+    await expect(getRows(page, 'aggridlowdefy_date_filter')).toHaveCount(1);
+  });
+
   // ============================================
   // BUILT-IN CELL RENDERERS — cell.type
   // ============================================

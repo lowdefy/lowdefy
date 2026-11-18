@@ -30,11 +30,13 @@ vi.doMock('@lowdefy/logger/cli', () => {
   };
 });
 
-vi.doMock('axios', () => ({
-  default: {
-    request: vi.fn(),
-  },
-}));
+const mockFetch = vi.fn(async () => new Response(null, { status: 204 }));
+vi.stubGlobal('fetch', mockFetch);
+
+function sentRequest(index = 0) {
+  const [url, init] = mockFetch.mock.calls[index];
+  return { url, method: init.method, headers: init.headers, data: JSON.parse(init.body) };
+}
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -42,7 +44,6 @@ beforeEach(() => {
 
 test('Print and log error with full context', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
-  const { default: axios } = await import('axios');
   const { default: createCliLogger } = await import('@lowdefy/logger/cli');
   const error = new Error('Test error');
   const context = {
@@ -54,24 +55,24 @@ test('Print and log error with full context', async () => {
   await errorHandler({ context, error });
   const logger = createCliLogger.mock.results[0].value;
   expect(logger.error.mock.calls).toEqual([[error]]);
-  const axiosArguments = axios.request.mock.calls[0][0];
-  expect(axiosArguments.headers).toEqual({
+  const request = sentRequest();
+  expect(request.headers).toEqual({
+    'Content-Type': 'application/json',
     'User-Agent': 'Lowdefy CLI vcliVersion',
   });
-  expect(axiosArguments.url).toEqual('https://api.lowdefy.net/errors');
-  expect(axiosArguments.method).toEqual('post');
-  expect(axiosArguments.data.cliVersion).toEqual('cliVersion');
-  expect(axiosArguments.data.message).toEqual('Test error');
-  expect(axiosArguments.data.name).toEqual('Error');
-  expect(axiosArguments.data.source).toEqual('cli');
-  expect(axiosArguments.data.stack).toMatch(/^ +at /);
-  expect(axiosArguments.data.lowdefyVersion).toEqual('lowdefyVersion');
-  expect(axiosArguments.data.command).toEqual('command');
+  expect(request.url).toEqual('https://api.lowdefy.net/errors');
+  expect(request.method).toEqual('POST');
+  expect(request.data.cliVersion).toEqual('cliVersion');
+  expect(request.data.message).toEqual('Test error');
+  expect(request.data.name).toEqual('Error');
+  expect(request.data.source).toEqual('cli');
+  expect(request.data.stack).toMatch(/^ +at /);
+  expect(request.data.lowdefyVersion).toEqual('lowdefyVersion');
+  expect(request.data.command).toEqual('command');
 });
 
 test('Print and log error with starting context', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
-  const { default: axios } = await import('axios');
   const { default: createCliLogger } = await import('@lowdefy/logger/cli');
   const error = new Error('Test error');
   const context = {
@@ -81,24 +82,24 @@ test('Print and log error with starting context', async () => {
 
   const logger = createCliLogger.mock.results[0].value;
   expect(logger.error.mock.calls).toEqual([[error]]);
-  const axiosArguments = axios.request.mock.calls[0][0];
-  expect(axiosArguments.headers).toEqual({
+  const request = sentRequest();
+  expect(request.headers).toEqual({
+    'Content-Type': 'application/json',
     'User-Agent': 'Lowdefy CLI vcliVersion',
   });
-  expect(axiosArguments.url).toEqual('https://api.lowdefy.net/errors');
-  expect(axiosArguments.method).toEqual('post');
-  expect(axiosArguments.data.cliVersion).toEqual('cliVersion');
-  expect(axiosArguments.data.message).toEqual('Test error');
-  expect(axiosArguments.data.name).toEqual('Error');
-  expect(axiosArguments.data.source).toEqual('cli');
-  expect(axiosArguments.data.stack).toMatch(/^ +at /);
-  expect(axiosArguments.data.lowdefyVersion).toBe(undefined);
-  expect(axiosArguments.data.command).toBe(undefined);
+  expect(request.url).toEqual('https://api.lowdefy.net/errors');
+  expect(request.method).toEqual('POST');
+  expect(request.data.cliVersion).toEqual('cliVersion');
+  expect(request.data.message).toEqual('Test error');
+  expect(request.data.name).toEqual('Error');
+  expect(request.data.source).toEqual('cli');
+  expect(request.data.stack).toMatch(/^ +at /);
+  expect(request.data.lowdefyVersion).toBe(undefined);
+  expect(request.data.command).toBe(undefined);
 });
 
 test('errorHandler does not report the error when options.disableTelemetry is set', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
-  const { default: axios } = await import('axios');
   const { default: createCliLogger } = await import('@lowdefy/logger/cli');
   const error = new Error('Test error');
   const context = {
@@ -111,27 +112,25 @@ test('errorHandler does not report the error when options.disableTelemetry is se
 
   const logger = createCliLogger.mock.results[0].value;
   expect(logger.error.mock.calls).toEqual([[error]]);
-  expect(axios.request.mock.calls).toEqual([]);
+  expect(mockFetch.mock.calls).toEqual([]);
 });
 
 test('errorHandler does not report the error when startUp failed before options were resolved', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
-  const { default: axios } = await import('axios');
   const error = new Error('Test error');
   const context = {
     cliVersion: 'cliVersion',
     commandLineOptions: { disableTelemetry: true },
   };
   await errorHandler({ context, error });
-  expect(axios.request.mock.calls).toEqual([]);
+  expect(mockFetch.mock.calls).toEqual([]);
 });
 
 test('Pass if logError fails', async () => {
   const { default: errorHandler } = await import('./errorHandler.js');
-  const { default: axios } = await import('axios');
   const { default: createCliLogger } = await import('@lowdefy/logger/cli');
   let didThrow = false;
-  axios.request.mockImplementationOnce(() => {
+  mockFetch.mockImplementationOnce(() => {
     didThrow = true;
     throw new Error('Network error');
   });
@@ -144,6 +143,6 @@ test('Pass if logError fails', async () => {
   await errorHandler({ context, error });
   const logger = createCliLogger.mock.results[0].value;
   expect(logger.error.mock.calls).toEqual([[error]]);
-  expect(axios.request.mock.calls.length).toBe(1);
+  expect(mockFetch.mock.calls.length).toBe(1);
   expect(didThrow).toBe(true);
 });

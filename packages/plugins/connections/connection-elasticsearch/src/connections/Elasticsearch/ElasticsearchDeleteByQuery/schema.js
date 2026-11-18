@@ -20,6 +20,20 @@ export default {
   type: 'object',
   description: 'Deletes documents that match the specified query.',
   properties: {
+    query: {
+      description:
+        'The documents to delete, as a query in the Elasticsearch Query DSL. See https://www.elastic.co/docs/explore-analyze/query-filter/languages/querydsl.',
+      type: 'object',
+    },
+    slice: {
+      description: 'Slice the request manually, with an "id" and the total number of slices "max".',
+      type: 'object',
+    },
+    body: {
+      not: {},
+      errorMessage:
+        'was removed in Lowdefy 8 (Elasticsearch client 9). Move the keys in "body" (like "query") to the top level of the request properties',
+    },
     index: {
       type: 'string',
       description: 'The name of the index.',
@@ -149,50 +163,30 @@ export default {
         "The number of slices this task should be divided into. Defaults to 1 meaning the task isn't sliced into subtasks.",
     },
     sort: {
-      description: 'A comma-separated list of <field>:<direction> pairs.',
-      examples: ['name:asc', ['rating:asc', 'created_at:desc']],
+      description:
+        'The order to process documents in when "max_docs" is set, in the Elasticsearch sort syntax: a field name, or an array of field names and objects like { timestamp: desc }.',
+      examples: ['name', ['name', { timestamp: 'desc' }]],
       anyOf: [
-        {
-          items: {
-            type: 'string',
-          },
-          type: 'array',
-        },
         {
           type: 'string',
         },
-      ],
-    },
-    _source: {
-      anyOf: [
         {
-          type: 'boolean',
+          type: 'object',
         },
         {
           type: 'array',
+          items: {
+            anyOf: [
+              {
+                type: 'string',
+              },
+              {
+                type: 'object',
+              },
+            ],
+          },
         },
       ],
-      items: {
-        type: 'string',
-      },
-      description:
-        'True or false to return the _source field or not, or a list of fields to return.',
-    },
-    _source_excludes: {
-      type: 'array',
-      items: {
-        type: 'string',
-      },
-      description:
-        'A comma-separated list of source fields to exclude from the response.\n\nYou can also use this parameter to exclude fields from the subset specified in _source_includes query parameter.\n\nIf the _source parameter is false, this parameter is ignored.',
-    },
-    _source_includes: {
-      type: 'array',
-      items: {
-        type: 'string',
-      },
-      description:
-        'A comma-separated list of source fields to include in the response.\n\nIf this parameter is specified, only these source fields are returned. You can exclude fields from this subset using the _source_excludes query parameter.\n\nIf the _source parameter is false, this parameter is ignored.',
     },
     stats: {
       description: 'Specific tag of the request for logging and statistical purposes',
@@ -224,6 +218,12 @@ export default {
         'Explicit version number for concurrency control. The specified version must match the current version of the document for the request to succeed.',
       type: 'integer',
     },
+    wait_for_completion: {
+      type: 'boolean',
+      description:
+        'If true, the request blocks until the operation is complete. If false, Elasticsearch runs the operation as a task and the response holds the task id. Default: true',
+      default: true,
+    },
     wait_for_active_shards: {
       type: 'string',
       description:
@@ -232,6 +232,6 @@ export default {
     },
   },
   errorMessage: {
-    type: 'ElasticsearchDelete request properties should be an object.',
+    type: 'ElasticsearchDeleteByQuery request properties should be an object.',
   },
 };

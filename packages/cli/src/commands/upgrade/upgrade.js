@@ -15,15 +15,19 @@
 */
 
 import path from 'path';
-import axios from 'axios';
 import semver from 'semver';
 
+import httpFetch from '../../utils/httpFetch.js';
 import { updateLowdefyVersion } from './executePhase.js';
 import getCodemods from './getCodemods.js';
 import resolveChain from './resolveChain.js';
 import runUpgrade from './runUpgrade.js';
 import { readUpgradeState } from './upgradeState.js';
 import { askQuestion } from './handlePrompt.js';
+
+// A package document lists every version's metadata: the upgrade waits longer than the default
+// for it on a slow network.
+const REGISTRY_TIMEOUT_MS = 30000;
 
 async function upgrade({ context }) {
   const currentVersion = context.lowdefyVersion;
@@ -42,8 +46,15 @@ async function upgrade({ context }) {
   if (!targetVersion) {
     logger.info({ spin: 'start' }, 'Checking latest Lowdefy version...');
     try {
-      const packageInfo = await axios.get('https://registry.npmjs.org/lowdefy');
-      targetVersion = packageInfo.data['dist-tags'].latest;
+      const response = await httpFetch({
+        url: 'https://registry.npmjs.org/lowdefy',
+        timeoutMs: REGISTRY_TIMEOUT_MS,
+      });
+      if (!response.ok) {
+        throw new Error(`Request failed with status code ${response.status}`);
+      }
+      const packageInfo = await response.json();
+      targetVersion = packageInfo['dist-tags'].latest;
     } catch {
       throw new Error('Could not reach npm registry to determine latest version.');
     }

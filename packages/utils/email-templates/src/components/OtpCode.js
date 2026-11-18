@@ -15,8 +15,9 @@
 */
 
 import React from 'react';
-import { Text } from '@react-email/components';
 import { type } from '@lowdefy/helpers';
+
+import Text from '../reactEmail/Text.js';
 
 // The code is read off the screen and typed (or copied) into the tab the person
 // started from, so it is rendered large, widely tracked and as selectable text -

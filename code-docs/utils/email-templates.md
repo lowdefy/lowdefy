@@ -54,6 +54,12 @@ Turns a `{ pageId, urlQuery, pathParams }` link object into a URL string (direct
 
 A fixed layout (logo header, greeting, content, signature, footer) parameterized by the theme. `defaultTheme.js` is the baseline; apps override via `app.email`, and a notification can override per-instance.
 
+### React Email components
+
+**Location:** `src/reactEmail/`
+
+The React Email building blocks the templates use (`Body`, `Button`, `Container`, `Head`, `Heading`, `Hr`, `Html`, `Img`, `Link`, `Preview`, `Section`, `Text`), copied from react-email 6.11.11 with its MIT notice in each file, because `@react-email/components` is deprecated and its replacement, the `react-email` package, also carries the CLI and preview server. The copies keep upstream's markup and styles; only TypeScript, `React.forwardRef` and the Tailwind element marker are left out. To take a later upstream fix, copy the change from `packages/react-email/src/components/` in the react-email repository.
+
 ### buildPreviewProps
 
 **Location:** `src/buildPreviewProps.js`

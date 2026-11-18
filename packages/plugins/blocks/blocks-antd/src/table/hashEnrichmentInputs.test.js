@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-/* global BigInt */
-
 import fs from 'fs';
 import { serializer } from '@lowdefy/helpers';
 

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import buildTimelineRows from './buildTimelineRows.js';
 
 const sam = { id: 'u1', name: 'Sam Taylor' };

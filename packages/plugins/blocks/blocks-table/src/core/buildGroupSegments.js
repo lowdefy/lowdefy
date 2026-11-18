@@ -20,7 +20,7 @@
 function buildGroupSegments({ cols, level, ancestorsByKey }) {
   const segments = [];
   cols.forEach((col) => {
-    const node = col.special ? null : ancestorsByKey.get(col.key)?.[level] ?? null;
+    const node = col.special ? null : (ancestorsByKey.get(col.key)?.[level] ?? null);
     const last = segments[segments.length - 1];
     if (last && last.node === node) {
       last.cols.push(col);

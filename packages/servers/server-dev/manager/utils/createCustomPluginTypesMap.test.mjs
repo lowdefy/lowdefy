@@ -58,9 +58,8 @@ vi.doMock('node:module', () => ({
 }));
 
 const { default: createCustomPluginTypesMap } = await import('./createCustomPluginTypesMap.mjs');
-const { default: createCustomPluginMessagesMap } = await import(
-  './createCustomPluginMessagesMap.mjs'
-);
+const { default: createCustomPluginMessagesMap } =
+  await import('./createCustomPluginMessagesMap.mjs');
 const { clearPluginTypeCache } = await import('./pluginTypeCache.mjs');
 
 const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn() };

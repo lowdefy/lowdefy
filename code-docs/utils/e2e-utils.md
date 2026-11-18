@@ -94,16 +94,16 @@ ldf.mock.request('id', { response }); // Inline mocking
 
 ### Core (`src/core/`)
 
-| File              | Purpose                                                               |
-| ----------------- | --------------------------------------------------------------------- |
-| `navigation.js`   | `goto()`, `waitForPage()` - navigation with Lowdefy ready detection   |
-| `requests.js`     | Request state access, `toFinish()`, `toHavePayload()` assertions      |
-| `state.js`        | State access via `page.evaluate()` into `window.lowdefy`              |
-| `url.js`          | URL and query parameter assertions                                    |
-| `validation.js`   | Block validation state access                                         |
-| `locators.js`     | Common locator patterns                                               |
-| `verifyServer.js` | Checks the server on a port is this app's e2e build (`globalSetup`)   |
-| `userCookie.js`   | Set/clear `lowdefy_e2e_user` cookie via `browserContext.addCookies()` |
+| File              | Purpose                                                                |
+| ----------------- | ---------------------------------------------------------------------- |
+| `navigation.js`   | `goto()`, `waitForPage()` - navigation, ready once the page onInit ran |
+| `requests.js`     | Request state access, `toFinish()`, `toHavePayload()` assertions       |
+| `state.js`        | State access via `page.evaluate()` into `window.lowdefy`               |
+| `url.js`          | URL and query parameter assertions                                     |
+| `validation.js`   | Block validation state access                                          |
+| `locators.js`     | Common locator patterns                                                |
+| `verifyServer.js` | Checks the server on a port is this app's e2e build (`globalSetup`)    |
+| `userCookie.js`   | Set/clear `lowdefy_e2e_user` cookie via `browserContext.addCookies()`  |
 
 ### Proxy (`src/proxy/`)
 
@@ -123,12 +123,19 @@ ldf.mock.request('id', { response }); // Inline mocking
 
 ### Init (`src/init/`)
 
-| File                 | Purpose                                     |
-| -------------------- | ------------------------------------------- |
-| `index.js`           | CLI entry point (`npx @lowdefy/e2e-utils`)  |
-| `detectApps.js`      | Finds Lowdefy apps in `app/` or `apps/`     |
-| `generateFiles.js`   | Creates e2e folder structure from templates |
-| `updateGitignore.js` | Adds test artifacts to .gitignore           |
+| File                 | Purpose                                                       |
+| -------------------- | ------------------------------------------------------------- |
+| `index.js`           | CLI entry point (`npx @lowdefy/e2e-utils`)                    |
+| `detectApps.js`      | Finds Lowdefy apps in `app/` or `apps/`                       |
+| `generateFiles.js`   | Creates e2e folder structure from templates                   |
+| `updateGitignore.js` | Adds test artifacts to .gitignore                             |
+| `prompts/`           | Numbered-list, yes/no and single-choice questions on readline |
+
+The questions use `node:readline/promises` with no prompt library. A choice list is printed
+numbered and answered by typing numbers (`1,3`; empty selects every app, or the first
+version). `createAsk` reads answers from the interface's async line iterator, not
+`rl.question`, so answers piped in at once (`printf '1\ny\n\n' | npx lowdefy-e2e init`) each
+reach their question. Ctrl+C or a closed input cancels the setup.
 
 ### Config (`src/config.js`)
 
@@ -531,8 +538,7 @@ src/
 ```
 @lowdefy/blocks-antd    # Block e2e helpers
 @lowdefy/blocks-basic   # Block e2e helpers
-js-yaml                 # Parse mocks.yaml
-prompts                 # CLI prompts
+yaml                    # Parse mocks.yaml and pnpm-workspace.yaml
 
 peerDependencies:
 @playwright/test        # Testing framework

@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getDictationWarning from './getDictationWarning.js';
 
 test('getDictationWarning gives denied when the permission is refused', () => {

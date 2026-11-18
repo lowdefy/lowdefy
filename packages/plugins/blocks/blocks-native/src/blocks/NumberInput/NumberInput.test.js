@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import { TextInput } from 'react-native';
 import { act, fireEvent, screen } from '@testing-library/react-native';
 
@@ -90,6 +91,7 @@ test('a required NumberInput shows its message after Validate', async () => {
 });
 
 test('the row variant is a Settings row: the title at the left, the number right-aligned', async () => {
+  const focus = vi.spyOn(TextInput.prototype, 'focus');
   await renderPage({
     pageConfig: formPage({
       blocks: [
@@ -122,7 +124,7 @@ test('the row variant is a Settings row: the title at the left, the number right
   await act(async () => {
     fireEvent.press(screen.getByTestId('qty_row'));
   });
-  expect(TextInput.prototype.focus).toHaveBeenCalledTimes(1);
+  expect(focus).toHaveBeenCalledTimes(1);
   await act(async () => {
     fireEvent.changeText(screen.getByTestId('qty_input'), '4');
   });

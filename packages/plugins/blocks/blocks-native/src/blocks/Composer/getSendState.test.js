@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getSendState from './getSendState.js';
 
 test('getSendState disables send while the text is empty or only whitespace', () => {

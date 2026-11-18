@@ -38,9 +38,8 @@ vi.doMock('./tenant/applyTenantToUpdate.js', () => ({
 const { default: MongoDBBulkWrite } = await import('./MongoDBBulkWrite/MongoDBBulkWrite.js');
 const { default: MongoDBInsertMany } = await import('./MongoDBInsertMany/MongoDBInsertMany.js');
 const { default: MongoDBInsertOne } = await import('./MongoDBInsertOne/MongoDBInsertOne.js');
-const { default: MongoDBTableChanges } = await import(
-  './MongoDBTableChanges/MongoDBTableChanges.js'
-);
+const { default: MongoDBTableChanges } =
+  await import('./MongoDBTableChanges/MongoDBTableChanges.js');
 const { default: MongoDBUpdateOne } = await import('./MongoDBUpdateOne/MongoDBUpdateOne.js');
 const { default: MongoDBUpdateMany } = await import('./MongoDBUpdateMany/MongoDBUpdateMany.js');
 const { default: getTestCollection } = await import('../../../test/getTestCollection.js');

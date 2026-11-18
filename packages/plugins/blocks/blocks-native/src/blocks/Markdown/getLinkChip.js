@@ -63,7 +63,7 @@ function getLinkChip({ href, linkChips = [], text }) {
   const label = text.trim();
   if (chip.label === 'text' || value === null || value === '') {
     const key = withPrefix({ chip, label });
-    return { chip, key: key === '' ? value ?? '' : key, title: null };
+    return { chip, key: key === '' ? (value ?? '') : key, title: null };
   }
   let key;
   let title;

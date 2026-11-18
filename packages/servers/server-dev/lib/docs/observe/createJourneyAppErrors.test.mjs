@@ -21,9 +21,8 @@ vi.doMock('./waitForClientErrorReports.js', () => ({ default: async () => {} }))
 const { default: createJourneyAppErrors } = await import('./createJourneyAppErrors.js');
 const { default: installStepObserver } = await import('./installStepObserver.js');
 const { default: readStepObserver } = await import('./readStepObserver.js');
-const { recordRunError, registerRunBuffer, releaseRunBuffer } = await import(
-  '../runErrorBuffers.js'
-);
+const { recordRunError, registerRunBuffer, releaseRunBuffer } =
+  await import('../runErrorBuffers.js');
 
 const origin = 'http://localhost:3227';
 const run = { run: '20261005T120000Z-ae0001', journey: null };

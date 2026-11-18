@@ -14,14 +14,15 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import { Linking } from 'react-native';
 
 import openPath from './openPath.js';
 import startShortcuts from './startShortcuts.js';
 
-jest.mock('./openPath.js', () => jest.fn());
+vi.mock('./openPath.js', () => ({ default: vi.fn() }));
 // The app was launched from the New job quick action.
-jest.mock('expo-quick-actions', () => ({
+vi.mock('expo-quick-actions', () => ({
   initial: { id: 'new_job' },
   setItems: async () => undefined,
   addListener: () => ({ remove: () => undefined }),
@@ -34,12 +35,12 @@ function createApp() {
   return {
     ready: Promise.resolve(),
     session: { getState: () => ({ root }), subscribe: () => () => undefined },
-    triggerAppEvent: jest.fn(),
+    triggerAppEvent: vi.fn(),
   };
 }
 
 test('the quick action that launched the app runs once, not again after a sign-out', async () => {
-  jest.spyOn(Linking, 'getInitialURL').mockResolvedValue(null);
+  vi.spyOn(Linking, 'getInitialURL').mockResolvedValue(null);
   const first = createApp();
   const stop = startShortcuts({ app: first });
   await flush();

@@ -15,9 +15,10 @@
 */
 
 import React from 'react';
-import { Button, Section } from '@react-email/components';
 import { type } from '@lowdefy/helpers';
 
+import Button from '../reactEmail/Button.js';
+import Section from '../reactEmail/Section.js';
 import defaultTheme from '../defaultTheme.js';
 
 function CtaButton({ label, href, theme }) {

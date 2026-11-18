@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { describe, expect, test } from 'vitest';
+
 import getPageView from './getPageView.js';
 import { createPage, createRoot, shell } from '../test/fixtures.js';
 

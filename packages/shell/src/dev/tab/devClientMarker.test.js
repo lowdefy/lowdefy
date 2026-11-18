@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import DEV_CLIENT_MARKER from './devClientMarker.js';
 
 const { DEV_CLIENT_MARKER: RELEASE_CHECK_MARKER } = require('../../../shellVariant.js');

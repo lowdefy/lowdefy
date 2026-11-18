@@ -106,7 +106,7 @@ pages:
     logger: {
       info: () => {},
       log: () => {},
-      warn: (arg) => warnings.push(typeof arg === 'string' ? arg : arg?.msg ?? ''),
+      warn: (arg) => warnings.push(typeof arg === 'string' ? arg : (arg?.msg ?? '')),
       error: () => {},
       succeed: () => {},
     },

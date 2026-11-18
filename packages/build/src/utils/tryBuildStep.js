@@ -36,10 +36,7 @@ function tryBuildStep(stepFn, stepName, { components, context }) {
     return stepFn({ components, context });
   } catch (error) {
     // Skip suppressed ConfigErrors (via ~ignoreBuildChecks)
-    if (
-      error instanceof ConfigError &&
-      shouldSuppressBuildCheck(error, context.keyMap)
-    ) {
+    if (error instanceof ConfigError && shouldSuppressBuildCheck(error, context.keyMap)) {
       return;
     }
     // Collect error object - logging happens at checkpoints in index.js

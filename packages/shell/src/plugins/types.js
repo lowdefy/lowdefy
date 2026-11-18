@@ -22,7 +22,6 @@ import * as cronOperators from '@lowdefy/operators-cron/operators/client';
 import * as dayjsOperators from '@lowdefy/operators-dayjs/operators/client';
 import * as diffOperators from '@lowdefy/operators-diff/operators/client';
 import * as jsOperators from '@lowdefy/operators-js/operators/client';
-import * as jsonataOperators from '@lowdefy/operators-jsonata/operators/client';
 import * as mqlOperators from '@lowdefy/operators-mql/operators/client';
 import * as nunjucksOperators from '@lowdefy/operators-nunjucks/operators/client';
 import * as uuidOperators from '@lowdefy/operators-uuid/operators/client';
@@ -53,7 +52,6 @@ const types = {
     ...cronOperators,
     ...dayjsOperators,
     ...diffOperators,
-    ...jsonataOperators,
     ...mqlOperators,
     ...nunjucksOperators,
     ...uuidOperators,

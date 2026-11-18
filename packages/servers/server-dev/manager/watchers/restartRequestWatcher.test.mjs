@@ -45,6 +45,13 @@ beforeEach(async () => {
   };
 });
 
+// On macOS the watcher's new directory restarts the process's FSEvents
+// stream, which loses a write made during the restart (see flushFsEvents).
+async function startWatcher() {
+  watcher = await restartRequestWatcher(context);
+  await flushFsEvents();
+}
+
 afterEach(async () => {
   if (watcher) {
     await watcher.close();
@@ -54,7 +61,7 @@ afterEach(async () => {
 });
 
 test('writing build/.restart restarts the server once and removes the sentinel', async () => {
-  watcher = await restartRequestWatcher(context);
+  await startWatcher();
   const sentinelPath = path.join(fixtureDir, 'build', '.restart');
 
   fs.writeFileSync(
@@ -84,7 +91,7 @@ test('writing build/.restart restarts the server once and removes the sentinel',
 });
 
 test('a restart request rebuilds the config before restarting the server', async () => {
-  watcher = await restartRequestWatcher(context);
+  await startWatcher();
   const sentinelPath = path.join(fixtureDir, 'build', '.restart');
 
   fs.writeFileSync(sentinelPath, JSON.stringify({ reason: 'Added a block type' }));
@@ -100,7 +107,7 @@ test('a restart request rebuilds the config before restarting the server', async
 
 test('a restart request restarts the server when the config build fails', async () => {
   context.lowdefyBuild.mockRejectedValue(new Error('Build failed with 1 error(s).'));
-  watcher = await restartRequestWatcher(context);
+  await startWatcher();
   const sentinelPath = path.join(fixtureDir, 'build', '.restart');
 
   fs.writeFileSync(sentinelPath, JSON.stringify({ reason: 'Added a block type' }));
@@ -135,7 +142,7 @@ test('a block added to a local plugin file its types re-export is defined after 
   await context.lowdefyBuild();
   expect(types).toEqual({ blocks: ['Card'] });
 
-  watcher = await restartRequestWatcher(context);
+  await startWatcher();
   fs.writeFileSync(
     path.join(fixtureDir, 'build', '.restart'),
     JSON.stringify({ reason: 'Added a block type' })

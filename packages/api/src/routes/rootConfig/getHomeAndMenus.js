@@ -45,7 +45,6 @@ async function getHomeAndMenus(context) {
 
   let defaultMenu = menus.find((menu) => menu.menuId === 'default');
   if (!defaultMenu) {
-    // eslint-disable-next-line prefer-destructuring
     defaultMenu = menus[0];
   }
   const homeLink = findHomeLink(defaultMenu);

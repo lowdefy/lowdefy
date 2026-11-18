@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import React from 'react';
-import { Linking, Text } from 'react-native';
+import { Linking, StyleSheet, Text } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { translate as translateMessage } from '@lowdefy/helpers';
 
@@ -48,13 +49,14 @@ test('DictationWarning shows nothing without a warning', async () => {
 });
 
 test('DictationWarning says the microphone is off, with Settings opening the app settings', async () => {
+  const openSettings = vi.spyOn(Linking, 'openSettings');
   await renderWarning('denied');
-  expect(screen.getByText('Microphone access is off.').props.style).toContainEqual({
-    color: colors.warningText,
-  });
+  expect(
+    StyleSheet.flatten(screen.getByText('Microphone access is off.').props.style)
+  ).toMatchObject({ color: colors.warningText });
   expect(screen.getByTestId('icon-TriangleAlert')).toBeTruthy();
   fireEvent.press(screen.getByText('Settings'));
-  expect(Linking.openSettings).toHaveBeenCalledTimes(1);
+  expect(openSettings).toHaveBeenCalledTimes(1);
 });
 
 test('DictationWarning says dictation stopped, without Settings, for other errors', async () => {

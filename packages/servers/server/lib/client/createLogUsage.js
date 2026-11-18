@@ -13,8 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { v4 as uuid } from 'uuid';
 import { createUrl } from '@lowdefy/client/adapters/url.js';
+
+import createMachineId from './createMachineId.js';
 
 // What about public usage
 
@@ -40,12 +41,12 @@ function getMachineId({ host }) {
     const store = getMachineStore({ host });
     let machine = store.get(MACHINE_ID_KEY);
     if (!machine) {
-      machine = uuid();
+      machine = createMachineId();
       store.set(MACHINE_ID_KEY, machine);
     }
     return machine;
   } catch (error) {
-    return uuid();
+    return createMachineId();
   }
 }
 

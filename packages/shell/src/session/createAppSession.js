@@ -157,7 +157,7 @@ function createAppSession({ apiBase, app, cacheStore, fetch, kv, tokenStore }) {
     // Another caller's pages: those cached when this caller last opened the app, if any. A 304 still
     // applies: the root is the same for both callers.
     const heldPages =
-      cacheKey === state.cacheKey ? state.pages : (await cacheStore.read(cacheKey))?.pages ?? {};
+      cacheKey === state.cacheKey ? state.pages : ((await cacheStore.read(cacheKey))?.pages ?? {});
     const root = rootResult.notModified ? state.root : rootResult.root;
     const pages = keepIndexedPages({ pages: heldPages, root });
     const removed = Object.keys(heldPages).filter((pageId) => pages[pageId] === undefined);

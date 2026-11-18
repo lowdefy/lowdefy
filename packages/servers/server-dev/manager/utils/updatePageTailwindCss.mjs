@@ -39,10 +39,7 @@ async function updatePageTailwindCss({ changedFiles, context }) {
     .filter((f) => f.endsWith('.yaml') || f.endsWith('.yml'))
     .forEach((f) => {
       try {
-        const content = fs.readFileSync(
-          path.join(context.directories.config, f),
-          'utf8'
-        );
+        const content = fs.readFileSync(path.join(context.directories.config, f), 'utf8');
         const doc = YAML.parse(content);
 
         const pageId = path.basename(f, path.extname(f));

@@ -16,20 +16,12 @@
 
 import { type } from '@lowdefy/helpers';
 import { createClient } from 'redis';
+import createClientOptions from './createClientOptions.js';
 import schema from './schema.js';
 
 async function Redis({ request, connection }) {
-  const connectionObject = type.isString(connection.connection)
-    ? { url: connection.connection }
-    : connection.connection;
-
-  const client = new createClient(connectionObject);
-  client.on('error', (error) => {
-    throw error;
-  });
-
   const { command, parameters, modifiers } = request;
-  await client.connect();
+  const client = createClient(createClientOptions({ connection: connection.connection }));
 
   if (!type.isFunction(client[command.toUpperCase()])) {
     throw new Error(`Invalid redis command "${command}".`);
@@ -44,12 +36,17 @@ async function Redis({ request, connection }) {
     return acc;
   }, {});
 
+  // Connection and command errors reject the connect() or command promise below. The client
+  // also emits them as 'error' events, which crash the process when nothing listens.
+  client.on('error', () => {});
+  await client.connect();
+
   try {
     const commandReturn = await client[command.toUpperCase()](...parameters, upperCaseModifiers);
-    await client.quit();
+    await client.close();
     return commandReturn;
   } catch (error) {
-    client.quit();
+    client.destroy();
     throw error;
   }
 }

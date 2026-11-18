@@ -13,6 +13,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
+
+import { expect, test } from 'vitest';
+
 import { act, fireEvent, within } from '@testing-library/react-native';
 
 import formPage from '../../test/formPage.js';

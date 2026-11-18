@@ -121,11 +121,6 @@ const features = [
   }),
   virtualizationFeature,
   optional({
-    name: 'positionedRows',
-    needs: ({ rowWindowStrategy }) => rowWindowStrategy === 'positioned',
-    load: () => import('./virtualization/positionedRowsFeature.js'),
-  }),
-  optional({
     name: 'serverRange',
     needs: needsServerData,
     load: () => import('./serverData/serverRangeFeature.js'),

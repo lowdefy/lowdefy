@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import parseIllustration from './parseIllustration.js';
 import toBoundingBoxGradients from './toBoundingBoxGradients.js';
 

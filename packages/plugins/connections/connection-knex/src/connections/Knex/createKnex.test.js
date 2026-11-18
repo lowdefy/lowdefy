@@ -83,6 +83,7 @@ test('createKnex converts a connection object port given as a string to a number
     server: 'server',
     port: 45678,
     database: 'db',
+    options: { encrypt: true },
   });
 });
 
@@ -112,4 +113,31 @@ test('createKnex leaves a numeric connection port unchanged', async () => {
     connection: { server: 'server', port: 45678, database: 'db' },
   });
   expect(knexClient.client.connectionSettings.port).toBe(45678);
+});
+
+test('createKnex turns encryption on for an mssql connection that does not set encrypt', async () => {
+  const createKnex = (await import('./createKnex.js')).default;
+  const knexClient = createKnex({ client: 'mssql', connection: { server: 'server' } });
+  expect(knexClient.client.connectionSettings).toEqual({
+    server: 'server',
+    options: { encrypt: true },
+  });
+});
+
+test('createKnex respects encrypt false on an mssql connection', async () => {
+  const createKnex = (await import('./createKnex.js')).default;
+  const knexClient = createKnex({
+    client: 'mssql',
+    connection: { server: 'server', options: { encrypt: false } },
+  });
+  expect(knexClient.client.connectionSettings).toEqual({
+    server: 'server',
+    options: { encrypt: false },
+  });
+});
+
+test('createKnex does not set encrypt for clients other than mssql', async () => {
+  const createKnex = (await import('./createKnex.js')).default;
+  const knexClient = createKnex({ client: 'pg', connection: { host: 'host' } });
+  expect(knexClient.client.connectionSettings).toEqual({ host: 'host' });
 });

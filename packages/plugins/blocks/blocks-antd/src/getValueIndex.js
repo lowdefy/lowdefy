@@ -16,9 +16,7 @@
 
 import { serializer, type } from '@lowdefy/helpers';
 
-// eslint-disable-next-line consistent-return
 const getIndex = (value, options, key = 'value') => {
-  // eslint-disable-next-line no-plusplus
   for (let i = 0; i < options.length; i++) {
     if (type.isPrimitive(options[i]) && options[i] === value) {
       return `${i}`;

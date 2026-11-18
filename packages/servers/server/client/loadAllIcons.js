@@ -33,7 +33,6 @@ function loadAllIcons() {
       },
       (error) => {
         loading = null;
-        // eslint-disable-next-line no-console
         console.error(error);
         throw error;
       }

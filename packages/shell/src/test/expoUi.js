@@ -18,7 +18,7 @@ import React from 'react';
 import { Text, View } from 'react-native';
 
 // Stand-ins for the @expo/ui controls the native blocks use: @expo/ui draws SwiftUI and Jetpack
-// Compose views through native modules Jest does not have. They keep the props the blocks pass,
+// Compose views through native modules a test does not have. They keep the props the blocks pass,
 // so a test fires their callbacks with fireEvent(view, 'valueChange', ...).
 function Host({ children }) {
   return <View>{children}</View>;

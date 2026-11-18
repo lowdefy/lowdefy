@@ -82,7 +82,7 @@ export default function Services() {
                   key={solution.title}
                   className="flex items-start gap-3 p-4 bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800"
                 >
-                  <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0">
+                  <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
                     <solution.icon style={{ fontSize: 20, color: '#22d3ee' }} />
                   </div>
                   <div>
@@ -120,7 +120,7 @@ export default function Services() {
                 className="h-7 w-auto dark:invert"
               />
             </div>
-            <div className="bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-900/50 p-8 border border-slate-200 dark:border-slate-800 bracket-corners bracket-corners-cyan">
+            <div className="bg-white dark:bg-linear-to-br/srgb dark:from-slate-900 dark:to-slate-900/50 p-8 border border-slate-200 dark:border-slate-800 bracket-corners bracket-corners-cyan">
               <div className="grid grid-cols-2 gap-4 mb-6 pb-6 border-b border-slate-200 dark:border-slate-700">
                 <div className="text-center">
                   <div className="text-4xl font-bold text-slate-900 dark:text-white mb-1">10+</div>
@@ -188,7 +188,7 @@ export default function Services() {
                     className="w-10 h-10 rounded-full object-cover"
                   />
                   <div>
-                    <div className="text-slate-900 dark:text-white font-medium text-sm group-hover:text-primary-400 transition-colors">
+                    <div className="text-slate-900 dark:text-white font-medium text-sm group-hover:text-primary-400 dark:group-hover:text-primary-400 transition-colors">
                       Gerrie van Wyk
                     </div>
                     <div className="text-slate-500 dark:text-slate-400 text-xs">

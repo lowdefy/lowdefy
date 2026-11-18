@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getLabelState from './getLabelState.js';
 
 test('an input without a title has no label title, and a title drops a trailing colon', () => {

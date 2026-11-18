@@ -24,8 +24,9 @@ import flushFsEvents from './flushFsEvents.mjs';
 // internally: wait for it to be ready, check what it watches, or listen to its
 // events. Call it before importing that module. Returns the live list of
 // { watcher, ready } entries, oldest first; ready resolves once the watcher's
-// ready event has fired and the OS reports file events to it. chokidar 4 watches
-// with fs.watch, which on macOS can miss a write made right after ready.
+// ready event has fired and the OS reports file events to it. chokidar watches
+// with fs.watch, which on macOS can miss a write made right after ready (see
+// flushFsEvents).
 function spyOnChokidar() {
   const watchers = [];
   function watch(...args) {

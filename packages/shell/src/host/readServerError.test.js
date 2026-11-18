@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { getDevError } from '@lowdefy/engine';
 import { AuthorizationError, RequestError } from '@lowdefy/errors';
 

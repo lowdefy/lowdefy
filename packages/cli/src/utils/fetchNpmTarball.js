@@ -19,49 +19,44 @@ import path from 'node:path';
 import { Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
 
-import axios from 'axios';
 import { Unpack } from 'tar';
 
+import httpFetch from './httpFetch.js';
 import verifyIntegrity from './verifyIntegrity.js';
+
+// A package document runs to a megabyte or two (every version's metadata): a command that needs
+// it waits longer than the default before giving up on a slow network.
+const REGISTRY_TIMEOUT_MS = 30000;
 
 async function fetchNpmTarball({ packageName, version, directory }) {
   const registryUrl = `https://registry.npmjs.org/${packageName}`;
-  let packageInfo;
-  try {
-    packageInfo = await axios.get(registryUrl);
-  } catch (error) {
-    if (error.response && error.response.status === 404) {
-      throw new Error(`Package "${packageName}" could not be found at ${registryUrl}.`);
-    }
-    throw error;
-  }
-
-  if (!packageInfo || !packageInfo.data) {
+  const packageResponse = await httpFetch({ url: registryUrl, timeoutMs: REGISTRY_TIMEOUT_MS });
+  if (packageResponse.status === 404) {
     throw new Error(`Package "${packageName}" could not be found at ${registryUrl}.`);
   }
+  if (!packageResponse.ok) {
+    throw new Error(`Request failed with status code ${packageResponse.status}`);
+  }
+  const packageInfo = await packageResponse.json();
 
-  if (!packageInfo.data.versions[version]) {
+  if (!packageInfo.versions[version]) {
     throw new Error(`Invalid version. "${packageName}" does not have version "${version}".`);
   }
-  const { dist } = packageInfo.data.versions[version];
-  let tarball;
+  const { dist } = packageInfo.versions[version];
 
-  try {
-    tarball = await axios.get(dist.tarball, {
-      responseType: 'arraybuffer',
-    });
-  } catch (error) {
-    if (error.response && error.response.status === 404) {
-      throw new Error(`Package "${packageName}" tarball could not be found at ${dist.tarball}.`);
-    }
-    throw error;
-  }
-
-  if (!tarball || !tarball.data) {
+  // No timeout: one would cut a download off mid-file on a slow network. The whole tarball is
+  // read before anything is extracted, so its integrity is checked first.
+  const tarballResponse = await httpFetch({ url: dist.tarball, timeoutMs: 0 });
+  if (tarballResponse.status === 404) {
     throw new Error(`Package "${packageName}" tarball could not be found at ${dist.tarball}.`);
   }
+  if (!tarballResponse.ok) {
+    throw new Error(`Request failed with status code ${tarballResponse.status}`);
+  }
+  const tarball = Buffer.from(await tarballResponse.arrayBuffer());
+
   verifyIntegrity({
-    data: tarball.data,
+    data: tarball,
     integrity: dist.integrity,
     name: `Package "${packageName}@${version}" tarball`,
   });
@@ -79,7 +74,7 @@ async function fetchNpmTarball({ packageName, version, directory }) {
     // outside the directory (a "../" path, an absolute path or a link out)
     // fails the extraction instead of being skipped.
     await pipeline(
-      Readable.from([tarball.data]),
+      Readable.from([tarball]),
       new Unpack({
         cwd: staging,
         strict: true,

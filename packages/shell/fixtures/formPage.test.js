@@ -14,17 +14,18 @@
   limitations under the License.
 */
 
+import { afterAll, beforeAll, expect, test, vi } from 'vitest';
+
 // Builds the form fixture with the Lowdefy build and renders its page with the native blocks,
 // the native renderer and the engine: a page of the list, input and action blocks, as a shell
 // draws it from what the server sends, with the shell's own plugin map. @expo/ui is mapped to the
-// stand-ins in src/test (jest.config.js).
+// stand-ins in src/test (vitest.config.js).
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
 import React from 'react';
-import { jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { createNativeGlobals, LowdefyPage } from '@lowdefy/client-native';
 
@@ -56,7 +57,7 @@ afterAll(() => {
 });
 
 function createHost() {
-  const fetch = jest.fn(async () => ({
+  const fetch = vi.fn(async () => ({
     ok: true,
     status: 200,
     headers: { get: () => null },
@@ -65,23 +66,23 @@ function createHost() {
   return {
     fetch,
     globals: createNativeGlobals({
-      assign: jest.fn(),
+      assign: vi.fn(),
       fetch,
       getPath: () => '/form',
       origin: 'https://form.example.com',
     }),
-    onBuildChanged: jest.fn(),
-    onCallerChanged: jest.fn(),
-    router: { back: jest.fn(), push: jest.fn(), replace: jest.fn() },
+    onBuildChanged: vi.fn(),
+    onCallerChanged: vi.fn(),
+    router: { back: vi.fn(), push: vi.fn(), replace: vi.fn() },
     sessionStorage: createMemoryStore(),
     storage: createMemoryStore(),
-    WebSocket: jest.fn(),
+    WebSocket: vi.fn(),
     websocketUrl: (apiPath) => apiPath.replace(/^http/, 'ws'),
   };
 }
 
 async function renderFormPage() {
-  const onScreenOptions = jest.fn();
+  const onScreenOptions = vi.fn();
   await render(
     <LowdefyPage
       core={{

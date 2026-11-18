@@ -17,3 +17,4 @@ name: blocks-qr E2E Tests
 
 pages:
   - _ref: ../../src/blocks/QRScanner/tests/QRScanner.e2e.yaml
+  - _ref: ../../src/blocks/QRScanner/tests/QRScannerScan.e2e.yaml

@@ -37,10 +37,7 @@ import { parseArgs } from 'node:util';
 // jose is not hoisted to the repo root - resolve it through the plugin
 // package that depends on it.
 const requireFromPlugin = createRequire(
-  new URL(
-    '../../../packages/plugins/plugins/plugin-better-auth/package.json',
-    import.meta.url
-  )
+  new URL('../../../packages/plugins/plugins/plugin-better-auth/package.json', import.meta.url)
 );
 const { SignJWT } = await import(requireFromPlugin.resolve('jose'));
 

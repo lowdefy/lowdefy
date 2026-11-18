@@ -17,8 +17,7 @@
 import { execSync } from 'child_process';
 
 function checkPnpmIsInstalled({ logger, pnpmCmd }) {
-  const ui =
-    logger?.ui ??
+  const ui = logger?.ui ??
     logger ?? {
       error: (message) => console.error(message),
     };

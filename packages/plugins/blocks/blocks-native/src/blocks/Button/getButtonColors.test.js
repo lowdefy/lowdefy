@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
 import { iosColors, withAlpha } from '@lowdefy/client-native';
 
 import getButtonColors from './getButtonColors.js';

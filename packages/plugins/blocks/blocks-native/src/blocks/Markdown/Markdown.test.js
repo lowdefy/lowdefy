@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { Dimensions, Linking } from 'react-native';
 import { act, fireEvent } from '@testing-library/react-native';
 import * as WebBrowser from 'expo-web-browser';
@@ -84,7 +84,7 @@ test('a Markdown draws GitHub-flavoured markdown in the iOS text styles', async 
 });
 
 test('a Markdown with onLinkPress passes the href to the actions and opens nothing', async () => {
-  const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  const openURL = vi.spyOn(Linking, 'openURL').mockResolvedValue(true);
   const { calls } = await renderPage({
     pageConfig: page([
       {
@@ -103,7 +103,7 @@ test('a Markdown with onLinkPress passes the href to the actions and opens nothi
 });
 
 test('a Markdown without onLinkPress opens a web link in the in-app browser', async () => {
-  const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  const openURL = vi.spyOn(Linking, 'openURL').mockResolvedValue(true);
   await renderPage({
     pageConfig: page([
       { id: 'body', type: 'Markdown', properties: { content: '[Docs](https://docs.test/a)' } },
@@ -117,7 +117,7 @@ test('a Markdown without onLinkPress opens a web link in the in-app browser', as
 });
 
 test('a Markdown without onLinkPress opens a mail link through the system', async () => {
-  const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  const openURL = vi.spyOn(Linking, 'openURL').mockResolvedValue(true);
   await renderPage({
     pageConfig: page([
       { id: 'body', type: 'Markdown', properties: { content: '[Write](mailto:ada@test.dev)' } },
@@ -129,7 +129,7 @@ test('a Markdown without onLinkPress opens a mail link through the system', asyn
 });
 
 test('a Markdown without onLinkPress opens an app path as a page through the Link action', async () => {
-  const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  const openURL = vi.spyOn(Linking, 'openURL').mockResolvedValue(true);
   const { host } = await renderPage({
     actions: { Link },
     pageConfig: page([
@@ -226,7 +226,7 @@ test('a Markdown linked image presses through onLinkPress', async () => {
 });
 
 test('a Markdown fires onLinkPress for every link, wherever it sits', async () => {
-  const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  const openURL = vi.spyOn(Linking, 'openURL').mockResolvedValue(true);
   const { calls } = await renderPage({
     pageConfig: page([
       {

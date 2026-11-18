@@ -226,7 +226,7 @@ test('updateInsertOne upsert false', async () => {
     collection,
     write: true,
   };
-  expect(async () => {
+  await expect(async () => {
     await MongoDBVersionedUpdateOne({ request, connection });
   }).rejects.toThrow('No matching record to update.');
 });
@@ -273,7 +273,7 @@ test('updateInsertOne upsert default false', async () => {
     collection,
     write: true,
   };
-  expect(async () => {
+  await expect(async () => {
     await MongoDBVersionedUpdateOne({ request, connection });
   }).rejects.toThrow('No matching record to update.');
 });
@@ -388,7 +388,7 @@ test('updateInsertOne disableNoMatchError false', async () => {
     collection,
     write: true,
   };
-  expect(async () => {
+  await expect(async () => {
     await MongoDBVersionedUpdateOne({ request, connection });
   }).rejects.toThrow('No matching record to update.');
 });

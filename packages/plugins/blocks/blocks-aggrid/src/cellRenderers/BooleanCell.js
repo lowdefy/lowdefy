@@ -23,10 +23,10 @@ function BooleanCell(params) {
   if (type.isNone(value)) return <NullCell />;
 
   const truthy = Boolean(value);
-  const label = truthy ? cellConfig?.trueLabel ?? 'Yes' : cellConfig?.falseLabel ?? 'No';
+  const label = truthy ? (cellConfig?.trueLabel ?? 'Yes') : (cellConfig?.falseLabel ?? 'No');
   const color = truthy
-    ? cellConfig?.trueColor ?? 'var(--ant-color-success)'
-    : cellConfig?.falseColor ?? 'var(--ant-color-text-quaternary)';
+    ? (cellConfig?.trueColor ?? 'var(--ant-color-success)')
+    : (cellConfig?.falseColor ?? 'var(--ant-color-text-quaternary)');
 
   return <span style={{ color, fontWeight: truthy ? 600 : 400 }}>{label}</span>;
 }

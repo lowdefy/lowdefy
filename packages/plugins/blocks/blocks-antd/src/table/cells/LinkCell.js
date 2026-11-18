@@ -28,7 +28,7 @@ import EmptyCell from './EmptyCell.js';
 function LinkCell({ value, row, column, components, onEvent }) {
   if (isEmptyValue(value)) return <EmptyCell />;
   const { cell } = column;
-  const label = type.isString(cell.labelField) ? get(row, cell.labelField) ?? value : value;
+  const label = type.isString(cell.labelField) ? (get(row, cell.labelField) ?? value) : value;
   const link = resolveLink({ link: cell, row });
   return (
     <CellLink

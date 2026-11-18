@@ -263,7 +263,7 @@ blocks:
 
   # Two AgGridLowdefy grids that differ only in themeParams. The override colour is a literal here
   # rather than an antd token so the assertion cannot be satisfied by the value the base theme would
-  # have resolved anyway, and headerBackgroundColor is chosen because .ag-header paints it with no
+  # have resolved anyway, and headerBackgroundColor is chosen because the header rows paint it with no
   # interaction. The sibling is what proves the override did not reach the shared module-scope theme.
 
   - id: theming_params_override
@@ -405,3 +405,54 @@ blocks:
         - dealer: A dealership name far wider than its column
         - dealer: Another dealership name far wider than its column
         - dealer: Short
+
+  # ============================================
+  # AG GRID 36 DEFAULTS — held at their v33 values
+  # ============================================
+
+  # AG Grid 36 changed four theme defaults that antdParams sets back: the grid's own font weight,
+  # the picker radius and height, and the pagination panel height. The wrapper's font weight is not
+  # 400, so a grid that inherits it shows 500 and one on v36's default shows 400. One Lowdefy and
+  # one Balham grid, since antdParams applies to both.
+
+  - id: theming_v36_lowdefy
+    type: AgGridLowdefy
+    style:
+      .element:
+        fontWeight: 500
+    properties:
+      height: 260
+      pagination: true
+      paginationPageSize: 2
+      paginationPageSizeSelector:
+        - 2
+        - 5
+      columnDefs:
+        - headerName: Name
+          field: name
+          filter: true
+      rowData:
+        - name: Alice
+        - name: Bob
+        - name: Charlie
+
+  - id: theming_v36_balham
+    type: AgGridBalham
+    style:
+      .element:
+        fontWeight: 500
+    properties:
+      height: 260
+      pagination: true
+      paginationPageSize: 2
+      paginationPageSizeSelector:
+        - 2
+        - 5
+      columnDefs:
+        - headerName: Name
+          field: name
+          filter: true
+      rowData:
+        - name: Alice
+        - name: Bob
+        - name: Charlie

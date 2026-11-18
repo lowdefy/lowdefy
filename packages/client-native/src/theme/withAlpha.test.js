@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import withAlpha from './withAlpha.js';
 
 test('withAlpha turns a six digit hex colour into rgba at the opacity', () => {

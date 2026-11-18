@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import toAppLinkPath from './toAppLinkPath.js';
 
 test('toAppLinkPath turns a link to the app into its page path and query', () => {

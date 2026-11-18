@@ -95,7 +95,7 @@ const SegmentedSelector = ({
             value={
               type.isNone(value)
                 ? null
-                : getSelectedIndex(value, uniqueValueOptions, { properties }) ?? null
+                : (getSelectedIndex(value, uniqueValueOptions, { properties }) ?? null)
             }
             onChange={(index) => {
               const val = type.isPrimitive(uniqueValueOptions[index])

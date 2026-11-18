@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import shiftOffset from './shiftOffset.js';
 
 test('shiftOffset moves an offset after an edit by the change in length', () => {

@@ -14,20 +14,20 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import watchShake from './watchShake.js';
 
 function setup() {
   let listener = null;
   let time = 0;
-  const onShake = jest.fn();
+  const onShake = vi.fn();
   const stop = watchShake({
     accelerometer: {
-      setUpdateInterval: jest.fn(),
+      setUpdateInterval: vi.fn(),
       addListener: (fn) => {
         listener = fn;
-        return { remove: jest.fn() };
+        return { remove: vi.fn() };
       },
     },
     now: () => time,

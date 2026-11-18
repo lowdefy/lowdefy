@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 import { AccessibilityInfo } from 'react-native';
 
 import { page, renderPage, screen } from '../../test/renderPage.js';
 
 test('with Reduce Motion on, a Skeleton is a static fill with no shimmer', async () => {
-  jest.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(true);
+  vi.spyOn(AccessibilityInfo, 'isReduceMotionEnabled').mockResolvedValue(true);
   await renderPage({
     pageConfig: page([{ id: 'bar', type: 'Skeleton', properties: { height: 12 } }]),
   });

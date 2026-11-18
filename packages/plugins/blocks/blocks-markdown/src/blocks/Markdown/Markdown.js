@@ -23,16 +23,18 @@ import gfm from 'remark-gfm';
 import markdownStyles from '../../style.module.css';
 import codeblockStyles from '../../codeblock.module.css';
 
-const Markdown = ({ blockId, classNames, properties, styles }) => (
-  <div id={blockId} className={classNames?.element} style={styles?.element}>
-    <ReactMarkdown
-      className={`${markdownStyles['markdown-body']} ${codeblockStyles['markdown-default-code']}`}
-      skipHtml={properties.skipHtml}
-      remarkPlugins={[gfm]}
-    >
-      {properties.content}
-    </ReactMarkdown>
-  </div>
-);
+function Markdown({ blockId, classNames, properties, styles }) {
+  return (
+    <div id={blockId} className={classNames?.element} style={styles?.element}>
+      <div
+        className={`${markdownStyles['markdown-body']} ${codeblockStyles['markdown-default-code']}`}
+      >
+        <ReactMarkdown skipHtml={properties.skipHtml} remarkPlugins={[gfm]}>
+          {properties.content}
+        </ReactMarkdown>
+      </div>
+    </div>
+  );
+}
 
 export default withBlockDefaults(Markdown);

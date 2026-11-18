@@ -61,12 +61,10 @@ const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/ad
 const { default: getBetterAuthConfig } = await import('../getBetterAuthConfig.js');
 const { default: ensureAuthIndexes } = await import('../organizations/ensureAuthIndexes.js');
 const { registerOrganizationBinding } = await import('../organizations/getOrganizationBinding.js');
-const { default: resolveAuthentication } = await import(
-  '../../../context/resolveAuthentication.js'
-);
-const { default: createWebSocketConnection } = await import(
-  '../../websocket/createWebSocketConnection.js'
-);
+const { default: resolveAuthentication } =
+  await import('../../../context/resolveAuthentication.js');
+const { default: createWebSocketConnection } =
+  await import('../../websocket/createWebSocketConnection.js');
 const { default: handleMobileSignIn } = await import('./handleMobileSignIn.js');
 
 const ORIGIN = 'http://localhost:3264';
@@ -147,10 +145,10 @@ async function setup({ cookieCache = false, mobile, twoFactor } = {}) {
     mobile:
       mobile === false
         ? undefined
-        : mobile ?? {
+        : (mobile ?? {
             shells: [{ id: 'field', scheme: 'com.example.field' }],
             sessionExpiresIn: null,
-          },
+          }),
   };
   let auth;
   auth = betterAuth(

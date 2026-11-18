@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import createAuthApi from './createAuthApi.js';
 import withoutCookies from './withoutCookies.js';
@@ -32,8 +32,8 @@ function response({ body = {}, headers = {}, status = 200 }) {
 }
 
 function setup(answer) {
-  const fetch = jest.fn(async () => response(answer));
-  const tokenStore = { set: jest.fn(async () => undefined) };
+  const fetch = vi.fn(async () => response(answer));
+  const tokenStore = { set: vi.fn(async () => undefined) };
   const getDeviceKey = async () => DEVICE_KEY;
   return { api: createAuthApi({ apiBase, fetch, getDeviceKey, tokenStore }), fetch, tokenStore };
 }
@@ -129,7 +129,7 @@ test('signOut ends the session the token names', async () => {
 });
 
 test('every shell call omits cookies', async () => {
-  const fetch = jest.fn(async () => response({}));
+  const fetch = vi.fn(async () => response({}));
   await withoutCookies(fetch)('https://field.example.com/api/user', { method: 'GET' });
   expect(fetch).toHaveBeenCalledWith('https://field.example.com/api/user', {
     method: 'GET',

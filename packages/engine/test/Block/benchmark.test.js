@@ -1,5 +1,3 @@
-/* eslint-disable dot-notation */
-
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -23,15 +21,12 @@ const NUM_TIMES = 10;
 const pageId = 'one';
 const lowdefy = { pageId };
 
-// eslint-disable-next-line consistent-return
 const runTests = ({ times, results = [], fn }) => {
   if (times <= 0) {
     return results;
   }
-  // eslint-disable-next-line no-undef
   const start = Date.now();
   fn(times);
-  // eslint-disable-next-line no-undef
   const end = Date.now();
   const duration = end - start;
 

@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-/* global __DEV__ */
 import { useContext } from 'react';
 import { ConfigError } from '@lowdefy/errors';
 

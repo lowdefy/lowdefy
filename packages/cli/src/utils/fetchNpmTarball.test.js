@@ -31,76 +31,65 @@ function sri(data) {
   return `sha512-${crypto.createHash('sha512').update(data).digest('base64')}`;
 }
 
-vi.doMock('axios', () => {
-  return {
-    default: {
-      get(url) {
-        if (url === 'https://registry.npmjs.org/valid-package') {
-          return Promise.resolve({
-            data: {
-              versions: {
-                '1.0.0': {
-                  dist: { tarball: 'tarball-valid', integrity: integrities.valid },
-                },
-                tampered: {
-                  dist: { tarball: 'tarball-traversal', integrity: integrities.valid },
-                },
-                traversal: {
-                  dist: { tarball: 'tarball-traversal', integrity: integrities.traversal },
-                },
-                noIntegrity: {
-                  dist: { tarball: 'tarball-valid' },
-                },
-                v404: {
-                  dist: {
-                    tarball: 'https://registry.npmjs.org/404',
-                  },
-                },
-                noData: {
-                  dist: {
-                    tarball: 'https://registry.npmjs.org/no-data',
-                  },
-                },
-                undef: {
-                  dist: {
-                    tarball: 'https://registry.npmjs.org/undefined',
-                  },
-                },
-                error: {
-                  dist: {
-                    tarball: 'https://registry.npmjs.org/axios-error',
-                  },
-                },
-              },
-            },
-          });
-        }
-        if (url === 'tarball-valid') {
-          return { data: tarballs.valid };
-        }
-        if (url === 'tarball-traversal') {
-          return { data: tarballs.traversal };
-        }
-        if (url === 'https://registry.npmjs.org/404') {
-          const error = new Error('Test 404');
-          error.response = {};
-          error.response.status = 404;
-          throw error;
-        }
-        if (url === 'https://registry.npmjs.org/axios-error') {
-          throw new Error('Axios error');
-        }
-        if (url === 'https://registry.npmjs.org/no-data') {
-          return {};
-        }
-        if (url === 'https://registry.npmjs.org/undefined') {
-          return;
-        }
-        return;
-      },
+const packageDocument = {
+  versions: {
+    '1.0.0': {
+      dist: { tarball: 'https://registry.example/tarball-valid', integrity: 'valid' },
     },
-  };
+    tampered: {
+      dist: { tarball: 'https://registry.example/tarball-traversal', integrity: 'valid' },
+    },
+    traversal: {
+      dist: { tarball: 'https://registry.example/tarball-traversal', integrity: 'traversal' },
+    },
+    noIntegrity: {
+      dist: { tarball: 'https://registry.example/tarball-valid' },
+    },
+    v404: { dist: { tarball: 'https://registry.example/404' } },
+    v500: { dist: { tarball: 'https://registry.example/500' } },
+    network: { dist: { tarball: 'https://registry.example/network-error' } },
+  },
+};
+
+function networkError() {
+  return new TypeError('fetch failed', {
+    cause: new Error('getaddrinfo ENOTFOUND registry.example'),
+  });
+}
+
+// Integrities name a tarball until the tarballs are packed, then resolve to its hash.
+function withIntegrities(document) {
+  const versions = {};
+  Object.entries(document.versions).forEach(([version, { dist }]) => {
+    versions[version] = {
+      dist: {
+        ...dist,
+        integrity: dist.integrity && integrities[dist.integrity],
+      },
+    };
+  });
+  return { versions };
+}
+
+const mockFetch = vi.fn(async (url) => {
+  if (url === 'https://registry.npmjs.org/valid-package') {
+    return Response.json(withIntegrities(packageDocument));
+  }
+  if (url === 'https://registry.example/tarball-valid') {
+    return new Response(tarballs.valid);
+  }
+  if (url === 'https://registry.example/tarball-traversal') {
+    return new Response(tarballs.traversal);
+  }
+  if (url === 'https://registry.npmjs.org/404' || url === 'https://registry.example/404') {
+    return new Response('Not found', { status: 404 });
+  }
+  if (url === 'https://registry.npmjs.org/500' || url === 'https://registry.example/500') {
+    return new Response('Server error', { status: 500 });
+  }
+  throw networkError();
 });
+vi.stubGlobal('fetch', mockFetch);
 
 // npm tarballs keep every file under a top-level package/ directory.
 async function packTarball({ cwd, entries, name, preservePaths = false }) {
@@ -213,27 +202,26 @@ test('npm return a 404', async () => {
   ).rejects.toThrow('Package "404" could not be found at https://registry.npmjs.org/404.');
 });
 
-test('axios error', async () => {
+test('npm responds with an error status', async () => {
   const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
   await expect(
-    fetchNpmTarball({ packageName: 'axios-error', version: '1.0.0', directory })
-  ).rejects.toThrow('Axios error');
+    fetchNpmTarball({ packageName: '500', version: '1.0.0', directory })
+  ).rejects.toThrow('Request failed with status code 500');
 });
 
-test('empty response', async () => {
+test('npm cannot be reached', async () => {
   const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
   await expect(
-    fetchNpmTarball({ packageName: 'no-data', version: '1.0.0', directory })
-  ).rejects.toThrow('Package "no-data" could not be found at https://registry.npmjs.org/no-data.');
+    fetchNpmTarball({ packageName: 'network-error', version: '1.0.0', directory })
+  ).rejects.toThrow('getaddrinfo ENOTFOUND registry.example');
 });
 
-test('undefined response', async () => {
+test('the package document times out after 30 seconds and the tarball download never does', async () => {
   const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
-  await expect(
-    fetchNpmTarball({ packageName: 'undefined', version: '1.0.0', directory })
-  ).rejects.toThrow(
-    'Package "undefined" could not be found at https://registry.npmjs.org/undefined.'
-  );
+  const timeout = vi.spyOn(AbortSignal, 'timeout');
+  await fetchNpmTarball({ packageName: 'valid-package', version: '1.0.0', directory });
+  expect(timeout.mock.calls).toEqual([[30000]]);
+  timeout.mockRestore();
 });
 
 test('tarball 404', async () => {
@@ -241,32 +229,22 @@ test('tarball 404', async () => {
   await expect(
     fetchNpmTarball({ packageName: 'valid-package', version: 'v404', directory })
   ).rejects.toThrow(
-    'Package "valid-package" tarball could not be found at https://registry.npmjs.org/404.'
+    'Package "valid-package" tarball could not be found at https://registry.example/404.'
   );
+  expect(fs.existsSync(directory)).toBe(false);
 });
 
-test('tarball axios error', async () => {
+test('tarball error status', async () => {
   const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
   await expect(
-    fetchNpmTarball({ packageName: 'valid-package', version: 'error', directory })
-  ).rejects.toThrow('Axios error');
+    fetchNpmTarball({ packageName: 'valid-package', version: 'v500', directory })
+  ).rejects.toThrow('Request failed with status code 500');
+  expect(fs.existsSync(directory)).toBe(false);
 });
 
-test('tarball empty response', async () => {
+test('tarball cannot be reached', async () => {
   const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
   await expect(
-    fetchNpmTarball({ packageName: 'valid-package', version: 'noData', directory })
-  ).rejects.toThrow(
-    'Package "valid-package" tarball could not be found at https://registry.npmjs.org/no-data.'
-  );
-});
-
-test('tarball undefined response', async () => {
-  const { default: fetchNpmTarball } = await import('./fetchNpmTarball.js');
-
-  await expect(
-    fetchNpmTarball({ packageName: 'valid-package', version: 'undef', directory })
-  ).rejects.toThrow(
-    'Package "valid-package" tarball could not be found at https://registry.npmjs.org/undefined.'
-  );
+    fetchNpmTarball({ packageName: 'valid-package', version: 'network', directory })
+  ).rejects.toThrow('getaddrinfo ENOTFOUND registry.example');
 });

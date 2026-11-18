@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
 import buildPage from './test/buildPage.js';
@@ -61,7 +61,7 @@ function designPage({ heading }) {
 }
 
 function renderScreen() {
-  const record = jest.fn();
+  const record = vi.fn();
   const { host } = createFakeHost({ path: '/home' });
   const core = {
     apiBase: 'https://app.lowdefy.test',

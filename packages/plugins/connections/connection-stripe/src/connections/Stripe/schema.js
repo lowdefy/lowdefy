@@ -29,8 +29,8 @@ export default {
     },
     apiVersion: {
       type: 'string',
-      description: 'Stripe API version to use.',
-      default: null,
+      description:
+        'Stripe API version to use, for example "2023-10-16". Defaults to the version the Stripe SDK is pinned to, which changes with each major Stripe SDK update.',
       errorMessage: {
         type: 'Stripe connection property "apiVersion" should be a string.',
       },
@@ -53,8 +53,8 @@ export default {
     },
     maxNetworkRetries: {
       type: 'integer',
-      description: 'The amount of times a request should be retried.',
-      default: 0,
+      description: 'The number of times a failed request is retried.',
+      default: 2,
       errorMessage: {
         type: 'Stripe connection property "maxNetworkRetries" should be an integer.',
       },

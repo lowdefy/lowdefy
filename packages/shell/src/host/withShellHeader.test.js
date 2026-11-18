@@ -14,12 +14,12 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { expect, test, vi } from 'vitest';
 
 import withShellHeader from './withShellHeader.js';
 
 test('every call carries the shell version as x-lowdefy-shell', async () => {
-  const fetch = jest.fn(async () => ({ status: 200 }));
+  const fetch = vi.fn(async () => ({ status: 200 }));
   const shellFetch = withShellHeader({ fetch, shellVersion: '7.4.0' });
   await shellFetch('https://app.example.com/api/page/home', { headers: { Accept: 'x' } });
   await shellFetch('https://app.example.com/api/user');

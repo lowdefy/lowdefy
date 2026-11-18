@@ -1,6 +1,16 @@
 # @lowdefy/actions-pdf-make
 
-PDF generation action using pdfmake library.
+PDF generation action using the pdfmake library (0.3). It runs in the browser only and downloads the file.
+
+## How it calls pdfmake
+
+`PdfMake.js` imports the browser build (`pdfmake/build/pdfmake.js`), a module-level singleton:
+
+- The bundled Roboto files (`src/fonts/vfs_fonts.js`, generated from `pdfmake/build/vfs_fonts.js`; regenerate it when pdfmake updates its Roboto) are written into pdfmake's virtual file system once, on import.
+- Every call sets the fonts (`Roboto` plus the `fonts` param) and the table layouts (`tableLayouts` param, or none) with `setFonts` / `setTableLayouts`, not `addFonts` / `addTableLayouts`, so one call's fonts and layouts do not carry into the next. pdfmake reads both synchronously in `createPdf`, so concurrent calls do not mix.
+- `createPdf(docDefinition).download(filename)` returns a promise that settles when the file is handed to the browser, so build errors (missing font, failed image URL) reject the action.
+- pdfmake 0.3 calls `pageBreakBefore(currentNode, nodeContainer)`, where `nodeContainer` only has getter methods. A `_function` reads its arguments through `_args`, which copies them and drops functions, so `adaptPageBreakBefore` resolves the getters and calls the app function with the pdfmake 0.2 arguments `(currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage)`.
+- No URL access policy is set. Image and font URLs are fetched by the user's browser with the user's own network access, so the SSRF concern behind pdfmake's `setUrlAccessPolicy` (CVE-2026-26801) does not apply, and URL resources are cached per document by default since 0.3.14 (CVE-2026-119743).
 
 ## Action
 
@@ -48,10 +58,12 @@ PDF generation action using pdfmake library.
 
 ## Parameters
 
-| Param           | Type   | Description                 |
-| --------------- | ------ | --------------------------- |
-| `filename`      | string | Downloaded file name        |
-| `docDefinition` | object | pdfmake document definition |
+| Param           | Type   | Description                                          |
+| --------------- | ------ | ---------------------------------------------------- |
+| `filename`      | string | Downloaded file name                                 |
+| `docDefinition` | object | pdfmake document definition, passed through as it is |
+| `fonts`         | object | Font definitions by name (URLs), added to Roboto     |
+| `tableLayouts`  | object | Custom table layouts by name                         |
 
 ## Document Definition
 

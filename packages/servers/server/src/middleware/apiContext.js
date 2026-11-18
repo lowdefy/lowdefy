@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import {
   createApiContext,
@@ -24,7 +25,6 @@ import {
   resolveTenantPreflight,
 } from '@lowdefy/api';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
-import { v4 as uuid } from 'uuid';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../../lib/build/appMeta.js';
@@ -64,7 +64,7 @@ function getRequestId(c) {
   if (incoming && REQUEST_ID_REGEX.test(incoming)) {
     return incoming;
   }
-  return uuid();
+  return randomUUID();
 }
 
 // The MCP route authenticates by access token alone - the mcp option switches

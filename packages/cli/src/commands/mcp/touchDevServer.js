@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import httpFetch from '../../utils/httpFetch.js';
+
 // A server that stopped answering must not hold up lowdefy_dev_start.
 const TOUCH_TIMEOUT_MS = 5000;
 
@@ -22,7 +24,7 @@ const TOUCH_TIMEOUT_MS = 5000;
 // lowdefy_dev_start needs it - every other tool forwards a request of its own.
 async function touchDevServer({ url, timeoutMs = TOUCH_TIMEOUT_MS }) {
   try {
-    await fetch(`${url}/api/ping`, { signal: AbortSignal.timeout(timeoutMs) });
+    await httpFetch({ url: `${url}/api/ping`, timeoutMs });
   } catch {
     // The next lowdefy_ call starts a server that has gone meanwhile.
   }

@@ -41,7 +41,7 @@ const RETRY_WINDOW_MS = 30000;
 // resume (code 11602). The resolver then reopens the stream at the driver's
 // last resume token (resumeAfter), so subscribers keep their channel instead
 // of all reconnecting and reloading at once, and miss no change.
-async function MongoDBChangeStream({ connection, properties, publish, signal, tenant }) {
+async function MongoDBChangeStream({ connection, properties, publish, ready, signal, tenant }) {
   let { fullDocument, pipeline } = deserialize(properties ?? {});
   if (tenant) {
     // Inject the tenant $match against fullDocument and force updateLookup so
@@ -69,8 +69,9 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
     // The driver updates the resume token on each change and each answer to the
     // stream's aggregate or getMore (the post-batch token), so a reopen after it
     // misses no change, even on a quiet stream that published none yet. An answer
-    // also ends the failing window. Time the driver spends blocked (waiting for a
-    // primary) is not counted as healthy.
+    // also ends the failing window, and tells the channel the stream is listening.
+    // Time the driver spends blocked (waiting for a primary) is not counted as
+    // healthy.
     let firstAnsweredAt = null;
     let lastAnsweredAt = null;
     stream.on('resumeTokenChanged', (token) => {
@@ -78,6 +79,7 @@ async function MongoDBChangeStream({ connection, properties, publish, signal, te
       failingSince = null;
       lastAnsweredAt = Date.now();
       firstAnsweredAt ??= lastAnsweredAt;
+      ready();
     });
     const closeStream = () =>
       stream.close().catch(() => {

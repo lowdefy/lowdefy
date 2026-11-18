@@ -14,10 +14,10 @@
   limitations under the License.
 */
 
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { act, fireEvent, screen, waitFor, within } from '@testing-library/react-native';
 
 import { ActionSheetIOS, StyleSheet } from 'react-native';
-import { jest } from '@jest/globals';
 import { Link } from '@lowdefy/actions-core/actions';
 
 import {
@@ -456,7 +456,7 @@ test('a long press on a reply copies its text or regenerates it', async () => {
     .mockImplementationOnce(async () => sse(textReply({ id: 'a2', text: 'Second answer.' })));
   await send('Hello');
   await waitFor(() => expect(screen.getByText('First answer.')).toBeTruthy());
-  const sheet = jest.spyOn(ActionSheetIOS, 'showActionSheetWithOptions');
+  const sheet = vi.spyOn(ActionSheetIOS, 'showActionSheetWithOptions');
   sheet.mockImplementationOnce((options, pick) => pick(options.options.indexOf('Copy')));
   await act(async () => {
     fireEvent(screen.getByTestId('atlas_message_a1'), 'longPress');
@@ -650,7 +650,7 @@ describe('dictation', () => {
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
   });
 
   test('the mic sits inside the field before send, and starts with no hints', async () => {
@@ -697,8 +697,10 @@ describe('dictation', () => {
     expect(field.props.value).toBeUndefined();
     const grey = within(field).getByText('for Sam can you check');
     expect(grey.props.children).toEqual(' for Sam can you check');
-    expect(grey.props.style.color).toEqual(expect.any(String));
-    expect(grey.props.style.color).not.toEqual(StyleSheet.flatten(field.props.style).color);
+    expect(StyleSheet.flatten(grey.props.style).color).toEqual(expect.any(String));
+    expect(StyleSheet.flatten(grey.props.style).color).not.toEqual(
+      StyleSheet.flatten(field.props.style).color
+    );
     // Cancel shows that nothing was taken into the text.
     await act(async () => {
       fireEvent.press(footerQuery().getByTestId('atlas_listening_cancel'));
@@ -876,18 +878,18 @@ describe('dictation', () => {
       setSpeechRecognition({ available: false });
       const { host } = await renderChat();
       host.streamFetch.mockImplementation(async () => sse(textReply({ text: 'On it.' })));
-      jest.useFakeTimers();
+      vi.useFakeTimers();
       await pressMic();
       await act(async () => {
-        jest.advanceTimersByTime(600);
+        vi.advanceTimersByTime(600);
       });
       expect(within(input()).getByText('for Sam can')).toBeTruthy();
       await act(async () => {
-        jest.advanceTimersByTime(300);
+        vi.advanceTimersByTime(300);
       });
       expect(footerQuery().queryByTestId('atlas_listening')).toBeNull();
       expect(input().props.value).toEqual('for Sam, can you look');
-      jest.useRealTimers();
+      vi.useRealTimers();
       await act(async () => {
         fireEvent.press(footerQuery().getByTestId('atlas_send'));
       });

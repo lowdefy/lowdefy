@@ -14,15 +14,15 @@
   limitations under the License.
 */
 
+import { randomUUID } from 'node:crypto';
 import path from 'path';
 import { readFile, writeFile } from '@lowdefy/node-utils';
-import { v4 as uuid } from 'uuid';
 
 async function getCliJson({ configDirectory }) {
   const filePath = path.resolve(configDirectory, './.lowdefy/cli.json');
   const cliJson = await readFile(filePath);
   if (!cliJson) {
-    const appId = uuid();
+    const appId = randomUUID();
     await writeFile(filePath, JSON.stringify({ appId }, null, 2));
     return { appId };
   }

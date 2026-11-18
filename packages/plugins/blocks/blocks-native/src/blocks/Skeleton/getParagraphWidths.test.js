@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getParagraphWidths from './getParagraphWidths.js';
 
 const percent = (width) => parseInt(width, 10);

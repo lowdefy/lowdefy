@@ -21,7 +21,6 @@ function _secret({ location, params, secrets = {} }) {
     throw new Error(`Getting all secrets is not allowed.`);
   }
   // Filter out OpenID Connect and JSON web token secrets
-  // eslint-disable-next-line no-unused-vars
   const { OPENID_CLIENT_SECRET, JWT_SECRET, ...rest } = secrets;
   return getFromObject({
     location,

@@ -15,11 +15,13 @@
 */
 
 import { useRef } from 'react';
+import { type } from '@lowdefy/helpers';
 
 import createFeatureSet from './createFeatureSet.js';
 import createMethodStubs from './createMethodStubs.js';
 import features from '../features/index.js';
 import loadOptionalFeature from './loadOptionalFeature.js';
+import virtualizationFeature from '../features/virtualization/virtualizationFeature.js';
 
 const sets = new Map();
 
@@ -32,14 +34,19 @@ const sets = new Map();
 // the optional features it has loaded: config that passes through a smaller state (columns read
 // again by a request are empty while it loads) must not remount the table, which would drop its
 // UI state and the rows applyTransaction pushed. Every feature works without its config.
-function useFeatureSet({ content, input, properties, rowWindowStrategy }) {
+// `rowWindowFeature` is the benchmark's comparison row window (bench/app/positionedRows), placed
+// right after virtualization so the features after it read its range. It lives in the bench so
+// its library (TanStack Virtual) is not a runtime dependency; the Lowdefy client never passes it.
+function useFeatureSet({ content, input, properties, rowWindowFeature }) {
   const kept = useRef(new Set());
-  const context = { content, input: input === true, properties, rowWindowStrategy };
+  const context = { content, input: input === true, properties };
   const needed = features.filter(
     (entry) => entry.optional && (kept.current.has(entry.name) || entry.needs(context))
   );
   needed.forEach((entry) => kept.current.add(entry.name));
-  const signature = needed.map((entry) => entry.name).join(',');
+  const names = needed.map((entry) => entry.name);
+  if (!type.isNone(rowWindowFeature)) names.push(rowWindowFeature.name);
+  const signature = names.join(',');
   const existing = sets.get(signature);
   if (existing !== undefined) return existing;
   const records = needed.map(loadOptionalFeature);
@@ -52,6 +59,9 @@ function useFeatureSet({ content, input, properties, rowWindowStrategy }) {
     const index = needed.indexOf(entry);
     return index === -1 ? createMethodStubs(entry) : records[index].feature;
   });
+  if (!type.isNone(rowWindowFeature)) {
+    list.splice(list.indexOf(virtualizationFeature) + 1, 0, rowWindowFeature);
+  }
   const set = { ...createFeatureSet(list), signature };
   sets.set(signature, set);
   return set;

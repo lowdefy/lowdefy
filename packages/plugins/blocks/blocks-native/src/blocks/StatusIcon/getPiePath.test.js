@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getPiePath from './getPiePath.js';
 
 test('getPiePath fills half a circle down the right side', () => {

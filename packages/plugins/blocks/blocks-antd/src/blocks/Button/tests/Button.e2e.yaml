@@ -272,3 +272,87 @@ blocks:
               _state: button_hidden_shortcut_fired
           else: 'hidden:fired'
           then: ''
+
+  # A modifier shortcut fires while the user types in a form field; a plain-key
+  # shortcut does not. A held key fires its shortcut once.
+  - id: button_shortcut_typing_input
+    type: TextInput
+
+  - id: button_shortcut_counted
+    type: Button
+    properties:
+      title: Counted
+    events:
+      onClick:
+        shortcut: mod+u
+        try:
+          - id: count_counted_shortcut
+            type: SetState
+            params:
+              button_shortcut_counted:
+                _sum:
+                  - _if_none:
+                      - _state: button_shortcut_counted
+                      - 0
+                  - 1
+
+  - id: button_shortcut_counted_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'counted:'
+          - _if_none:
+              - _state: button_shortcut_counted
+              - 0
+
+  - id: button_shortcut_plain
+    type: Button
+    properties:
+      title: Plain
+    events:
+      onClick:
+        shortcut: q
+        try:
+          - id: count_plain_shortcut
+            type: SetState
+            params:
+              button_shortcut_plain:
+                _sum:
+                  - _if_none:
+                      - _state: button_shortcut_plain
+                      - 0
+                  - 1
+
+  - id: button_shortcut_plain_display
+    type: Span
+    properties:
+      content:
+        _string.concat:
+          - 'plain:'
+          - _if_none:
+              - _state: button_shortcut_plain
+              - 0
+
+  - id: button_shortcut_sequence
+    type: Button
+    properties:
+      title: Sequence
+    events:
+      onClick:
+        shortcut: g b
+        try:
+          - id: set_sequence_shortcut_fired
+            type: SetState
+            params:
+              button_shortcut_sequence_fired: true
+
+  - id: button_shortcut_sequence_display
+    type: Span
+    properties:
+      content:
+        _if:
+          test:
+            _state: button_shortcut_sequence_fired
+          then: 'sequence:fired'
+          else: ''

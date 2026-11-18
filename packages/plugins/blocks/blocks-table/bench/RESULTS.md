@@ -174,7 +174,7 @@ Every case held 60 fps at 1x (p95 18.1-18.6 ms against an idle floor near 18.4 m
 
 Measured 2026-09-28 with the stand-in text cells; the summary above has both strategies with the mixed cells.
 
-Both strategies are in the code; the block uses the translated window. `positioned` is a bench-only prop (`rowWindowStrategy`) the Lowdefy client never passes. Same data, same column virtualisation, same cells:
+Both strategies are in the code; the block uses the translated window. `positioned` lives in the bench (`bench/app/positionedRows`), passed to the Table as its `rowWindowFeature` prop, which the Lowdefy client never passes. Same data, same column virtualisation, same cells:
 
 | Scenario                                                           | Translated window (default) | TanStack Virtual, per-row transforms |
 | ------------------------------------------------------------------ | --------------------------- | ------------------------------------ |

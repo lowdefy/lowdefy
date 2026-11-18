@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import getChipMaxWidth from './getChipMaxWidth.js';
 
 test('getChipMaxWidth caps a chip with text after it at three quarters of the line', () => {

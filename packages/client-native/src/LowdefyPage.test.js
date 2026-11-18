@@ -14,8 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test, vi } from 'vitest';
 import React from 'react';
-import { jest } from '@jest/globals';
 import { Dimensions, Linking, StyleSheet, Text } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { getBreakpoint } from '@lowdefy/layout-native';
@@ -314,7 +314,7 @@ test('the engine reads the route and the window size through the native host glo
 });
 
 test('a Screen page reports its header options and renders its headerRight slot', async () => {
-  const onScreenOptions = jest.fn();
+  const onScreenOptions = vi.fn();
   await renderPage({
     onScreenOptions,
     pageConfig: {
@@ -488,7 +488,7 @@ test('a link component follows its link through the host router', async () => {
 });
 
 test('a link to another site opens through the system', async () => {
-  const openURL = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  const openURL = vi.spyOn(Linking, 'openURL').mockResolvedValue(true);
   const { lowdefy } = await renderPage({ pageConfig: greetingPage });
   await screen.findByText('Hello');
   lowdefy._internal.link({ url: 'https://example.com/help', urlQuery: { q: 1 } });

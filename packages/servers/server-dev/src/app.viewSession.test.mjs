@@ -52,7 +52,6 @@ function apiContext() {
   'detached',
   'devInspect',
   'devRecording',
-  'devTools',
   'endpoints',
   'jitPage',
   'mcp',
@@ -103,7 +102,6 @@ const { default: app } = await import('./app.js');
 const callerlessRoutes = [
   '/api/reload',
   '/api/ping',
-  '/api/dev-tools',
   '/api/dev-inspect',
   '/api/dev-inspect/*',
   '/api/dev-recording',

@@ -38,6 +38,10 @@ The CLI checks a journey file in `cli/src/commands/test/validateJourney.js`: the
 4. `selectTier` (async) cuts the tier over that selection and returns `deprecated: true` journeys as skipped. `--lint` returns before it, so lint ignores `--tier`.
 5. `formatNoTestsMatched` explains an empty selection.
 
+The two differ in what they give back. `lowdefy test` prints every journey's lines. `lowdefy_run_tests` answers an agent, and a client refuses an answer it cannot hold, so `runAppTests` cuts it with `compactTestResults.js`: `summary`, `failed` (each failing or flaky journey with its report and failure), `passed` and `skipped` (one line per journey) and `resultFile`. The lists hold at most 20,000 characters as printed. Failures keep their full detail for the first 12,000, are then named with a message cut at 300 characters, and passing lines take what is left; `omitted` counts what did not fit (`failedDetail`, `failed`, `passed`, `skipped`). Every journey of the run, with its report, is written to `.lowdefy/test/results.json` (`writeTestResults.js`), which `resultFile` names. A journey's `exercised` path is in neither: it runs to thousands of entries a journey, and `exercised.json` keeps it (see "Hardening").
+
+The shim sends one MCP progress notification per finished journey (`createProgressSender.js`) when the client passed a progress token with the call, so a long run is not silent.
+
 The MCP tool resolves `paths` against the config directory, the CLI against the current directory. The MCP tool always reads `tests/journeys/`; `--journeys-directory` is CLI only.
 
 `isFullSuiteRun` is true only for a run with no paths, filters or tags, tier `full`, and only for its first repetition. Only such a run records `journey` traces and `.lowdefy/test/run.json`. Skipping deprecated journeys keeps a run whole.

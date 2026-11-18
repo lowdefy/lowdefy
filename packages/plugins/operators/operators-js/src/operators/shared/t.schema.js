@@ -18,6 +18,6 @@ export default {
   type: 'object',
   params: {
     description:
-      'Translation key or object { key, values, locale }. Resolves the key against the active locale\'s messages with ICU MessageFormat interpolation, falling back to the fallback locale and finally to the key itself.',
+      "Translation key or object { key, values, locale }. Resolves the key against the active locale's messages with ICU MessageFormat interpolation, falling back to the fallback locale and finally to the key itself.",
   },
 };

@@ -118,11 +118,8 @@ export default function Stack() {
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 px-3 py-2.5 -mx-1 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group"
                 >
-                  <feature.icon
-                    style={{ fontSize: 16, color: '#2cb7ff' }}
-                    className="flex-shrink-0"
-                  />
-                  <span className="text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary-400 transition-colors">
+                  <feature.icon style={{ fontSize: 16, color: '#2cb7ff' }} className="shrink-0" />
+                  <span className="text-sm text-slate-700 dark:text-slate-300 group-hover:text-primary-400 dark:group-hover:text-primary-400 transition-colors">
                     {feature.title}
                   </span>
                 </a>
@@ -154,7 +151,7 @@ export default function Stack() {
                     height={32}
                     className="w-6 h-6 object-contain"
                   />
-                  <span className="text-[10px] text-slate-500 dark:text-slate-500 text-center leading-tight group-hover:text-cyan-400 transition-colors">
+                  <span className="text-[10px] text-slate-500 dark:text-slate-500 text-center leading-tight group-hover:text-cyan-400 dark:group-hover:text-cyan-400 transition-colors">
                     {connector.name}
                   </span>
                 </a>
@@ -200,7 +197,7 @@ export default function Stack() {
                 >
                   <useCase.icon
                     style={{ fontSize: 16, color: '#94a3b8' }}
-                    className="flex-shrink-0 group-hover:text-green-400"
+                    className="shrink-0 group-hover:text-green-400"
                   />
                   <span className="text-sm text-slate-700 dark:text-slate-300">
                     {useCase.title}

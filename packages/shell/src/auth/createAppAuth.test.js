@@ -14,7 +14,8 @@
   limitations under the License.
 */
 
-import { jest } from '@jest/globals';
+import { beforeEach, expect, test, vi } from 'vitest';
+import * as SecureStore from 'expo-secure-store';
 
 import createAppAuth from './createAppAuth.js';
 import createAppSession from '../session/createAppSession.js';
@@ -24,14 +25,12 @@ import createMemoryStore from '../host/createMemoryStore.js';
 import getAuthView from './getAuthView.js';
 import { createPages, createRoot } from '../test/fixtures.js';
 
-jest.mock('expo-secure-store', () =>
-  jest.requireActual('../test/createFakeSecureStore.js').default()
+vi.mock('expo-secure-store', async () =>
+  (await import('../test/createFakeSecureStore.js')).default()
 );
-jest.mock('expo-crypto', () => ({ getRandomBytes: (count) => new Uint8Array(count).fill(7) }));
-jest.mock('expo-web-browser', () => ({}));
-jest.mock('expo-local-authentication', () => ({}));
-
-const SecureStore = jest.requireMock('expo-secure-store');
+vi.mock('expo-crypto', () => ({ getRandomBytes: (count) => new Uint8Array(count).fill(7) }));
+vi.mock('expo-web-browser', () => ({}));
+vi.mock('expo-local-authentication', () => ({}));
 
 const apiBase = 'https://field.example.com';
 const app = { id: 'field', name: 'Field', urls: { production: apiBase } };
@@ -113,15 +112,15 @@ async function until(check) {
 async function setup({
   cacheStore = createMemoryCacheStore(),
   kv = createMemoryStore(),
-  queueStore = { removeApp: jest.fn(async () => undefined) },
+  queueStore = { removeApp: vi.fn(async () => undefined) },
   server = createServer().server,
   shell = standardShell,
-  streamFetch = jest.fn(),
+  streamFetch = vi.fn(),
 } = {}) {
   const clock = { now: 0 };
   const appState = createFakeAppState();
-  const localAuthentication = { authenticateAsync: jest.fn(async () => ({ success: true })) };
-  const onSignedOut = jest.fn();
+  const localAuthentication = { authenticateAsync: vi.fn(async () => ({ success: true })) };
+  const onSignedOut = vi.fn();
   const auth = createAppAuth({
     apiBase,
     app,
@@ -250,7 +249,7 @@ test('a 401 to a call that carried the token removes the person and asks for sig
 
 test('a 401 to a streamed chat call that carried the token ends the session too', async () => {
   const { server } = createServer();
-  const streamFetch = jest.fn(async () => response({ status: 401 }));
+  const streamFetch = vi.fn(async () => response({ status: 401 }));
   const context = await setup({ server, streamFetch });
   await signIn(context);
   keepPersonData(context.kv);

@@ -85,7 +85,7 @@ const defaultIconAliases = {
   user: 'User',
   users: 'Users',
   view: 'Eye',
-  warning: 'TriangleAlert',
+  warning: 'TriangleExclamationPoint',
 
   // Ant Design icon names that people and agents reach for by habit. They map to
   // the same icons as the names above, so either spelling looks the same.
@@ -122,11 +122,11 @@ const defaultIconAliases = {
   camera: 'Camera',
   bot: 'Bot',
   unchanged: 'CirclePause',
-  bold: 'Bold',
+  bold: 'LetterB',
   italic: 'Italic',
   strikethrough: 'Strikethrough',
   highlight: 'Highlighter',
-  'icon-missing': 'CircleAlert',
+  'icon-missing': 'CircleExclamationPoint',
 };
 
 export default defaultIconAliases;

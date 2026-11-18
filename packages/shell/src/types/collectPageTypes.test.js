@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { expect, test } from 'vitest';
+
 import collectPageTypes from './collectPageTypes.js';
 
 const page = {

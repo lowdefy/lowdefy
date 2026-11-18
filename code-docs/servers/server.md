@@ -55,7 +55,7 @@ lowdefy build
 - `@auth/core` + `@hono/auth-js` - Auth.js engine and Hono integration
 - `vite` + `@vitejs/plugin-react` - Client bundling
 - `@sentry/node` (tracing) or `@sentry/node-core/light` (errors only), loaded only when `SENTRY_DSN` is set, + `@sentry/browser` + `@sentry/vite-plugin` - Error tracking
-- `react` (18.2.0)
+- `react` + `react-dom` (19.3.1) - the one React every app and block plugin renders with
 - `pino` (via `@lowdefy/logger`)
 
 ## Directory Structure
