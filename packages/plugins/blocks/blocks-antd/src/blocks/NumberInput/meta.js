@@ -20,6 +20,7 @@ import icon from '../../schemas/icon.js';
 import {
   disabled,
   autoFocus,
+  selectOnFocus,
   variant,
   bordered,
   sizeSmallDefaultLarge,
@@ -43,6 +44,10 @@ export default {
       description: 'Trigger action when number input is changed.',
       event: { value: 'The current number value.' },
     },
+    onEscape: {
+      description: 'Trigger actions when input is focused and Escape is pressed.',
+      event: { value: 'The current number value.' },
+    },
     onFocus: 'Trigger action when number input gets focus.',
     onPressEnter: 'Trigger actions when input is focused and enter is pressed.',
     onTooltipClick: 'Trigger actions when the tooltip icon is clicked.',
@@ -52,6 +57,7 @@ export default {
     additionalProperties: false,
     properties: {
       autoFocus,
+      selectOnFocus,
       changeOnWheel: {
         type: 'boolean',
         default: false,

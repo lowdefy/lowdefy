@@ -124,8 +124,14 @@ const TextInput = ({
               onBlur={() => {
                 methods.triggerEvent({ name: 'onBlur' });
               }}
-              onFocus={() => {
+              onFocus={(event) => {
+                if (properties.selectOnFocus) event.target.select();
                 methods.triggerEvent({ name: 'onFocus' });
+              }}
+              onKeyDown={(event) => {
+                // Escape while an IME is composing cancels the composition, not the field.
+                if (event.key !== 'Escape' || event.nativeEvent.isComposing) return;
+                methods.triggerEvent({ name: 'onEscape', event: { value } });
               }}
               prefix={
                 properties.prefix ||
