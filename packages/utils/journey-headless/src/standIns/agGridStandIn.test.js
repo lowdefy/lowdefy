@@ -481,6 +481,40 @@ test('AgGrid filter set by a method leaves later row steps to the browser', asyn
   expect(log).toEqual([]);
 });
 
+test.each([
+  ['sizeColumnsToFit', [], 'sizes its columns'],
+  ['autoSize', [{ skipHeader: true }], 'sizes its columns'],
+  ['exportDataAsCsv', [{ fileName: 'people.csv' }], 'exports its rows'],
+])(
+  'AgGrid %s, which the stand-in does not model, leaves the journey to the browser at the call',
+  async (method, args, what) => {
+    const { log, result } = await runTestJourney({
+      pages: [
+        gridPage({
+          blocks: [
+            {
+              id: 'call',
+              type: 'Button',
+              events: {
+                onClick: [
+                  { id: 'call', type: 'CallMethod', params: { blockId: 'people', method, args } },
+                ],
+              },
+            },
+          ],
+        }),
+      ],
+      steps: [{ click: 'call' }, { click: { blockId: 'people', rowKey: '1' } }],
+    });
+    expect(result.browserOnly).toEqual({
+      index: 0,
+      step: { click: 'call' },
+      reason: `CallMethod ${method} on AgGridAlpine "people" ${what}, which the headless stand-in does not model: the step runs in a browser.`,
+    });
+    expect(log).toEqual([]);
+  }
+);
+
 test("AgGrid link, input and valueGetter cells are the browser's", async () => {
   const cases = [
     [{ field: 'name', cell: { type: 'link' } }, 'a link cell'],

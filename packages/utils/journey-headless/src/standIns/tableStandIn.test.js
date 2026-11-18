@@ -456,11 +456,14 @@ test('Table with a view in its value leaves the step to the browser', async () =
   expect(log).toEqual([]);
 });
 
-test('Table row methods leave the journey to the browser at the call, naming the method', async () => {
+test('Table methods leave the journey to the browser at the call, naming the method', async () => {
   const cases = [
     ['setFilter', [{ key: 'name', op: 'eq', value: 'Ada' }], 'sets a filter'],
     ['setSearch', ['Ada'], 'sets a search'],
     ['applyTransaction', [{ remove: ['a1'] }], 'changes its rows'],
+    ['clearFilters', [], 'clears its filters'],
+    ['scrollToRow', [{ rowKey: 'a1' }], 'scrolls a row into view'],
+    ['exportCsv', [{ filename: 'people.csv' }], 'exports its rows'],
   ];
   for (const [method, args, what] of cases) {
     const pages = tablePage();

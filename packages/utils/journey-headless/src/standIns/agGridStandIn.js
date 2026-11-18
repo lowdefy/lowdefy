@@ -22,6 +22,7 @@ import findAgGridFeature from './findAgGridFeature.js';
 import fireEvent from './fireEvent.js';
 import listAgGridControls from './listAgGridControls.js';
 import readAgGridColumns from './readAgGridColumns.js';
+import registerBrowserOnlyMethods from './registerBrowserOnlyMethods.js';
 
 // What blocks-aggrid's display grids (AgGrid.js, one component behind AgGridAlpine, AgGridBalham,
 // AgGridMaterial and AgGridLowdefy) do for a row or a cell control, headless.
@@ -137,15 +138,24 @@ function readGrid({ actor, block, state }) {
   };
 }
 
+// The rest of the methods AgGrid.js registers, which the stand-in does not model: a CallMethod
+// with one leaves the journey to the browser at that step (registerBrowserOnlyMethods).
+const BROWSER_ONLY_METHODS = {
+  autoSize: 'sizes its columns',
+  exportDataAsCsv: 'exports its rows',
+  sizeColumnsToFit: 'sizes its columns',
+};
+
 // A filter a method sets (setFilterModel, setQuickFilter) hides rows the stand-in cannot tell,
 // so every row step on the grid after it is the browser's.
-function registerMethods({ block, state }) {
+function registerMethods({ actor, block, state }) {
   block.registerMethod('setFilterModel', () => {
     state.filteredBy = 'a filter set by setFilterModel';
   });
   block.registerMethod('setQuickFilter', () => {
     state.filteredBy = 'a quick filter set by setQuickFilter';
   });
+  registerBrowserOnlyMethods({ actor, block, methods: BROWSER_ONLY_METHODS });
 }
 
 export default {

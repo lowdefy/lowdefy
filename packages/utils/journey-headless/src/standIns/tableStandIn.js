@@ -29,6 +29,8 @@ import htmlHoldsCellControl from './htmlHoldsCellControl.js';
 import listTableControls from './listTableControls.js';
 import readHtmlCell from './readHtmlCell.js';
 import readTableColumns from './readTableColumns.js';
+import registerBrowserOnlyMethods from './registerBrowserOnlyMethods.js';
+import TABLE_METHODS from './TABLE_METHODS.js';
 import TABLE_PROPERTIES from './TABLE_PROPERTIES.js';
 
 // What blocks-table's Table does for a row or a cell control, headless, through blocks-antd's
@@ -169,24 +171,8 @@ function readGrid({ actor, block }) {
   return grid;
 }
 
-// The Table methods that change the rows a person sees: a filter or a search, which the table
-// writes to its value with an onChange, or rows added, updated or removed over the data, whose
-// counts the method returns. The stand-in models none of it, so a CallMethod with one leaves the
-// journey to the browser at that step, naming the method.
-const ROW_METHODS = {
-  applyTransaction: 'changes its rows',
-  setFilter: 'sets a filter',
-  setSearch: 'sets a search',
-};
-
 function registerMethods({ actor, block }) {
-  Object.entries(ROW_METHODS).forEach(([method, what]) => {
-    block.registerMethod(method, () => {
-      actor.browserOnly.push(
-        `CallMethod ${method} on ${describeBlock(block)} ${what}, which the headless stand-in does not model: the step runs in a browser.`
-      );
-    });
-  });
+  registerBrowserOnlyMethods({ actor, block, methods: TABLE_METHODS });
 }
 
 export default {
