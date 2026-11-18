@@ -15,15 +15,21 @@
 */
 
 import React from 'react';
+import { type } from '@lowdefy/helpers';
 import StatusCell from '@lowdefy/blocks-antd/table/cells/StatusCell.js';
 import TagCell from '@lowdefy/blocks-antd/table/cells/TagCell.js';
 
 // A select's options with the look of the cell (the cell editor, the filter builder's values): a
 // status dot or a tag chip in the value's colour (the shared cell renderers, for one value), with
-// the label as `text` for search and as the option's `title`.
+// the label as `text` for search and as the option's `title`. An option's `description` (a
+// non-empty string) is carried for a dropdown that shows it under the label (SelectOption).
 function toSelectOptions({ components, spec, row }) {
   const { column } = spec;
   return (spec.options ?? []).map((option) => ({
+    description:
+      type.isString(option.description) && option.description !== ''
+        ? option.description
+        : undefined,
     label:
       column.type === 'status' ? (
         <StatusCell column={column} row={row} value={option.value} />
