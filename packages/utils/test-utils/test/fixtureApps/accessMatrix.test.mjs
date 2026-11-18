@@ -52,6 +52,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'app_errors',
     'app_errors_open',
     'containing_split',
+    'controls',
     'explore',
     'explore_guarded',
     'explore_pr',

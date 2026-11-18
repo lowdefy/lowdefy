@@ -96,6 +96,31 @@ fixtureTest('a data-set journey clicking a button whose request uses MongoDB pas
   expect(result.passed).toBe(true);
 });
 
+// A modal's OK button is drawn in a portal outside every block wrapper, so the click rails read
+// the block a control target names, not the one around the clicked element.
+fixtureTest(
+  "a data-set journey clicking a modal's ok control is refused when its onOk reaches an undeclared connection",
+  async () => {
+    const result = await postJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [
+        { click: 'open_rails_modal_button' },
+        { click: { blockId: 'rails_modal', control: 'ok' } },
+      ],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(1);
+    expect(result.failure.message).toBe(
+      'Block "rails_modal" reaches connection "rails_undeclared" (UndeclaredFixture, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.'
+    );
+    expect(result.failure.actual).toBe(
+      'a click that reaches connection "rails_undeclared" (UndeclaredFixture, no dataSet declaration)'
+    );
+  }
+);
+
 fixtureTest('a journey without a data set is not railed', async () => {
   const result = await postJourney({
     pageId: 'rails',

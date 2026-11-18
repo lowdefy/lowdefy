@@ -49,6 +49,20 @@ async function postJourney(body) {
   return result;
 }
 
+// Posts a journey to the fixture's dev server with no parity check, for a journey whose rowKey,
+// control or open steps the headless runner has no block stand-ins for yet (LDF-1044's
+// stand-ins and its parity journeys come later).
+async function postBrowserJourney(body) {
+  const { status, body: result } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: { user: 'none', ...body },
+  });
+  if (status !== 200) {
+    throw new Error(`Journey route answered ${status}: ${JSON.stringify(result)}`);
+  }
+  return result;
+}
+
 async function listMutants(body) {
   const { status, body: result } = await postJson({ path: '/lowdefy-docs/mutants', body });
   if (status !== 200) {
@@ -66,4 +80,12 @@ async function launchChromium() {
   }
 }
 
-export { fixtureTest, launchChromium, fixtureUrl, listMutants, postJourney, postJson };
+export {
+  fixtureTest,
+  launchChromium,
+  fixtureUrl,
+  listMutants,
+  postBrowserJourney,
+  postJourney,
+  postJson,
+};

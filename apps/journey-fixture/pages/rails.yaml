@@ -6,6 +6,10 @@
 # declares dataSet: redirect) works. The auth rail acts at runtime:
 # logout_button runs Logout, so its click fails, while skipped_logout_button's
 # Logout is skipped (nothing in state allows it), so its click passes.
+# rails_modal's OK button sits in the modal's portal, outside every block
+# wrapper; its onOk calls a request on rails_undeclared (a connection type that
+# declares no dataSet), so a click on { blockId: rails_modal, control: ok } is
+# refused as the modal's.
 id: rails
 type: Box
 requests:
@@ -14,6 +18,11 @@ requests:
     connectionId: rails_external
     properties:
       url: /hook
+  - id: call_undeclared
+    type: UndeclaredFixtureEcho
+    connectionId: rails_undeclared
+    properties:
+      value: rails
   - id: save_rail_item
     type: MongoDBInsertOne
     connectionId: fixture_db
@@ -91,3 +100,30 @@ blocks:
     properties:
       type: success
       message: Rail item saved
+  - id: open_rails_modal_button
+    type: Button
+    properties:
+      title: Open rails modal
+    events:
+      onClick:
+        - id: open_rails_modal
+          type: CallMethod
+          params:
+            blockId: rails_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: rails_modal
+    type: Modal
+    properties:
+      title: Call the undeclared service?
+    events:
+      onOk:
+        - id: call_undeclared
+          type: Request
+          params: call_undeclared
+    blocks:
+      - id: rails_modal_body
+        type: Paragraph
+        properties:
+          content: Its OK button calls a request a data set cannot redirect.

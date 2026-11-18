@@ -33,6 +33,10 @@ connections:
     type: AxiosHttp
     properties:
       baseURL: http://127.0.0.1:9
+  # A connection whose type declares no dataSet: the data-set rails test clicks the OK button of a
+  # modal whose onOk calls a request on it, and the click is refused before it acts.
+  - id: rails_undeclared
+    type: UndeclaredFixture
   - _ref: connections/storage_bucket.yaml
   - _ref: connections/walled_runtime.yaml
   - _ref: connections/fixture_signature.yaml
@@ -110,3 +114,4 @@ pages:
   - _ref: pages/handoff.yaml
   - _ref: pages/selectors.yaml
   - _ref: pages/containing_split.yaml
+  - _ref: pages/controls.yaml
