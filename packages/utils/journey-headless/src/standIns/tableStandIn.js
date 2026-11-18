@@ -35,6 +35,44 @@ const MODELLED = new Set([...TABLE_PROPERTIES.modelled, ...TABLE_PROPERTIES.look
 // Cells that draw a link (CellLink, an anchor), which a click on the cell lands on.
 const LINK_CELL_TYPES = new Set(['avatar', 'email', 'link', 'phone', 'relation', 'url']);
 
+// Column configs that load one of Table's optional features, which own clicks on their cells or
+// edit them, as blocks-table's needsEnrichment and needsEditing read them: an enrichment, ai or
+// extract column, a run state, a user-defined column, an editable one.
+const ENRICHMENT_KINDS = new Set(['enrichment', 'ai', 'extract']);
+const COLUMN_FEATURES = [
+  {
+    what: 'enrichment columns',
+    test: (column) =>
+      ENRICHMENT_KINDS.has(column.kind) ||
+      !type.isUndefined(column.status) ||
+      column.userDefined === true,
+  },
+  {
+    what: 'an editable column',
+    test: (column) => column.editable === true || type.isObject(column.editable),
+  },
+];
+
+// Whether `defaultColumn` or any leaf column, header groups included, passes `test`, as
+// blocks-table's someColumnConfig reads the raw column config.
+function someColumnConfig({ properties, test }) {
+  function some(entries) {
+    return entries.some((entry) => {
+      if (!type.isObject(entry)) {
+        return false;
+      }
+      if (type.isArray(entry.children)) {
+        return some(entry.children);
+      }
+      return test(entry);
+    });
+  }
+  if (type.isObject(properties.defaultColumn) && test(properties.defaultColumn)) {
+    return true;
+  }
+  return type.isArray(properties.columns) && some(properties.columns);
+}
+
 // A property set to anything but false turns its feature on.
 function isOn(value) {
   return !type.isNone(value) && value !== false;
@@ -42,8 +80,9 @@ function isOn(value) {
 
 // What makes the rows or columns a person sees differ from the data and columns, or keeps state
 // the stand-in does not model: a property outside the modelled and looks-only ones
-// (TABLE_PROPERTIES; one no list classes counts too), server data, or a view in the block's value
-// (a sort, filter, search or column change the table wrote, or the app set).
+// (TABLE_PROPERTIES; one no list classes counts too), server data, a column that loads enrichment
+// or editing, or a view in the block's value (a sort, filter, search or column change the table
+// wrote, or the app set).
 function findTableFeature(block) {
   const properties = block.eval.properties ?? {};
   const property = Object.keys(properties).find(
@@ -54,6 +93,10 @@ function findTableFeature(block) {
   }
   if (!type.isNone(properties.data) && !type.isArray(properties.data)) {
     return 'server data';
+  }
+  const columnFeature = COLUMN_FEATURES.find(({ test }) => someColumnConfig({ properties, test }));
+  if (!type.isUndefined(columnFeature)) {
+    return columnFeature.what;
   }
   const view = block.value?.view;
   if (type.isObject(view) && Object.keys(view).length > 0) {

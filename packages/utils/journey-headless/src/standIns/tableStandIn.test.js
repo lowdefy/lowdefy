@@ -320,6 +320,30 @@ test('Table properties the stand-in does not model leave the step to the browser
   expect(looks.result.passed).toBe(true);
 });
 
+test('Table enrichment and editable columns leave the step to the browser', async () => {
+  const cases = [
+    [
+      { columns: [{ key: 'name', kind: 'ai', prompt: 'Who is {{ name }}?' }] },
+      'enrichment columns',
+    ],
+    [
+      { columns: [{ title: 'G', children: [{ key: 'name', status: { field: 's' } }] }] },
+      'enrichment columns',
+    ],
+    [{ columns: ['name'], defaultColumn: { editable: true } }, 'an editable column'],
+  ];
+  for (const [properties, feature] of cases) {
+    const { log, result } = await runTestJourney({
+      pages: tablePage({ properties }),
+      steps: [{ click: { blockId: 'people', rowKey: 'a1' } }],
+    });
+    expect(result.browserOnly.reason).toBe(
+      `Table "people" uses ${feature}, which the headless stand-in does not model: the step runs in a browser.`
+    );
+    expect(log).toEqual([]);
+  }
+});
+
 test("Table link cells are the browser's", async () => {
   const { result } = await runTestJourney({
     pages: tablePage({ properties: { columns: [{ key: 'name', type: 'link' }] } }),

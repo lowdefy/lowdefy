@@ -35,6 +35,11 @@ const BROWSER_CELL_TYPES = new Set([
   'textInput',
 ]);
 
+// An avatar cell with a link draws its name as a link (AvatarCell's GridLink).
+function isAvatarLink(cell) {
+  return cell.type === 'avatar' && type.isObject(cell.link);
+}
+
 // The component's getRowId: the field `rowId` names (a plain key, not a path), else id, else _id;
 // a row with none gets a generated key (assignRowId), which is null here.
 function readRowKey({ row, rowId }) {
@@ -66,6 +71,8 @@ function columnBrowserOnly({ block, column }) {
   let what = null;
   if (type.isObject(colDef.cell) && BROWSER_CELL_TYPES.has(colDef.cell.type)) {
     what = `a ${colDef.cell.type} cell`;
+  } else if (type.isObject(colDef.cell) && isAvatarLink(colDef.cell)) {
+    what = 'an avatar cell with a link';
   } else if (!type.isObject(colDef.cell) && !type.isNone(colDef.cellRenderer)) {
     what = 'a custom cellRenderer';
   } else if (!type.isNone(colDef.valueGetter)) {

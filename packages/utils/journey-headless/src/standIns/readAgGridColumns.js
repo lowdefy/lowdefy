@@ -18,13 +18,15 @@ import { type } from '@lowdefy/helpers';
 
 const PIN_ORDER = { left: 0, center: 1, right: 2 };
 
-// AG Grid merges a column's definition over its column types and the grid's defaultColDef.
+// AG Grid merges a column's definition over its column types and the grid's defaultColDef. The
+// cell renderer comes from the column's own `cell` only: processColDefs reads it from each column,
+// and AG Grid ignores a `cell` on defaultColDef or a column type.
 function mergeColDef({ col, columnTypes, defaultColDef }) {
   const typeNames = type.isArray(col.type) ? col.type : [col.type];
   const types = typeNames
     .filter((name) => type.isString(name) && type.isObject(columnTypes?.[name]))
     .map((name) => columnTypes[name]);
-  return Object.assign({}, defaultColDef, ...types, col);
+  return { ...Object.assign({}, defaultColDef, ...types, col), cell: col.cell };
 }
 
 function readPinned(colDef) {

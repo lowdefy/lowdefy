@@ -316,6 +316,22 @@ test('AgGrid switch write lasts until the block rowData changes', async () => {
   expect(readLog(log).map(([, event]) => event.newValue)).toEqual([true, true]);
 });
 
+test('AgGrid cell controls come from the column, not defaultColDef', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      gridPage({
+        properties: {
+          columnDefs: [{ field: 'name' }],
+          defaultColDef: { cell: { type: 'buttons', buttons: [{ eventName: 'onEdit' }] } },
+        },
+      }),
+    ],
+    steps: [{ click: { blockId: 'people', rowKey: '1' } }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log).map(([name]) => name)).toEqual(['onCellClick', 'onRowClick']);
+});
+
 test('AgGrid control key in two columns needs a column, which narrows it', async () => {
   const columnDefs = [
     { field: 'name', cell: { type: 'buttons', buttons: [{ eventName: 'onOpen' }] } },
@@ -395,6 +411,10 @@ test("AgGrid link, input and valueGetter cells are the browser's", async () => {
     [{ field: 'name', cell: { type: 'textInput' } }, 'a textInput cell'],
     [{ field: 'name', valueGetter: 'data.name' }, 'a valueGetter'],
     [{ field: 'name', editable: true }, 'cell editing (editable)'],
+    [
+      { field: 'name', cell: { type: 'avatar', link: { pageId: 'person' } } },
+      'an avatar cell with a link',
+    ],
   ];
   for (const [column, what] of cases) {
     const { result } = await runTestJourney({
