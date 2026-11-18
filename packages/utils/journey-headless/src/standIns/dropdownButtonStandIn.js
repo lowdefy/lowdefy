@@ -72,11 +72,6 @@ function clickBlock({ actor, block, state }) {
   clickTrigger({ actor, block, state, trigger: readTrigger(block) });
 }
 
-// Escape closes the dropdown (pressEscape).
-function escape({ actor, block, state }) {
-  closeDropdown({ actor, block, state });
-}
-
 function open({ actor, block, state }) {
   refuseDisabled({ block });
   refuseOpenAgain({ block, state });
@@ -87,4 +82,4 @@ function leave({ actor, block, state, targetBlock }) {
   leaveDropdown({ actor, block, state, targetBlock, trigger: readTrigger(block) });
 }
 
-export default { answersBlockClick, click, clickBlock, escape, leave, open };
+export default { answersBlockClick, click, clickBlock, leave, open };

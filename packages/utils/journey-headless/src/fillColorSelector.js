@@ -15,16 +15,16 @@
 */
 
 import pointerClick from './pointerClick.js';
-import pressEscape from './pressEscape.js';
 
 // A fill of a ColorSelector, as the browser runner makes it (fillColorPicker): it clicks the
-// picker's trigger, types the hex colour, then presses Escape to close the picker. The click is
-// the pointer's (pointerClick) and the Escape closes every open dropdown on the page as well
-// (pressEscape). The fill's own checks have passed (checkFillTarget).
+// picker's trigger before it types the hex colour, so the fill is a pointer click on the block too
+// (pointerClick): another open dropdown closes as on a click outside, and a dropdown whose content
+// holds the picker hears the click on its trigger. The Escape that closes the picker afterwards
+// reaches no dropdown: the picker's hex input has the focus, and an open dropdown stays open. The
+// fill's own checks have passed (checkFillTarget).
 async function fillColorSelector({ actor, block, step }) {
   await pointerClick({ actor, block });
   await actor.stepRunner.run({ step });
-  pressEscape({ actor });
   await actor.settle();
 }
 

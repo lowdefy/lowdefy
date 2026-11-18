@@ -16,6 +16,7 @@
 
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import collectBlockParents from './collectBlockParents.js';
+import isClickClaimed from './isClickClaimed.js';
 import leaveDropdowns from './leaveDropdowns.js';
 import readStandInState from './readStandInState.js';
 
@@ -33,22 +34,27 @@ function findContentTrigger({ actor, block }) {
   return null;
 }
 
-// What the pointer does on a plain click on `block`, before the block's own click: every other
-// open dropdown hears it leave (leaveDropdowns), and the closest dropdown whose content holds the
-// block hears a click on its trigger, which its content is (its stand-in's clickContent): a closed
-// one opens and fires onOpenChange first, an open click dropdown closes. A disabled block takes no
-// click, so no trigger hears one.
-async function pointerClick({ actor, block }) {
-  const trigger =
-    block.eval.properties?.disabled === true ? null : findContentTrigger({ actor, block });
+// A click the pointer makes on `block`, in the browser's order. Every other open dropdown hears
+// the pointer leave it first (leaveDropdowns). Then `click` runs, what the click does on the block
+// itself (its onClick). Then the closest dropdown whose content holds the block hears the click on
+// its trigger, which its content is (its stand-in's clickContent): the click bubbles out to the
+// trigger, and a hover dropdown opens only after its mouse-enter delay. The dropdown's events for
+// it run unless a block on the way handled the click (isClickClaimed). A dropdown the click took
+// away (a Modal holding it closed and unmounted it, a link left the page) is gone, and hears
+// nothing.
+async function pointerClick({ actor, block, click }) {
+  const trigger = findContentTrigger({ actor, block });
+  const state = trigger === null ? null : readStandInState({ actor, block: trigger });
   leaveDropdowns({ actor, except: trigger, targetBlock: block });
-  if (trigger === null) {
+  await click?.();
+  if (trigger === null || actor.page.standIns.get(trigger.id)?.state !== state) {
     return;
   }
   await BLOCK_STAND_INS[trigger.type].clickContent({
     actor,
     block: trigger,
-    state: readStandInState({ actor, block: trigger }),
+    claimed: isClickClaimed({ actor, block, container: trigger }),
+    state,
   });
 }
 

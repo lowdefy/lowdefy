@@ -35,13 +35,13 @@ import tableStandIn from './standIns/tableStandIn.js';
 // - answersBlockClick() and clickBlock(): whether the component answers a plain click on the block
 //   itself (a dropdown's trigger), and the click when it does. Without them a plain click fires
 //   the block's onClick.
-// - clickContent(): a plain click on a block inside this one's content, which is its trigger (a
-//   DropdownMenu's), before that block's own click (pointerClick). Resolves once it has acted.
+// - clickContent({ claimed }): a plain click on a block inside this one's content, which is its
+//   trigger (a DropdownMenu's), after that block's own click (pointerClick). claimed: a block on
+//   the way handled the click, so the engine skips this block's events for it (isClickClaimed).
 // - open(): an open step on the block.
 // - leave({ targetBlock }): another click, open or select is about to act (on targetBlock), and
 //   the block's dropdown is open (state.open): close it as a click outside or the mouse leaving
 //   does.
-// - escape(): Escape was pressed and the block's dropdown is open: close it (pressEscape).
 // - expect({ kind, target, timeout }): expect.visible or expect.hidden (kind) with a rowKey.
 // The step runner answers a step a block's stand-in has no part for in a browser, naming the block
 // and its type (runHeadlessStep). The match is by exact type: a block installed under a type

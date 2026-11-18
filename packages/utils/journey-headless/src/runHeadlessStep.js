@@ -59,9 +59,9 @@ async function runStandIn({ actor, block, part, what, ...args }) {
 
 // A click on a block: a rowKey or control target, and a plain click a component answers itself
 // (a dropdown's trigger), go to the block's stand-in. Any other click fires the block's onClick
-// through the step runner, once the pointer has reached it (pointerClick: a click inside a
-// DropdownMenu's content opens a closed one first); a block with none is left to the browser,
-// where the click lands on a control inside it. Resolves true when the click is done.
+// through the step runner, as a pointer click (pointerClick: a block in a DropdownMenu's content
+// clicks its trigger too); a block with none is left to the browser, where the click lands on a
+// control inside it. Resolves true when the click is done.
 async function runBlockClick({ actor, step, stepTimeout }) {
   const target = step.click;
   const block = await waitForShownBlock({ actor, target, timeout: stepTimeout });
@@ -85,8 +85,9 @@ async function runBlockClick({ actor, step, stepTimeout }) {
     );
     return true;
   }
-  await pointerClick({ actor, block });
-  return false;
+  await pointerClick({ actor, block, click: () => actor.stepRunner.run({ step }) });
+  await actor.settle();
+  return true;
 }
 
 // expect.visible or expect.hidden on a grid row by key goes to the grid's stand-in. A block that
@@ -137,7 +138,7 @@ async function runRowExpect({ actor, step, stepTimeout }) {
 // (actor.browserOnly), naming the block and its type, as a click on a block with no onClick of its
 // own does, which in a browser lands on a control inside it. A click, open or select first closes
 // any other open dropdown (leaveDropdowns). A fill is refused where the browser's would be
-// (checkFillTarget); a ColorSelector's fill clicks and presses Escape, as the browser's does
+// (checkFillTarget); a ColorSelector's fill clicks its picker first, as the browser's does
 // (fillColorSelector). wait.request waits for a call made since the last interaction: `since` is
 // the actor's call count when that window opened.
 async function runHeadlessStep({ actors, answer, host, since, step, stepTimeout }) {

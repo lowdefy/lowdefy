@@ -15,6 +15,7 @@
 */
 
 import HeadlessStepError from '../HeadlessStepError.js';
+import isClickClaimed from '../isClickClaimed.js';
 import describeBlock from './describeBlock.js';
 import {
   clickTrigger,
@@ -45,8 +46,8 @@ import refuseMenuItem from './refuseMenuItem.js';
 // its menu unmounts.
 //
 // The block's `content` area is the dropdown's trigger: antd's Dropdown draws it as the element
-// that opens the menu. A click on a block in it, or on the block itself, is a click on the
-// trigger as well as on that block.
+// that opens the menu. A click on a block in it, or on the block itself, reaches the trigger after
+// that block's own click.
 
 function readTrigger(block) {
   return block.eval.properties?.trigger ?? 'hover';
@@ -104,8 +105,9 @@ function answersBlockClick() {
 }
 
 // The trigger is the block's own element, which a disabled dropdown leaves clickable: the click
-// lands and nothing opens. Resolves once an open has fired its onOpenChange.
-function clickOwnTrigger({ actor, block, state }) {
+// lands and nothing opens. claimed: a block in the content handled the click (isClickClaimed).
+// Resolves once an open has fired its onOpenChange.
+function clickOwnTrigger({ actor, block, state, claimed = false }) {
   if (block.eval.properties?.disabled === true) {
     return Promise.resolve();
   }
@@ -113,36 +115,42 @@ function clickOwnTrigger({ actor, block, state }) {
     actor,
     block,
     state,
+    claimed,
     trigger: readTrigger(block),
     onClosed: onClosed({ block, state }),
   });
 }
 
 // A plain click on the block lands on the first control in its content (findContentControl), as
-// the browser runner's does, through the trigger: the dropdown answers the click first, then that
-// control fires its onClick. A disabled control takes no click, so the browser's step fails.
+// the browser runner's does: that control fires its onClick, then the click reaches the trigger,
+// which the control's onClick may have handled. A disabled control takes no click, so the
+// browser's step fails.
 async function clickBlock({ actor, block, state }) {
   const control = findContentControl({ actor, block });
-  if (control?.eval.properties?.disabled === true) {
+  if (control === null) {
+    await clickOwnTrigger({ actor, block, state });
+    return;
+  }
+  if (control.eval.properties?.disabled === true) {
     throw new HeadlessStepError(
       `A click on ${describeBlock(block)} lands on block "${control.blockId}", which is disabled.`,
       { actual: 'disabled', expected: `an enabled block "${control.blockId}"` }
     );
   }
-  await clickOwnTrigger({ actor, block, state });
-  if (control !== null && Object.hasOwn(control.Events.events, 'onClick')) {
+  if (Object.hasOwn(control.Events.events, 'onClick')) {
     fireEvent({ actor, block: control, name: 'onClick' });
   }
+  await clickOwnTrigger({
+    actor,
+    block,
+    state,
+    claimed: isClickClaimed({ actor, block: control, container: block }),
+  });
 }
 
-// A plain click on a block in the content area (pointerClick), before that block's own click.
-function clickContent({ actor, block, state }) {
-  return clickOwnTrigger({ actor, block, state });
-}
-
-// Escape closes the dropdown (pressEscape).
-function escape({ actor, block, state }) {
-  closeDropdown({ actor, block, state, onClosed: onClosed({ block, state }) });
+// A plain click on a block in the content area, after that block's own click (pointerClick).
+function clickContent({ actor, block, state, claimed }) {
+  return clickOwnTrigger({ actor, block, state, claimed });
 }
 
 function open({ actor, block, state }) {
@@ -162,4 +170,4 @@ function leave({ actor, block, state, targetBlock }) {
   });
 }
 
-export default { answersBlockClick, click, clickBlock, clickContent, escape, leave, open };
+export default { answersBlockClick, click, clickBlock, clickContent, leave, open };

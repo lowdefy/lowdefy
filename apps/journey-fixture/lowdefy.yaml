@@ -117,3 +117,4 @@ pages:
   - _ref: pages/selectors.yaml
   - _ref: pages/containing_split.yaml
   - _ref: pages/controls.yaml
+  - _ref: pages/popup_parity.yaml
