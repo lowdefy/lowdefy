@@ -41,9 +41,9 @@ function capitalise(text) {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
 }
 
-// After a step (a click, open, fill or select, see railedSteps) on a data-set run has settled,
-// fails it when an auth-engine action executed: its callers are injected and have no auth
-// session, so it fails for a harness reason. An action the chain skipped (a validation that
+// After a step (a click, open, fill, select or press, see railedSteps) on a data-set run has
+// settled, fails it when an auth-engine action executed: its callers are injected and have no
+// auth session, so it fails for a harness reason. An action the chain skipped (a validation that
 // stopped it, a skip: condition) never runs, so a step that only might reach one is fine.
 // blockId is the block the step acted on, when known.
 async function checkAuthActionsRan({ journey, page, blockId, step }) {

@@ -25,6 +25,9 @@
 # rails_shortcut_button's onClick, which calls the undeclared request, so the
 # press is refused; mod+j fires rails_safe_shortcut_button's, which only sets
 # state; Enter in rails_enter_logout_input runs Logout, so the auth rail fails it.
+# Escape in rails_escape_modal (focus sits in its portal, outside every block
+# wrapper) fires its onCancel, which calls the undeclared request, so the press
+# is refused as the modal's.
 id: rails
 type: Box
 requests:
@@ -259,3 +262,30 @@ blocks:
       onPressEnter:
         - id: sign_out_on_enter
           type: Logout
+  - id: open_rails_escape_modal_button
+    type: Button
+    properties:
+      title: Open escape modal
+    events:
+      onClick:
+        - id: open_rails_escape_modal
+          type: CallMethod
+          params:
+            blockId: rails_escape_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: rails_escape_modal
+    type: Modal
+    properties:
+      title: Escape calls the undeclared service
+    events:
+      onCancel:
+        - id: call_undeclared_on_cancel
+          type: Request
+          params: call_undeclared
+    blocks:
+      - id: rails_escape_modal_body
+        type: Paragraph
+        properties:
+          content: Escape closes it, and its onCancel calls a request a data set cannot redirect.

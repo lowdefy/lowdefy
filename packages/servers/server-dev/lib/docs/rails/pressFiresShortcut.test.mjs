@@ -28,7 +28,13 @@ test.each([
   ['Alt+Shift+n', 'shift+alt+N', 'Control'],
   ['Meta+Backspace', 'mod+Backspace', 'Meta'],
   ['i', 'g i', 'Control'],
-  ['Control++', 'ctrl++', 'Meta'],
+  ['Meta+KeyS', 'mod+s', 'Meta'],
+  ['Meta+s', 'mod+KeyS', 'Meta'],
+  ['Control+/', 'mod+Slash', 'Control'],
+  ['a', '[Shift]+a', 'Meta'],
+  ['Shift+a', '[Shift]+a', 'Meta'],
+  ['Meta+3', 'mod+([0-9])', 'Meta'],
+  ['Space', 'Space', 'Meta'],
   ['ControlOrMeta+s', 'mod+s', 'Meta'],
 ])('pressing %s fires the shortcut %s (platform modifier %s)', (key, shortcut, modifier) => {
   expect(pressFiresShortcut({ key, shortcut, modifier })).toBe(true);
@@ -41,6 +47,8 @@ test.each([
   ['Meta+j', 'mod+k', 'Meta'],
   ['g', 'g i', 'Control'],
   ['Enter', 'Escape', 'Meta'],
+  ['Meta+a', 'mod+([0-9])', 'Meta'],
+  ['Alt+a', '[Shift]+a', 'Meta'],
 ])(
   'pressing %s does not fire the shortcut %s (platform modifier %s)',
   (key, shortcut, modifier) => {

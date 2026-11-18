@@ -312,3 +312,26 @@ fixtureTest(
     );
   }
 );
+
+// An open modal draws its dialog in a portal outside every block wrapper, and Escape there fires
+// its onCancel, so the rails check the block whose portal holds the focused element.
+fixtureTest(
+  'a data-set journey pressing Escape in a modal whose onCancel reaches an undeclared connection is refused',
+  async () => {
+    const result = await postBrowserJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [
+        { click: 'open_rails_escape_modal_button' },
+        { expect: { visible: 'rails_escape_modal_body' } },
+        { press: 'Escape' },
+      ],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(2);
+    expect(result.failure.message).toBe(
+      `Block "rails_escape_modal" reaches connection "rails_undeclared" ${UNDECLARED}, so a data-set journey cannot press a key that fires its events.`
+    );
+  }
+);

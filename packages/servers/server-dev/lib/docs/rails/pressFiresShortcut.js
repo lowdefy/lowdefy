@@ -14,46 +14,72 @@
   limitations under the License.
 */
 
-// The modifier names a block's `shortcut` takes (client createShortcutManager's MODIFIER_MAP,
-// with tinykeys' own `$mod`) and the ones Playwright's `keyboard.press` takes, as the modifier
-// they hold down. `mod` is the platform's: Meta on Apple, Control elsewhere.
-const MODIFIERS = {
-  mod: 'mod',
-  $mod: 'mod',
-  controlormeta: 'mod',
-  ctrl: 'control',
-  control: 'control',
-  alt: 'alt',
-  shift: 'shift',
-  meta: 'meta',
-};
+import { normalizeShortcut } from '@lowdefy/client/createShortcutManager.js';
+import { matchKeybindingPress, parseKeybinding } from 'tinykeys';
 
-// One chord as the set of modifiers it holds and its key, both lower case, `mod` resolved to
-// the platform modifier. A chord whose key is `+` ends in an empty part, so the key is `+`.
-function parseChord({ chord, modifier }) {
-  const parts = chord.split('+');
-  const key = parts.at(-1) === '' ? '+' : parts.at(-1);
-  const held = parts.slice(0, parts.at(-1) === '' ? -2 : -1).map((part) => {
-    const name = MODIFIERS[part.toLowerCase()] ?? part.toLowerCase();
-    return name === 'mod' ? modifier.toLowerCase() : name;
-  });
-  return { modifiers: new Set(held), key: key.toLowerCase() };
+// Playwright's US layout for the keys whose KeyboardEvent.key and .code differ, each name
+// (as a journey may write it) to [key, code]. Letters and digits follow a rule below; any
+// other name (Enter, Escape, Tab, ArrowUp, F2) is its own key and code.
+const US_KEYS = [
+  [' ', 'Space'],
+  ['-', 'Minus'],
+  ['=', 'Equal'],
+  ['[', 'BracketLeft'],
+  [']', 'BracketRight'],
+  ['\\', 'Backslash'],
+  [';', 'Semicolon'],
+  ["'", 'Quote'],
+  ['`', 'Backquote'],
+  [',', 'Comma'],
+  ['.', 'Period'],
+  ['/', 'Slash'],
+];
+const BY_NAME = new Map(
+  US_KEYS.flatMap(([key, code]) => [
+    [key, [key, code]],
+    [code, [key, code]],
+  ])
+);
+
+// The KeyboardEvent key and code Playwright sends for a key name.
+function keyAndCode(name) {
+  if (BY_NAME.has(name)) return BY_NAME.get(name);
+  if (/^[a-z]$/i.test(name)) return [name, `Key${name.toUpperCase()}`];
+  if (/^Key[A-Z]$/.test(name)) return [name.slice(3).toLowerCase(), name];
+  if (/^[0-9]$/.test(name)) return [name, `Digit${name}`];
+  if (/^Digit[0-9]$/.test(name)) return [name.slice(5), name];
+  return [name, name];
 }
 
-function sameModifiers(left, right) {
-  return left.size === right.size && [...left].every((name) => right.has(name));
+// Playwright's modifier names, as the KeyboardEvent modifier each holds down.
+const MODIFIERS = { Shift: 'Shift', Control: 'Control', Alt: 'Alt', Meta: 'Meta' };
+
+// The keydown a press of `key` (a Playwright chord, `Mod` already resolved) sends, as far as
+// tinykeys reads it. A chord whose key is `+` ends in an empty part.
+function pressedEvent({ key, modifier }) {
+  const parts = key.split('+');
+  const plusKey = parts.at(-1) === '' && parts.length > 1;
+  const name = plusKey ? '+' : parts.at(-1);
+  const held = new Set(
+    parts
+      .slice(0, plusKey ? -2 : -1)
+      .map((part) => (part === 'ControlOrMeta' ? modifier : (MODIFIERS[part] ?? part)))
+  );
+  const [eventKey, code] = keyAndCode(name);
+  return { key: eventKey, code, getModifierState: (mod) => held.has(mod) };
 }
 
-// Whether pressing `key` (the chord the runner presses, `Mod` already resolved) fires a block
-// event with this `shortcut`, the way tinykeys matches it: the same modifiers held, no others,
-// and the same key, case ignored. A sequence (`g i`) fires on the press of its last chord, so
-// that chord is matched; a press of it with no press of the chords before refuses too much,
-// never too little. `modifier` is the platform modifier (getShortcutModifier).
+// Whether pressing `key` fires a block event bound with this `shortcut`, decided by tinykeys
+// itself on the shortcut the client binds (createShortcutManager's normalizeShortcut): the
+// binding's key matches the event's key (case ignored) or code, or its `(regex)` matches either;
+// its required modifiers are held and no others but its `[optional]` ones. `$mod` is `modifier`,
+// the page's platform modifier (getShortcutModifier), since tinykeys in Node reads no platform.
+// A sequence (`g i`) fires on the press of its last chord, so that chord is matched: a press of
+// it alone refuses too much, never too little.
 function pressFiresShortcut({ key, shortcut, modifier }) {
-  const pressed = parseChord({ chord: key, modifier });
-  const last = shortcut.trim().split(/\s+/).at(-1);
-  const bound = parseChord({ chord: last, modifier });
-  return pressed.key === bound.key && sameModifiers(pressed.modifiers, bound.modifiers);
+  const bound = normalizeShortcut(shortcut.trim()).replaceAll('$mod', modifier);
+  const last = parseKeybinding(bound).at(-1);
+  return matchKeybindingPress(pressedEvent({ key, modifier }), last);
 }
 
 export default pressFiresShortcut;

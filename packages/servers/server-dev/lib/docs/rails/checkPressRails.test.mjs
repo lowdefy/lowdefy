@@ -18,14 +18,23 @@ import { vi, expect, test } from 'vitest';
 
 import checkPressRails from './checkPressRails.js';
 
-// The page's first evaluate arms the auth recorder; the second reads the shown page, the focused
-// block and the page's shortcuts.
-function createPage({ pageId = 'rails', focused = null, shortcuts = [] } = {}) {
+// The page's first evaluate arms the auth recorder; the second reads what the focused element
+// sits in, the shown page, its blocks and the shortcuts they bind.
+function createPage({
+  pageId = 'rails',
+  wrappers = [],
+  control = null,
+  portals = [],
+  blockIds = [],
+  shortcuts = [],
+} = {}) {
   return {
-    evaluate: vi
-      .fn()
-      .mockResolvedValueOnce(undefined)
-      .mockResolvedValueOnce({ pageId, focused, shortcuts }),
+    evaluate: vi.fn().mockResolvedValueOnce(undefined).mockResolvedValueOnce({
+      pageId,
+      around: { wrappers, control, portals },
+      blockIds,
+      shortcuts,
+    }),
   };
 }
 
@@ -95,12 +104,12 @@ test('a press on an unrailed block passes and returns that block', async () => {
   expect(journey.dataSetRails.refusal).toHaveBeenCalledTimes(1);
 });
 
-test('a press is checked against the focused block', async () => {
+test('a press is checked against the block around the focused element', async () => {
   const journey = createJourney(['login_input']);
   await expect(
     checkPressRails({
       journey,
-      page: createPage({ focused: 'login_input', shortcuts: SHORTCUTS }),
+      page: createPage({ wrappers: ['login_input'], shortcuts: SHORTCUTS }),
       key: 'Enter',
       modifier: 'Meta',
     })
@@ -112,7 +121,7 @@ test('a press reaching the focused block and a shortcut checks both and names ne
   await expect(
     checkPressRails({
       journey,
-      page: createPage({ focused: 'notes_input', shortcuts: SHORTCUTS }),
+      page: createPage({ wrappers: ['notes_input'], shortcuts: SHORTCUTS }),
       key: 'Meta+s',
       modifier: 'Meta',
     })
@@ -141,10 +150,61 @@ test('a press while no Lowdefy page shows is not checked', async () => {
   await expect(
     checkPressRails({
       journey,
-      page: createPage({ pageId: null, focused: 'save_button' }),
+      page: createPage({ pageId: null, wrappers: ['save_button'] }),
       key: 'Enter',
       modifier: 'Meta',
     })
   ).resolves.toBe('save_button');
   expect(journey.dataSetRails.refusal).not.toHaveBeenCalled();
+});
+
+test('a press is checked against every block wrapper around the focused element', async () => {
+  const journey = createJourney(['form_box']);
+  await expect(
+    checkPressRails({
+      journey,
+      page: createPage({ wrappers: ['save_button', 'form_box'] }),
+      key: 'Enter',
+      modifier: 'Meta',
+    })
+  ).rejects.toThrow('Block "form_box" is refused.');
+});
+
+test('a press on a focused input inside containers names the input', async () => {
+  await expect(
+    checkPressRails({
+      journey: createJourney([]),
+      page: createPage({ wrappers: ['name_input', 'form_box', 'page'] }),
+      key: 'Enter',
+      modifier: 'Meta',
+    })
+  ).resolves.toBe('name_input');
+});
+
+test('a press on a marked control in a portal is checked against the block that marks it', async () => {
+  const journey = createJourney(['delete_modal']);
+  await expect(
+    checkPressRails({
+      journey,
+      page: createPage({ control: 'delete_modal' }),
+      key: 'Enter',
+      modifier: 'Meta',
+    })
+  ).rejects.toThrow('Block "delete_modal" is refused.');
+});
+
+test('a press in a modal portal is checked against the block whose portal class it carries', async () => {
+  const journey = createJourney(['rows.0.edit_modal']);
+  await expect(
+    checkPressRails({
+      journey,
+      page: createPage({
+        portals: ['ldf-portal-rows_0_edit_modal'],
+        blockIds: ['rows.0.edit_modal', 'rows_0_edit_modal_title'],
+      }),
+      key: 'Escape',
+      modifier: 'Meta',
+    })
+  ).rejects.toThrow('Block "rows.0.edit_modal" is refused.');
+  expect(journey.dataSetRails.refusal).toHaveBeenCalledTimes(1);
 });
