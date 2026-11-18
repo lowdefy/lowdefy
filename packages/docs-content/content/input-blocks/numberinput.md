@@ -826,6 +826,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
+| `selectOnFocus` | boolean | `false` | Select the text when the input gets focus, autoFocus included, so typing replaces it. |
 | `changeOnWheel` | boolean | `false` | Allow changing the value with the mouse wheel while the input is focused. |
 | `bordered` | boolean | `true` | Whether or not the number input has a border style. Deprecated, use variant instead. |
 | `controls` | boolean | `true` | Whether or not to show the +- controls. |
@@ -924,6 +925,7 @@ Numeric input with step controls, min/max limits, precision, and formatting.
 | --- | --- | --- |
 | `onBlur` | \- | Trigger action event occurs when number input loses focus. |
 | `onChange` | `{ value }` | Trigger action when number input is changed. |
+| `onEscape` | `{ value }` | Trigger actions when input is focused and Escape is pressed. |
 | `onFocus` | \- | Trigger action when number input gets focus. |
 | `onPressEnter` | \- | Trigger actions when input is focused and enter is pressed. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |

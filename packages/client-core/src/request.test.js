@@ -594,3 +594,39 @@ describe('page unload', () => {
     ).rejects.toThrow('Bad gateway.');
   });
 });
+
+describe('read-only view', () => {
+  const user = { id: 'user_a', organization_id: 'org_1', roles: ['editor'] };
+  const refusal = {
+    name: 'AuthorizationError',
+    message: 'This connection is read-only. Reconnect with write access to make changes.',
+    code: 'view_write_required',
+  };
+
+  test.each([
+    { call: 'a page request', reloadOnAuthorizationError: true },
+    { call: 'an endpoint call', reloadOnAuthorizationError: false },
+  ])(
+    'request throws the reconnect message for $call refused with view_write_required, and tells the host of no caller change',
+    async ({ reloadOnAuthorizationError }) => {
+      mockFetchResponse({ ok: false, status: 403, body: refusal });
+      let thrown;
+      try {
+        await request({
+          lowdefy: createLowdefy(user),
+          method: 'POST',
+          reloadOnAuthorizationError,
+          url: '/api/request/p/save',
+        });
+      } catch (error) {
+        thrown = error;
+      }
+      expect(thrown).toBeInstanceOf(AuthorizationError);
+      expect(thrown.message).toEqual(refusal.message);
+      expect(thrown.code).toEqual('view_write_required');
+      expect(host.onCallerChanged).not.toHaveBeenCalled();
+      expect(host.onBuildChanged).not.toHaveBeenCalled();
+      expect(host.fetch).toHaveBeenCalledTimes(1);
+    }
+  );
+});

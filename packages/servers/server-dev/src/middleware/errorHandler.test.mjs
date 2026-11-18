@@ -415,3 +415,39 @@ test('errorHandler treats a basePath prefixed page path as a page path', async (
   expect(res.status).toEqual(500);
   expect(await res.text()).toEqual('Internal Server Error');
 });
+
+test('errorHandler sends the view_write_required code of a read-only view session with the 403', async () => {
+  const error = createAuthorizationError('This connection is read-only.');
+  error.code = 'view_write_required';
+  const res = await createApp({ error, logger: createLogger() }).request(
+    '/api/endpoints/save_task'
+  );
+
+  expect(res.status).toEqual(403);
+  expect(await res.json()).toEqual({
+    name: 'AuthorizationError',
+    message: 'This connection is read-only.',
+    code: 'view_write_required',
+  });
+});
+
+test.each([
+  ['a system call code', 'ECONNREFUSED'],
+  ['a database driver code', 11000],
+  ['a code no client acts on', 'internal_detail'],
+])('errorHandler does not send %s carried by an expected error', async (_, code) => {
+  for (const createError of [
+    createAuthenticationError,
+    createAuthorizationError,
+    createTwoFactorEnrolmentRequiredError,
+    createUserError,
+  ]) {
+    const error = createError('Refused.');
+    error.code = code;
+    const res = await createApp({ error, logger: createLogger() }).request(
+      '/api/endpoints/save_task'
+    );
+    const body = await res.json();
+    expect(body).toEqual({ name: error.name, message: 'Refused.' });
+  }
+});

@@ -52,5 +52,3 @@ Agent edits YAML → asks "what's broken" → gets structured errors with file l
 
 - Snippet-level validation tool (validate a YAML fragment against schema + semantic rules without a full build — Svelte MCP pattern; cheaper than the rebuild round-trip).
 - Request dry-run: needs a `dryRun` contract in `@lowdefy/api`/connections; today only `@lowdefy/connection-test` is side-effect-free. Document TestConnection as the safe pipeline-test target in the interim.
-- Let apps expose their own MCP tools from config (Nuxt MCP Toolkit pattern) — agent-callable app features, not just dev tooling.
-- OAuth/allowlisting if the MCP endpoint is ever exposed beyond localhost (Vercel MCP safety norm). Currently dev-only/localhost.

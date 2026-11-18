@@ -1,0 +1,13 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["view references page", "\"viewPages\" entry"],
+      "errorContains": [
+        "MCP endpoint \"open_task\" view references page \"tsak\", which does not exist.",
+        "MCP \"viewPages\" entry \"concept\" does not reference a page.",
+        "lowdefy.yaml:"
+      ]
+    }
+  ]
+}

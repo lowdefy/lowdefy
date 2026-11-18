@@ -78,6 +78,7 @@ vi.doMock('./middleware/sentry.js', () => ({ default: passThrough }));
 vi.doMock('../lib/build/appMeta.js', () => ({ default: { buildId: 'build-1' } }));
 vi.doMock('../lib/build/auth.js', () => ({ default: { configured: false } }));
 vi.doMock('../lib/build/theme.js', () => ({ default: {} }));
+vi.doMock('../lib/build/mcp.js', () => ({ default: { views: { configured: false } } }));
 vi.doMock('../lib/build/config.js', () => ({
   default: { requestTimeout: REQUEST_TIMEOUT_MS },
 }));

@@ -409,3 +409,14 @@ test.describe('DateSelector today button', () => {
     await expect(page.locator('#bl-ds_show_today_false .ant-picker-now')).toHaveCount(0);
   });
 });
+
+test.describe('DateSelector autoOpen', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToTestPage(page, 'dateselector');
+  });
+
+  test('autoOpen opens the calendar when the block mounts', async ({ page }) => {
+    await getBlock(page, 'dateselector_show_auto_open').locator('button').click();
+    await expect(page.locator('#bl-dateselector_auto_open .ant-picker-dropdown')).toBeVisible();
+  });
+});

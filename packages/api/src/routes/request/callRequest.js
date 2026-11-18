@@ -17,6 +17,9 @@
 import { serializer } from '@lowdefy/helpers';
 
 import authorizeRequest from './authorizeRequest.js';
+import authorizeViewRequest from './authorizeViewRequest.js';
+import authorizeViewRequestProperties from '../auth/view/authorizeViewRequestProperties.js';
+import authorizeViewRequestResolver from '../auth/view/authorizeViewRequestResolver.js';
 import callRequestResolver from './callRequestResolver.js';
 import checkConnectionRead from './checkConnectionRead.js';
 import checkConnectionWrite from './checkConnectionWrite.js';
@@ -42,6 +45,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
   context.evaluateOperators = createEvaluateOperators(context);
 
   logger.debug({ event: 'debug_request', blockId, pageId, payload, requestId });
+  await authorizeViewRequest(context, { pageId, requestId });
   const requestConfig = await getRequestConfig(context, { pageId, requestId });
   const connectionConfig = await getConnectionConfig(context, {
     connectionId: requestConfig.connectionId,
@@ -51,6 +55,7 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
 
   const connection = getConnection(context, { connectionConfig });
   const requestResolver = getRequestResolver(context, { connection, requestConfig });
+  authorizeViewRequestResolver(context, { requestId, requestResolver });
   const { tenant, tenantGuard } = resolveTenancy(context, {
     connection,
     connectionConfig,
@@ -73,6 +78,10 @@ async function callRequest(context, { blockId, pageId, payload, requestId }) {
     routineContext,
   });
 
+  authorizeViewRequestProperties(context, {
+    requestId: requestId,
+    requestProperties,
+  });
   checkConnectionRead(context, {
     connectionConfig,
     connectionProperties,

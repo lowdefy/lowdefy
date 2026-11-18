@@ -46,13 +46,21 @@ function getPublicOrigins({ context }) {
 // front of the app rewrites Host; the app's configured public origins are too.
 // A refusal is logged, since behind a proxy that passes neither it would
 // otherwise be a silent 403 on every upgrade.
-function isWebSocketOriginAllowed({ context, getHeader }) {
-  const allowed = isSameOriginRequest({
-    getHeader,
-    allowNoOrigin: true,
-    acceptForwardedHost: true,
-    publicOrigins: getPublicOrigins({ context }),
-  });
+//
+// viewOrigins are the origins the app's MCP App views run on (getViewHosts),
+// passed by a server that serves views. A view is another site by design, so
+// its exact origin is accepted whatever Sec-Fetch-Site says. The origin alone
+// admits nobody: the server also requires the view session the handshake
+// carries.
+function isWebSocketOriginAllowed({ context, getHeader, viewOrigins = [] }) {
+  const allowed =
+    viewOrigins.includes(getHeader('origin')) ||
+    isSameOriginRequest({
+      getHeader,
+      allowNoOrigin: true,
+      acceptForwardedHost: true,
+      publicOrigins: getPublicOrigins({ context }),
+    });
   if (!allowed) {
     context.logger.warn(
       {

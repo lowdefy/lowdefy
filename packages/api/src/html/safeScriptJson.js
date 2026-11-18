@@ -16,8 +16,7 @@
 
 // Escape characters that could break out of the enclosing <script> tag or
 // terminate a JS string literal. Used to defuse the js/bad-code-sanitization
-// class of injection for values embedded into inline scripts and the
-// application/json config script.
+// class of injection for values embedded into inline scripts.
 const SCRIPT_ESCAPES = {
   '<': '\\u003C',
   '>': '\\u003E',

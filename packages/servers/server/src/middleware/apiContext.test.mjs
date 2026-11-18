@@ -51,6 +51,7 @@ vi.doMock('../../lib/build/appMeta.js', () => ({ default: {} }));
 vi.doMock('../../lib/build/config.js', () => ({ default: {} }));
 vi.doMock('../../lib/build/i18n.js', () => ({ default: {} }));
 vi.doMock('../../lib/build/logger.js', () => ({ default: { sentry: {} } }));
+vi.doMock('../../lib/build/mcp.js', () => ({ default: { views: { configured: false } } }));
 vi.doMock('../../lib/server/log/createHandleError.js', () => ({
   default: vi.fn(() => vi.fn()),
 }));

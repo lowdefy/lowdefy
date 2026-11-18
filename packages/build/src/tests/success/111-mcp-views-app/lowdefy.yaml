@@ -1,0 +1,173 @@
+# 111: MCP views
+# Verifies the view config of the mcp block: mcp.json carries endpoints[].view
+# (entrypoint defaulted, _payload and _response left for the server) and
+# views { configured, pages, sources }, with the endpoints (and their scopes),
+# websocket channels and agents each view page uses. A view page's artifact
+# carries view: true. The task page is a tool's view; the concept page is
+# listed in viewPages; the home page is not a view page.
+lowdefy: local
+name: Mcp Views Test
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: views_auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+  oauthProvider:
+    consentPage: consent
+  websockets:
+    protected: true
+
+connections:
+  - id: tasks
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: tasks
+
+websockets:
+  - id: task-feed
+    type: MongoDBChangeStream
+    connectionId: tasks
+    properties:
+      pipeline:
+        - $match:
+            operationType: update
+  - id: task-presence
+    type: MongoDBChangeStream
+    connectionId: tasks
+    properties:
+      pipeline:
+        - $match:
+            operationType: insert
+
+api:
+  - id: open_task
+    type: Api
+    description: Open a task.
+    payloadSchema:
+      type: object
+      properties:
+        key:
+          type: string
+        tab:
+          type: string
+      required:
+        - key
+    routine: []
+  - id: show_board
+    type: Api
+    description: Show the task board.
+    payloadSchema:
+      type: object
+      properties: {}
+    routine: []
+  - id: list_tasks
+    type: Api
+    description: List tasks.
+    payloadSchema:
+      type: object
+      properties: {}
+    routine: []
+  - id: task-reads
+    type: Api
+    routine: []
+  - id: save-task
+    type: Api
+    routine: []
+
+mcp:
+  viewPages:
+    - concept
+  viewSources:
+    - https://files.example.com
+    - _secret: ANALYTICS_ORIGIN
+  viewEndpoints:
+    - id: task-reads
+      scope: mcp:read
+  endpoints:
+    - id: open_task
+      scope: mcp:read
+      view:
+        pageId: task
+        pathParams:
+          space:
+            _response: space.key
+          ref:
+            _payload: key
+        urlQuery:
+          tab:
+            _payload: tab
+    - id: show_board
+      scope: mcp:read
+      view:
+        pageId: board
+        entrypoint: true
+    - id: list_tasks
+      scope: mcp:read
+
+pages:
+  - id: consent
+    type: Box
+  - id: home
+    type: Box
+    events:
+      onMount:
+        - id: save
+          type: CallAPI
+          params:
+            endpointId: save-task
+  - id: board
+    type: Box
+    events:
+      onMount:
+        - id: list
+          type: CallAPI
+          params:
+            endpointId: list_tasks
+  - id: concept
+    type: Box
+  - id: task
+    type: Box
+    path: '{space}/tasks/{ref}'
+    subscriptions:
+      - websocketId: task-feed
+    events:
+      onMount:
+        - id: reads
+          type: CallAPI
+          params:
+            endpointId: task-reads
+        - id: watch
+          type: Subscribe
+          params: task-presence
+    blocks:
+      - id: save_button
+        type: Button
+        events:
+          onClick:
+            - id: save
+              type: CallAPI
+              params:
+                endpointId: save-task
+            - id: reopen
+              type: CallAPI
+              params:
+                endpointId: open_task
+            # Not listed: the build collects only a static endpointId.
+            - id: dynamic
+              type: CallAPI
+              params:
+                endpointId:
+                  _state: endpoint_id

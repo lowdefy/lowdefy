@@ -1,0 +1,1012 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+// What a view session may reach, through the functions the page, request,
+// endpoint, websocket and agent routes call. One built app is served to every
+// test: the view page "task" with what the build listed for it, and beside it
+// pages, endpoints, a websocket and an agent that no view page uses.
+
+import { vi, beforeEach, describe, expect, test } from 'vitest';
+
+import authorizeViewAgent from '../../agent/authorizeViewAgent.js';
+import callAgent from '../../agent/callAgent.js';
+import callEndpoint from '../../endpoints/callEndpoint.js';
+import callRequest from '../../request/callRequest.js';
+import createEvaluateOperators from '../../../context/createEvaluateOperators.js';
+import createChannelRegistry from '../../websocket/createChannelRegistry.js';
+import getPageConfig from '../../page/getPageConfig.js';
+import invokeEndpoint from '../../endpoints/invokeEndpoint.js';
+import prepareChannel from '../../websocket/prepareChannel.js';
+import runDetachedEndpoint from '../../endpoints/runDetachedEndpoint.js';
+import runLinkEndpoint from '../../endpoints/runLinkEndpoint.js';
+import testContext from '../../../test/testContext.js';
+
+const protectedAuth = { public: false };
+const adminAuth = { public: false, roles: ['admin'] };
+
+function page({ pageId, ...rest }) {
+  return { id: `page:${pageId}`, pageId, auth: protectedAuth, ...rest };
+}
+
+function request({ pageId, requestId, type = 'Read', auth = protectedAuth, properties = {} }) {
+  return {
+    id: `request:${pageId}:${requestId}`,
+    requestId,
+    pageId,
+    type,
+    connectionId: 'db',
+    auth,
+    properties,
+  };
+}
+
+function endpoint({ endpointId, auth = protectedAuth, ...rest }) {
+  return { endpointId, type: 'Api', auth, routine: { ':return': endpointId }, ...rest };
+}
+
+// An endpoint whose routine runs one request step of the given type.
+function routineEndpoint({ endpointId, type }) {
+  return endpoint({
+    endpointId,
+    routine: [
+      {
+        id: `request:${endpointId}:step`,
+        stepId: 'step',
+        type,
+        connectionId: 'db',
+        properties: {},
+      },
+      { ':return': endpointId },
+    ],
+  });
+}
+
+// An endpoint whose routine runs one auth step or CallAgent step.
+function stepEndpoint({ endpointId, id, type, properties = {} }) {
+  return endpoint({
+    endpointId,
+    routine: [{ id, stepId: 'step', type, properties }, { ':return': endpointId }],
+  });
+}
+
+const authStepEndpoints = [
+  'ListMembers',
+  'ListUsers',
+  'UpdateMemberRoles',
+  'InviteMember',
+  'RevokeMcpGrant',
+  'CreateMcpToken',
+  'CustomStep',
+];
+
+function linkEndpoint({ endpointId, auth }) {
+  return endpoint({
+    endpointId,
+    auth,
+    link: true,
+    routine: { ':return': `https://files.example.com/${endpointId}` },
+  });
+}
+
+function websocket({ websocketId, auth = protectedAuth }) {
+  return {
+    id: `websocket:${websocketId}`,
+    websocketId,
+    type: 'Feed',
+    auth,
+    properties: { publish: true },
+  };
+}
+
+const viewPages = {
+  task: {
+    endpoints: [
+      { id: 'admin_save', scope: 'mcp:write' },
+      { id: 'export', scope: 'mcp:write' },
+      { id: 'files', scope: 'mcp:read' },
+      { id: 'read_tasks', scope: 'mcp:read' },
+      { id: 'reads_in_routine', scope: 'mcp:read' },
+      { id: 'save_task', scope: 'mcp:write' },
+      { id: 'sends_in_routine', scope: 'mcp:read' },
+      { id: 'spawns', scope: 'mcp:read' },
+      { id: 'writes_in_routine', scope: 'mcp:read' },
+      { id: 'calls_agent', scope: 'mcp:read' },
+      ...authStepEndpoints.map((type) => ({ id: `auth_${type}`, scope: 'mcp:read' })),
+    ],
+    websockets: ['task-feed'],
+    agents: [],
+  },
+  board: { endpoints: [], websockets: [], agents: [] },
+  field: { endpoints: [], websockets: [], agents: [] },
+  everywhere: { endpoints: [], websockets: [], agents: [] },
+};
+
+function createFiles({ views = { configured: true, pages: viewPages, sources: [] } } = {}) {
+  return {
+    'routes.json': ['task', 'board', 'field', 'everywhere', 'settings'].map((pageId) => ({
+      pageId,
+      path: pageId,
+      auth: protectedAuth,
+    })),
+    'mcp.json': { configured: true, endpoints: [], views },
+    'pages/task.json': page({ pageId: 'task', view: true }),
+    'pages/board.json': page({ pageId: 'board', view: true, auth: adminAuth }),
+    'pages/field.json': page({ pageId: 'field', view: true, target: 'mobile' }),
+    'pages/everywhere.json': page({ pageId: 'everywhere', view: true, target: 'both' }),
+    'pages/settings.json': page({ pageId: 'settings' }),
+    'pages/task/requests/read.json': request({ pageId: 'task', requestId: 'read' }),
+    'pages/task/requests/write.json': request({
+      pageId: 'task',
+      requestId: 'write',
+      type: 'Write',
+    }),
+    'pages/task/requests/send.json': request({ pageId: 'task', requestId: 'send', type: 'Send' }),
+    'pages/task/requests/bare.json': request({ pageId: 'task', requestId: 'bare', type: 'Bare' }),
+    'pages/board/requests/read.json': request({
+      pageId: 'board',
+      requestId: 'read',
+      auth: adminAuth,
+    }),
+    'pages/field/requests/read.json': request({ pageId: 'field', requestId: 'read' }),
+    'pages/settings/requests/read.json': request({ pageId: 'settings', requestId: 'read' }),
+    'connections/db.json': {
+      id: 'connection:db',
+      connectionId: 'db',
+      type: 'Db',
+      properties: { write: true },
+    },
+    'api/read_tasks.json': endpoint({ endpointId: 'read_tasks' }),
+    'api/save_task.json': endpoint({ endpointId: 'save_task' }),
+    'api/admin_save.json': endpoint({ endpointId: 'admin_save', auth: adminAuth }),
+    // Tagged mcp:read by the app, whatever their routines do.
+    'api/reads_in_routine.json': routineEndpoint({ endpointId: 'reads_in_routine', type: 'Read' }),
+    'api/writes_in_routine.json': routineEndpoint({
+      endpointId: 'writes_in_routine',
+      type: 'Write',
+    }),
+    'api/sends_in_routine.json': routineEndpoint({ endpointId: 'sends_in_routine', type: 'Send' }),
+    'api/calls_agent.json': stepEndpoint({
+      endpointId: 'calls_agent',
+      id: 'agent:calls_agent:step',
+      type: 'CallAgent',
+      properties: { agentId: 'helper', prompt: 'Summarise.' },
+    }),
+    ...Object.fromEntries(
+      authStepEndpoints.map((type) => [
+        `api/auth_${type}.json`,
+        stepEndpoint({ endpointId: `auth_${type}`, id: `auth:auth_${type}:step`, type }),
+      ])
+    ),
+    'pages/task/requests/out.json': request({
+      pageId: 'task',
+      requestId: 'out',
+      properties: { pipeline: [{ $match: { open: true } }, { $out: 'copy' }] },
+    }),
+    'pages/task/requests/merge.json': request({
+      pageId: 'task',
+      requestId: 'merge',
+      properties: {
+        pipeline: [
+          { $unionWith: { coll: 'other', pipeline: [{ $merge: { into: 'copy' } }] } },
+          { $facet: { a: [{ $count: 'n' }] } },
+        ],
+      },
+    }),
+    'pages/task/requests/reshape.json': request({
+      pageId: 'task',
+      requestId: 'reshape',
+      properties: {
+        pipeline: [{ $replaceRoot: { newRoot: { $mergeObjects: ['$a', '$b'] } } }, { $limit: 1 }],
+      },
+    }),
+    'api/spawns.json': endpoint({
+      endpointId: 'spawns',
+      routine: [
+        {
+          id: 'endpoint:spawns:spawn',
+          stepId: 'spawn',
+          type: 'CallApi',
+          properties: { endpointId: 'writes_in_routine', detached: true },
+        },
+        { ':return': 'spawns' },
+      ],
+    }),
+    'linkEndpoints.json': ['files', 'export', 'private_files'].map((endpointId) => ({
+      endpointId,
+      segments: [endpointId],
+    })),
+    'api/files.json': linkEndpoint({ endpointId: 'files' }),
+    'api/export.json': linkEndpoint({ endpointId: 'export' }),
+    'api/private_files.json': linkEndpoint({ endpointId: 'private_files' }),
+    // A tool of the MCP server that no view page calls.
+    'api/list_all.json': endpoint({ endpointId: 'list_all' }),
+    'websockets/task-feed.json': websocket({ websocketId: 'task-feed' }),
+    'websockets/other-feed.json': websocket({ websocketId: 'other-feed' }),
+    'agents/helper.json': {
+      id: 'agent:helper',
+      agentId: 'helper',
+      type: 'Chat',
+      connectionId: 'db',
+      auth: protectedAuth,
+      tools: [],
+      properties: {},
+    },
+  };
+}
+
+const readResolver = vi.fn(async () => 'read');
+readResolver.schema = {};
+readResolver.meta = { checkRead: true, checkWrite: false };
+const writeResolver = vi.fn(async () => 'written');
+writeResolver.schema = {};
+writeResolver.meta = { checkRead: false, checkWrite: true };
+// A request type with no read or write switch on its connection - an HTTP
+// call, a mail send - declares neither check, and writes all the same.
+const sendResolver = vi.fn(async () => 'sent');
+sendResolver.schema = {};
+sendResolver.meta = { checkRead: false, checkWrite: false };
+const bareResolver = vi.fn(async () => 'done');
+bareResolver.schema = {};
+bareResolver.meta = {};
+const agentResolver = vi.fn(async () => ({ response: 'stream', result: 'done' }));
+// Stand-ins for the auth steps, each acting on the caller's own records so the
+// organization floor asks for nothing. The view rule reads the step's type.
+const authStep = vi.fn(async () => ({ ok: true }));
+authStep.meta = { authority: { scope: 'caller' } };
+const feedResolver = vi.fn();
+feedResolver.meta = { checkRead: false, publish: true };
+
+const member = { id: 'user_1', roles: ['field'] };
+
+function createContext({ files = createFiles(), system, user = member, viewSession } = {}) {
+  const readConfigFile = vi.fn(async (path) => files[path] ?? null);
+  const context = testContext({
+    connections: {
+      Db: {
+        schema: {},
+        create: () => ({}),
+        requests: {
+          Bare: bareResolver,
+          Read: readResolver,
+          Send: sendResolver,
+          Write: writeResolver,
+        },
+      },
+    },
+    readConfigFile,
+    system,
+    user,
+  });
+  context.agents = { Chat: { resolver: agentResolver, schema: {} } };
+  context.auth = {};
+  context.steps = Object.fromEntries(authStepEndpoints.map((type) => [type, authStep]));
+  context.websockets = { Feed: feedResolver };
+  if (viewSession !== undefined) {
+    context.viewSession = viewSession;
+  }
+  return context;
+}
+
+function viewContext({ grantedScopes = ['mcp:read', 'mcp:write'], ...rest } = {}) {
+  return createContext({ viewSession: { clientId: 'client_1', grantedScopes }, ...rest });
+}
+
+// Every caller that is not a view session, as resolveAuthentication and the
+// system context leave them.
+const otherCallers = [
+  ['a browser session', () => createContext({ viewSession: null })],
+  [
+    'a phone session',
+    () => createContext({ viewSession: null, user: { ...member, session_mobile: true } }),
+  ],
+  [
+    'a strategy caller',
+    () => createContext({ viewSession: null, user: { ...member, auth_method: 'apiKey' } }),
+  ],
+  ['a system context', () => createContext({ system: true, user: null })],
+];
+
+const requestParams = { blockId: 'block', payload: {} };
+const endpointParams = { blockId: 'block', pageId: 'task', payload: {} };
+const agentParams = { pageId: 'task', messages: [{ role: 'user', content: 'Hello' }] };
+
+const opaque = { name: 'AuthorizationError' };
+const writeRequired = { name: 'AuthorizationError', code: 'view_write_required' };
+
+beforeEach(() => {
+  vi.clearAllMocks();
+});
+
+describe('pages', () => {
+  test('a view session is served a view page', async () => {
+    const result = await getPageConfig(viewContext(), { path: 'task' });
+    expect(result.status).toBe('ok');
+    expect(result.pageConfig).toMatchObject({ pageId: 'task', view: true });
+  });
+
+  test('a view session gets wrong_surface for a page that is not a view page', async () => {
+    const result = await getPageConfig(viewContext(), { path: 'settings' });
+    expect(result).toEqual({
+      status: 'wrong_surface',
+      pageId: 'settings',
+      pathParams: {},
+      surface: undefined,
+    });
+  });
+
+  test('the view surface comes from the session, whatever surface the client names', async () => {
+    const context = viewContext();
+    expect((await getPageConfig(context, { path: 'settings', surface: 'web' })).status).toBe(
+      'wrong_surface'
+    );
+    expect((await getPageConfig(context, { path: 'settings', surface: 'mobile' })).status).toBe(
+      'wrong_surface'
+    );
+    expect((await getPageConfig(context, { path: 'task', surface: 'mobile' })).status).toBe('ok');
+  });
+
+  test('a view page the caller lacks the roles for stays unauthorized, never wrong_surface', async () => {
+    const result = await getPageConfig(viewContext(), { path: 'board' });
+    expect(result.status).toBe('unauthorized');
+  });
+
+  test('a path that matches no page stays not_found for a view session', async () => {
+    expect((await getPageConfig(viewContext(), { path: 'nowhere' })).status).toBe('not_found');
+  });
+
+  test('a view page whose target is mobile is not served to a view session', async () => {
+    const result = await getPageConfig(viewContext(), { path: 'field' });
+    expect(result).toMatchObject({ status: 'wrong_surface', pageId: 'field', surface: 'mobile' });
+  });
+
+  test('a view page whose target is both is served to a view session', async () => {
+    expect((await getPageConfig(viewContext(), { path: 'everywhere' })).status).toBe('ok');
+  });
+
+  test('a view session whose grant carries no MCP scope is served no page', async () => {
+    const result = await getPageConfig(viewContext({ grantedScopes: [] }), { path: 'task' });
+    expect(result.status).toBe('wrong_surface');
+  });
+
+  test('a view session on a read-only grant is served a view page', async () => {
+    const result = await getPageConfig(viewContext({ grantedScopes: ['mcp:read'] }), {
+      path: 'task',
+    });
+    expect(result.status).toBe('ok');
+  });
+
+  test.each(otherCallers)('%s is served web pages as before', async (name, create) => {
+    expect((await getPageConfig(create(), { path: 'settings' })).status).toBe('ok');
+    expect((await getPageConfig(create(), { path: 'task' })).status).toBe('ok');
+    expect((await getPageConfig(create(), { path: 'everywhere' })).status).toBe('ok');
+    expect((await getPageConfig(create(), { path: 'field' })).status).toBe('wrong_surface');
+  });
+
+  test.each(otherCallers)('%s on the mobile surface is served as before', async (name, create) => {
+    const surface = 'mobile';
+    expect((await getPageConfig(create(), { path: 'field', surface })).status).toBe('ok');
+    expect((await getPageConfig(create(), { path: 'everywhere', surface })).status).toBe('ok');
+    expect((await getPageConfig(create(), { path: 'task', surface })).status).toBe('wrong_surface');
+  });
+});
+
+describe('requests', () => {
+  test("a view session calls a view page's own request", async () => {
+    const result = await callRequest(viewContext(), {
+      ...requestParams,
+      pageId: 'task',
+      requestId: 'read',
+    });
+    expect(result).toMatchObject({ success: true, response: 'read' });
+  });
+
+  test('a view session is refused a request of a page that is not a view page', async () => {
+    const context = viewContext();
+    await expect(
+      callRequest(context, { ...requestParams, pageId: 'settings', requestId: 'read' })
+    ).rejects.toMatchObject({ ...opaque, message: 'Request "read" does not exist.' });
+    expect(readResolver).not.toHaveBeenCalled();
+    // Refused before the request is looked up.
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('pages/settings/requests/read.json');
+  });
+
+  test('a request that does not exist and one on another page are the same answer to a view session', async () => {
+    const onOtherPage = await callRequest(viewContext(), {
+      ...requestParams,
+      pageId: 'settings',
+      requestId: 'read',
+    }).catch((error) => error);
+    const missing = await callRequest(viewContext(), {
+      ...requestParams,
+      pageId: 'settings',
+      requestId: 'read_missing',
+    }).catch((error) => error);
+    const missingPage = await callRequest(viewContext(), {
+      ...requestParams,
+      pageId: 'nowhere',
+      requestId: 'read',
+    }).catch((error) => error);
+    expect(onOtherPage.name).toBe('AuthorizationError');
+    expect(missing.name).toBe(onOtherPage.name);
+    expect(missing.message).toBe('Request "read_missing" does not exist.');
+    expect(missingPage.name).toBe(onOtherPage.name);
+    expect(missingPage.message).toBe(onOtherPage.message);
+  });
+
+  test('a view session is refused a request of a view page whose target is mobile', async () => {
+    await expect(
+      callRequest(viewContext(), { ...requestParams, pageId: 'field', requestId: 'read' })
+    ).rejects.toMatchObject(opaque);
+  });
+
+  test('a view session lacking the roles of a request on a view page is refused as its browser session is', async () => {
+    const params = { ...requestParams, pageId: 'board', requestId: 'read' };
+    const asView = await callRequest(viewContext(), params).catch((error) => error);
+    const asBrowser = await callRequest(createContext({ viewSession: null }), params).catch(
+      (error) => error
+    );
+    expect(asView.name).toBe('AuthorizationError');
+    expect(asView.message).toBe(asBrowser.message);
+    expect(asView.code).toBeUndefined();
+    expect(readResolver).not.toHaveBeenCalled();
+  });
+
+  test('with mcp:read only, a request whose resolver writes is refused with view_write_required', async () => {
+    await expect(
+      callRequest(viewContext({ grantedScopes: ['mcp:read'] }), {
+        ...requestParams,
+        pageId: 'task',
+        requestId: 'write',
+      })
+    ).rejects.toMatchObject(writeRequired);
+    expect(writeResolver).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    ['declares neither check', 'send', sendResolver],
+    ['declares no meta keys at all', 'bare', bareResolver],
+  ])(
+    'with mcp:read only, a request whose resolver %s is refused with view_write_required',
+    async (label, requestId, resolver) => {
+      await expect(
+        callRequest(viewContext({ grantedScopes: ['mcp:read'] }), {
+          ...requestParams,
+          pageId: 'task',
+          requestId,
+        })
+      ).rejects.toMatchObject(writeRequired);
+      expect(resolver).not.toHaveBeenCalled();
+      // With mcp:write, and for any other caller, it runs.
+      const withWrite = await callRequest(viewContext(), {
+        ...requestParams,
+        pageId: 'task',
+        requestId,
+      });
+      expect(withWrite.success).toBe(true);
+      const browser = await callRequest(createContext({ viewSession: null }), {
+        ...requestParams,
+        pageId: 'task',
+        requestId,
+      });
+      expect(browser.success).toBe(true);
+    }
+  );
+
+  test.each([
+    ['a $out stage', 'out'],
+    ['a $merge stage inside a nested pipeline', 'merge'],
+  ])(
+    'with mcp:read only, a read request whose pipeline carries %s is refused with view_write_required',
+    async (label, requestId) => {
+      const params = { ...requestParams, pageId: 'task', requestId };
+      await expect(
+        callRequest(viewContext({ grantedScopes: ['mcp:read'] }), params)
+      ).rejects.toMatchObject(writeRequired);
+      expect(readResolver).not.toHaveBeenCalled();
+      // With mcp:write, and for an ordinary session, the request and its
+      // connection decide, as before.
+      expect((await callRequest(viewContext(), params)).success).toBe(true);
+      expect((await callRequest(createContext({ viewSession: null }), params)).success).toBe(true);
+    }
+  );
+
+  test('with mcp:read only, a pipeline whose operators only resemble a writing stage runs', async () => {
+    const result = await callRequest(viewContext({ grantedScopes: ['mcp:read'] }), {
+      ...requestParams,
+      pageId: 'task',
+      requestId: 'reshape',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  test.each([
+    ['names no page', 'nowhere'],
+    ['is the path of a request file', 'task/requests/read'],
+    ['runs through a file', 'task.json/x'],
+    ['climbs out of the pages folder', '../api/read_tasks'],
+    ['is empty', ''],
+  ])(
+    'a page id that %s is refused to a view session before any page file is read',
+    async (label, pageId) => {
+      const context = viewContext();
+      const readPaths = [];
+      const readConfigFile = context.readConfigFile;
+      // The file system fails a path that runs through a file; a page id must
+      // never get that far.
+      context.readConfigFile = vi.fn(async (path) => {
+        readPaths.push(path);
+        if (path.startsWith('pages/task.json/')) {
+          throw Object.assign(new Error('ENOTDIR: not a directory'), { code: 'ENOTDIR' });
+        }
+        return readConfigFile(path);
+      });
+      await expect(
+        callRequest(context, { ...requestParams, pageId, requestId: 'read' })
+      ).rejects.toMatchObject({ ...opaque, message: 'Request "read" does not exist.' });
+      expect(readPaths).toEqual(['routes.json']);
+    }
+  );
+
+  test('with mcp:read only, a request whose resolver reads is served', async () => {
+    const result = await callRequest(viewContext({ grantedScopes: ['mcp:read'] }), {
+      ...requestParams,
+      pageId: 'task',
+      requestId: 'read',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  test('with mcp:write, a request whose resolver writes is decided by roles alone', async () => {
+    const result = await callRequest(viewContext({ grantedScopes: ['mcp:write'] }), {
+      ...requestParams,
+      pageId: 'task',
+      requestId: 'write',
+    });
+    expect(result).toMatchObject({ success: true, response: 'written' });
+  });
+
+  test('a view session whose grant carries no MCP scope is refused every request', async () => {
+    const context = viewContext({ grantedScopes: [] });
+    const read = await callRequest(context, {
+      ...requestParams,
+      pageId: 'task',
+      requestId: 'read',
+    }).catch((error) => error);
+    const write = await callRequest(context, {
+      ...requestParams,
+      pageId: 'task',
+      requestId: 'write',
+    }).catch((error) => error);
+    expect(read).toMatchObject(opaque);
+    expect(read.code).toBeUndefined();
+    expect(write).toMatchObject(opaque);
+    expect(write.code).toBeUndefined();
+  });
+
+  test.each(otherCallers)('%s calls any request as before', async (name, create) => {
+    const onViewPage = await callRequest(create(), {
+      ...requestParams,
+      pageId: 'task',
+      requestId: 'write',
+    });
+    const onOtherPage = await callRequest(create(), {
+      ...requestParams,
+      pageId: 'settings',
+      requestId: 'read',
+    });
+    expect(onViewPage.success).toBe(true);
+    expect(onOtherPage.success).toBe(true);
+    const context = create();
+    await callRequest(context, { ...requestParams, pageId: 'settings', requestId: 'read' });
+    // No view check ran: neither the page nor the view lists were read.
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('pages/settings.json');
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('mcp.json');
+  });
+});
+
+describe('endpoints', () => {
+  test('a view session calls an endpoint listed for a view page', async () => {
+    const result = await callEndpoint(viewContext(), {
+      ...endpointParams,
+      endpointId: 'read_tasks',
+    });
+    expect(result).toMatchObject({ success: true, response: 'read_tasks' });
+  });
+
+  test('a view session is refused an endpoint no view page lists, though it exists', async () => {
+    const context = viewContext();
+    await expect(
+      callEndpoint(context, { ...endpointParams, endpointId: 'list_all' })
+    ).rejects.toMatchObject({ ...opaque, message: 'API Endpoint "list_all" does not exist.' });
+    // Refused before the endpoint is looked up.
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('api/list_all.json');
+  });
+
+  test('an endpoint that is not listed and one that does not exist are the same answer to a view session', async () => {
+    const unlisted = await callEndpoint(viewContext(), {
+      ...endpointParams,
+      endpointId: 'list_all',
+    }).catch((error) => error);
+    const missing = await callEndpoint(viewContext(), {
+      ...endpointParams,
+      endpointId: 'no_such',
+    }).catch((error) => error);
+    expect(missing.name).toBe(unlisted.name);
+    expect(missing.message).toBe('API Endpoint "no_such" does not exist.');
+    expect(missing.code).toBe(unlisted.code);
+  });
+
+  test('with mcp:read only, a listed endpoint whose scope is mcp:write is refused with view_write_required', async () => {
+    await expect(
+      callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), {
+        ...endpointParams,
+        endpointId: 'save_task',
+      })
+    ).rejects.toMatchObject(writeRequired);
+  });
+
+  test('with mcp:read only, a listed endpoint whose scope is mcp:read is served', async () => {
+    const result = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), {
+      ...endpointParams,
+      endpointId: 'read_tasks',
+    });
+    expect(result.success).toBe(true);
+  });
+
+  test('with mcp:write, a listed endpoint whose scope is mcp:write is decided by roles alone', async () => {
+    const allowed = await callEndpoint(viewContext({ grantedScopes: ['mcp:write'] }), {
+      ...endpointParams,
+      endpointId: 'save_task',
+    });
+    expect(allowed.success).toBe(true);
+    await expect(
+      callEndpoint(viewContext({ grantedScopes: ['mcp:write'] }), {
+        ...endpointParams,
+        endpointId: 'admin_save',
+      })
+    ).rejects.toMatchObject({ ...opaque, message: 'API Endpoint "admin_save" does not exist.' });
+  });
+
+  test('a read-only view session lacking the roles of a listed write endpoint gets the role refusal, not view_write_required', async () => {
+    const error = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), {
+      ...endpointParams,
+      endpointId: 'admin_save',
+    }).catch((caught) => caught);
+    expect(error).toMatchObject(opaque);
+    expect(error.code).toBeUndefined();
+  });
+
+  test('a view session whose grant carries no MCP scope is refused every endpoint', async () => {
+    const error = await callEndpoint(viewContext({ grantedScopes: [] }), {
+      ...endpointParams,
+      endpointId: 'read_tasks',
+    }).catch((caught) => caught);
+    expect(error).toMatchObject(opaque);
+    expect(error.code).toBeUndefined();
+  });
+
+  test('an app with no views configured lists nothing, so a view session calls no endpoint', async () => {
+    const files = createFiles({ views: { configured: false, pages: {}, sources: [] } });
+    await expect(
+      callEndpoint(viewContext({ files }), { ...endpointParams, endpointId: 'read_tasks' })
+    ).rejects.toMatchObject(opaque);
+  });
+
+  test('with mcp:read only, a request step that reads runs in an endpoint tagged mcp:read', async () => {
+    const result = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), {
+      ...endpointParams,
+      endpointId: 'reads_in_routine',
+    });
+    expect(result).toMatchObject({ success: true, response: 'reads_in_routine' });
+    expect(readResolver).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([
+    ['writes', 'writes_in_routine', writeResolver],
+    ['declares neither check', 'sends_in_routine', sendResolver],
+  ])(
+    'with mcp:read only, a request step whose resolver %s is refused in an endpoint tagged mcp:read',
+    async (label, endpointId, resolver) => {
+      const result = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), {
+        ...endpointParams,
+        endpointId,
+      });
+      expect(result.success).toBe(false);
+      expect(result.status).toBe('error');
+      expect(resolver).not.toHaveBeenCalled();
+
+      const withWrite = await callEndpoint(viewContext(), { ...endpointParams, endpointId });
+      expect(withWrite).toMatchObject({ success: true, response: endpointId });
+      expect(resolver).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  test('a detached run a read-only view session dispatched is still refused a request step that writes', async () => {
+    const context = createContext({ user: null });
+    const result = await runDetachedEndpoint(context, {
+      endpointId: 'writes_in_routine',
+      payload: {},
+      principal: {
+        user: member,
+        system: false,
+        viewSession: { clientId: 'client_1', grantedScopes: ['mcp:read'] },
+      },
+    });
+    expect(result.success).toBe(false);
+    expect(writeResolver).not.toHaveBeenCalled();
+
+    const ordinary = await runDetachedEndpoint(createContext({ user: null }), {
+      endpointId: 'writes_in_routine',
+      payload: {},
+      principal: { user: member, system: false },
+    });
+    expect(ordinary.success).toBe(true);
+  });
+
+  test.each(['ListMembers', 'ListUsers'])(
+    'with mcp:read only, the %s auth step runs',
+    async (type) => {
+      const result = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), {
+        ...endpointParams,
+        endpointId: `auth_${type}`,
+      });
+      expect(result).toMatchObject({ success: true, response: `auth_${type}` });
+      expect(authStep).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  test.each(['UpdateMemberRoles', 'InviteMember', 'RevokeMcpGrant', 'CustomStep'])(
+    'with mcp:read only, the %s auth step is refused, and with mcp:write it runs',
+    async (type) => {
+      const params = { ...endpointParams, endpointId: `auth_${type}` };
+      const refused = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), params);
+      expect(refused.success).toBe(false);
+      expect(authStep).not.toHaveBeenCalled();
+
+      const allowed = await callEndpoint(viewContext(), params);
+      expect(allowed.success).toBe(true);
+      expect(authStep).toHaveBeenCalledTimes(1);
+    }
+  );
+
+  test('the CreateMcpToken auth step is refused to every view session, whatever its scopes', async () => {
+    const params = { ...endpointParams, endpointId: 'auth_CreateMcpToken' };
+    for (const grantedScopes of [['mcp:read'], ['mcp:write'], ['mcp:read', 'mcp:write']]) {
+      const result = await callEndpoint(viewContext({ grantedScopes }), params);
+      expect(result.success).toBe(false);
+    }
+    expect(authStep).not.toHaveBeenCalled();
+  });
+
+  test.each(otherCallers.slice(0, 3))('%s runs every auth step as before', async (name, create) => {
+    for (const type of authStepEndpoints) {
+      const result = await callEndpoint(create(), {
+        ...endpointParams,
+        endpointId: `auth_${type}`,
+      });
+      expect(result.success).toBe(true);
+    }
+    expect(authStep).toHaveBeenCalledTimes(authStepEndpoints.length);
+  });
+
+  test('with mcp:read only, a CallAgent step is refused, and with mcp:write it runs', async () => {
+    const params = { ...endpointParams, endpointId: 'calls_agent' };
+    const refused = await callEndpoint(viewContext({ grantedScopes: ['mcp:read'] }), params);
+    expect(refused.success).toBe(false);
+    expect(agentResolver).not.toHaveBeenCalled();
+
+    const allowed = await callEndpoint(viewContext(), params);
+    expect(allowed.success).toBe(true);
+    expect(agentResolver).toHaveBeenCalledTimes(1);
+
+    const browser = await callEndpoint(createContext({ viewSession: null }), params);
+    expect(browser.success).toBe(true);
+  });
+
+  test('a detached call carries the view session of the run that dispatched it', async () => {
+    process.env.CRON_SECRET = 'cron-secret';
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 202,
+      arrayBuffer: async () => new ArrayBuffer(0),
+    }));
+    const originalFetch = global.fetch;
+    global.fetch = fetchMock;
+    try {
+      const context = viewContext({ grantedScopes: ['mcp:read'] });
+      context.origin = 'https://app.test';
+      const result = await callEndpoint(context, { ...endpointParams, endpointId: 'spawns' });
+      expect(result.success).toBe(true);
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      const body = JSON.parse(fetchMock.mock.calls[0][1].body);
+      expect(body.principal.viewSession).toEqual({
+        clientId: 'client_1',
+        grantedScopes: ['mcp:read'],
+      });
+
+      const browser = createContext({ viewSession: null });
+      browser.origin = 'https://app.test';
+      await callEndpoint(browser, { ...endpointParams, endpointId: 'spawns' });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      expect(JSON.parse(fetchMock.mock.calls[1][1].body).principal.viewSession).toBeNull();
+    } finally {
+      global.fetch = originalFetch;
+      delete process.env.CRON_SECRET;
+    }
+  });
+
+  test('an endpoint that a routine calls is not held to the view lists', async () => {
+    const context = viewContext({ grantedScopes: ['mcp:read'] });
+    context.evaluateOperators = createEvaluateOperators(context);
+    const result = await invokeEndpoint(context, {
+      endpointId: 'list_all',
+      payload: {},
+      endpointDepth: 0,
+    });
+    expect(result).toMatchObject({ status: 'return', response: 'list_all' });
+  });
+
+  test.each(otherCallers)('%s calls any endpoint as before', async (name, create) => {
+    const context = create();
+    const unlisted = await callEndpoint(context, { ...endpointParams, endpointId: 'list_all' });
+    const write = await callEndpoint(context, { ...endpointParams, endpointId: 'save_task' });
+    expect(unlisted.success).toBe(true);
+    expect(write.success).toBe(true);
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('mcp.json');
+  });
+});
+
+describe('link endpoints', () => {
+  const link = (endpointId) => ({ segments: [endpointId, 'report.pdf'], query: {} });
+
+  test('a view session opens a link endpoint listed for a view page', async () => {
+    const answer = await runLinkEndpoint(
+      viewContext({ grantedScopes: ['mcp:read'] }),
+      link('files')
+    );
+    expect(answer).toEqual({ status: 302, location: 'https://files.example.com/files' });
+  });
+
+  test('a view session is refused a link endpoint no view page lists, as a link that does not exist', async () => {
+    const context = viewContext();
+    const unlisted = await runLinkEndpoint(context, link('private_files'));
+    const unmatched = await runLinkEndpoint(context, link('no_such'));
+    expect(unlisted).toEqual({ status: 404, body: { error: 'Not found.' } });
+    expect(unlisted).toEqual(unmatched);
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('api/private_files.json');
+  });
+
+  test('with mcp:read only, a listed link endpoint whose scope is mcp:write is refused', async () => {
+    const answer = await runLinkEndpoint(
+      viewContext({ grantedScopes: ['mcp:read'] }),
+      link('export')
+    );
+    expect(answer).toEqual({ status: 403 });
+    const withWrite = await runLinkEndpoint(viewContext(), link('export'));
+    expect(withWrite.status).toBe(302);
+  });
+
+  test.each(otherCallers)('%s opens any link endpoint as before', async (name, create) => {
+    const context = create();
+    expect((await runLinkEndpoint(context, link('private_files'))).status).toBe(302);
+    expect((await runLinkEndpoint(context, link('export'))).status).toBe(302);
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('mcp.json');
+  });
+});
+
+describe('websockets', () => {
+  test('a view session opens a channel listed for a view page', async () => {
+    const result = await prepareChannel(viewContext({ grantedScopes: ['mcp:read'] }), {
+      websocketId: 'task-feed',
+      payload: {},
+    });
+    expect(result.websocketConfig.websocketId).toBe('task-feed');
+  });
+
+  test('a view session is refused a channel no view page lists, as a channel that does not exist', async () => {
+    const context = viewContext();
+    const unlisted = await prepareChannel(context, {
+      websocketId: 'other-feed',
+      payload: {},
+    }).catch((error) => error);
+    const missing = await prepareChannel(context, {
+      websocketId: 'no-feed',
+      payload: {},
+    }).catch((error) => error);
+    expect(unlisted).toMatchObject({
+      ...opaque,
+      message: 'Websocket "other-feed" does not exist.',
+    });
+    expect(missing.name).toBe(unlisted.name);
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('websockets/other-feed.json');
+  });
+
+  test('a view session whose grant carries no MCP scope opens no channel', async () => {
+    await expect(
+      prepareChannel(viewContext({ grantedScopes: [] }), { websocketId: 'task-feed', payload: {} })
+    ).rejects.toMatchObject(opaque);
+  });
+
+  test('with mcp:read only, publishing to a listed channel is refused with view_write_required', async () => {
+    const registry = createChannelRegistry();
+    await expect(
+      registry.publish(viewContext({ grantedScopes: ['mcp:read'] }), {
+        websocketId: 'task-feed',
+        payload: {},
+      })
+    ).rejects.toMatchObject(writeRequired);
+  });
+
+  test('with mcp:write, publishing to a listed channel is decided by roles alone', async () => {
+    const registry = createChannelRegistry();
+    await expect(
+      registry.publish(viewContext(), { websocketId: 'task-feed', payload: {} })
+    ).resolves.toBeUndefined();
+  });
+
+  test.each(otherCallers)(
+    '%s opens and publishes to any channel as before',
+    async (name, create) => {
+      const context = create();
+      const result = await prepareChannel(context, { websocketId: 'other-feed', payload: {} });
+      expect(result.websocketConfig.websocketId).toBe('other-feed');
+      await expect(
+        createChannelRegistry().publish(context, { websocketId: 'other-feed', payload: {} })
+      ).resolves.toBeUndefined();
+      expect(context.readConfigFile).not.toHaveBeenCalledWith('mcp.json');
+    }
+  );
+});
+
+describe('agents', () => {
+  test('a view session is refused every agent, since the build lists none', async () => {
+    const context = viewContext();
+    const existing = await callAgent(context, { ...agentParams, agentId: 'helper' }).catch(
+      (error) => error
+    );
+    const missing = await callAgent(context, { ...agentParams, agentId: 'no_such' }).catch(
+      (error) => error
+    );
+    expect(existing).toMatchObject(opaque);
+    expect(missing.name).toBe(existing.name);
+    expect(missing.message).toBe(existing.message.replace('helper', 'no_such'));
+    expect(agentResolver).not.toHaveBeenCalled();
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('agents/helper.json');
+  });
+
+  test('an agent listed for a view page is allowed, and refused to a grant with no MCP scope', async () => {
+    const files = createFiles({
+      views: {
+        configured: true,
+        pages: { task: { endpoints: [], websockets: [], agents: ['helper'] } },
+        sources: [],
+      },
+    });
+    await expect(
+      authorizeViewAgent(viewContext({ files }), { agentId: 'helper' })
+    ).resolves.toBeUndefined();
+    await expect(
+      authorizeViewAgent(viewContext({ files, grantedScopes: [] }), { agentId: 'helper' })
+    ).rejects.toMatchObject(opaque);
+  });
+
+  test.each(otherCallers)('%s chats with an agent as before', async (name, create) => {
+    const context = create();
+    const result = await callAgent(context, { ...agentParams, agentId: 'helper' });
+    expect(result).toEqual({ response: 'stream' });
+    expect(context.readConfigFile).not.toHaveBeenCalledWith('mcp.json');
+  });
+});

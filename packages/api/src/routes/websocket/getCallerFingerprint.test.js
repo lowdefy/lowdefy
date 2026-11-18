@@ -57,3 +57,27 @@ test('getCallerFingerprint does not reorder the caller roles in place', () => {
   getCallerFingerprint({ user });
   expect(user.roles).toEqual(['editor', 'admin']);
 });
+
+test('getCallerFingerprint of a view session changes when the scopes of its grant change', () => {
+  const full = { clientId: 'client_1', grantedScopes: ['mcp:read', 'mcp:write'] };
+  const narrowed = { clientId: 'client_1', grantedScopes: ['mcp:read'] };
+  const opened = getCallerFingerprint({ user: caller, viewSession: full });
+  expect(getCallerFingerprint({ user: caller, viewSession: narrowed })).not.toBe(opened);
+  expect(
+    getCallerFingerprint({
+      user: caller,
+      viewSession: { clientId: 'client_1', grantedScopes: ['mcp:write', 'mcp:read'] },
+    })
+  ).toBe(opened);
+});
+
+test('getCallerFingerprint of a caller that is not a view session is unchanged by the view field', () => {
+  expect(getCallerFingerprint({ user: caller, viewSession: null })).toBe(
+    getCallerFingerprint({ user: caller })
+  );
+  expect(JSON.parse(getCallerFingerprint({ user: caller }))).toEqual({
+    id: caller.id ?? null,
+    organizationId: caller.organization_id ?? null,
+    roles: [...caller.roles].sort(),
+  });
+});

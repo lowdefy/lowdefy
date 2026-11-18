@@ -131,3 +131,17 @@ test('passes through anchor attributes', () => {
   expect(a.rel).toBe('nofollow');
   expect(a.getAttribute('aria-label')).toBe('lbl');
 });
+
+test('origin makes the href the absolute URL of the page and leaves navigation to the router', () => {
+  const router = { basePath: '/admin', push: vi.fn(), replace: vi.fn() };
+  const Link = createLinkComponent({ origin: 'https://app.example.com', router });
+  const { container } = render(<Link href={{ pathname: '/page-1', query: 'a=1' }}>Go</Link>);
+  const a = container.querySelector('a');
+  expect(a.getAttribute('href')).toBe('https://app.example.com/admin/page-1?a=1');
+  fireEvent.click(a);
+  expect(router.push).toHaveBeenCalledWith({
+    pathname: '/page-1',
+    query: 'a=1',
+    scroll: undefined,
+  });
+});
