@@ -96,8 +96,10 @@ function describe(result) {
 // build host), and must give the same result. A journey the classifier leaves to the browser,
 // one that reaches a browser-only step at run time and a mutant run (mutants exist on the dev
 // server only) are recorded and not compared. A detached CallApi is compared too: the build host
-// records it and the dev server sends it, and the journey answers the same. Set
-// LOWDEFY_JOURNEY_PARITY=report to record differences without failing.
+// records it and the dev server sends it, and the journey answers the same while the dev server
+// has CRON_SECRET. Without it the dev server's send fails as any server's would, while the build
+// host still records the call. Set LOWDEFY_JOURNEY_PARITY=report to record differences without
+// failing.
 async function checkParity({ body, browser }) {
   const serverDirectory = process.env.LOWDEFY_JOURNEY_FIXTURE_PARITY_SERVER;
   if (type.isUndefined(serverDirectory) || process.env.LOWDEFY_JOURNEY_PARITY === 'off') {
