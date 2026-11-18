@@ -1214,16 +1214,33 @@ const POPUPS = [
 
 const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
 
-// A stand-in for a popup element: enough DOM for the open step's marking.
-// A popup antd is animating out carries its motion's `-leave` class (LEAVING in the runner).
-const LEAVING = '[class*="-leave"]';
+// A popup antd is animating out carries its motion's `ant-<motion>-leave` class (LEAVING in the
+// runner).
+const LEAVING = [
+  'zoom',
+  'zoom-big',
+  'fade',
+  'slide-up',
+  'slide-down',
+  'slide-left',
+  'slide-right',
+  'drawer-panel-motion-left',
+  'drawer-panel-motion-right',
+  'drawer-panel-motion-top',
+  'drawer-panel-motion-bottom',
+]
+  .map((motion) => `.ant-${motion}-leave`)
+  .join(', ');
 
-function createPopup({ visible, leaving = false }) {
+// A stand-in for a popup element: enough DOM for the open step's marking. matches() reads a list
+// of class selectors, as LEAVING is.
+function createPopup({ visible, classes = [] }) {
   const attributes = new Set();
   return {
     attributes,
     checkVisibility: () => visible,
-    matches: (selector) => selector === LEAVING && leaving,
+    matches: (selector) =>
+      selector.split(', ').some((part) => classes.includes(part.replace(/^\./, ''))),
     setAttribute: (name) => attributes.add(name),
     removeAttribute: (name) => attributes.delete(name),
   };
@@ -1258,23 +1275,28 @@ test('runJourney open waits for a popup its own click opened, not one already sh
   const fading = createPopup({ visible: true });
   const closed = createPopup({ visible: false });
   // Still fading out after it closed: not showing, so not marked, and found again if reopened.
-  const leaving = createPopup({ visible: true, leaving: true });
+  const leaving = createPopup({ visible: true, classes: ['ant-dropdown', 'ant-slide-up-leave'] });
+  // Showing, with "leave" in its block's portal class: not taken as fading out.
+  const leaveNamed = createPopup({ visible: true, classes: ['ldf-portal-leave_menu'] });
+  const popups = [fading, closed, leaving, leaveNamed];
   page.elementsFor = (selector) => {
     if (selector === POPUPS.join(', ')) {
-      return [fading, closed, leaving];
+      return popups;
     }
     if (selector === `[${SHOWING_BEFORE}]`) {
-      return [fading, closed, leaving].filter((popup) => popup.attributes.has(SHOWING_BEFORE));
+      return popups.filter((popup) => popup.attributes.has(SHOWING_BEFORE));
     }
     return [];
   };
   const markedWhenClicked = [];
   const markedLeavingWhenClicked = [];
+  const markedLeaveNamedWhenClicked = [];
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
     locator.click.mockImplementation(async () => {
       markedWhenClicked.push(fading.attributes.has(SHOWING_BEFORE));
       markedLeavingWhenClicked.push(leaving.attributes.has(SHOWING_BEFORE));
+      markedLeaveNamedWhenClicked.push(leaveNamed.attributes.has(SHOWING_BEFORE));
       page.clicks.push(selector);
     });
     return locator;
@@ -1285,6 +1307,7 @@ test('runJourney open waits for a popup its own click opened, not one already sh
   expect(result.passed).toBe(true);
   expect(markedWhenClicked).toEqual([true]);
   expect(markedLeavingWhenClicked).toEqual([false]);
+  expect(markedLeaveNamedWhenClicked).toEqual([true]);
   expect(closed.attributes.has(SHOWING_BEFORE)).toBe(false);
   expect(page.waits).toContain(
     POPUPS.map((selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING})`).join(', ')

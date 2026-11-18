@@ -103,9 +103,27 @@ const {
   radioOption: RADIO_OPTION,
 } = journeyTargetSelectors;
 
-// An element antd is animating out (a closing modal or dropdown popup carries its motion's
-// `-leave` classes until it is hidden): it is still visible, but no longer what a person acts on.
-const LEAVING = '[class*="-leave"]';
+// An element antd is animating out: still visible, but no longer what a person acts on. antd's
+// motion (rc-motion) gives it the class `ant-<motion>-leave` until it is hidden, for the motions
+// antd's Modal and ConfirmModal (zoom, fade), Drawer (panel motions), dropdown and select popups
+// (slides) and ColorPicker's popover (zoom-big) use. Only whole class names match, so a block id
+// or class with "leave" in it (the portal class `ldf-portal-leave_modal`, `annual-leave`) does
+// not count as leaving.
+const LEAVING_MOTIONS = [
+  'zoom',
+  'zoom-big',
+  'fade',
+  'slide-up',
+  'slide-down',
+  'slide-left',
+  'slide-right',
+  'drawer-panel-motion-left',
+  'drawer-panel-motion-right',
+  'drawer-panel-motion-top',
+  'drawer-panel-motion-bottom',
+];
+const LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave`).join(', ');
+const INSIDE_LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave *`).join(', ');
 
 // The cell a row-key target with no column or control clicks: the row's first cell. AG Grid draws
 // cells out of display order (ensureDomOrder is off), so it is the cell AG Grid and Table number
@@ -459,7 +477,7 @@ function controlMatches({ page, target }) {
     blockId: target.blockId,
     control: target.control,
     rowKey: target.rowKey,
-  })}:not(${LEAVING} *)`;
+  })}:not(${INSIDE_LEAVING})`;
   if (type.isUndefined(target.column)) {
     return page.locator(selector).filter({ visible: true });
   }

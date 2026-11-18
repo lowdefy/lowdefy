@@ -19,8 +19,9 @@ import { expect } from 'vitest';
 
 // The browser runner's rowKey and control targets (LDF-1044), run by the real runner over the
 // fixture app's controls page. Each control carries data-lf-block and data-lf-control (and
-// data-lf-row-key in a grid cell), so it is found wherever antd draws it. The headless runner has
-// no stand-ins for these blocks yet, so these journeys post without the parity check.
+// data-lf-row-key in a grid cell), so it is found wherever antd draws it. These journeys test the
+// browser runner alone, so they post without the parity check; the headless stand-ins for these
+// blocks have their own tests in @lowdefy/journey-headless.
 
 function lastIs(value) {
   return { expect: { state: { path: 'last', equals: value } } };
@@ -41,6 +42,27 @@ fixtureTest('a Modal ok control clicks the OK button in its portal footer', asyn
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
 });
+
+fixtureTest(
+  'a Modal whose id starts with "leave", or whose class ends in "-leave", is not taken as closing',
+  async () => {
+    // leave_modal's portal class is ldf-portal-leave_modal; holiday_modal's .ant-modal element has
+    // the class annual-leave.
+    const result = await postBrowserJourney({
+      pageId: 'controls',
+      steps: [
+        { click: 'open_leave_modal_button' },
+        { click: { blockId: 'leave_modal', control: 'ok' } },
+        lastIs('leave-ok'),
+        { click: 'open_holiday_modal_button' },
+        { click: { blockId: 'holiday_modal', control: 'ok' } },
+        lastIs('holiday-ok'),
+      ],
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+  }
+);
 
 fixtureTest('a ConfirmModal cancel control clicks Cancel in its modal.confirm dialog', async () => {
   const result = await postBrowserJourney({
