@@ -38,5 +38,15 @@ const generators = {
   'double-submit': [doubleSubmit],
 };
 
-export { KINDS };
+// The generators that read who the journey runs as. On a case-table journey, whose user is a
+// `_case` placeholder, generateVariants runs them on each row's journey ('every'), or on the
+// first row's alone ('first'): tenantCalls replays the payloads of the measured run, which is the
+// first row's.
+const ROW_GENERATORS = new Map([
+  [roleGranted, 'every'],
+  [tenant, 'every'],
+  [tenantCalls, 'first'],
+]);
+
+export { KINDS, ROW_GENERATORS };
 export default generators;

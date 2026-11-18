@@ -53,7 +53,9 @@ function currentRoleKeys({ journey, dataSet, names }) {
 // holding none of them is not written. A variant that passes
 // is kept as a persona of the journey, not a copy: its comment names the user
 // list to set on the original journey, and the variant file is then deleted.
-function roleGranted({ journey, dataSet, roleMatrix, pageConfigs }) {
+// On a row of a case-table journey (`caseTable`, from generateVariants), which
+// takes no user list, its comment says to add its rows to the table instead.
+function roleGranted({ journey, dataSet, roleMatrix, pageConfigs, caseTable }) {
   if (type.isNone(dataSet)) {
     return { skipped: 'the journey declares no data: set' };
   }
@@ -94,7 +96,11 @@ function roleGranted({ journey, dataSet, roleMatrix, pageConfigs }) {
       overrides: { user: name },
       steps: journey.steps,
     };
-    if (!type.isNull(names)) {
+    if (!type.isNone(caseTable)) {
+      variant.comments = {
+        0: `Passes? Keep ${name} as rows of "${caseTable.journeyName}", not a copy: add these rows to its cases with user: ${name}, renamed, and delete this file.`,
+      };
+    } else if (!type.isNull(names)) {
       variant.comments = {
         0: `Passes? Keep ${name} as a persona of "${journey.name}", not a copy: set its user to [${[
           ...names,
