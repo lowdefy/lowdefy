@@ -227,6 +227,13 @@ test('docsJourneyHandler answers 400 for a _case or _ref left in the posted jour
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
+test('docsJourneyHandler sends a _ref inside a payload to the endpoint as written', async () => {
+  const steps = [{ call: { endpoint: 'save_config', payload: { _ref: 'x' } } }];
+  const result = await docsJourneyHandler(createContext({ data: 'scope', steps }));
+  expect(result.status).toBe(200);
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ steps }));
+});
+
 test('docsJourneyHandler answers 400 with the message for a bad stub', async () => {
   const badStub = await docsJourneyHandler(
     createContext({

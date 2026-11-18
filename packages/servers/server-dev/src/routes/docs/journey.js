@@ -40,12 +40,11 @@ async function docsJourneyHandler(c) {
   const { pathParams, steps, urlQuery, state, timeout } = body;
   const pageId = body.pageId ?? undefined;
   const placeholderError = findSentPlaceholder({
+    cases: body.cases,
     data: body.data,
     pageId,
-    pathParams,
     steps,
     stubs: body.stubs,
-    urlQuery,
     user: body.user,
   });
   if (placeholderError) {

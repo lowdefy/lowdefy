@@ -182,11 +182,11 @@ test('MCP lowdefy_run_journey refuses a _ref or _case left in the journey, point
 
   const placeholder = await client.callTool({
     name: 'lowdefy_run_journey',
-    arguments: { steps: [{ call: { endpoint: { _case: 'endpoint' } } }] },
+    arguments: { steps: [{ _case: 'step' }] },
   });
   expect(placeholder.isError).toBe(true);
   expect(placeholder.content[0].text).toContain(
-    'Journey "steps[0].call.endpoint" is a _case placeholder, {"_case":"endpoint"}'
+    'Journey "steps[0]" is a _case placeholder, {"_case":"step"}'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
   await client.close();

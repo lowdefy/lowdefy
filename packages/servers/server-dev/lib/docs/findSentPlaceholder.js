@@ -17,12 +17,14 @@
 import { type } from '@lowdefy/helpers';
 import { findJourneyPlaceholder } from '@lowdefy/node-utils';
 
-// A journey sent to the journey route or lowdefy_run_journey takes literal values: a `_ref` or
-// `_case` in it (node-utils' findJourneyPlaceholder) would be sent as a literal object, so it is
-// refused with where it belongs. Returns the error, or undefined.
-function findSentPlaceholder({ data, pageId, pathParams, steps, stubs, urlQuery, user }) {
+// A journey sent to the journey route or lowdefy_run_journey takes literal values. A `_ref` or
+// `_case` where a journey file's placeholder could have been meant (a step, a step list, cases,
+// a stub, user, data or pageId: node-utils' findJourneyPlaceholder with literal) is refused with
+// where it belongs; one inside a value is sent as written. Returns the error, or undefined.
+function findSentPlaceholder({ cases, data, pageId, steps, stubs, user }) {
   const { error } = findJourneyPlaceholder({
-    journey: { pageId, pathParams, urlQuery, user, data, stubs, steps },
+    journey: { pageId, user, data, cases, stubs, steps },
+    literal: true,
   });
   if (type.isUndefined(error)) {
     return undefined;

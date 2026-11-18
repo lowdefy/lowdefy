@@ -328,7 +328,7 @@ This runs `logs an activity from each source [form]`, `[import]` and `[api]`; `-
 
 Keep shared files under `tests/shared/`: every file under `tests/journeys/` is read as a journey. A changed shared file changes the hash of every journey that refers to it, so their [exercised](#hardening-journeys) entries go stale. [Data sets](/journey-data-sets) do not take `_ref`.
 
-The `lowdefy_run_journey` tool runs one inline journey, with no file to refer from, so it takes neither `cases` nor `_ref`: a `_case` or `_ref` in a journey sent to it is refused, naming where it is. Run a journey file that has them with `lowdefy test` or the `lowdefy_run_tests` tool.
+The `lowdefy_run_journey` tool runs one inline journey, with no file to refer from, so it takes neither `cases` nor `_ref`. A `_case` or `_ref` where a file's would stand for part of the journey (a step, a step list, `cases`, a stub or the stub list, `user`, `data` or `pageId`) is refused, naming where it is. Inside a value, such as a payload, a stub's answer or a `match`, it is sent as written. Run a journey file that has them with `lowdefy test` or the `lowdefy_run_tests` tool.
 
 ### Stubs and forced failures
 
@@ -396,7 +396,7 @@ steps:
 - A `call` or `request` that reaches the held request is parked, and its step passes; the steps after it run. `expect` steps right after a parked call read nothing from it.
 - `release` lets the parked call go, waits for it to answer, and makes its answer the one the next `expect` steps read.
 - A `hold` no call reached, or a call still parked when the journey ends, fails the journey.
-- `hold` takes `requestId`, a request step's id in an endpoint routine or a page request's id, and `endpoint` or `pageId` when two routines share the id. Only `call` and `request` steps are parked: a click whose request reaches a held request fails the step. A page's double submit is the [`doubleSubmit` variant](#variants-lowdefy-journeys-variants)'s to test.
+- `hold` takes `requestId`, a request step's id in an endpoint routine or a page request's id, and `endpoint` or `pageId` when two routines share the id. `release` names the call to let go the same way: `release: <requestId>` lets the first call parked at that id go, and `release: { requestId, endpoint, pageId }` the one parked in that routine, so two holds on one id release in either order. Only `call` and `request` steps are parked: a click whose request reaches a held request fails the step. A page's double submit is the [`doubleSubmit` variant](#variants-lowdefy-journeys-variants)'s to test.
 - Check the outcome in the database, as above. An `Api` endpoint's `:reject` answers `200` with the reject message as its error.
 
 ### System calls and webhooks

@@ -47,6 +47,42 @@ function findIn({ value, at }) {
   return undefined;
 }
 
+function placeholderKeyOf(value) {
+  if (!type.isObject(value)) return undefined;
+  return PLACEHOLDER_KEYS.find((placeholder) => Object.hasOwn(value, placeholder));
+}
+
+function checkAt({ value, at }) {
+  const key = placeholderKeyOf(value);
+  return type.isUndefined(key) ? undefined : { at, key, value };
+}
+
+function checkEach({ value, at }) {
+  if (!type.isArray(value)) return undefined;
+  for (const [index, entry] of value.entries()) {
+    const found = checkAt({ value: entry, at: joinPath({ base: at, key: index }) });
+    if (!type.isUndefined(found)) return found;
+  }
+  return undefined;
+}
+
+// The places a journey file's `_ref` or `_case` stands for a part of the journey, rather than
+// for a value: a step list or one step, the case table, the stub list or one stub, and user,
+// data and pageId (a user list's entries too).
+function findInParts({ journey }) {
+  if (!type.isObject(journey)) return undefined;
+  for (const field of ['user', 'data', 'pageId', 'cases', 'stubs', 'steps']) {
+    const at = field;
+    const found =
+      checkAt({ value: journey[field], at }) ??
+      (['user', 'stubs', 'steps'].includes(field)
+        ? checkEach({ value: journey[field], at })
+        : undefined);
+    if (!type.isUndefined(found)) return found;
+  }
+  return undefined;
+}
+
 function describe({ at, key, value }) {
   const written = JSON.stringify(value);
   if (key === '_case') {
@@ -56,12 +92,18 @@ function describe({ at, key, value }) {
 }
 
 // A journey's values are sent and compared as written, so a `_case` or `_ref` left in one would
-// be sent as a literal object: a `_case` in a journey with no "cases" (or inside a row's value),
-// or either one in a journey posted to the dev server, which takes literal values. `journey` is
-// the journey's run fields (steps, stubs, user, data, pageId, ...), after its refs were read and
-// its row filled in. Returns { error } naming the first one by its path, or {}.
-function findJourneyPlaceholder({ journey }) {
-  const found = findIn({ value: journey, at: '' });
+// be sent as a literal object. `journey` is the journey's run fields (steps, stubs, user, data,
+// pageId, ...). Returns { error } naming the first one by its path, or {}.
+//
+// - A journey file (lowdefy test), after its refs were read and its row filled in: a `_case`
+//   anywhere fills from a row, so one left anywhere is refused (one in a journey with no
+//   "cases", or inside a row's value).
+// - literal: true, a journey sent to the dev server's journey route or lowdefy_run_journey,
+//   which take literal values: a `_ref` or `_case` is refused only where a file's placeholder
+//   could have been meant (findInParts). Inside a value (a payload, a stub's answer, a match,
+//   an expected value) it is data, as an endpoint's payload may carry operator objects.
+function findJourneyPlaceholder({ journey, literal = false }) {
+  const found = literal ? findInParts({ journey }) : findIn({ value: journey, at: '' });
   return type.isUndefined(found) ? {} : { error: describe(found) };
 }
 
