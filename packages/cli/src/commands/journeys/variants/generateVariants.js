@@ -26,11 +26,10 @@ function runGenerator({ generator, journey, exercised, inputs }) {
   if (type.isArray(generated)) {
     return { variants: generated, notes: [] };
   }
-  const notes = type.isNone(generated.skipped)
-    ? []
-    : type.isArray(generated.skipped)
-      ? generated.skipped
-      : [generated.skipped];
+  if (type.isNone(generated.skipped)) {
+    return { variants: generated.variants ?? [], notes: [] };
+  }
+  const notes = type.isArray(generated.skipped) ? generated.skipped : [generated.skipped];
   return { variants: generated.variants ?? [], notes };
 }
 
