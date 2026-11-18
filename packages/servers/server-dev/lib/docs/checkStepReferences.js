@@ -160,6 +160,23 @@ function checkEndpointId({ endpointId }) {
   });
 }
 
+// A webhook step posts to an endpoint declared `webhook`; the route answers any other as one that
+// does not exist.
+function checkWebhookId({ endpointId }) {
+  const endpoint = readBuildArtifact({ name: `api/${endpointId}.json` });
+  if (endpoint === null) {
+    checkEndpointId({ endpointId });
+    return;
+  }
+  if (type.isNone(endpoint.webhook) || endpoint.webhook === false) {
+    throw unknownReference({
+      message: `Endpoint "${endpointId}" is not a webhook endpoint: a webhook step posts to an endpoint declared "webhook". Call it with a "call" step instead.`,
+      expected: `a webhook endpoint "${endpointId}"`,
+      actual: `endpoint "${endpointId}" declares no "webhook"`,
+    });
+  }
+}
+
 function checkPageId({ pageId }) {
   const registry = readBuildArtifact({ name: 'pageRegistry.json' });
   if (Object.prototype.hasOwnProperty.call(registry, pageId)) {
@@ -240,6 +257,10 @@ async function checkStepReferences({ journey, page, step }) {
   if (key === 'call') {
     checkCallerName({ journey, key, name: step.call.as });
     checkEndpointId({ endpointId: step.call.endpoint });
+    return;
+  }
+  if (key === 'webhook') {
+    checkWebhookId({ endpointId: step.webhook.endpoint });
     return;
   }
   if (key === 'request') {

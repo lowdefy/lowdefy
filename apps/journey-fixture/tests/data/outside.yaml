@@ -1,0 +1,9 @@
+# The data set the system call and webhook journeys run on (tests/journeys/_headless/system.yaml
+# and webhook.yaml): two runs no one has closed, and no payment events. Change it only together
+# with those journeys. The dev server runs a data set journey only as a user of its data set.
+fixtures:
+  fixture_db:
+    - { _id: BR-1, kind: run }
+    - { _id: BR-2, kind: run }
+users:
+  operator: { id: u_operator, roles: [] }

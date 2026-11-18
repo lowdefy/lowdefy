@@ -17,24 +17,27 @@
 import { type } from '@lowdefy/helpers';
 import { relativePosixPath } from '@lowdefy/node-utils';
 
-import collapsePersonas from '../test/collapsePersonas.js';
-import validateJourney from '../test/validateJourney.js';
+import collapseRuns from '../test/collapseRuns.js';
+import expandJourney from '../test/expandJourney.js';
+import validateJourneyItem from '../test/validateJourneyItem.js';
 
 // The committed journeys behind discovered or selected test items, each once:
-// a journey's persona runs collapse back to the journey as written. Each comes
+// discovered items are expanded as selected ones are (a selected run expands
+// to itself), and a journey's runs collapse as collapseRuns says. Each comes
 // with its place in its file and its path relative to the config directory.
 // A file that does not parse, or a journey that does not validate, is
 // reported in `skipped` and left alone.
 function committedJourneys({ context, items }) {
   const journeys = [];
   const skipped = [];
-  collapsePersonas({ items }).forEach((item) => {
+  const runs = items.flatMap((item) => expandJourney({ item }));
+  collapseRuns({ items: runs }).forEach((item) => {
     const file = relativePosixPath({ from: context.directories.config, to: item.filePath });
     if (!type.isNone(item.error)) {
       skipped.push(`${file}: ${item.error}`);
       return;
     }
-    const validation = validateJourney({ journey: item.journey });
+    const validation = validateJourneyItem({ item });
     if (!validation.valid) {
       skipped.push(`${file}: ${validation.message}`);
       return;

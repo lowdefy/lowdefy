@@ -1,6 +1,10 @@
 # @lowdefy/e2e-utils
 
-Playwright testing utilities for Lowdefy applications with a locator-first API.
+Playwright testing utilities with a locator-first API, kept as Lowdefy's own tool for the block e2e
+suites. Apps test pages and endpoints with journeys (`packages/docs/testing/config-tests.md`); the
+app-facing docs pages and the `lowdefy-e2e` scaffold command were retired (LDF-1022, decision
+`e2e-utils-not-for-apps`), and `packages/docs/testing/e2e-utils-migration.md` moves an app's specs
+to journeys.
 
 **Source:** `packages/utils/e2e-utils/`
 **Updated:** 2026-02-11
@@ -8,11 +12,11 @@ Playwright testing utilities for Lowdefy applications with a locator-first API.
 
 ## Purpose
 
-Provides e2e testing infrastructure for Lowdefy apps:
+Provides the e2e testing infrastructure every block package's e2e suite runs on, and the `runtime`
+and `targets` exports the journey runner shares:
 
 - Locator-first API for blocks, requests, state, and URL
 - Request mocking (static and inline)
-- Scaffold command for project setup
 - Block helper factory for type-specific interactions
 
 ## Architecture Overview
@@ -120,22 +124,6 @@ ldf.mock.request('id', { response }); // Inline mocking
 | ---------------------- | --------------------------------------- |
 | `createMockManager.js` | Per-test mock state, route interception |
 | `loadStaticMocks.js`   | Parses mocks.yaml, applies wildcards    |
-
-### Init (`src/init/`)
-
-| File                 | Purpose                                                       |
-| -------------------- | ------------------------------------------------------------- |
-| `index.js`           | CLI entry point (`npx @lowdefy/e2e-utils`)                    |
-| `detectApps.js`      | Finds Lowdefy apps in `app/` or `apps/`                       |
-| `generateFiles.js`   | Creates e2e folder structure from templates                   |
-| `updateGitignore.js` | Adds test artifacts to .gitignore                             |
-| `prompts/`           | Numbered-list, yes/no and single-choice questions on readline |
-
-The questions use `node:readline/promises` with no prompt library. A choice list is printed
-numbered and answered by typing numbers (`1,3`; empty selects every app, or the first
-version). `createAsk` reads answers from the interface's async line iterator, not
-`rl.question`, so answers piped in at once (`printf '1\ny\n\n' | npx lowdefy-e2e init`) each
-reach their question. Ctrl+C or a closed input cancels the setup.
 
 ### Config (`src/config.js`)
 
@@ -506,19 +494,6 @@ src/
 │   └── verifyServer.js
 ├── fixtures/
 │   └── index.js                # Playwright test.extend()
-├── init/
-│   ├── index.js                # CLI entry
-│   ├── detectApps.js
-│   ├── generateFiles.js
-│   ├── updateGitignore.js
-│   └── templates/
-│       ├── playwright.config.js.template
-│       ├── example.spec.js.template
-│       ├── fixtures.js.template
-│       ├── mocks.yaml.template
-│       ├── mongodb.spec.js.template
-│       ├── env.e2e.template
-│       └── README.md.template
 ├── mocking/
 │   ├── index.js
 │   ├── createMockManager.js
@@ -538,7 +513,7 @@ src/
 ```
 @lowdefy/blocks-antd    # Block e2e helpers
 @lowdefy/blocks-basic   # Block e2e helpers
-yaml                    # Parse mocks.yaml and pnpm-workspace.yaml
+yaml                    # Parse mocks.yaml
 
 peerDependencies:
 @playwright/test        # Testing framework

@@ -14,27 +14,51 @@
   limitations under the License.
 */
 
+import addFailGate from './addFailGate.js';
+import addJourneyStubs from './addJourneyStubs.js';
+import addPauseGate from './addPauseGate.js';
 import applyDataSetRedirect from './applyDataSetRedirect.js';
+import checkJourneyStubTargets from './checkJourneyStubTargets.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
+import describeFailGate from './describeFailGate.js';
+import createSessionConnections from './createSessionConnections.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
 import getRunDataStore from './getRunDataStore.js';
+import listUnfiredFailGates from './listUnfiredFailGates.js';
+import listUnreachedPauseGates from './listUnreachedPauseGates.js';
 import openDataSession from './openDataSession.js';
+import raceToPauseGate from './raceToPauseGate.js';
 import readDataSet from './readDataSet.js';
+import readForcedFailure from './readForcedFailure.js';
+import recordForcedFailure from './recordForcedFailure.js';
+import releasePauseGates from './releasePauseGates.js';
 import sinkExternalConnections from './sinkExternalConnections.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
 import trackSessionWork from './trackSessionWork.js';
 
 export {
+  addFailGate,
+  addJourneyStubs,
+  addPauseGate,
   applyDataSetRedirect,
+  checkJourneyStubTargets,
   createDataSetRefusal,
+  describeFailGate,
+  createSessionConnections,
   dataSessionRegistry,
   findSessionDocuments,
   getDataStore,
   getRunDataStore,
+  listUnfiredFailGates,
+  listUnreachedPauseGates,
   openDataSession,
+  raceToPauseGate,
   readDataSet,
+  readForcedFailure,
+  recordForcedFailure,
+  releasePauseGates,
   sinkExternalConnections,
   sweepOrphanDatabases,
   trackSessionWork,

@@ -18,6 +18,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
+import { openTestApp } from '@lowdefy/test-utils';
 import { afterAll, beforeAll, expect, test } from 'vitest';
 
 import createBuildHost from '../../src/createBuildHost.js';
@@ -96,9 +97,10 @@ afterAll(() => {
 });
 
 test('a journey reads the value a run sets for a secret, and the stand-in for one it does not', async () => {
-  const host = await createBuildHost({ ...build, secrets: { ORG_ID: 'org-a' }, user });
+  const app = await openTestApp({ ...build, secrets: { ORG_ID: 'org-a' } });
   let result;
   try {
+    const host = await createBuildHost({ app, user });
     result = await runHeadlessJourney({
       host,
       journey: {
@@ -109,8 +111,9 @@ test('a journey reads the value a run sets for a secret, and the stand-in for on
       },
       stepTimeout: 2000,
     });
-  } finally {
     await host.close();
+  } finally {
+    await app.close();
   }
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
@@ -120,12 +123,14 @@ test('a journey reads the value a run sets for a secret, and the stand-in for on
 });
 
 test('a journey reads the stand-in for every secret when the run sets none', async () => {
-  const host = await createBuildHost({ ...build, user });
+  const app = await openTestApp(build);
   let result;
   try {
+    const host = await createBuildHost({ app, user });
     result = await runHeadlessJourney({ host, journey, stepTimeout: 2000 });
-  } finally {
     await host.close();
+  } finally {
+    await app.close();
   }
   expect(result.passed).toBe(true);
   expect(result.calls.map(({ response }) => response)).toEqual([

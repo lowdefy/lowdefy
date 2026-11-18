@@ -21,9 +21,15 @@ import {
   classifyJourney,
   findPlaceholderStep,
   normaliseJourneySteps,
+  validateJourneyDataSession,
   validateJourneySteps,
 } from '@lowdefy/node-utils';
-import { getDataStore, openDataSession } from '@lowdefy/test-utils/dataSets';
+import {
+  addJourneyStubs,
+  checkJourneyStubTargets,
+  getDataStore,
+  openDataSession,
+} from '@lowdefy/test-utils/dataSets';
 
 import collectExercised from './collectExercised.js';
 import createDevServerHost from './createDevServerHost.js';
@@ -34,6 +40,7 @@ import describePageNeed from './describePageNeed.js';
 import journeyRunRecording from './journeyRunRecording.js';
 import listStepPageIds from './listStepPageIds.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import readConnectionPlugins from './readConnectionPlugins.js';
 import readDevAuthMode from './readDevAuthMode.js';
 import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
 import selectFinalState from './selectFinalState.js';
@@ -84,7 +91,8 @@ function toObservedEvent(payload) {
 // with the calls it made and their payloads (calls).
 // A journey whose steps need a browser answers { pageId, browserOnly: { index, step, reason },
 // steps: [] }, before any data is loaded; one that reaches an action only a browser can carry out
-// answers browserOnly for that step. Refusals ({ error, refused }) are runJourney's.
+// answers browserOnly for that step. Refusals ({ error, refused }) are runJourney's. `stubs`, the
+// journey's answer stubs and fail gates (validated by the caller), are set on its data session.
 async function runJourneyHeadless({
   origin,
   pageId,
@@ -96,6 +104,7 @@ async function runJourneyHeadless({
   stepTimeout = 5000,
   mutantCookie,
   data,
+  stubs,
   recording,
   by,
   readConfigFile = defaultReadConfigFile,
@@ -109,6 +118,16 @@ async function runJourneyHeadless({
     if (!type.isUndefined(pageError)) {
       return { error: `runJourney ${pageError}`, refused: true };
     }
+  }
+  // Stubs, gates and expect.sunk live on the data session: refused without a data set, as
+  // lowdefy test refuses them, whether or not this host would open a session.
+  const { error: dataSessionError } = validateJourneyDataSession({
+    data,
+    steps: inputSteps,
+    stubs,
+  });
+  if (!type.isUndefined(dataSessionError)) {
+    return { error: dataSessionError, refused: true };
   }
   const steps = normaliseJourneySteps({ steps: inputSteps });
   const { error: placeholderError } = findPlaceholderStep({ steps });
@@ -145,6 +164,15 @@ async function runJourneyHeadless({
   let store;
   let loadMs;
   if (!type.isUndefined(dataSet)) {
+    // An answer stub on a type the app does not have would never answer: refused before the data
+    // set loads.
+    const stubsError = checkJourneyStubTargets({
+      connections: await readConnectionPlugins(),
+      stubs,
+    });
+    if (!type.isUndefined(stubsError)) {
+      return { error: stubsError, refused: true };
+    }
     try {
       store = await getDataStore({ logger });
     } catch (error) {
@@ -156,6 +184,7 @@ async function runJourneyHeadless({
     } catch (error) {
       return { error: error.message, refused: true };
     }
+    addJourneyStubs({ session: session.session, stubs });
     loadMs = Date.now() - loadStart;
   }
   // The step checks read the pages' built artifacts; a page the route table does not know is left

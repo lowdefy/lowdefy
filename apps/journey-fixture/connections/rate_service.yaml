@@ -1,0 +1,7 @@
+# An outside rate service the price_run endpoint asks (api/price_run.yaml). Nothing listens at the
+# URL: under a data set its requests are sunk, and tests/journeys/_headless/stubs.yaml answers them
+# with a stub.
+id: rate_service
+type: AxiosHttp
+properties:
+  baseURL: http://127.0.0.1:9

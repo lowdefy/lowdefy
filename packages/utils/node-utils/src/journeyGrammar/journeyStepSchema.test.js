@@ -28,12 +28,15 @@ const ajv = new Ajv({ allErrors: true, strict: false });
 const validateSchema = ajv.compile(journeyStepSchema);
 
 // After a click, so expect.error and expect.effect are placed where they may be,
-// and expect.status after the call it reads.
+// expect.status after the call it reads, and a release after a hold of its request.
 function validatorAccepts(step) {
-  const before =
-    type.isObject(step?.expect) && Object.hasOwn(step.expect, 'status')
-      ? { call: { endpoint: 'save' } }
-      : { click: 'save' };
+  let before = { click: 'save' };
+  if (type.isObject(step?.expect) && Object.hasOwn(step.expect, 'status')) {
+    before = { call: { endpoint: 'save' } };
+  }
+  if (type.isObject(step) && type.isString(step.release)) {
+    before = { hold: { requestId: step.release } };
+  }
   return type.isUndefined(validateJourneySteps({ steps: [before, step] }).error);
 }
 
@@ -93,16 +96,30 @@ const VALID_STEPS = [
   { expect: { status: 403 } },
   { expect: { db: { collection: 'orders', match: {}, count: 0 } } },
   { expect: { db: { collection: 'orders', connectionId: 'db', match: {}, equals: [{}] } } },
+  { expect: { sunk: {} } },
+  { expect: { sunk: { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', count: 2 } } },
+  { expect: { sunk: { requestId: 'fetch_rate', match: { url: '/rates' } } } },
   { call: { endpoint: 'orders-cancel' } },
   { call: { endpoint: 'orders-cancel', payload: { id: 1 }, as: 'none' } },
   { call: { endpoint: 'orders-cancel', as: { roles: ['admin'] } } },
   { request: { pageId: 'orders', requestId: 'get_order' } },
   { request: { pageId: 'orders', requestId: 'get_order', payload: {}, as: 'client_b' } },
+  { hold: { requestId: 'claim_run' } },
+  { hold: { requestId: 'claim_run', endpoint: 'run-approve', pageId: 'runs' } },
+  { release: 'claim_run' },
+  { call: { endpoint: 'nightly_close', as: 'system' } },
+  { webhook: { endpoint: 'payment_events', body: { id: 'evt_1' } } },
+  { webhook: { endpoint: 'payment_events', body: 'raw text', query: { a: '1' } } },
+  { webhook: { endpoint: 'payment_events', body: null, headers: { 'x-signature': 'abc' } } },
   ...Object.values(JOURNEY_STEP_EXAMPLES).flat(),
 ];
 
 const INVALID_STEPS = [
   'click submit',
+  { expect: { sunk: { requestId: '' } } },
+  { expect: { sunk: { count: -1 } } },
+  { expect: { sunk: { match: 'EUR' } } },
+  { expect: { sunk: { endpoint: 'price_run' } } },
   {},
   { hover: 'a' },
   { click: 'a', fill: { blockId: 'b', value: 'x' } },
@@ -192,6 +209,20 @@ const INVALID_STEPS = [
   { request: { requestId: 'get_order' } },
   { request: { pageId: 'orders' } },
   { request: { pageId: 'orders', requestId: 'r', endpoint: 'e' } },
+  { hold: 'claim_run' },
+  { hold: {} },
+  { hold: { requestId: '' } },
+  { hold: { requestId: 'r', endpoint: 7 } },
+  { hold: { requestId: 'r', times: 2 } },
+  { release: '' },
+  { release: { requestId: 'r' } },
+  { request: { pageId: 'orders', requestId: 'get_order', as: 'system' } },
+  { webhook: 'payment_events' },
+  { webhook: { endpoint: 'payment_events' } },
+  { webhook: { endpoint: '', body: {} } },
+  { webhook: { endpoint: 'payment_events', body: {}, headers: { 'x-attempt': 2 } } },
+  { webhook: { endpoint: 'payment_events', body: {}, query: 'a=1' } },
+  { webhook: { endpoint: 'payment_events', body: {}, as: 'system' } },
 ];
 
 test.each(VALID_STEPS.map((step) => [step]))(

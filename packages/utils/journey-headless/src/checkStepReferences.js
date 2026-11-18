@@ -138,6 +138,23 @@ function checkEndpointId({ endpointId, host }) {
   });
 }
 
+// A webhook step posts to an endpoint declared `webhook`; the route answers any other as one that
+// does not exist.
+function checkWebhookId({ endpointId, host }) {
+  const endpoint = host.readArtifact(`api/${endpointId}.json`);
+  if (endpoint === null) {
+    checkEndpointId({ endpointId, host });
+    return;
+  }
+  if (type.isNone(endpoint.webhook) || endpoint.webhook === false) {
+    throw unknownReference({
+      message: `Endpoint "${endpointId}" is not a webhook endpoint: a webhook step posts to an endpoint declared "webhook". Call it with a "call" step instead.`,
+      expected: `a webhook endpoint "${endpointId}"`,
+      actual: `endpoint "${endpointId}" declares no "webhook"`,
+    });
+  }
+}
+
 // On a data set run an `as` name opens that data set user, so a name that is neither the first
 // actor nor one of its users is a misspelling. Without a data set any name is a new person.
 function checkActorName({ host, name }) {
@@ -154,8 +171,9 @@ function checkActorName({ host, name }) {
 }
 
 // Checked at the start of every step against the build, as the browser runner checks it
-// (server-dev's checkStepReferences): a misspelt blockId, requestId, endpointId, goto pageId or
-// `as` name fails its step and names the unknown id, instead of passing a step that asserts
+// (server-dev's checkStepReferences): a misspelt blockId, requestId, endpointId, goto pageId, the
+// endpoint or page a hold narrows to, a webhook step's endpoint that is not a webhook, or `as`
+// name fails its step and names the unknown id, instead of passing a step that asserts
 // something is absent (expect.hidden, expect.calls with count 0). Block and request ids are read
 // from the actor's current page; with no page open they are not checked.
 function checkStepReferences({ actor, host, journeyPageId, step }) {
@@ -172,8 +190,21 @@ function checkStepReferences({ actor, host, journeyPageId, step }) {
     checkEndpointId({ endpointId: step.call.endpoint, host });
     return;
   }
+  if (key === 'webhook') {
+    checkWebhookId({ endpointId: step.webhook.endpoint, host });
+    return;
+  }
   if (key === 'request') {
     checkRequestId({ host, pageId: step.request.pageId, requestId: step.request.requestId });
+    return;
+  }
+  if (key === 'hold') {
+    if (!type.isUndefined(step.hold.endpoint)) {
+      checkEndpointId({ endpointId: step.hold.endpoint, host });
+    }
+    if (!type.isUndefined(step.hold.pageId)) {
+      checkPageId({ host, pageId: step.hold.pageId });
+    }
     return;
   }
   const calls = key === 'expect' && getStepKey(step.expect) === 'calls' ? step.expect.calls : null;

@@ -20,7 +20,7 @@ import { parseDataSet, relativePosixPath } from '@lowdefy/node-utils';
 import lintJourney from './lintJourney.js';
 import measuredJourney from '../measuredJourney.js';
 import readExercised from '../readExercised.js';
-import validateJourney from '../validateJourney.js';
+import validateJourneyItem from '../validateJourneyItem.js';
 
 // Each data set the journeys name, read once: { dataSet } or
 // { error } when its file cannot be read.
@@ -61,7 +61,7 @@ async function lintJourneys({ context, items }) {
   items.forEach((item) => {
     const name = item.journey?.name ?? item.filePath;
     const validation = type.isNone(item.error)
-      ? validateJourney({ journey: item.journey })
+      ? validateJourneyItem({ item })
       : { valid: false, message: item.error };
     if (!validation.valid) {
       report({

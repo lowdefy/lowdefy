@@ -5,24 +5,32 @@ rules for tests (naming, co-location, ES module mocking) live in `CLAUDE.md`.
 
 ## Test levels
 
-Test each change at the lowest level that fails when the change breaks. The first three levels
-are what a Lowdefy app's own tests use; this repository has suites that prove each of them.
+Test each change at the lowest level that fails when the change breaks. Each kind of test has one
+way to write it (LDF-1022, "One way for each kind of test"); the first four levels are what a
+Lowdefy app's own tests use, and this repository has suites that prove each of them.
 
-| Level            | Proves                                                                      | Runs on                                                            | Cost                                         | Suites here that cover it                                                                                |
-| ---------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| Journey          | what a page shows, how it reacts, paths across pages, sign-up and sign-in   | a dev server and a real Chromium                                   | seconds to tens of seconds a journey         | [Journey fixture app](#journey-fixture-app), [Auth journeys](#auth-journeys)                             |
-| Headless journey | a page's logic and state, what it writes, what a page would never send      | a production build, in the CLI's process, no browser               | a build, then no browser time                | [Journey fixture app](#journey-fixture-app)                                                              |
-| Endpoint test    | table-driven logic, stubbed services, races, cron and internal routines     | a production build, in the test's process, a `mongod`              | a build, then 2 to 3 seconds a test file     | [Endpoint test harness](#endpoint-test-harness)                                                          |
-| The access table | who can reach which page and endpoint, as one committed `tests/access.yaml` | a production build, in the CLI's process (`lowdefy test --access`) | a build, then milliseconds for the whole app | [Endpoint test harness](#endpoint-test-harness) (`accessMatrix`), the CLI's `test` unit tests (the step) |
-| Unit test        | one function of a package or plugin                                         | vitest, no app                                                     | milliseconds                                 | [Unit tests](#unit-tests)                                                                                |
+| Level            | Proves                                                                                                                                                          | Runs on                                                            | Cost                                         | Suites here that cover it                                                                                |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Browser journey  | what a page shows, how it reacts, paths across pages, sign-up and sign-in                                                                                       | a dev server and a real Chromium                                   | seconds to tens of seconds a journey         | [Journey fixture app](#journey-fixture-app), [Auth journeys](#auth-journeys)                             |
+| Headless journey | a page's logic and state, what it sends and writes (by `blockId`); endpoint and server logic, page-less (`call`, `request`, `webhook`, `cases`, `stubs`, races) | a production build, in the CLI's process, no browser               | a build, then no browser time                | [Journey fixture app](#journey-fixture-app), `@lowdefy/journey-headless`' `test:fixture`                 |
+| The access table | who can reach which page and endpoint, as one committed `tests/access.yaml`                                                                                     | a production build, in the CLI's process (`lowdefy test --access`) | a build, then milliseconds for the whole app | [Endpoint test harness](#endpoint-test-harness) (`accessMatrix`), the CLI's `test` unit tests (the step) |
+| Unit test        | one function of a package, plugin or Lambda                                                                                                                     | vitest, no app                                                     | milliseconds                                 | [Unit tests](#unit-tests)                                                                                |
+| test-utils test  | only what a journey cannot say: a value computed in code, an answer computed from the request, rows generated in code                                           | a production build, in the test's process, a `mongod`              | a build, then 2 to 3 seconds a test file     | [Endpoint test harness](#endpoint-test-harness)                                                          |
 
-- **Each check has one home.** A page's logic, state and writes are a journey that targets blocks by
+- **Each check has one way.** A page's logic, state and writes are a journey that targets blocks by
   `blockId` and asserts with `expect.state`, `expect.calls` or `expect: { db }`, so it runs headless
-  (`lowdefy test --headless --build`); a write journey ends with `expect: { db }`. What a page would
-  never send is a page-less journey with `call` or `request`. Endpoint tests hold only what YAML
-  cannot say. A browser journey, the most expensive check, is for what a page shows. Never write a
-  journey per role over every page: that table is the access table's.
-- **Headless journeys on a build, endpoint tests and the access table read a build**, so a config
+  (`lowdefy test --headless --build`); a write journey ends with `expect: { db }`. Endpoint and
+  server logic is a page-less journey: `call`, `request` and `webhook` steps; a `cases` table for
+  many cases of one check, with computed values written into its rows; `stubs` for outside answers
+  (`answer`) and forced failures (`fail`); `hold` and `release` for races; `as: system` for cron and
+  internal endpoints; `expect: { sunk }` for what an outside service was asked. A payload's shape is
+  the endpoint's `payloadSchema`, so journey cases test data scope. A browser journey, the most
+  expensive check, is for what a page shows. Never write a journey per role over every page: that
+  table is the access table's.
+- **A test-utils test is the escape hatch**, and its file says why a journey can't express it.
+  Apps no longer test with `@lowdefy/e2e-utils`; Lowdefy keeps it for its block e2e suites
+  ([Block tests](#block-tests)).
+- **Headless journeys on a build, test-utils tests and the access table read a build**, so a config
   edit needs a build first. While editing an app, call the endpoint on the dev server
   (`lowdefy_run_endpoint` or `lowdefy_run_request` with `user` and `data`), and run the tests once
   before calling the change done.
@@ -35,10 +43,10 @@ are what a Lowdefy app's own tests use; this repository has suites that prove ea
 
 `lowdefy agent-setup` writes the same rules into an app's `AGENTS.md`
 (`packages/cli/src/commands/agentSetup/testingRules.js`) and each journey skill
-(`skills/testLevel.js`). The user docs for endpoint tests are
-`packages/docs/testing/endpoint-tests.md`, and for the access table
-`packages/docs/testing/access-table.md`. The package is described
-in [utils/test-utils.md](./utils/test-utils.md).
+(`skills/testLevel.js`). The user docs are `packages/docs/testing/config-tests.md` for journeys and
+their grammar, `endpoint-tests.md` for the test-utils escape hatch, `access-table.md` for the access
+table, and `e2e-utils-migration.md` for an app moving off e2e-utils. The package is described in
+[utils/test-utils.md](./utils/test-utils.md).
 
 ## Getting a worktree ready
 
@@ -712,17 +720,18 @@ A release runs the complete path twice: on the Release pull request from `develo
 CI does not run on its own, so run what the change needs before you push, and list the
 commands in the pull request body:
 
-| Change touches                                 | Run                                                                                                                              |
-| ---------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| any package                                    | `pnpm build` (more than one package), then each changed package's tests and its dependents' (`pnpm --filter=...<package> test`)  |
-| several packages, root config, the lockfile    | `pnpm test` (the dependency check and every package)                                                                             |
-| `connection-mongodb`, tenancy, auth adapters   | `pnpm test:mongodb`                                                                                                              |
-| `test-utils/src/dataSets` (data sessions)      | `pnpm test:mongodb`, `@lowdefy/server-dev`'s tests, the journey `test:fixture` suites and `@lowdefy/test-utils`'s `test:fixture` |
-| the journey runner, journey cookies or mutants | the journey `test:fixture` suites (`@lowdefy/server-dev`, `lowdefy`)                                                             |
-| `test-utils`, the gate, the build it reads     | `pnpm --filter=@lowdefy/test-utils test`, and its `test:fixture` (see [Endpoint test harness](#endpoint-test-harness))           |
-| the endpoint tests docs page's code samples    | `pnpm --filter=@lowdefy/test-utils test:fixture docsSamples`, then `pnpm docs:content` and `pnpm --filter=@lowdefy/docs test`    |
-| blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                             |
-| any JavaScript file                            | `pnpm exec eslint <changed files>` and `pnpm format:check` ([Linting](./linting.md))                                             |
+| Change touches                                  | Run                                                                                                                                 |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| any package                                     | `pnpm build` (more than one package), then each changed package's tests and its dependents' (`pnpm --filter=...<package> test`)     |
+| several packages, root config, the lockfile     | `pnpm test` (the dependency check and every package)                                                                                |
+| `connection-mongodb`, tenancy, auth adapters    | `pnpm test:mongodb`                                                                                                                 |
+| `test-utils/src/dataSets` (data sessions)       | `pnpm test:mongodb`, `@lowdefy/server-dev`'s tests, the journey `test:fixture` suites and `@lowdefy/test-utils`'s `test:fixture`    |
+| the journey runner, journey cookies or mutants  | the journey `test:fixture` suites (`@lowdefy/server-dev`, `lowdefy`)                                                                |
+| `test-utils`, the gate, the build it reads      | `pnpm --filter=@lowdefy/test-utils test`, and its `test:fixture` (see [Endpoint test harness](#endpoint-test-harness))              |
+| the endpoint tests docs page's code samples     | `pnpm --filter=@lowdefy/test-utils test:fixture docsSamples`, then `pnpm docs:content` and `pnpm --filter=@lowdefy/docs test`       |
+| the config tests docs page's page-less journeys | `pnpm --filter=@lowdefy/journey-headless test:fixture docsSamples`, then `pnpm docs:content` and `pnpm --filter=@lowdefy/docs test` |
+| blocks, `block-utils`, the engine               | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                                |
+| any JavaScript file                             | `pnpm exec eslint <changed files>` and `pnpm format:check` ([Linting](./linting.md))                                                |
 
 The developer may add the `ci` or `ci-full` label to run them again in CI.
 

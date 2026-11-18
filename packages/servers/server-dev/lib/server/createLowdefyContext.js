@@ -30,7 +30,7 @@ import { type } from '@lowdefy/helpers';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
 import {
   applyDataSetRedirect,
-  sinkExternalConnections,
+  createSessionConnections,
   trackSessionWork,
 } from '@lowdefy/test-utils/dataSets';
 
@@ -150,7 +150,7 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
   // Which browser context sent the request: errors it causes are stamped with
   // it, so a journey run claims only its own (see createHandleError).
   context.recording = readRecordingCookie(c.req.header('cookie'));
-  context.handleError = createHandleError({ context });
+  context.handleError = createHandleError({ context, dataSession });
   // The request's own middleware takes the context as soon as it can sink an
   // error: the auth steps below can throw, and the error handler reads the
   // context back to log the fault with its request id and location.
@@ -242,13 +242,15 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
     });
   }
   if (!type.isNone(dataSession)) {
-    applyDataSetRedirect({ context, session: dataSession, connections });
-    // Requests of connections that reach an outside service are recorded, never sent.
-    context.connections = sinkExternalConnections({
-      context,
+    // Requests of connections that reach an outside service are recorded, never sent, and the
+    // data session's stubs and gates apply, as on the build host.
+    const { gate, resolvers } = createSessionConnections({
       connections,
+      context,
       session: dataSession,
     });
+    applyDataSetRedirect({ context, session: dataSession, connections: gate });
+    context.connections = resolvers;
     context.dataSet = dataSession.name;
     context.waitUntil = trackSessionWork({ session: dataSession });
   }

@@ -154,6 +154,13 @@ test('parseDataSet refuses a user named none', async () => {
   );
 });
 
+test('parseDataSet refuses a user named system, which `as: system` on a call means', async () => {
+  writeDataSet('alpha.yaml', 'users:\n  system: { id: u_1 }\n');
+  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
+    'users key "system" is reserved: `as: system` on a call runs the endpoint as a cron or internal run does, with no user.'
+  );
+});
+
 test('parseDataSet refuses an index with v', async () => {
   writeDataSet('alpha.yaml', 'indexes:\n  tickets:\n    - { key: { a: 1 }, v: 2 }\n');
   await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(

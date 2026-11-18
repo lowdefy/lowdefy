@@ -30,7 +30,9 @@ const host = {
   readPageConfig: () => undefined,
   resolveUser: () => null,
   rootConfig: {},
+  system: () => undefined,
   userNames: [],
+  webhook: () => undefined,
 };
 
 test('createHeadlessHost returns a host with every part', () => {

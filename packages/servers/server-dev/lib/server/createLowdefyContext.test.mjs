@@ -20,6 +20,7 @@ import { fileURLToPath } from 'url';
 
 import { Hono } from 'hono';
 import { vi, afterAll, afterEach, beforeEach, describe, expect, test } from 'vitest';
+import { isForcedFailure } from '@lowdefy/errors';
 import { projectCaughtError } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
 
@@ -99,9 +100,17 @@ fixtures.forEach(({ absolutePath, content }) => {
 // A checkout that has built an app already holds real artifacts here, which import plugins this
 // package does not depend on, so the stubs are also mocked over whatever is on disk.
 // The connection plugin map carries each type's meta.dataSet, which the data session gate reads.
+// The request resolvers stand for the real ones, so a test can see whether a request reached them.
+const mongoFind = vi.fn(async () => ['real row']);
+const knexRaw = vi.fn(async () => ['real']);
+const httpCall = vi.fn(async () => ({ real: true }));
 const connectionPlugins = {
-  MongoDBCollection: { meta: { tenant: true, dataSet: 'redirect' } },
-  Knex: {},
+  MongoDBCollection: {
+    meta: { tenant: true, dataSet: 'redirect' },
+    requests: { MongoDBFind: mongoFind },
+  },
+  Knex: { requests: { KnexRaw: knexRaw } },
+  AxiosHttp: { meta: { dataSet: 'external' }, requests: { AxiosHttp: httpCall } },
 };
 fixtures.forEach(({ absolutePath }) => {
   vi.doMock(absolutePath, () => ({
@@ -256,6 +265,10 @@ function registerSession(state = 'open') {
     databases: new Map([[JSON.stringify(['secret:MONGODB_URI', null]), 'ld_aaaaaaaaaaaa_0']]),
     databaseCount: 1,
     work: new Set(),
+    sunk: [],
+    stubs: [],
+    failGates: [],
+    pauseGates: [],
   };
   dataSessionRegistry.set(session.id, session);
   return session;
@@ -322,6 +335,93 @@ describe('data sessions', () => {
     await expect(context.readConfigFile('connections/warehouse.json')).rejects.toThrow(
       'Connection "warehouse" (type Knex) cannot run under data set "staging-sample": its type does not say how to redirect it.'
     );
+  });
+
+  // The dev server builds its connection map with the build host's own function
+  // (createSessionConnections in @lowdefy/test-utils/dataSets), so a stub or a gate set on the
+  // data session answers here as it does in a test of a production build.
+  describe('stubs and gates on the data session', () => {
+    const dataCookie = { cookie: `lowdefy_journey_data=${journeyActorToken}.session1` };
+    const args = {
+      connectionId: 'payments',
+      endpointId: 'invoice-send',
+      request: { url: '/charge', token: secret },
+      requestId: 'charge',
+    };
+
+    test('a stubbed outside request answers the stub and is recorded in sunk, with secrets scrubbed', async () => {
+      const session = registerSession();
+      session.stubs.push(
+        {
+          connectionType: 'AxiosHttp',
+          requestType: 'AxiosHttp',
+          match: { url: '/refund' },
+          answer: { data: 'refunded' },
+        },
+        { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { data: 'charged' } }
+      );
+      const context = await createLowdefyContext({ c: createHonoContext({ headers: dataCookie }) });
+      expect(await context.connections.AxiosHttp.requests.AxiosHttp(args)).toEqual({
+        data: 'charged',
+      });
+      expect(httpCall).not.toHaveBeenCalled();
+      expect(session.sunk).toEqual([
+        {
+          connectionId: 'payments',
+          connectionType: 'AxiosHttp',
+          requestId: 'charge',
+          pageId: null,
+          endpointId: 'invoice-send',
+          request: { url: '/charge', token: '[REDACTED]' },
+          requestType: 'AxiosHttp',
+        },
+      ]);
+    });
+
+    test('a stub on a type that declares nothing lets its connection through the gate', async () => {
+      const session = registerSession();
+      session.stubs.push({
+        connectionType: 'Knex',
+        requestType: 'KnexRaw',
+        answer: [{ total: 3 }],
+      });
+      createInjectedApiContext.mockImplementationOnce((context) => {
+        context.readConfigFile = async () => ({
+          connectionId: 'warehouse',
+          type: 'Knex',
+          properties: { client: 'pg' },
+        });
+      });
+      const context = await createLowdefyContext({ c: createHonoContext({ headers: dataCookie }) });
+      expect((await context.readConfigFile('connections/warehouse.json')).type).toEqual('Knex');
+      expect(await context.connections.Knex.requests.KnexRaw(args)).toEqual([{ total: 3 }]);
+      expect(knexRaw).not.toHaveBeenCalled();
+    });
+
+    test('a fail gate fails a MongoDB request with the forced message before it runs, once', async () => {
+      const session = registerSession();
+      session.failGates.push({
+        requestId: 'charge',
+        endpoint: 'invoice-send',
+        message: 'Write failed on purpose',
+        times: 1,
+        fired: 0,
+      });
+      const context = await createLowdefyContext({ c: createHonoContext({ headers: dataCookie }) });
+      const { MongoDBFind } = context.connections.MongoDBCollection.requests;
+      const error = await MongoDBFind(args).catch((caught) => caught);
+      expect(error.name).toEqual('ServiceError');
+      expect(error.message).toEqual('Write failed on purpose');
+      expect(isForcedFailure(error)).toBe(true);
+      expect(mongoFind).not.toHaveBeenCalled();
+      expect(await MongoDBFind(args)).toEqual(['real row']);
+      expect(session.failGates[0].fired).toEqual(1);
+    });
+
+    test('without a data session the connections are the plugin map, with no stub or gate', async () => {
+      const context = await createLowdefyContext({ c: createHonoContext() });
+      expect(context.connections).toBe(connectionPlugins);
+    });
   });
 
   test('a data session passed by a dev tool call redirects connections and rides the detached hop as a data cookie', async () => {

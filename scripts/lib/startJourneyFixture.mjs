@@ -84,6 +84,9 @@ function startDevServer({ ports, uri }) {
         LOWDEFY_SECRET_FIXTURE_API_KEY: crypto.randomBytes(16).toString('hex'),
         LOWDEFY_SECRET_FIXTURE_AUTH_SECRET: crypto.randomBytes(32).toString('hex'),
         LOWDEFY_SECRET_FIXTURE_DATABASE_URI: uri,
+        // The stand-in a test build gives this secret (@lowdefy/test-utils' createTestSecrets),
+        // so the signatures in the fixture's webhook journey verify on the dev server too.
+        LOWDEFY_SECRET_FIXTURE_WEBHOOK_SECRET: 'test-secret-FIXTURE_WEBHOOK_SECRET',
         LOWDEFY_SERVER_DEV_INTERNAL_PORT: String(ports.internal),
         LOWDEFY_SERVER_DEV_STRICT_PORT: 'true',
       },

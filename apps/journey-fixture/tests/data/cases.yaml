@@ -1,0 +1,8 @@
+# The data set the case-table journey runs on (tests/journeys/_headless/cases.yaml): one
+# activity from another source, so each row's count shows it saw only its own write. Change it
+# only together with that journey.
+fixtures:
+  fixture_db:
+    - { _id: A-0, kind: activity, source: seed }
+users:
+  member: { id: u_cases_member, roles: [] }

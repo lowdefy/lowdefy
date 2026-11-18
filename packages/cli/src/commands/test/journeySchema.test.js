@@ -116,7 +116,7 @@ test('journeySchema rejects an unknown step key', () => {
   const result = validateJourney({ journey });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Unknown journey step key. Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Unknown journey step key. Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
@@ -462,7 +462,7 @@ test('journeySchema refuses a journey with no pageId at the first step that need
   ).toEqual({
     valid: false,
     message:
-      'Journey should have required property "pageId": step 2 (click "cancel_button") needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request) or db.',
+      'Journey should have required property "pageId": step 2 (click "cancel_button") needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
   });
   expect(
     validateJourney({
@@ -482,5 +482,134 @@ test('journeySchema refuses a journey with no pageId at the first step that need
         steps: [{ wait: { state: 'loaded' } }, { expect: { status: 200 } }],
       },
     }).message
-  ).toContain('Step 1: Step "expect.status" must follow a "call" or "request" step');
+  ).toContain(
+    'Step 1: Step "expect.status" must follow a "call", "request", "release" or "webhook" step'
+  );
+});
+
+test('validateJourney accepts stubs, each an answer or a forced failure', () => {
+  expect(
+    validateJourney({
+      journey: {
+        ...minimalJourney,
+        data: 'finance-runs',
+        stubs: [
+          { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { data: 'pdf' } },
+          { requestId: 'update_run_lines', endpoint: 'billing-run-approve', fail: 'Write failed' },
+        ],
+      },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('validateJourney refuses a stub entry the stub grammar refuses, naming its place', () => {
+  expect(
+    validateJourney({
+      journey: {
+        ...minimalJourney,
+        data: 'finance-runs',
+        stubs: [
+          { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: null },
+          { requestId: 'save', fail: 'x', when: 'later' },
+        ],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey "stubs[1]": A forced failure stub does not take "when". It takes requestId, endpoint, pageId, fail, times.',
+  });
+  expect(validateJourney({ journey: { ...minimalJourney, stubs: { fail: 'x' } } })).toEqual({
+    valid: false,
+    message: 'Journey "stubs" should be a list of answer and forced failure stubs.',
+  });
+});
+
+test('validateJourney refuses stubs on a journey with no data set', () => {
+  expect(
+    validateJourney({
+      journey: { ...minimalJourney, stubs: [{ requestId: 'save', fail: 'Down' }] },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey "stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".',
+  });
+});
+
+test('validateJourney refuses hold and expect.sunk on a journey with no data set', () => {
+  const pageLess = { name: 'races the claim' };
+  expect(
+    validateJourney({
+      journey: {
+        ...pageLess,
+        steps: [{ hold: { requestId: 'claim_run' } }, { call: { endpoint: 'approve_run' } }],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Step 0: "hold" needs a data set: its gate lives on the journey\'s data session. Give the journey a "data".',
+  });
+  expect(
+    validateJourney({ journey: { ...pageLess, steps: [{ expect: { sunk: { count: 0 } } }] } })
+  ).toEqual({
+    valid: false,
+    message:
+      'Step 0: expect.sunk needs a data set: it reads the requests the journey\'s data session recorded. Give the journey a "data".',
+  });
+  expect(
+    validateJourney({
+      journey: { ...pageLess, data: 'races', steps: [{ expect: { sunk: { count: 0 } } }] },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('validateJourney refuses a _case in a journey with no cases, and one a row fills in', () => {
+  expect(
+    validateJourney({
+      journey: {
+        name: 'calls the endpoint',
+        steps: [{ call: { endpoint: 'ping', payload: { id: { _case: 'id' } } } }],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey "steps[0].call.payload.id" is a _case placeholder, {"_case":"id"}, with no case row to fill it in: _case reads a key of a row of the journey\'s "cases" table.',
+  });
+  expect(
+    validateJourney({
+      journey: {
+        name: 'calls the endpoint',
+        cases: [{ name: 'nested', payload: { id: { _case: 'id' } } }],
+        steps: [{ call: { endpoint: 'ping', payload: { _case: 'payload' } } }],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey case "nested": Journey "steps[0].call.payload.id" is a _case placeholder, {"_case":"id"}, with no case row to fill it in: _case reads a key of a row of the journey\'s "cases" table.',
+  });
+});
+
+test('validateJourney accepts a case table and validates each run after its row is filled in', () => {
+  const journey = {
+    name: 'opens each page',
+    pageId: { _case: 'page' },
+    cases: [
+      { name: 'orders', page: 'orders' },
+      { name: 'refunds', page: 'refunds' },
+    ],
+    steps: [{ click: 'submit' }],
+  };
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+  expect(
+    validateJourney({
+      journey: { ...journey, cases: [...journey.cases, { name: 'bad', page: 3 }] },
+    })
+  ).toEqual({
+    valid: false,
+    message: 'Journey case "bad": Journey "pageId" should be a string.',
+  });
 });

@@ -1,7 +1,17 @@
-An **endpoint test** runs your app's built API endpoints and page requests in a Node test, as a named user, on an in-memory MongoDB, and reads the database back. It needs a build of the app and nothing else: no server, no browser and no port. Use it for what a [journey](/config-tests) cannot say: table-driven cases, computed expected values, fixtures built in code, stubbed services, race tests and cron or internal routines. A single call and its result, such as a role refused or a write stored, is a journey that needs no browser.
+An **endpoint test** is a Node test on `@lowdefy/test-utils`: it runs your app's built API endpoints and page requests as a named user, on an in-memory MongoDB, and reads the database back. It needs a build of the app and nothing else: no server, no browser and no port.
+
+It is the escape hatch. Endpoint and server logic is a [page-less journey](/config-tests#page-less-journeys): data scope, case tables, outside answers and forced failures, races, cron and internal endpoints, and webhooks all have a journey form. Write an endpoint test only for what a journey cannot say:
+
+- a value computed in code, where a journey would write it into a [case row](/config-tests#case-tables),
+- an outside answer computed from the request, where a journey's [stub](/config-tests#stubs-and-forced-failures) answers as written,
+- thousands of rows or payloads generated in code, property-based tests and scale runs,
+- a check that reads below the routine's own connections, or a clock a journey cannot set.
+
+Each test file says at its top why a journey can't express it:
 
 ```js
 // tests/endpoints/activity.test.mjs
+// Why not a journey: the sources are generated in code, and a stub answers from the request.
 import assert from 'node:assert/strict';
 import { after, before, beforeEach, test } from 'node:test';
 import { openTestApp } from '@lowdefy/test-utils';
@@ -15,13 +25,15 @@ before(async () => {
 beforeEach(() => session.reset());
 after(() => app.close());
 
-test('a member logs activity', async () => {
-  const answer = await session.as('member').call('log_activity', { source: 'import' });
-  assert.equal(answer.status, 200);
-  assert.deepEqual(answer.response, { logged: true });
+test('every one of 100 generated sources is logged once', async () => {
+  const sources = Array.from({ length: 100 }, (_, index) => `source-${index}`);
+  for (const source of sources) {
+    const answer = await session.as('member').call('log_activity', { source });
+    assert.equal(answer.status, 200);
+  }
 
-  const logged = await session.collection('fixture_db').findOne({ kind: 'activity' });
-  assert.equal(logged.source, 'import');
+  const logged = await session.collection('fixture_db').distinct('source', { kind: 'activity' });
+  assert.deepEqual(logged.sort(), sources.sort());
 });
 ```
 
@@ -54,17 +66,6 @@ fixtures:
 users:
   member: { id: u_member, roles: [member] }
 ```
-
-## Which test for which check
-
-| Check                                                                     | Test                                                                     |
-| ------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| A page's logic and state, what a control writes                           | A [journey](/config-tests) that targets blocks by `blockId`, headless    |
-| What a page would never send: another tenant's ids, wrong types           | A journey with no `pageId`, using `call` or `request` steps              |
-| Table-driven cases, stubbed services, races, cron and internal routines   | An endpoint test                                                         |
-| Who can reach which page and endpoint                                     | [The access table](/access-table), `tests/access.yaml` for the whole app |
-| What a page shows, how it reacts, paths across pages, sign-up and sign-in | A [journey](/config-tests) in the browser                                |
-| Custom browser code against a production build                            | [e2e testing](/e2e-introduction)                                         |
 
 ## Setting up
 
@@ -123,22 +124,27 @@ It returns the app:
 
 A session is a set of fresh in-memory databases, one for each database your connections name, loaded with the data set `tests/data/<data>.yaml`. Leave `data` out for empty databases.
 
+Calling, failing, stubbing and holding have a journey form: `call` and `request` steps, `as: system`, `webhook`, `stubs` and `hold`. Use them from code only in a test that is code for another reason.
+
 Open one session per file and call `session.reset()` before each test. Resetting is several times cheaper than opening a new session. Each test file has databases of its own, so files never see each other's writes.
 
-| Call                                                   | Description                                                                                                                                                     |
-| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `session.as(user)`                                     | A caller. `user` is the name of a user in the data set, a user object such as `{ id: 'u1', roles: ['admin'] }`, or `'none'` for a signed out caller.            |
-| `session.as(user).call(endpointId, payload)`           | Calls an API endpoint.                                                                                                                                          |
-| `session.as(user).request(pageId, requestId, payload)` | Calls a page request.                                                                                                                                           |
-| `session.as(user).page(path)`                          | What the page route decides for a path.                                                                                                                         |
-| `session.system().call(endpointId, payload)`           | Calls an endpoint as a scheduled or detached run does: no user, the endpoint's `auth` is not checked, and an `InternalApi` endpoint can be called.              |
-| `session.collection(connectionId)`                     | The MongoDB driver's collection behind a `MongoDBCollection` connection. It reads what is stored, past the tenant wall.                                         |
-| `session.seed(connectionId, docs)`                     | Inserts documents as given, for what a test builds on top of its data set.                                                                                      |
-| `session.sunk`                                         | The requests to outside services, in order. See [Outside services](#outside-services).                                                                          |
-| `session.stub(connectionType, requestType, fn)`        | Answers a request type with a function of the test's own.                                                                                                       |
-| `session.pauseBefore(stepId)`                          | Holds a routine before a request step, for a test of two calls that race.                                                                                       |
-| `session.settled()`                                    | Waits for background work, such as the routine of an `async: true` endpoint. A server answers before that work ends, so wait here before reading what it wrote. |
-| `session.reset()`                                      | Puts the databases back to the data set, empties `sunk` and releases held routines. Stubs stay.                                                                 |
+| Call                                                            | Description                                                                                                                                                                         |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `session.as(user)`                                              | A caller. `user` is the name of a user in the data set, a user object such as `{ id: 'u1', roles: ['admin'] }`, or `'none'` for a signed out caller.                                |
+| `session.as(user).call(endpointId, payload)`                    | Calls an API endpoint.                                                                                                                                                              |
+| `session.as(user).request(pageId, requestId, payload)`          | Calls a page request.                                                                                                                                                               |
+| `session.as(user).page(path)`                                   | What the page route decides for a path.                                                                                                                                             |
+| `session.system().call(endpointId, payload)`                    | Calls an endpoint as a scheduled or detached run does: no user, the endpoint's `auth` is not checked, and an `InternalApi` endpoint can be called.                                  |
+| `session.collection(connectionId)`                              | The MongoDB driver's collection behind a `MongoDBCollection` connection. It reads what is stored, past the tenant wall.                                                             |
+| `session.seed(connectionId, docs)`                              | Inserts documents as given, for what a test builds on top of its data set.                                                                                                          |
+| `session.sunk`                                                  | The requests to outside services, in order. See [Outside services](#outside-services).                                                                                              |
+| `session.webhook(endpointId, { body, query, headers })`         | Posts to a `webhook` endpoint as its sender does, so its `verify` gate runs. `body` is sent as raw text: a string as written, anything else as JSON.                                |
+| `session.stub(connectionType, requestType, fn)`                 | Answers a request type with a function of the test's own.                                                                                                                           |
+| `session.fail({ requestId, endpoint, pageId, message, times })` | Makes the next matching request throw with `message` before it runs, on any connection. `times` fails the next n, or `'all'`.                                                       |
+| `session.unfiredFailGates()`                                    | The fail gates no request has reached yet, as `{ requestId, endpoint, pageId, message, times }`.                                                                                    |
+| `session.pauseBefore(stepId)`                                   | Holds a routine before a request step, for a test of two calls that race.                                                                                                           |
+| `session.settled()`                                             | Waits for background work, such as the routine of an `async: true` endpoint. A server answers before that work ends, so wait here before reading what it wrote.                     |
+| `session.reset()`                                               | Puts the databases back to the data set, empties `sunk` and the fail gates, and releases held routines. Stubs stay. Throws, after resetting, naming any fail gate that never fired. |
 
 The examples below go in the same file as the first test, so they share its `app` and `session`.
 
@@ -168,27 +174,6 @@ test('a failing routine names the config line that failed', async () => {
 ```
 
 Payloads and answers pass through the serializer and JSON, as they do between a browser and a server, so a date in a payload arrives as a date.
-
-### Permissions
-
-Call the same endpoint as each kind of caller. A refused call is an answer, not an exception:
-
-```js
-test('only an auditor reaches auditor_only', async () => {
-  const refused = await session.as('member').call('auditor_only');
-  assert.equal(refused.status, 403);
-  assert.equal(refused.error.name, 'AuthorizationError');
-
-  const signedOut = await session.as('none').call('auditor_only');
-  assert.equal(signedOut.status, 401);
-
-  const auditor = { id: 'u_auditor', roles: ['auditor'] };
-  const admitted = await session.as(auditor).call('auditor_only');
-  assert.deepEqual(admitted.response, { admitted: true });
-});
-```
-
-For every page and endpoint at once, use [the access table](/access-table), not an endpoint test.
 
 ### Page requests
 
@@ -247,7 +232,7 @@ test('the hook is recorded, not sent', async () => {
 });
 ```
 
-`null` breaks a routine that reads the answer. `session.stub(connectionType, requestType, fn)` gives the answer instead. `fn` is called with the record `sunk` holds, and what it returns is the request's response. What it throws is the request's failure.
+`null` breaks a routine that reads the answer. A journey's `stubs` answer as written; `session.stub(connectionType, requestType, fn)` computes the answer from the request. `fn` is called with the record `sunk` holds, and what it returns is the request's response. What it throws is the request's failure.
 
 ```js
 test('a stub answers for the outside service', async () => {
@@ -270,7 +255,7 @@ Real secrets are never read. When the app opens, `LOWDEFY_SECRET_*` and `CRON_SE
 
 ### System runs and races
 
-`session.system().call` runs an endpoint that no user calls, such as a scheduled routine or an `InternalApi` endpoint. It waits for the routine and answers its result:
+A journey runs these with `call` `as: system` and with `hold` and `release`. In code, `session.system().call` runs an endpoint that no user calls, such as a scheduled routine or an `InternalApi` endpoint. It waits for the routine and answers its result:
 
 ```js
 test('the detached log writes as the system', async () => {

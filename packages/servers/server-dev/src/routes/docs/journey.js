@@ -15,9 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { validateJourneySteps } from '@lowdefy/node-utils';
+import { validateJourneyStubs, validateJourneySteps } from '@lowdefy/node-utils';
 
 import describePageNeed from '../../../lib/docs/describePageNeed.js';
+import findSentPlaceholder from '../../../lib/docs/findSentPlaceholder.js';
 import getBuildId from '../../../lib/docs/getBuildId.js';
 import lowdefyConfig from '../../../lib/build/config.js';
 import { openMutantRun } from '../../../lib/server/mutants/mutantRuns.js';
@@ -38,6 +39,18 @@ async function docsJourneyHandler(c) {
   const body = await c.req.json().catch(() => ({}));
   const { pathParams, steps, urlQuery, state, timeout } = body;
   const pageId = body.pageId ?? undefined;
+  const placeholderError = findSentPlaceholder({
+    data: body.data,
+    pageId,
+    pathParams,
+    steps,
+    stubs: body.stubs,
+    urlQuery,
+    user: body.user,
+  });
+  if (placeholderError) {
+    return c.json({ error: placeholderError }, 400);
+  }
   if (!type.isUndefined(pageId) && !type.isString(pageId)) {
     return c.json(
       {
@@ -97,6 +110,10 @@ async function docsJourneyHandler(c) {
       },
       400
     );
+  }
+  const { error: stubsError } = validateJourneyStubs({ stubs: body.stubs });
+  if (stubsError) {
+    return c.json({ error: stubsError }, 400);
   }
   // One POST is one run. A journey with a list of users runs once per user:
   // lowdefy test and lowdefy_run_journey expand the list, posting or running
@@ -187,6 +204,7 @@ async function docsJourneyHandler(c) {
       basePath: lowdefyConfig.basePath ?? '',
       mutantCookie: mutantRun?.cookiePayload,
       data: body.data,
+      stubs: body.stubs,
       by: 'test',
       // Journeys posted here come from `lowdefy test` and lowdefy_run_tests.
       recording: type.isNone(body.recording)

@@ -62,3 +62,26 @@ test('createFaultSink does not look up a location for an internal Lowdefy error'
   expect(faults).toEqual([fault]);
   expect(context.readConfigFile).not.toHaveBeenCalled();
 });
+
+test('createFaultSink records a forced failure on the data session by the call, and lists no fault', async () => {
+  const context = { ...createContext(), rid: 'rid-1' };
+  const faults = [];
+  const session = { forced: [] };
+  const forced = errors.markForcedFailure(new errors.ServiceError('Write failed on purpose'));
+  await createFaultSink({ context, faults, session, testApp })(forced);
+  expect(faults).toEqual([]);
+  expect(forced.handled).toBe(true);
+  expect(session.forced).toEqual([{ rid: 'rid-1', message: 'Write failed on purpose' }]);
+  expect(context.readConfigFile).not.toHaveBeenCalled();
+});
+
+test('createFaultSink lists a plain error that carries forced: true as a fault', async () => {
+  const context = { ...createContext(), rid: 'rid-1' };
+  const faults = [];
+  const session = { forced: [] };
+  const fault = new errors.ServiceError('Upstream timed out');
+  fault.forced = true;
+  await createFaultSink({ context, faults, session, testApp })(fault);
+  expect(faults).toEqual([fault]);
+  expect(session.forced).toEqual([]);
+});

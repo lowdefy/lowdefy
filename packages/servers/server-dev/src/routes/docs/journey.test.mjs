@@ -128,7 +128,7 @@ test('docsJourneyHandler returns 400 naming an unknown step', async () => {
 
   expect(result.status).toBe(400);
   expect(result.data.error).toEqual(
-    'Step 0: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Step 0: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
@@ -180,6 +180,64 @@ test('docsJourneyHandler refuses a list of users with 400: one POST is one run',
   expect(result.status).toBe(400);
   expect(result.data.error).toBe(
     'POST /lowdefy-docs/journey runs one user. For a list of data set users, post once per user, or use lowdefy test or lowdefy_run_journey, which run the journey once as each. Received ["admin","member"].'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler passes the journey stubs to the runner with its data set', async () => {
+  const stubs = [
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+    { requestId: 'save_price', fail: 'Write failed on purpose', times: 'all' },
+  ];
+  const c = createContext({
+    steps: [{ call: { endpoint: 'price_run' } }],
+    data: 'stubs',
+    user: 'finance',
+    stubs,
+  });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(200);
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ data: 'stubs', stubs }));
+});
+
+test('docsJourneyHandler answers 400 for a _case or _ref left in the posted journey', async () => {
+  const placeholder = await docsJourneyHandler(
+    createContext({
+      data: 'scope',
+      user: { _case: 'user' },
+      steps: [{ call: { endpoint: 'tickets-add-comment' } }],
+    })
+  );
+  expect(placeholder.status).toBe(400);
+  expect(placeholder.data.error).toBe(
+    'Journey "user" is a _case placeholder, {"_case":"user"}, with no case row to fill it in: _case reads a key of a row of the journey\'s "cases" table. A journey sent here takes literal values: a journey file with cases or _ref runs through lowdefy test (lowdefy_run_tests), which reads them.'
+  );
+  const ref = await docsJourneyHandler(
+    createContext({
+      data: 'scope',
+      steps: [{ call: { endpoint: 'ping' } }, { _ref: 'tests/shared/steps/check.yaml' }],
+    })
+  );
+  expect(ref.status).toBe(400);
+  expect(ref.data.error).toMatch(
+    /^Journey "steps\[1\]" is a _ref, \{"_ref":"tests\/shared\/steps\/check.yaml"\}, that was not read/
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler answers 400 with the message for a bad stub', async () => {
+  const badStub = await docsJourneyHandler(
+    createContext({
+      steps: [{ call: { endpoint: 'price_run' } }],
+      data: 'stubs',
+      stubs: [{ requestId: 'save_price', fail: 'Down', times: 0 }],
+    })
+  );
+  expect(badStub.status).toBe(400);
+  expect(badStub.data.error).toBe(
+    'Journey "stubs[0]": Journey stub "times" should be a whole number above 0 or "all". Received 0.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });

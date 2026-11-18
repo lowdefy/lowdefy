@@ -17,7 +17,7 @@
 import { type } from '@lowdefy/helpers';
 import { findPlaceholderStep } from '@lowdefy/node-utils';
 
-import validateJourney from './validateJourney.js';
+import validateJourneyItem from './validateJourneyItem.js';
 
 // The result for a discovered journey no runner can take, or undefined when it can run: a file
 // that did not parse, a journey the schema or grammar refuses, or a placeholder step. Refused
@@ -36,11 +36,7 @@ function checkJourneyItem({ item }) {
       message: item.error,
     };
   }
-  // A persona run is named `<name> [<user>]`; the name limit applies to the
-  // name as authored, which expandPersonas validated, never to the run name.
-  const validation = validateJourney({
-    journey: type.isNone(item.personaOf) ? journey : { ...journey, name: item.personaOf.name },
-  });
+  const validation = validateJourneyItem({ item });
   if (!validation.valid) {
     return {
       name,

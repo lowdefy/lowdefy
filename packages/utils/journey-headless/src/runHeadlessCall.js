@@ -17,12 +17,24 @@
 import { type } from '@lowdefy/helpers';
 
 import readAnswerError from './readAnswerError.js';
+import readForcedError from './readForcedError.js';
+
+// The answer of the call the caller makes: a call `as: system` runs the endpoint as the system does
+// (host.system), anything else as the caller's user (host.call).
+function callAs({ call, caller, host, payload }) {
+  if (caller.system === true) {
+    return host.system({ endpointId: call.endpointId, payload });
+  }
+  return host.call({ ...call, payload, user: caller.user });
+}
 
 // Runs a call or request step: the payload as it is given goes to the host's in-process call, as
 // the browser runner posts it to the route, as the step's `as` (actors.callerFor) or the current
 // actor. A refusal or an error is the answer, not a failure of the step: expect.status and
 // expect.error read it from the answer this returns ({ description, status, error }). The call is
-// recorded on the caller, for expect.calls, and the server's faults go to the error sink.
+// recorded on the caller, for expect.calls, and the server's faults go to the error sink. A call a
+// fail gate failed answers with the forced message (readForcedError), not the generic one the
+// client sees.
 async function runHeadlessCall({ actors, host, step }) {
   const isCall = !type.isUndefined(step.call);
   const params = isCall ? step.call : step.request;
@@ -31,7 +43,7 @@ async function runHeadlessCall({ actors, host, step }) {
   const call = isCall
     ? { endpointId: params.endpoint, kind: 'endpoint' }
     : { kind: 'request', pageId: params.pageId, requestId: params.requestId };
-  const answer = await host.call({ ...call, payload, user: caller.user });
+  const answer = await callAs({ call, caller, host, payload });
   answer.faults.forEach((fault) => host.errorSink.add({ call, error: fault, source: 'server' }));
   caller.calls.push({
     ...call,
@@ -45,7 +57,9 @@ async function runHeadlessCall({ actors, host, step }) {
     description: isCall
       ? `endpoint "${params.endpoint}"`
       : `request "${params.requestId}" on page "${params.pageId}"`,
-    error: readAnswerError({ body: answer.body, status: answer.status }),
+    error:
+      readForcedError({ body: answer.body, session: host.dataSession }) ??
+      readAnswerError({ body: answer.body, status: answer.status }),
     status: answer.status,
   };
 }

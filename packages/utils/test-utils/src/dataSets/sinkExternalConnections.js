@@ -16,6 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
+import describeSunkRequest from './describeSunkRequest.js';
+
 // The loopback hosts the dev server's own mail capture listens on (LOWDEFY_DEV_SMTP_PORT).
 const LOOPBACK_HOSTS = new Set(['127.0.0.1', 'localhost', '::1']);
 
@@ -26,23 +28,6 @@ function isDevMailCapture({ connectionType, connection }) {
   const port = process.env.LOWDEFY_DEV_SMTP_PORT;
   if (connectionType !== 'SMTP' || type.isNone(port)) return false;
   return LOOPBACK_HOSTS.has(connection?.host) && String(connection?.port) === String(port);
-}
-
-// What a sunk request carries: where it was aimed and what it asked for, never the connection's
-// properties, which hold its credentials. Request properties are evaluated app config and
-// payload; secrets are scrubbed.
-function describeSunkRequest({ context, args, connectionType }) {
-  const scrub = context.scrubSecrets ?? ((value) => value);
-  return {
-    connectionId: args.connectionId,
-    connectionType,
-    requestId: args.requestId,
-    pageId: args.pageId ?? null,
-    endpointId: args.endpointId ?? null,
-    request: type.isUndefined(args.request)
-      ? null
-      : JSON.parse(scrub(JSON.stringify(args.request))),
-  };
 }
 
 // The plugin connection map for a data session's requests. A connection type that declares
@@ -79,10 +64,7 @@ function sinkExternalConnections({ context, connections, session }) {
         if (isDevMailCapture({ connectionType, connection: args.connection })) {
           return resolver(args);
         }
-        session.sunk.push({
-          ...describeSunkRequest({ context, args, connectionType }),
-          requestType,
-        });
+        session.sunk.push(describeSunkRequest({ args, connectionType, context, requestType }));
         return null;
       };
       sunkRequests[requestType] = Object.assign(sink, resolver);

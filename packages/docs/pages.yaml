@@ -88,12 +88,7 @@
 - _ref: testing/endpoint-tests.yaml
 - _ref: testing/access-table.yaml
 - _ref: testing/explore-pull-request.yaml
-- _ref: testing/e2e-introduction.yaml
-- _ref: testing/e2e-getting-started.yaml
-- _ref: testing/e2e-writing-tests.yaml
-- _ref: testing/e2e-mocking.yaml
-- _ref: testing/e2e-auth.yaml
-- _ref: testing/e2e-configuration.yaml
+- _ref: testing/e2e-utils-migration.yaml
 
 - _ref: blocks/input/InputGallery.yaml
 - _ref: blocks/input/AutoComplete.yaml
