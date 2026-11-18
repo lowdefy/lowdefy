@@ -41,6 +41,8 @@ function splitSelection({ entries }) {
 }
 
 // What a run function that threw stands for: that journey failed, and the rest of the run goes on.
+// The error's stack is kept, since a throw there is a bug in the runner rather than in the journey:
+// results.json holds it, and formatJourneyResult prints it once per run.
 function thrownResult({ entry, error }) {
   const { item, usage } = entry;
   const message = `The journey run failed with an error: ${error?.message ?? String(error)}`;
@@ -58,6 +60,7 @@ function thrownResult({ entry, error }) {
     stepCount: item.journey?.steps?.length ?? 0,
     durationMs: 0,
     message,
+    ...(type.isString(error?.stack) ? { stack: error.stack } : {}),
     usage,
   };
 }

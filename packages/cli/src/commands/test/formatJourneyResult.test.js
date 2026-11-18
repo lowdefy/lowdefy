@@ -87,6 +87,35 @@ test('formatJourneyResult prints the message when a journey failed without a ste
   ]);
 });
 
+test('formatJourneyResult prints the stack of a run that threw once across the run', () => {
+  const stack =
+    'TypeError: x is undefined\n    at runJourney (runJourney.js:10:5)\n    at run (test.js:4:2)';
+  const result = (name) => ({
+    name,
+    filePath: `/app/tests/journeys/${name}.yaml`,
+    passed: false,
+    repeat: 1,
+    message: 'The journey run failed with an error: x is undefined',
+    stack,
+  });
+  const seen = new Set();
+  expect(formatJourneyResult({ result: result('a'), seen })).toEqual([
+    'FAIL  a',
+    '      file: /app/tests/journeys/a.yaml',
+    '      The journey run failed with an error: x is undefined',
+    '      stack:',
+    '        TypeError: x is undefined',
+    '        at runJourney (runJourney.js:10:5)',
+    '        at run (test.js:4:2)',
+  ]);
+  expect(formatJourneyResult({ result: result('b'), seen })).toEqual([
+    'FAIL  b',
+    '      file: /app/tests/journeys/b.yaml',
+    '      The journey run failed with an error: x is undefined',
+    '      stack: as printed above',
+  ]);
+});
+
 test('formatJourneyResult prints the data set line once across several journeys on one data set', () => {
   const seen = new Set();
   const data = { name: 'sample', loadMs: 900, documents: 41212 };

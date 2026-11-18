@@ -110,6 +110,20 @@ function contendedLines({ result }) {
   ];
 }
 
+// The stack of a run function that threw (runJourneyPool), printed once per run: the same bug
+// failing every journey prints one stack, under the first of them.
+function stackLines({ result, seen }) {
+  if (!type.isString(result.stack)) {
+    return [];
+  }
+  const key = `stack:${result.stack}`;
+  if (seen.has(key)) {
+    return ['      stack: as printed above'];
+  }
+  seen.add(key);
+  return ['      stack:', ...result.stack.split('\n').map((line) => `        ${line.trim()}`)];
+}
+
 function formatSingle({ result, seen }) {
   if (result.passed) {
     return [
@@ -127,6 +141,7 @@ function formatSingle({ result, seen }) {
     ...formatJourneyDataSet({ result, seen }),
     `      file: ${result.filePath}`,
     ...failureLines({ failure: result.failure, message: result.message }),
+    ...stackLines({ result, seen }),
   ];
 }
 
@@ -174,8 +189,9 @@ function formatRepeated({ result, seen }) {
 // failure of a journey that passed only when rerun alone), or a FAIL
 // line followed by an indented explanation of what went wrong. Replayed
 // (--repeat above 1), the class - PASS, FLAKY or FAIL - with the runs that
-// passed, and each failing run's step. A data set and its warnings are
-// printed once per run: `seen` is shared across the run's results.
+// passed, and each failing run's step. A data set and its warnings, and the
+// stack of a run function that threw, are printed once per run: `seen` is
+// shared across the run's results.
 function formatJourneyResult({ result, seen = new Set() }) {
   if ((result.repeat ?? 1) === 1 || result.refused === true) {
     return formatSingle({ result, seen });

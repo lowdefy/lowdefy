@@ -166,6 +166,31 @@ test('runJourneyPool fails the item whose run throws and runs the rest', async (
   });
 });
 
+test('runJourneyPool keeps the stack of a run that throws', async () => {
+  const error = new Error('cannot read properties of undefined');
+  const [result] = await runJourneyPool({
+    entries: [entry({ name: 'a' })],
+    readLimit: () => 1,
+    run: async () => {
+      throw error;
+    },
+  });
+  expect(result.stack).toBe(error.stack);
+  expect(result.stack).toContain('runJourneyPool.test.js');
+});
+
+test('runJourneyPool leaves the stack out when what was thrown has none', async () => {
+  const [result] = await runJourneyPool({
+    entries: [entry({ name: 'a' })],
+    readLimit: () => 1,
+    run: async () => {
+      throw 'closed';
+    },
+  });
+  expect(result.message).toBe('The journey run failed with an error: closed');
+  expect(result).not.toHaveProperty('stack');
+});
+
 test('runJourneyPool calls onFinished as each journey finishes and onReported in run order', async () => {
   const runner = controlledRun();
   const entries = [
