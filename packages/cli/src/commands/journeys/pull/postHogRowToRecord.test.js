@@ -146,6 +146,7 @@ test('postHogRowToRecord builds an enriched click target from lowdefy properties
     block_type: 'Button',
     row: null,
     column: null,
+    control: null,
     text_token: tokenText({ salt, text: 'Review' }),
     nth: null,
     option: false,
@@ -163,6 +164,7 @@ test('postHogRowToRecord reads a chain-only click target with no block type', ()
     block_type: null,
     row: null,
     column: null,
+    control: null,
     text_token: tokenText({ salt, text: 'Review' }),
     nth: null,
     option: false,
@@ -170,6 +172,51 @@ test('postHogRowToRecord reads a chain-only click target with no block type', ()
   expect(result.blockIds).toEqual(['groups.2.rows.0.review_button', 'groups.2.rows', 'groups']);
   expect(result.chainFallback).toBe(true);
   expect(JSON.stringify(result.record)).not.toContain('bl-');
+});
+
+test('postHogRowToRecord reads a marked control from lowdefy_control, with no text token', () => {
+  const { record } = map({
+    eventType: 'click',
+    elText: 'Pay',
+    lowdefy_block_id: 'invoices',
+    lowdefy_block_ids: '["invoices"]',
+    lowdefy_block_type: 'AgGridAlpine',
+    lowdefy_row: 1,
+    lowdefy_column: 'actions',
+    lowdefy_control: 'onPay',
+  });
+  expect(record.target).toEqual({
+    block_id: 'invoices',
+    block_type: 'AgGridAlpine',
+    row: 1,
+    column: 'actions',
+    control: 'onPay',
+    text_token: null,
+    nth: null,
+    option: false,
+  });
+  expect(record.target).not.toHaveProperty('row_key');
+  expect(validateTraceRecord({ record })).toEqual({});
+});
+
+test('postHogRowToRecord reads a marked control from a masked chain, with no row key', () => {
+  const { record, chainFallback } = map({
+    eventType: 'click',
+    elText: 'OK',
+    elementsChain: chains.modalOk,
+  });
+  expect(chainFallback).toBe(true);
+  expect(record.target).toEqual({
+    block_id: 'delete_modal',
+    block_type: null,
+    row: null,
+    column: null,
+    control: 'ok',
+    text_token: null,
+    nth: null,
+    option: false,
+  });
+  expect(validateTraceRecord({ record })).toEqual({});
 });
 
 test('postHogRowToRecord keeps a portal dropdown item by its text token', () => {

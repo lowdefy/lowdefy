@@ -23,7 +23,8 @@ import postHogState from './postHogState.js';
 const AUTOCAPTURE_EVENTS = ['$autocapture', '$rageclick', '$dead_click'];
 
 // The lowdefy_* properties of a described target. Null, false and empty values are left out, so
-// an event only carries what it says. `lowdefy_text` is the text of the control the click reached
+// an event only carries what it says. `lowdefy_control` is the key of the marked control the
+// click reached (a modal's `ok`, a menu item's key), a config name; such a click has no text. `lowdefy_text` is the text of the control the click reached
 // (the button, menu item, option or label), as the dev recorder reads it; `$el_text` is only the
 // clicked element's, which a click on a wrapper or a child leaves empty or different. It is a
 // text property, so maskEventText removes it like `$el_text` when it is not config text.
@@ -34,6 +35,7 @@ function targetProperties(target) {
     lowdefy_block_type: target.block_type,
     lowdefy_row: target.row,
     lowdefy_column: target.column,
+    lowdefy_control: target.control,
     lowdefy_block_ids: target.block_ids,
     lowdefy_option: target.option,
     lowdefy_text: target.text,

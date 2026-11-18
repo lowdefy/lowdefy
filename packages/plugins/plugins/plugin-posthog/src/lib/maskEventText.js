@@ -21,10 +21,14 @@ const { blockWrapperPrefix } = journeyTargetSelectors;
 // Chain keys that only describe structure and stay as they are. Any other attribute goes, so an
 // attribute posthog-js or a block adds later cannot carry data out. Classes stay: the classes
 // Lowdefy and antd render carry no runtime keys, so a block's `class` must not be built from data.
+// A marked control's block id and control key (data-lf-block, data-lf-control) are config names,
+// so they stay; its row key (data-lf-row-key) can be the app's data and goes.
 const CHAIN_STRUCTURAL_KEYS = new Set([
   'attr__class',
   'attr__col-id',
   'attr__data-col-key',
+  'attr__data-lf-block',
+  'attr__data-lf-control',
   'attr__data-row-index',
   'attr__role',
   'attr__row-index',
@@ -45,6 +49,8 @@ const ELEMENT_STRUCTURAL_KEYS = new Set([
   'attr__class',
   'attr__col-id',
   'attr__data-col-key',
+  'attr__data-lf-block',
+  'attr__data-lf-control',
   'attr__data-row-index',
   'attr__role',
   'attr__row-index',
@@ -146,7 +152,7 @@ function maskEventText({ event, trace, pageId }) {
       properties: event.properties,
       keepText: (text) => type.isString(text) && trace.isConfigText({ text, pageId }) === true,
     });
-  } catch (error) {
+  } catch {
     maskProperties({ properties: event.properties, keepText: () => false });
   }
   return event;

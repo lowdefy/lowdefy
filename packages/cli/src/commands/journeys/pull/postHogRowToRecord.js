@@ -55,38 +55,57 @@ function pathnameOf({ values }) {
 // it is stored as a salted token, which readers resolve only to config text.
 // The text is the control's (`lowdefy_text`), as the dev recorder reads it;
 // events captured before the plugin sent it fall back to `$el_text`, the
-// clicked element's own text.
+// clicked element's own text. A click on a marked control is its block's
+// control (`lowdefy_control`, or the chain's data-lf-control) with no text,
+// as the dev recorder records it, and no row key, which PostHog never holds.
+function clickTarget({ blockId, blockType, row, column, control, option, textToken }) {
+  const isControl = !type.isNone(control);
+  return {
+    block_id: blockId,
+    block_type: blockType,
+    row,
+    column,
+    control: isControl ? control : null,
+    text_token: isControl ? null : textToken,
+    nth: null,
+    option: isControl ? false : option,
+  };
+}
+
 function resolveTarget({ values, salt }) {
   const textToken = tokenText({ salt, text: values.controlText ?? values.elText });
   if (!type.isNone(values.blockId)) {
     return {
       chainFallback: false,
       blockIds: values.blockIds ?? [values.blockId],
-      target: {
-        block_id: values.blockId,
-        block_type: values.blockType,
+      target: clickTarget({
+        blockId: values.blockId,
+        blockType: values.blockType,
         row: values.row,
         column: values.column,
-        text_token: textToken,
-        nth: null,
+        control: values.control,
         option: values.option,
-      },
+        textToken,
+      }),
     };
   }
-  // Without the journey control marks, as the PostHog enrichment reads it.
-  const chain = targetFromElementsChain(values.elementsChain, { marks: false });
+  // As the PostHog enrichment reads it: control marks, no row key. The masked
+  // chain holds no row key either, so a cell control in a row with a generated
+  // key would read as a control here, but such a click always has its grid's
+  // lowdefy_block_id, so it never falls back to the chain.
+  const chain = targetFromElementsChain(values.elementsChain, { rowKey: false });
   return {
     chainFallback: true,
     blockIds: chain.block_ids,
-    target: {
-      block_id: chain.block_id,
-      block_type: null,
+    target: clickTarget({
+      blockId: chain.block_id,
+      blockType: null,
       row: chain.row,
       column: chain.column,
-      text_token: textToken,
-      nth: null,
+      control: chain.control,
       option: chain.option,
-    },
+      textToken,
+    }),
   };
 }
 
