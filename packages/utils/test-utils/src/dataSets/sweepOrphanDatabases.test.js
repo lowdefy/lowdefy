@@ -15,6 +15,7 @@
 */
 
 import { spawnSync } from 'node:child_process';
+import { threadId } from 'node:worker_threads';
 
 import { afterEach, expect, test, vi } from 'vitest';
 
@@ -83,6 +84,28 @@ test("sweepOrphanDatabases on a per-run store drops this process's own databases
   const { client, dropped } = createClient([`${owned}_0`, orphan]);
   await sweepOrphanDatabases({ client, perRun: true });
   expect(dropped).toEqual([orphan]);
+});
+
+test('sweepOrphanDatabases on a per-run store leaves the databases of another thread of this process, whether or not a session there owns them', async () => {
+  // A test file in another worker thread: its sessions are in that thread's registry, not this one's.
+  const other = `ld_p${process.pid}t${threadId + 1}_aaaaaaaaaaaa_0`;
+  const { client, dropped } = createClient([other]);
+  await sweepOrphanDatabases({ client, perRun: true });
+  expect(dropped).toEqual([]);
+});
+
+test('sweepOrphanDatabases on a per-run store drops the databases of a worker thread of a test process that has exited', async () => {
+  const left = `ld_p${deadPid()}t2_bbbbbbbbbbbb_0`;
+  const { client, dropped } = createClient([left]);
+  await sweepOrphanDatabases({ client, perRun: true });
+  expect(dropped).toEqual([left]);
+});
+
+test("sweepOrphanDatabases without perRun drops a database that carries another thread of this process, as the dev server's store has one thread", async () => {
+  const other = `ld_p${process.pid}t${threadId + 1}_aaaaaaaaaaaa_0`;
+  const { client, dropped } = createClient([other]);
+  await sweepOrphanDatabases({ client });
+  expect(dropped).toEqual([other]);
 });
 
 test("sweepOrphanDatabases without perRun drops a database that carries a running process's pid, as the dev server's store has one process", async () => {
