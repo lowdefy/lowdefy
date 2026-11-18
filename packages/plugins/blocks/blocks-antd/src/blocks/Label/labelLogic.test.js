@@ -34,10 +34,10 @@ test('labelLogic gives a stacked field 16px below it and 8px between label and i
   });
 });
 
-test('labelLogic gives a small stacked field 4px below it and 2px between label and input', () => {
+test('labelLogic gives a small stacked field 2px below it and none between label and input', () => {
   expect(spacing({ title: 'Name', size: 'small' })).toEqual({
-    labelGap: 2,
-    fieldGap: 'var(--lf-field-gap-small, 4px)',
+    labelGap: 0,
+    fieldGap: 'var(--lf-field-gap-small, 2px)',
   });
 });
 

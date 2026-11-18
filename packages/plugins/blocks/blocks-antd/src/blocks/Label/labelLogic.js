@@ -63,13 +63,10 @@ function labelLogic({
   // beside buttons, so they keep none. Containers can tune it with the CSS variables.
   let fieldGap = 0;
   if (showLabel && !properties.inline) {
-    fieldGap = isSmall ? 'var(--lf-field-gap-small, 4px)' : 'var(--lf-field-gap, 16px)';
+    fieldGap = isSmall ? 'var(--lf-field-gap-small, 2px)' : 'var(--lf-field-gap, 16px)';
   }
 
-  let labelGap = 8;
-  if (isSmall) {
-    labelGap = properties.inline ? 0 : 2;
-  }
+  const labelGap = isSmall ? 0 : 8;
 
   const rowClassName = clsx(
     'ant-form-item',

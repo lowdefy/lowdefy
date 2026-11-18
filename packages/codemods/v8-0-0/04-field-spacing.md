@@ -7,15 +7,15 @@
 with a `label` property: TextInput, Selector, DateSelector, Switch and the rest) and to the Label
 block.
 
-| Field                                             | Lowdefy 7                             | Lowdefy 8                 |
-| ------------------------------------------------- | ------------------------------------- | ------------------------- |
-| Label above the input, default and large size     | 0 below the field, 8px label to input | 16px below the field, 8px |
-| Label above the input, `size: small`              | 0 below the field, 0 label to input   | 4px below the field, 2px  |
-| `label.inline: true`                              | 0 below the field                     | 0 below the field (same)  |
-| No label (`label.disabled: true`, or `title: ''`) | 0 below the field                     | 0 below the field (same)  |
+| Field                                             | Lowdefy 7                             | Lowdefy 8                     |
+| ------------------------------------------------- | ------------------------------------- | ----------------------------- |
+| Label above the input, default and large size     | 0 below the field, 8px label to input | 16px below the field, 8px     |
+| Label above the input, `size: small`              | 0 below the field, 0 label to input   | 2px below the field, 0 (same) |
+| `label.inline: true`                              | 0 below the field                     | 0 below the field (same)      |
+| No label (`label.disabled: true`, or `title: ''`) | 0 below the field                     | 0 below the field (same)      |
 
 A container sets the spacing for all the fields inside it with the CSS variables
-`--lf-field-gap` (default 16px) and `--lf-field-gap-small` (default 4px) in its `style`.
+`--lf-field-gap` (default 16px) and `--lf-field-gap-small` (default 2px) in its `style`.
 
 An app that is not migrated **still builds and works**. Containers that spaced their fields with
 `layout.gap` now get the gap plus the field's own space, so their forms look loose: 32px between
@@ -60,8 +60,8 @@ A breakpoint object never holds arrays: `{ xs: [8, 0] }` is invalid and silently
 - **Fields side by side:** keep the horizontal gap and set the vertical gap to 0: `gap: 16`
   becomes `gap: [16, 0]`, `gap: [24, 16]` becomes `gap: [24, 0]`, and `gap: { xs: 8, md: 16 }`
   becomes `gap: [{ xs: 8, md: 16 }, 0]`.
-- **Spacing the app chose on purpose:** fields now carry 16px below them (4px for `size: small`).
-  When the old vertical gap is under 12 or over 24 (for small fields, anything but 0 to 8), keep it
+- **Spacing the app chose on purpose:** fields now carry 16px below them (2px for `size: small`).
+  When the old vertical gap is under 12 or over 24 (for small fields, over 6), keep it
   by setting the variable on the container with the old vertical gap, as well as removing the
   vertical gap: `style: { --lf-field-gap: 8px }`, or `--lf-field-gap-small` for small fields.
 
