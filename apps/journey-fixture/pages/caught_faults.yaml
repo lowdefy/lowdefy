@@ -18,4 +18,4 @@ blocks:
           type: SetState
           params:
             caught:
-              _actions: call_caught_operator.response.caught
+              _api: caught_operator.response.caught
