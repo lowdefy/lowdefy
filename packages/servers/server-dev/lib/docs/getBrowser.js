@@ -16,6 +16,7 @@
 
 import { buildPagePath, type, urlQuery as urlQueryFn } from '@lowdefy/helpers';
 
+import browserCrashError from './browserCrashError.js';
 import lowdefyConfig from '../build/config.js';
 import isPageReady from './isPageReady.js';
 import launchedBrowsers from './launchedBrowsers.js';
@@ -96,8 +97,14 @@ async function openPage({
   }
   // colorScheme is what the page's `prefers-color-scheme` media query reports,
   // so an app following the system theme renders light or dark accordingly.
-  const context = await browser.newContext({ viewport: { width, height }, colorScheme });
-  launchedAs.lifecycle.trackContext(context);
+  const { lifecycle } = launchedAs;
+  let context;
+  try {
+    context = await browser.newContext({ viewport: { width, height }, colorScheme });
+  } catch (error) {
+    throw browserCrashError({ error, browser, lifecycle });
+  }
+  lifecycle.trackContext({ browser, context });
   // The URLs a data set journey's context tried to reach on another host of the dev server. None
   // left the browser; the journey runner fails the step that caused them.
   const leftOrigin = [];
@@ -173,7 +180,12 @@ async function openPage({
         origin,
       }),
     ]);
-    const page = await context.newPage();
+    let page;
+    try {
+      page = await context.newPage();
+    } catch (error) {
+      throw browserCrashError({ error, browser, lifecycle });
+    }
     if (url === null) {
       return { context, page, ready: true, url, leftOrigin };
     }
