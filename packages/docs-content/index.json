@@ -3350,7 +3350,7 @@
         "testing/journey-data-sets.md",
         "testing/journey-data-sets.yaml"
       ],
-      "hash": "075d2fb697a1293bceb4d39cc5c3bb16858b25a6198e6f4c7d52b3301551e3e6"
+      "hash": "accdece2e86295c06aa5cbdfabfaf67ccecfe6750e9c6dbccfcd7eab8829b29c"
     },
     "testing/endpoint-tests": {
       "files": [
@@ -3371,7 +3371,7 @@
         "testing/explore-pull-request.md",
         "testing/explore-pull-request.yaml"
       ],
-      "hash": "1a36582512bc2878bc3240bafe50405d42d79defc567015892a3452dc9bb02b8"
+      "hash": "c97ee14faeeafe1ef3bdf5cbffabccb15dc5a3b0040ed60feb48ccaf1c569502"
     },
     "testing/e2e-utils-migration": {
       "files": [
