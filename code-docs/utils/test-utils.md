@@ -107,15 +107,15 @@ which runs one `@lowdefy/api` call in a context of its own, as a server runs one
 `createCallContext` builds that context with the fields the production server's middleware sets
 (`packages/servers/server/src/middleware/apiContext.js`). What differs:
 
-| Field         | In a test                                                                                                                                                                               |
-| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| caller        | Injected by `createInjectedApiContext`. No auth engine runs, so auth steps fail.                                                                                                        |
-| `connections` | The app's real map, behind the data session's gate and sink (`createSessionConnections`).                                                                                               |
-| `secrets`     | `test-secret-<NAME>` for every secret the build names, with `openTestApp({ secrets })` over them.                                                                                       |
-| `agents`      | Empty, so an agent call fails before it reaches a model provider.                                                                                                                       |
-| origin        | None, and `CRON_SECRET` is gone, so a `detached: true` `CallApi` fails.                                                                                                                 |
-| `waitUntil`   | `trackSessionWork`, which `session.settled()` and `reset()` wait on.                                                                                                                    |
-| `handleError` | `createFaultSink`: lists the fault on the answer's `faults`, with its config `source`, and `caught: true` when a `:catch` of the routine handled it (`runRoutine` passes `{ caught }`). |
+| Field         | In a test                                                                                                                                                                                                                                                      |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| caller        | Injected by `createInjectedApiContext`. No auth engine runs, so auth steps fail.                                                                                                                                                                               |
+| `connections` | The app's real map, behind the data session's gate and sink (`createSessionConnections`).                                                                                                                                                                      |
+| `secrets`     | `test-secret-<NAME>` for every secret the build names, with `openTestApp({ secrets })` over them.                                                                                                                                                              |
+| `agents`      | Empty, so an agent call fails before it reaches a model provider.                                                                                                                                                                                              |
+| origin        | None, and `CRON_SECRET` is gone, so a `detached: true` `CallApi` fails.                                                                                                                                                                                        |
+| `waitUntil`   | `trackSessionWork`, which `session.settled()` and `reset()` wait on.                                                                                                                                                                                           |
+| `handleError` | `createFaultSink`: lists the fault on the answer's `faults`, with its config `source`, and `caught: true` when a `:catch` of the routine handled it without passing it on (`controlTry`'s `settleCaughtFaults` passes `{ caught }` once the `:catch` has run). |
 
 The answer is `{ status, success, response, error, body, faults }`:
 

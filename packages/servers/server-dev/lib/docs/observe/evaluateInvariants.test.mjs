@@ -234,6 +234,34 @@ test('a 5xx from an app route is request-failed unless a server error entry for 
   expect(explainedRequest.map((finding) => finding.kind)).toEqual(['server-error']);
 });
 
+test('a fault a :catch of the routine handled is no server-error and explains no 5xx', async () => {
+  const response = {
+    url: `${origin}/api/endpoints/assign_ticket`,
+    method: 'POST',
+    status: 500,
+  };
+  const findings = await evaluate({
+    window: quietWindow({
+      requests: [response],
+      responses: [response],
+      errors: [
+        {
+          store: 'server',
+          message: 'Caught operator fault.',
+          caught: true,
+          endpointId: 'assign_ticket',
+        },
+      ],
+    }),
+  });
+  expect(findings).toEqual([
+    expect.objectContaining({
+      kind: 'request-failed',
+      message: 'POST /api/endpoints/assign_ticket answered 500.',
+    }),
+  ]);
+});
+
 test("a page request a test's fail gate failed is no app error: no action-error, server-error or request-failed", async () => {
   const response = {
     url: `${origin}/api/request/tickets/save_ticket`,
