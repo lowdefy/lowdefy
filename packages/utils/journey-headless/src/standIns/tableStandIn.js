@@ -14,9 +14,12 @@
   limitations under the License.
 */
 
+import columnNeedsEditing from '@lowdefy/blocks-antd/table/columnNeedsEditing.js';
+import columnNeedsEnrichment from '@lowdefy/blocks-antd/table/columnNeedsEnrichment.js';
 import createRowKeyGetter from '@lowdefy/blocks-antd/table/createRowKeyGetter.js';
 import readColumnValue from '@lowdefy/blocks-antd/table/readColumnValue.js';
 import resolveLink from '@lowdefy/blocks-antd/table/resolveLink.js';
+import someColumnConfig from '@lowdefy/blocks-antd/table/someColumnConfig.js';
 import { journeyTargetSelectors, type } from '@lowdefy/helpers';
 
 import createGridStandIn from './createGridStandIn.js';
@@ -38,42 +41,13 @@ const MODELLED = new Set([...TABLE_PROPERTIES.modelled, ...TABLE_PROPERTIES.look
 const LINK_CELL_TYPES = new Set(['avatar', 'email', 'link', 'phone', 'relation', 'url']);
 
 // Column configs that load one of Table's optional features, which own clicks on their cells or
-// edit them, as blocks-table's needsEnrichment and needsEditing read them: an enrichment, ai or
-// extract column, a run state, a user-defined column, an editable one.
-const ENRICHMENT_KINDS = new Set(['enrichment', 'ai', 'extract']);
+// edit them, by blocks-table's own rules (needsEnrichment and needsEditing test each column with
+// these): an enrichment, ai or extract column, a run state, a user-defined column, an editable one.
+// TABLE_COLUMN_KEYS classes every column key by whether it can load one.
 const COLUMN_FEATURES = [
-  {
-    what: 'enrichment columns',
-    test: (column) =>
-      ENRICHMENT_KINDS.has(column.kind) ||
-      !type.isUndefined(column.status) ||
-      column.userDefined === true,
-  },
-  {
-    what: 'an editable column',
-    test: (column) => column.editable === true || type.isObject(column.editable),
-  },
+  { what: 'enrichment columns', test: columnNeedsEnrichment },
+  { what: 'an editable column', test: columnNeedsEditing },
 ];
-
-// Whether `defaultColumn` or any leaf column, header groups included, passes `test`, as
-// blocks-table's someColumnConfig reads the raw column config.
-function someColumnConfig({ properties, test }) {
-  function some(entries) {
-    return entries.some((entry) => {
-      if (!type.isObject(entry)) {
-        return false;
-      }
-      if (type.isArray(entry.children)) {
-        return some(entry.children);
-      }
-      return test(entry);
-    });
-  }
-  if (type.isObject(properties.defaultColumn) && test(properties.defaultColumn)) {
-    return true;
-  }
-  return type.isArray(properties.columns) && some(properties.columns);
-}
 
 // A property set to anything but false turns its feature on.
 function isOn(value) {
