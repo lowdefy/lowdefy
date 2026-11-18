@@ -46,9 +46,13 @@ function readJourneys(file) {
 
 const journeys = [...readJourneys('popups.yaml'), ...readJourneys('grids.yaml')];
 
-// The journeys that must fail, by the step they fail at, in both runners.
+// The journeys that must fail, in both runners at the same step, with what the browser's message
+// says: the disabled button is found and refused, not missing.
 const REFUSED_AT = {
-  'grids.yaml: a Table button disabled by its when condition refuses the click': 0,
+  'grids.yaml: a Table button disabled by its when condition refuses the click': {
+    index: 0,
+    message: 'element is not enabled',
+  },
 };
 
 // Each journey here must have run headless and matched, not been left to the browser: the parity
@@ -86,7 +90,8 @@ fixtureTest.each(journeys)('%s', async (name, journey) => {
   });
   if (Object.hasOwn(REFUSED_AT, name)) {
     expect(result.passed).toBe(false);
-    expect(result.failure.index).toBe(REFUSED_AT[name]);
+    expect(result.failure.index).toBe(REFUSED_AT[name].index);
+    expect(result.failure.message).toContain(REFUSED_AT[name].message);
   } else {
     expect(result.failure).toBeUndefined();
     expect(result.passed).toBe(true);

@@ -261,8 +261,8 @@ The block stand-ins have parity journeys of their own: `standInParity.test.mjs` 
 in `apps/journey-fixture/tests/journeys/_parity/` (`popups.yaml` on the `popup_targets` page,
 `grids.yaml` on `grid_targets`) and fails unless it ran headless and matched. Those pages append
 every event they fire, with its payload, to state `log`, which the check compares, so a stand-in
-that fires a wrong event, order or payload fails its journey. A journey's last step expects the
-`log` the browser gives, so a new journey's expectation comes from a browser run.
+that fires a wrong event, order or payload fails its journey. A journey that checks `log` expects
+the `log` the browser gives, so a new journey's expectation comes from a browser run.
 
 The headless runner's own suites run over production builds of the fixture, no browser needed:
 

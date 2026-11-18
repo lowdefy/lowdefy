@@ -745,11 +745,19 @@ async function runClick({ journey, page, step, timeout }) {
 // enters a hover dropdown's popup, then opens the dropdown. A click on an item within that wait
 // closes the dropdown before the wait ends, and the dropdown opens again, with onOpenChange, under
 // a pointer that never moved. A person is never that quick, so a click on a hover dropdown's
-// control first rests on it past the wait.
-const HOVER_ENTER_WAIT_MS = 200;
+// control first rests on it past the wait, with room for a busy page. A row's or a cell's control
+// is in a cell menu, which opens on click (see openDropdown), so it is clicked at once.
+const HOVER_ENTER_WAIT_MS = 300;
 
 async function restOnHoverDropdownItem({ page, target, locator, timeout }) {
-  if (type.isUndefined(target.control) || !type.isUndefined(target.rowKey)) return;
+  if (
+    type.isUndefined(target.control) ||
+    !type.isUndefined(target.row) ||
+    !type.isUndefined(target.rowKey) ||
+    !type.isUndefined(target.column)
+  ) {
+    return;
+  }
   if ((await readDropdownTrigger({ page, blockId: target.blockId })) !== 'hover') return;
   await locator.hover({ timeout });
   await page.waitForTimeout(HOVER_ENTER_WAIT_MS);
