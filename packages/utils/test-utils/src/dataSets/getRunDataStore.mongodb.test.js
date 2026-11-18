@@ -309,9 +309,11 @@ function startThreadFile(scriptPath) {
     },
   });
   const opened = once(worker, 'message').then(([message]) => message);
+  // A thread that failed has exited and never answers, so its error fails the test, not a timeout.
+  const exited = new Promise((resolve) => worker.once('exit', resolve));
   async function close() {
     worker.postMessage('close');
-    await once(worker, 'message');
+    await Promise.race([once(worker, 'message'), exited]);
     await worker.terminate();
   }
   return { worker, opened, close };
