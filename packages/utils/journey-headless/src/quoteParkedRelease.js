@@ -16,7 +16,7 @@
 
 // The release step a parked call's message tells the author to write, quoted, followed by the
 // hold it lets go when that release names another parked call too (createJourneyRaces):
-// `"release: claim"`, or `"release: claim" (the hold at step 1: the 2nd such release lets it go)`.
+// `"release: claim"`, or `"release: claim" (the hold at step 1, once the call at step 2 is let go)`.
 function quoteParkedRelease({ hold, release }) {
   const quoted = `"${release}"`;
   return hold === undefined ? quoted : `${quoted} (${hold})`;

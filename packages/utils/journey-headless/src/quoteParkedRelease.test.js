@@ -26,9 +26,9 @@ test('quoteParkedRelease names the hold after a release another parked call shar
   expect(
     quoteParkedRelease({
       release: 'release: { requestId: claim, pageId: new-claim }',
-      hold: 'the hold at step 1: the 2nd such release lets it go',
+      hold: 'the hold at step 1, once the call at step 2 is let go',
     })
   ).toBe(
-    '"release: { requestId: claim, pageId: new-claim }" (the hold at step 1: the 2nd such release lets it go)'
+    '"release: { requestId: claim, pageId: new-claim }" (the hold at step 1, once the call at step 2 is let go)'
   );
 });

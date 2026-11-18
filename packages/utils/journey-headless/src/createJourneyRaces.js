@@ -101,18 +101,20 @@ function readParkedReleaseKey({ gate, holds }) {
   };
 }
 
-function ordinal(number) {
-  const tens = number % 100;
-  if (tens >= 11 && tens <= 13) return `${number}th`;
-  const suffix = { 1: 'st', 2: 'nd', 3: 'rd' }[number % 10] ?? 'th';
-  return `${number}${suffix}`;
+// The calls parked ahead of a call on its release, named by their steps: `the call at step 3`,
+// `the calls at steps 3 and 4`.
+function describeAhead(ahead) {
+  const steps = ahead.map((entry) => entry.index);
+  if (steps.length === 1) return `the call at step ${steps[0]}`;
+  return `the calls at steps ${steps.slice(0, -1).join(', ')} and ${steps.at(-1)}`;
 }
 
 // The release that lets a parked call go, and, when that release names another call in `parked`
 // too, the hold this one waits at (`hold`; undefined while the release names it alone). A release
 // lets go the first parked call whose request it matches, so such calls are told apart by the
 // whole request each reached, endpoint and pageId both, when that names only this call.
-// Otherwise the hold says which such release lets this call go.
+// Otherwise the hold names the calls parked before this one that the release would let go first,
+// whichever release lets them go: an ordinal would hold only while every release used this form.
 function describeParkedRelease({ entry, holds, parked }) {
   const key = readParkedReleaseKey({ gate: entry.gate, holds });
   const release = writeRelease(key);
@@ -131,8 +133,14 @@ function describeParkedRelease({ entry, holds, parked }) {
   if (namedByWholeKey.length === 1) {
     return { release: writeRelease(wholeKey), hold: heldAt };
   }
-  const order = ordinal(namedByKey.indexOf(entry) + 1);
-  return { release, hold: `${heldAt}: the ${order} such release lets it go` };
+  const ahead = namedByKey.slice(0, namedByKey.indexOf(entry));
+  if (ahead.length === 0) {
+    return { release, hold: heldAt };
+  }
+  return {
+    release,
+    hold: `${heldAt}, once ${describeAhead(ahead)} ${ahead.length === 1 ? 'is' : 'are'} let go`,
+  };
 }
 
 function createJourneyRaces({ host }) {

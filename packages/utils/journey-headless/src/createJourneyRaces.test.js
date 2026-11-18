@@ -180,7 +180,7 @@ test('createJourneyRaces names the hold of each of two calls parked on one page 
   expect(second).toEqual({
     parkedAt: 'claim',
     release: 'release: { requestId: claim, pageId: new-claim }',
-    hold: 'the hold at step 1: the 2nd such release lets it go',
+    hold: 'the hold at step 1, once the call at step 2 is let go',
   });
   const failure = await races.finish();
   expect(failure.index).toBe(2);
@@ -188,7 +188,7 @@ test('createJourneyRaces names the hold of each of two calls parked on one page 
     'a "release: { requestId: claim, pageId: new-claim }" step to let the parked call go'
   );
   expect(failure.message).toBe(
-    'The call parked at the gate on request "claim" was still parked when the journey ended: release it with "release: { requestId: claim, pageId: new-claim }" (the hold at step 0: the 1st such release lets it go).'
+    'The call parked at the gate on request "claim" was still parked when the journey ended: release it with "release: { requestId: claim, pageId: new-claim }" (the hold at step 0).'
   );
   expect(failure.message).not.toContain(second.hold);
 });
@@ -239,10 +239,35 @@ test('createJourneyRaces names the hold when a release would let an earlier call
   expect(await request({ pageId: 'claims', label: 'page' })).toEqual({
     parkedAt: 'claim',
     release: 'release: { requestId: claim, pageId: claims }',
-    hold: 'the hold at step 1: the 2nd such release lets it go',
+    hold: 'the hold at step 1, once the call at step 2 is let go',
   });
   const release = { release: { requestId: 'claim', pageId: 'claims' } };
   expect((await run(release)).label).toBe('routine');
   expect((await run(release)).label).toBe('page');
   expect(await races.finish()).toBeUndefined();
+});
+
+test('createJourneyRaces keeps a shared release hint true when the call ahead is let go by its own release', async () => {
+  const { races, request, run } = setUp();
+  await run({ hold: { requestId: 'claim' } });
+  await run({ hold: { requestId: 'claim' } });
+  await request({ pageId: 'claims', endpointId: 'approve', label: 'routine' });
+  await request({ pageId: 'claims', label: 'page' });
+  expect((await run({ release: { requestId: 'claim', endpoint: 'approve' } })).label).toBe(
+    'routine'
+  );
+  expect((await run({ release: { requestId: 'claim', pageId: 'claims' } })).label).toBe('page');
+  expect(await races.finish()).toBeUndefined();
+});
+
+test('createJourneyRaces names every call parked ahead on a shared release', async () => {
+  const { request, run } = setUp();
+  await run({ hold: { requestId: 'claim' } });
+  await run({ hold: { requestId: 'claim' } });
+  await run({ hold: { requestId: 'claim' } });
+  await request({ pageId: 'new-claim' });
+  await request({ pageId: 'new-claim' });
+  expect((await request({ pageId: 'new-claim' })).hold).toBe(
+    'the hold at step 2, once the calls at steps 3 and 4 are let go'
+  );
 });
