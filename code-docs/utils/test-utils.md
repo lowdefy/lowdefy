@@ -183,7 +183,11 @@ write that state.
 - **Journey stubs** are checked against the app before they are set (`checkJourneyStubTargets`,
   over `checkStubTarget`, the check `session.stub` runs): an answer stub on a connection or
   request type the app does not have would never answer, so the journey is refused, naming the
-  stub.
+  stub. Each journey answer stub counts `answered` (`createStubResolver`); `listUnansweredStubs`
+  lists the ones that name their request (`requestId`, `endpoint`, `pageId` or `match`) and no
+  request reached, and `describeAnswerStub` names one, so a journey fails on a stub that stood in
+  for nothing. A stub keyed only by its types is a fallback and may go unused. A test's `session.stub` counts nothing and is never reported:
+  it lasts across a file's tests.
 - **Pause gates** (`session.pauseBefore(stepId)`, `addPauseGate`) hold request steps only.
   `createGatedResolver` wraps every request resolver: the first routine to reach a request an
   open gate matches stops with its request built and not yet sent, and the gate records

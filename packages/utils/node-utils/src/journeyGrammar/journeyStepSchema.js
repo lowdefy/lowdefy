@@ -363,9 +363,17 @@ const STEPS = {
     additionalProperties: false,
   },
   release: {
-    ...nonEmptyString,
     description:
-      'Let the call parked at the gate a "hold" step set on this request id go, wait for it to answer, and make its answer the one the expect steps after it read. A gate no call reached, or a call still parked when the journey ends, fails the journey. Headless only.',
+      'Let the call parked at the gate a "hold" step set on this request id go, wait for it to answer, and make its answer the one the expect steps after it read. Give { requestId, endpoint, pageId } to name one of two holds on one request id: it lets go of the call parked at the request it names, matched as a hold matches. A gate no call reached, or a call still parked when the journey ends, fails the journey. Headless only.',
+    oneOf: [
+      nonEmptyString,
+      {
+        type: 'object',
+        properties: { requestId: nonEmptyString, endpoint: nonEmptyString, pageId: nonEmptyString },
+        required: ['requestId'],
+        additionalProperties: false,
+      },
+    ],
   },
   webhook: {
     type: 'object',
@@ -399,7 +407,7 @@ const journeyStepSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Journey step',
   description:
-    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, column, nth }; fill, select and expect.text need a blockId. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request, release or webhook step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it. A request takes no "as": "system". A journey with no pageId runs only call, request, hold, release, webhook, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
+    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, column, nth }; fill, select and expect.text need a blockId. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request, release or webhook step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it, with its endpoint or pageId when two holds share the id. A request takes no "as": "system". A journey with no pageId runs only call, request, hold, release, webhook, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
   oneOf: Object.values(JOURNEY_STEP_SCHEMAS),
 };
 

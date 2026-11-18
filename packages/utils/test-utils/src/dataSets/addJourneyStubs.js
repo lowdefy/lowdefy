@@ -20,7 +20,8 @@ import addFailGate from './addFailGate.js';
 
 // Sets a journey's `stubs` on its data session, in the order written: an entry with `fail` is a
 // fail gate (addFailGate), any other an answer stub, which answers its literal `answer`
-// (createStubResolver). Each entry was validated with node-utils' validateJourneyStub.
+// (createStubResolver). An answer stub counts `answered`, so one no request reached can be
+// reported (listUnansweredStubs). Each entry was validated with node-utils' validateJourneyStub.
 function addJourneyStubs({ session, stubs }) {
   (stubs ?? []).forEach((stub) => {
     if (!type.isUndefined(stub.fail)) {
@@ -42,6 +43,7 @@ function addJourneyStubs({ session, stubs }) {
       endpoint: stub.endpoint,
       pageId: stub.pageId,
       match: stub.match,
+      answered: 0,
     });
   });
 }

@@ -184,3 +184,31 @@ test('a release whose gate no call reached fails the step', async () => {
       'No call reached the gate on request "claim_run", so no call is parked to release. A call or request step after the hold must reach it.',
   });
 });
+
+test('a release naming its hold by endpoint lets the call parked in that routine go', async () => {
+  const key = { requestId: 'claim_run', endpoint: 'approve_run' };
+  const steps = raceJourney.steps.map((step) => {
+    if (step.release === 'claim_run') return { release: key };
+    if (step.hold?.requestId === 'claim_run') return { hold: key };
+    return step;
+  });
+  const result = await run({ steps });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(host.dataSession.pauseGates).toEqual([]);
+});
+
+test('a release naming an endpoint the app has not fails the step, naming it', async () => {
+  const steps = raceJourney.steps.map((step) =>
+    step.release === 'claim_run'
+      ? { release: { requestId: 'claim_run', endpoint: 'approve_runs' } }
+      : step
+  );
+  const result = await run({ steps });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    step: { release: { requestId: 'claim_run', endpoint: 'approve_runs' } },
+    message: expect.stringContaining('The app has no endpoint "approve_runs".'),
+  });
+  expect(host.dataSession.pauseGates).toEqual([]);
+});

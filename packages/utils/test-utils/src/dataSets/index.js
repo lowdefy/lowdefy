@@ -20,14 +20,18 @@ import addPauseGate from './addPauseGate.js';
 import applyDataSetRedirect from './applyDataSetRedirect.js';
 import checkJourneyStubTargets from './checkJourneyStubTargets.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
+import describeAnswerStub from './describeAnswerStub.js';
 import describeFailGate from './describeFailGate.js';
+import drainSessionWork from './drainSessionWork.js';
 import createSessionConnections from './createSessionConnections.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
 import getRunDataStore from './getRunDataStore.js';
+import listUnansweredStubs from './listUnansweredStubs.js';
 import listUnfiredFailGates from './listUnfiredFailGates.js';
 import listUnreachedPauseGates from './listUnreachedPauseGates.js';
+import matchesRequestKey from './matchesRequestKey.js';
 import openDataSession from './openDataSession.js';
 import raceToPauseGate from './raceToPauseGate.js';
 import readDataSet from './readDataSet.js';
@@ -45,14 +49,18 @@ export {
   applyDataSetRedirect,
   checkJourneyStubTargets,
   createDataSetRefusal,
+  describeAnswerStub,
   describeFailGate,
+  drainSessionWork,
   createSessionConnections,
   dataSessionRegistry,
   findSessionDocuments,
   getDataStore,
   getRunDataStore,
+  listUnansweredStubs,
   listUnfiredFailGates,
   listUnreachedPauseGates,
+  matchesRequestKey,
   openDataSession,
   raceToPauseGate,
   readDataSet,

@@ -68,6 +68,7 @@ test('the stubs journey answers the rate service, and its forced failures read a
     { requestId: 'claim_run', fired: 2 },
     { requestId: 'insert_activity', fired: 2 },
   ]);
+  expect(host.dataSession.stubs.map(({ answered }) => answered)).toEqual([2]);
   // The client sees the generic message; the forced one is the server's record of the call.
   const forced = result.calls.filter((call) => call.success === false);
   expect(forced).toHaveLength(5);
@@ -112,6 +113,55 @@ test('a fail gate that never fired fails the journey at its last step, naming th
       'The forced failure on request "claim_run" on endpoint "approve_run" ("Never reached") never fired: no request the journey made matched it, so nothing tested what it fails.',
   });
   expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
+});
+
+test('an answer stub that never answered fails the journey at its last step, naming the stub', async () => {
+  const steps = [
+    { call: { endpoint: 'price_run', payload: { id: 'BR-1', currency: 'EUR' } } },
+    { expect: { status: 200 } },
+  ];
+  const result = await run({
+    steps,
+    stubs: [
+      stubsJourney.stubs[0],
+      {
+        connectionType: 'AxiosHttp',
+        requestType: 'AxiosHttp',
+        endpoint: 'price_run',
+        match: { params: { currency: 'USD' } },
+        answer: { status: 200, data: { rate: 2 } },
+      },
+    ],
+  });
+  expect(host.dataSession.stubs.map(({ answered }) => answered)).toEqual([1, 0]);
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual({
+    index: 1,
+    step: steps[1],
+    expected:
+      'a request to be answered by the AxiosHttp/AxiosHttp stub on endpoint "price_run" and match {"params":{"currency":"USD"}}',
+    actual: 'no request reached it',
+    message:
+      'The AxiosHttp/AxiosHttp stub on endpoint "price_run" and match {"params":{"currency":"USD"}} never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer. A stub that names its request (requestId, endpoint, pageId or match) must answer; one keyed only by connectionType and requestType is a fallback and may go unused.',
+  });
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
+});
+
+// A stub keyed only by its types is a fallback, as a shared stub list or a case table row whose
+// branch makes no outside call leaves one: it may go unused.
+test('a fallback answer stub no request reached leaves the journey passing', async () => {
+  const fallback = {
+    connectionType: 'AxiosHttp',
+    requestType: 'AxiosHttp',
+    answer: { status: 200, data: { rate: 1.5 } },
+  };
+  const result = await run({
+    steps: [{ expect: { db: { collection: 'items', match: { kind: 'price' }, count: 0 } } }],
+    stubs: [fallback],
+  });
+  expect(host.dataSession.stubs.map(({ answered }) => answered)).toEqual([0]);
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
 });
 
 test('expect.error after a forced failure fails on text the forced message does not hold', async () => {

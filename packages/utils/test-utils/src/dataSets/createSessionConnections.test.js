@@ -18,8 +18,10 @@ import { beforeEach, expect, test, vi } from 'vitest';
 import { isForcedFailure } from '@lowdefy/errors';
 
 import addFailGate from './addFailGate.js';
+import addJourneyStubs from './addJourneyStubs.js';
 import addPauseGate from './addPauseGate.js';
 import createSessionConnections from './createSessionConnections.js';
+import listUnansweredStubs from './listUnansweredStubs.js';
 import listUnfiredFailGates from './listUnfiredFailGates.js';
 import releasePauseGates from './releasePauseGates.js';
 
@@ -198,6 +200,23 @@ test('createSessionConnections matches a stub on part of the request, so one con
     { to: 'billing@example.test', subject: 'Run approved' },
     { sql: 'select 1', token: '[REDACTED]' },
   ]);
+});
+
+test("createSessionConnections counts a journey stub's answers, so the session lists the ones no request reached", async () => {
+  addJourneyStubs({
+    session,
+    stubs: [
+      { connectionType: 'SMTP', requestType: 'SMTPMailSend', answer: 'first' },
+      { connectionType: 'SMTP', requestType: 'SMTPMailSend', requestId: 'other', answer: 'never' },
+    ],
+  });
+  stub({ connectionType: 'SMTP', requestType: 'SMTPMailSend', answer: 'test stub' });
+  const { resolvers } = build();
+  expect(await resolvers.SMTP.requests.SMTPMailSend(args)).toEqual('first');
+  expect(await resolvers.SMTP.requests.SMTPMailSend(args)).toEqual('first');
+  expect(session.stubs.map(({ answered }) => answered)).toEqual([2, 0, undefined]);
+  // A test's session.stub counts no answers, so it is never listed.
+  expect(listUnansweredStubs({ session })).toEqual([session.stubs[1]]);
 });
 
 test('createSessionConnections sinks a request no stub matches on an external type: it answers null and is recorded once', async () => {

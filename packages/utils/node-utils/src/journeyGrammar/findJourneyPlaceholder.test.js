@@ -71,3 +71,76 @@ test('findJourneyPlaceholder names a _ref left in a journey by its path', () => 
       'Journey "stubs[0]" is a _ref, {"_ref":"tests/shared/stubs/rates.yaml"}, that was not read: _ref is resolved only when lowdefy test reads a journey file.',
   });
 });
+
+test('findJourneyPlaceholder with literal passes a _ref or _case inside a value through as data', () => {
+  expect(
+    findJourneyPlaceholder({
+      literal: true,
+      journey: {
+        data: 'scope',
+        user: 'client_a',
+        steps: [
+          { call: { endpoint: 'save_config', payload: { _ref: 'x' } } },
+          { call: { endpoint: 'save_config', payload: { rule: { _case: 'kind' } } } },
+          { expect: { calls: { endpoint: 'save_config', match: { payload: { _ref: 'x' } } } } },
+        ],
+        stubs: [{ requestId: 'load', answer: { _ref: 'x' } }],
+      },
+    })
+  ).toEqual({});
+});
+
+test('findJourneyPlaceholder with literal refuses a _ref or _case where a file meant a part of the journey', () => {
+  const refused = (journey) => findJourneyPlaceholder({ journey, literal: true }).error;
+  expect(refused({ steps: [{ call: { endpoint: 'a' } }, { _ref: 'tests/shared/x.yaml' }] })).toBe(
+    'Journey "steps[1]" is a _ref, {"_ref":"tests/shared/x.yaml"}, that was not read: _ref is resolved only when lowdefy test reads a journey file.'
+  );
+  expect(refused({ steps: { _ref: 'tests/shared/steps.yaml' } })).toMatch(
+    /^Journey "steps" is a _ref/
+  );
+  expect(refused({ cases: { _ref: 'tests/shared/cases.yaml' }, steps: [] })).toMatch(
+    /^Journey "cases" is a _ref/
+  );
+  expect(refused({ stubs: { _ref: 'tests/shared/stubs.yaml' }, steps: [] })).toMatch(
+    /^Journey "stubs" is a _ref/
+  );
+  expect(refused({ stubs: [{ _ref: 'tests/shared/stub.yaml' }], steps: [] })).toMatch(
+    /^Journey "stubs\[0\]" is a _ref/
+  );
+  expect(refused({ user: { _case: 'user' }, steps: [] })).toMatch(
+    /^Journey "user" is a _case placeholder/
+  );
+  expect(refused({ user: ['a', { _case: 'user' }], steps: [] })).toMatch(
+    /^Journey "user\[1\]" is a _case placeholder/
+  );
+  expect(refused({ data: { _case: 'data' }, steps: [] })).toMatch(
+    /^Journey "data" is a _case placeholder/
+  );
+  expect(refused({ pageId: { _case: 'page' }, steps: [] })).toMatch(
+    /^Journey "pageId" is a _case placeholder/
+  );
+  expect(refused({ steps: [{ _case: 'step' }] })).toMatch(
+    /^Journey "steps\[0\]" is a _case placeholder/
+  );
+  expect(refused({ pathParams: { _case: 'params' }, steps: [] })).toMatch(
+    /^Journey "pathParams" is a _case placeholder/
+  );
+  expect(refused({ pathParams: { id: { _case: 'id' } }, steps: [] })).toMatch(
+    /^Journey "pathParams.id" is a _case placeholder/
+  );
+  expect(refused({ urlQuery: { _ref: 'tests/shared/q.yaml' }, steps: [] })).toMatch(
+    /^Journey "urlQuery" is a _ref/
+  );
+  expect(refused({ urlQuery: { tab: { _ref: 'tests/shared/tab.yaml' } }, steps: [] })).toMatch(
+    /^Journey "urlQuery.tab" is a _ref/
+  );
+});
+
+test('findJourneyPlaceholder with literal passes a placeholder deeper in a urlQuery value as data', () => {
+  expect(
+    findJourneyPlaceholder({
+      literal: true,
+      journey: { urlQuery: { filter: { where: { _ref: 'x' } } }, steps: [] },
+    })
+  ).toEqual({});
+});
