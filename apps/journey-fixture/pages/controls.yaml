@@ -5,7 +5,8 @@ type: Box
 # (packages/servers/server-dev/test/journeyFixture/controls.test.mjs). Every event writes what it
 # did to state `last`. The grid's pinned column is listed last, so the row's first displayed cell
 # is not its first column in the config. plain_grid's rows carry no key, so the grid generates
-# one. tickets_table shows its reply button only while the row is hovered.
+# one. tickets_table shows its reply button only while the row is hovered. Two of dupes_table's
+# rows share a key. notes_menu opens on a right click (trigger: contextMenu).
 blocks:
   - id: controls_title
     type: Title
@@ -121,6 +122,29 @@ blocks:
               type: SetState
               params:
                 content_clicked: true
+  - id: notes_menu
+    type: DropdownMenu
+    properties:
+      trigger: contextMenu
+      links:
+        - id: pin
+          type: MenuLink
+          properties:
+            title: Pin
+    events:
+      onClick:
+        - id: set_notes_item
+          type: SetState
+          params:
+            last:
+              _string.concat:
+                - 'notes-'
+                - _event: key
+    blocks:
+      - id: notes_menu_label
+        type: Paragraph
+        properties:
+          content: Right-click for note actions
   - id: invoices_grid
     type: AgGridAlpine
     properties:
@@ -235,3 +259,13 @@ blocks:
               _string.concat:
                 - 'open-'
                 - _event: rowKey
+  - id: dupes_table
+    type: Table
+    properties:
+      columns:
+        - key: subject
+      data:
+        - _id: d-1
+          subject: First copy
+        - _id: d-1
+          subject: Second copy

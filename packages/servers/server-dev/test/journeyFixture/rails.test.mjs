@@ -121,6 +121,26 @@ fixtureTest(
   }
 );
 
+// A dropdown item shows only once its dropdown is open, and opening it fires the block's
+// onOpenChange, so the rails check the block before the runner opens it.
+fixtureTest(
+  'a data-set journey clicking a dropdown item control is refused before the dropdown opens',
+  async () => {
+    const result = await postJourney({
+      pageId: 'rails',
+      data: 'rails',
+      user: 'member',
+      steps: [{ click: { blockId: 'rails_dropdown', control: 'onCallUndeclared' } }],
+    });
+    expect(result.passed).toBe(false);
+    expect(result.failure.index).toBe(0);
+    expect(result.failure.message).toBe(
+      'Block "rails_dropdown" reaches connection "rails_undeclared" (UndeclaredFixture, no dataSet declaration), which a data set cannot redirect, so a data-set journey cannot click it.'
+    );
+    expect(result.state.rails_dropdown_opened ?? null).toBe(null);
+  }
+);
+
 fixtureTest('a journey without a data set is not railed', async () => {
   const result = await postJourney({
     pageId: 'rails',

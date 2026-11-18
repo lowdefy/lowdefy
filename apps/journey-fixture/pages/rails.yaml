@@ -9,7 +9,9 @@
 # rails_modal's OK button sits in the modal's portal, outside every block
 # wrapper; its onOk calls a request on rails_undeclared (a connection type that
 # declares no dataSet), so a click on { blockId: rails_modal, control: ok } is
-# refused as the modal's.
+# refused as the modal's. rails_dropdown's item does the same, and its
+# onOpenChange sets rails_dropdown_opened: the rails refuse the click before the
+# runner opens the dropdown to show the item, so the state is never set.
 id: rails
 type: Box
 requests:
@@ -127,3 +129,20 @@ blocks:
         type: Paragraph
         properties:
           content: Its OK button calls a request a data set cannot redirect.
+  - id: rails_dropdown
+    type: DropdownButton
+    properties:
+      title: Rails actions
+      items:
+        - title: Call undeclared
+          eventName: onCallUndeclared
+    events:
+      onOpenChange:
+        - id: set_rails_dropdown_opened
+          type: SetState
+          params:
+            rails_dropdown_opened: true
+      onCallUndeclared:
+        - id: call_undeclared_from_dropdown
+          type: Request
+          params: call_undeclared

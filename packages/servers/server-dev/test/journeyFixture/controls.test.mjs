@@ -96,6 +96,18 @@ fixtureTest(
   }
 );
 
+fixtureTest(
+  'a contextMenu DropdownMenu item control opens its dropdown with a right click',
+  async () => {
+    const result = await postBrowserJourney({
+      pageId: 'controls',
+      steps: [{ click: { blockId: 'notes_menu', control: 'pin' } }, lastIs('notes-pin')],
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+  }
+);
+
 fixtureTest('an AgGrid row by key is clicked on its first displayed cell', async () => {
   // The pinned Number column is listed last in columnDefs and drawn first.
   const result = await postBrowserJourney({
@@ -190,6 +202,20 @@ fixtureTest('a row key no row carries fails as not actionable', async () => {
   expect(result.failure.message).toMatch(
     /^Block "invoices_grid" row key "inv-9" was not actionable: /
   );
+});
+
+fixtureTest('a row key two rows carry fails with the count', async () => {
+  const result = await postBrowserJourney({
+    pageId: 'controls',
+    timeout: 2000,
+    steps: [{ click: { blockId: 'dupes_table', rowKey: 'd-1' } }],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(0);
+  expect(result.failure.message).toBe(
+    'Matched 2 rows with key "d-1" in block "dupes_table"; a row key names one row, so give each row its own key.'
+  );
+  expect(result.failure.actual).toBe('2 rows');
 });
 
 fixtureTest('a control that matches two visible elements fails with the count', async () => {

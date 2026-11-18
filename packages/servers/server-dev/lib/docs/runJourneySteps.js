@@ -332,10 +332,14 @@ function plural({ count, word }) {
 // A target with `nth` also waits for a first match before it is resolved, so
 // the front-most open layer is chosen (locatePageWideText) once the control is
 // showing, not before a dialog the previous step opened has rendered.
-async function resolveActionTarget({ page, target, timeout }) {
+//
+// beforeReveal runs once, before a `control` target hovers its row or opens a
+// dropdown to show the control: those act on the block too (a dropdown fires
+// onOpenChange), so a click's rails check must come first.
+async function resolveActionTarget({ page, target, timeout, beforeReveal }) {
   await refuseGeneratedRowKey({ page, target });
   if (!type.isUndefined(target.control)) {
-    return locateControl({ page, target, timeout });
+    return locateControl({ page, target, timeout, beforeReveal });
   }
   if (!type.isUndefined(target.rowKey)) {
     await waitForOneKeyedRow({ page, target, timeout });
@@ -464,29 +468,33 @@ function controlMatches({ page, target }) {
     .filter({ visible: true });
 }
 
-// Whether the block's dropdown opens on hover: DropdownMenu's default, or a block whose `trigger`
-// property is hover. A block the page does not hold opens on click.
-async function opensOnHover({ page, blockId }) {
+// How the block's dropdown opens: its `trigger` property (hover, click or contextMenu), else hover
+// for DropdownMenu (its default) and click for any other. A block the page does not hold opens
+// on click.
+async function readDropdownTrigger({ page, blockId }) {
   const facts = await readBlockFacts({ page, blockId });
-  if (type.isNone(facts)) return false;
-  if (facts.trigger === 'hover') return true;
-  return facts.type === 'DropdownMenu' && type.isNone(facts.trigger);
+  if (type.isNone(facts)) return 'click';
+  if (!type.isNone(facts.trigger)) return facts.trigger;
+  return facts.type === 'DropdownMenu' ? 'hover' : 'click';
 }
 
-// Opens a dropdown the way a person does: a hover dropdown by hovering its trigger, any other by
-// clicking it. Only the block's own trigger can open on hover; a row's or a cell's is a cell menu,
-// which opens on click.
+// Opens a dropdown the way a person does: a hover dropdown by hovering its trigger, a
+// contextMenu dropdown by right-clicking it, any other by clicking it. Only the block's own
+// trigger reads the block's `trigger`; a row's or a cell's is a cell menu, which opens on click.
 async function openDropdown({ page, target, trigger, timeout }) {
   const isBlockScope =
     !type.isUndefined(target.blockId) &&
     type.isUndefined(target.row) &&
     type.isUndefined(target.rowKey) &&
     type.isUndefined(target.column);
-  if (isBlockScope && (await opensOnHover({ page, blockId: target.blockId }))) {
+  const opensOn = isBlockScope
+    ? await readDropdownTrigger({ page, blockId: target.blockId })
+    : 'click';
+  if (opensOn === 'hover') {
     await trigger.hover({ timeout });
     return;
   }
-  await trigger.click({ timeout });
+  await trigger.click({ timeout, button: opensOn === 'contextMenu' ? 'right' : 'left' });
 }
 
 // The one visible control a `control` target names. When none shows it reveals the control as a
@@ -494,7 +502,8 @@ async function openDropdown({ page, target, trigger, timeout }) {
 // then opens the first closed dropdown trigger in the scope (the cell, else the row, else the
 // block) and waits for its popup. Several visible matches fail with the count, as a `text` that
 // matches several controls does; none within the timeout fails naming what was tried.
-async function locateControl({ page, target, timeout }) {
+// beforeReveal (the click rails) runs once, before the first hover or open.
+async function locateControl({ page, target, timeout, beforeReveal }) {
   const deadline = Date.now() + timeout;
   const description = describeTarget(target);
   const matches = controlMatches({ page, target });
@@ -504,6 +513,13 @@ async function locateControl({ page, target, timeout }) {
   await waitForLoadingBlocks({ page, timeout });
   let hoveredRow = type.isUndefined(target.rowKey);
   let openedOf = 0;
+  let revealChecked = type.isUndefined(beforeReveal);
+  const checkBeforeReveal = async () => {
+    if (!revealChecked) {
+      revealChecked = true;
+      await beforeReveal();
+    }
+  };
   for (;;) {
     const count = await matches.count();
     if (count === 1) {
@@ -525,6 +541,7 @@ async function locateControl({ page, target, timeout }) {
     if (!hoveredRow) {
       const row = keyedRows({ page, target }).first();
       if (await row.isVisible()) {
+        await checkBeforeReveal();
         await row.hover({ timeout: remaining });
         hoveredRow = true;
         continue;
@@ -532,6 +549,7 @@ async function locateControl({ page, target, timeout }) {
     }
     if (openedOf === 0 && (await triggers.count()) > 0) {
       openedOf = await triggers.count();
+      await checkBeforeReveal();
       await openDropdown({ page, target, trigger: triggers.first(), timeout: remaining });
       continue;
     }
@@ -660,12 +678,25 @@ async function runOpen({ page, step, timeout }) {
 async function runClick({ journey, page, step, timeout }) {
   const { count = 1, ...target } = normaliseTarget(step.click);
   let blockId = null;
+  // Checked once per click: before a control target's hover or open reveals the control (its
+  // block is the target's own, so no element is needed), else before the click.
+  let railsChecked = false;
+  const checkRails = async (locator) => {
+    if (railsChecked) return;
+    railsChecked = true;
+    blockId = await checkClickRails({ journey, page, locator, target });
+  };
   await actOnTarget({
     target,
     action: async () => {
-      const located = await resolveActionTarget({ page, target, timeout });
+      const located = await resolveActionTarget({
+        page,
+        target,
+        timeout,
+        beforeReveal: () => checkRails(null),
+      });
       const locator = await resolveClickLocator({ located, target, timeout });
-      blockId = await checkClickRails({ journey, page, locator, target });
+      await checkRails(locator);
       await locator.click({ timeout, clickCount: count });
     },
   });
