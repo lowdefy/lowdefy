@@ -44,11 +44,14 @@ const BUTTONS = [
   { key: 'cancel', event: 'onCancel', props: 'cancelButtonProps' },
 ];
 
-// antd draws no OK or Cancel button when the footer is turned off or the block fills its footer
-// area, which replaces the default footer.
+// antd draws no OK or Cancel button when the footer is turned off, the block fills its footer
+// area, which replaces the default footer, or the modal is loading, which draws no footer.
 function readFooter(block) {
   if (block.eval.properties?.footer === false) {
     return 'its footer is off (footer: false)';
+  }
+  if (block.eval.properties?.loading) {
+    return 'it is loading (loading: true)';
   }
   if ((block.slots?.footer?.blocks ?? []).length > 0) {
     return 'the blocks in its footer area replace the default footer';

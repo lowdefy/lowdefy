@@ -28,10 +28,11 @@ import readControlKey from './readControlKey.js';
 // holds their statuses, oldest first. OK fires onOk and Cancel onCancel; the dialog stays open only
 // when the event failed and did not bounce (the component throws then, which keeps antd's dialog
 // open), else it closes and antd's afterClose fires onClose. Only a confirm dialog has a Cancel
-// button: info, success, warning and error dialogs show OK alone.
+// button: info, success, warning and error dialogs show OK alone. A button its properties
+// (okButton, cancelButton) disable refuses the click, as a browser cannot click it.
 const BUTTONS = [
-  { key: 'ok', event: 'onOk' },
-  { key: 'cancel', event: 'onCancel' },
+  { key: 'ok', event: 'onOk', props: 'okButton' },
+  { key: 'cancel', event: 'onCancel', props: 'cancelButton' },
 ];
 
 function registerMethods({ actor, block, state }) {
@@ -69,6 +70,12 @@ async function click({ actor, block, state, target }) {
     controls: dialog.status === 'confirm' ? BUTTONS : BUTTONS.slice(0, 1),
     noun: `${dialog.status} dialog button`,
   });
+  if (block.eval.properties?.[button.props]?.disabled === true) {
+    throw new HeadlessStepError(`The ${control} button of ${description} is disabled.`, {
+      actual: 'disabled',
+      expected: `an enabled ${control} button in ${description}`,
+    });
+  }
   const response = await fireEvent({ actor, block, name: button.event });
   if (response.success === false && response.bounced !== true) {
     return;

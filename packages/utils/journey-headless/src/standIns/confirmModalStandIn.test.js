@@ -152,3 +152,21 @@ test('ConfirmModal opened twice has two ok buttons, which a control target refus
     'ConfirmModal "confirm" has 2 dialogs open, each with its own ok button; a control target names one.'
   );
 });
+
+test('ConfirmModal with a disabled ok or cancel button refuses the click', async () => {
+  const ok = await runTestJourney({
+    pages: [confirmPage({ properties: { okButton: { disabled: true } } })],
+    steps: [{ click: 'open' }, { click: { blockId: 'confirm', control: 'ok' } }],
+  });
+  expect(ok.result.passed).toBe(false);
+  expect(ok.result.failure.message).toBe('The ok button of ConfirmModal "confirm" is disabled.');
+  expect(readLog(ok.log)).not.toContainEqual(['onOk']);
+  const cancel = await runTestJourney({
+    pages: [confirmPage({ properties: { cancelButton: { disabled: true } } })],
+    steps: [{ click: 'open' }, { click: { blockId: 'confirm', control: 'cancel' } }],
+  });
+  expect(cancel.result.failure.message).toBe(
+    'The cancel button of ConfirmModal "confirm" is disabled.'
+  );
+  expect(readLog(cancel.log)).not.toContainEqual(['onCancel']);
+});

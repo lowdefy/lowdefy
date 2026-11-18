@@ -98,6 +98,18 @@ test('Modal with footer false has no ok button', async () => {
   expect(readLog(log)).not.toContainEqual(['onOk']);
 });
 
+test('Modal that is loading has no ok button', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [modalPage({ properties: { loading: true } })],
+    steps: [{ click: 'open' }, { click: { blockId: 'modal', control: 'ok' } }],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toBe(
+    'Modal "modal" has no footer button keyed "ok". It has no footer buttons.'
+  );
+  expect(readLog(log)).not.toContainEqual(['onOk']);
+});
+
 test('Modal that fills its footer area has no cancel button', async () => {
   const { result } = await runTestJourney({
     pages: [modalPage({ slots: { footer: { blocks: [{ id: 'footerButton', type: 'Button' }] } } })],
