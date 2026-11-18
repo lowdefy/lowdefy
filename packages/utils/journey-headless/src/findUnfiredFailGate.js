@@ -31,8 +31,16 @@ const DRAIN_TIMEOUT_MS = 30000;
 // gate fired and every such stub answered. A stub keyed only by connectionType and requestType is
 // a fallback and may go unused (listUnansweredStubs). `session` is the data session. Its background
 // work (context.waitUntil) is drained first, so a request only that work makes is counted. Work
-// still running after the wait is judged as it stands, and the message says so.
+// still running after the wait is judged as it stands, and the message says so. With no gate left
+// unfired and no named stub left unanswered there is nothing that work could change, so it is not
+// waited for: work that never ends would otherwise hold the journey here as well as in close().
 async function findUnfiredFailGate({ session, steps }) {
+  if (
+    listUnfiredFailGates({ session }).length === 0 &&
+    listUnansweredStubs({ session }).length === 0
+  ) {
+    return undefined;
+  }
   const drained = await drainSessionWork({ work: session.work, timeoutMs: DRAIN_TIMEOUT_MS });
   const stillRunning = drained
     ? ''
