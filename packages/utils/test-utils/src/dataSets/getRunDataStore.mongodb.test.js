@@ -353,10 +353,10 @@ test('test files whose owner never exits leave no keeper and no mongod once none
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-run-store-reaper-'));
   const { parent, startFile } = startParent();
   const reports = [];
+  const filePids = [];
   try {
     // Two files of one run under the same parent, each holding a session, share one store.
     const releasePath = path.join(directory, 'release');
-    const filePids = [];
     for (const name of ['a', 'b']) {
       const reportPath = path.join(directory, `${name}.json`);
       filePids.push(
@@ -377,6 +377,10 @@ test('test files whose owner never exits leave no keeper and no mongod once none
     expect(isProcessAlive({ pid: parent.pid })).toBe(true);
     expect(await waitFor(() => isGone(first), { timeoutMs: IDLE_STOP_MS + 20000 })).toBe(true);
   } finally {
+    // A file still waiting to be released would wait for good: its release file goes below.
+    filePids
+      .filter((pid) => isProcessAlive({ pid }))
+      .forEach((pid) => process.kill(pid, 'SIGKILL'));
     reports.forEach(stopKeeper);
     parent.kill('SIGKILL');
     fs.rmSync(directory, { recursive: true, force: true });
