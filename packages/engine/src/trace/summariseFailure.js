@@ -16,13 +16,15 @@
 
 // The value-free summary of a failed event, from the { error, action, index } wrapper
 // callActions records (or { error } for a control-flow parser error, which has no action).
-// Consumers never learn the wrapper shape.
+// Consumers never learn the wrapper shape. `forced` marks a failure a test's fail gate forced on
+// the server, which a journey runner never counts as an app error.
 function summariseFailure({ error, action }) {
   return {
     actionId: action?.id ?? null,
     actionType: action?.type ?? null,
     configKey: error.configKey ?? action?.['~k'] ?? null,
     errorName: error.name ?? null,
+    forced: error.forced === true,
     invalidBlocks: error.invalidBlocks ?? [],
   };
 }

@@ -17,12 +17,13 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { isExpectedError } from '@lowdefy/errors';
 import { createTraceId, type } from '@lowdefy/helpers';
-import { validateJourneyUser } from '@lowdefy/node-utils';
+import { validateJourneyStubs, validateJourneyUser } from '@lowdefy/node-utils';
 
 import deviceAction from './device/deviceAction.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import findConfig from './findConfig.js';
 import findPageBlock from './findPageBlock.js';
+import findSentPlaceholder from './findSentPlaceholder.js';
 import fitResponse from './fitResponse.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
@@ -375,15 +376,28 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       state,
       timeout,
       data,
+      stubs,
       exercised,
       device,
       headless,
     }) => {
+      const placeholderError = findSentPlaceholder({
+        data,
+        pageId,
+        pathParams,
+        steps,
+        stubs,
+        urlQuery,
+        user,
+      });
+      if (placeholderError) {
+        return notFoundResult(placeholderError);
+      }
       if (!type.isNone(device)) {
         const refused = deviceParamsError({
           tool: 'lowdefy_run_journey',
-          params: { urlQuery, user, data, exercised },
-          names: ['urlQuery', 'user', 'data', 'exercised'],
+          params: { urlQuery, user, data, stubs, exercised },
+          names: ['urlQuery', 'user', 'data', 'stubs', 'exercised'],
         });
         if (refused !== null) {
           return refused;
@@ -412,6 +426,10 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       if (userError) {
         return notFoundResult(userError);
       }
+      const { error: stubsError } = validateJourneyStubs({ stubs });
+      if (stubsError) {
+        return notFoundResult(stubsError);
+      }
       // One params object for both branches, so neither can drop a parameter
       // the other passes. basePath is read as the HTTP route reads it, so
       // expect.calls counts and app errors match under a basePath.
@@ -424,6 +442,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         state,
         stepTimeout: timeout,
         data,
+        stubs,
         basePath: lowdefyConfig.basePath ?? '',
       };
       // headless: true runs the journey with no browser (runJourneyHeadless).

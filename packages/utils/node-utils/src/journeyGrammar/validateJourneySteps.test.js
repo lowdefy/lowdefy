@@ -100,14 +100,14 @@ test('validateJourneySteps rejects steps that are not an array', () => {
 test('validateJourneySteps names the index and key of an unknown step', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a' }, { hover: 'b' }] });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
 test('validateJourneySteps rejects a step with more than one key', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a', fill: { blockId: 'b' } }] });
   expect(result.error).toEqual(
-    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
@@ -581,7 +581,7 @@ test('validateJourneySteps ends an expect error with examples of that expect kin
 
 test('validateJourneySteps lists the valid step names for an unknown step', () => {
   expect(validateJourneySteps({ steps: [{ browser_forward: true }] }).error).toBe(
-    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.'
+    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
@@ -656,14 +656,14 @@ test('validateJourneySteps accepts expect.status and expect.error after a call o
 
 test('validateJourneySteps rejects an expect.status with no call or request before it', () => {
   expect(validateJourneySteps({ steps: [{ expect: { status: 403 } }] }).error).toBe(
-    'Step 0: Step "expect.status" must follow a "call" or "request" step, whose answer it reads; only expect steps may sit between them. Received it after the start of the journey.'
+    'Step 0: Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after the start of the journey.'
   );
   expect(
     validateJourneySteps({
       steps: [{ call: { endpoint: 'e' } }, { click: 'save' }, { expect: { status: 403 } }],
     }).error
   ).toBe(
-    'Step 2: Step "expect.status" must follow a "call" or "request" step, whose answer it reads; only expect steps may sit between them. Received it after a "click" step.'
+    'Step 2: Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after a "click" step.'
   );
   expect(
     validateJourneySteps({
@@ -689,6 +689,152 @@ test.each([
     'Step 1: Step "expect.status" requires an HTTP status code, a whole number from 100 to 599, e.g. 403.'
   );
   expect(result.error).toContain(message);
+});
+
+test('validateJourneySteps accepts hold and release, with expect steps reading the release', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim_run' } },
+        { call: { endpoint: 'run-approve', payload: { id: 'BR-1' } } },
+        { call: { endpoint: 'run-approve', payload: { id: 'BR-1' }, as: 'other' } },
+        { expect: { status: 200 } },
+        { release: 'claim_run' },
+        { expect: { status: 200 } },
+        { expect: { error: 'already approved' } },
+        { hold: { requestId: 'claim_run', endpoint: 'run-approve', pageId: 'runs' } },
+        { release: 'claim_run' },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed hold and release steps', () => {
+  function error(step) {
+    return validateJourneySteps({ steps: [step] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ hold: 'claim_run' })).toBe(
+    'Step 0: Step "hold" requires { requestId, endpoint?, pageId? }. Received "claim_run".'
+  );
+  expect(error({ hold: {} })).toBe(
+    'Step 0: Step "hold" requires "requestId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ hold: { requestId: 'r', endpoint: '' } })).toBe(
+    'Step 0: Step "hold" requires "endpoint" to be a non-empty string. Received "".'
+  );
+  expect(error({ hold: { requestId: 'r', pageId: 3 } })).toBe(
+    'Step 0: Step "hold" requires "pageId" to be a non-empty string. Received 3.'
+  );
+  expect(error({ hold: { requestId: 'r', times: 2 } })).toBe(
+    'Step 0: Step "hold" has unknown key "times". Keys are: requestId, endpoint, pageId.'
+  );
+  expect(error({ release: { requestId: 'r' } })).toBe(
+    'Step 0: Step "release" requires the requestId of a "hold" step before it. Received {"requestId":"r"}.'
+  );
+  expect(validateJourneySteps({ steps: [{ hold: [] }] }).error).toMatch(
+    / Example: \{"hold":\{"requestId":"claim_order"\}\}/
+  );
+});
+
+test('validateJourneySteps rejects a release that names no gate a hold before it set', () => {
+  expect(validateJourneySteps({ steps: [{ release: 'claim_run' }] }).error).toBe(
+    'Step 0: Step "release" names request "claim_run", which no "hold" step before it holds. A release lets go of the call a hold parked.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ hold: { requestId: 'other_request' } }, { release: 'claim_run' }],
+    }).error
+  ).toBe(
+    'Step 1: Step "release" names request "claim_run", which no "hold" step before it holds. A release lets go of the call a hold parked.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ release: 'claim_run' }, { hold: { requestId: 'claim_run' } }],
+    }).error
+  ).toContain('Step 0: Step "release" names request "claim_run", which no "hold"');
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim_run' } },
+        { release: 'claim_run' },
+        { release: 'claim_run' },
+      ],
+    }).error
+  ).toBe(
+    'Step 2: Step "release" names request "claim_run", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.'
+  );
+});
+
+test('validateJourneySteps rejects an expect.status after a hold, which answers nothing', () => {
+  expect(
+    validateJourneySteps({ steps: [{ hold: { requestId: 'r' } }, { expect: { status: 200 } }] })
+      .error
+  ).toBe(
+    'Step 1: Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after a "hold" step.'
+  );
+});
+
+test('validateJourneySteps accepts a call as system and refuses a request as system', () => {
+  expect(
+    validateJourneySteps({
+      steps: [{ call: { endpoint: 'nightly_close', as: 'system' } }, { expect: { status: 200 } }],
+    })
+  ).toEqual({});
+  expect(
+    validateJourneySteps({
+      steps: [{ request: { pageId: 'orders', requestId: 'get_order', as: 'system' } }],
+    }).error.replace(EXAMPLES, '')
+  ).toBe(
+    'Step 0: Step "request" cannot run "as: system": a page request is always sent by a person on the page. Call the endpoint the request reaches with a "call" step "as: system" instead.'
+  );
+});
+
+test('validateJourneySteps accepts a webhook, with expect steps reading its answer', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        {
+          webhook: {
+            endpoint: 'payment_events',
+            body: { id: 'evt_1' },
+            query: { attempt: '1' },
+            headers: { 'x-signature': 'abc' },
+          },
+        },
+        { expect: { status: 401 } },
+        { expect: { error: 'Webhook verification failed.' } },
+        { webhook: { endpoint: 'payment_events', body: 'id=evt_2' } },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed webhook steps', () => {
+  function error(step) {
+    return validateJourneySteps({ steps: [step] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ webhook: 'payment_events' })).toBe(
+    'Step 0: Step "webhook" requires { endpoint, body, query?, headers? }. Received "payment_events".'
+  );
+  expect(error({ webhook: { body: {} } })).toBe(
+    'Step 0: Step "webhook" requires "endpoint" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ webhook: { endpoint: 'payment_events' } })).toBe(
+    'Step 0: Step "webhook" requires "body": a string is sent as written, anything else as JSON.'
+  );
+  expect(error({ webhook: { endpoint: 'e', body: {}, headers: { 'x-attempt': 2 } } })).toBe(
+    'Step 0: Step "webhook" requires "headers" to be an object of strings. Received {"x-attempt":2}.'
+  );
+  expect(error({ webhook: { endpoint: 'e', body: {}, query: 'a=1' } })).toBe(
+    'Step 0: Step "webhook" requires "query" to be an object of strings. Received "a=1".'
+  );
+  expect(error({ webhook: { endpoint: 'e', body: {}, as: 'system' } })).toBe(
+    'Step 0: Step "webhook" has unknown key "as". Keys are: endpoint, body, query, headers.'
+  );
+  expect(validateJourneySteps({ steps: [{ webhook: 1 }] }).error).toMatch(
+    / Example: \{"webhook":\{"endpoint":"payments-events"/
+  );
 });
 
 test('validateJourneySteps accepts expect.calls with payload or response in place of count', () => {
@@ -762,5 +908,38 @@ test('validateJourneySteps rejects malformed expect.db', () => {
   );
   expect(error('orders')).toContain(
     'Step "expect.db" requires { collection, connectionId?, match, count }'
+  );
+});
+
+test('validateJourneySteps accepts expect.sunk narrowed by connection, request type and id', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { sunk: {} } },
+        { expect: { sunk: { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', count: 0 } } },
+        { expect: { sunk: { requestId: 'fetch_rate', count: 2, match: { params: {} } } } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed expect.sunk', () => {
+  function error(sunk) {
+    return validateJourneySteps({ steps: [{ expect: { sunk } }] }).error.replace(EXAMPLES, '');
+  }
+  expect(error('AxiosHttp')).toBe(
+    'Step 0: Step "expect.sunk" requires { connectionType?, requestType?, requestId?, count?, match? }. Received "AxiosHttp".'
+  );
+  expect(error({ endpoint: 'price_run' })).toBe(
+    'Step 0: Step "expect.sunk" has unknown key "endpoint". Keys are: connectionType, requestType, requestId, count, match.'
+  );
+  expect(error({ requestType: '' })).toBe(
+    'Step 0: Step "expect.sunk" requires "requestType" to be a non-empty string. Received "".'
+  );
+  expect(error({ count: 1.5 })).toBe(
+    'Step 0: Step "expect.sunk" requires "count" to be a whole number of requests, 0 or more. Received 1.5.'
+  );
+  expect(error({ match: ['EUR'] })).toBe(
+    'Step 0: Step "expect.sunk" requires "match" to be an object of the request values to match. Received ["EUR"].'
   );
 });

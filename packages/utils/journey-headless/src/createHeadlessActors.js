@@ -19,6 +19,7 @@ import createHeadlessActor from './createHeadlessActor.js';
 import { type } from '@lowdefy/helpers';
 
 const MAIN_ACTOR = 'main';
+const SYSTEM = 'system';
 
 // The people of a headless journey, as a browser journey's actors: it starts as "main", the
 // journey's user, and an `as` step switches to another, opening the journey's first page for
@@ -28,6 +29,9 @@ const MAIN_ACTOR = 'main';
 function createHeadlessActors({ host, onTrace, plugins, start, stepTimeout, user }) {
   const actors = new Map();
   let currentName = MAIN_ACTOR;
+  // The system caller is kept apart from the actors an `as` step opens, so a journey with no data
+  // set, where `as: system` is any other person, never calls as the system by it.
+  let systemActor = null;
 
   function userFor(name) {
     if (name !== MAIN_ACTOR && host.userNames.includes(name)) {
@@ -69,13 +73,34 @@ function createHeadlessActors({ host, onTrace, plugins, start, stepTimeout, user
     currentName = name;
   }
 
+  // The caller of a call step `as: system`: no user and no page, marked `system`, so the call
+  // runs the endpoint as a cron or detached run does (host.system).
+  function openSystem() {
+    if (systemActor === null) {
+      systemActor = createHeadlessActor({
+        host,
+        name: SYSTEM,
+        onTrace,
+        plugins,
+        stepTimeout,
+        user: null,
+      });
+      systemActor.system = true;
+    }
+    return systemActor;
+  }
+
   // Who a call or request step calls as, without switching the actor the journey acts as, as the
   // browser runner picks it: the current actor when the step names no one, the actor of that name
-  // for a name, and an actor of its own for "none" (signed out) or an inline user object. Its
-  // calls are recorded on that actor, for expect.calls.
+  // for a name, an actor of its own for "none" (signed out) or an inline user object, and the
+  // system caller for "system" (a call step only). Its calls are recorded on that actor, for
+  // expect.calls.
   async function callerFor(as) {
     if (type.isUndefined(as)) {
       return actors.get(currentName);
+    }
+    if (as === SYSTEM) {
+      return openSystem();
     }
     if (as === 'none' || type.isObject(as)) {
       // Spaced, so it never takes the name of an actor an `as` step opened.
@@ -85,7 +110,7 @@ function createHeadlessActors({ host, onTrace, plugins, start, stepTimeout, user
   }
 
   return {
-    all: () => [...actors.values()],
+    all: () => (systemActor === null ? [...actors.values()] : [...actors.values(), systemActor]),
     callerFor,
     current: () => actors.get(currentName),
     open,

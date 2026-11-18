@@ -16,11 +16,12 @@
 
 import { beforeEach, expect, test, vi } from 'vitest';
 
-import holdAtStep from './holdAtStep.js';
+import createGatedResolver from './dataSets/createGatedResolver.js';
 import pauseBefore from './pauseBefore.js';
-import releasePauseGates from './releasePauseGates.js';
+import releasePauseGates from './dataSets/releasePauseGates.js';
 
 let testSession;
+let session;
 let resolver;
 let held;
 
@@ -34,10 +35,11 @@ async function isSettled(promise) {
 }
 
 beforeEach(() => {
-  testSession = { closed: false, gates: new Map(), held: new Set() };
+  session = { failGates: [], pauseGates: [] };
+  testSession = { closed: false, dataSession: { session } };
   resolver = vi.fn(async (args) => `ran ${args.requestId}`);
   resolver.meta = { checkWrite: true };
-  held = holdAtStep({ resolver, testSession });
+  held = createGatedResolver({ resolver, session });
 });
 
 test('pauseBefore holds the first routine to reach the step until it is released, before its request runs', async () => {
@@ -95,7 +97,7 @@ test('pauseBefore refuses a step id that is not a string and a closed session', 
   expect(() => pauseBefore({ stepId: 'insert_run', testSession })).toThrow('The session is closed');
 });
 
-test('holdAtStep keeps the schema and meta of the resolver it wraps', () => {
+test('createGatedResolver keeps the schema and meta of the resolver it wraps', () => {
   expect(held.meta).toBe(resolver.meta);
 });
 
@@ -104,9 +106,8 @@ test('releasePauseGates lets go of a held routine and removes the gates no routi
   pauseBefore({ stepId: 'never_reached', testSession });
   const first = held({ requestId: 'insert_run' });
   await reachedGate.reached;
-  releasePauseGates({ testSession });
+  releasePauseGates({ session });
   expect(await first).toEqual('ran insert_run');
   expect(await held({ requestId: 'never_reached' })).toEqual('ran never_reached');
-  expect(testSession.gates.size).toEqual(0);
-  expect(testSession.held.size).toEqual(0);
+  expect(session.pauseGates).toEqual([]);
 });

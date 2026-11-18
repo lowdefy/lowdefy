@@ -17,31 +17,14 @@
 import checkAccessTable from './checkAccessTable.js';
 import updateAccessTable from './updateAccessTable.js';
 
-// The access step of a `lowdefy test` run that reads the production build. Its openTestApp is
-// the run's one build check: a missing build, one of another Lowdefy version and one older than
-// the config refuse the run with @lowdefy/test-utils' message, which names the command to run,
-// before any journey. mode is "check" (--headless --build), "access" (--access, where a missing
-// file fails) or "update" (--update-access). Returns { refused } or { failed }.
-async function runAccessStep({ context, mode }) {
-  // Loaded only for a run that reads the build: it brings the server's own modules.
-  const { openTestApp } = await import('@lowdefy/test-utils');
-  let app;
-  try {
-    app = await openTestApp({
-      configDirectory: context.directories.config,
-      serverDirectory: context.directories.server,
-    });
-  } catch (error) {
-    return { refused: error.message };
+// The access step of a `lowdefy test` run that reads the production build, on the run's one app
+// (openBuildApp, which checks the build). mode is "check" (--headless --build), "access"
+// (--access, where a missing file fails) or "update" (--update-access). Returns { failed }.
+async function runAccessStep({ app, context, mode }) {
+  if (mode === 'update') {
+    return updateAccessTable({ app, context });
   }
-  try {
-    if (mode === 'update') {
-      return await updateAccessTable({ app, context });
-    }
-    return await checkAccessTable({ app, context, required: mode === 'access' });
-  } finally {
-    await app.close();
-  }
+  return checkAccessTable({ app, context, required: mode === 'access' });
 }
 
 export default runAccessStep;

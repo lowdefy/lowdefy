@@ -33,11 +33,15 @@ const entries = [];
 // buffer only (see runErrorBuffers), or is dropped when the run has ended:
 // kept out of this ring and the event bus, it never reaches build-status or
 // an agent's event stream, and a run that trips many errors cannot evict the
-// developer's own. The run reports its errors in its own result.
+// developer's own. The run reports its errors in its own result. A forced failure (a journey's
+// fail gate) is only ever a run's: it never reaches the ring or the event bus.
 function push(entry) {
   const stamped = { ...entry, buildId: getBuildId() };
   if (isRunErrorEntry(stamped)) {
     recordRunError({ ...stamped, store: 'server' });
+    return;
+  }
+  if (stamped.forced === true) {
     return;
   }
   entries.push(stamped);

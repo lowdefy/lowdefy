@@ -265,7 +265,7 @@ Scheduled and detached-only endpoints are `InternalApi` by design, so a plain ru
 
 This is dev-only — enable it when you're comfortable with the agent writing to your dev data.
 
-Calling an endpoint or request directly is the way to check logic, calculations, permissions and what it writes while editing: pass `user` and `data` to act as a [data set](/journey-data-sets) user on a database of its own. To keep such a check as a regression test, write a journey that needs no browser: driven from the page, or with no `pageId` and a `call` or `request` step for what a page would never send. An [endpoint test](/endpoint-tests) holds what a journey cannot say, such as table-driven cases and stubbed services.
+Calling an endpoint or request directly is the way to check logic, calculations, permissions and what it writes while editing: pass `user` and `data` to act as a [data set](/journey-data-sets) user on a database of its own. To keep such a check as a regression test, write a journey that needs no browser: driven from the page, or a [page-less journey](/config-tests#page-less-journeys) with `call`, `request` or `webhook` steps for endpoint and server logic, with a `cases` table for many cases and `stubs` for outside services. An [endpoint test](/endpoint-tests) holds only what a journey cannot say, such as a value computed in code.
 
 ## Journeys — verify behaviour, not just layout
 

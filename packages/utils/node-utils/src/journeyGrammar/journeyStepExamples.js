@@ -39,9 +39,27 @@ const JOURNEY_STEP_EXAMPLES = {
   call: [
     { call: { endpoint: 'orders-cancel', payload: { order_id: 'ORD-1' } } },
     { call: { endpoint: 'orders-cancel', payload: { order_id: 'ORD-2' }, as: 'other_customer' } },
+    { call: { endpoint: 'orders-nightly-close', as: 'system' } },
   ],
   request: [
     { request: { pageId: 'orders', requestId: 'get_order', payload: { order_id: 'ORD-1' } } },
+  ],
+  hold: [
+    { hold: { requestId: 'claim_order' } },
+    { hold: { requestId: 'claim_order', endpoint: 'orders-approve' } },
+  ],
+  release: [{ release: 'claim_order' }],
+  webhook: [
+    {
+      webhook: {
+        endpoint: 'payments-events',
+        body: { type: 'payment.succeeded', order_id: 'ORD-1' },
+        headers: {
+          'x-signature': '9f2c5e0b7d4a1c3e8b6f0a2d4c6e8f1a3b5d7c9e0f2a4b6c8d0e2f4a6b8c0d2e',
+        },
+      },
+    },
+    { webhook: { endpoint: 'mail-bounces', body: 'id=42&event=bounce', query: { token: 'abc' } } },
   ],
   'expect.state': [{ expect: { state: { path: 'order.status', equals: 'Open' } } }],
   'expect.visible': [{ expect: { visible: 'save_button' } }],
@@ -63,6 +81,14 @@ const JOURNEY_STEP_EXAMPLES = {
     {
       expect: {
         db: { collection: 'orders', match: { _id: 'ORD-1' }, equals: [{ status: 'Open' }] },
+      },
+    },
+  ],
+  'expect.sunk': [
+    { expect: { sunk: { connectionType: 'SendGridMail', count: 1 } } },
+    {
+      expect: {
+        sunk: { requestId: 'fetch_rate', match: { params: { currency: 'EUR' } } },
       },
     },
   ],

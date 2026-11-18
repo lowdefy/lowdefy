@@ -21,15 +21,21 @@ import {
   getShortcutModifier,
   getState,
 } from '@lowdefy/e2e-utils/runtime';
-import { CALL_STEP_KEYS, getStepKey } from '@lowdefy/node-utils';
+import {
+  expectAnswerError,
+  expectAnswerStatus,
+  expectDb,
+  expectSunk,
+  findUnfiredFailGate,
+  HeadlessStepError,
+} from '@lowdefy/journey-headless';
+import { ANSWER_STEP_KEYS, getStepKey } from '@lowdefy/node-utils';
+import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
 import checkClickRails from './rails/checkClickRails.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
-import expectAnswerError from './expectAnswerError.js';
-import expectAnswerStatus from './expectAnswerStatus.js';
-import expectJourneyDb from './expectJourneyDb.js';
 import { buildPageUrl } from './getBrowser.js';
 import hasNoEffect from './observe/hasNoEffect.js';
 import isDeepEqual from './isDeepEqual.js';
@@ -40,6 +46,7 @@ import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
 import runJourneyCall from './runJourneyCall.js';
+import runJourneyWebhook from './runJourneyWebhook.js';
 import shownTextSelector from './shownTextSelector.js';
 
 // Playwright colours its call log with ANSI escapes; the result is read by an
@@ -1089,6 +1096,30 @@ function expectEffect({ journey }) {
   }
 }
 
+// What expect.db reads in a browser run, as a headless host's findDocuments: the journey's data
+// session databases on the data store.
+function createDbReader({ journey }) {
+  return {
+    findDocuments: ({ collection, connectionId, match }) => {
+      if (type.isNone(journey.dataSession)) {
+        throw new Error(
+          'expect.db reads the journey\'s data set database, and this journey declares no "data".'
+        );
+      }
+      return findSessionDocuments({
+        buildDirectory: journey.buildDirectory,
+        client: journey.dataStore.client,
+        collection,
+        connectionId,
+        match,
+        session: journey.dataSession.session,
+      });
+    },
+  };
+}
+
+// The checks on a call's answer, the database and the outside requests are the headless runner's
+// own (@lowdefy/journey-headless), so each check has one implementation on every host.
 async function runExpect({ journey, page, step, timeout }) {
   const expectation = step.expect;
   const key = getStepKey(expectation);
@@ -1119,17 +1150,20 @@ async function runExpect({ journey, page, step, timeout }) {
       // After a call or request, the answer's error. App errors are claimed when the step's
       // window closes (see observe/claimExpectedErrors).
       if (!type.isUndefined(journey.lastAnswer)) {
-        expectAnswerError({ journey, text: params });
+        expectAnswerError({ answer: journey.lastAnswer, text: params });
       }
       return;
     case 'effect':
       expectEffect({ journey });
       return;
     case 'status':
-      expectAnswerStatus({ journey, status: params });
+      expectAnswerStatus({ answer: journey.lastAnswer, status: params });
       return;
     case 'db':
-      await expectJourneyDb({ journey, params, timeout });
+      await expectDb({ host: createDbReader({ journey }), params, timeout });
+      return;
+    case 'sunk':
+      await expectSunk({ params, session: journey.dataSession?.session, timeout });
       return;
     default:
       // The grammar admits nothing else; an expectation it gains is not passed unchecked.
@@ -1220,6 +1254,9 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
     case 'request':
       await runJourneyCall({ journey, step, timeout });
       return;
+    case 'webhook':
+      await runJourneyWebhook({ journey, step, timeout });
+      return;
     default:
       // The grammar admits nothing else; a step it gains is not passed unchecked.
       throw new Error(`The browser journey runner has no step "${getStepKey(step)}".`);
@@ -1227,7 +1264,7 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
 }
 
 function toFailure({ error, index, step }) {
-  if (error instanceof JourneyStepError) {
+  if (error instanceof JourneyStepError || error instanceof HeadlessStepError) {
     // `actual` is null rather than undefined so the key survives JSON — an
     // agent reading the failure sees "found nothing", not a missing field.
     return {
@@ -1270,8 +1307,8 @@ async function runJourneySteps({ journey, steps }) {
       continue;
     }
     const started = Date.now();
-    // A call's answer is read only by the expect steps straight after it.
-    if (!['expect', ...CALL_STEP_KEYS].includes(getStepKey(step))) {
+    // A call's or webhook's answer is read only by the expect steps straight after it.
+    if (!['expect', ...ANSWER_STEP_KEYS].includes(getStepKey(step))) {
       journey.lastAnswer = undefined;
     }
     if (REQUEST_WINDOW_STEPS.includes(getStepKey(step))) {
@@ -1323,6 +1360,14 @@ async function runJourneySteps({ journey, steps }) {
   }
   if (!type.isUndefined(appErrors) && type.isUndefined(failure) && steps.length > 0) {
     failure = await appErrors.judgeDrain({ journey, steps, results });
+  }
+  // A fail gate the journey's stubs set that no request reached fails it at its last step. A
+  // journey on no data set has no fail gates.
+  if (type.isUndefined(failure) && steps.length > 0 && !type.isNone(journey.dataSession)) {
+    failure = findUnfiredFailGate({ session: journey.dataSession.session, steps });
+    if (!type.isUndefined(failure)) {
+      results[failure.index].status = 'failed';
+    }
   }
   return { results, screenshots, failure };
 }

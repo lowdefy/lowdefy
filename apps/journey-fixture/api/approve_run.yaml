@@ -1,0 +1,29 @@
+# Two approvals of one run race in tests/journeys/_headless/race.yaml (run headless by
+# packages/utils/journey-headless/test/fixture/races.test.mjs): a hold parks the first before
+# claim_run, the second claims the run, and the released first finds it claimed. claim_run only
+# claims a run no one has approved, so one approval wins whichever order they run in.
+id: approve_run
+type: Api
+routine:
+  - id: claim_run
+    type: MongoDBUpdateOne
+    connectionId: fixture_db
+    properties:
+      filter:
+        _id:
+          _payload: id
+        kind: run
+        approved_by: null
+      update:
+        $set:
+          approved_by:
+            _user: id
+      disableNoMatchError: true
+  - ':if':
+      _eq:
+        - _step: claim_run.matchedCount
+        - 0
+    ':then':
+      - ':reject': Run already approved.
+  - ':return':
+      approved: true

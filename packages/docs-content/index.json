@@ -488,40 +488,10 @@
       "path": "content/testing/explore-pull-request.md"
     },
     {
-      "slug": "testing/e2e-introduction",
-      "title": "E2E Testing",
+      "slug": "testing/e2e-utils-migration",
+      "title": "Moving from e2e-utils",
       "section": "Testing",
-      "path": "content/testing/e2e-introduction.md"
-    },
-    {
-      "slug": "testing/e2e-getting-started",
-      "title": "Getting Started",
-      "section": "Testing",
-      "path": "content/testing/e2e-getting-started.md"
-    },
-    {
-      "slug": "testing/e2e-writing-tests",
-      "title": "Writing Tests",
-      "section": "Testing",
-      "path": "content/testing/e2e-writing-tests.md"
-    },
-    {
-      "slug": "testing/e2e-mocking",
-      "title": "Mocking Requests",
-      "section": "Testing",
-      "path": "content/testing/e2e-mocking.md"
-    },
-    {
-      "slug": "testing/e2e-auth",
-      "title": "Testing Authentication",
-      "section": "Testing",
-      "path": "content/testing/e2e-auth.md"
-    },
-    {
-      "slug": "testing/e2e-configuration",
-      "title": "Configuration",
-      "section": "Testing",
-      "path": "content/testing/e2e-configuration.md"
+      "path": "content/testing/e2e-utils-migration.md"
     },
     {
       "slug": "input-blocks/inputgallery",
@@ -3132,7 +3102,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "6ea7d0743e7482c13eec24e901a9939553b1455a67fb197340c59a13e33833d5"
+      "hash": "662659ccaf4a5918c10cc76a23fdec4910d24aca6a38aa739f8a627ab637630b"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3373,28 +3343,28 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "a02a9bde6403f9e77c89dcd01f3d4e485dbdb0a4beecc82a73bc8a04f78cb39b"
+      "hash": "d33ce84085fc8d3ea572ae15291e296d43cf4640b694020ba22099e57bff81de"
     },
     "testing/journey-data-sets": {
       "files": [
         "testing/journey-data-sets.md",
         "testing/journey-data-sets.yaml"
       ],
-      "hash": "c89eddbb137a28b1234685104fb6030a7168665be98786d7cc4eb2a89e83d5a7"
+      "hash": "075d2fb697a1293bceb4d39cc5c3bb16858b25a6198e6f4c7d52b3301551e3e6"
     },
     "testing/endpoint-tests": {
       "files": [
         "testing/endpoint-tests.md",
         "testing/endpoint-tests.yaml"
       ],
-      "hash": "d9a414d4f2649bd257b49f076e6bbb5e6aec3df5001864c06cf00748a1306caf"
+      "hash": "8682303639ad7a66d2014213a5d2b0f945016f64b70c27892c84f7d438cb94c9"
     },
     "testing/access-table": {
       "files": [
         "testing/access-table.md",
         "testing/access-table.yaml"
       ],
-      "hash": "67216350d42798ad257cb3363117a27e53013ba498d4e541fd9468752c5f7188"
+      "hash": "90c044e9537ae6a9b72c4c9f99a6497f51f7e1d440c96b8ab13df1ca732d0fe1"
     },
     "testing/explore-pull-request": {
       "files": [
@@ -3403,41 +3373,12 @@
       ],
       "hash": "1a36582512bc2878bc3240bafe50405d42d79defc567015892a3452dc9bb02b8"
     },
-    "testing/e2e-introduction": {
+    "testing/e2e-utils-migration": {
       "files": [
-        "testing/e2e-introduction.yaml"
+        "testing/e2e-utils-migration.md",
+        "testing/e2e-utils-migration.yaml"
       ],
-      "hash": "4d490055b0153e2278d13fae8029966bc7b313c0cb17155411bcbf19ca252150"
-    },
-    "testing/e2e-getting-started": {
-      "files": [
-        "testing/e2e-getting-started.yaml"
-      ],
-      "hash": "e8edb96355d7cceb727a2720833273f1909b71958a7a86c4386219ab20f03248"
-    },
-    "testing/e2e-writing-tests": {
-      "files": [
-        "testing/e2e-writing-tests.yaml"
-      ],
-      "hash": "beb914d1029677e1c1124c1127f362a4defe3e10160668c9ac864d010da5cbc5"
-    },
-    "testing/e2e-mocking": {
-      "files": [
-        "testing/e2e-mocking.yaml"
-      ],
-      "hash": "0ec5cfa5672c4f704ef5cecc27c969205274e9af3944c0f806b53ebffe7540ad"
-    },
-    "testing/e2e-auth": {
-      "files": [
-        "testing/e2e-auth.yaml"
-      ],
-      "hash": "7e21e6e51df915d906d23cdb8abd0272359092eed5b2eeaf6dbf0f6223a6f884"
-    },
-    "testing/e2e-configuration": {
-      "files": [
-        "testing/e2e-configuration.yaml"
-      ],
-      "hash": "cf462dd44839dba1d6f856407b6bf10deff9ace9e1eea27fba6c32d565c94ec7"
+      "hash": "1c5b8b42bccb49d997af889a9824066390ac6e9e758e8ddb7969d23d3114a0f0"
     },
     "input-blocks/inputgallery": {
       "files": [

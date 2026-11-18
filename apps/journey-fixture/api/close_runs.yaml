@@ -1,0 +1,20 @@
+# An internal endpoint a cron run would call: no caller reaches it over HTTP, and a journey calls
+# it with `as: system` (tests/journeys/_headless/system.yaml, run headless by
+# packages/utils/journey-headless/test/fixture/outside.test.mjs).
+id: close_runs
+type: InternalApi
+routine:
+  - id: close
+    type: MongoDBUpdateMany
+    connectionId: fixture_db
+    properties:
+      filter:
+        kind: run
+        closed:
+          $ne: true
+      update:
+        $set:
+          closed: true
+  - ':return':
+      closed:
+        _step: close.modifiedCount

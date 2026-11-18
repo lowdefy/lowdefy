@@ -16,6 +16,8 @@
 
 import { afterAll, beforeAll, beforeEach, expect, test } from 'vitest';
 
+import { openTestApp } from '@lowdefy/test-utils';
+
 import createBuildHost from '../../src/createBuildHost.js';
 import runHeadlessJourney from '../../src/runHeadlessJourney.js';
 import journeyFixture from './journeyFixture.mjs';
@@ -24,10 +26,12 @@ import journeyFixture from './journeyFixture.mjs';
 // steps on the client engine in Node, their checks, and app errors judged as the browser runner
 // judges them.
 
+let app;
 let host;
 
 beforeAll(async () => {
-  host = await createBuildHost({ ...journeyFixture, data: 'harden', user: 'member' });
+  app = await openTestApp(journeyFixture);
+  host = await createBuildHost({ app, data: 'harden', user: 'member' });
 });
 
 beforeEach(() => {
@@ -36,6 +40,7 @@ beforeEach(() => {
 
 afterAll(async () => {
   await host?.close();
+  await app?.close();
 });
 
 // The page config comes in its serialized form, where an array is { '~arr': [...] }.

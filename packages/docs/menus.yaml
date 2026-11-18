@@ -321,36 +321,6 @@
         title: Testing
         icon: FlaskConical
       links:
-        - id: e2e-introduction
-          type: MenuLink
-          pageId: e2e-introduction
-          properties:
-            title: Introduction
-        - id: e2e-getting-started
-          type: MenuLink
-          pageId: e2e-getting-started
-          properties:
-            title: Getting Started
-        - id: e2e-writing-tests
-          type: MenuLink
-          pageId: e2e-writing-tests
-          properties:
-            title: Writing Tests
-        - id: e2e-mocking
-          type: MenuLink
-          pageId: e2e-mocking
-          properties:
-            title: Mocking Requests
-        - id: e2e-auth
-          type: MenuLink
-          pageId: e2e-auth
-          properties:
-            title: Testing Authentication
-        - id: e2e-configuration
-          type: MenuLink
-          pageId: e2e-configuration
-          properties:
-            title: Configuration
         - id: config-tests
           type: MenuLink
           pageId: config-tests
@@ -376,6 +346,11 @@
           pageId: explore-pull-request
           properties:
             title: Exploring a Pull Request
+        - id: e2e-utils-migration
+          type: MenuLink
+          pageId: e2e-utils-migration
+          properties:
+            title: Moving from e2e-utils
     - id: users_group
       type: MenuGroup
       properties:

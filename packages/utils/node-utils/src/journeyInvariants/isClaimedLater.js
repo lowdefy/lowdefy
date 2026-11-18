@@ -15,21 +15,21 @@
 */
 
 import {
-  CALL_STEP_KEYS,
+  ANSWER_STEP_KEYS,
   getStepKey,
   INTERACTION_STEP_KEYS,
 } from '../journeyGrammar/validateJourneySteps.js';
 import isExpectErrorStep from './isExpectErrorStep.js';
 
 // Whether the step at `index` has app errors an expect.error after it claims: an interaction
-// directly followed by one, or a call or request followed by one among the expect steps that
-// read its answer. The browser and headless runners both decide it here, so they agree.
+// directly followed by one, or a call, request or release followed by one among the expect steps
+// that read its answer. The browser and headless runners both decide it here, so they agree.
 function isClaimedLater({ index, steps }) {
   const key = getStepKey(steps[index]);
   if (INTERACTION_STEP_KEYS.includes(key)) {
     return isExpectErrorStep(steps[index + 1]);
   }
-  if (!CALL_STEP_KEYS.includes(key)) {
+  if (!ANSWER_STEP_KEYS.includes(key)) {
     return false;
   }
   for (let next = index + 1; next < steps.length; next += 1) {

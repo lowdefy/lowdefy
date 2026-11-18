@@ -18,11 +18,18 @@ import path from 'node:path';
 import { type } from '@lowdefy/helpers';
 import { getState } from '@lowdefy/e2e-utils/runtime';
 import {
+  classifyJourney,
   findPlaceholderStep,
   normaliseJourneySteps,
+  validateJourneyDataSession,
   validateJourneySteps,
 } from '@lowdefy/node-utils';
-import { getDataStore, openDataSession } from '@lowdefy/test-utils/dataSets';
+import {
+  addJourneyStubs,
+  checkJourneyStubTargets,
+  getDataStore,
+  openDataSession,
+} from '@lowdefy/test-utils/dataSets';
 
 import collectExercised from './collectExercised.js';
 import createDataSetRails from './rails/createDataSetRails.js';
@@ -90,7 +97,9 @@ function defaultReadConfigFile(name) {
 // before any browser opens. `pathParams` fill the placeholders of the page's
 // path; one left without a value is an error before any browser opens. A
 // journey with no pageId opens no page: its steps only call the server (call,
-// request, expect on their answers, the calls made and the database).
+// request, expect on their answers, the calls made and the database). `stubs`,
+// the journey's answer stubs and fail gates (validated by the caller), are set
+// on its data session: the browser's requests resolve on it in this process.
 async function runJourney({
   origin,
   pageId,
@@ -107,6 +116,7 @@ async function runJourney({
   readConfigFile = defaultReadConfigFile,
   mutantCookie,
   data,
+  stubs,
   recording,
   by,
 }) {
@@ -171,6 +181,27 @@ async function runJourney({
   if (!type.isUndefined(callChecksError)) {
     return { error: callChecksError, refused: true };
   }
+  // hold and release park a call in the runner's own process, and a call as system runs its
+  // endpoint as the system there (over HTTP that is the detached route, which needs CRON_SECRET).
+  // A browser posting to the server can do neither, so they are refused before any browser opens
+  // rather than run unchecked.
+  const { inProcess } = classifyJourney({ journey: { steps: inputSteps } });
+  if (!type.isUndefined(inProcess)) {
+    return {
+      error: `Step ${inProcess.index}: ${inProcess.reason}. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).`,
+      refused: true,
+    };
+  }
+  // Stubs and expect.sunk live on the data session: refused without a data set, as lowdefy test
+  // and the headless run refuse them.
+  const { error: dataSessionError } = validateJourneyDataSession({
+    data,
+    steps: inputSteps,
+    stubs,
+  });
+  if (!type.isUndefined(dataSessionError)) {
+    return { error: dataSessionError, refused: true };
+  }
   // A page-less journey's messages name the app it calls.
   let pagePath;
   let url = `${origin}${basePath}`;
@@ -205,6 +236,7 @@ async function runJourney({
         url,
         user: resolved.user,
         dataSet,
+        stubs,
         urlQuery,
         width,
         height,
@@ -230,6 +262,7 @@ async function runJourneyInBrowser({
   url,
   user,
   dataSet,
+  stubs,
   urlQuery,
   width,
   height,
@@ -248,6 +281,15 @@ async function runJourneyInBrowser({
   let store = null;
   let loadMs;
   if (!type.isUndefined(dataSet)) {
+    // An answer stub on a type the app does not have would never answer: refused before the data
+    // set loads.
+    const stubsError = checkJourneyStubTargets({
+      connections: await readConnectionPlugins(),
+      stubs,
+    });
+    if (!type.isUndefined(stubsError)) {
+      return { error: stubsError, refused: true };
+    }
     try {
       store = await getDataStore({ logger });
     } catch (error) {
@@ -260,6 +302,7 @@ async function runJourneyInBrowser({
       return { error: error.message, refused: true };
     }
     loadMs = Date.now() - loadStart;
+    addJourneyStubs({ session: session.session, stubs });
   }
 
   let browser;

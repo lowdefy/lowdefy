@@ -117,6 +117,28 @@ test('--headless --build runs the headless journey and lists the browser journey
   });
 });
 
+// The case table the config tests docs page shows (its sample matches this file), with its rows
+// and steps read from tests/shared through _ref.
+test('--headless --build runs a case table journey once per row', async () => {
+  const { code, output } = await runCli([
+    'test',
+    '--headless',
+    '--build',
+    '--config-directory',
+    configDirectory,
+    '--server-directory',
+    serverDirectory,
+    path.join(configDirectory, 'tests', 'journeys', '_headless', 'cases.yaml'),
+  ]);
+  ['form', 'import', 'api'].forEach((row) => {
+    expect(output).toMatch(
+      new RegExp(`PASS {2}logs an activity from each source \\[${row}\\] {2}\\(4 steps, \\d+ms\\)`)
+    );
+  });
+  expect(output).toContain('3 passed, 0 failed of 3 journeys');
+  expect(code).toBe(0);
+});
+
 test('--headless --build with no build exits non-zero with the test harness message', async () => {
   const missing = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-no-build-'));
   try {

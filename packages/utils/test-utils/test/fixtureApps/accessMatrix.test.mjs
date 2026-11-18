@@ -72,11 +72,15 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'walled',
   ]);
   expect(Object.keys(matrix.endpoints)).toEqual([
+    'approve_run',
     'auditor_only',
+    'close_runs',
     'detached_log',
     'explode',
     'log_activity',
     'notify',
+    'payment_events',
+    'price_run',
     'save_walled',
     'typed_order',
   ]);

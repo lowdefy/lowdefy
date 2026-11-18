@@ -17,8 +17,9 @@
 // The findings of the error entries a step's run caused: an entry the client reported is a
 // client-error, and a fault the server logged is a server-error, or an environment finding when
 // usesSearchStage(entry) says it came from a $search or $vectorSearch stage, which the data set's
-// memory store cannot run. Each entry is { message?, name?, source? }. Returns finding drafts for
-// keyFindings.
+// memory store cannot run. A server entry for a failure a test's fail gate forced (`forced`) is the
+// test's doing, no finding. Each entry is { message?, name?, source?, forced? }. Returns finding
+// drafts for keyFindings.
 function findErrorEntries({ clientEntries, serverEntries, usesSearchStage = () => false }) {
   return [
     ...clientEntries.map((entry) => ({
@@ -26,11 +27,13 @@ function findErrorEntries({ clientEntries, serverEntries, usesSearchStage = () =
       message: entry.message ?? entry.name,
       source: entry.source ?? null,
     })),
-    ...serverEntries.map((entry) => ({
-      kind: usesSearchStage(entry) ? 'environment' : 'server-error',
-      message: entry.message ?? entry.name,
-      source: entry.source ?? null,
-    })),
+    ...serverEntries
+      .filter((entry) => entry.forced !== true)
+      .map((entry) => ({
+        kind: usesSearchStage(entry) ? 'environment' : 'server-error',
+        message: entry.message ?? entry.name,
+        source: entry.source ?? null,
+      })),
   ];
 }
 

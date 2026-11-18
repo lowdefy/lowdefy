@@ -108,14 +108,24 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
     'call the request or endpoint on the dev server with `lowdefy_run_request` or `lowdefy_run_endpoint`, passing `user` and `data`'
   );
   expect(agentsMd).toContain(
-    'The regression test for such a change is a journey (`tests/journeys/`) that needs no browser'
+    "A page's logic and state, and what it sends and writes: a journey (`tests/journeys/`) that needs no browser."
   );
   expect(agentsMd).toContain('A write journey ends with `expect: { db }` on what was stored.');
   expect(agentsMd).toContain(
-    'Where the app has endpoint tests (`tests/endpoints/`, Node tests on `@lowdefy/test-utils`): they hold what a journey cannot say'
+    'Endpoint and server logic: a journey with no `pageId` and `call`, `request` or `webhook` steps.'
   );
   expect(agentsMd).toContain(
-    'Add or update one for such a change, and run them once, before you call the change done.'
+    'Many cases of one check are one journey with a `cases` table, one run per row'
+  );
+  expect(agentsMd).toContain("outside services (the journey's `stubs` with an `answer`");
+  expect(agentsMd).toContain('races (`hold` and `release`)');
+  expect(agentsMd).toContain('Keep shared rows, stubs and steps under `tests/shared/`');
+  expect(agentsMd).toContain(
+    'Only what a journey cannot say is a Node test on `@lowdefy/test-utils` (`tests/endpoints/`)'
+  );
+  expect(agentsMd).toContain("The test file says why a journey can't express it.");
+  expect(agentsMd).toContain(
+    'Where the app has such tests, run them once, before you call the change done.'
   );
   expect(agentsMd).toContain('every config edit needs a build first');
   expect(agentsMd).toContain(
