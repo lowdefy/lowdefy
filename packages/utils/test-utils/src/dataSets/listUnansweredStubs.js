@@ -18,14 +18,14 @@ import { type } from '@lowdefy/helpers';
 
 // Whether an answer stub names the request it answers: a stub narrowed by requestId, endpoint,
 // pageId or match stands in for one request the journey must make. One keyed only by
-// connectionType and requestType is a fallback, such as a shared stub list (one _ref many
+// connectionType and requestType (or an empty match, which matches any request) is a fallback, such as a shared stub list (one _ref many
 // journeys use) or a case table row whose branch makes no outside call, and may go unused.
 function namesTarget(stub) {
   return (
     !type.isNone(stub.requestId) ||
     !type.isNone(stub.endpoint) ||
     !type.isNone(stub.pageId) ||
-    !type.isUndefined(stub.match)
+    (type.isObject(stub.match) && Object.keys(stub.match).length > 0)
   );
 }
 

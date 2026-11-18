@@ -31,9 +31,14 @@ const DRAIN_TIMEOUT_MS = 30000;
 // gate fired and every such stub answered. A stub keyed only by connectionType and requestType is
 // a fallback and may go unused (listUnansweredStubs). `session` is the data session. Its background
 // work (context.waitUntil) is drained first, so a request only that work makes is counted. Work
-// still running after the wait (as when the session closes) is judged as it stands.
+// still running after the wait is judged as it stands, and the message says so.
 async function findUnfiredFailGate({ session, steps }) {
-  await drainSessionWork({ work: session.work, timeoutMs: DRAIN_TIMEOUT_MS });
+  const drained = await drainSessionWork({ work: session.work, timeoutMs: DRAIN_TIMEOUT_MS });
+  const stillRunning = drained
+    ? ''
+    : ` Background work (context.waitUntil) was still running ${
+        DRAIN_TIMEOUT_MS / 1000
+      } s after the last step, so a request it would have made was not counted.`;
   const index = steps.length - 1;
   const [gate] = listUnfiredFailGates({ session });
   if (!type.isUndefined(gate)) {
@@ -43,7 +48,7 @@ async function findUnfiredFailGate({ session, steps }) {
       step: steps[index],
       expected: `a request to reach the forced failure on ${description}`,
       actual: 'no request reached it',
-      message: `The forced failure on ${description} ("${gate.message}") never fired: no request the journey made matched it, so nothing tested what it fails.`,
+      message: `The forced failure on ${description} ("${gate.message}") never fired: no request the journey made matched it, so nothing tested what it fails.${stillRunning}`,
     };
   }
   const [stub] = listUnansweredStubs({ session });
@@ -54,7 +59,7 @@ async function findUnfiredFailGate({ session, steps }) {
       step: steps[index],
       expected: `a request to be answered by the ${description}`,
       actual: 'no request reached it',
-      message: `The ${description} never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer. A stub that names its request (requestId, endpoint, pageId or match) must answer; one keyed only by connectionType and requestType is a fallback and may go unused.`,
+      message: `The ${description} never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer. A stub that names its request (requestId, endpoint, pageId or match) must answer; one keyed only by connectionType and requestType is a fallback and may go unused.${stillRunning}`,
     };
   }
   return undefined;

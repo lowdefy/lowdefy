@@ -233,6 +233,11 @@ test('docsJourneyHandler answers 400 for a placeholder in pathParams or urlQuery
   );
   expect(pathParams.status).toBe(400);
   expect(pathParams.data.error).toMatch(/^Journey "pathParams" is a _case placeholder/);
+  const pathParamsValue = await docsJourneyHandler(
+    createContext({ pageId: 'ticket', pathParams: { ticket_id: { _ref: 'x' } }, steps: [] })
+  );
+  expect(pathParamsValue.status).toBe(400);
+  expect(pathParamsValue.data.error).toMatch(/^Journey "pathParams.ticket_id" is a _ref/);
   const urlQuery = await docsJourneyHandler(
     createContext({ pageId: 'ticket', urlQuery: { _ref: 'tests/shared/q.yaml' }, steps: [] })
   );

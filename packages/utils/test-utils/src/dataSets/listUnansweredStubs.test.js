@@ -34,7 +34,8 @@ test('listUnansweredStubs lists a stub that names its target and never answered'
 
 test('listUnansweredStubs leaves out a fallback stub, keyed only by its types, that never answered', () => {
   const fallback = stub({ answered: 0 });
-  expect(listUnansweredStubs({ session: { stubs: [fallback] } })).toEqual([]);
+  const emptyMatch = stub({ match: {}, answered: 0 });
+  expect(listUnansweredStubs({ session: { stubs: [fallback, emptyMatch] } })).toEqual([]);
 });
 
 test('listUnansweredStubs leaves out a stub that answered', () => {

@@ -214,6 +214,20 @@ test('MCP lowdefy_run_journey refuses a case table and a placeholder in pathPara
     'Journey "pathParams" is a _case placeholder, {"_case":"params"}'
   );
 
+  const pathParamsValue = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'ticket', pathParams: { ticket_id: { _ref: 'x' } }, steps: [] },
+  });
+  expect(pathParamsValue.isError).toBe(true);
+  expect(pathParamsValue.content[0].text).toContain('Journey "pathParams.ticket_id" is a _ref');
+
+  const notString = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'ticket', pathParams: { ticket_id: 1 }, steps: [] },
+  });
+  expect(notString.isError).toBe(true);
+  expect(notString.content[0].text).toContain('"pathParams" param must be an object of strings');
+
   const urlQuery = await client.callTool({
     name: 'lowdefy_run_journey',
     arguments: { pageId: 'ticket', urlQuery: { id: { _ref: 'tests/shared/q.yaml' } }, steps: [] },
