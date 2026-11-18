@@ -204,6 +204,82 @@ test('AgGrid refuses a column it does not show', async () => {
   );
 });
 
+test('AgGrid columns with no colId or field are numbered as AG Grid numbers them', async () => {
+  const buttons = (title) => ({ type: 'buttons', buttons: [{ eventName: 'onEdit', title }] });
+  const page = gridPage({
+    properties: {
+      columnDefs: [
+        { field: 'name' },
+        { headerName: 'Actions', cell: buttons('Edit') },
+        { headerName: 'More', cell: buttons('Edit again') },
+      ],
+    },
+  });
+  const { log, result } = await runTestJourney({
+    pages: [page],
+    steps: [
+      { click: { blockId: 'people', rowKey: '1', column: '0', control: 'onEdit' } },
+      { click: { blockId: 'people', rowKey: '1', column: '1', control: 'onEdit' } },
+      { click: { blockId: 'people', rowKey: '1', column: 'undefined' } },
+    ],
+  });
+  expect(readLog(log).map(([name, event]) => [name, event.button.title])).toEqual([
+    ['onEdit', 'Edit'],
+    ['onEdit', 'Edit again'],
+  ]);
+  expect(result.failure.message).toBe(
+    'AgGridAlpine "people" shows no column "undefined". Its shown columns: name, 0, 1.'
+  );
+});
+
+test('AgGrid second column on a field is <field>_1', async () => {
+  const page = gridPage({
+    properties: { columnDefs: [{ field: 'name' }, { field: 'name', headerName: 'Again' }] },
+    events: { onRowClick: [] },
+  });
+  const { log, result } = await runTestJourney({
+    pages: [page],
+    steps: [{ click: { blockId: 'people', rowKey: '1', column: 'name_1' } }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    [
+      'onCellClick',
+      {
+        cell: { column: 'name', value: 'Ada' },
+        colId: 'name_1',
+        row: ROWS[0],
+        rowIndex: 0,
+        selected: [],
+      },
+    ],
+  ]);
+});
+
+test('AgGrid first-cell click on a column with no colId or field fires its number as colId', async () => {
+  const page = gridPage({
+    properties: { columnDefs: [{ headerName: 'Row' }, { field: 'name' }] },
+    events: { onRowClick: [] },
+  });
+  const { log, result } = await runTestJourney({
+    pages: [page],
+    steps: [{ click: { blockId: 'people', rowKey: '2' } }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    [
+      'onCellClick',
+      {
+        cell: { column: undefined, value: undefined },
+        colId: '0',
+        row: ROWS[1],
+        rowIndex: 1,
+        selected: [],
+      },
+    ],
+  ]);
+});
+
 test('AgGrid cell button fires its event and no row or cell event', async () => {
   const { log, result } = await runTestJourney({
     pages: [gridPage({ type: 'AgGridLowdefy' })],

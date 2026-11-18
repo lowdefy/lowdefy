@@ -14,11 +14,9 @@
   limitations under the License.
 */
 
+import columnNeedsEnrichment from '@lowdefy/blocks-antd/table/columnNeedsEnrichment.js';
+import someColumnConfig from '@lowdefy/blocks-antd/table/someColumnConfig.js';
 import { type } from '@lowdefy/helpers';
-
-import someColumnConfig from '../../core/someColumnConfig.js';
-
-const ENRICHMENT_KINDS = new Set(['enrichment', 'ai', 'extract']);
 
 // Enrichment loads for a Table with enrichment, ai or extract columns, a run state (`status`),
 // user-defined columns (their header menu manages them), a provider catalogue, the add-column
@@ -31,13 +29,7 @@ function needsEnrichment({ input, properties }) {
   if (type.isArray(properties.providers) && properties.providers.length > 0) return true;
   if (properties.addColumn === true || type.isObject(properties.addColumn)) return true;
   if (properties.addRow === true || properties.importCsv === true) return true;
-  return someColumnConfig({
-    properties,
-    test: (column) =>
-      ENRICHMENT_KINDS.has(column.kind) ||
-      !type.isUndefined(column.status) ||
-      column.userDefined === true,
-  });
+  return someColumnConfig({ properties, test: columnNeedsEnrichment });
 }
 
 export default needsEnrichment;

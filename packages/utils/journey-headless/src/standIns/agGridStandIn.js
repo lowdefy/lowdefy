@@ -117,7 +117,7 @@ function clickCell({ actor, block, column, entry }) {
 
 function readGrid({ actor, block, state }) {
   const properties = block.eval.properties ?? {};
-  const columns = readAgGridColumns(properties);
+  const columns = readAgGridColumns(properties, { description: describeBlock(block) });
   const feature = findAgGridFeature({ columns: columns.all, properties, state });
   const rows = holdRows({ rowData: properties.rowData ?? [], state });
   return {
@@ -131,7 +131,7 @@ function readGrid({ actor, block, state }) {
       index,
     })),
     columns: columns.shown,
-    columnBrowserOnly: (column) => columnBrowserOnly({ block, column }),
+    columnBrowserOnly: ({ column }) => columnBrowserOnly({ block, column }),
     listControls: ({ column, entry }) => listAgGridControls({ actor, block, column, entry }),
     clickCell: ({ column, entry }) => clickCell({ actor, block, column, entry }),
   };

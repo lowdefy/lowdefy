@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import someColumnConfig from '../../core/someColumnConfig.js';
+import someColumnConfig from '@lowdefy/blocks-antd/table/someColumnConfig.js';
 
 // The group rows load when a column can be grouped by: `view.group` only takes groupable columns.
 function needsGroupRows({ properties }) {

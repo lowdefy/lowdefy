@@ -37,8 +37,8 @@ import refuseGeneratedRowKey from './refuseGeneratedRowKey.js';
 //   generates) and its index in the data, which is the displayed index on every grid a stand-in
 //   covers.
 // - columns: the shown columns, in display order, each { id, ... }: id is what `column` names.
-// - columnBrowserOnly(column): why a cell of the column is the browser's (a link or input cell),
-//   else null.
+// - columnBrowserOnly({ column, entry }): why the column's cell in the row is the browser's (a
+//   link or input cell, an html cell holding a link), else null, or a promise of either.
 // - listControls({ column, entry }): the controls the cell draws for the row, in order, hidden ones
 //   left out: { kind, key, disabled, click() }. A cell menu's trigger comes first (kind trigger,
 //   no key), then its items.
@@ -64,8 +64,8 @@ function refuseDisabledControl({ block, control, entry }) {
   });
 }
 
-function pushColumnBrowserOnly({ actor, column, grid }) {
-  const reason = grid.columnBrowserOnly(column);
+async function pushColumnBrowserOnly({ actor, column, entry, grid }) {
+  const reason = await grid.columnBrowserOnly({ column, entry });
   if (reason === null) {
     return false;
   }
@@ -76,7 +76,7 @@ function pushColumnBrowserOnly({ actor, column, grid }) {
 // A control target: the one control keyed `control` among the cells of the named row (every row
 // without rowKey) and column (every shown column without one), as the browser clicks only a single
 // visible match. A closed cell menu opens first in the browser; it fires nothing.
-function clickControl({ actor, block, entries, grid, target }) {
+async function clickControl({ actor, block, entries, grid, target }) {
   const columns = type.isUndefined(target.column)
     ? grid.columns
     : [findGridColumn({ block, grid, column: target.column })];
@@ -94,7 +94,7 @@ function clickControl({ actor, block, entries, grid, target }) {
     controls,
     noun: 'control',
   });
-  if (pushColumnBrowserOnly({ actor, column: control.column, grid })) {
+  if (await pushColumnBrowserOnly({ actor, column: control.column, entry: control.entry, grid })) {
     return;
   }
   refuseDisabledControl({ block, control, entry: control.entry });
@@ -103,9 +103,9 @@ function clickControl({ actor, block, entries, grid, target }) {
 
 // A row or cell target: the browser clicks the first control in the cell (a button, a switch, a
 // cell menu's trigger), or the cell itself when it has none.
-function clickRowCell({ actor, block, entry, grid, target }) {
+async function clickRowCell({ actor, block, entry, grid, target }) {
   const column = findGridColumn({ block, grid, column: target.column });
-  if (pushColumnBrowserOnly({ actor, column, grid })) {
+  if (await pushColumnBrowserOnly({ actor, column, entry, grid })) {
     return;
   }
   const [first] = grid.listControls({ column, entry });
@@ -123,7 +123,7 @@ function clickRowCell({ actor, block, entry, grid, target }) {
 
 function createGridStandIn({ fix, readGrid }) {
   // A click with rowKey, control or both. The step runner waits for the block to show.
-  function click({ actor, block, state, target }) {
+  async function click({ actor, block, state, target }) {
     const grid = readGrid({ actor, block, state });
     if (grid.browserOnly !== null) {
       actor.browserOnly.push(grid.browserOnly);
@@ -135,10 +135,10 @@ function createGridStandIn({ fix, readGrid }) {
       entries = [findGridRow({ block, fix, grid, rowKey: target.rowKey })];
     }
     if (!type.isUndefined(target.control)) {
-      clickControl({ actor, block, entries, grid, target });
+      await clickControl({ actor, block, entries, grid, target });
       return;
     }
-    clickRowCell({ actor, block, entry: entries[0], grid, target });
+    await clickRowCell({ actor, block, entry: entries[0], grid, target });
   }
 
   // expect.visible or expect.hidden on a row by key (and a column): the block shows, the row is in

@@ -14,15 +14,20 @@
   limitations under the License.
 */
 
+import columnNeedsEditing from '@lowdefy/blocks-antd/table/columnNeedsEditing.js';
+import columnNeedsEnrichment from '@lowdefy/blocks-antd/table/columnNeedsEnrichment.js';
 import createRowKeyGetter from '@lowdefy/blocks-antd/table/createRowKeyGetter.js';
 import readColumnValue from '@lowdefy/blocks-antd/table/readColumnValue.js';
 import resolveLink from '@lowdefy/blocks-antd/table/resolveLink.js';
+import someColumnConfig from '@lowdefy/blocks-antd/table/someColumnConfig.js';
 import { journeyTargetSelectors, type } from '@lowdefy/helpers';
 
 import createGridStandIn from './createGridStandIn.js';
 import describeBlock from './describeBlock.js';
 import fireEvent from './fireEvent.js';
+import htmlHoldsCellControl from './htmlHoldsCellControl.js';
 import listTableControls from './listTableControls.js';
+import readHtmlCell from './readHtmlCell.js';
 import readTableColumns from './readTableColumns.js';
 import TABLE_PROPERTIES from './TABLE_PROPERTIES.js';
 
@@ -36,42 +41,13 @@ const MODELLED = new Set([...TABLE_PROPERTIES.modelled, ...TABLE_PROPERTIES.look
 const LINK_CELL_TYPES = new Set(['avatar', 'email', 'link', 'phone', 'relation', 'url']);
 
 // Column configs that load one of Table's optional features, which own clicks on their cells or
-// edit them, as blocks-table's needsEnrichment and needsEditing read them: an enrichment, ai or
-// extract column, a run state, a user-defined column, an editable one.
-const ENRICHMENT_KINDS = new Set(['enrichment', 'ai', 'extract']);
+// edit them, by blocks-table's own rules (needsEnrichment and needsEditing test each column with
+// these): an enrichment, ai or extract column, a run state, a user-defined column, an editable one.
+// TABLE_COLUMN_KEYS classes every column key by whether it can load one.
 const COLUMN_FEATURES = [
-  {
-    what: 'enrichment columns',
-    test: (column) =>
-      ENRICHMENT_KINDS.has(column.kind) ||
-      !type.isUndefined(column.status) ||
-      column.userDefined === true,
-  },
-  {
-    what: 'an editable column',
-    test: (column) => column.editable === true || type.isObject(column.editable),
-  },
+  { what: 'enrichment columns', test: columnNeedsEnrichment },
+  { what: 'an editable column', test: columnNeedsEditing },
 ];
-
-// Whether `defaultColumn` or any leaf column, header groups included, passes `test`, as
-// blocks-table's someColumnConfig reads the raw column config.
-function someColumnConfig({ properties, test }) {
-  function some(entries) {
-    return entries.some((entry) => {
-      if (!type.isObject(entry)) {
-        return false;
-      }
-      if (type.isArray(entry.children)) {
-        return some(entry.children);
-      }
-      return test(entry);
-    });
-  }
-  if (type.isObject(properties.defaultColumn) && test(properties.defaultColumn)) {
-    return true;
-  }
-  return type.isArray(properties.columns) && some(properties.columns);
-}
 
 // A property set to anything but false turns its feature on.
 function isOn(value) {
@@ -105,8 +81,21 @@ function findTableFeature(block) {
   return null;
 }
 
-function columnBrowserOnly({ block, column }) {
+// An html cell's html (HtmlCell) can hold a link or a data-event element, which a click on the
+// cell lands on. Plain formatted html leaves the click to the cell.
+async function htmlCellBrowserOnly({ block, column, entry }) {
+  const html = readHtmlCell({ column: column.column, row: entry.row });
+  if (html === null || !(await htmlHoldsCellControl(html))) {
+    return null;
+  }
+  return `Column "${column.id}" of ${describeBlock(block)} has an html cell holding a link or data-event, which the headless stand-in does not model: the step runs in a browser.`;
+}
+
+async function columnBrowserOnly({ block, column, entry }) {
   const cellType = column.column.type;
+  if (cellType === 'html') {
+    return htmlCellBrowserOnly({ block, column, entry });
+  }
   if (!LINK_CELL_TYPES.has(cellType)) {
     return null;
   }
@@ -157,7 +146,7 @@ function readGrid({ actor, block }) {
     browserOnly: null,
     rows: [],
     columns: [],
-    columnBrowserOnly: (column) => columnBrowserOnly({ block, column }),
+    columnBrowserOnly: ({ column, entry }) => columnBrowserOnly({ block, column, entry }),
     listControls: ({ column, entry }) => listTableControls({ actor, block, column, entry }),
     clickCell: ({ column, entry }) => clickCell({ actor, block, column, entry }),
   };
@@ -180,4 +169,27 @@ function readGrid({ actor, block }) {
   return grid;
 }
 
-export default createGridStandIn({ fix: 'give rows an `_id` or `id`, or set `rowKey`', readGrid });
+// The Table methods that change the rows a person sees: a filter or a search, which the table
+// writes to its value with an onChange, or rows added, updated or removed over the data, whose
+// counts the method returns. The stand-in models none of it, so a CallMethod with one leaves the
+// journey to the browser at that step, naming the method.
+const ROW_METHODS = {
+  applyTransaction: 'changes its rows',
+  setFilter: 'sets a filter',
+  setSearch: 'sets a search',
+};
+
+function registerMethods({ actor, block }) {
+  Object.entries(ROW_METHODS).forEach(([method, what]) => {
+    block.registerMethod(method, () => {
+      actor.browserOnly.push(
+        `CallMethod ${method} on ${describeBlock(block)} ${what}, which the headless stand-in does not model: the step runs in a browser.`
+      );
+    });
+  });
+}
+
+export default {
+  ...createGridStandIn({ fix: 'give rows an `_id` or `id`, or set `rowKey`', readGrid }),
+  registerMethods,
+};
