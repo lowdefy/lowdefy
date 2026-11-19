@@ -1376,6 +1376,7 @@ test('test --headless --build runs headless journeys on the build with no server
   expect(mockPost).not.toHaveBeenCalled();
   expect(mockOpenTestApp).toHaveBeenCalledWith({
     configDirectory,
+    secrets: {},
     serverDirectory: context.directories.server,
   });
   const app = await mockOpenTestApp.mock.results[0].value;
@@ -1401,6 +1402,37 @@ test('test --headless --build runs headless journeys on the build with no server
   expect(written.journeys['tests/journeys/a.yaml#clicks submit']).toEqual({ passed: true });
   expect(written.journeys['tests/journeys/b.yaml#reads the title'].browserOnly.index).toBe(1);
   expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
+});
+
+test('test --headless --build gives every journey the LOWDEFY_TEST_SECRET_ values of its environment, and never a LOWDEFY_SECRET_ value', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  process.env.LOWDEFY_TEST_SECRET_ORG_ID = 'org-a';
+  process.env.LOWDEFY_SECRET_ORG_ID = 'org-real';
+  process.env.LOWDEFY_SECRET_X = 'real';
+  const app = { close: vi.fn() };
+  mockOpenTestApp.mockResolvedValue(app);
+  try {
+    await test({ context });
+  } finally {
+    delete process.env.LOWDEFY_TEST_SECRET_ORG_ID;
+    delete process.env.LOWDEFY_SECRET_ORG_ID;
+    delete process.env.LOWDEFY_SECRET_X;
+  }
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(mockOpenTestApp).toHaveBeenCalledWith({
+    configDirectory,
+    secrets: { ORG_ID: 'org-a' },
+    serverDirectory: context.directories.server,
+  });
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(2);
+  mockCreateBuildHost.mock.calls.forEach(([options]) => {
+    expect(options.app).toBe(app);
+  });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(2);
+  expect(process.exitCode).toBeUndefined();
 });
 
 test('test --headless --build is refused with the harness message when the build cannot be read', async () => {

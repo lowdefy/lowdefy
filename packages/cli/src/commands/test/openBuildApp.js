@@ -18,13 +18,16 @@
 // serves the whole run: the access step, and each headless journey on a fresh session of its own.
 // This openTestApp is the run's one build check: a missing build, one of another Lowdefy version
 // and one older than the config refuse the run with @lowdefy/test-utils' message, which names the
-// command to run, before any journey. Returns { app } or { refused }; the caller closes the app.
-async function openBuildApp({ context }) {
+// command to run, before any journey. `secrets` are the test values the command was given for the
+// app's secrets, by name; every other secret reads its stand-in. Returns { app } or { refused };
+// the caller closes the app.
+async function openBuildApp({ context, secrets }) {
   // Loaded only for a run that reads the build: it brings the server's own modules.
   const { openTestApp } = await import('@lowdefy/test-utils');
   try {
     const app = await openTestApp({
       configDirectory: context.directories.config,
+      secrets,
       serverDirectory: context.directories.server,
     });
     return { app };

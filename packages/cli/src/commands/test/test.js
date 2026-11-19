@@ -35,6 +35,7 @@ import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
 import readAccessMode from './readAccessMode.js';
 import readHeadlessMode from './readHeadlessMode.js';
 import readJourneyConcurrency from './readJourneyConcurrency.js';
+import readTestSecrets from './readTestSecrets.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
 import runAccessStep from './access/runAccessStep.js';
@@ -161,7 +162,8 @@ async function test({ context }) {
   }
   // A run on the production build opens it once: the access step and every headless journey use
   // the one app, which is closed once, after the last journey, also when one throws.
-  const opened = await openBuildApp({ context });
+  const secrets = readTestSecrets({ env: process.env });
+  const opened = await openBuildApp({ context, secrets });
   if (!type.isUndefined(opened.refused)) {
     refuse({ context, message: opened.refused });
     return;
