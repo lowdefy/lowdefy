@@ -34,10 +34,12 @@ import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
 import readAccessMode from './readAccessMode.js';
 import readHeadlessMode from './readHeadlessMode.js';
+import readJourneyConcurrency from './readJourneyConcurrency.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
 import runAccessStep from './access/runAccessStep.js';
 import runHeadlessTests from './runHeadlessTests.js';
+import runJourneyPool from './runJourneyPool.js';
 import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
 import selectTier from './selectTier.js';
@@ -101,6 +103,18 @@ async function test({ context }) {
     refuse({ context, message: headlessError });
     return;
   }
+  // Only browser runs go side by side; headless runs go one at a time.
+  const { readLimit, error: concurrencyError } = headless
+    ? { readLimit: () => 1 }
+    : readJourneyConcurrency({
+        concurrency: context.options.concurrency,
+        name: '--concurrency',
+        repeat,
+      });
+  if (concurrencyError) {
+    refuse({ context, message: concurrencyError });
+    return;
+  }
   const tier = parseTier(context.options.tier);
   const usageWindow = `${parseUsageWindow(context.options.usageWindow)}m`;
   const {
@@ -135,6 +149,7 @@ async function test({ context }) {
     headless,
     lint,
     paths,
+    readLimit,
     repeat,
     tags,
     tier,
@@ -169,6 +184,7 @@ async function testJourneys({
   headless,
   lint,
   paths,
+  readLimit,
   repeat,
   tags,
   tier,
@@ -307,35 +323,41 @@ async function testJourneys({
       tier,
       repetition: 1,
     });
+  // In selection order, whatever order the journeys finished in.
   const results = [];
   const browserOnly = [];
   const seen = new Set();
   try {
-    for (const { suite, item, usage } of tiered.selected) {
-      const result = {
+    const pooled = await runJourneyPool({
+      entries: tiered.selected,
+      readLimit,
+      // A contended failure's rerun records nothing (runJourneyPool).
+      run: async ({ suite, item, usage }, { rerun }) => ({
         ...(await runRepeated({
           suite: headless ? headlessDevSuite({ suite }) : suite,
           context,
           item,
           url: server.url,
           repeat,
-          recording,
+          recording: rerun ? undefined : recording,
         })),
         usage,
-      };
-      if (!type.isUndefined(result.browserOnly)) {
-        browserOnly.push(result);
-        context.logger.info(formatBrowserOnly({ result }));
-        continue;
-      }
-      results.push(result);
-      const lines = suite.format({ result, seen });
-      if (result.passed) {
-        lines.forEach((line) => context.logger.info(line));
-      } else {
-        lines.forEach((line) => context.logger.error(line));
-      }
-    }
+      }),
+      onReported: ({ entry, result }) => {
+        if (!type.isUndefined(result.browserOnly)) {
+          context.logger.info(formatBrowserOnly({ result }));
+          return;
+        }
+        const lines = entry.suite.format({ result, seen });
+        if (result.passed) {
+          lines.forEach((line) => context.logger.info(line));
+        } else {
+          lines.forEach((line) => context.logger.error(line));
+        }
+      },
+    });
+    results.push(...pooled.filter((result) => type.isUndefined(result.browserOnly)));
+    browserOnly.push(...pooled.filter((result) => !type.isUndefined(result.browserOnly)));
     writeExercised({
       directories: context.directories,
       results,

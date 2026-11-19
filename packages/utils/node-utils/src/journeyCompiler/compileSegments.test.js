@@ -77,6 +77,27 @@ test('compileSegments leaves out records of other sources', () => {
   expect(segments.map((segment) => segment.session)).toEqual(['s-1']);
 });
 
+test('compileSegments groups the records of journeys run side by side by session, whatever their order in the file', () => {
+  // Two journeys of one test run append to one .jsonl as their records arrive, so their lines
+  // interleave and their times overlap.
+  const first = [
+    ...shortFlow({ session: 's-1', at: 0, source: 'journey' }),
+    traceRecord({ at: 3, session: 's-1', block: 'submit', source: 'journey' }),
+  ];
+  const second = shortFlow({ session: 's-2', at: 1, source: 'journey' });
+  const interleaved = [second[0], first[0], first[1], second[1], first[3], second[2], first[2]];
+  const alone = [
+    ...compileSegments({ records: first, source: 'journey' }).segments,
+    ...compileSegments({ records: second, source: 'journey' }).segments,
+  ];
+  const { segments } = compileSegments({ records: interleaved, source: 'journey' });
+  expect(segments).toEqual(alone);
+  expect(segments.map((segment) => [segment.session, segment.sequence.length])).toEqual([
+    ['s-1', 3],
+    ['s-2', 2],
+  ]);
+});
+
 test('compileSegments keeps only records inside the since and until window', () => {
   const { segments } = compileSegments({
     records: [

@@ -49,9 +49,23 @@ function checkPageId({ journey }) {
   )} needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.`;
 }
 
-// A journey with a `cases` table is valid when its table is and each of its runs is, validated
-// after its row is filled in, under the name as written.
+// The journey schema's root keys alone, with its message for a key it does not know. A row
+// fills in `_case` values and never adds a root key, so an unknown one is the journey's.
+const rootKeysSchema = {
+  type: 'object',
+  additionalProperties: false,
+  properties: Object.fromEntries(Object.keys(journeySchema.properties).map((key) => [key, {}])),
+  errorMessage: { additionalProperties: journeySchema.errorMessage.additionalProperties },
+};
+
+// A journey with a `cases` table is valid when its root keys are known, its table is valid and
+// each of its runs is, validated after its row is filled in, under the name as written.
 function validateCases({ journey }) {
+  try {
+    validate({ schema: rootKeysSchema, data: journey });
+  } catch (error) {
+    return { valid: false, message: error.message };
+  }
   const { runs, error } = expandCases({ journey });
   if (!type.isUndefined(error)) {
     return { valid: false, message: error };

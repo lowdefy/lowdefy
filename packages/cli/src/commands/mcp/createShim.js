@@ -464,7 +464,7 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
   // A suite can run for many minutes, so each finished journey is reported as
   // progress: a client that sees none takes the call for dead and ends it.
   async function runTests(
-    { directory, filter, tags, paths, repeat, tier, usageWindow, headless },
+    { directory, filter, tags, paths, repeat, tier, usageWindow, headless, concurrency },
     { sendProgress }
   ) {
     const app = await resolve({ directory });
@@ -479,6 +479,7 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
       tier,
       usageWindow,
       headless,
+      concurrency,
       onProgress: ({ done, total, name, class: journeyClass }) =>
         sendProgress({ progress: done, total, message: `${journeyClass} ${name}` }),
     });

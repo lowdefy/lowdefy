@@ -113,6 +113,13 @@ const lifecycleTools = [
           description:
             'No browser, much faster. A journey that needs one is listed as browserOnly with that step.',
         },
+        concurrency: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 3,
+          description:
+            "Browser journeys at once on data sets. Default 1. Refused with headless. Above 1, other sessions' screenshots can wait for a browser.",
+        },
         usageWindow: {
           type: 'string',
           pattern: '^[1-9][0-9]*m$',

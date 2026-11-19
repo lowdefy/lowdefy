@@ -145,3 +145,16 @@ test('compactTestResults lists the journeys a headless run left to a browser as 
     skipped: [],
   });
 });
+
+test('compactTestResults counts the journeys that passed after an alone rerun', () => {
+  const answer = compactTestResults({
+    results: [{ ...passing(1), contended: true }, passing(2), { ...passing(3), contended: true }],
+    skipped: [],
+  });
+  expect(answer.contended).toBe(2);
+});
+
+test('compactTestResults leaves contended out when no journey was rerun alone', () => {
+  const answer = compactTestResults({ results: [passing(1), failing(2)], skipped: [] });
+  expect(answer).not.toHaveProperty('contended');
+});

@@ -225,9 +225,13 @@ async function runJourney({
   }
   const { dataSet } = resolved;
 
+  // The journey's own time starts once it holds a browser slot: `durationMs` from then, and
+  // `waitedMs` for the slot, so a caller running journeys side by side can tell the two apart.
+  const requestedAt = Date.now();
   return withBrowserSlot({
-    task: () =>
-      runJourneyInBrowser({
+    task: async () => {
+      const startedAt = Date.now();
+      const result = await runJourneyInBrowser({
         origin,
         basePath,
         pageId,
@@ -248,7 +252,13 @@ async function runJourney({
         steps,
         stateSelection,
         readConfigFile,
-      }),
+      });
+      // A run that could not run is answered by its error alone.
+      if (!type.isUndefined(result.error)) {
+        return result;
+      }
+      return { ...result, durationMs: Date.now() - startedAt, waitedMs: startedAt - requestedAt };
+    },
   });
 }
 

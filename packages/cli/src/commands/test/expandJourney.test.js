@@ -182,3 +182,30 @@ test('measuredJourney is the first run of a case table and of a user list', () =
     }).name
   ).toBe('edits [admin]');
 });
+
+test.each([
+  ['a case table', table],
+  [
+    'a user list',
+    {
+      name: 'refuses another company',
+      pageId: 'form',
+      data: 'support',
+      user: ['client_a', 'client_b'],
+      steps: [{ click: 'submit' }],
+    },
+  ],
+])('an unknown root key on %s is refused once, naming the journey', (_, journey) => {
+  const runs = expandJourney({ item: item({ ...journey, seriel: true }) });
+  expect(runs).toEqual([item({ ...journey, seriel: true })]);
+  const refused = runs.map((run) => checkJourneyItem({ item: run }));
+  expect(refused).toHaveLength(1);
+  expect(refused[0]).toMatchObject({
+    name: 'refuses another company',
+    passed: false,
+    refused: true,
+  });
+  expect(refused[0].message).toMatch(
+    /^Invalid journey file: Journey has an unknown key "seriel"\. Keys are: /
+  );
+});

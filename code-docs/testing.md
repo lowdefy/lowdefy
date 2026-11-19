@@ -248,6 +248,16 @@ the complete path, before every release (see [CI](#ci)). Run it when
 changing the journey runner, journey cookies or mutants. Which page, data set and test covers
 which journey feature is listed under "Fixture app" in `code-docs/architecture/journeys.md`.
 
+`lowdefy test` runs one browser journey at a time by default. `--concurrency <n>` (1 to 3, or
+`LOWDEFY_JOURNEY_CONCURRENCY`; `concurrency` on `lowdefy_run_tests`) keeps up to n data-set
+journeys in flight through `runJourneyPool`, and runs journeys with no data set, or marked
+`serial: true`, alone after them. Headless runs always go one at a time. Every browser operation on
+the machine shares three browser slots, so at 2 or more another session's screenshot or state
+inspection can wait several journeys for a slot: in the large-app measurement with two runs at 2
+each, 7 of 13 screenshots waited over 60 s. When changing the pool, run the fixture's suite with
+`lowdefy test --url <fixture url> --concurrency 2`, then `--concurrency 1`, and compare. See
+"Running journeys side by side" in `code-docs/architecture/journeys.md`.
+
 ### Headless parity
 
 The server-dev fixture suite also checks every journey it posts that `classifyJourney` calls

@@ -16,7 +16,9 @@
 
 // How `lowdefy test` runs, from --headless and --build: { headless, build } or { error }.
 // --headless alone runs the headless journeys on the dev server; with --build, on the production
-// build in this process.
+// build in this process. Headless runs go one at a time, so a --concurrency typed beside
+// --headless is refused rather than ignored; one from lowdefy.yaml's cli config is not chosen by
+// this run, so it is left alone.
 function readHeadlessMode({ options }) {
   const headless = options.headless === true;
   const build = options.build === true;
@@ -24,6 +26,12 @@ function readHeadlessMode({ options }) {
     return {
       error:
         '--build runs the headless journeys on the production build: pass --headless with it, as in "lowdefy test --headless --build".',
+    };
+  }
+  if (headless && (options.typedOptions ?? []).includes('concurrency')) {
+    return {
+      error:
+        '--concurrency runs browser journeys side by side, and a headless run goes one at a time: drop --concurrency, or drop --headless to run the browser journeys side by side.',
     };
   }
   return { headless, build };
