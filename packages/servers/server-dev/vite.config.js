@@ -77,10 +77,8 @@ function lowdefyWebSocket() {
 
 // The @lowdefy packages this server depends on. A linked plugin pinned to
 // another release brings its own copies, and the client would then mix
-// versions: the dev server pre-bundles one copy per package for every
-// importer (whichever its scan meets first, so the server's own code can get
-// a plugin's older @lowdefy/helpers without an export it imports), and a
-// production build bundles both, so blocks read module state the client never
+// versions: the dev server (see packageCopies) and a production build each
+// serve the plugin its own copy, so blocks read module state the client never
 // filled (the HTML enhancements it registers in @lowdefy/block-utils). The
 // server's copies are the ones its client and blocks were released with.
 const packageJson = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
