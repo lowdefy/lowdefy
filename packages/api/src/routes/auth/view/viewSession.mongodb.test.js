@@ -50,9 +50,8 @@ const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/ad
 const { default: getBetterAuthConfig } = await import('../getBetterAuthConfig.js');
 const { default: ensureAuthIndexes } = await import('../organizations/ensureAuthIndexes.js');
 const { registerOrganizationBinding } = await import('../organizations/getOrganizationBinding.js');
-const { default: resolveAuthentication } = await import(
-  '../../../context/resolveAuthentication.js'
-);
+const { default: resolveAuthentication } =
+  await import('../../../context/resolveAuthentication.js');
 const { default: mintViewSession } = await import('./mintViewSession.js');
 
 const ORIGIN = 'http://localhost:3264';

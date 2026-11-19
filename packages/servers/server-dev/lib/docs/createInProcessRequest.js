@@ -27,7 +27,9 @@ function createInProcessRequest({ cookies, method, origin, path }) {
     get: () => undefined,
     req: {
       header: (name) =>
-        name === undefined ? Object.fromEntries(headers.entries()) : headers.get(name) ?? undefined,
+        name === undefined
+          ? Object.fromEntries(headers.entries())
+          : (headers.get(name) ?? undefined),
       method,
       path,
       raw: { headers, signal: new AbortController().signal },

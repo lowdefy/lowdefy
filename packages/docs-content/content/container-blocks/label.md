@@ -709,6 +709,101 @@ Form label wrapper with title, description, and validation feedback.
                   status: success
 ```
 
+```yaml
+- id: label_stacked_name
+  type: TextInput
+  properties:
+    title: Name
+- id: label_stacked_email
+  type: TextInput
+  properties:
+    title: Email
+    label:
+      extra: A field with a label above its input keeps 16px below it, so the form
+        needs no layout gap.
+- id: label_stacked_company
+  type: Selector
+  properties:
+    title: Company
+    options:
+      - Acme
+      - Globex
+      - Initech
+```
+
+```yaml
+- id: label_stacked_small_name
+  type: TextInput
+  properties:
+    title: Name
+    size: small
+- id: label_stacked_small_status
+  type: Selector
+  properties:
+    title: Status
+    size: small
+    options:
+      - Open
+      - Won
+      - Lost
+- id: label_stacked_small_owner
+  type: TextInput
+  properties:
+    title: Owner
+    size: small
+```
+
+```yaml
+- id: label_filter_bar
+  type: Box
+  layout:
+    gap: 8
+    align: middle
+  blocks:
+    - id: label_filter_search
+      type: TextInput
+      layout:
+        flex: 1 1 160px
+      properties:
+        placeholder: Search
+        label:
+          disabled: true
+    - id: label_filter_status
+      type: Selector
+      layout:
+        flex: 0 1 220px
+      properties:
+        title: Status
+        options:
+          - Open
+          - Won
+          - Lost
+        label:
+          inline: true
+    - id: label_filter_go
+      type: Button
+      layout:
+        flex: 0 0 auto
+      properties:
+        title: Filter
+```
+
+```yaml
+- id: label_tight_box
+  type: Box
+  style:
+    --lf-field-gap: 8px
+  blocks:
+    - id: label_tight_first
+      type: TextInput
+      properties:
+        title: First name
+    - id: label_tight_last
+      type: TextInput
+      properties:
+        title: Last name
+```
+
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
 | `xs` | object | - | Label width on extra small screens (below 576px) when the label is not inline. |

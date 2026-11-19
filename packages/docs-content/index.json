@@ -4611,7 +4611,7 @@
         "blocks/container/Label.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "6462dcd1e088f79476551e4da47fdeca856b5fba465af19e5316fb680d371d6e"
+      "hash": "1f94ba97a6d2438e7272688c4740afe30eb16a3fcb4cd0fda2ee23880339ce5e"
     },
     "container-blocks/layout": {
       "files": [
