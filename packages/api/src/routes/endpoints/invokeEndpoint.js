@@ -30,7 +30,7 @@ async function invokeEndpoint(
     payload,
     endpointDepth,
     literalData = null,
-    caught = false,
+    caughtFaults = null,
     outsideCaller = false,
   }
 ) {
@@ -56,9 +56,11 @@ async function invokeEndpoint(
     items: {},
     state: {},
     endpointDepth: endpointDepth + 1,
-    // Called from inside a :try with a :catch: an expected error the called endpoint does not
-    // catch itself is handled by the caller's :catch, so it is logged at debug (runRoutine).
-    caught,
+    // Called from inside a :try with a :catch (caughtFaults is that try's list): an expected error
+    // the called endpoint does not catch itself is handled by the caller's :catch, so it is
+    // logged at debug, and a fault is left to the caller's try to report (runRoutine).
+    caught: caughtFaults !== null,
+    caughtFaults,
     // The agent ({ id, conversationId, files }) whose tool call started this chain of endpoint
     // calls, or null. Set by the engine from the running agent, never from the payload, so
     // `_agent` can mark agent work.

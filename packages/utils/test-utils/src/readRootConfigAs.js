@@ -22,6 +22,7 @@ import createCallContext from './createCallContext.js';
 async function readRootConfigAs({ testSession, user }) {
   checkSessionOpen({ testSession });
   const context = createCallContext({
+    detached: [],
     faults: [],
     req: { url: '/', method: 'GET', hostname: 'localhost' },
     testSession,

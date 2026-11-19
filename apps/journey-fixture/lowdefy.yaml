@@ -33,6 +33,10 @@ connections:
     type: AxiosHttp
     properties:
       baseURL: http://127.0.0.1:9
+  # A connection whose type declares no dataSet: the data-set rails test clicks the OK button of a
+  # modal whose onOk calls a request on it, and the click is refused before it acts.
+  - id: rails_undeclared
+    type: UndeclaredFixture
   - _ref: connections/storage_bucket.yaml
   - _ref: connections/walled_runtime.yaml
   - _ref: connections/fixture_signature.yaml
@@ -68,7 +72,11 @@ auth:
       - approve_run
       - close_runs
       - payment_events
+      - caught_webhook
       - price_run
+      - log_payload
+      - caught_operator
+      - rethrown_operator
     roles:
       auditor:
         - auditor_only
@@ -84,7 +92,11 @@ api:
   - _ref: api/approve_run.yaml
   - _ref: api/close_runs.yaml
   - _ref: api/payment_events.yaml
+  - _ref: api/caught_webhook.yaml
   - _ref: api/price_run.yaml
+  - _ref: api/log_payload.yaml
+  - _ref: api/caught_operator.yaml
+  - _ref: api/rethrown_operator.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -108,3 +120,8 @@ pages:
   - _ref: pages/handoff.yaml
   - _ref: pages/selectors.yaml
   - _ref: pages/containing_split.yaml
+  - _ref: pages/controls.yaml
+  - _ref: pages/popup_parity.yaml
+  - _ref: pages/popup_targets.yaml
+  - _ref: pages/grid_targets.yaml
+  - _ref: pages/caught_faults.yaml

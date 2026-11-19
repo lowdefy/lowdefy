@@ -30,13 +30,16 @@ vi.doMock('@lowdefy/api', () => ({
 vi.doMock('../../lib/server/sentry/captureSentryError.js', () => ({
   default: mockCaptureSentryError,
 }));
+const viewOrigin = 'https://0123456789abcdef0123456789abcdef.claudemcpcontent.com';
+const mockGetViewOrigins = vi.fn(() => [viewOrigin]);
+vi.doMock('../lib/getViewOrigins.js', () => ({ default: mockGetViewOrigins }));
 
 const { default: clientErrorHandler } = await import('./clientError.js');
 
-function post(headers) {
+function post(headers, { viewSession = null } = {}) {
   const app = new Hono();
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { logger: { child: mockChild } });
+    c.set('lowdefyContext', { logger: { child: mockChild }, viewSession });
     await next();
   });
   app.all('/api/client-error', clientErrorHandler);
@@ -103,4 +106,40 @@ test('clientError answers 405 to a request that is not a POST', async () => {
   app.all('/api/client-error', clientErrorHandler);
   const res = await app.request('/api/client-error', { method: 'GET' });
   expect(res.status).toEqual(405);
+});
+
+const viewSession = { clientId: 'client-1', grantedScopes: ['mcp:read'] };
+
+test('clientError admits a view origin that carries a view session', async () => {
+  const res = await post(
+    { host: 'app.test', origin: viewOrigin, 'sec-fetch-site': 'cross-site' },
+    { viewSession }
+  );
+  expect(res.status).toEqual(200);
+  expect(mockLogClientError).toHaveBeenCalledTimes(1);
+});
+
+test('clientError refuses a view origin without a view session', async () => {
+  const res = await post({ host: 'app.test', origin: viewOrigin, 'sec-fetch-site': 'cross-site' });
+  expect(res.status).toEqual(403);
+  expect(mockLogClientError).not.toHaveBeenCalled();
+});
+
+test('clientError refuses another site even when it carries a view session', async () => {
+  const res = await post(
+    { host: 'app.test', origin: 'https://other.test', 'sec-fetch-site': 'cross-site' },
+    { viewSession }
+  );
+  expect(res.status).toEqual(403);
+  expect(mockLogClientError).not.toHaveBeenCalled();
+});
+
+test('clientError refuses a view origin of an app without a view', async () => {
+  mockGetViewOrigins.mockReturnValueOnce([]);
+  const res = await post(
+    { host: 'app.test', origin: viewOrigin, 'sec-fetch-site': 'cross-site' },
+    { viewSession }
+  );
+  expect(res.status).toEqual(403);
+  expect(mockLogClientError).not.toHaveBeenCalled();
 });

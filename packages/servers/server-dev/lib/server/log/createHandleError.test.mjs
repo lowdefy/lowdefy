@@ -153,6 +153,7 @@ test('handleError pushes an error with a configKey into the server error store w
     timestamp: expect.any(String),
     name: 'ConfigError',
     message: 'Bad config.',
+    caught: false,
     source: 'pages/home.yaml:5',
     config: 'root.pages[0:home]',
     hint: null,
@@ -247,6 +248,25 @@ test('handleError stamps a stored error with the recording of the context that c
     run: '20261003T151200Z-p0d4rm',
     journey: 'save-ticket',
   });
+});
+
+test('handleError stamps a fault a :catch of the routine handled as caught, and still logs it', async () => {
+  const context = testContext();
+  const handleError = createHandleError({ context });
+  const caught = new ConfigError('Bad config.', { configKey: 'key_1' });
+  const escaped = new ConfigError('Bad config again.', { configKey: 'key_1' });
+
+  await handleError(caught, { caught: true });
+  await handleError(escaped, { caught: false });
+
+  expect(serverErrorStore.push.mock.calls.map(([entry]) => entry.caught)).toEqual([true, false]);
+  expect(context.logger.error).toHaveBeenCalledWith(caught);
+  expect(context.logger.error).toHaveBeenCalledWith(escaped);
+});
+
+test('handleError stores a fault with no options as not caught', async () => {
+  await createHandleError({ context: testContext() })(new ConfigError('Bad config.'));
+  expect(serverErrorStore.push.mock.calls[0][0].caught).toBe(false);
 });
 
 test('handleError stamps a developer request error with a null recording', async () => {

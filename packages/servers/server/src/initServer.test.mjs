@@ -49,6 +49,12 @@ vi.doMock('../lib/build/config.js', () => ({
   default: { environment: 'prod', environments: { prod: { guards } } },
 }));
 
+const mcpConfig = { configured: true, views: { configured: true, pages: {}, sources: [] } };
+const logMcpViews = vi.fn();
+vi.doMock('../lib/build/mcp.js', () => ({ default: mcpConfig }));
+vi.doMock('@lowdefy/api', () => ({ logMcpViews }));
+vi.doMock('@lowdefy/node-utils', () => ({ getSecretsFromEnv: () => ({ KEY: 'value' }) }));
+
 const { default: initServer } = await import('./initServer.js');
 
 // The app module is imported once and then cached, so find the run that imported it rather than
@@ -113,4 +119,18 @@ test('initServer does not log Sentry when Sentry was not started', async () => {
   const result = await initServer();
   expect(result.sentry).toBe(null);
   expect(info).not.toHaveBeenCalled();
+});
+
+test('initServer logs the MCP views of the app with the build config and the secrets', async () => {
+  await initServer();
+  expect(logMcpViews.mock.calls).toEqual([
+    [
+      {
+        config: { environment: 'prod', environments: { prod: { guards } } },
+        logger: { info },
+        mcpConfig,
+        secrets: { KEY: 'value' },
+      },
+    ],
+  ]);
 });

@@ -38,6 +38,20 @@ export const autoFocus = {
   description: 'Autofocus to the block on page load.',
 };
 
+export const autoOpen = {
+  type: 'boolean',
+  default: false,
+  description:
+    'Open the dropdown (the calendar on a date picker) and focus the block when it mounts, for a field that shows its input only after the value is clicked. It closes as usual on a pick, a click outside or Escape.',
+};
+
+export const selectOnFocus = {
+  type: 'boolean',
+  default: false,
+  description:
+    'Select the text when the input gets focus, autoFocus included, so typing replaces it.',
+};
+
 export const variant = {
   type: 'string',
   enum: ['outlined', 'filled', 'borderless', 'underlined'],

@@ -23,7 +23,7 @@ _ref:
         type: Markdown
         properties:
           content: |
-            Actions run in response to events — a button click, a page load, an input change. All 24 actions, grouped by purpose. See [Events and Actions](/events-and-actions) for how event chains work.
+            Actions run in response to events — a button click, a page load, an input change. All 26 actions, grouped by purpose. See [Events and Actions](/events-and-actions) for how event chains work.
       - id: section_state_validation_title
         type: Title
         properties:
@@ -170,6 +170,25 @@ _ref:
                 type: Html
                 properties:
                   html: '<b>Link</b>'
+          - id: card_mcpopenlink
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_mcpopenlink
+                  type: Link
+                  params:
+                    pageId: McpOpenLink
+            blocks:
+              - id: card_mcpopenlink_label
+                type: Html
+                properties:
+                  html: '<b>McpOpenLink</b>'
           - id: card_scrollto
             type: Card
             layout:
@@ -316,6 +335,25 @@ _ref:
                 type: Html
                 properties:
                   html: '<b>DisplayMessage</b>'
+          - id: card_mcpsendmessage
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_mcpsendmessage
+                  type: Link
+                  params:
+                    pageId: McpSendMessage
+            blocks:
+              - id: card_mcpsendmessage_label
+                type: Html
+                properties:
+                  html: '<b>McpSendMessage</b>'
           - id: card_setdarkmode
             type: Card
             layout:

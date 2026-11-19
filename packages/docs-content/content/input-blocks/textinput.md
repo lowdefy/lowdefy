@@ -560,6 +560,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 | `allowClear` | boolean | `false` | Allow the user to clear their input. |
 | `type` | string | `"text"` | The type of input, (see [MDN](https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types)). Enum: `text`, `number`, `password`, `tel`, `email`, `url`. |
 | `autoFocus` | boolean | `false` | Autofocus to the block on page load. |
+| `selectOnFocus` | boolean | `false` | Select the text when the input gets focus, autoFocus included, so typing replaces it. |
 | `bordered` | boolean | `true` | Whether or not the text input has a border style. |
 | `disabled` | boolean | `false` | Disable the block if true. |
 | `maxLength` | integer | - | The max number of input characters. |
@@ -663,6 +664,7 @@ Single-line text input with sizes, prefix/suffix icons, character count, and cle
 | `onBlur` | \- | Trigger action event occurs when text input loses focus. |
 | `onChange` | `{ value }` | Trigger action when text input is changed. |
 | `onClear` | \- | Trigger action when the clear button is clicked. |
+| `onEscape` | `{ value }` | Trigger action when Escape is pressed while text input is focused. |
 | `onFocus` | \- | Trigger action when text input gets focus. |
 | `onPressEnter` | \- | Trigger action when enter is pressed while text input is focused. |
 | `onTooltipClick` | \- | Trigger actions when the tooltip icon is clicked. |

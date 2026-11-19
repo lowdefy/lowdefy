@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import compileRecord from './compileRecord.js';
 import journeySequence from './journeySequence.js';
 import stepIdentity from './stepIdentity.js';
 import { expect, test } from 'vitest';
@@ -73,6 +74,62 @@ test('stepIdentity tells controls of one block apart and keeps the old form with
   );
   expect(stepIdentity({ step: { click: { blockId: 'grid', rowKey: 'a', column: 'x' } } })).toBe(
     stepIdentity({ step: { click: { blockId: 'grid', rowKey: 'b', column: 'x' } } })
+  );
+});
+
+// The click step a trace record compiles to, as the journey compiler writes it.
+function clickStepOf(target) {
+  const { steps, flags } = compileRecord({ record: { kind: 'click', target } });
+  return { step: steps[0], flags };
+}
+
+test('stepIdentity gives a dev and a production click on one modal control one identity', () => {
+  // describeElement in dev, and the production pull of the same click.
+  const dev = clickStepOf({ block_id: 'delete_modal', control: 'ok', text: null });
+  const production = clickStepOf({
+    block_id: 'delete_modal',
+    block_type: null,
+    row: null,
+    column: null,
+    control: 'ok',
+    text_token: null,
+    nth: null,
+    option: false,
+  });
+  expect(dev.step).toEqual({ click: { blockId: 'delete_modal', control: 'ok' } });
+  expect(production).toEqual(dev);
+  expect(stepIdentity({ step: production.step })).toBe(stepIdentity({ step: dev.step }));
+});
+
+test('stepIdentity gives a dev grid cell control with a row key and its production click with a row one identity', () => {
+  const dev = clickStepOf({
+    block_id: 'invoices',
+    row: 1,
+    row_key: 'inv-2',
+    column: 'actions',
+    control: 'onPay',
+    text: null,
+  });
+  const production = clickStepOf({
+    block_id: 'invoices',
+    block_type: 'AgGridAlpine',
+    row: 1,
+    column: 'actions',
+    control: 'onPay',
+    text_token: null,
+    nth: null,
+    option: false,
+  });
+  expect(dev.step).toEqual({
+    click: { blockId: 'invoices', rowKey: 'inv-2', column: 'actions', control: 'onPay' },
+  });
+  expect(production.step).toEqual({
+    click: { blockId: 'invoices', row: 1, column: 'actions', control: 'onPay' },
+  });
+  expect(production.flags).toEqual([]);
+  expect(stepIdentity({ step: production.step })).toBe(stepIdentity({ step: dev.step }));
+  expect(stepIdentity({ step: production.step })).not.toBe(
+    stepIdentity({ step: { click: { blockId: 'invoices', row: 1, column: 'actions' } } })
   );
 });
 

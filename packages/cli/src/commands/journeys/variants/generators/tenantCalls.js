@@ -83,7 +83,8 @@ function toCallStep(call) {
 // the journey's page sent, with the payload the page built, and the insider's row the payload
 // names is left as the fixture wrote it (expect.db). The tenant wall scopes queries rather than
 // refusing them, so the proof is the row, not a status. The payloads come from a headless run of
-// the journey (calls): a browser run does not record them.
+// the journey (calls): a browser run does not record them. A detached CallApi a routine made is
+// recorded there too (detached: true), but the page never sent it, so it is not replayed.
 function tenantCalls({ journey, dataSet, exercised, calls, collections = {} }) {
   if (type.isNone(dataSet)) {
     return { skipped: 'the journey declares no data: set' };
@@ -115,7 +116,7 @@ function tenantCalls({ journey, dataSet, exercised, calls, collections = {} }) {
   const seen = new Set();
   const steps = [];
   calls
-    .filter((call) => call.actor === 'main' && writes.has(callKey(call)))
+    .filter((call) => call.actor === 'main' && call.detached !== true && writes.has(callKey(call)))
     .forEach((call) => {
       const named = findNamedDocument({
         collections,

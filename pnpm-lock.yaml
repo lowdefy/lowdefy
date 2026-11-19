@@ -2271,6 +2271,9 @@ importers:
       '@lowdefy/e2e-utils':
         specifier: 7.4.0
         version: link:../../../utils/e2e-utils
+      '@lowdefy/node-utils':
+        specifier: 7.4.0
+        version: link:../../../utils/node-utils
       '@playwright/test':
         specifier: 1.65.0
         version: 1.65.0
@@ -3300,6 +3303,12 @@ importers:
 
   packages/utils/journey-headless:
     dependencies:
+      '@lowdefy/blocks-antd':
+        specifier: 7.4.0
+        version: link:../../plugins/blocks/blocks-antd
+      '@lowdefy/client':
+        specifier: 7.4.0
+        version: link:../../client
       '@lowdefy/client-core':
         specifier: 7.4.0
         version: link:../../client-core
@@ -3315,10 +3324,25 @@ importers:
       '@lowdefy/node-utils':
         specifier: 7.4.0
         version: link:../node-utils
+      '@lowdefy/nunjucks':
+        specifier: 7.4.0
+        version: link:../nunjucks
       '@lowdefy/test-utils':
         specifier: 7.4.0
         version: link:../test-utils
+      dompurify:
+        specifier: 3.4.17
+        version: 3.4.17
+      jsdom:
+        specifier: 31.0.0
+        version: 31.0.0(@noble/hashes@2.2.0)
+      tinykeys:
+        specifier: 4.0.1
+        version: 4.0.1
     devDependencies:
+      '@lowdefy/blocks-table':
+        specifier: 7.4.0
+        version: link:../../plugins/blocks/blocks-table
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)

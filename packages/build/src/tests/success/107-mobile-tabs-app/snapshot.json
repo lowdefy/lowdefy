@@ -1132,6 +1132,11 @@
     },
     "configured": false,
     "hasPublicTool": false,
+    "views": {
+      "configured": false,
+      "pages": {},
+      "sources": []
+    },
     "~k": "3c"
   },
   "menus.json": {

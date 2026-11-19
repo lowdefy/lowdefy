@@ -18,6 +18,7 @@ import crypto from 'node:crypto';
 
 import { type } from '@lowdefy/helpers';
 
+import createDetachedRecorder from './createDetachedRecorder.js';
 import createFaultSink from './createFaultSink.js';
 import {
   applyDataSetRedirect,
@@ -33,13 +34,16 @@ import {
 //   and createInjectedApiContext takes the organization policy and the gate's enforcement
 //   facts from the built auth.json, which keeps the tenant wall up.
 // - Connections go through the data session's gate, sink, stubs and gates, as under a journey.
-// - agents is empty, the secrets are the test secrets, and there is no origin, so a detached
-//   CallApi has nowhere to send its loopback request even if CRON_SECRET were set.
+// - agents is empty, and the secrets are the test secrets.
+// - A detached CallApi is taken here (context.sendDetached) instead of being sent over the
+//   /api/detached route, which needs CRON_SECRET and an origin the test host has neither of: it
+//   is recorded on `detached` as { endpointId, payload }, as an outside service's request is
+//   recorded on the session, and its target never runs. The caller carries on as on a server.
 // - waitUntil tracks background work on the session, so session.settled() can wait for it.
 // - handleError lists faults on the call's answer, and records a forced failure on the data
 //   session; the logger is silent.
 // `user` is the caller's user object, or null for a signed out caller.
-function createCallContext({ faults, req, testSession, user }) {
+function createCallContext({ detached, faults, req, testSession, user }) {
   const { runtime, testApp } = testSession;
   const { session } = testSession.dataSession;
   const { createInjectedApiContext, normalizeInjectedCaller } = testApp.modules.api;
@@ -69,6 +73,7 @@ function createCallContext({ faults, req, testSession, user }) {
     websockets: runtime.websockets,
   };
   context.handleError = createFaultSink({ context, faults, session, testApp });
+  context.sendDetached = createDetachedRecorder({ detached, testApp });
   createInjectedApiContext(context, { authJson: testApp.authJson });
   const { gate, resolvers } = createSessionConnections({
     connections: runtime.connections,

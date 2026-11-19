@@ -20,10 +20,12 @@ import { WebParser } from '@lowdefy/operators';
 import Actions from './Actions.js';
 import createUpdaters from './createUpdaters.js';
 import DependencyTracker from './tracking/DependencyTracker.js';
+import readMcpDisplayMode from './tracking/readMcpDisplayMode.js';
 import readMediaViewport from './tracking/readMediaViewport.js';
 import Slots from './Slots.js';
 import Requests from './Requests.js';
 import State from './State.js';
+import updateMcp from './tracking/updateMcp.js';
 import updateMedia from './tracking/updateMedia.js';
 import WebSockets from './WebSockets.js';
 
@@ -116,6 +118,9 @@ function createContext({
       // The viewport the page's blocks last evaluated _media against, or null without a window.
       // updateMedia diffs a resize against it.
       media: readMediaViewport({ lowdefy }),
+      // The display mode of the MCP host the page's blocks last evaluated _mcp against, or null
+      // outside a host. updateMcp diffs a host context change against it.
+      mcpDisplayMode: readMcpDisplayMode({ lowdefy }),
       organizationId,
       // The read recorder of the block evaluating itself, or null. Managed by DependencyTracker.
       readRecorder: null,
@@ -168,6 +173,8 @@ function createContext({
   };
   // Called by the client's debounced resize listener.
   _internal.updateMedia = () => updateMedia({ context: ctx });
+  // Called by the client when the MCP host a view is shown in reports a new context.
+  _internal.updateMcp = () => updateMcp({ context: ctx });
   // Page lifecycle events (onVisible, onHidden, onOnline, onOffline, onResize) are
   // triggered on the page's root block by browser listeners attached in the client.
   _internal.triggerPageEvent = ({ name, event, progress = () => undefined }) =>

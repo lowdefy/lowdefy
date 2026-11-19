@@ -25,11 +25,14 @@ import { openTestApp } from '@lowdefy/test-utils';
 import createBuildHost from '../../src/createBuildHost.js';
 import runHeadlessJourney from '../../src/runHeadlessJourney.js';
 import journeyFixture from './journeyFixture.mjs';
+import writeCaughtFaultEndpoints from './writeCaughtFaultEndpoints.mjs';
 
 // call, request, expect.status, expect.db and expect.calls payloads, headless, over a copy of the
 // journey-fixture build in which log_activity (which writes) is gated to the auditor role, as
 // @lowdefy/test-utils' session suites gate it. The fixture app has no gated endpoint that
-// writes, and its journey suites count its endpoints, so the app is left as it is.
+// writes, and its journey suites count its endpoints, so the app is left as it is. The copy also
+// holds routines that catch, or do not catch, what the build host cannot run, and routines that
+// make detached calls (writeCaughtFaultEndpoints).
 
 let directory;
 let gatedApp;
@@ -62,6 +65,7 @@ function copyBuildWithGatedWrite() {
   const logActivity = JSON.parse(fs.readFileSync(logActivityPath, 'utf8'));
   logActivity.auth = { public: false, roles: ['auditor'] };
   fs.writeFileSync(logActivityPath, JSON.stringify(logActivity));
+  writeCaughtFaultEndpoints({ serverDirectory });
   // Written after the config, so the copied build is as fresh as the original.
   const later = new Date(Date.now() + 1000);
   fs.utimesSync(path.join(serverDirectory, 'build', 'refMap.json'), later, later);
@@ -211,6 +215,158 @@ test('a request step calls a page request directly with the payload given', asyn
         {
           expect: {
             db: { collection: 'items', match: { name: 'Direct item' }, equals: [{ page: 'home' }] },
+          },
+        },
+      ],
+    },
+    stepTimeout: 2000,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+const authEngineMessage =
+  'Auth step "add_member" requires the auth engine - auth is not configured (or dev.mockUser is active).';
+
+test('a routine that catches an auth step the build host cannot run passes, judged by its answer', async () => {
+  const result = await runHeadlessJourney({
+    host,
+    journey: {
+      steps: [
+        { call: { endpoint: 'caught_auth' } },
+        { expect: { status: 200 } },
+        { expect: { calls: { endpoint: 'caught_auth', count: 1, response: { ok: true } } } },
+      ],
+    },
+    stepTimeout: 2000,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+test('an auth step no :catch handles fails the journey at its step, as a server error', async () => {
+  const result = await runHeadlessJourney({
+    host,
+    journey: {
+      steps: [
+        { call: { endpoint: 'uncaught_auth', as: 'auditor' } },
+        { expect: { calls: { endpoint: 'uncaught_auth', count: 1 } } },
+      ],
+    },
+    stepTimeout: 2000,
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({ index: 0, kind: 'app-error' });
+  expect(result.failure.errors).toEqual([
+    expect.objectContaining({ kind: 'server-error', message: authEngineMessage }),
+  ]);
+});
+
+test("a caught fault is still listed on the call's answer, marked caught", async () => {
+  const answer = await host.call({ endpointId: 'caught_auth', kind: 'endpoint', payload: {} });
+  expect(answer.status).toEqual(200);
+  expect(answer.response).toEqual({ ok: true });
+  expect(answer.faults.map(({ caught, message }) => ({ caught, message }))).toEqual([
+    { caught: true, message: authEngineMessage },
+  ]);
+});
+
+// A detached CallApi on the build host: the host records it instead of sending it over the
+// /api/detached route, which needs CRON_SECRET, and never runs its target. The routine answers as
+// on a server, with no :catch needed, and expect.calls reads the call by its target endpoint.
+test('a detached CallApi no :catch handles answers as on a server, and expect.calls reads its endpoint and payload', async () => {
+  const result = await runHeadlessJourney({
+    host,
+    journey: {
+      steps: [
+        { call: { endpoint: 'send_detached', payload: { source: 'journey' } } },
+        { expect: { status: 200 } },
+        {
+          expect: {
+            calls: {
+              endpoint: 'send_detached',
+              count: 1,
+              response: { sent: { detached: true, endpointId: 'detached_log' } },
+            },
+          },
+        },
+        {
+          expect: {
+            calls: { endpoint: 'detached_log', count: 1, payload: { source: 'journey' } },
+          },
+        },
+      ],
+    },
+    stepTimeout: 2000,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.calls.filter((call) => call.endpointId === 'detached_log')).toEqual([
+    {
+      actor: 'main',
+      kind: 'endpoint',
+      endpointId: 'detached_log',
+      detached: true,
+      payload: { source: 'journey' },
+      status: null,
+      success: null,
+      response: null,
+      error: null,
+    },
+  ]);
+  // The target never ran: nothing it writes is on the data set's database.
+  expect(await host.findDocuments({ collection: 'items', match: { kind: 'detached' } })).toEqual(
+    []
+  );
+});
+
+test("the app's notify endpoint, whose detached CallApi has no :catch, passes its journey", async () => {
+  const result = await runHeadlessJourney({
+    host,
+    journey: {
+      steps: [
+        // log_activity, which notify calls, is gated to the auditor in this copy.
+        { as: 'auditor' },
+        { call: { endpoint: 'notify' } },
+        { expect: { status: 200 } },
+        { expect: { calls: { endpoint: 'notify', count: 1, response: { notified: true } } } },
+        { expect: { calls: { endpoint: 'detached_log', count: 1, payload: {} } } },
+      ],
+    },
+    stepTimeout: 2000,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+test('a payload that differs from the detached call fails expect.calls, naming the path', async () => {
+  const result = await runHeadlessJourney({
+    host,
+    journey: {
+      steps: [
+        { call: { endpoint: 'send_detached', payload: { source: 'journey' } } },
+        { expect: { calls: { endpoint: 'detached_log', payload: { source: 'elsewhere' } } } },
+      ],
+    },
+    stepTimeout: 2000,
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({ index: 1 });
+  expect(result.failure.message).toContain(
+    'Expected the last call to endpoint "detached_log" (call 1 of 1) to hold the payload given'
+  );
+});
+
+test('the detached calls a webhook makes are recorded on the current actor', async () => {
+  const result = await runHeadlessJourney({
+    host,
+    journey: {
+      steps: [
+        { webhook: { endpoint: 'detached_webhook', body: {} } },
+        { expect: { status: 200 } },
+        {
+          expect: {
+            calls: { endpoint: 'detached_log', count: 1, payload: { source: 'webhook' } },
           },
         },
       ],

@@ -19,24 +19,27 @@ import createErrorAnswer from './createErrorAnswer.js';
 import createResultAnswer from './createResultAnswer.js';
 
 // Runs one call in a context of its own, as a server runs one request, and answers
-// { status, success, response, error, body, faults }:
+// { status, success, response, error, body, faults, detached }:
 // - status: the HTTP status the server would answer with.
 // - success, response, error: the answer as the client reads it.
 // - body: the JSON the server sends.
 // - faults: the errors the server would log at error level. The same array takes the faults of
 //   background work the call started, so it is complete once session.settled() resolves.
+// - detached: the detached CallApi calls the call made, as { endpointId, payload }, in the order
+//   it made them. The test host records them and never runs their targets (createCallContext).
 // `run` is given the context and makes the @lowdefy/api call.
 async function answerCall({ req, run, testSession, user }) {
   const { testApp } = testSession;
+  const detached = [];
   const faults = [];
-  const context = createCallContext({ faults, req, testSession, user });
+  const context = createCallContext({ detached, faults, req, testSession, user });
   let result;
   try {
     result = await run(context);
   } catch (error) {
-    return createErrorAnswer({ context, error, faults, testApp });
+    return { ...(await createErrorAnswer({ context, error, faults, testApp })), detached };
   }
-  return createResultAnswer({ faults, result, testApp });
+  return { ...createResultAnswer({ faults, result, testApp }), detached };
 }
 
 export default answerCall;

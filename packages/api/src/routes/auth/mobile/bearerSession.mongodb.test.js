@@ -24,6 +24,12 @@ import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { vi, afterAll, beforeAll, beforeEach, expect, test } from 'vitest';
 import * as mongodb from 'mongodb';
 
+// mcp.json as the build writes it for an app with no MCP views.
+const mcpJsonWithoutViews = {
+  configured: false,
+  views: { configured: false, pages: {}, sources: [] },
+};
+
 // The adapter keeps its client for the process lifetime, so the test records
 // every client it creates and closes them afterwards.
 const clients = [];
@@ -147,6 +153,7 @@ async function setup({ cookieCache = false, mobile, twoFactor } = {}) {
   let auth;
   auth = betterAuth(
     getBetterAuthConfig({
+      mcpJson: mcpJsonWithoutViews,
       appMeta: { name: 'Test App', slug: 'test-app' },
       authJson,
       createSystemContext: () => ({}),

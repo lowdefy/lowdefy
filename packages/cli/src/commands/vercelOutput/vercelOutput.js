@@ -43,6 +43,37 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+// build/mcp.json: views.configured is true for an app with an MCP App view. @lowdefy/build always
+// writes the file, so a build directory without it is not a finished build and the read fails.
+function readHasView({ buildDirectory }) {
+  const mcp = JSON.parse(fs.readFileSync(path.join(buildDirectory, 'mcp.json'), 'utf8'));
+  return mcp.views.configured === true;
+}
+
+// The function every path the filesystem does not answer is routed to: functions/api.func.
+const FUNCTION_PATH = '/api';
+
+// A view runs the app's client on its host's origin and loads the client's scripts, stylesheets,
+// fonts and public files from the app, which a browser allows only when the response says so. On
+// Vercel the CDN serves those files, so the header the Node server sets on them is set here.
+//
+// The route is in the hit phase, which runs once a request has matched something, and it matches
+// the path the request was routed to, not the one it was sent to: a static file's own path, or
+// FUNCTION_PATH for everything the function answers. Leaving out FUNCTION_PATH gives the header
+// to the files the CDN serves and to nothing the function answers, whatever the request's path, as
+// the Node server's allowAnyOrigin gives it only to a file it serves. A page under a public
+// folder's name stays unreadable from other origins, and so does every API route.
+function getStaticCorsRoutes() {
+  return [
+    { handle: 'hit' },
+    {
+      src: `^(?!${escapeRegExp(FUNCTION_PATH)}$).*$`,
+      headers: { 'access-control-allow-origin': '*' },
+      continue: true,
+    },
+  ];
+}
+
 // The crons array is generated from build/schedules.json (written by @lowdefy/build for endpoints
 // that declare `schedules`). A missing file means no schedules → no crons. Vercel fires crons only
 // on the production deployment, so with config.environments the schedules of every other
@@ -170,6 +201,7 @@ async function vercelOutput({ context }) {
   //    cached for good; Vercel's static default (max-age=0, must-revalidate) would revalidate
   //    each of a page's chunks on every visit.
   const crons = await readCrons({ basePath, buildDirectory });
+  const hasView = readHasView({ buildDirectory });
   const config = {
     version: 3,
     routes: [
@@ -179,7 +211,8 @@ async function vercelOutput({ context }) {
         continue: true,
       },
       { handle: 'filesystem' },
-      { src: '/(.*)', dest: '/api' },
+      { src: '/(.*)', dest: FUNCTION_PATH },
+      ...(hasView ? getStaticCorsRoutes() : []),
     ],
   };
   if (crons.length > 0) {

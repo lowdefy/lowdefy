@@ -15,6 +15,7 @@
 */
 
 import crypto from 'node:crypto';
+import { threadId } from 'node:worker_threads';
 import { type } from '@lowdefy/helpers';
 
 import dataSessionRegistry from './dataSessionRegistry.js';
@@ -75,15 +76,18 @@ function createClose({ session, client, logger }) {
 //
 // `store` is a test run's store (getRunDataStore), which the endpoint test harness passes; the
 // dev server passes none and gets its own (getDataStore). On a run's store the run's other test
-// processes hold sessions too, so the prefix carries this process's pid (ld_p<pid>_<hex>) and
-// the orphan sweep leaves the databases of processes still running (sweepOrphanDatabases).
+// files hold sessions too, in other processes or in other worker threads of this one, so the
+// prefix carries this process's pid and, in a worker thread, its thread id (ld_p<pid>_<hex>, or
+// ld_p<pid>t<threadId>_<hex>), and the orphan sweep leaves the databases of processes still
+// running and of other threads (sweepOrphanDatabases).
 async function openDataSession({ dataSet, logger, store: runStore }) {
   const store = runStore ?? (await getDataStore({ logger }));
   const perRun = store.perRun === true;
   const { client, uri } = store;
   const id = crypto.randomBytes(16).toString('hex');
   const hex = crypto.randomBytes(6).toString('hex');
-  const prefix = perRun ? `ld_p${process.pid}_${hex}` : `ld_${hex}`;
+  const owner = threadId === 0 ? `p${process.pid}` : `p${process.pid}t${threadId}`;
+  const prefix = perRun ? `ld_${owner}_${hex}` : `ld_${hex}`;
   const databaseTargets = dataSet.databaseTargets ?? [];
   const session = {
     id,

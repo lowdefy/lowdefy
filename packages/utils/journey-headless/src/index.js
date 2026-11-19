@@ -24,6 +24,7 @@ import findUnfiredFailGate from './findUnfiredFailGate.js';
 import HeadlessStepError from './HeadlessStepError.js';
 import loadClientPlugins from './loadClientPlugins.js';
 import openHeadlessPage from './openHeadlessPage.js';
+import pressFiresShortcut from './pressFiresShortcut.js';
 import readForcedError from './readForcedError.js';
 import readWebhookError from './readWebhookError.js';
 import runHeadlessJourney from './runHeadlessJourney.js';
@@ -39,6 +40,7 @@ export {
   HeadlessStepError,
   loadClientPlugins,
   openHeadlessPage,
+  pressFiresShortcut,
   readForcedError,
   readWebhookError,
   runHeadlessJourney,

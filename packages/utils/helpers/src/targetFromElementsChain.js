@@ -149,12 +149,14 @@ function findMarkedControl(entries) {
 // control, with its row key when it sits in a keyed row and the column of its cell: no text or
 // nth, and the control's block leads block_ids, since a popup control sits in no block wrapper. A
 // row with a key the grid did not generate gives `row_key` beside `row`; the journey compiler
-// writes rowKey in place of row. With `marks: false` the marks are not read, so a control
-// describes by its text as before: the PostHog enrichment sends that, and no row key.
+// writes rowKey in place of row. With `rowKey: false` the target has no `row_key`: a row key can
+// be the app's data, so the PostHog enrichment and the production pull leave it out. A marked
+// control still describes as its block's control there, and a cell control keeps `row`. The key
+// is still read, so a cell control in a row with a generated key describes by its text, as dev.
 //
 // Pure, so the production pull runs it in Node on captured events. Total: any string gives a
 // target and never throws.
-function targetFromElementsChain(chain, { marks = true } = {}) {
+function targetFromElementsChain(chain, { rowKey = true } = {}) {
   const entries = type.isString(chain) ? parseElementsChain(chain) : [];
   const blockIds = entries.map(blockIdOf).filter((blockId) => blockId !== null);
   const blockIndex = entries.findIndex((entry) => blockIdOf(entry) !== null);
@@ -174,23 +176,26 @@ function targetFromElementsChain(chain, { marks = true } = {}) {
     option: inner.some(isOption),
     block_ids: blockIds,
   };
-  if (!marks) {
-    const { row_key: _rowKey, control: _control, ...unmarked } = target;
-    return unmarked;
-  }
-  // The key of a pinned row (ag-grid `t-0`) names no journey row, as its index does not.
-  if (target.row !== null) target.row_key = rowKeyOf(row);
+  // The key of a pinned row (ag-grid `t-0`) names no journey row, as its index does not. A cell
+  // control in a pinned row is no control target either, so it describes by its text.
+  const inPinnedRow = row !== null && target.row === null;
+  if (!inPinnedRow) target.row_key = rowKeyOf(row);
   const marked = findMarkedControl(entries);
-  if (marked === null) return target;
-  return {
-    ...target,
-    block_id: marked.blockId,
-    row_key: marked.rowKey,
-    control: marked.control,
-    text: null,
-    option: false,
-    block_ids: [marked.blockId, ...blockIds.filter((blockId) => blockId !== marked.blockId)],
-  };
+  const described =
+    marked === null || inPinnedRow
+      ? target
+      : {
+          ...target,
+          block_id: marked.blockId,
+          row_key: marked.rowKey,
+          control: marked.control,
+          text: null,
+          option: false,
+          block_ids: [marked.blockId, ...blockIds.filter((blockId) => blockId !== marked.blockId)],
+        };
+  if (rowKey) return described;
+  const { row_key: _rowKey, ...withoutRowKey } = described;
+  return withoutRowKey;
 }
 
 export default targetFromElementsChain;

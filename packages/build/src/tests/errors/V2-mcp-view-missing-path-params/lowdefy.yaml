@@ -1,0 +1,54 @@
+# V2: MCP View Missing Path Params
+# ================================
+# Tests that a view gives every placeholder of its page's path a value.
+#
+# Expected errors:
+#   [Config Error] MCP endpoint "open_task" view shows page "task" without path params "space". The page's path is "{space}/tasks/{ref}".
+
+lowdefy: local
+
+auth:
+  secret:
+    _secret: BETTER_AUTH_SECRET
+  database:
+    id: auth_db
+    type: MongoDBAuthAdapter
+    properties: {}
+  providers:
+    - id: google
+      type: Google
+      properties:
+        clientId:
+          _secret: GOOGLE_CLIENT_ID
+        clientSecret:
+          _secret: GOOGLE_CLIENT_SECRET
+  oauthProvider:
+    consentPage: consent
+
+api:
+  - id: open_task
+    type: Api
+    description: Open a task.
+    payloadSchema:
+      type: object
+      properties:
+        key:
+          type: string
+    routine: []
+
+mcp:
+  endpoints:
+    - id: open_task
+      scope: mcp:read
+      view:
+        pageId: task
+        pathParams:
+          ref:
+            _payload: key
+
+pages:
+  - id: consent
+    type: Box
+  - id: task
+    type: Box
+    path: '{space}/tasks/{ref}'

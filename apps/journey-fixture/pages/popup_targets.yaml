@@ -1,0 +1,446 @@
+id: popup_targets
+type: Box
+# Popups a journey names by key ({ blockId, control }) or opens, for the parity journeys in
+# tests/journeys/_parity/popups.yaml (packages/servers/server-dev/test/journeyFixture/
+# standInParity.test.mjs, LDF-1063). Each runs in the browser and headless and must end with the
+# same state. Every event appends { event, payload } to state `log`, so a missing, extra or
+# reordered event, or a different payload, shows in the end state. save_modal's onOk validates
+# its required input, so OK on an empty form fails and the modal stays open. view_menu's content
+# button logs its own onClick, which a click on a menu item must not fire. print_dropdown is a
+# split button, export_dropdown is not. side_menu holds this page's item and another page's.
+blocks:
+  - id: popup_targets_title
+    type: Title
+    properties:
+      content: Popup targets
+      level: 2
+  - id: open_save_modal_button
+    type: Button
+    properties:
+      title: Open save modal
+    events:
+      onClick:
+        - id: open_save_modal
+          type: CallMethod
+          params:
+            blockId: save_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: save_modal
+    type: Modal
+    properties:
+      title: Save the report
+    events:
+      onOpen:
+        - id: log_save_open
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: save_modal.onOpen
+                    payload: { _event: true }
+      onOk:
+        - id: log_save_ok
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: save_modal.onOk
+                    payload: { _event: true }
+        - id: validate_save
+          type: Validate
+          params:
+            blockIds:
+              - save_name
+      onCancel:
+        - id: log_save_cancel
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: save_modal.onCancel
+                    payload: { _event: true }
+      onClose:
+        - id: log_save_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: save_modal.onClose
+                    payload: { _event: true }
+      afterOpenChange:
+        - id: log_save_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: save_modal.afterOpenChange
+                    payload: { _event: true }
+      afterClose:
+        - id: log_save_after_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: save_modal.afterClose
+                    payload: { _event: true }
+    blocks:
+      - id: save_name
+        type: TextInput
+        required: true
+        properties:
+          title: Report name
+  - id: open_filters_drawer_button
+    type: Button
+    properties:
+      title: Open filters drawer
+    events:
+      onClick:
+        - id: open_filters_drawer
+          type: CallMethod
+          params:
+            blockId: filters_drawer
+            method: setOpen
+            args:
+              - open: true
+  - id: filters_drawer
+    type: Drawer
+    properties:
+      title: Filters
+    events:
+      onOpen:
+        - id: log_filters_open
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: filters_drawer.onOpen
+                    payload: { _event: true }
+      onClose:
+        - id: log_filters_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: filters_drawer.onClose
+                    payload: { _event: true }
+      afterOpenChange:
+        - id: log_filters_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: filters_drawer.afterOpenChange
+                    payload: { _event: true }
+      afterClose:
+        - id: log_filters_after_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: filters_drawer.afterClose
+                    payload: { _event: true }
+    blocks:
+      - id: close_filters_drawer_button
+        type: Button
+        properties:
+          title: Done
+        events:
+          onClick:
+            - id: close_filters_drawer
+              type: CallMethod
+              params:
+                blockId: filters_drawer
+                method: setOpen
+                args:
+                  - open: false
+  - id: open_discard_confirm_button
+    type: Button
+    properties:
+      title: Open discard confirm
+    events:
+      onClick:
+        - id: open_discard_confirm
+          type: CallMethod
+          params:
+            blockId: discard_confirm
+            method: open
+  - id: discard_confirm
+    type: ConfirmModal
+    properties:
+      title: Discard the draft?
+      content: The draft will be lost.
+    events:
+      onOk:
+        - id: log_discard_ok
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: discard_confirm.onOk
+                    payload: { _event: true }
+      onCancel:
+        - id: log_discard_cancel
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: discard_confirm.onCancel
+                    payload: { _event: true }
+      onClose:
+        - id: log_discard_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: discard_confirm.onClose
+                    payload: { _event: true }
+  - id: open_saved_notice_button
+    type: Button
+    properties:
+      title: Open saved notice
+    events:
+      onClick:
+        - id: open_saved_notice
+          type: CallMethod
+          params:
+            blockId: saved_notice
+            method: open
+            args:
+              - status: info
+  - id: saved_notice
+    type: ConfirmModal
+    properties:
+      title: Saved
+      content: The report is saved.
+    events:
+      onOk:
+        - id: log_notice_ok
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: saved_notice.onOk
+                    payload: { _event: true }
+      onCancel:
+        - id: log_notice_cancel
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: saved_notice.onCancel
+                    payload: { _event: true }
+      onClose:
+        - id: log_notice_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: saved_notice.onClose
+                    payload: { _event: true }
+  - id: export_dropdown
+    type: DropdownButton
+    properties:
+      title: Export
+      items:
+        - title: CSV
+          eventName: onCsv
+        - title: PDF
+          eventName: onPdf
+    events:
+      onClick:
+        - id: log_export_click
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: export_dropdown.onClick
+                    payload: { _event: true }
+      onOpenChange:
+        - id: log_export_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: export_dropdown.onOpenChange
+                    payload: { _event: true }
+      onCsv:
+        - id: log_export_csv
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: export_dropdown.onCsv
+                    payload: { _event: true }
+      onPdf:
+        - id: log_export_pdf
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: export_dropdown.onPdf
+                    payload: { _event: true }
+  - id: print_dropdown
+    type: DropdownButton
+    properties:
+      title: Print
+      split: true
+      items:
+        - title: Summary
+          eventName: onSummary
+        - title: Full report
+          eventName: onFull
+    events:
+      onClick:
+        - id: log_print_click
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: print_dropdown.onClick
+                    payload: { _event: true }
+      onOpenChange:
+        - id: log_print_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: print_dropdown.onOpenChange
+                    payload: { _event: true }
+      onSummary:
+        - id: log_print_summary
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: print_dropdown.onSummary
+                    payload: { _event: true }
+      onFull:
+        - id: log_print_full
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: print_dropdown.onFull
+                    payload: { _event: true }
+  - id: side_menu
+    type: Menu
+    properties:
+      links:
+        - id: popup_targets_link
+          type: MenuLink
+          pageId: popup_targets
+          properties:
+            title: Popup targets
+        - id: popup_parity_link
+          type: MenuLink
+          pageId: popup_parity
+          properties:
+            title: Popup parity
+    events:
+      onClick:
+        - id: log_side_click
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: side_menu.onClick
+                    payload: { _event: true }
+      onSelect:
+        - id: log_side_select
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: side_menu.onSelect
+                    payload: { _event: true }
+  # Opens on hover (DropdownMenu's default) and comes last, so its open menu covers no block a
+  # journey clicks.
+  - id: view_menu
+    type: DropdownMenu
+    properties:
+      selectable: true
+      links:
+        - id: compact
+          type: MenuLink
+          properties:
+            title: Compact
+        - id: detailed
+          type: MenuLink
+          properties:
+            title: Detailed
+        - id: parity_page
+          type: MenuLink
+          pageId: popup_parity
+          properties:
+            title: Popup parity
+    events:
+      onClick:
+        - id: log_view_click
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: view_menu.onClick
+                    payload: { _event: true }
+      onSelect:
+        - id: log_view_select
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: view_menu.onSelect
+                    payload: { _event: true }
+      onOpenChange:
+        - id: log_view_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: view_menu.onOpenChange
+                    payload: { _event: true }
+    blocks:
+      - id: view_menu_button
+        type: Button
+        properties:
+          title: View
+        events:
+          onClick:
+            - id: log_view_content_click
+              type: SetState
+              params:
+                log:
+                  _array.concat:
+                    - _if_none: [{ _state: log }, []]
+                    - - event: view_menu_button.onClick
+                        payload: { _event: true }

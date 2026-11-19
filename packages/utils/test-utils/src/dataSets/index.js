@@ -22,6 +22,7 @@ import checkJourneyStubTargets from './checkJourneyStubTargets.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
 import describeAnswerStub from './describeAnswerStub.js';
 import describeFailGate from './describeFailGate.js';
+import drainSessionWork from './drainSessionWork.js';
 import createSessionConnections from './createSessionConnections.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import findSessionDocuments from './findSessionDocuments.js';
@@ -50,6 +51,7 @@ export {
   createDataSetRefusal,
   describeAnswerStub,
   describeFailGate,
+  drainSessionWork,
   createSessionConnections,
   dataSessionRegistry,
   findSessionDocuments,

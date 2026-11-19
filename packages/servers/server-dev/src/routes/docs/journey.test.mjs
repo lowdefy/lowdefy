@@ -227,6 +227,45 @@ test('docsJourneyHandler answers 400 for a _case or _ref left in the posted jour
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
 
+test('docsJourneyHandler answers 400 for a placeholder in pathParams or urlQuery', async () => {
+  const pathParams = await docsJourneyHandler(
+    createContext({ pageId: 'ticket', pathParams: { _case: 'params' }, steps: [] })
+  );
+  expect(pathParams.status).toBe(400);
+  expect(pathParams.data.error).toMatch(/^Journey "pathParams" is a _case placeholder/);
+  const pathParamsValue = await docsJourneyHandler(
+    createContext({ pageId: 'ticket', pathParams: { ticket_id: { _ref: 'x' } }, steps: [] })
+  );
+  expect(pathParamsValue.status).toBe(400);
+  expect(pathParamsValue.data.error).toMatch(/^Journey "pathParams.ticket_id" is a _ref/);
+  const urlQuery = await docsJourneyHandler(
+    createContext({ pageId: 'ticket', urlQuery: { _ref: 'tests/shared/q.yaml' }, steps: [] })
+  );
+  expect(urlQuery.status).toBe(400);
+  expect(urlQuery.data.error).toMatch(/^Journey "urlQuery" is a _ref/);
+  const value = await docsJourneyHandler(
+    createContext({ pageId: 'ticket', urlQuery: { id: { _case: 'id' } }, steps: [] })
+  );
+  expect(value.status).toBe(400);
+  expect(value.data.error).toMatch(/^Journey "urlQuery.id" is a _case placeholder/);
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler answers 400 for a posted case table', async () => {
+  const result = await docsJourneyHandler(
+    createContext({
+      data: 'scope',
+      cases: [{ source: 'form' }],
+      steps: [{ call: { endpoint: 'log_activity', payload: { source: { _case: 'source' } } } }],
+    })
+  );
+  expect(result.status).toBe(400);
+  expect(result.data.error).toBe(
+    'A journey sent here runs once and takes no "cases" table: case tables run through lowdefy test (lowdefy_run_tests), one run per row. Send one row\'s values in place of each _case, or run the journey file. Received "cases": [{"source":"form"}].'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
 test('docsJourneyHandler sends a _ref inside a payload to the endpoint as written', async () => {
   const steps = [{ call: { endpoint: 'save_config', payload: { _ref: 'x' } } }];
   const result = await docsJourneyHandler(createContext({ data: 'scope', steps }));

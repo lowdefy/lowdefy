@@ -16,18 +16,19 @@
 
 import { serializer } from '@lowdefy/helpers';
 
+import addServerFaults from './addServerFaults.js';
 import readAnswer from './readAnswer.js';
+import recordDetachedCalls from './recordDetachedCalls.js';
 
 // The page's callRequest and callAPI (lowdefy._internal), on the host's in-process calls instead
 // of HTTP. Each sends what createCallRequest.js and createCallAPI.js post, as the page's user,
 // returns or throws what they would, and is recorded in `calls` with its payload, response and
-// error deserialized, for expect.calls. The server's faults go to the error sink.
+// error deserialized, for expect.calls, followed by the detached calls its routine made
+// (recordDetachedCalls). The server's faults go to the error sink (addServerFaults).
 function createPageCalls({ calls, host, user }) {
   async function send({ call, record }) {
     const answer = await host.call({ ...call, user });
-    answer.faults.forEach((fault) =>
-      host.errorSink.add({ call: record, error: fault, source: 'server' })
-    );
+    addServerFaults({ call: record, errorSink: host.errorSink, faults: answer.faults });
     calls.push({
       ...record,
       payload: serializer.deserialize(call.payload),
@@ -36,6 +37,7 @@ function createPageCalls({ calls, host, user }) {
       response: answer.response,
       error: answer.error,
     });
+    recordDetachedCalls({ answer, calls });
     return readAnswer(answer);
   }
   return {

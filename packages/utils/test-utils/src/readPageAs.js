@@ -32,6 +32,7 @@ async function readPageAs({ path, testSession, urlQuery, user }) {
   }
   const { getPageConfig } = testSession.testApp.modules.api;
   const context = createCallContext({
+    detached: [],
     faults: [],
     req: { url: `/${path}`, method: 'GET', hostname: 'localhost' },
     testSession,

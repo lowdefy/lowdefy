@@ -31,6 +31,8 @@ export { default as ListOrganizations } from './actions/ListOrganizations/ListOr
 export { default as Login } from './actions/Login/Login.js';
 export { default as Logout } from './actions/Logout/Logout.js';
 export { default as MagicLinkVerify } from './actions/MagicLinkVerify/MagicLinkVerify.js';
+export { default as McpOpenLink } from './actions/McpOpenLink/McpOpenLink.js';
+export { default as McpSendMessage } from './actions/McpSendMessage/McpSendMessage.js';
 export { default as OAuthConsent } from './actions/OAuthConsent/OAuthConsent.js';
 export { default as OAuthContinue } from './actions/OAuthContinue/OAuthContinue.js';
 export { default as PasskeyDelete } from './actions/PasskeyDelete/PasskeyDelete.js';

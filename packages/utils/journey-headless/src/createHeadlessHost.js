@@ -44,7 +44,12 @@ import { type } from '@lowdefy/helpers';
  *   (@lowdefy/test-utils/dataSets), which holds its stubs, fail gates, pause gates, sunk
  *   requests and the forced failures its error sink recorded; null for a journey with no data set
  *   on a host that runs it on none. A hold step sets its pause gate here.
- * @property {string|null} dataSetName The data set the data was loaded from, or null for none.
+ * @property {string|null} dataSetName The data set the data was loaded from, or null for none. A
+ *   journey on a data set checks each step that acts on a block against the data-set rails
+ *   (createDataSetRails in @lowdefy/node-utils), as the browser runner does.
+ * @property {Object} connections The app's connection plugin map, by connection type, as the
+ *   data-session gate reads it: what the data-set rails read each connection type's
+ *   meta.dataSet declaration from.
  * @property {(name: string) => (Object|null)} readArtifact A build artifact by its path in the
  *   build ("routes.json", "pages/home.json", "api/notify.json"), deserialized, or null when the
  *   build has none: what the runner checks a step's ids against.
@@ -81,6 +86,8 @@ import { type } from '@lowdefy/helpers';
  * @property {*} error
  * @property {Object} body The JSON the server sends.
  * @property {Array} faults The errors the server would log at error level.
+ * @property {Array<{ endpointId: string, payload: * }>} detached The detached CallApi calls the
+ *   call's routine made, in order: recorded for expect.calls (recordDetachedCalls).
  */
 
 /**
@@ -89,6 +96,7 @@ import { type } from '@lowdefy/helpers';
  * @property {*} body The JSON the route sends, or the text of a text/plain answer.
  * @property {string} contentType "application/json" or "text/plain".
  * @property {Array} faults The errors the server would log at error level.
+ * @property {Array<{ endpointId: string, payload: * }>} detached As a HostAnswer's.
  * @property {string} rid The call's request id: a routine that failed answers with no request id,
  *   so the message of a forced failure is read by this one (readForcedError).
  */
@@ -102,6 +110,7 @@ import { type } from '@lowdefy/helpers';
 const HOST_KEYS = [
   'call',
   'close',
+  'connections',
   'dataSession',
   'dataSetName',
   'errorSink',

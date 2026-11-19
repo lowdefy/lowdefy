@@ -154,14 +154,15 @@ The examples below go in the same file as the first test, so they share its `app
 
 `call` and `request` resolve to the same object, whether the call worked or not. They never throw for what the app answered.
 
-| Field      | Description                                                                                                                                         |
-| ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `status`   | The HTTP status a server would answer: 200, 400 for a payload the endpoint's `payloadSchema` refuses, 401 signed out, 403 refused, 500 for a fault. |
-| `success`  | `true` when the endpoint or request succeeded.                                                                                                      |
-| `response` | What the endpoint returned, or the request's response, as the client reads it. `null` when it failed.                                               |
-| `error`    | The error as the client reads it, or `null`.                                                                                                        |
-| `body`     | The JSON body a server would send.                                                                                                                  |
-| `faults`   | The errors a server would log, each with its `message` and the config `source` it came from.                                                        |
+| Field      | Description                                                                                                                                             |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `status`   | The HTTP status a server would answer: 200, 400 for a payload the endpoint's `payloadSchema` refuses, 401 signed out, 403 refused, 500 for a fault.     |
+| `success`  | `true` when the endpoint or request succeeded.                                                                                                          |
+| `response` | What the endpoint returned, or the request's response, as the client reads it. `null` when it failed.                                                   |
+| `error`    | The error as the client reads it, or `null`.                                                                                                            |
+| `body`     | The JSON body a server would send.                                                                                                                      |
+| `faults`   | The errors a server would log, each with its `message` and the config `source` it came from. One the routine's own `:catch` handled has `caught: true`. |
+| `detached` | The `CallApi` calls with `detached: true` the routine made, in order, each as `{ endpointId, payload }`. Their endpoints never run in the test.         |
 
 The app runs in production mode, as a deployed server does. So the `error` of a fault carries a generic message, and the real message is in `faults`:
 
@@ -312,10 +313,11 @@ Who can reach which page and endpoint is checked by `tests/access.yaml`, which `
 - **The HTTP server, sessions and the auth engine.** Callers are injected, so nothing signs in, and a step that calls the auth engine fails. Test sign-up and sign-in with a [journey](/config-tests#testing-sign-up-and-sign-in).
 - **The client.** Blocks, actions, operators the browser evaluates and what a page shows are a journey's to test.
 - **Atlas Search.** The in-memory MongoDB has no `$search`.
-- **Agents and detached calls.** No agent is loaded, so an agent call fails and no model provider is reached. A `CallApi` with `detached: true` fails for want of `CRON_SECRET`. Call the endpoint it starts with `session.system().call`.
+- **Agents.** No agent is loaded, so an agent call fails and no model provider is reached.
+- **What a detached call runs.** A `CallApi` with `detached: true` is recorded on the answer's `detached` and its endpoint never runs, as an outside service's request is recorded and never sent. The routine carries on as on a server, without `CRON_SECRET`. Test the endpoint it starts with `session.system().call`.
 - **Code that reaches out without a connection.** A plugin's own `fetch` is not sunk and reaches the real service.
 - **Development mode.** The app runs in production mode only.
 
 ## Data store
 
-Under `node --test`, every test file of a run shares one in-memory `mongod`, each file on databases of its own. It stops when the runner exits, also when the runner is killed. Under another runner, each test process starts its own.
+Under `node --test`, every test file of a run shares one in-memory `mongod`, each file on databases of its own. It stops when the runner exits, also when the runner is killed. Under another runner, each test process starts its own. Test files a runner runs in worker threads of one process, as vitest's `pool: 'threads'` does, share that process's store, each on databases of its own, so no file's session touches another's.
