@@ -34,19 +34,19 @@ afterEach(() => {
 });
 
 test('readDotEnv does nothing when the app has no .env file', () => {
-  expect(readDotEnv({ configDirectory })).toEqual([]);
+  readDotEnv({ configDirectory });
   expect(process.env.LDF_CLI_DOTENV_TEST).toBe(undefined);
 });
 
 test('readDotEnv loads the .env file in the config directory', () => {
   fs.writeFileSync(path.join(configDirectory, '.env'), 'LDF_CLI_DOTENV_TEST=file\n');
-  expect(readDotEnv({ configDirectory })).toEqual(['LDF_CLI_DOTENV_TEST']);
+  readDotEnv({ configDirectory });
   expect(process.env.LDF_CLI_DOTENV_TEST).toBe('file');
 });
 
 test('readDotEnv does not overwrite a variable already in the environment', () => {
   process.env.LDF_CLI_DOTENV_TEST = 'shell';
   fs.writeFileSync(path.join(configDirectory, '.env'), 'LDF_CLI_DOTENV_TEST=file\n');
-  expect(readDotEnv({ configDirectory })).toEqual([]);
+  readDotEnv({ configDirectory });
   expect(process.env.LDF_CLI_DOTENV_TEST).toBe('shell');
 });

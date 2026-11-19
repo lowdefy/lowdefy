@@ -21,25 +21,22 @@ import { parseEnv } from 'node:util';
 // process.loadEnvFile uses. process.loadEnvFile itself is not used: it never overwrites a
 // variable that is already set, which the dev server's reload of a changed .env needs, and it
 // reads a leading byte order mark as part of the first variable's name, so that variable is lost.
-// A variable already in the environment is kept unless override is true, as dotenv did. Returns
-// the names of the variables it set, so a caller can tell them from the ones the shell gave.
+// A variable already in the environment is kept unless override is true, as dotenv did.
 function loadDotEnvFile({ filePath, override = false }) {
   let content;
   try {
     content = fs.readFileSync(filePath, 'utf8');
   } catch (error) {
     // An app need not have a .env file.
-    if (error.code === 'ENOENT') return [];
+    if (error.code === 'ENOENT') return;
     throw error;
   }
   const variables = parseEnv(content.replace(/^﻿/, ''));
-  const loaded = Object.keys(variables).filter(
-    (name) => override || !Object.hasOwn(process.env, name)
-  );
-  loaded.forEach((name) => {
-    process.env[name] = variables[name];
+  Object.entries(variables).forEach(([name, value]) => {
+    if (override || !Object.hasOwn(process.env, name)) {
+      process.env[name] = value;
+    }
   });
-  return loaded;
 }
 
 export default loadDotEnvFile;

@@ -65,7 +65,6 @@ test('startUp, options empty', async () => {
     command: 'test',
     commandLineOptions: {},
     configDirectory: path.resolve(process.cwd()),
-    dotEnvNames: [],
     directories: {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),
@@ -103,7 +102,6 @@ test('startUp, options undefined', async () => {
     command: 'test',
     commandLineOptions: {},
     configDirectory: path.resolve(process.cwd()),
-    dotEnvNames: [],
     directories: {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),
@@ -140,7 +138,6 @@ test('startUp, options configDirectory', async () => {
     cliVersion: 'cliVersion',
     command: 'test',
     commandLineOptions: { configDirectory: './configDirectory' },
-    dotEnvNames: [],
     directories: {
       build: path.resolve(process.cwd(), './configDirectory/.lowdefy/server/build'),
       config: path.resolve(process.cwd(), './configDirectory'),
@@ -180,7 +177,6 @@ test('startUp, no lowdefyVersion returned', async () => {
     cliVersion: 'cliVersion',
     command: 'test',
     commandLineOptions: {},
-    dotEnvNames: [],
     directories: {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),
@@ -224,7 +220,6 @@ test('startUp, requiresLowdefyYaml false with command "init"', async () => {
     cliVersion: 'cliVersion',
     command: 'init',
     commandLineOptions: {},
-    dotEnvNames: [],
     directories: {
       build: path.resolve(process.cwd(), './.lowdefy/server/build'),
       config: path.resolve(process.cwd()),

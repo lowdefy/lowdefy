@@ -17,9 +17,8 @@
 import path from 'path';
 import { loadDotEnvFile } from '@lowdefy/node-utils';
 
-// Loads the app's .env file into the environment and returns the names of the variables it set.
 function readDotEnv(context) {
-  return loadDotEnvFile({ filePath: path.join(context.configDirectory, '.env') });
+  loadDotEnvFile({ filePath: path.join(context.configDirectory, '.env') });
 }
 
 export default readDotEnv;

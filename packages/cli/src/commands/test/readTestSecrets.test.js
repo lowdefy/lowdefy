@@ -18,33 +18,31 @@ import { expect, test } from 'vitest';
 
 import readTestSecrets from './readTestSecrets.js';
 
-test('readTestSecrets reads every LOWDEFY_SECRET_ variable by its secret name, and nothing else', () => {
+test('readTestSecrets reads every LOWDEFY_TEST_SECRET_ variable by its secret name, and nothing else', () => {
   expect(
     readTestSecrets({
-      dotEnvNames: [],
       env: {
         CRON_SECRET: 'cron',
-        LOWDEFY_SECRET_EMPTY: '',
-        LOWDEFY_SECRET_ORG_ID: 'org-a',
+        LOWDEFY_TEST_SECRET_EMPTY: '',
+        LOWDEFY_TEST_SECRET_ORG_ID: 'org-a',
         PATH: '/usr/bin',
       },
     })
   ).toEqual({ EMPTY: '', ORG_ID: 'org-a' });
 });
 
-test('readTestSecrets leaves out a secret the CLI loaded from the .env file', () => {
+test('readTestSecrets never reads a LOWDEFY_SECRET_ variable, which holds a real secret', () => {
   expect(
     readTestSecrets({
-      dotEnvNames: ['LOWDEFY_SECRET_MONGODB_URI', 'OTHER'],
       env: {
         LOWDEFY_SECRET_MONGODB_URI: 'mongodb://real',
-        LOWDEFY_SECRET_ORG_ID: 'org-a',
-        OTHER: 'x',
+        LOWDEFY_SECRET_ORG_ID: 'org-real',
+        LOWDEFY_TEST_SECRET_ORG_ID: 'org-a',
       },
     })
   ).toEqual({ ORG_ID: 'org-a' });
 });
 
 test('readTestSecrets returns no secrets from an environment without any', () => {
-  expect(readTestSecrets({ dotEnvNames: [], env: { PATH: '/usr/bin' } })).toEqual({});
+  expect(readTestSecrets({ env: { PATH: '/usr/bin' } })).toEqual({});
 });

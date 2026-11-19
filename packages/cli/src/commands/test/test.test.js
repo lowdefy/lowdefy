@@ -95,7 +95,6 @@ beforeEach(() => {
       test: path.join(configDirectory, '.lowdefy', 'test'),
       traces: path.join(configDirectory, '.lowdefy', 'traces'),
     },
-    dotEnvNames: [],
     options: { port: 3000 },
     logger: {
       info: (line) => logs.info.push(line),
@@ -1289,27 +1288,22 @@ test('test --headless --build runs headless journeys on the build with no server
   expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
 });
 
-test('test --headless --build gives every journey the LOWDEFY_SECRET_ values of its environment, without the ones from .env', async () => {
+test('test --headless --build gives every journey the LOWDEFY_TEST_SECRET_ values of its environment, and never a LOWDEFY_SECRET_ value', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
   writeJourneyFile('b.yaml', journeyYaml({ name: 'clicks submit again' }));
   headlessContext();
-  context.dotEnvNames = ['LOWDEFY_SECRET_FROM_DOT_ENV'];
-  process.env.LOWDEFY_SECRET_ORG_ID = 'org-a';
-  process.env.LOWDEFY_SECRET_FROM_DOT_ENV = 'real';
-  // The run's one openTestApp takes the secrets out of the environment, before the access step
-  // and every journey.
+  process.env.LOWDEFY_TEST_SECRET_ORG_ID = 'org-a';
+  process.env.LOWDEFY_SECRET_ORG_ID = 'org-real';
+  process.env.LOWDEFY_SECRET_X = 'real';
   const app = { close: vi.fn() };
-  mockOpenTestApp.mockImplementation(async () => {
-    delete process.env.LOWDEFY_SECRET_ORG_ID;
-    delete process.env.LOWDEFY_SECRET_FROM_DOT_ENV;
-    return app;
-  });
+  mockOpenTestApp.mockResolvedValue(app);
   try {
     await test({ context });
   } finally {
+    delete process.env.LOWDEFY_TEST_SECRET_ORG_ID;
     delete process.env.LOWDEFY_SECRET_ORG_ID;
-    delete process.env.LOWDEFY_SECRET_FROM_DOT_ENV;
+    delete process.env.LOWDEFY_SECRET_X;
   }
   expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
   expect(mockOpenTestApp).toHaveBeenCalledWith({

@@ -14,19 +14,17 @@
   limitations under the License.
 */
 
-const SECRET_PREFIX = 'LOWDEFY_SECRET_';
+const TEST_SECRET_PREFIX = 'LOWDEFY_TEST_SECRET_';
 
 // The test values a `lowdefy test --headless --build` run was given for the app's secrets, by
-// name: every LOWDEFY_SECRET_<NAME> in the environment the command was started with. The ones
-// the CLI loaded from the app's .env file (dotEnvNames) are left out: they are the app's real
-// secrets, which a run on the build never reads, so a run gives the same answer on a
-// developer's machine and in CI. A secret with no value here reads its stand-in.
-function readTestSecrets({ dotEnvNames, env }) {
-  const fromDotEnv = new Set(dotEnvNames);
+// name: every LOWDEFY_TEST_SECRET_<NAME> in the command's environment. The app's real secrets,
+// LOWDEFY_SECRET_*, are never read, so a shell, CI job or .env file that holds them cannot leak
+// them into a test run. A secret with no value here reads its stand-in.
+function readTestSecrets({ env }) {
   return Object.fromEntries(
     Object.keys(env)
-      .filter((key) => key.startsWith(SECRET_PREFIX) && !fromDotEnv.has(key))
-      .map((key) => [key.slice(SECRET_PREFIX.length), env[key]])
+      .filter((key) => key.startsWith(TEST_SECRET_PREFIX))
+      .map((key) => [key.slice(TEST_SECRET_PREFIX.length), env[key]])
   );
 }
 

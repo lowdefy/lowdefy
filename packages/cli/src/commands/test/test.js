@@ -146,10 +146,8 @@ async function test({ context }) {
     return;
   }
   // A run on the production build opens it once: the access step and every headless journey use
-  // the one app, which is closed once, after the last journey, also when one throws. The test
-  // values for the app's secrets are read first: openTestApp takes every secret out of the
-  // environment.
-  const secrets = readTestSecrets({ dotEnvNames: context.dotEnvNames, env: process.env });
+  // the one app, which is closed once, after the last journey, also when one throws.
+  const secrets = readTestSecrets({ env: process.env });
   const opened = await openBuildApp({ context, secrets });
   if (!type.isUndefined(opened.refused)) {
     refuse({ context, message: opened.refused });

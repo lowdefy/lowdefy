@@ -683,13 +683,15 @@ lowdefy test --headless --build
 
 `--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run. A `CallApi` with `detached: true` is recorded instead of sent, since it dispatches through the server's own route: the routine carries on as on a server, the endpoint it starts never runs, and `expect: { calls }` reads it as a call to that endpoint, with its payload. An auth step cannot run on a build, since no auth engine runs: it fails as a config error. A routine that handles the failure in the `:catch` of its `:try` still passes, see below. The results are written to `.lowdefy/test/headless-run.json`.
 
-The app's real secrets are never read: every secret the build names reads the stand-in `test-secret-<NAME>`, and the values in the app's `.env` file are left out. To give a secret a test value, set `LOWDEFY_SECRET_<NAME>` in the environment of the command:
+The app's real secrets are never read: every secret the build names reads the stand-in `test-secret-<NAME>`, and no `LOWDEFY_SECRET_*` variable reaches the run, whether it comes from the shell, CI or the app's `.env` file. To give a secret a test value, set `LOWDEFY_TEST_SECRET_<NAME>` in the environment of the command:
 
 ```
-LOWDEFY_SECRET_ORG_ID=org-a lowdefy test --headless --build
+LOWDEFY_TEST_SECRET_ORG_ID=org-a lowdefy test --headless --build
 ```
 
-Every journey of the run reads `org-a` for `_secret: ORG_ID`, and a secret that is not set keeps its stand-in. Use it for logic that compares a secret with data, such as an id the data set also holds. The run takes every `LOWDEFY_SECRET_*` variable its shell holds, so start it from a shell without the app's real secrets, and set the same test values in CI.
+Every journey of the run reads `org-a` for `_secret: ORG_ID`, and a secret with no test value keeps its stand-in. Use it for logic that compares a secret with data, such as an id the data set also holds. Set the same test values in CI, so the run gives the same answer there.
+
+A sunk request's record has every secret value of 8 or more characters, test values and stand-ins included, replaced with `[REDACTED]`, so `expect: { sunk }` and a stub's `match` cannot match a secret value that is also a data-set id.
 
 ### While you edit
 
