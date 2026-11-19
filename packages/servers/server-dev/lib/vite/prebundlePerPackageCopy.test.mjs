@@ -33,18 +33,38 @@ function writeFile(file, content) {
   fs.writeFileSync(file, content);
 }
 
-function installPackage(dir, name, version) {
-  const packageDir = path.join(dir, 'node_modules', name);
+function writePackage(packageDir, name, version, { exports, subpaths = [] } = {}) {
   writeFile(
     path.join(packageDir, 'package.json'),
-    JSON.stringify({ name, version, type: 'module', main: 'index.js' })
+    JSON.stringify({ name, version, type: 'module', main: 'index.js', exports })
   );
-  writeFile(path.join(packageDir, 'index.js'), `export const version = '${name}@${version}';\n`);
+  for (const file of ['index.js', ...subpaths]) {
+    writeFile(path.join(packageDir, file), `export const version = '${name}@${version}';\n`);
+  }
 }
 
-function writeSourcePackage(dir, imports) {
+function installPackage(dir, name, version, options) {
+  writePackage(path.join(dir, 'node_modules', name), name, version, options);
+}
+
+// pnpm installs `"<alias>": "npm:<name>@<version>"` in its store under the real name and links
+// it into node_modules under the alias.
+function installAlias(dir, alias, name, version) {
+  const packageDir = path.join(
+    dir,
+    'node_modules',
+    '.pnpm',
+    `${name}@${version}`,
+    'node_modules',
+    name
+  );
+  writePackage(packageDir, name, version);
+  fs.symlinkSync(packageDir, path.join(dir, 'node_modules', alias), 'dir');
+}
+
+function writeSourceFile(file, imports) {
   writeFile(
-    path.join(dir, 'index.js'),
+    file,
     [
       ...imports.map((name, i) => `import { version as v${i} } from '${name}';`),
       `export const versions = [${imports.map((_, i) => `v${i}`).join(', ')}];`,
@@ -56,25 +76,40 @@ function writeSourcePackage(dir, imports) {
 // A server directory with two source packages, as a Lowdefy block package of a Lowdefy
 // checkout and a linked app plugin are: Vite serves both from source, so the optimiser
 // pre-bundles their bare imports.
-//   markdown: the server has 10.1.0; the plugin pins 8.0.7.
+//   markdown: the server has 10.1.0, whose exports hold only its main file; the plugin pins
+//             8.0.7 and also imports markdown/extra.js from it.
 //   lib:      the server has none; the block and the plugin each install their own.
 //   shared:   the server has 1.0.0 and dedupes it; the plugin installs 2.0.0.
 //   common:   the server has none; the block and the plugin share one installed copy.
+//   aliased:  the server has aliased 1.0.0; the plugin installs fork 2.0.0 under that name.
+//   @scope/late/sub.js: only the plugin's late.js imports it, which nothing the scan crawls
+//             imports, so the dev server meets it only when it is requested.
 function writeFixture({ name, pluginFirst }) {
   const root = path.join(tmp, name);
-  installPackage(root, 'markdown', '10.1.0');
+  installPackage(root, 'markdown', '10.1.0', { exports: { '.': './index.js' } });
   installPackage(root, 'shared', '1.0.0');
+  installPackage(root, 'aliased', '1.0.0');
   installPackage(path.join(root, 'packages'), 'common', '3.0.0');
 
   const block = path.join(root, 'packages', 'block');
   installPackage(block, 'lib', '1.0.0');
-  writeSourcePackage(block, ['markdown', 'lib', 'shared', 'common']);
+  writeSourceFile(path.join(block, 'index.js'), ['markdown', 'lib', 'shared', 'common', 'aliased']);
 
   const plugin = path.join(root, 'packages', 'plugin');
-  installPackage(plugin, 'markdown', '8.0.7');
+  installPackage(plugin, 'markdown', '8.0.7', { subpaths: ['extra.js'] });
   installPackage(plugin, 'lib', '2.0.0');
   installPackage(plugin, 'shared', '2.0.0');
-  writeSourcePackage(plugin, ['markdown', 'lib', 'shared', 'common']);
+  installPackage(plugin, '@scope/late', '1.0.0', { subpaths: ['sub.js'] });
+  installAlias(plugin, 'aliased', 'fork', '2.0.0');
+  writeSourceFile(path.join(plugin, 'index.js'), [
+    'markdown',
+    'markdown/extra.js',
+    'lib',
+    'shared',
+    'common',
+    'aliased',
+  ]);
+  writeSourceFile(path.join(plugin, 'late.js'), ['@scope/late/sub.js']);
 
   const importers = pluginFirst ? ['plugin', 'block'] : ['block', 'plugin'];
   writeFile(
@@ -94,7 +129,7 @@ async function servedVersions(environment, url) {
   const versions = [];
   for (const depUrl of depUrls) {
     const dep = await environment.transformRequest(depUrl);
-    versions.push(dep.code.match(/"([\w-]+@[\d.]+)"/)[1]);
+    versions.push(dep.code.match(/"((?:@[\w-]+\/)?[\w-]+@[\d.]+)"/)[1]);
   }
   return versions;
 }
@@ -149,12 +184,15 @@ test.each([
       'lib@1.0.0',
       'shared@1.0.0',
       'common@3.0.0',
+      'aliased@1.0.0',
     ]);
     expect(await servedVersions(environment, '/packages/plugin/index.js')).toEqual([
+      'markdown@8.0.7',
       'markdown@8.0.7',
       'lib@2.0.0',
       'shared@1.0.0',
       'common@3.0.0',
+      'fork@2.0.0',
     ]);
 
     // The scan found every copy: serving discovered none, so no page reloads to take one in.
@@ -162,11 +200,23 @@ test.each([
     expect(ids).toEqual(scannedIds);
     // The server's copy keeps its plain id, a dedupe package stays single, and a copy two
     // importers share is pre-bundled once.
-    expect(ids.filter((id) => !id.includes(' > '))).toEqual(['markdown', 'shared']);
+    expect(ids.filter((id) => !id.includes(' > '))).toEqual(['aliased', 'markdown', 'shared']);
     expect(ids.filter((id) => id.endsWith(' > markdown'))).toHaveLength(1);
     expect(ids.filter((id) => id.endsWith(' > lib'))).toHaveLength(2);
     expect(ids.filter((id) => id.endsWith(' > common'))).toHaveLength(1);
     expect(ids.filter((id) => id.endsWith(' > shared'))).toHaveLength(0);
+    expect(ids.filter((id) => id.startsWith('fork@2.0.0-'))).toHaveLength(1);
+    expect(ids.filter((id) => id.endsWith(' > markdown/extra.js'))).toHaveLength(1);
+
+    // A copy the scan never met is pre-bundled when it is first requested.
+    expect(await servedVersions(environment, '/packages/plugin/late.js')).toEqual([
+      '@scope/late@1.0.0',
+    ]);
+    expect(
+      Object.keys(environment.depsOptimizer.metadata.optimized).filter((id) =>
+        id.startsWith('@scope/late@1.0.0-')
+      )
+    ).toEqual([expect.stringMatching(/ > @scope\/late\/sub\.js$/)]);
   } finally {
     await server.close();
   }

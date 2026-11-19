@@ -32,13 +32,28 @@ function cleanUrl(url) {
   return url.replace(/[?#].*$/s, '');
 }
 
-// The installed package a resolved file belongs to, or null when the file is not inside an
-// installed copy of that package (a linked package, or an alias that points elsewhere).
-function packageDirOf(file, name) {
-  const marker = `/node_modules/${name}/`;
+// The folder of the installed package a resolved file belongs to: the package after the last
+// node_modules in its path, which is also right for an npm: alias (pnpm installs `"markdown":
+// "npm:markdown-fork@1"` as .pnpm/markdown-fork@1/node_modules/markdown-fork). Null for a file
+// outside node_modules, such as a linked package's.
+function packageDirOf(file) {
+  const marker = '/node_modules/';
   const index = file.lastIndexOf(marker);
   if (index === -1) return null;
-  return file.slice(0, index + marker.length - 1);
+  const parts = file.slice(index + marker.length).split('/');
+  const nameParts = parts[0].startsWith('@') ? 2 : 1;
+  return file.slice(0, index + marker.length) + parts.slice(0, nameParts).join('/');
+}
+
+// The file the bare id resolves to from the server directory, or null when the server has no
+// copy of the package, or has one whose exports do not hold that subpath (a deep import of a
+// path another major dropped).
+async function resolveServerFile(resolveFile, environment, id) {
+  try {
+    return (await resolveFile(environment, id)) ?? null;
+  } catch {
+    return null;
+  }
 }
 
 // The dev server's dependency optimiser pre-bundles one copy of a package per bare import id,
@@ -69,16 +84,18 @@ function prebundlePerPackageCopy() {
   const copyFiles = new Map();
   const copyIds = new Map();
 
-  async function findCopyId(environment, id, name, importer) {
+  async function findCopyId(environment, id, importer) {
     const file = await resolveFile(environment, id, importer);
     if (!file || !path.isAbsolute(file)) return null;
     const normalizedFile = normalizePath(cleanUrl(file));
     if (!optimizableFileRe.test(normalizedFile)) return null;
-    const packageDir = packageDirOf(normalizedFile, name);
+    const packageDir = packageDirOf(normalizedFile);
     if (!packageDir) return null;
-    const serverFile = await resolveFile(environment, id);
+    const serverFile = await resolveServerFile(resolveFile, environment, id);
     if (serverFile === file) return null;
-    const { version } = JSON.parse(fs.readFileSync(path.join(packageDir, 'package.json'), 'utf8'));
+    const { name, version } = JSON.parse(
+      fs.readFileSync(path.join(packageDir, 'package.json'), 'utf8')
+    );
     const hash = crypto.createHash('sha256').update(packageDir).digest('hex').slice(0, 8);
     const copyId = `${name}@${version}-${hash} > ${id}`;
     copyFiles.set(copyId, file);
@@ -90,11 +107,10 @@ function prebundlePerPackageCopy() {
     if (!importer || id.includes('?') || !bareImportRe.test(id)) return null;
     const importerFile = cleanUrl(importer);
     if (!path.isAbsolute(importerFile) || importerFile.includes('node_modules')) return null;
-    const name = packageNameOf(id);
-    if (environment.config.resolve.dedupe.includes(name)) return null;
+    if (environment.config.resolve.dedupe.includes(packageNameOf(id))) return null;
     const cacheKey = `${id}\0${path.dirname(importerFile)}`;
     if (!copyIds.has(cacheKey)) {
-      copyIds.set(cacheKey, findCopyId(environment, id, name, importerFile));
+      copyIds.set(cacheKey, findCopyId(environment, id, importerFile));
     }
     return copyIds.get(cacheKey);
   }
@@ -119,12 +135,9 @@ function prebundlePerPackageCopy() {
       const copyId = await copyIdFor(this.environment, id, importer);
       if (!copyId) return null;
       await depsOptimizer.scanProcessing;
-      const { metadata } = depsOptimizer;
-      const depInfo =
-        metadata.optimized[copyId] ??
-        metadata.discovered[copyId] ??
-        metadata.chunks[copyId] ??
-        depsOptimizer.registerMissingImport(copyId, copyFiles.get(copyId));
+      // Returns the copy's pre-bundle when the scan found it, else adds it, as Vite does for a
+      // plain id it meets after the scan.
+      const depInfo = depsOptimizer.registerMissingImport(copyId, copyFiles.get(copyId));
       return depsOptimizer.getOptimizedDepId(depInfo);
     },
   };
@@ -136,9 +149,10 @@ function prebundlePerPackageCopy() {
       const copyId = await copyIdFor(scanEnvironment, id, importer);
       if (!copyId) return null;
       // The scan records the dependency under the id it is asked to resolve. The optimiser's
-      // bundle takes these plugins too; it never asks for a copy id (its importers are installed
-      // packages), and if it did, the copy id would not resolve there and the import resolves as
-      // before.
+      // bundle takes these plugins too, and meets a source importer when a pre-bundled package
+      // imports a linked one (an installed plugin importing a Lowdefy package of a checkout).
+      // A copy id does not resolve there, so this returns null and the bundle resolves the
+      // import from its importer, which is that importer's own copy.
       return this.resolve(copyId, importer, { ...extraOptions, skipSelf: true });
     },
   };
