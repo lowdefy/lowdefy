@@ -3246,7 +3246,7 @@
       "files": [
         "plugins/plugins-actions.yaml"
       ],
-      "hash": "f030c7444d82598aa7f810562252002ed2c555c8cb6212ee9db338716bdb4be4"
+      "hash": "608d6ed6fceefc6d56658c749dc571db60ff298213379bdfa2ea8dbe19b2e6a4"
     },
     "plugins/plugins-connections": {
       "files": [
@@ -3271,7 +3271,7 @@
       "files": [
         "plugins/PostHog.yaml"
       ],
-      "hash": "54ef91d2b8cb0d977dda85e0f73fabdd399b489df3fbfbd4681d14dfce0f9d96"
+      "hash": "e5a1ddf5e10e59a440c3fe1098ab1690f084d94001976cca42e2096e1e134d45"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -3375,14 +3375,14 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "6ff285b68da408987a1763c62d0cbb9b154acb70155b737c68599186055eb119"
+      "hash": "5a410a674717b47797c543d4d2684846c9b4d92d1645e47067dbb87c76ab0bd9"
     },
     "testing/journey-data-sets": {
       "files": [
         "testing/journey-data-sets.md",
         "testing/journey-data-sets.yaml"
       ],
-      "hash": "075d2fb697a1293bceb4d39cc5c3bb16858b25a6198e6f4c7d52b3301551e3e6"
+      "hash": "7e6321f527337621cc59135070bf6597e277191167cd8730382a17f2c4af42fe"
     },
     "testing/endpoint-tests": {
       "files": [
@@ -3403,7 +3403,7 @@
         "testing/explore-pull-request.md",
         "testing/explore-pull-request.yaml"
       ],
-      "hash": "1a36582512bc2878bc3240bafe50405d42d79defc567015892a3452dc9bb02b8"
+      "hash": "c97ee14faeeafe1ef3bdf5cbffabccb15dc5a3b0040ed60feb48ccaf1c569502"
     },
     "testing/e2e-utils-migration": {
       "files": [
@@ -5131,7 +5131,7 @@
         "actions/PostHogInit.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "37c86efeee835191f973bef8a9a198034bb9d2605e1bdaae1b98ee26dfb77d80"
+      "hash": "c699ed52e64af1f3460bd41166cbeba802b6e2e9eaa67f44935c33fa04cae3be"
     },
     "actions/posthogoptin": {
       "files": [

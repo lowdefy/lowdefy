@@ -228,7 +228,9 @@ test('targetFromElementsChain reads block, row, column and option from a masked 
   ).toEqual({
     block_id: 'grid',
     row: 3,
+    row_key: null,
     column: 'name',
+    control: null,
     text: null,
     option: false,
     block_ids: ['grid', 'page'],
@@ -248,7 +250,9 @@ test('targetFromElementsChain reads block, row, column and option from a masked 
   ).toEqual({
     block_id: 'customer',
     row: null,
+    row_key: null,
     column: null,
+    control: null,
     text: null,
     option: true,
     block_ids: ['customer'],

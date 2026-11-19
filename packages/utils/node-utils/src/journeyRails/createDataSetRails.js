@@ -15,9 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { normaliseBlockId } from '@lowdefy/node-utils';
 
+import normaliseBlockId from '../journeyGrammar/normaliseBlockId.js';
 import findExternalBlocks from './findExternalBlocks.js';
+import RAILED_STEPS from './railedSteps.js';
 
 // A list item's block (`rows.2.delete`) is listed by its template id
 // (`rows.$.delete`).
@@ -43,23 +44,27 @@ function describeConnection(connection) {
   return `"${connection.connectionId}" (${describeDeclaration(connection)})`;
 }
 
-// The static rail of a data-set journey run: a click on a block whose events
-// reach a connection whose type declares meta.dataSet 'external', declares
-// nothing, or has no artifact would reach a real service or be refused by the
-// gate. Declarations are read from connections, the plugin connection map the
-// gate reads. refusal({ pageId, blockId }) says why such a click is refused, or
-// null when the block may be clicked. Each page's list is read from the build
-// once per run. (Auth-engine actions are a runtime rail: see
-// checkAuthActionsRan.)
-function createDataSetRails({ buildDirectory, connections }) {
+// The static rail of a data-set journey run: a step that acts on a block (a click, an open, a
+// fill, a select or a press, see railedSteps) whose events reach a connection whose type declares
+// meta.dataSet 'external', declares nothing, or has no artifact would reach a real service or be
+// refused by the gate. Declarations are read from connections, the plugin connection map the
+// gate reads, and the build through readArtifact(name), a build artifact by its path in the build
+// ("pages/home.json"), deserialized, or null when the build has none. Both journey runners check
+// a step against it before it acts: the browser's (checkStepRails in @lowdefy/server-dev) and the
+// headless one (@lowdefy/journey-headless). refusal({ pageId, blockId, step }) says why such a
+// step is refused, in that step's words, or null when the block may be acted on. Each page's list
+// is read from the build once per run. (Auth-engine actions are a runtime rail: see
+// checkAuthActionsRan in @lowdefy/server-dev.)
+function createDataSetRails({ readArtifact, connections }) {
   const pages = new Map();
   function readPage(pageId) {
     if (!pages.has(pageId)) {
-      pages.set(pageId, findExternalBlocks({ buildDirectory, pageId, connections }).blocks);
+      pages.set(pageId, findExternalBlocks({ readArtifact, pageId, connections }).blocks);
     }
     return pages.get(pageId);
   }
-  function refusal({ pageId, blockId }) {
+  function refusal({ pageId, blockId, step }) {
+    const words = RAILED_STEPS[step];
     const refused = findListed({ blocks: readPage(pageId), blockId });
     if (!type.isUndefined(refused)) {
       const reasons = refused
@@ -70,8 +75,8 @@ function createDataSetRails({ buildDirectory, connections }) {
         .join(', and ');
       const named = refused.map(describeConnection).join(', ');
       return {
-        message: `Block "${blockId}" reaches ${reasons}, so a data-set journey cannot click it.`,
-        actual: `a click that reaches connection ${named}`,
+        message: `Block "${blockId}" reaches ${reasons}, so a data-set journey cannot ${words.act}.`,
+        actual: `${words.step} that reaches connection ${named}`,
       };
     }
     return null;

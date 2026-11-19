@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { get, type } from '@lowdefy/helpers';
+import { get, journeyTargetSelectors, type } from '@lowdefy/helpers';
 
 // A function giving each row its key: the `rowKey` field when set, otherwise
 // `_id`, then `id`. A row with none of them gets a key tied to the row object
@@ -30,7 +30,7 @@ function createRowKeyGetter({ rowKey } = {}) {
     let fallback = generated.get(row);
     if (type.isUndefined(fallback)) {
       counter += 1;
-      fallback = `__row_${counter}`;
+      fallback = `${journeyTargetSelectors.generatedRowKeyPrefix}${counter}`;
       generated.set(row, fallback);
     }
     return fallback;

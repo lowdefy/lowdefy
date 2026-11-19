@@ -14,17 +14,11 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
-import path from 'node:path';
-import { serializer } from '@lowdefy/helpers';
+import { Table } from '@lowdefy/blocks-table/metas';
+import { expect, test } from 'vitest';
 
-// A build artifact, deserialized, or null when the build wrote none.
-function readBuiltArtifact({ buildDirectory, name }) {
-  const filePath = path.join(buildDirectory, name);
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-  return serializer.deserialize(JSON.parse(fs.readFileSync(filePath, 'utf8')));
-}
+import TABLE_METHODS from './TABLE_METHODS.js';
 
-export default readBuiltArtifact;
+test('every Table method in its meta is listed, and nothing else', () => {
+  expect(Object.keys(TABLE_METHODS).sort()).toEqual(Object.keys(Table.methods).sort());
+});

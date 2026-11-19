@@ -54,6 +54,7 @@ function LazyCell({ api, col, lead, original, rowKey }) {
   if (!active) return renderPlaceholder({ col, original });
   shownRef.current = true;
   return renderCell({
+    blockId: api.blockId,
     column: col.column,
     row: original,
     rowKey,

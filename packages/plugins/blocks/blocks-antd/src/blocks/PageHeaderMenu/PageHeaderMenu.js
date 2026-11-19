@@ -35,7 +35,7 @@ import getDefaultLogoUrl from '../getDefaultLogoUrl.js';
 import getPageSpacing from '../getPageSpacing.js';
 import withPageTheme from '../withPageTheme.js';
 
-const PageHeaderMenu = ({
+function PageHeaderMenu({
   apiBase,
   basePath,
   blockId,
@@ -48,7 +48,7 @@ const PageHeaderMenu = ({
   pageId,
   properties,
   styles = {},
-}) => {
+}) {
   const spacing = getPageSpacing({ padding: properties.padding });
   useEffect(() => {
     registerDarkModeMethod(methods);
@@ -113,6 +113,7 @@ const PageHeaderMenu = ({
                       <div className="hidden lg:flex flex-auto">
                         <Menu
                           blockId={`${blockId}_menu`}
+                          journeyMarks={false}
                           apiBase={apiBase}
                           basePath={basePath}
                           components={{ Icon, Link, ShortcutBadge }}
@@ -270,6 +271,6 @@ const PageHeaderMenu = ({
       }}
     />
   );
-};
+}
 
 export default withBlockDefaults(withPageTheme(PageHeaderMenu));

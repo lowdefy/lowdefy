@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import { getState } from '@lowdefy/e2e-utils/runtime';
 import {
   classifyJourney,
+  createDataSetRails,
   findPlaceholderStep,
   normaliseJourneySteps,
   validateJourneyDataSession,
@@ -32,7 +33,6 @@ import {
 } from '@lowdefy/test-utils/dataSets';
 
 import collectExercised from './collectExercised.js';
-import createDataSetRails from './rails/createDataSetRails.js';
 import createJourneyAppErrors from './observe/createJourneyAppErrors.js';
 import describeDataSetResult from './dataSets/describeDataSetResult.js';
 import JourneyStepError from './JourneyStepError.js';
@@ -356,7 +356,7 @@ async function runJourneyInBrowser({
     journey.dataStore = store;
     if (!type.isUndefined(dataSet)) {
       journey.dataSetRails = createDataSetRails({
-        buildDirectory: path.join(process.cwd(), 'build'),
+        readArtifact: (name) => readBuildArtifact({ name, deserialize: true }),
         connections: await readConnectionPlugins(),
       });
     }

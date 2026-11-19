@@ -1,0 +1,367 @@
+id: controls
+type: Box
+# Controls a journey names by key ({ blockId, control }) and grid rows it names by key
+# ({ blockId, rowKey }), for the browser runner
+# (packages/servers/server-dev/test/journeyFixture/controls.test.mjs). Every event writes what it
+# did to state `last`. The grid's pinned column is listed last, so the row's first displayed cell
+# is not its first column in the config. plain_grid's rows carry no key, so the grid generates
+# one. tickets_table shows its reply button only while the row is hovered. Two of dupes_table's
+# rows share a key. notes_menu opens on a right click (trigger: contextMenu). leave_modal's id
+# starts with "leave" and holiday_modal's own element (`.ant-modal`, above its footer buttons) has
+# the class annual-leave, so neither may pass for a modal antd is animating out. switch_grid's
+# switch writes into its row, and reload_switch_grid gives it new rows.
+blocks:
+  - id: controls_title
+    type: Title
+    properties:
+      content: Controls
+      level: 2
+  - id: open_edit_modal_button
+    type: Button
+    properties:
+      title: Open edit modal
+    events:
+      onClick:
+        - id: open_edit_modal
+          type: CallMethod
+          params:
+            blockId: edit_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: edit_modal
+    type: Modal
+    properties:
+      title: Edit item
+    events:
+      onOk:
+        - id: set_modal_ok
+          type: SetState
+          params:
+            last: modal-ok
+    blocks:
+      - id: edit_modal_body
+        type: Paragraph
+        properties:
+          content: Edit the item
+  - id: open_leave_modal_button
+    type: Button
+    properties:
+      title: Open leave modal
+    events:
+      onClick:
+        - id: open_leave_modal
+          type: CallMethod
+          params:
+            blockId: leave_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: leave_modal
+    type: Modal
+    properties:
+      title: Request leave
+    events:
+      onOk:
+        - id: set_leave_ok
+          type: SetState
+          params:
+            last: leave-ok
+  - id: open_holiday_modal_button
+    type: Button
+    properties:
+      title: Open holiday modal
+    events:
+      onClick:
+        - id: open_holiday_modal
+          type: CallMethod
+          params:
+            blockId: holiday_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: holiday_modal
+    type: Modal
+    class:
+      .element: annual-leave
+    properties:
+      title: Book a holiday
+    events:
+      onOk:
+        - id: set_holiday_ok
+          type: SetState
+          params:
+            last: holiday-ok
+  - id: open_confirm_dialog_button
+    type: Button
+    properties:
+      title: Open confirm dialog
+    events:
+      onClick:
+        - id: open_confirm_dialog
+          type: CallMethod
+          params:
+            blockId: confirm_dialog
+            method: open
+  - id: confirm_dialog
+    type: ConfirmModal
+    properties:
+      title: Discard changes?
+      content: Your edits will be lost.
+    events:
+      onOk:
+        - id: set_confirm_ok
+          type: SetState
+          params:
+            last: confirm-ok
+      onCancel:
+        - id: set_confirm_cancel
+          type: SetState
+          params:
+            last: confirm-cancel
+  - id: actions_dropdown
+    type: DropdownButton
+    properties:
+      title: Actions
+      items:
+        - title: Archive
+          eventName: onArchive
+        - title: Export
+          eventName: onExport
+    events:
+      onArchive:
+        - id: set_archive
+          type: SetState
+          params:
+            last: archive
+      onExport:
+        - id: set_export
+          type: SetState
+          params:
+            last: export
+  # Opens on hover (DropdownMenu's default). A click on its content's button would set
+  # content_clicked, which a hover never does.
+  - id: account_menu
+    type: DropdownMenu
+    properties:
+      links:
+        - id: settings
+          type: MenuLink
+          properties:
+            title: Settings
+        - id: billing
+          type: MenuLink
+          properties:
+            title: Billing
+    events:
+      onClick:
+        - id: set_menu_item
+          type: SetState
+          params:
+            last:
+              _string.concat:
+                - 'menu-'
+                - _event: key
+    blocks:
+      - id: account_menu_label
+        type: Button
+        properties:
+          title: Account
+        events:
+          onClick:
+            - id: set_content_clicked
+              type: SetState
+              params:
+                content_clicked: true
+  - id: notes_menu
+    type: DropdownMenu
+    properties:
+      trigger: contextMenu
+      links:
+        - id: pin
+          type: MenuLink
+          properties:
+            title: Pin
+    events:
+      onClick:
+        - id: set_notes_item
+          type: SetState
+          params:
+            last:
+              _string.concat:
+                - 'notes-'
+                - _event: key
+    blocks:
+      - id: notes_menu_label
+        type: Paragraph
+        properties:
+          content: Right-click for note actions
+  - id: invoices_grid
+    type: AgGridAlpine
+    properties:
+      height: 220
+      columnDefs:
+        - headerName: Amount
+          field: amount
+        - headerName: Customer
+          field: customer
+        - headerName: Number
+          field: number
+          pinned: left
+        - headerName: ''
+          colId: menu
+          width: 70
+          cell:
+            type: menu
+            items:
+              - eventName: onVoid
+                title: Void
+              - eventName: onRemind
+                title: Remind
+      rowData:
+        - id: inv-1
+          number: INV-0001
+          customer: Acme
+          amount: 100
+        - id: inv-2
+          number: INV-0002
+          customer: Globex
+          amount: 250
+        - id: inv-3
+          number: INV-0003
+          customer: Initech
+          amount: 75
+    events:
+      onCellClick:
+        - id: set_clicked_cell
+          type: SetState
+          params:
+            last:
+              _string.concat:
+                - 'cell-'
+                - _event: row.id
+                - '-'
+                - _event: colId
+      onVoid:
+        - id: set_void
+          type: SetState
+          params:
+            last:
+              _string.concat:
+                - 'void-'
+                - _event: row.id
+      onRemind:
+        - id: set_remind
+          type: SetState
+          params:
+            last:
+              _string.concat:
+                - 'remind-'
+                - _event: row.id
+  - id: plain_grid
+    type: AgGridAlpine
+    properties:
+      height: 140
+      columnDefs:
+        - headerName: Name
+          field: name
+      rowData:
+        - name: One
+        - name: Two
+  - id: tickets_table
+    type: Table
+    properties:
+      columns:
+        - key: subject
+        - key: reply
+          type: buttons
+          title: ''
+          cell:
+            showOn: hover
+            buttons:
+              - eventName: onReply
+                title: Reply
+        - key: open
+          type: buttons
+          title: ''
+          cell:
+            buttons:
+              - eventName: onOpenTicket
+                title: Open
+      data:
+        - _id: t-1
+          subject: Cannot export the invoice
+        - _id: t-2
+          subject: Login link expired
+    events:
+      onReply:
+        - id: set_reply
+          type: SetState
+          params:
+            last:
+              _string.concat:
+                - 'reply-'
+                - _event: rowKey
+      onOpenTicket:
+        - id: set_open_ticket
+          type: SetState
+          params:
+            last:
+              _string.concat:
+                - 'open-'
+                - _event: rowKey
+  - id: dupes_table
+    type: Table
+    properties:
+      columns:
+        - key: subject
+      data:
+        - _id: d-1
+          subject: First copy
+        - _id: d-1
+          subject: Second copy
+  # switch_grid's rows come from state `rows` until reload_switch_grid sets new ones. Each toggle
+  # appends its newValue to state `toggles`, so a test reads whether a toggle saw the write
+  # before it.
+  - id: switch_grid
+    type: AgGridAlpine
+    properties:
+      height: 140
+      columnDefs:
+        - headerName: Name
+          field: name
+        - headerName: Active
+          field: active
+          cell:
+            type: switch
+            eventName: onToggle
+      rowData:
+        _if_none:
+          - _state: rows
+          - - id: s-1
+              name: Ada
+              active: false
+    events:
+      onToggle:
+        - id: record_toggle
+          type: SetState
+          params:
+            toggles:
+              _array.concat:
+                - _if_none:
+                    - _state: toggles
+                    - []
+                - - _event: newValue
+  - id: reload_switch_grid
+    type: Button
+    properties:
+      title: Reload switch grid
+    events:
+      onClick:
+        - id: set_rows
+          type: SetState
+          params:
+            rows:
+              - id: s-1
+                name: Ada Lovelace
+                active: false

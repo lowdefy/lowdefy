@@ -149,34 +149,37 @@ function colKey(col, index, prefix, seen) {
   return key;
 }
 
-function recProcessColDefs(columnDefs, methods, components, cache, seen, prefix) {
+function recProcessColDefs(columnDefs, context, cache, seen, prefix) {
   return columnDefs.map((col, index) => {
     const key = colKey(col, index, prefix, seen);
     const entry = cache.get(key) ?? {};
     cache.set(key, entry);
     const newColDef = {};
     if (type.isArray(col.children)) {
-      newColDef.children = recProcessColDefs(
-        col.children,
-        methods,
-        components,
-        cache,
-        seen,
-        `${key}/`
-      );
+      newColDef.children = recProcessColDefs(col.children, context, cache, seen, `${key}/`);
     }
     if (type.isObject(col.cell) && type.isString(col.cell.type)) {
       const Renderer = getCellRenderer(col.cell.type);
       if (Renderer) {
         const cell = col.cell;
         newColDef.cellRenderer = stableRenderer(entry, 'cell', (params) =>
-          Renderer({ ...params, cellConfig: cell, methods, components })
+          Renderer({
+            ...params,
+            blockId: context.blockId,
+            cellConfig: cell,
+            methods: context.methods,
+            components: context.components,
+          })
         );
       }
     } else if (type.isFunction(col.cellRenderer)) {
       const cellRenderer = col.cellRenderer;
       newColDef.cellRenderer = stableRenderer(entry, 'cell', (params) =>
-        renderHtml({ className: 'lf-cell-html', html: cellRenderer(params), methods })
+        renderHtml({
+          className: 'lf-cell-html',
+          html: cellRenderer(params),
+          methods: context.methods,
+        })
       );
     }
     const merged = {
@@ -193,9 +196,17 @@ function recProcessColDefs(columnDefs, methods, components, cache, seen, prefix)
   });
 }
 
-function processColDefs(columnDefs = [], methods, components, cache = new Map()) {
+// `blockId` is the grid block's id, which the cell renderers mark their controls with for
+// journeys.
+function processColDefs(columnDefs = [], { blockId, methods, components } = {}, cache = new Map()) {
   const seen = new Set();
-  const processed = recProcessColDefs(columnDefs, methods, components, cache, seen, '');
+  const processed = recProcessColDefs(
+    columnDefs,
+    { blockId, methods, components },
+    cache,
+    seen,
+    ''
+  );
   // Drop columns that are no longer defined, so a grid whose columns come and go does
   // not accumulate adapters. A column that returns gets a fresh one, which is correct
   // — its cells were unmounted with it.

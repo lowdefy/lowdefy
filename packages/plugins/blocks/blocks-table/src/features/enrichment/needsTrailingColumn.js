@@ -14,9 +14,8 @@
   limitations under the License.
 */
 
+import someColumnConfig from '@lowdefy/blocks-antd/table/someColumnConfig.js';
 import { type } from '@lowdefy/helpers';
-
-import someColumnConfig from '../../core/someColumnConfig.js';
 
 // Whether a table shows the enrichment trailing column, from its raw config (the lazy block's
 // fallback lays it out before the table's code loads): the "+" header with `addColumn`, or the

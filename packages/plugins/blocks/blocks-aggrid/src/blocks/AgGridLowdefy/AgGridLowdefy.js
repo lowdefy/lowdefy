@@ -42,6 +42,7 @@ const AgGridLowdefy = ({ blockId, components, events, loading, methods, properti
       }}
     >
       <AgGrid
+        blockId={blockId}
         components={components}
         events={events}
         loading={loading}

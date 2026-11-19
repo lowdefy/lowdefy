@@ -17,11 +17,22 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { serializer } from '@lowdefy/helpers';
 
 import findExternalBlocks from './findExternalBlocks.js';
 import { afterEach, beforeEach, expect, test } from 'vitest';
 
 let buildDirectory;
+
+// A build artifact by its path, deserialized, or null when the build has none, as a journey
+// host's readArtifact reads it.
+function readArtifact(name) {
+  const filePath = path.join(buildDirectory, name);
+  if (!fs.existsSync(filePath)) {
+    return null;
+  }
+  return serializer.deserialize(JSON.parse(fs.readFileSync(filePath, 'utf8')));
+}
 
 const connections = {
   MongoDBCollection: { meta: { tenant: true, dataSet: 'redirect' } },
@@ -196,7 +207,7 @@ const mailer = { connectionId: 'mailer', type: 'AxiosHttp', dataSet: 'external' 
 const webhook = { connectionId: 'webhook', type: 'AxiosHttp', dataSet: 'external' };
 
 test('findExternalBlocks lists blocks whose events reach a connection declaring external, nothing, or with no artifact', () => {
-  expect(findExternalBlocks({ buildDirectory, pageId: 'tickets', connections })).toEqual({
+  expect(findExternalBlocks({ readArtifact, pageId: 'tickets', connections })).toEqual({
     blocks: {
       invite: [mailer],
       hook: [webhook],
@@ -210,7 +221,7 @@ test('findExternalBlocks lists blocks whose events reach a connection declaring 
 });
 
 test('findExternalBlocks lets a block reach plugin types that declare redirect or walled', () => {
-  const { blocks } = findExternalBlocks({ buildDirectory, pageId: 'tickets', connections });
+  const { blocks } = findExternalBlocks({ readArtifact, pageId: 'tickets', connections });
   expect(blocks.accept).toBeUndefined();
   expect(blocks.archive).toBeUndefined();
   expect(blocks.refresh).toBeUndefined();
@@ -220,7 +231,7 @@ test('findExternalBlocks lets a block reach plugin types that declare redirect o
 test('findExternalBlocks refuses MongoDBCollection when the connection map does not declare it', () => {
   const { MongoDBCollection, ...withoutMongo } = connections;
   const { blocks } = findExternalBlocks({
-    buildDirectory,
+    readArtifact,
     pageId: 'tickets',
     connections: withoutMongo,
   });
@@ -231,8 +242,8 @@ test('findExternalBlocks refuses MongoDBCollection when the connection map does 
 });
 
 test('findExternalBlocks throws for a page with no build artifact', () => {
-  expect(() => findExternalBlocks({ buildDirectory, pageId: 'missing', connections })).toThrow(
-    `Page "missing" has no build artifact in ${buildDirectory}.`
+  expect(() => findExternalBlocks({ readArtifact, pageId: 'missing', connections })).toThrow(
+    'Page "missing" has no build artifact.'
   );
 });
 
@@ -242,7 +253,7 @@ test('findExternalBlocks lets a block reach an external type with request resolv
     AxiosHttp: { ...connections.AxiosHttp, requests: { AxiosHttp: () => {} } },
   };
   const { blocks } = findExternalBlocks({
-    buildDirectory,
+    readArtifact,
     pageId: 'tickets',
     connections: sinkable,
   });

@@ -38,6 +38,8 @@ const MODIFIER_MAP = {
 
 const MODIFIER_VALUES = new Set(['$mod', 'Alt', 'Shift', 'Control']);
 
+// A block's `shortcut` in tinykeys' grammar (`mod` as `$mod`, single keys lower case). The
+// dev server's journey rails read it too, to tell which block a pressed chord fires.
 function normalizeShortcut(shortcut) {
   // Sequences are space-separated parts like "g i"
   if (shortcut.includes(' ') && !shortcut.includes('+')) {
@@ -140,4 +142,5 @@ function createShortcutManager() {
   return { init, destroy };
 }
 
+export { normalizeShortcut };
 export default createShortcutManager;

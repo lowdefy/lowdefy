@@ -211,6 +211,7 @@ function TableLightBlock({
   const columns = useMemo(
     () =>
       buildAntdColumns({
+        blockId,
         nodes: config.headerGroups,
         compiledByKey: config.compiledByKey,
         sort,
@@ -220,7 +221,7 @@ function TableLightBlock({
         onEvent,
         skeleton: showSkeleton,
       }),
-    [config, sort, getRowKey, methods, components, onEvent, showSkeleton]
+    [blockId, config, sort, getRowKey, methods, components, onEvent, showSkeleton]
   );
   const skeletonRows = useMemo(
     () => (showSkeleton ? getSkeletonRows({ properties, size }) : null),

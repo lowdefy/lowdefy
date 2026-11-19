@@ -46,9 +46,13 @@ function readQuery(query) {
 //   lowdefy object, as the web client's router does, and joins the history. back() goes back one
 //   page, by a full load when that page was opened by an earlier load.
 // - Showing a page runs what the web client's components run: the app's and the page's onInit
-//   and onInitAsync, then onMount on every block it mounts. Modals and Drawers start closed; their
-//   setOpen and toggleOpen stand-ins open them, fire their onOpen and onClose and mount their
-//   content (registerBlockStandIns).
+//   and onInitAsync, then onMount on every block it mounts. Popup blocks (Modal, Drawer,
+//   ConfirmModal) start closed; the methods their stand-ins register open them, fire their open
+//   and close events and mount their content through setOpen (registerBlockStandIns).
+// - page.standIns holds what each block's stand-in keeps for the shown page, by block id
+//   (readStandInState): a dropdown's open state and selected keys, a confirm dialog's status.
+//   track(promise) holds an event a stand-in fired until settle, and sends its error to the
+//   host's error sink.
 // - stepRunner is client-core's step runner on the shown page; idle() waits for a navigation the
 //   page started.
 // `calls`, `messages` and `navigations` record what the actor's pages did; leftApp is the URL of a
@@ -99,20 +103,22 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     return host.readPageConfig({ pageId, path, pathParams, urlQuery, user });
   }
 
+  // Opens or closes a popup block (POPUP_BLOCK_TYPES) as antd's `open` prop does: its content
+  // shows, and mounts, only while it is open. Fires none of the block's events, which its stand-in
+  // fires in the component's order (BLOCK_STAND_INS). Returns whether the open state changed.
   function setOpen({ block, open }) {
     const { openBlocks, mounted, context } = actor.page;
     if (openBlocks.has(block.id) === open) {
-      return;
+      return false;
     }
     if (open) {
       openBlocks.add(block.id);
-      block.triggerEvent({ name: 'onOpen' });
       track(fireMountEvents({ context, mounted, openBlocks }));
     } else {
       openBlocks.delete(block.id);
-      block.triggerEvent({ name: 'onClose' });
     }
     context._internal.update();
+    return true;
   }
 
   async function show({ page, urlQuery }) {
@@ -139,6 +145,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       openBlocks: new Set(),
       pageId: page.pageId,
       reportedParseErrors: new Set(),
+      standIns: new Map(),
       urlQuery: urlQuery ?? {},
     };
     const progress = () => undefined;
@@ -146,7 +153,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     appContext._internal.runOnInitAsync(progress);
     await context._internal.runOnInit(progress);
     context._internal.runOnInitAsync(progress);
-    registerBlockStandIns({ context, openBlocks: actor.page.openBlocks, setOpen });
+    registerBlockStandIns({ actor });
     await fireMountEvents({
       context,
       mounted: actor.page.mounted,
@@ -216,11 +223,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     if (client === null) {
       return true;
     }
-    registerBlockStandIns({
-      context: actor.page.context,
-      openBlocks: actor.page.openBlocks,
-      setOpen,
-    });
+    registerBlockStandIns({ actor });
     const settled = await waitForSettle({
       getPageContext,
       lowdefy: client.lowdefy,
@@ -235,7 +238,9 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
   actor.getPageContext = getPageContext;
   actor.idle = idle;
   actor.load = load;
+  actor.setOpen = setOpen;
   actor.settle = settle;
+  actor.track = track;
   actor.url = () => client?.globals.window.location.href ?? null;
   actor.stepRunner = createStepRunner({
     getLowdefy: () => client?.lowdefy,

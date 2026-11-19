@@ -16,9 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
-import pageBlocks from '../pageBlocks.js';
-import readBuiltArtifact from './readBuiltArtifact.js';
-import readRoutineSteps from '../readRoutineSteps.js';
+import pageBlocks from './pageBlocks.js';
+import readRoutineSteps from './readRoutineSteps.js';
 
 // The meta.dataSet declarations a data session runs against the session's databases (see
 // applyDataSetRedirect in @lowdefy/test-utils): 'redirect' takes its target's session database, 'walled'
@@ -45,14 +44,11 @@ function requestedIds({ params, pageRequestIds }) {
   return [];
 }
 
-function createConnectionReader({ buildDirectory }) {
+function createConnectionReader({ readArtifact }) {
   const types = new Map();
   return function connectionType(connectionId) {
     if (!types.has(connectionId)) {
-      const connection = readBuiltArtifact({
-        buildDirectory,
-        name: `connections/${connectionId}.json`,
-      });
+      const connection = readArtifact(`connections/${connectionId}.json`);
       types.set(connectionId, connection?.type ?? null);
     }
     return types.get(connectionId);
@@ -62,7 +58,7 @@ function createConnectionReader({ buildDirectory }) {
 // The connections an endpoint's routine reaches, through endpoints its
 // CallApi steps call. A dev build only warns about a call to an endpoint
 // with no artifact (callapi-refs), so such a call reaches nothing.
-function endpointConnections({ buildDirectory, endpointId }) {
+function endpointConnections({ readArtifact, endpointId }) {
   const connections = new Set();
   const seen = new Set();
   const queue = [endpointId];
@@ -70,7 +66,7 @@ function endpointConnections({ buildDirectory, endpointId }) {
     const id = queue.shift();
     if (seen.has(id)) continue;
     seen.add(id);
-    const endpoint = readBuiltArtifact({ buildDirectory, name: `api/${id}.json` });
+    const endpoint = readArtifact(`api/${id}.json`);
     if (endpoint === null) continue;
     readRoutineSteps({ routine: endpoint.routine }).forEach((step) => {
       if (type.isString(step.connectionId)) connections.add(step.connectionId);
@@ -96,30 +92,29 @@ function dataSetMode({ connections, connectionType }) {
 // { connectionId, type, dataSet } (type null for a connection with no
 // artifact, dataSet the declared value or null). The rails mirror the
 // declaration only: a redirect connection whose properties the gate refuses
-// fails when its request runs. A data-set journey may not click these blocks
+// fails when its request runs. A data-set journey may not act on these blocks
 // (see createDataSetRails). Ids computed by operators are not followed.
-function findExternalBlocks({ buildDirectory, pageId, connections }) {
-  const page = readBuiltArtifact({ buildDirectory, name: `pages/${pageId}.json` });
+// readArtifact(name) is a build artifact by its path in the build
+// ("pages/home.json"), deserialized, or null when the build has none.
+function findExternalBlocks({ readArtifact, pageId, connections }) {
+  const page = readArtifact(`pages/${pageId}.json`);
   if (page === null) {
-    throw new Error(`Page "${pageId}" has no build artifact in ${buildDirectory}.`);
+    throw new Error(`Page "${pageId}" has no build artifact.`);
   }
   const pageRequestIds = (page.requests ?? []).map((request) => request.requestId);
-  const connectionType = createConnectionReader({ buildDirectory });
+  const connectionType = createConnectionReader({ readArtifact });
   const blocks = {};
   pageBlocks(page).forEach(({ blockId, actions }) => {
     const reached = new Set();
     actions.forEach((action) => {
       if (action.type === 'Request') {
         requestedIds({ params: action.params, pageRequestIds }).forEach((requestId) => {
-          const request = readBuiltArtifact({
-            buildDirectory,
-            name: `pages/${pageId}/requests/${requestId}.json`,
-          });
+          const request = readArtifact(`pages/${pageId}/requests/${requestId}.json`);
           if (type.isString(request?.connectionId)) reached.add(request.connectionId);
         });
       }
       if (action.type === 'CallAPI' && type.isString(action.params?.endpointId)) {
-        endpointConnections({ buildDirectory, endpointId: action.params.endpointId }).forEach(
+        endpointConnections({ readArtifact, endpointId: action.params.endpointId }).forEach(
           (connectionId) => reached.add(connectionId)
         );
       }

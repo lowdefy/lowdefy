@@ -62,7 +62,7 @@ function writeSiderState({ methods, properties, open }) {
   }
 }
 
-const PageSidebarLayout = ({
+function PageSidebarLayout({
   apiBase,
   basePath,
   blockId,
@@ -75,7 +75,7 @@ const PageSidebarLayout = ({
   pageId,
   properties,
   styles = {},
-}) => {
+}) {
   const spacing = getPageSpacing({ padding: properties.padding });
   const [openSiderState, setSiderOpen] = useState(() =>
     getInitialSiderState({ methods, properties })
@@ -208,6 +208,7 @@ const PageSidebarLayout = ({
                     <div style={{ flex: '1 1 auto', minHeight: 0, overflowY: 'auto' }}>
                       <Menu
                         blockId={`${blockId}_menu`}
+                        journeyMarks={false}
                         components={{ Icon, Link, ShortcutBadge }}
                         apiBase={apiBase}
                         basePath={basePath}
@@ -527,6 +528,6 @@ const PageSidebarLayout = ({
     />
   );
   return layout;
-};
+}
 
 export default withBlockDefaults(withPageTheme(PageSidebarLayout));

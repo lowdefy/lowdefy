@@ -202,6 +202,18 @@ test('validateTraceRecord requires zero-based integers or null for row and nth',
   expect(check({ ...sample, target: { ...sample.target, row: null, nth: 0 } })).toBeUndefined();
 });
 
+test('validateTraceRecord requires a string or null row_key and control', () => {
+  expect(check({ ...sample, target: { ...sample.target, row_key: 4 } })).toContain(
+    '"target.row_key" should be a string or null. Received 4.'
+  );
+  expect(check({ ...sample, target: { ...sample.target, control: true } })).toContain(
+    '"target.control" should be a string or null. Received true.'
+  );
+  expect(
+    check({ ...sample, target: { ...sample.target, row_key: 'inv-2', control: 'onPay' } })
+  ).toBeUndefined();
+});
+
 test('validateTraceRecord requires a string or null block_type', () => {
   expect(check({ ...sample, target: { ...sample.target, block_type: 3 } })).toContain(
     '"target.block_type" should be a string or null. Received 3.'

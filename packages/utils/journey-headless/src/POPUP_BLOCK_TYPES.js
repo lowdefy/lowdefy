@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-// Blocks whose content shows only while they are open: their component keeps the open state and
-// registers setOpen and toggleOpen, which a headless page stands in for (registerBlockStandIns).
-const POPUP_BLOCK_TYPES = new Set(['Drawer', 'Modal']);
+// Blocks whose content shows only while they are open: their component keeps the open state, which
+// a headless page keeps in page.openBlocks through the methods their stand-ins register
+// (BLOCK_STAND_INS): setOpen and toggleOpen on Modal and Drawer, open on ConfirmModal.
+const POPUP_BLOCK_TYPES = new Set(['ConfirmModal', 'Drawer', 'Modal']);
 
 export default POPUP_BLOCK_TYPES;

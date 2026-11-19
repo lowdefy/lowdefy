@@ -91,8 +91,24 @@ function getStepKey(step) {
 // `nth` picks among several matches. `text` alone, with no blockId, searches
 // the whole page — that is how portal-rendered controls (confirm dialog
 // buttons, modal footers, dropdown menu items) are reached, since they render
-// outside every block.
-const TARGET_KEYS = ['blockId', 'text', 'containing', 'row', 'column', 'nth'];
+// outside every block. `rowKey` names a grid row by its key and `control` a
+// control the block draws by its key (a modal's ok, a menu item); both need
+// the blockId, and both runners read them, where the others read the page.
+const TARGET_KEYS = ['blockId', 'text', 'containing', 'row', 'rowKey', 'column', 'control', 'nth'];
+
+// Why a step refuses a target key, naming the browser form to use instead. No
+// covered block has an input in a row, and a block's control shows only while
+// its popup is open, so only click (and an expectation on a row) takes them.
+const REFUSED_TARGET_KEY_REASONS = {
+  rowKey:
+    'a row named by key is clicked or expected; reach an input in a grid row with "row" (the displayed row) and "column"',
+  control:
+    'a control named by key is clicked; reach it with "text" (its exact text) instead, after a click or an open that shows it',
+};
+
+function isNonEmptyString(value) {
+  return type.isString(value) && value !== '';
+}
 
 function isIndex(value) {
   return type.isInt(value) && value >= 0;
@@ -113,8 +129,23 @@ function findUnknownKeys({ key, params, allowed }) {
 // Validates the target keys of a step object; `extraKeys` are the step's own
 // keys (`value`, `contains`) that may sit beside them. Returns an error
 // message, or undefined when the target is well-formed.
-function validateTargetObject({ key, params, extraKeys = [], requireBlockId = false }) {
-  const unknownKeys = findUnknownKeys({ key, params, allowed: [...TARGET_KEYS, ...extraKeys] });
+// `refusedKeys` are target keys the step does not take, refused with the
+// browser form to use instead.
+function validateTargetObject({
+  key,
+  params,
+  extraKeys = [],
+  refusedKeys = [],
+  requireBlockId = false,
+}) {
+  const refusedKey = refusedKeys.find((refused) => Object.hasOwn(params, refused));
+  if (!type.isUndefined(refusedKey)) {
+    return `Step "${key}" takes no "${refusedKey}": ${
+      REFUSED_TARGET_KEY_REASONS[refusedKey]
+    }. Received ${describe(params)}.`;
+  }
+  const allowed = [...TARGET_KEYS.filter((target) => !refusedKeys.includes(target)), ...extraKeys];
+  const unknownKeys = findUnknownKeys({ key, params, allowed });
   if (!type.isUndefined(unknownKeys)) {
     return unknownKeys;
   }
@@ -134,6 +165,37 @@ function validateTargetObject({ key, params, extraKeys = [], requireBlockId = fa
   }
   if (!type.isUndefined(params.text) && !type.isUndefined(params.containing)) {
     return `Step "${key}" takes "text" (a control's exact text) or "containing" (text an element contains), not both. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.rowKey) && !isNonEmptyString(params.rowKey)) {
+    return `Step "${key}" requires "rowKey" to be a non-empty string, the row's key. Received ${describe(
+      params.rowKey
+    )}.`;
+  }
+  if (!type.isUndefined(params.control) && !isNonEmptyString(params.control)) {
+    return `Step "${key}" requires "control" to be a non-empty string, the control's key. Received ${describe(
+      params.control
+    )}.`;
+  }
+  if (
+    (!type.isUndefined(params.rowKey) || !type.isUndefined(params.control)) &&
+    type.isUndefined(params.blockId)
+  ) {
+    return `Step "${key}" requires a "blockId" (the block that draws the row or control) when "rowKey" or "control" is given. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.rowKey) && !type.isUndefined(params.row)) {
+    return `Step "${key}" takes "rowKey" (the row's key) or "row" (the displayed row), not both. Received ${describe(
+      params
+    )}.`;
+  }
+  const controlWith = ['text', 'containing', 'nth'].find(
+    (other) => !type.isUndefined(params[other])
+  );
+  if (!type.isUndefined(params.control) && !type.isUndefined(controlWith)) {
+    return `Step "${key}" takes "control" (the control's key) or "${controlWith}", not both. Received ${describe(
       params
     )}.`;
   }
@@ -175,17 +237,19 @@ function validateTargetObject({ key, params, extraKeys = [], requireBlockId = fa
   return undefined;
 }
 
-// click and expect.visible take a blockId string or a target object.
-function validateTarget({ key, params }) {
+// open, expect.visible and expect.hidden take a blockId string or a target
+// object.
+function validateTarget({ key, params, refusedKeys = [] }) {
   if (type.isString(params)) {
     return undefined;
   }
   if (!type.isObject(params)) {
-    return `Step "${key}" requires a blockId string or a target object { blockId, text, containing, row, column, nth }. Received ${describe(
+    const keys = TARGET_KEYS.filter((target) => !refusedKeys.includes(target)).join(', ');
+    return `Step "${key}" requires a blockId string or a target object { ${keys} }. Received ${describe(
       params
     )}.`;
   }
-  return validateTargetObject({ key, params });
+  return validateTargetObject({ key, params, refusedKeys });
 }
 
 // click takes a target and an optional `count` of 1 to 3: that many clicks in
@@ -552,6 +616,7 @@ function validateBlockValue({ key, params }) {
     key,
     params,
     extraKeys: ['value', 'from'],
+    refusedKeys: ['rowKey', 'control'],
     requireBlockId: true,
   });
 }
@@ -637,6 +702,7 @@ function validateFill(params) {
     key: 'fill',
     params,
     extraKeys: ['fromEmail'],
+    refusedKeys: ['rowKey', 'control'],
     requireBlockId: true,
   });
 }
@@ -731,9 +797,9 @@ function validateExpect(params) {
     case 'state':
       return validateExpectState(value);
     case 'visible':
-      return validateTarget({ key: 'expect.visible', params: value });
+      return validateTarget({ key: 'expect.visible', params: value, refusedKeys: ['control'] });
     case 'hidden':
-      return validateTarget({ key: 'expect.hidden', params: value });
+      return validateTarget({ key: 'expect.hidden', params: value, refusedKeys: ['control'] });
     case 'calls':
       return validateCalls(value);
     case 'text':
@@ -744,6 +810,7 @@ function validateExpect(params) {
         key: 'expect.text',
         params: value,
         extraKeys: ['contains'],
+        refusedKeys: ['control'],
         requireBlockId: true,
       });
     case 'url':
@@ -919,7 +986,7 @@ function validateStepParams({ key, params }) {
     case 'click':
       return validateClick(params);
     case 'open':
-      return validateTarget({ key: 'open', params });
+      return validateTarget({ key: 'open', params, refusedKeys: ['rowKey', 'control'] });
     case 'fill':
       return validateFill(params);
     case 'select':
