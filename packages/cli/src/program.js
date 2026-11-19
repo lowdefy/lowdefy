@@ -680,6 +680,12 @@ program
       'Rewrite tests/access.yaml from the production build and run nothing else. With no file, also writes the tests/data/roles.yaml data set it is checked as, when missing.'
     )
   )
+  .addOption(
+    new Option(
+      '--concurrency <n>',
+      'Run up to n browser journeys at once (1 to 3). Journeys with no data set, or marked serial, run alone after the rest. Default 1, or LOWDEFY_JOURNEY_CONCURRENCY. One at a time under --repeat or while memory is short; refused with --headless. At 2 or more, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
+    )
+  )
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)

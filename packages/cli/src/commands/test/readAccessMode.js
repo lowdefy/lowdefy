@@ -49,6 +49,12 @@ const REFUSED_OPTIONS = [
     purpose: JOURNEYS_PURPOSE,
   },
   {
+    key: 'concurrency',
+    flag: '--concurrency',
+    meant: 'lowdefy test --concurrency <n>',
+    purpose: 'to run the browser journeys side by side',
+  },
+  {
     key: 'filter',
     flag: '--filter',
     meant: 'lowdefy test --headless --build --filter <name>',

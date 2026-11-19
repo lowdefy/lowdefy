@@ -22,7 +22,10 @@ import path from 'path';
 import flowLines from '../journeys/evidence/flowLines.js';
 import runAppTests from './runAppTests.js';
 import sequenceId from '../journeys/evidence/sequenceId.js';
-import { afterEach, beforeEach, expect, test } from 'vitest';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
+
+// The machine's memory pressure would hold a concurrency run at one on a busy machine.
+vi.mock('../hub/readMemoryPressure.js', () => ({ default: () => 'normal' }));
 
 let bodies;
 let configDirectory;
@@ -65,6 +68,10 @@ beforeEach(async () => {
       }
       if (pageId === 'orders') {
         res.end(JSON.stringify({ passed: true }));
+        return;
+      }
+      if (pageId === 'slow') {
+        setTimeout(() => res.end(JSON.stringify({ passed: true })), 80);
         return;
       }
       res.end(
@@ -224,6 +231,48 @@ test('runAppTests reports each journey as it finishes', async () => {
     { done: 1, total: 2, name: 'orders list', class: 'PASS' },
     { done: 2, total: 2, name: 'refund button', class: 'FAIL' },
   ]);
+});
+
+test('runAppTests with concurrency 2 reports progress as journeys finish and results in selection order', async () => {
+  writeJourney('a-slow.yaml', {
+    name: 'slow list',
+    pageId: 'slow',
+    data: 'base',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  writeJourney('b-orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    data: 'base',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  const progress = [];
+
+  const answer = await runAppTests({
+    configDirectory,
+    url,
+    concurrency: 2,
+    onProgress: (event) => progress.push(event),
+  });
+
+  expect(progress).toEqual([
+    { done: 1, total: 2, name: 'orders list', class: 'PASS' },
+    { done: 2, total: 2, name: 'slow list', class: 'PASS' },
+  ]);
+  expect(answer.summary).toBe('2 passed, 0 failed of 2 journeys');
+  expect(readResults(answer).map((result) => result.name)).toEqual(['slow list', 'orders list']);
+});
+
+test('runAppTests refuses concurrency with headless, and one out of range, without running anything', async () => {
+  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [] });
+  expect(await runAppTests({ configDirectory, url, headless: true, concurrency: 2 })).toEqual({
+    summary:
+      'concurrency runs browser journeys side by side, and a headless run goes one at a time: drop concurrency, or drop headless to run the browser journeys side by side.',
+  });
+  expect(await runAppTests({ configDirectory, url, concurrency: 5 })).toEqual({
+    summary: 'concurrency must be an integer from 1 to 3. Received 5.',
+  });
+  expect(bodies).toEqual([]);
 });
 
 test('runAppTests runs only the journeys matching the filter', async () => {

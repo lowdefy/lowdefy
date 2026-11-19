@@ -185,6 +185,7 @@ _ref:
             - `--config-directory <config-directory>`: Change the config directory. The default is the current working directory.
             - `--dev-directory <dev-directory>`: Change the dev directory, the directory in which the development server is placed. The default is `<config-directory>/.lowdefy/dev`.
             - `--disable-telemetry`: Disable telemetry.
+            - `--concurrency <n>`: Run up to `n` browser journeys at once (1 to 3). Journeys with no data set, or marked `serial: true`, run alone after the rest. The default is `1`, or `LOWDEFY_JOURNEY_CONCURRENCY`. Runs one at a time under `--repeat` or while memory is short, and is refused with `--headless`. At 2 or more, a screenshot or state inspection from another session can wait several journeys for a browser slot. See [Journeys side by side](/config-tests#journeys-side-by-side).
             - `[paths...]`: Journey files, directories (read with their sub-folders) or quoted globs such as `'tests/journeys/review/**'` to run instead of the whole suite, anywhere under the config directory, candidates in `tests/journeys/_candidates/` included. A glob that matches nothing exits with code `1`.
             - `--tag <tag>`: Only run journeys whose `tags` include this tag. Repeat it to run the journeys carrying any of the tags. Exits with code `1` if no journey matches.
             - `--filter <name>`: Only run journeys whose `name` contains this string (case-insensitive). Repeat it to run the journeys matching any of the strings. Exits with code `1` if no journey matches.

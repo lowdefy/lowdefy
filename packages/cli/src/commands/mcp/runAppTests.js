@@ -26,7 +26,9 @@ import parseRepeat from '../test/parseRepeat.js';
 import parseTestSelection from '../test/parseTestSelection.js';
 import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
+import readJourneyConcurrency from '../test/readJourneyConcurrency.js';
 import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
+import runJourneyPool from '../test/runJourneyPool.js';
 import runRepeated from '../test/runRepeated.js';
 import selectTests from '../test/selectTests.js';
 import selectTier from '../test/selectTier.js';
@@ -49,12 +51,14 @@ import writeHeadlessRun from '../test/writeHeadlessRun.js';
 // may need a server set up for them, which the running dev server is not.
 // `headless` runs the journeys with no browser on the dev server: one that
 // needs a browser is a line under browserOnly, neither passed nor failed.
+// `concurrency` keeps up to that many browser journeys in flight (readJourneyConcurrency); a
+// headless run goes one at a time and refuses it.
 //
 // The answer is cut to what an agent can read (compactTestResults); every
 // journey's result is in the file `resultFile` names. A journey's measured
 // path (`exercised`) is in neither: it runs to thousands of entries a journey,
 // and writeExercised keeps it in .lowdefy/test/exercised.json for the tools
-// that read it. `onProgress` is called as each journey finishes.
+// that read it. `onProgress` is called as each journey finishes, in the order they finish.
 async function runAppTests({
   configDirectory,
   url,
@@ -65,12 +69,26 @@ async function runAppTests({
   tier: tierValue,
   usageWindow: usageWindowValue,
   headless = false,
+  concurrency,
   onProgress,
 }) {
   const context = { directories: getDirectories({ configDirectory, options: {} }) };
   const { repeat, error: repeatError } = parseRepeat(repeatValue);
   if (repeatError) {
     return { summary: repeatError };
+  }
+  if (headless && !type.isNone(concurrency)) {
+    return {
+      summary:
+        'concurrency runs browser journeys side by side, and a headless run goes one at a time: drop concurrency, or drop headless to run the browser journeys side by side.',
+    };
+  }
+  // Only browser runs go side by side; headless runs go one at a time.
+  const { readLimit, error: concurrencyError } = headless
+    ? { readLimit: () => 1 }
+    : readJourneyConcurrency({ concurrency, name: 'concurrency', repeat });
+  if (concurrencyError) {
+    return { summary: concurrencyError };
   }
   const tier = parseTier(tierValue);
   const usageWindow = `${parseUsageWindow(usageWindowValue)}m`;
@@ -122,28 +140,43 @@ async function runAppTests({
         tags: selection.tags,
         tier,
       };
+  const runSuite = ({ suite }) => (headless ? headlessDevSuite({ suite }) : suite);
+  const pooled = await runJourneyPool({
+    entries: tiered.selected,
+    readLimit,
+    // A contended failure's rerun records nothing (runJourneyPool).
+    run: async ({ suite, item, usage }, { rerun }) => ({
+      ...(await runRepeated({
+        suite: runSuite({ suite }),
+        context,
+        item,
+        url,
+        repeat,
+        recording: rerun ? undefined : recording,
+      })),
+      usage,
+    }),
+    onFinished: async ({ result, done, total }) => {
+      if (!type.isNone(onProgress)) {
+        await onProgress({
+          done,
+          total,
+          name: result.name,
+          class: type.isUndefined(result.browserOnly) ? result.class : 'BROWSER-ONLY',
+        });
+      }
+    },
+  });
+  // In selection order, whatever order the journeys finished in.
   const runs = [];
   const browserOnly = [];
-  for (const { suite, item, usage } of tiered.selected) {
-    const runSuite = headless ? headlessDevSuite({ suite }) : suite;
-    const result = {
-      ...(await runRepeated({ suite: runSuite, context, item, url, repeat, recording })),
-      usage,
-    };
+  pooled.forEach((result, index) => {
     if (type.isUndefined(result.browserOnly)) {
-      runs.push({ suite: runSuite, result });
+      runs.push({ suite: runSuite(tiered.selected[index]), result });
     } else {
       browserOnly.push(result);
     }
-    if (!type.isNone(onProgress)) {
-      await onProgress({
-        done: runs.length + browserOnly.length,
-        total: tiered.selected.length,
-        name: result.name,
-        class: type.isUndefined(result.browserOnly) ? result.class : 'BROWSER-ONLY',
-      });
-    }
-  }
+  });
   const results = runs.map(({ result }) => result);
   writeExercised({
     directories: context.directories,
@@ -187,9 +220,12 @@ async function runAppTests({
     browserOnly: browserOnlyResults,
     skipped,
   });
+  // A thrown run's stack stays in results.json; in the answer, the first report that holds it
+  // prints it once, and a stack on every entry would spend the detail budget on one bug.
+  const answerResults = journeyResults.map(({ stack, ...result }) => result);
   return {
     summary,
-    ...compactTestResults({ results: journeyResults, browserOnly: browserOnlyResults, skipped }),
+    ...compactTestResults({ results: answerResults, browserOnly: browserOnlyResults, skipped }),
     resultFile,
   };
 }

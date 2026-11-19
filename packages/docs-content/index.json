@@ -3095,7 +3095,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "cdc795b1ad45e166cd2c5dd347e1575f0c3fdb2aa3c6b90361106325081561b9"
+      "hash": "ed77a2a91822b3e4a1890e9fac7b445399d43ed0ac73579867a5a1d531480dfe"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3134,7 +3134,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "662659ccaf4a5918c10cc76a23fdec4910d24aca6a38aa739f8a627ab637630b"
+      "hash": "a25c53856faf0db8be8a6587216732e550bfc311c44712700ceecd07b9f5ddd2"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3375,7 +3375,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "4baccfc9d274a4d28a68f9290ac32dc530ff3923179d041fa522fac5e4ee487b"
+      "hash": "cefb34459227b116b5f81e700eded23081e1247962c9ff7d8309b824eb499ca9"
     },
     "testing/journey-data-sets": {
       "files": [

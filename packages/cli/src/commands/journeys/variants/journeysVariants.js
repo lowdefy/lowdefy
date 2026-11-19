@@ -22,7 +22,8 @@ import expandJourney from '../../test/expandJourney.js';
 import fetchBuildId from '../../test/fetchBuildId.js';
 import fetchVariantInputs from './fetchVariantInputs.js';
 import formatJourneyResult from '../../test/formatJourneyResult.js';
-import generators, { KINDS } from './generators/index.js';
+import generateVariants from './generateVariants.js';
+import { KINDS } from './generators/index.js';
 import readConnectionCollections from './readConnectionCollections.js';
 import readExercised from '../../test/readExercised.js';
 import readVariantDataSets from './readVariantDataSets.js';
@@ -138,26 +139,6 @@ async function recordMeasured({ context, item, url, result }) {
     buildId: await fetchBuildId({ url }),
   });
   return { exercised: result.exercised, calls: result.calls };
-}
-
-// Runs each kind's generators. A generator returns its variants, or
-// { skipped } with a note, or { variants, skipped: [notes] } when it wrote
-// some and skipped others.
-function generate({ context, kinds, journey, exercised, inputs }) {
-  const variants = [];
-  kinds.forEach((kind) => {
-    generators[kind].forEach((generator) => {
-      const generated = generator({ journey, exercised, ...inputs });
-      if (type.isArray(generated)) {
-        variants.push(...generated);
-        return;
-      }
-      variants.push(...(generated.variants ?? []));
-      const notes = type.isArray(generated.skipped) ? generated.skipped : [generated.skipped];
-      notes.forEach((note) => context.logger.info(`SKIPPED  ${kind}: ${note}`));
-    });
-  });
-  return variants;
 }
 
 function reportFile({ context, file }) {
@@ -283,8 +264,7 @@ async function journeysVariants({ context }) {
       journey: item.journey,
       exercised: measured.exercised,
     });
-    const variants = generate({
-      context,
+    const { variants, skipped } = generateVariants({
       kinds,
       journey: item.journey,
       exercised: measured.exercised,
@@ -295,6 +275,7 @@ async function journeysVariants({ context }) {
         collections: readConnectionCollections({ context }),
       },
     });
+    skipped.forEach(({ kind, note }) => context.logger.info(`SKIPPED  ${kind}: ${note}`));
     const files = writeVariantFiles({
       directories: context.directories,
       filePath: item.filePath,

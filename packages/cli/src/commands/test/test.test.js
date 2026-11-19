@@ -67,6 +67,10 @@ vi.doMock('@lowdefy/journey-headless', () => ({
   runHeadlessJourney: mockRunHeadlessJourney,
 }));
 
+// The machine's memory pressure would hold a --concurrency run at one on a busy machine.
+const mockReadMemoryPressure = vi.fn(() => 'normal');
+vi.doMock('../hub/readMemoryPressure.js', () => ({ default: mockReadMemoryPressure }));
+
 let configDirectory;
 let context;
 let logs;
@@ -1175,6 +1179,118 @@ test('test --build without --headless is refused before anything runs', async ()
   expect(mockOpenTestApp).not.toHaveBeenCalled();
 });
 
+function dataJourneyYaml({ name, serial = false }) {
+  return `name: ${name}\npageId: form\ndata: base\n${
+    serial ? 'serial: true\n' : ''
+  }steps:\n  - click: submit\n`;
+}
+
+// Answers each post after the delay its journey's name maps to, counting the posts in flight.
+function delayedPosts({ delays }) {
+  const flight = { now: 0, max: 0, order: [] };
+  mockPost.mockImplementation(async (url, body) => {
+    const name = body.recording?.journey?.split('#')[1] ?? body.steps.length;
+    flight.now += 1;
+    flight.max = Math.max(flight.max, flight.now);
+    flight.order.push(name);
+    await new Promise((resolve) => setTimeout(resolve, delays[name] ?? 0));
+    flight.now -= 1;
+    return { data: { passed: true, steps: [] } };
+  });
+  return flight;
+}
+
+test('test --concurrency 2 keeps two data set journeys in flight and prints them in run order', async () => {
+  const { default: test } = await import('./test.js');
+  // The journey with no data set is first in the selection, and runs alone after the others.
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'no data' }));
+  writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'slow' }));
+  writeJourneyFile('c.yaml', dataJourneyYaml({ name: 'quick' }));
+  writeJourneyFile('d.yaml', dataJourneyYaml({ name: 'next' }));
+  context.options = { ...context.options, concurrency: '2' };
+  const flight = delayedPosts({ delays: { slow: 60 } });
+  await test({ context });
+  expect(flight.max).toBe(2);
+  expect(flight.order).toEqual(['slow', 'quick', 'next', 'no data']);
+  // quick and next finished before slow, and print after it, in run order; the alone journey
+  // first in the selection did not hold them back.
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringMatching(/^PASS {2}slow/),
+    expect.stringMatching(/^PASS {2}quick/),
+    expect.stringMatching(/^PASS {2}next/),
+    expect.stringMatching(/^PASS {2}no data/),
+  ]);
+  const run = JSON.parse(fs.readFileSync(path.join(context.directories.test, 'run.json'), 'utf8'));
+  expect(Object.keys(run.journeys)).toEqual([
+    'tests/journeys/a.yaml#no data',
+    'tests/journeys/b.yaml#slow',
+    'tests/journeys/c.yaml#quick',
+    'tests/journeys/d.yaml#next',
+  ]);
+  expect(logs.info[logs.info.length - 1]).toEqual('4 passed, 0 failed of 4 journeys');
+});
+
+test('test runs one journey at a time by default and a serial journey alone', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'first' }));
+  writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'second' }));
+  const flight = delayedPosts({ delays: {} });
+  await test({ context });
+  expect(flight.max).toBe(1);
+
+  context.options = { ...context.options, concurrency: '3' };
+  writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'first', serial: true }));
+  const serialFlight = delayedPosts({ delays: {} });
+  await test({ context });
+  expect(serialFlight.max).toBe(1);
+  expect(serialFlight.order).toEqual(['second', 'first']);
+});
+
+test('test --concurrency out of range is refused before a server starts', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.options = { ...context.options, concurrency: '4' };
+  await test({ context });
+  expect(logs.error).toEqual(['--concurrency must be an integer from 1 to 3. Received "4".']);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --concurrency with --headless is refused before anything opens', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.options = {
+    ...context.options,
+    headless: true,
+    build: true,
+    concurrency: '2',
+    typedOptions: ['headless', 'build', 'concurrency'],
+  };
+  await test({ context });
+  expect(logs.error).toEqual([
+    '--concurrency runs browser journeys side by side, and a headless run goes one at a time: drop --concurrency, or drop --headless to run the browser journeys side by side.',
+  ]);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless leaves a concurrency from lowdefy.yaml alone and runs one at a time', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'first' }));
+  writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'second' }));
+  context.options = {
+    ...context.options,
+    headless: true,
+    concurrency: 2,
+    typedOptions: ['headless'],
+  };
+  const flight = delayedPosts({ delays: {} });
+  await test({ context });
+  expect(flight.max).toBe(1);
+  expect(process.exitCode).toBeUndefined();
+});
+
 test('test --headless posts each journey headless to the dev server, takes no slots and lists browser-only ones', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
@@ -1389,9 +1505,10 @@ test('test --headless --build opens the build once and gives each journey a host
   expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
   expect(mockCreateBuildHost).toHaveBeenCalledTimes(3);
   expect(mockCreateBuildHost.mock.calls.every(([{ app: given }]) => given === app)).toBe(true);
+  // The pool runs the journey on a data set first, then those with none, which run alone.
   expect(mockCreateBuildHost.mock.calls.map(([{ data, user }]) => ({ data, user }))).toEqual([
-    { data: undefined, user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] } },
     { data: 'harden', user: 'member' },
+    { data: undefined, user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] } },
     { data: undefined, user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] } },
   ]);
   expect(mockHostClose).toHaveBeenCalledTimes(3);
@@ -1427,16 +1544,20 @@ test('test --headless --build refuses a journey whose data set is unknown and ru
   expect(process.exitCode).toBe(1);
 });
 
-test('test --headless --build closes the app once when a journey throws', async () => {
+test('test --headless --build fails a journey that throws, runs the rest and closes the app once', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
   writeJourneyFile('b.yaml', journeyYaml({ name: 'clicks submit again' }));
   headlessContext();
   const app = openOneApp();
   mockRunHeadlessJourney.mockRejectedValueOnce(new Error('The runner broke.'));
-  await expect(test({ context })).rejects.toThrow('The runner broke.');
-  expect(mockHostClose).toHaveBeenCalledTimes(1);
+  await test({ context });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(2);
+  expect(logs.error.some((line) => line.includes('The runner broke.'))).toBe(true);
+  expect(logs.error[logs.error.length - 1]).toBe('1 passed, 1 failed of 2 journeys');
+  expect(mockHostClose).toHaveBeenCalledTimes(2);
   expect(app.close).toHaveBeenCalledTimes(1);
+  expect(process.exitCode).toBe(1);
 });
 
 test('test --headless --build --repeat runs every repeat on the one app', async () => {
@@ -1632,6 +1753,17 @@ test('test --access with a journey option is refused before the build opens', as
   await test({ context });
   expect(logs.error).toEqual([
     '--access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.',
+  ]);
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --access with --concurrency is refused before the build opens', async () => {
+  const { default: test } = await import('./test.js');
+  accessContext({ access: true, concurrency: '2', typedOptions: ['concurrency'] });
+  await test({ context });
+  expect(logs.error).toEqual([
+    '--access checks the access table alone: drop --concurrency, or run "lowdefy test --concurrency <n>" to run the browser journeys side by side.',
   ]);
   expect(mockOpenTestApp).not.toHaveBeenCalled();
   expect(process.exitCode).toBe(1);

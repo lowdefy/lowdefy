@@ -1967,6 +1967,35 @@ test('runJourney opens each actor the first time an as step names it and returns
   expect(inviteeContext.close).toHaveBeenCalledTimes(1);
 });
 
+test('runJourney reports its duration from the browser slot being taken and its wait for the slot', async () => {
+  const sharedHome = process.env.LOWDEFY_HOME;
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-timing-'));
+  process.env.LOWDEFY_HOME = home;
+  // Every browser slot is held elsewhere on the machine until one frees after 400 ms.
+  const others = [];
+  for (let index = 0; index < 3; index += 1) {
+    others.push(await acquireMachineSlot({ name: 'browser', limit: 3 }));
+  }
+  const freed = setTimeout(() => others.shift().release(), 400);
+  const page = createPage();
+  mockOpenPage.mockImplementationOnce(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return { context: { close: vi.fn(async () => {}) }, page, ready: true, leftOrigin: [] };
+  });
+  try {
+    const result = await runJourney({ origin, pageId: 'form', steps: [] });
+    expect(result.passed).toBe(true);
+    expect(result.waitedMs).toBeGreaterThanOrEqual(350);
+    expect(result.durationMs).toBeGreaterThanOrEqual(90);
+    expect(result.durationMs).toBeLessThan(result.waitedMs);
+  } finally {
+    clearTimeout(freed);
+    others.forEach((slot) => slot.release());
+    process.env.LOWDEFY_HOME = sharedHome;
+    fs.rmSync(home, { recursive: true, force: true });
+  }
+});
+
 test('runJourney with four actors takes one machine browser slot for the whole journey', async () => {
   const sharedHome = process.env.LOWDEFY_HOME;
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-slot-'));

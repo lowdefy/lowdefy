@@ -21,6 +21,15 @@ import readResponseBody from '../../utils/readResponseBody.js';
 import checkJourneyItem from './checkJourneyItem.js';
 import recordingJourneyName from './recordingJourneyName.js';
 
+// The journey's own time: the route's, counted from the browser slot it waited `waitedMs` for, or,
+// from an older server that sends none, this POST's, which includes that wait.
+function readTiming({ result, postMs }) {
+  if (type.isNumber(result.durationMs)) {
+    return { durationMs: result.durationMs, waitedMs: result.waitedMs };
+  }
+  return { durationMs: postMs };
+}
+
 function describeErrorResponse({ status, data }) {
   const body = type.isString(data) ? data : JSON.stringify(data);
   return `POST /lowdefy-docs/journey responded ${status}: ${body}`;
@@ -110,8 +119,9 @@ async function runJourney({ context, item, url, recordRun, mutant, headless = fa
     };
   }
   result = result ?? {};
+  const timing = readTiming({ result, postMs: durationMs });
   if (!type.isNone(result.error)) {
-    return { name, filePath, passed: false, stepCount, durationMs, message: result.error };
+    return { name, filePath, passed: false, stepCount, ...timing, message: result.error };
   }
   if (!type.isNone(result.browserOnly)) {
     return {
@@ -119,7 +129,7 @@ async function runJourney({ context, item, url, recordRun, mutant, headless = fa
       filePath,
       passed: false,
       stepCount,
-      durationMs,
+      ...timing,
       browserOnly: result.browserOnly,
     };
   }
@@ -131,7 +141,7 @@ async function runJourney({ context, item, url, recordRun, mutant, headless = fa
       filePath,
       passed: true,
       stepCount,
-      durationMs,
+      ...timing,
       ...dataSet,
       exercised: result.exercised,
       mutant: result.mutant,
@@ -152,7 +162,7 @@ async function runJourney({ context, item, url, recordRun, mutant, headless = fa
     filePath,
     passed: false,
     stepCount,
-    durationMs,
+    ...timing,
     ...dataSet,
     failure: result.failure,
     message: result.failure?.message,

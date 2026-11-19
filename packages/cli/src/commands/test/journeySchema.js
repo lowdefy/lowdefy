@@ -227,6 +227,158 @@ const evidenceSchema = {
   },
 };
 
+// The keys a journey file may have at its root.
+const properties = {
+  name: {
+    type: 'string',
+    maxLength: 100,
+    errorMessage: {
+      type: 'Journey "name" should be a string.',
+      maxLength: 'Journey "name" should be at most 100 characters.',
+    },
+  },
+  // What the journey proves, in at most 60 words: the pattern allows up to
+  // 60 runs of non-space characters.
+  description: {
+    type: 'string',
+    pattern: '^\\s*(?:\\S+\\s+){0,59}\\S*\\s*$',
+    errorMessage: {
+      type: 'Journey "description" should be a string.',
+      pattern: 'Journey "description" should be at most 60 words.',
+    },
+  },
+  pageId: {
+    type: 'string',
+    description:
+      'The page the journey opens. Left out, the journey opens no page and runs only call, request, as, wait: { ms } and expect on error, status, calls or db.',
+    errorMessage: { type: 'Journey "pageId" should be a string.' },
+  },
+  // Must match the data set name pattern in @lowdefy/node-utils.
+  data: {
+    type: 'string',
+    pattern: '^[a-z0-9][a-z0-9_-]{0,63}$',
+    description:
+      "The data set (tests/data/<name>.yaml) the journey runs on, in a fresh database of its own. Every value the journey types, selects, clicks by text or asserts comes from the data set's fixtures or users, or is UI text. See https://docs.lowdefy.com/journey-data-sets.",
+    errorMessage:
+      'Journey "data" should be a data set name (tests/data/<name>.yaml): lowercase letters, digits, "-" and "_".',
+  },
+  // validateJourney checks a list with validateJourneyUser: names only, and
+  // a data set to read them from.
+  user: {
+    anyOf: [
+      { type: 'object' },
+      { const: 'none' },
+      { type: 'string' },
+      { type: 'array', items: { type: 'string' } },
+    ],
+    description:
+      'Who the journey runs as: an inline user object, "none" for signed out, the name of a user in the journey\'s data set, or a list of data set user names to run the journey once as each, reported as "<name> [<user>]".',
+    errorMessage:
+      'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, the name of a user in the journey\'s data set, or a list of such names, e.g. [admin, member].',
+  },
+  pathParams: {
+    type: 'object',
+    additionalProperties: { type: 'string' },
+    description:
+      "Values for the placeholders of the page's path, one string per placeholder, read by _path_params.",
+    errorMessage:
+      'Journey "pathParams" should be an object of strings, one per placeholder of the page\'s path.',
+  },
+  urlQuery: {
+    type: 'object',
+    errorMessage: { type: 'Journey "urlQuery" should be an object.' },
+  },
+  // The sections of the suite the journey belongs to, for `lowdefy test
+  // --tag`. validateJourney checks each tag against the grammar's pattern.
+  tags: {
+    type: 'array',
+    items: { type: 'string' },
+    uniqueItems: true,
+    description:
+      'Sections of the suite the journey belongs to, such as smoke or review. `lowdefy test --tag <tag>` runs the journeys carrying any of the given tags.',
+    errorMessage: 'Journey "tags" should be a list of distinct tag strings, e.g. [smoke, review].',
+  },
+  // Written by `lowdefy journeys variants` on the edge-case candidates it
+  // generates: the journey it varies, the kind of edge case and its detail.
+  variant: {
+    type: 'object',
+    required: ['of', 'kind', 'detail'],
+    additionalProperties: false,
+    properties: {
+      of: { type: 'string', errorMessage: { type: 'Journey "variant.of" should be a string.' } },
+      kind: {
+        type: 'string',
+        errorMessage: { type: 'Journey "variant.kind" should be a string.' },
+      },
+      detail: {
+        type: 'string',
+        errorMessage: { type: 'Journey "variant.detail" should be a string.' },
+      },
+    },
+    errorMessage: {
+      type: 'Journey "variant" should be an object { of, kind, detail }.',
+      required: 'Journey "variant" should have "of", "kind" and "detail".',
+      additionalProperties: 'Journey "variant" should only have "of", "kind" and "detail".',
+    },
+  },
+  // Must match MAX_JOURNEY_TIMEOUT in @lowdefy/server-dev.
+  timeout: {
+    type: 'integer',
+    minimum: 1,
+    maximum: 60000,
+    errorMessage:
+      'Journey "timeout" should be a whole number of milliseconds from 1 to 60000 - how long each step may wait.',
+  },
+  // A flow being retired from the app, while the team watches its
+  // production use drain: refresh keeps counting it.
+  deprecated: {
+    type: 'boolean',
+    description:
+      'Marks a journey whose flow is being retired from the app. `lowdefy journeys evidence --refresh` keeps counting its production use.',
+    errorMessage: 'Journey "deprecated" should be true or false.',
+  },
+  // Read by the browser test pool: a journey marked serial runs with no
+  // other journey in flight.
+  serial: {
+    type: 'boolean',
+    description:
+      'Runs the journey with no other journey in flight. Mark a data-set journey that depends on something outside its data session: the clock, a file, or an outside service that is not stubbed.',
+    errorMessage: 'Journey "serial" should be true or false.',
+  },
+  evidence: evidenceSchema,
+  // expandCases expands the table before a run is validated, so a run never carries it.
+  cases: casesSchema,
+  // validateJourney checks each entry with validateJourneyStub.
+  stubs: {
+    type: 'array',
+    description:
+      'Answers for outside requests and forced failures of any request, set on the data session the journey runs on. Each entry is an answer { connectionType, requestType, answer, requestId?, endpoint?, pageId?, match? } or a forced failure { requestId, endpoint?, pageId?, fail, times? }.',
+    errorMessage: 'Journey "stubs" should be a list of answer and forced failure stubs.',
+  },
+  steps: {
+    type: 'array',
+    minItems: 1,
+    items: {
+      type: 'object',
+      minProperties: 1,
+      maxProperties: 1,
+      propertyNames: { enum: STEP_KEYS },
+      errorMessage: {
+        type: 'Journey step should be an object with exactly one key.',
+        minProperties: 'Journey step should have exactly one key.',
+        maxProperties: 'Journey step should have exactly one key.',
+        propertyNames: `Unknown journey step key. Steps are: ${STEP_KEYS.join(', ')}.`,
+      },
+    },
+    errorMessage: {
+      type: 'Journey "steps" should be an array of steps.',
+      minItems: 'Journey "steps" should have at least one step.',
+    },
+  },
+};
+
+const JOURNEY_KEYS = Object.keys(properties).join(', ');
+
 // The step grammar itself lives in @lowdefy/node-utils, shared with the dev
 // server's journey runner; this schema checks the file's shape and the step
 // names, and validateJourney runs the grammar over the steps. pageId may be
@@ -235,149 +387,14 @@ const evidenceSchema = {
 const journeySchema = {
   type: 'object',
   required: ['name', 'steps'],
-  properties: {
-    name: {
-      type: 'string',
-      maxLength: 100,
-      errorMessage: {
-        type: 'Journey "name" should be a string.',
-        maxLength: 'Journey "name" should be at most 100 characters.',
-      },
-    },
-    // What the journey proves, in at most 60 words: the pattern allows up to
-    // 60 runs of non-space characters.
-    description: {
-      type: 'string',
-      pattern: '^\\s*(?:\\S+\\s+){0,59}\\S*\\s*$',
-      errorMessage: {
-        type: 'Journey "description" should be a string.',
-        pattern: 'Journey "description" should be at most 60 words.',
-      },
-    },
-    pageId: {
-      type: 'string',
-      description:
-        'The page the journey opens. Left out, the journey opens no page and runs only call, request, as, wait: { ms } and expect on error, status, calls or db.',
-      errorMessage: { type: 'Journey "pageId" should be a string.' },
-    },
-    // Must match the data set name pattern in @lowdefy/node-utils.
-    data: {
-      type: 'string',
-      pattern: '^[a-z0-9][a-z0-9_-]{0,63}$',
-      description:
-        "The data set (tests/data/<name>.yaml) the journey runs on, in a fresh database of its own. Every value the journey types, selects, clicks by text or asserts comes from the data set's fixtures or users, or is UI text. See https://docs.lowdefy.com/journey-data-sets.",
-      errorMessage:
-        'Journey "data" should be a data set name (tests/data/<name>.yaml): lowercase letters, digits, "-" and "_".',
-    },
-    // validateJourney checks a list with validateJourneyUser: names only, and
-    // a data set to read them from.
-    user: {
-      anyOf: [
-        { type: 'object' },
-        { const: 'none' },
-        { type: 'string' },
-        { type: 'array', items: { type: 'string' } },
-      ],
-      description:
-        'Who the journey runs as: an inline user object, "none" for signed out, the name of a user in the journey\'s data set, or a list of data set user names to run the journey once as each, reported as "<name> [<user>]".',
-      errorMessage:
-        'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, the name of a user in the journey\'s data set, or a list of such names, e.g. [admin, member].',
-    },
-    pathParams: {
-      type: 'object',
-      additionalProperties: { type: 'string' },
-      description:
-        "Values for the placeholders of the page's path, one string per placeholder, read by _path_params.",
-      errorMessage:
-        'Journey "pathParams" should be an object of strings, one per placeholder of the page\'s path.',
-    },
-    urlQuery: {
-      type: 'object',
-      errorMessage: { type: 'Journey "urlQuery" should be an object.' },
-    },
-    // The sections of the suite the journey belongs to, for `lowdefy test
-    // --tag`. validateJourney checks each tag against the grammar's pattern.
-    tags: {
-      type: 'array',
-      items: { type: 'string' },
-      uniqueItems: true,
-      description:
-        'Sections of the suite the journey belongs to, such as smoke or review. `lowdefy test --tag <tag>` runs the journeys carrying any of the given tags.',
-      errorMessage:
-        'Journey "tags" should be a list of distinct tag strings, e.g. [smoke, review].',
-    },
-    // Written by `lowdefy journeys variants` on the edge-case candidates it
-    // generates: the journey it varies, the kind of edge case and its detail.
-    variant: {
-      type: 'object',
-      required: ['of', 'kind', 'detail'],
-      additionalProperties: false,
-      properties: {
-        of: { type: 'string', errorMessage: { type: 'Journey "variant.of" should be a string.' } },
-        kind: {
-          type: 'string',
-          errorMessage: { type: 'Journey "variant.kind" should be a string.' },
-        },
-        detail: {
-          type: 'string',
-          errorMessage: { type: 'Journey "variant.detail" should be a string.' },
-        },
-      },
-      errorMessage: {
-        type: 'Journey "variant" should be an object { of, kind, detail }.',
-        required: 'Journey "variant" should have "of", "kind" and "detail".',
-        additionalProperties: 'Journey "variant" should only have "of", "kind" and "detail".',
-      },
-    },
-    // Must match MAX_JOURNEY_TIMEOUT in @lowdefy/server-dev.
-    timeout: {
-      type: 'integer',
-      minimum: 1,
-      maximum: 60000,
-      errorMessage:
-        'Journey "timeout" should be a whole number of milliseconds from 1 to 60000 - how long each step may wait.',
-    },
-    // A flow being retired from the app, while the team watches its
-    // production use drain: refresh keeps counting it.
-    deprecated: {
-      type: 'boolean',
-      description:
-        'Marks a journey whose flow is being retired from the app. `lowdefy journeys evidence --refresh` keeps counting its production use.',
-      errorMessage: 'Journey "deprecated" should be true or false.',
-    },
-    evidence: evidenceSchema,
-    // expandCases expands the table before a run is validated, so a run never carries it.
-    cases: casesSchema,
-    // validateJourney checks each entry with validateJourneyStub.
-    stubs: {
-      type: 'array',
-      description:
-        'Answers for outside requests and forced failures of any request, set on the data session the journey runs on. Each entry is an answer { connectionType, requestType, answer, requestId?, endpoint?, pageId?, match? } or a forced failure { requestId, endpoint?, pageId?, fail, times? }.',
-      errorMessage: 'Journey "stubs" should be a list of answer and forced failure stubs.',
-    },
-    steps: {
-      type: 'array',
-      minItems: 1,
-      items: {
-        type: 'object',
-        minProperties: 1,
-        maxProperties: 1,
-        propertyNames: { enum: STEP_KEYS },
-        errorMessage: {
-          type: 'Journey step should be an object with exactly one key.',
-          minProperties: 'Journey step should have exactly one key.',
-          maxProperties: 'Journey step should have exactly one key.',
-          propertyNames: `Unknown journey step key. Steps are: ${STEP_KEYS.join(', ')}.`,
-        },
-      },
-      errorMessage: {
-        type: 'Journey "steps" should be an array of steps.',
-        minItems: 'Journey "steps" should have at least one step.',
-      },
-    },
-  },
+  // A misspelt key fails the journey rather than being ignored: `seriel: true`
+  // would otherwise run a serial journey beside others.
+  additionalProperties: false,
+  properties,
   errorMessage: {
     type: 'Journey should be an object.',
+    // `| safe`: the message is plain text, so a key is shown as written, not HTML-escaped.
+    additionalProperties: `Journey has {% if params.errors | length > 1 %}unknown keys{% else %}an unknown key{% endif %} {% for error in params.errors %}"{{ error.params.additionalProperty | safe }}"{% if not loop.last %}, {% endif %}{% endfor %}. Keys are: ${JOURNEY_KEYS}.`,
     required: {
       name: 'Journey should have required property "name".',
       steps: 'Journey should have required property "steps".',
