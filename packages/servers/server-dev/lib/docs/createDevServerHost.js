@@ -24,6 +24,7 @@ import {
   redactErrorResponse,
   runDetachedEndpoint,
   runWebhookEndpoint,
+  sendDetachedRequest,
 } from '@lowdefy/api';
 import { expectedAnswers, isExpectedError, isForcedFailure } from '@lowdefy/errors';
 import { buildPagePath, serializer, type } from '@lowdefy/helpers';
@@ -34,6 +35,7 @@ import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 import buildPageIfNeeded from '../server/jitPageBuilder.js';
 import createInProcessRequest from './createInProcessRequest.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import readConnectionPlugins from './readConnectionPlugins.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
 import resolveHeadlessUser from '../server/auth/resolveHeadlessUser.js';
@@ -52,7 +54,7 @@ function createErrorSink() {
 
 // The answer to a call that threw, as the server's error handler answers it: an expected outcome
 // with its status and { name, message }, or a fault, logged and answered 500.
-async function answerError({ context, error, faults }) {
+async function answerError({ context, detached, error, faults }) {
   if (isExpectedError(error)) {
     const { status } = expectedAnswers[error.name] ?? expectedAnswers.UserError;
     const refusal = new Error(error.message);
@@ -64,6 +66,7 @@ async function answerError({ context, error, faults }) {
       error: refusal,
       body: { name: error.name, message: error.message },
       faults,
+      detached,
     };
   }
   await context.handleError(error);
@@ -75,18 +78,19 @@ async function answerError({ context, error, faults }) {
     error: serializer.deserializeFromString(text),
     body: JSON.parse(text),
     faults,
+    detached,
   };
 }
 
 // The answer a call gets, as the server's routes and error handler answer it (and as
 // @lowdefy/test-utils' answerCall answers for a build): a 200 with the call's result, or what
 // answerError answers when it threw.
-async function answer({ context, faults, run }) {
+async function answer({ context, detached, faults, run }) {
   let result;
   try {
     result = await run(context);
   } catch (error) {
-    return answerError({ context, error, faults });
+    return answerError({ context, detached, error, faults });
   }
   const text = JSON.stringify(result);
   const read = serializer.deserializeFromString(text);
@@ -97,6 +101,7 @@ async function answer({ context, faults, run }) {
     error: read.error ?? null,
     body: JSON.parse(text),
     faults,
+    detached,
   };
 }
 
@@ -176,16 +181,30 @@ async function createDevServerHost({
       user: toCaller(callUser),
     });
     // The faults the call logs at error level, as answerCall's faults: what a browser journey's
-    // server error entries hold for the run's invariants. A forced failure (a fail gate's) is no
-    // fault: the dev server's handleError records it on the data session instead.
+    // server error entries hold for the run's invariants. One a :catch of the routine handled
+    // is marked `caught: true`, as createFaultSink in @lowdefy/test-utils marks it. A forced
+    // failure (a fail gate's) is no fault: the dev server's handleError records it on the data
+    // session instead.
     const handleError = context.handleError;
-    context.handleError = async (error) => {
+    context.handleError = async (error, options) => {
       if (!isExpectedError(error) && !isForcedFailure(error)) {
+        if (options?.caught === true) {
+          error.caught = true;
+        }
         faults.push(error);
       }
-      return handleError(error);
+      return handleError(error, options);
     };
-    return { context, faults };
+    // The detached CallApi calls the call makes, as answerCall's detached: the build host takes
+    // them and never runs their targets, while the dev server sends each over its own
+    // /api/detached route as it always does (sendDetachedRequest), and records it once sent, so
+    // expect.calls reads a journey's detached calls the same on either host.
+    const detached = [];
+    context.sendDetached = (callerContext, args) => {
+      sendDetachedRequest(callerContext, args);
+      detached.push({ endpointId: args.endpointId, payload: serializer.copy(args.payload) });
+    };
+    return { context, detached, faults };
   }
 
   const root = await createContext({ method: 'GET', requestPath: '/api/root' });
@@ -242,12 +261,17 @@ async function createDevServerHost({
     counter.recordCall({ url: `${origin}${requestPath}`, method: 'POST' });
     const body = kind === 'request' ? { actionId, blockId, payload } : { blockId, pageId, payload };
     const parsed = parseRequestBody({ text: JSON.stringify(body) });
-    const { context, faults } = await createContext({ callUser, method: 'POST', requestPath });
+    const { context, detached, faults } = await createContext({
+      callUser,
+      method: 'POST',
+      requestPath,
+    });
     if (kind === 'request') {
       // As the request route does: the page's request artifact is built before it is read.
       await buildPageIfNeeded({ pageId, buildDirectory, configDirectory });
       return answer({
         context,
+        detached,
         faults,
         run: (callContext) =>
           callRequest(callContext, {
@@ -260,6 +284,7 @@ async function createDevServerHost({
     }
     return answer({
       context,
+      detached,
       faults,
       run: (callContext) =>
         callEndpoint(callContext, {
@@ -278,13 +303,14 @@ async function createDevServerHost({
     const requestPath = `/api/detached/${endpointId}`;
     counter.recordCall({ url: `${origin}${requestPath}`, method: 'POST' });
     const parsed = parseRequestBody({ text: JSON.stringify({ payload }) });
-    const { context, faults } = await createContext({
+    const { context, detached, faults } = await createContext({
       callUser: 'none',
       method: 'POST',
       requestPath,
     });
     return answer({
       context,
+      detached,
       faults,
       run: (callContext) =>
         runDetachedEndpoint(callContext, {
@@ -297,12 +323,12 @@ async function createDevServerHost({
 
   // A webhook step: posted as the endpoints route runs a webhook endpoint, through
   // runWebhookEndpoint with no caller, so its verify gate runs against rawBody. Answers what the
-  // route sends, { status, body, contentType, faults, rid }, as @lowdefy/test-utils' callWebhook
-  // does: rid is the call's request id, by which a forced failure's message is read.
+  // route sends, { status, body, contentType, faults, detached, rid }, as @lowdefy/test-utils'
+  // callWebhook does: rid is the call's request id, by which a forced failure's message is read.
   async function webhook({ endpointId, headers, query, rawBody }) {
     const requestPath = `/api/endpoints/${endpointId}`;
     counter.recordCall({ url: `${origin}${requestPath}`, method: 'POST' });
-    const { context, faults } = await createContext({
+    const { context, detached, faults } = await createContext({
       callUser: 'none',
       method: 'POST',
       requestPath,
@@ -315,6 +341,7 @@ async function createDevServerHost({
           body: sent.body,
           contentType: 'text/plain',
           faults,
+          detached,
           rid: context.rid,
         };
       }
@@ -323,11 +350,12 @@ async function createDevServerHost({
         body: JSON.parse(JSON.stringify(sent.body)),
         contentType: 'application/json',
         faults,
+        detached,
         rid: context.rid,
       };
     } catch (error) {
-      const { body, status } = await answerError({ context, error, faults });
-      return { status, body, contentType: 'application/json', faults, rid: context.rid };
+      const { body, status } = await answerError({ context, detached, error, faults });
+      return { status, body, contentType: 'application/json', faults, detached, rid: context.rid };
     }
   }
 
@@ -365,6 +393,7 @@ async function createDevServerHost({
     call,
     // The data session belongs to the journey run, which closes it (runJourneyHeadless).
     close: async () => {},
+    connections: await readConnectionPlugins(),
     dataSetName: dataSet?.name ?? null,
     dataSession: session?.session ?? null,
     errorSink: createErrorSink(),

@@ -18,6 +18,8 @@ import { getDevError } from '@lowdefy/engine';
 import { isExpectedError } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
+import fetchApi from './fetchApi.js';
+
 // A native core lives for the whole app session, and every server failure adds
 // its own requestId to the key, so the set is cleared once it holds this many.
 // An error logged again after that is shown again, never lost.
@@ -80,15 +82,16 @@ function createHandleError(lowdefy) {
       // Client-originated errors — send to server for logging + location resolution
       try {
         const serialized = serializer.serialize(error);
-        const response = await lowdefy._internal.host.fetch(
-          `${lowdefy.apiBase ?? ''}/api/client-error`,
-          {
+        const response = await fetchApi({
+          init: {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(serialized),
             credentials: 'same-origin',
-          }
-        );
+          },
+          lowdefy,
+          path: '/api/client-error',
+        });
         if (response.ok) {
           const { source: resolvedSource, configError: serializedConfigError } =
             await response.json();

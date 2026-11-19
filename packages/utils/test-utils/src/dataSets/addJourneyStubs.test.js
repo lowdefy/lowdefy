@@ -48,6 +48,7 @@ test('addJourneyStubs sets answer stubs and fail gates on the session in the ord
       endpoint: 'price_run',
       pageId: undefined,
       match: { params: { currency: 'EUR' } },
+      answered: 0,
     },
   ]);
   expect(session.failGates).toEqual([

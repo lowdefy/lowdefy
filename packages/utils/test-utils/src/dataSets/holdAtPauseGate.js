@@ -19,7 +19,8 @@ import { type } from '@lowdefy/helpers';
 import matchesRequestKey from './matchesRequestKey.js';
 
 // Holds a routine at the first open pause gate its request matches, in the order the gates were
-// set: the gate records that it was reached, tells the test, and the routine waits for release.
+// set: the gate records that it was reached and by which request, tells the test, and the
+// routine waits for release.
 // The gate is taken before the first await, so two routines racing to it never take one gate.
 async function holdAtPauseGate({ args, session }) {
   const gate = session.pauseGates.find(
@@ -27,6 +28,8 @@ async function holdAtPauseGate({ args, session }) {
   );
   if (type.isUndefined(gate)) return;
   gate.reached = true;
+  // The request that reached it, so a release can name the gate by it (createJourneyRaces).
+  gate.reachedBy = { requestId: args.requestId, endpointId: args.endpointId, pageId: args.pageId };
   gate.arrive();
   await gate.whenReleased;
 }

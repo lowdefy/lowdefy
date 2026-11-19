@@ -21,6 +21,7 @@ import createHeadlessHost from './createHeadlessHost.js';
 const host = {
   call: () => undefined,
   close: () => undefined,
+  connections: {},
   dataSession: {},
   dataSetName: null,
   errorSink: { errors: [], add: () => undefined },

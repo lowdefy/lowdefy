@@ -1,0 +1,12 @@
+{
+  "tests": [
+    {
+      "mode": "prod",
+      "errors": ["MCP view endpoint"],
+      "errorContains": [
+        "MCP view endpoint \"task-reads\" does not reference a defined api endpoint.",
+        "lowdefy.yaml:"
+      ]
+    }
+  ]
+}

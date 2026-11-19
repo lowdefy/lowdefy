@@ -62,7 +62,6 @@ test('classifyJourney calls call, request and their checks headless', () => {
 test.each([
   ['screenshot', { screenshot: 'home' }, 'step "screenshot" needs a browser'],
   ['email', { email: { to: 'a@example.com' } }, 'step "email" needs a browser'],
-  ['open', { open: 'kind' }, 'step "open" needs a browser'],
   [
     'press other than Enter',
     { press: 'Escape' },
@@ -86,7 +85,15 @@ test.each([
   });
 });
 
-test.each(['text', 'containing', 'row', 'column', 'nth'])(
+const DOM_TARGET_REASONS = {
+  text: 'a target by text reads the page; name the control with control on its block',
+  containing: 'a target by "containing" reads the page; a headless run targets blocks by blockId',
+  row: 'a target by row reads the displayed order; name the row with rowKey to run headless',
+  column: 'a target by "column" reads the page; a headless run targets blocks by blockId',
+  nth: 'a target by "nth" reads the page; a headless run targets blocks by blockId',
+};
+
+test.each(Object.keys(DOM_TARGET_REASONS))(
   'classifyJourney names a target by %s as needing the browser',
   (key) => {
     const value = ['row', 'nth'].includes(key) ? 0 : 'x';
@@ -95,7 +102,7 @@ test.each(['text', 'containing', 'row', 'column', 'nth'])(
       headless: false,
       index: 0,
       step,
-      reason: `a target by "${key}" reads the page; a headless run targets blocks by blockId`,
+      reason: DOM_TARGET_REASONS[key],
     });
   }
 );
@@ -151,7 +158,35 @@ test('classifyJourney keeps inProcess on a journey that also needs the browser',
 test('classifyJourney names a visible check by text as needing the browser', () => {
   const step = { expect: { visible: { text: 'Saved' } } };
   expect(classify([step]).reason).toBe(
-    'a target by "text" reads the page; a headless run targets blocks by blockId'
+    'a target by text reads the page; name the control with control on its block'
+  );
+});
+
+test('classifyJourney calls rowKey, control and open targets headless', () => {
+  const steps = [
+    { open: 'actions_menu' },
+    { click: { blockId: 'actions_menu', control: 'archive' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'actions', control: 'void' } },
+    { click: { blockId: 'delete_modal', control: 'ok' } },
+    { expect: { hidden: { blockId: 'invoices', rowKey: 'inv-0042' } } },
+    { expect: { visible: { blockId: 'invoices', rowKey: 'inv-0043', column: 'number' } } },
+  ];
+  expect(classify(steps)).toEqual({ headless: true });
+});
+
+test('classifyJourney names an open by text as needing the browser', () => {
+  const step = { open: { text: 'More' } };
+  expect(classify([step]).reason).toBe(
+    'a target by text reads the page; name the control with control on its block'
+  );
+});
+
+test('classifyJourney names a column without rowKey as needing the browser, also on an expectation', () => {
+  const step = { expect: { hidden: { blockId: 'invoices', column: 'number' } } };
+  expect(classify([step]).reason).toBe(
+    'a target by "column" reads the page; a headless run targets blocks by blockId'
   );
 });
 

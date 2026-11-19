@@ -1,0 +1,227 @@
+# Parity journeys for the popup block stand-ins (LDF-1063), on the popup_targets page. Each runs in
+# the browser and headless (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs)
+# and must end with the same state `log`, the events the page fired in order with their payloads.
+# The final expect on `log` is what the component does in the browser. In a folder starting with
+# "_" so the suite's own runs, and harden, leave it out.
+- name: a Modal's OK fails while its onOk fails, then closes it
+  pageId: popup_targets
+  steps:
+    - click: open_save_modal_button
+    # afterOpenChange fires once the open animation ends; a person clicks OK after it.
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: save_modal.onOpen
+            - event: save_modal.afterOpenChange
+              payload:
+                open: true
+    - click: { blockId: save_modal, control: ok }
+    - expect: { visible: save_name }
+    - fill: { blockId: save_name, value: Quarterly }
+    - click: { blockId: save_modal, control: ok }
+    - expect: { hidden: save_name }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: save_modal.onOpen
+            - event: save_modal.afterOpenChange
+              payload:
+                open: true
+            - event: save_modal.onOk
+            - event: save_modal.onOk
+            - event: save_modal.onClose
+            - event: save_modal.afterClose
+            - event: save_modal.afterOpenChange
+              payload:
+                open: false
+- name: a Drawer closed by setOpen fires its close events
+  pageId: popup_targets
+  steps:
+    - click: open_filters_drawer_button
+    # afterOpenChange fires once the open animation ends; a person closes it after that.
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: filters_drawer.onOpen
+            - event: filters_drawer.afterOpenChange
+              payload:
+                drawerOpen: true
+                open: true
+    - click: close_filters_drawer_button
+    - expect: { hidden: close_filters_drawer_button }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: filters_drawer.onOpen
+            - event: filters_drawer.afterOpenChange
+              payload:
+                drawerOpen: true
+                open: true
+            - event: filters_drawer.onClose
+            - event: filters_drawer.afterOpenChange
+              payload:
+                drawerOpen: false
+                open: false
+            - event: filters_drawer.afterClose
+- name: a ConfirmModal opened by CallMethod is cancelled, then confirmed
+  pageId: popup_targets
+  steps:
+    - click: open_discard_confirm_button
+    - click: { blockId: discard_confirm, control: cancel }
+    - click: open_discard_confirm_button
+    - click: { blockId: discard_confirm, control: ok }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: discard_confirm.onCancel
+            - event: discard_confirm.onClose
+            - event: discard_confirm.onOk
+            - event: discard_confirm.onClose
+- name: an info ConfirmModal closes by its only button, OK
+  pageId: popup_targets
+  steps:
+    - click: open_saved_notice_button
+    - click: { blockId: saved_notice, control: ok }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: saved_notice.onOk
+            - event: saved_notice.onClose
+- name: a DropdownButton opened by open fires the item clicked
+  pageId: popup_targets
+  steps:
+    - open: print_dropdown
+    - click: { blockId: print_dropdown, control: onSummary }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: print_dropdown.onOpenChange
+              payload:
+                open: true
+            - event: print_dropdown.onSummary
+            - event: print_dropdown.onOpenChange
+              payload:
+                open: false
+- name: a DropdownButton item clicked alone opens the dropdown first
+  pageId: popup_targets
+  steps:
+    - click: { blockId: print_dropdown, control: onFull }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: print_dropdown.onOpenChange
+              payload:
+                open: true
+            - event: print_dropdown.onFull
+            - event: print_dropdown.onOpenChange
+              payload:
+                open: false
+- name: a split DropdownButton's main button fires onClick
+  pageId: popup_targets
+  steps:
+    - click: print_dropdown
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: print_dropdown.onClick
+- name: a click on a DropdownButton that is not split opens it, then an item fires
+  pageId: popup_targets
+  steps:
+    - click: export_dropdown
+    - click: { blockId: export_dropdown, control: onPdf }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: export_dropdown.onOpenChange
+              payload:
+                open: true
+            - event: export_dropdown.onPdf
+            - event: export_dropdown.onOpenChange
+              payload:
+                open: false
+- name: a selectable hover DropdownMenu selects an item once when clicked twice
+  pageId: popup_targets
+  steps:
+    - click: { blockId: view_menu, control: compact }
+    - click: { blockId: view_menu, control: compact }
+    - click: { blockId: view_menu, control: detailed }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: view_menu.onOpenChange
+              payload:
+                open: true
+            - event: view_menu.onClick
+              payload:
+                key: compact
+                keyPath:
+                  - compact
+            - event: view_menu.onOpenChange
+              payload:
+                open: false
+            - event: view_menu.onSelect
+              payload:
+                key: compact
+                selectedKeys:
+                  - compact
+            - event: view_menu.onOpenChange
+              payload:
+                open: true
+            - event: view_menu.onClick
+              payload:
+                key: compact
+                keyPath:
+                  - compact
+            - event: view_menu.onOpenChange
+              payload:
+                open: false
+            - event: view_menu.onOpenChange
+              payload:
+                open: true
+            - event: view_menu.onClick
+              payload:
+                key: detailed
+                keyPath:
+                  - detailed
+            - event: view_menu.onOpenChange
+              payload:
+                open: false
+            - event: view_menu.onSelect
+              payload:
+                key: detailed
+                selectedKeys:
+                  - detailed
+- name: a DropdownMenu link item goes to its page
+  pageId: popup_targets
+  steps:
+    - click: { blockId: view_menu, control: parity_page }
+    - expect: { visible: popup_parity_title }
+- name: a Menu's item for the current page fires onClick without onSelect
+  pageId: popup_targets
+  steps:
+    - click: { blockId: side_menu, control: popup_targets }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: side_menu.onClick
+              payload:
+                key: popup_targets
+                keyPath:
+                  - popup_targets
+- name: a Menu's item for another page goes to it
+  pageId: popup_targets
+  steps:
+    - click: { blockId: side_menu, control: popup_parity }
+    - expect: { visible: popup_parity_title }

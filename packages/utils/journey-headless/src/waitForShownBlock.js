@@ -16,9 +16,8 @@
 
 import { type } from '@lowdefy/helpers';
 
-import collectBlockParents from './collectBlockParents.js';
-import isBlockShown from './isBlockShown.js';
 import pollUntil from './pollUntil.js';
+import readShownBlock from './readShownBlock.js';
 
 function readBlockId(target) {
   return type.isString(target) ? target : target?.blockId;
@@ -29,15 +28,7 @@ function readBlockId(target) {
 // the browser waits for a target to be visible. Throws when it is not shown by then.
 async function waitForShownBlock({ actor, target, timeout }) {
   const blockId = readBlockId(target);
-  const read = () => {
-    const context = actor.page?.context;
-    const block = context?._internal.RootSlots.map[blockId];
-    if (type.isNone(block)) {
-      return null;
-    }
-    const { parents } = collectBlockParents({ context });
-    return isBlockShown({ block, openBlocks: actor.page.openBlocks, parents }) ? block : null;
-  };
+  const read = () => readShownBlock({ actor, blockId });
   const { held, value } = await pollUntil({ check: (block) => block !== null, read, timeout });
   if (!held) {
     throw new Error(`Block "${blockId}" is not visible. Waited ${timeout} ms.`);

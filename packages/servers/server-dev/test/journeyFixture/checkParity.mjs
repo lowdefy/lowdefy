@@ -51,18 +51,6 @@ function failedAt(result) {
   return result.failure?.index ?? result.failure?.phase ?? null;
 }
 
-// A detached CallApi dispatches through the server's own /api/detached route, which a production
-// build opened in process (test-utils) does not serve: test-utils removes CRON_SECRET and has no
-// origin to post to. The dev server's headless host serves it; until then such a journey is not
-// compared.
-const DETACHED_ON_BUILD = 'CallApi with "detached: true" requires the CRON_SECRET';
-
-function needsServerHost(result) {
-  return (result.failure?.errors ?? []).some((error) =>
-    String(error.message).includes(DETACHED_ON_BUILD)
-  );
-}
-
 function countAppErrors(result) {
   return result.failure?.errors?.length ?? 0;
 }
@@ -106,9 +94,12 @@ function describe(result) {
 // classifyJourney calls headless runs again on the client engine in Node, over a production
 // build of the fixture app with the journey's data set and user (@lowdefy/journey-headless'
 // build host), and must give the same result. A journey the classifier leaves to the browser,
-// one that reaches a browser-only step at run time, a mutant run (mutants exist on the dev server
-// only) and one that reaches a detached CallApi (needsServerHost) are recorded and not compared. Set LOWDEFY_JOURNEY_PARITY=report to record
-// differences without failing.
+// one that reaches a browser-only step at run time and a mutant run (mutants exist on the dev
+// server only) are recorded and not compared. A detached CallApi is compared too: the build host
+// records it and the dev server sends it, and the journey answers the same while the dev server
+// has CRON_SECRET. Without it the dev server's send fails as any server's would, while the build
+// host still records the call. Set LOWDEFY_JOURNEY_PARITY=report to record differences without
+// failing.
 async function checkParity({ body, browser }) {
   const serverDirectory = process.env.LOWDEFY_JOURNEY_FIXTURE_PARITY_SERVER;
   if (type.isUndefined(serverDirectory) || process.env.LOWDEFY_JOURNEY_PARITY === 'off') {
@@ -152,10 +143,6 @@ async function checkParity({ body, browser }) {
   }
   if (!type.isUndefined(headless.browserOnly)) {
     record({ ...entry, kind: 'browser-only at run time', reason: headless.browserOnly.reason });
-    return;
-  }
-  if (needsServerHost(headless)) {
-    record({ ...entry, kind: 'needs a server host', reason: 'a detached CallApi' });
     return;
   }
   const differences = type.isUndefined(headless.error)

@@ -27,6 +27,7 @@ import HeadlessStepError from './HeadlessStepError.js';
 import isBlockShown from './isBlockShown.js';
 import isDeepEqual from './isDeepEqual.js';
 import pollUntil from './pollUntil.js';
+import quoteParkedRelease from './quoteParkedRelease.js';
 import toJsonValue from './toJsonValue.js';
 
 function readBlockId(target) {
@@ -94,12 +95,14 @@ async function expectUrl({ actor, params, timeout }) {
 }
 
 // A call parked at a pause gate has not answered: its answer is the release's, read after it.
+// `answer.release` names the release step that lets this call go, and `answer.hold` its hold when
+// another call is parked on the same release (createJourneyRaces).
 function checkAnswered(answer) {
   if (!type.isString(answer?.parkedAt)) {
     return;
   }
   throw new HeadlessStepError(
-    `The call before this step is parked at the gate on request "${answer.parkedAt}" and has not answered: read its answer after "release: ${answer.parkedAt}".`,
+    `The call before this step is parked at the gate on request "${answer.parkedAt}" and has not answered: read its answer after ${quoteParkedRelease(answer)}.`,
     {
       actual: `parked at request "${answer.parkedAt}"`,
       expected: 'the answer of the call before this step',

@@ -43,19 +43,52 @@ const TARGET_PROPERTIES = {
     ...nonEmptyString,
     description: 'Text the element shows, e.g. the email address a list row shows.',
   },
-  row: { ...index, description: 'Zero-based grid row, as displayed. Needs blockId.' },
+  row: {
+    ...index,
+    description:
+      'Zero-based grid row, as displayed. Needs blockId. Browser only: name the row with rowKey to run headless.',
+  },
+  rowKey: {
+    ...nonEmptyString,
+    description:
+      "The grid row whose key this is (the field the AgGrid rowId names, else id or _id; Table's rowKey, else _id or id). Clicks the row's first cell, or the cell in column. Stays put when the grid sorts and runs headless. Needs blockId; not with row.",
+  },
   column: { type: 'string', description: 'Grid column id. Needs blockId.' },
+  control: {
+    ...nonEmptyString,
+    description:
+      "The key of a control the block draws: ok or cancel on a Modal or ConfirmModal, a DropdownButton item's eventName, a DropdownMenu link's id, a Menu link's pageId (else id), the eventName of a grid cell's button, menu item or switch (with rowKey). Opens the block's dropdown first when it is closed. Runs headless. Needs blockId; not with text, containing or nth.",
+  },
   nth: { ...index, description: 'Zero-based pick among several matches.' },
 };
 
-function targetObject({ properties = {}, required = [], requireBlockId = false }) {
+// Pairs of target keys a target never holds together.
+const EXCLUSIVE_TARGET_KEYS = [
+  ['text', 'containing'],
+  ['rowKey', 'row'],
+  ['control', 'text'],
+  ['control', 'containing'],
+  ['control', 'nth'],
+];
+
+// `refuse` lists target keys the step does not take.
+function targetObject({ properties = {}, required = [], refuse = [], requireBlockId = false }) {
+  const targetProperties = Object.fromEntries(
+    Object.entries(TARGET_PROPERTIES).filter(([key]) => !refuse.includes(key))
+  );
   const schema = {
     type: 'object',
-    properties: { ...TARGET_PROPERTIES, ...properties },
+    properties: { ...targetProperties, ...properties },
     additionalProperties: false,
     required,
-    not: { required: ['text', 'containing'] },
-    dependencies: { row: ['blockId'], column: ['blockId'] },
+    allOf: EXCLUSIVE_TARGET_KEYS.filter((pair) => !pair.some((key) => refuse.includes(key))).map(
+      (pair) => ({ not: { required: pair } })
+    ),
+    dependencies: Object.fromEntries(
+      ['row', 'rowKey', 'column', 'control']
+        .filter((key) => !refuse.includes(key))
+        .map((key) => [key, ['blockId']])
+    ),
   };
   if (requireBlockId) {
     schema.required = ['blockId', ...required];
@@ -69,10 +102,16 @@ function targetObject({ properties = {}, required = [], requireBlockId = false }
   return schema;
 }
 
-const TARGET = {
-  description: 'A blockId string, or a target object.',
-  oneOf: [{ type: 'string' }, targetObject({})],
-};
+function target({ refuse = [] } = {}) {
+  return {
+    description: 'A blockId string, or a target object.',
+    oneOf: [{ type: 'string' }, targetObject({ refuse })],
+  };
+}
+
+// An expectation reads a row by key, never a control: a control shows only while its popup is
+// open.
+const EXPECT_TARGET = target({ refuse: ['control'] });
 
 // A null value is a placeholder, so it must be marked from: shape.
 const VALUE_PLACEHOLDER_RULE = {
@@ -93,11 +132,15 @@ const FROM_EMAIL = {
   additionalProperties: false,
 };
 
+// No covered block has an input in a row, and a control is clicked, never typed into.
+const VALUE_REFUSED_KEYS = ['rowKey', 'control'];
+
 function valueTarget() {
   return {
     ...targetObject({
       properties: { value: {}, from: FROM },
       required: ['value'],
+      refuse: VALUE_REFUSED_KEYS,
       requireBlockId: true,
     }),
     ...VALUE_PLACEHOLDER_RULE,
@@ -133,15 +176,16 @@ const EXPECT_KINDS = {
     required: ['path', 'equals'],
     additionalProperties: false,
   },
-  visible: TARGET,
+  visible: EXPECT_TARGET,
   hidden: {
-    ...TARGET,
+    ...EXPECT_TARGET,
     description:
       'Nothing the target names is visible. Passes at once when nothing matches yet, so pair it with something that must be present first.',
   },
   text: targetObject({
     properties: { contains: { type: 'string' } },
     required: ['contains'],
+    refuse: ['control'],
     requireBlockId: true,
   }),
   url: {
@@ -247,14 +291,15 @@ const CALL_PAYLOAD = {
 
 const STEPS = {
   click: {
-    description: 'Click a target. "count": 2 or 3 clicks in quick succession, a double click.',
+    description:
+      'Click a target. "count": 2 or 3 clicks in quick succession, a double click. { blockId, rowKey } clicks a grid row by its key (with column, that cell; with control, that row\'s control) and { blockId, control } a control the block draws, both headless too.',
     oneOf: [
       { type: 'string' },
       targetObject({ properties: { count: { type: 'integer', minimum: 1, maximum: 3 } } }),
     ],
   },
   open: {
-    ...TARGET,
+    ...target({ refuse: VALUE_REFUSED_KEYS }),
     description:
       "Open an input's dropdown or picker popup and wait for it to show, so a following screenshot captures it.",
   },
@@ -265,6 +310,7 @@ const STEPS = {
       targetObject({
         properties: { fromEmail: FROM_EMAIL },
         required: ['fromEmail'],
+        refuse: VALUE_REFUSED_KEYS,
         requireBlockId: true,
       }),
     ],
@@ -363,9 +409,17 @@ const STEPS = {
     additionalProperties: false,
   },
   release: {
-    ...nonEmptyString,
     description:
-      'Let the call parked at the gate a "hold" step set on this request id go, wait for it to answer, and make its answer the one the expect steps after it read. A gate no call reached, or a call still parked when the journey ends, fails the journey. Headless only.',
+      'Let the call parked at the gate a "hold" step set on this request id go, wait for it to answer, and make its answer the one the expect steps after it read. Give { requestId, endpoint, pageId } to name one of two holds on one request id: it lets go of the call parked at the request it names, matched as a hold matches. A gate no call reached, or a call still parked when the journey ends, fails the journey. Headless only.',
+    oneOf: [
+      nonEmptyString,
+      {
+        type: 'object',
+        properties: { requestId: nonEmptyString, endpoint: nonEmptyString, pageId: nonEmptyString },
+        required: ['requestId'],
+        additionalProperties: false,
+      },
+    ],
   },
   webhook: {
     type: 'object',
@@ -399,7 +453,7 @@ const journeyStepSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Journey step',
   description:
-    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, column, nth }; fill, select and expect.text need a blockId. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request, release or webhook step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it. A request takes no "as": "system". A journey with no pageId runs only call, request, hold, release, webhook, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
+    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, rowKey, column, control, nth }; fill, select and expect.text need a blockId, and so do rowKey and control. rowKey (a grid row by its key) and control (a control the block draws, by its key) run headless and in the browser; text, containing, row and nth read the page and run in the browser only. click takes rowKey and control, expect.visible, expect.hidden and expect.text take rowKey; fill, select and open take neither. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request, release or webhook step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it, with its endpoint or pageId when two holds share the id. A request takes no "as": "system". A journey with no pageId runs only call, request, hold, release, webhook, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
   oneOf: Object.values(JOURNEY_STEP_SCHEMAS),
 };
 

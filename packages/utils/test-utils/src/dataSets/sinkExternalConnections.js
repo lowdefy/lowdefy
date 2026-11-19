@@ -40,7 +40,7 @@ function isDevMailCapture({ connectionType, connection }) {
 // never takes, or an id an operator computes, cannot reach out either. It leaves the resolver's
 // schema and meta in place, so the request is still validated, read-checked and write-checked
 // as for real. Types with no request resolvers (an Mcp config container) have nothing to sink
-// and stay refused by the click rails. Returns a new map; the plugin map is never mutated.
+// and stay refused by the step rails. Returns a new map; the plugin map is never mutated.
 function sinkExternalConnections({ context, connections, session }) {
   const sunk = {};
   Object.entries(connections).forEach(([connectionType, definition]) => {

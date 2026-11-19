@@ -18,7 +18,12 @@
 // the examples for its step, so an agent that wrote a step wrong gets the
 // right form back; the journey step schema carries the same examples.
 const JOURNEY_STEP_EXAMPLES = {
-  click: [{ click: 'save_button' }, { click: { text: 'OK' } }],
+  click: [
+    { click: 'save_button' },
+    { click: { blockId: 'delete_modal', control: 'ok' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } },
+    { click: { text: 'OK' } },
+  ],
   open: [{ open: 'status_selector' }],
   fill: [
     { fill: { blockId: 'name_input', value: 'Ada' } },
@@ -48,7 +53,10 @@ const JOURNEY_STEP_EXAMPLES = {
     { hold: { requestId: 'claim_order' } },
     { hold: { requestId: 'claim_order', endpoint: 'orders-approve' } },
   ],
-  release: [{ release: 'claim_order' }],
+  release: [
+    { release: 'claim_order' },
+    { release: { requestId: 'claim_order', endpoint: 'orders-approve' } },
+  ],
   webhook: [
     {
       webhook: {
@@ -63,7 +71,10 @@ const JOURNEY_STEP_EXAMPLES = {
   ],
   'expect.state': [{ expect: { state: { path: 'order.status', equals: 'Open' } } }],
   'expect.visible': [{ expect: { visible: 'save_button' } }],
-  'expect.hidden': [{ expect: { hidden: 'error_alert' } }],
+  'expect.hidden': [
+    { expect: { hidden: 'error_alert' } },
+    { expect: { hidden: { blockId: 'invoices', rowKey: 'inv-0042' } } },
+  ],
   'expect.text': [{ expect: { text: { blockId: 'title', contains: 'Orders' } } }],
   'expect.url': [{ expect: { url: { contains: '/orders' } } }],
   'expect.title': [{ expect: { title: { contains: 'Orders' } } }],

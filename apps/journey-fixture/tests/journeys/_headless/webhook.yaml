@@ -61,3 +61,13 @@
           x-fixture-signature: 3ecf0c67fc28daabe7cfb765671cd717ec91ab45414e200920d67266cc200039
     - expect: { status: 200 }
     - expect: { db: { collection: items, match: { kind: payment_event }, count: 1 } }
+# A webhook whose routine catches a fault (api/caught_webhook.yaml): the routine handled it and
+# answered, so the journey judges the answer, and the caught fault fails no step.
+- name: a webhook whose routine catches a fault answers 200 and passes
+  data: outside
+  user: operator
+  steps:
+    - webhook:
+        endpoint: caught_webhook
+        body: { id: evt_4, type: payment.succeeded }
+    - expect: { status: 200 }

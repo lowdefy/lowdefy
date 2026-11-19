@@ -295,6 +295,29 @@ test('tenantCalls finds the row a payload names, not the first row of the organi
   expect(variant.steps[1].expect.db.match).toEqual({ _id: 't2' });
 });
 
+test('tenantCalls does not replay a detached call a routine made, which the page never sent', () => {
+  const [variant] = tenantCalls({
+    journey: closeTicket,
+    dataSet,
+    exercised: {
+      ...closeExercised,
+      endpoints: [...closeExercised.endpoints, { endpointId: 'archive_ticket', write: true }],
+    },
+    calls: [
+      ...closeCalls,
+      {
+        actor: 'main',
+        kind: 'endpoint',
+        endpointId: 'archive_ticket',
+        detached: true,
+        payload: { ticketId: 't2' },
+      },
+    ],
+    collections: { tickets: 'tickets' },
+  });
+  expect(variant.steps.map((step) => Object.keys(step)[0])).toEqual(['request', 'expect']);
+});
+
 test('tenantCalls is skipped without a headless run, or when no write names an insider row', () => {
   expect(
     tenantCalls({ journey: closeTicket, dataSet, exercised: closeExercised, collections: {} })

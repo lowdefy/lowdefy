@@ -103,7 +103,7 @@ beforeEach(() => {
   mockOpenDataSession.mockResolvedValue({
     id: 'session1',
     cookie: 'session1',
-    session: { stubs: [], failGates: [], forced: [], sunk: [] },
+    session: { stubs: [], failGates: [], forced: [], sunk: [], work: new Set() },
     close,
   });
   mockResolveJourneyDataSet.mockResolvedValue({ dataSet, user: { id: 'u_1', roles: ['admin'] } });
@@ -283,7 +283,7 @@ test('runJourney closes the data session when no browser can be fetched', async 
 });
 
 test('runJourney sets the journey stubs on the data session it opens', async () => {
-  const session = { stubs: [], failGates: [], forced: [], sunk: [] };
+  const session = { stubs: [], failGates: [], forced: [], sunk: [], work: new Set() };
   mockOpenDataSession.mockResolvedValue({ id: 'session1', cookie: 'session1', session, close });
   await runJourney({
     origin,

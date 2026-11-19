@@ -17,6 +17,8 @@
 import { type } from '@lowdefy/helpers';
 
 import authorizeApiEndpoint from './authorizeApiEndpoint.js';
+import authorizeViewEndpoint from './authorizeViewEndpoint.js';
+import authorizeViewWrite from '../auth/view/authorizeViewWrite.js';
 import createEvaluateOperators from '../../context/createEvaluateOperators.js';
 import createLinkAnswer from './createLinkAnswer.js';
 import getEndpointConfig from './getEndpointConfig.js';
@@ -33,9 +35,15 @@ const refusalStatuses = {
 // The caller's auth refused as a status with no body: an image load cannot read one. It goes
 // through authorizeApiEndpoint, as every endpoint route does, so the refusal rules (roles,
 // two-factor enrolment) stay in one place; only the errors it throws are read as statuses here.
-function getRefusalStatus(context, { endpointConfig }) {
+//
+// A view session is then held to its grant: a link endpoint whose scope is mcp:write is
+// refused to a read-only grant, once the roles have allowed the endpoint itself.
+function getRefusalStatus(context, { endpointConfig, viewEndpoint }) {
   try {
     authorizeApiEndpoint(context, { endpointConfig });
+    if (viewEndpoint.writes) {
+      authorizeViewWrite(context, { subject: `API endpoint "${endpointConfig.endpointId}"` });
+    }
     return null;
   } catch (error) {
     if (Object.hasOwn(refusalStatuses, error.name)) {
@@ -86,6 +94,18 @@ async function runLinkEndpoint(context, { segments, query }) {
     return answerUnmatched(context);
   }
   const { endpointId, path } = match;
+  // A view session reaches only the link endpoints the build listed for a view page. One that
+  // is not listed answers as a GET that names no link endpoint, so a view session cannot tell
+  // which link ids exist.
+  let viewEndpoint;
+  try {
+    viewEndpoint = await authorizeViewEndpoint(context, { endpointId });
+  } catch (error) {
+    if (error.name !== 'AuthorizationError') {
+      throw error;
+    }
+    return answerUnmatched(context);
+  }
   context.endpointId = endpointId;
   context.evaluateOperators = createEvaluateOperators(context);
 
@@ -94,7 +114,7 @@ async function runLinkEndpoint(context, { segments, query }) {
   context.logger.info({ event: 'call_link_endpoint', endpointId });
   const endpointConfig = await getEndpointConfig(context, { endpointId });
 
-  const refusalStatus = getRefusalStatus(context, { endpointConfig });
+  const refusalStatus = getRefusalStatus(context, { endpointConfig, viewEndpoint });
   if (!type.isNone(refusalStatus)) {
     return { status: refusalStatus };
   }

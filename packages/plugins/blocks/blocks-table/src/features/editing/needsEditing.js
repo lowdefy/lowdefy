@@ -14,18 +14,15 @@
   limitations under the License.
 */
 
+import columnNeedsEditing from '@lowdefy/blocks-antd/table/columnNeedsEditing.js';
+import someColumnConfig from '@lowdefy/blocks-antd/table/someColumnConfig.js';
 import { type } from '@lowdefy/helpers';
-
-import someColumnConfig from '../../core/someColumnConfig.js';
 
 // Editing loads for TableInput, and for a Table with an editable column or row drag.
 function needsEditing({ input, properties }) {
   if (input === true) return true;
   if (properties.rowDrag === true || type.isObject(properties.rowDrag)) return true;
-  return someColumnConfig({
-    properties,
-    test: (column) => column.editable === true || type.isObject(column.editable),
-  });
+  return someColumnConfig({ properties, test: columnNeedsEditing });
 }
 
 export default needsEditing;

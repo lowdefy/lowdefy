@@ -148,7 +148,7 @@ test.each([
   ],
   [
     { click: { blockId: 'grid', colum: 'actions' } },
-    /Step "click" has unknown key "colum". Keys are: blockId, text, containing, row, column, nth/,
+    /Step "click" has unknown key "colum". Keys are: blockId, text, containing, row, rowKey, column, control, nth/,
   ],
   [
     { click: { blockId: 'grid', colum: 'a', rows: 1 } },
@@ -202,7 +202,7 @@ test.each([
   ],
   [
     { expect: { text: { blockId: 'grid', row: 0, contains: 'a', equals: 'a' } } },
-    /Step "expect.text" has unknown key "equals". Keys are: blockId, text, containing, row, column, nth, contains/,
+    /Step "expect.text" has unknown key "equals". Keys are: blockId, text, containing, row, rowKey, column, nth, contains/,
   ],
   [{ expect: { url: '/detail' } }, /Step "expect.url" requires \{ contains \}/],
   [{ back: 'home' }, /Step "back" takes no value: write \{ "back": true \}. Received "home"/],
@@ -324,7 +324,7 @@ test('validateJourneySteps rejects from on click, press and wait', () => {
       ''
     )
   ).toBe(
-    'Step 0: Step "click" has unknown key "from". Keys are: blockId, text, containing, row, column, nth, count.'
+    'Step 0: Step "click" has unknown key "from". Keys are: blockId, text, containing, row, rowKey, column, control, nth, count.'
   );
   expect(
     validateJourneySteps({ steps: [{ press: { key: 'Enter', from: 'recorded' } }] }).error.replace(
@@ -728,8 +728,17 @@ test('validateJourneySteps rejects malformed hold and release steps', () => {
   expect(error({ hold: { requestId: 'r', times: 2 } })).toBe(
     'Step 0: Step "hold" has unknown key "times". Keys are: requestId, endpoint, pageId.'
   );
-  expect(error({ release: { requestId: 'r' } })).toBe(
-    'Step 0: Step "release" requires the requestId of a "hold" step before it. Received {"requestId":"r"}.'
+  expect(error({ release: ['r'] })).toBe(
+    'Step 0: Step "release" requires the requestId of a "hold" step before it, or { requestId, endpoint?, pageId? }. Received ["r"].'
+  );
+  expect(error({ release: { endpoint: 'e' } })).toBe(
+    'Step 0: Step "release" requires "requestId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ release: { requestId: 'r', pageId: '' } })).toBe(
+    'Step 0: Step "release" requires "pageId" to be a non-empty string. Received "".'
+  );
+  expect(error({ release: { requestId: 'r', times: 2 } })).toBe(
+    'Step 0: Step "release" has unknown key "times". Keys are: requestId, endpoint, pageId.'
   );
   expect(validateJourneySteps({ steps: [{ hold: [] }] }).error).toMatch(
     / Example: \{"hold":\{"requestId":"claim_order"\}\}/
@@ -762,6 +771,48 @@ test('validateJourneySteps rejects a release that names no gate a hold before it
     }).error
   ).toBe(
     'Step 2: Step "release" names request "claim_run", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.'
+  );
+});
+
+test('validateJourneySteps accepts a release naming one of two holds on one request id', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim', endpoint: 'approve' } },
+        { hold: { requestId: 'claim', endpoint: 'reject' } },
+        { call: { endpoint: 'approve' } },
+        { call: { endpoint: 'reject' } },
+        { release: { requestId: 'claim', endpoint: 'reject' } },
+        { expect: { status: 200 } },
+        { release: 'claim' },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects a release whose endpoint or pageId no hold before it has', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim', endpoint: 'approve' } },
+        { call: { endpoint: 'approve' } },
+        { release: { requestId: 'claim', endpoint: 'reject' } },
+      ],
+    }).error
+  ).toBe(
+    'Step 2: Step "release" names request "claim" with an endpoint or pageId that no "hold" of that request before it has. A release lets go of the call a hold parked.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim', endpoint: 'approve' } },
+        { release: { requestId: 'claim' } },
+        { release: { requestId: 'claim', endpoint: 'approve' } },
+      ],
+    }).error
+  ).toBe(
+    'Step 2: Step "release" names request "claim", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.'
   );
 });
 
@@ -942,4 +993,96 @@ test('validateJourneySteps rejects malformed expect.sunk', () => {
   expect(error({ match: ['EUR'] })).toBe(
     'Step 0: Step "expect.sunk" requires "match" to be an object of the request values to match. Received ["EUR"].'
   );
+});
+
+test('validateJourneySteps accepts rowKey and control targets on click and rowKey on expectations', () => {
+  const steps = [
+    { click: { blockId: 'invoices', rowKey: 'inv-0042' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', control: 'void' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'actions', control: 'void' } },
+    { click: { blockId: 'delete_modal', control: 'ok' } },
+    { expect: { visible: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } } },
+    { expect: { hidden: { blockId: 'invoices', rowKey: 'inv-0042' } } },
+    { expect: { text: { blockId: 'invoices', rowKey: 'inv-0042', contains: 'Paid' } } },
+  ];
+  expect(validateJourneySteps({ steps })).toEqual({});
+});
+
+test.each([
+  [
+    { click: { rowKey: 'inv-0042' } },
+    'Step "click" requires a "blockId" (the block that draws the row or control) when "rowKey" or "control" is given.',
+  ],
+  [
+    { click: { control: 'ok' } },
+    'Step "click" requires a "blockId" (the block that draws the row or control) when "rowKey" or "control" is given.',
+  ],
+  [
+    { click: { blockId: 'invoices', rowKey: '' } },
+    'Step "click" requires "rowKey" to be a non-empty string, the row\'s key.',
+  ],
+  [
+    { click: { blockId: 'delete_modal', control: 3 } },
+    'Step "click" requires "control" to be a non-empty string, the control\'s key.',
+  ],
+  [
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', row: 0 } },
+    'Step "click" takes "rowKey" (the row\'s key) or "row" (the displayed row), not both.',
+  ],
+  [
+    { click: { blockId: 'delete_modal', control: 'ok', text: 'OK' } },
+    'Step "click" takes "control" (the control\'s key) or "text", not both.',
+  ],
+  [
+    { click: { blockId: 'delete_modal', control: 'ok', containing: 'OK' } },
+    'Step "click" takes "control" (the control\'s key) or "containing", not both.',
+  ],
+  [
+    { click: { blockId: 'delete_modal', control: 'ok', nth: 1 } },
+    'Step "click" takes "control" (the control\'s key) or "nth", not both.',
+  ],
+])('validateJourneySteps refuses the target %j', (step, message) => {
+  expect(validateJourneySteps({ steps: [step] }).error).toContain(`Step 0: ${message}`);
+});
+
+const ROW_KEY_REFUSAL =
+  'a row named by key is clicked or expected; reach an input in a grid row with "row" (the displayed row) and "column"';
+const CONTROL_REFUSAL =
+  'a control named by key is clicked; reach it with "text" (its exact text) instead, after a click or an open that shows it';
+
+test.each([
+  [{ fill: { blockId: 'invoices', rowKey: 'inv-0042', value: 'Ada' } }, 'fill', 'rowKey'],
+  [{ fill: { blockId: 'actions', control: 'name', value: 'Ada' } }, 'fill', 'control'],
+  [
+    { fill: { blockId: 'invoices', rowKey: 'inv-0042', fromEmail: { to: 'a@b.c', match: 'x' } } },
+    'fill',
+    'rowKey',
+  ],
+  [{ select: { blockId: 'invoices', rowKey: 'inv-0042', value: 'Open' } }, 'select', 'rowKey'],
+  [{ select: { blockId: 'actions', control: 'status', value: 'Open' } }, 'select', 'control'],
+  [{ open: { blockId: 'invoices', rowKey: 'inv-0042' } }, 'open', 'rowKey'],
+  [{ open: { blockId: 'actions_menu', control: 'archive' } }, 'open', 'control'],
+  [
+    { expect: { visible: { blockId: 'delete_modal', control: 'ok' } } },
+    'expect.visible',
+    'control',
+  ],
+  [{ expect: { hidden: { blockId: 'actions_menu', control: 'x' } } }, 'expect.hidden', 'control'],
+  [
+    { expect: { text: { blockId: 'actions_menu', control: 'x', contains: 'Archive' } } },
+    'expect.text',
+    'control',
+  ],
+])('validateJourneySteps refuses %j, naming the browser form', (step, key, refused) => {
+  const reason = refused === 'rowKey' ? ROW_KEY_REFUSAL : CONTROL_REFUSAL;
+  expect(validateJourneySteps({ steps: [step] }).error).toContain(
+    `Step 0: Step "${key}" takes no "${refused}": ${reason}.`
+  );
+});
+
+test('validateJourneySteps leaves refused target keys out of the keys it lists', () => {
+  expect(
+    validateJourneySteps({ steps: [{ select: { blockId: 'a', value: 'b', colum: 'c' } }] }).error
+  ).toContain('Keys are: blockId, text, containing, row, column, nth, value, from.');
 });

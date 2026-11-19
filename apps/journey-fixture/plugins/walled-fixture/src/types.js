@@ -19,11 +19,13 @@
 // no database address: it names a walled MongoDBCollection connection and
 // reaches MongoDB only through the walled client, so it declares
 // meta.dataSet 'walled'. FixtureSignature is the webhook verifier of api/payment_events.yaml.
+// UndeclaredFixture declares no dataSet, so the step rails refuse a click that reaches it.
 export default {
-  connections: ['FixtureSignature', 'WalledFixture'],
+  connections: ['FixtureSignature', 'UndeclaredFixture', 'WalledFixture'],
   connectionMetas: {
     FixtureSignature: { tenant: false },
+    UndeclaredFixture: { tenant: false },
     WalledFixture: { tenant: false },
   },
-  requests: ['VerifyFixtureSignature', 'WalledFixtureInsert'],
+  requests: ['UndeclaredFixtureEcho', 'VerifyFixtureSignature', 'WalledFixtureInsert'],
 };

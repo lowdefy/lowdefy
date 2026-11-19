@@ -109,9 +109,8 @@ function createContext() {
   return context;
 }
 
-async function run(routine) {
-  const context = createContext();
-  const routineContext = {
+function createRoutineContext() {
+  return {
     arrayIndices: [],
     endpointDepth: 0,
     error: null,
@@ -120,6 +119,11 @@ async function run(routine) {
     state: {},
     steps: {},
   };
+}
+
+async function run(routine) {
+  const context = createContext();
+  const routineContext = createRoutineContext();
   const res = await runRoutine(context, routineContext, { routine });
   return { context, res, routineContext };
 }
@@ -505,6 +509,106 @@ test.each([
     );
   }
 );
+
+test('runRoutine tells handleError whether a :catch of the routine handles the fault', async () => {
+  const bad = step({ stepId: 'bad', type: 'FailConfig', properties: {} });
+
+  const caught = createContext();
+  const caughtHandleError = vi.spyOn(caught, 'handleError');
+  await runRoutine(caught, createRoutineContext(), {
+    routine: {
+      ':try': { ':if': true, ':then': bad },
+      ':catch': { ':set_state': { failed: true } },
+    },
+  });
+  expect(caughtHandleError).toHaveBeenCalledTimes(1);
+  expect(caughtHandleError.mock.calls[0][1]).toEqual({ caught: true });
+
+  // A :try with only a :finally handles nothing, and neither does a :catch for its own errors.
+  const escaped = createContext();
+  const escapedHandleError = vi.spyOn(escaped, 'handleError');
+  await runRoutine(escaped, createRoutineContext(), {
+    routine: [
+      { ':try': bad, ':finally': { ':set_state': { cleaned: true } } },
+      { ':try': { ':throw': 'first' }, ':catch': bad },
+    ],
+  });
+  expect(escapedHandleError).toHaveBeenCalledTimes(1);
+  expect(escapedHandleError.mock.calls[0][1]).toEqual({ caught: false });
+
+  const inCatch = createContext();
+  const inCatchHandleError = vi.spyOn(inCatch, 'handleError');
+  await runRoutine(inCatch, createRoutineContext(), {
+    routine: { ':try': { ':throw': 'first' }, ':catch': bad },
+  });
+  expect(inCatchHandleError).toHaveBeenCalledTimes(1);
+  expect(inCatchHandleError.mock.calls[0][1]).toEqual({ caught: false });
+});
+
+test('a fault a :catch rethrows with :throw { _error: true } is reported once, as not caught', async () => {
+  const context = createContext();
+  const handleError = vi.spyOn(context, 'handleError');
+  const res = await runRoutine(context, createRoutineContext(), {
+    routine: {
+      ':try': step({ stepId: 'bad', type: 'FailConfig', properties: {} }),
+      ':catch': { ':throw': { _error: true } },
+    },
+  });
+  expect(res.status).toEqual('error');
+  expect(res.error.name).toEqual('ConfigError');
+  expect(handleError).toHaveBeenCalledTimes(1);
+  expect(handleError.mock.calls[0][0].name).toEqual('ConfigError');
+  expect(handleError.mock.calls[0][1]).toEqual({ caught: false });
+});
+
+test('a fault an inner :catch rethrows is caught when an outer :catch handles it', async () => {
+  const context = createContext();
+  const handleError = vi.spyOn(context, 'handleError');
+  const res = await runRoutine(context, createRoutineContext(), {
+    routine: {
+      ':try': {
+        ':try': step({ stepId: 'bad', type: 'FailConfig', properties: {} }),
+        ':catch': { ':throw': { _error: true } },
+      },
+      ':catch': { ':set_state': { failed: true } },
+    },
+  });
+  expect(res.status).toEqual('continue');
+  expect(handleError).toHaveBeenCalledTimes(1);
+  expect(handleError.mock.calls[0][1]).toEqual({ caught: true });
+});
+
+test('a fault an inner :catch rethrows escapes when no outer :try has a :catch', async () => {
+  const context = createContext();
+  const handleError = vi.spyOn(context, 'handleError');
+  const res = await runRoutine(context, createRoutineContext(), {
+    routine: {
+      ':try': {
+        ':try': step({ stepId: 'bad', type: 'FailConfig', properties: {} }),
+        ':catch': { ':throw': { _error: true } },
+      },
+      ':finally': { ':set_state': { cleaned: true } },
+    },
+  });
+  expect(res.status).toEqual('error');
+  expect(handleError).toHaveBeenCalledTimes(1);
+  expect(handleError.mock.calls[0][1]).toEqual({ caught: false });
+});
+
+test('a fault a :catch answers with a :throw of a message or a :reject is caught', async () => {
+  for (const handler of [{ ':throw': 'Could not save.' }, { ':reject': 'Could not save.' }]) {
+    const context = createContext();
+    const handleError = vi.spyOn(context, 'handleError');
+    await runRoutine(context, createRoutineContext(), {
+      routine: {
+        ':try': step({ stepId: 'bad', type: 'FailConfig', properties: {} }),
+        ':catch': handler,
+      },
+    });
+    expect(handleError).toHaveBeenCalledTimes(1);
+    expect(handleError.mock.calls[0][1]).toEqual({ caught: true });
+  }
+});
 
 test('a ConfigError in a nested :try with :catch is reported once', async () => {
   const { context, res } = await run({

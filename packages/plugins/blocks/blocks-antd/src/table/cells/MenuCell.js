@@ -17,7 +17,7 @@
 import React, { useState } from 'react';
 import { Dropdown } from 'antd';
 import { renderHtml } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
+import { journeyTargetSelectors, type } from '@lowdefy/helpers';
 
 import resolveControlField from '../resolveControlField.js';
 import resolveControlFlag from '../resolveControlFlag.js';
@@ -26,7 +26,7 @@ import EmptyCell from './EmptyCell.js';
 // A row menu, key-compatible with the ag-grid menu cell. The cell renders a
 // plain trigger button; the antd Dropdown mounts on the first click, so a
 // table of menus costs one button per row until a menu is opened.
-function MenuCell({ value, row, rowKey, column, methods, components, onEvent }) {
+function MenuCell({ blockId, value, row, rowKey, column, methods, components, onEvent }) {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const { cell, compiled } = column;
@@ -118,6 +118,11 @@ function MenuCell({ value, row, rowKey, column, methods, components, onEvent }) 
           getPopupContainer={() => document.body}
           menu={{
             items: resolved.map(({ index, item, title, icon, disabled }) => ({
+              ...journeyTargetSelectors.controlMarks({
+                blockId,
+                control: item.eventName,
+                rowKey,
+              }),
               key: String(index),
               label: type.isNone(title) ? undefined : renderHtml({ html: String(title), methods }),
               icon: type.isNone(icon) ? undefined : (

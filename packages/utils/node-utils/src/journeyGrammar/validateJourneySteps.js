@@ -91,8 +91,24 @@ function getStepKey(step) {
 // `nth` picks among several matches. `text` alone, with no blockId, searches
 // the whole page — that is how portal-rendered controls (confirm dialog
 // buttons, modal footers, dropdown menu items) are reached, since they render
-// outside every block.
-const TARGET_KEYS = ['blockId', 'text', 'containing', 'row', 'column', 'nth'];
+// outside every block. `rowKey` names a grid row by its key and `control` a
+// control the block draws by its key (a modal's ok, a menu item); both need
+// the blockId, and both runners read them, where the others read the page.
+const TARGET_KEYS = ['blockId', 'text', 'containing', 'row', 'rowKey', 'column', 'control', 'nth'];
+
+// Why a step refuses a target key, naming the browser form to use instead. No
+// covered block has an input in a row, and a block's control shows only while
+// its popup is open, so only click (and an expectation on a row) takes them.
+const REFUSED_TARGET_KEY_REASONS = {
+  rowKey:
+    'a row named by key is clicked or expected; reach an input in a grid row with "row" (the displayed row) and "column"',
+  control:
+    'a control named by key is clicked; reach it with "text" (its exact text) instead, after a click or an open that shows it',
+};
+
+function isNonEmptyString(value) {
+  return type.isString(value) && value !== '';
+}
 
 function isIndex(value) {
   return type.isInt(value) && value >= 0;
@@ -113,8 +129,23 @@ function findUnknownKeys({ key, params, allowed }) {
 // Validates the target keys of a step object; `extraKeys` are the step's own
 // keys (`value`, `contains`) that may sit beside them. Returns an error
 // message, or undefined when the target is well-formed.
-function validateTargetObject({ key, params, extraKeys = [], requireBlockId = false }) {
-  const unknownKeys = findUnknownKeys({ key, params, allowed: [...TARGET_KEYS, ...extraKeys] });
+// `refusedKeys` are target keys the step does not take, refused with the
+// browser form to use instead.
+function validateTargetObject({
+  key,
+  params,
+  extraKeys = [],
+  refusedKeys = [],
+  requireBlockId = false,
+}) {
+  const refusedKey = refusedKeys.find((refused) => Object.hasOwn(params, refused));
+  if (!type.isUndefined(refusedKey)) {
+    return `Step "${key}" takes no "${refusedKey}": ${
+      REFUSED_TARGET_KEY_REASONS[refusedKey]
+    }. Received ${describe(params)}.`;
+  }
+  const allowed = [...TARGET_KEYS.filter((target) => !refusedKeys.includes(target)), ...extraKeys];
+  const unknownKeys = findUnknownKeys({ key, params, allowed });
   if (!type.isUndefined(unknownKeys)) {
     return unknownKeys;
   }
@@ -134,6 +165,37 @@ function validateTargetObject({ key, params, extraKeys = [], requireBlockId = fa
   }
   if (!type.isUndefined(params.text) && !type.isUndefined(params.containing)) {
     return `Step "${key}" takes "text" (a control's exact text) or "containing" (text an element contains), not both. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.rowKey) && !isNonEmptyString(params.rowKey)) {
+    return `Step "${key}" requires "rowKey" to be a non-empty string, the row's key. Received ${describe(
+      params.rowKey
+    )}.`;
+  }
+  if (!type.isUndefined(params.control) && !isNonEmptyString(params.control)) {
+    return `Step "${key}" requires "control" to be a non-empty string, the control's key. Received ${describe(
+      params.control
+    )}.`;
+  }
+  if (
+    (!type.isUndefined(params.rowKey) || !type.isUndefined(params.control)) &&
+    type.isUndefined(params.blockId)
+  ) {
+    return `Step "${key}" requires a "blockId" (the block that draws the row or control) when "rowKey" or "control" is given. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.rowKey) && !type.isUndefined(params.row)) {
+    return `Step "${key}" takes "rowKey" (the row's key) or "row" (the displayed row), not both. Received ${describe(
+      params
+    )}.`;
+  }
+  const controlWith = ['text', 'containing', 'nth'].find(
+    (other) => !type.isUndefined(params[other])
+  );
+  if (!type.isUndefined(params.control) && !type.isUndefined(controlWith)) {
+    return `Step "${key}" takes "control" (the control's key) or "${controlWith}", not both. Received ${describe(
       params
     )}.`;
   }
@@ -175,17 +237,19 @@ function validateTargetObject({ key, params, extraKeys = [], requireBlockId = fa
   return undefined;
 }
 
-// click and expect.visible take a blockId string or a target object.
-function validateTarget({ key, params }) {
+// open, expect.visible and expect.hidden take a blockId string or a target
+// object.
+function validateTarget({ key, params, refusedKeys = [] }) {
   if (type.isString(params)) {
     return undefined;
   }
   if (!type.isObject(params)) {
-    return `Step "${key}" requires a blockId string or a target object { blockId, text, containing, row, column, nth }. Received ${describe(
+    const keys = TARGET_KEYS.filter((target) => !refusedKeys.includes(target)).join(', ');
+    return `Step "${key}" requires a blockId string or a target object { ${keys} }. Received ${describe(
       params
     )}.`;
   }
-  return validateTargetObject({ key, params });
+  return validateTargetObject({ key, params, refusedKeys });
 }
 
 // click takes a target and an optional `count` of 1 to 3: that many clicks in
@@ -338,6 +402,38 @@ function validateHold(params) {
   );
   if (!type.isUndefined(invalid)) {
     return `Step "hold" requires "${invalid}" to be a non-empty string. Received ${describe(
+      params[invalid]
+    )}.`;
+  }
+  return undefined;
+}
+
+// release: <requestId>, or release: { requestId, endpoint?, pageId? } to name one of two holds
+// on one request id, as the hold named it.
+function validateRelease(params) {
+  if (type.isString(params) && params !== '') {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return `Step "release" requires the requestId of a "hold" step before it, or { requestId, endpoint?, pageId? }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'release',
+    params,
+    allowed: ['requestId', 'endpoint', 'pageId'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  const invalid = ['requestId', 'endpoint', 'pageId'].find(
+    (idKey) =>
+      (idKey === 'requestId' || !type.isUndefined(params[idKey])) &&
+      (!type.isString(params[idKey]) || params[idKey] === '')
+  );
+  if (!type.isUndefined(invalid)) {
+    return `Step "release" requires "${invalid}" to be a non-empty string. Received ${describe(
       params[invalid]
     )}.`;
   }
@@ -520,6 +616,7 @@ function validateBlockValue({ key, params }) {
     key,
     params,
     extraKeys: ['value', 'from'],
+    refusedKeys: ['rowKey', 'control'],
     requireBlockId: true,
   });
 }
@@ -605,6 +702,7 @@ function validateFill(params) {
     key: 'fill',
     params,
     extraKeys: ['fromEmail'],
+    refusedKeys: ['rowKey', 'control'],
     requireBlockId: true,
   });
 }
@@ -699,9 +797,9 @@ function validateExpect(params) {
     case 'state':
       return validateExpectState(value);
     case 'visible':
-      return validateTarget({ key: 'expect.visible', params: value });
+      return validateTarget({ key: 'expect.visible', params: value, refusedKeys: ['control'] });
     case 'hidden':
-      return validateTarget({ key: 'expect.hidden', params: value });
+      return validateTarget({ key: 'expect.hidden', params: value, refusedKeys: ['control'] });
     case 'calls':
       return validateCalls(value);
     case 'text':
@@ -712,6 +810,7 @@ function validateExpect(params) {
         key: 'expect.text',
         params: value,
         extraKeys: ['contains'],
+        refusedKeys: ['control'],
         requireBlockId: true,
       });
     case 'url':
@@ -773,18 +872,37 @@ function findAnsweredCall({ steps, index }) {
   return undefined;
 }
 
-// A release lets go of a call a hold step before it parked, so it names the request of a hold
-// that no release before it has used.
+// A release is `release: <requestId>` or `release: { requestId, endpoint?, pageId? }`.
+function readReleaseKey(release) {
+  return type.isString(release) ? { requestId: release } : release;
+}
+
+// Whether a release could let go of the call a hold parked: the same request id, and no endpoint
+// or pageId that the two both give and give differently.
+function releaseFitsHold({ hold, key }) {
+  return ['requestId', 'endpoint', 'pageId'].every(
+    (field) => type.isNone(hold[field]) || type.isNone(key[field]) || hold[field] === key[field]
+  );
+}
+
+// A release lets go of a call a hold step before it parked, so a hold before it fits it, and the
+// holds before it on its request id outnumber the releases of that id before it. Which parked
+// call it lets go is matched when it runs (createJourneyRaces).
 function validateReleasePlacement({ steps, index }) {
-  const requestId = steps[index].release;
+  const key = readReleaseKey(steps[index].release);
+  const { requestId } = key;
   const before = steps.slice(0, index);
-  const holds = before.filter((step) => step.hold?.requestId === requestId).length;
-  const releases = before.filter((step) => step.release === requestId).length;
-  if (holds > releases) {
-    return undefined;
+  const holds = before.filter((step) => step.hold?.requestId === requestId);
+  const releases = before.filter(
+    (step) => readReleaseKey(step.release)?.requestId === requestId
+  ).length;
+  if (!holds.some((step) => releaseFitsHold({ hold: step.hold, key }))) {
+    return holds.length === 0
+      ? `Step "release" names request "${requestId}", which no "hold" step before it holds. A release lets go of the call a hold parked.`
+      : `Step "release" names request "${requestId}" with an endpoint or pageId that no "hold" of that request before it has. A release lets go of the call a hold parked.`;
   }
-  if (holds === 0) {
-    return `Step "release" names request "${requestId}", which no "hold" step before it holds. A release lets go of the call a hold parked.`;
+  if (holds.length > releases) {
+    return undefined;
   }
   return `Step "release" names request "${requestId}", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.`;
 }
@@ -868,7 +986,7 @@ function validateStepParams({ key, params }) {
     case 'click':
       return validateClick(params);
     case 'open':
-      return validateTarget({ key: 'open', params });
+      return validateTarget({ key: 'open', params, refusedKeys: ['rowKey', 'control'] });
     case 'fill':
       return validateFill(params);
     case 'select':
@@ -911,12 +1029,7 @@ function validateStepParams({ key, params }) {
     case 'hold':
       return validateHold(params);
     case 'release':
-      if (!type.isString(params) || params === '') {
-        return `Step "release" requires the requestId of a "hold" step before it. Received ${describe(
-          params
-        )}.`;
-      }
-      return undefined;
+      return validateRelease(params);
     case 'webhook':
       return validateWebhook(params);
     default:

@@ -19,7 +19,8 @@ import parseElementsChain from './parseElementsChain.js';
 import parseRowIndex from './parseRowIndex.js';
 import type from './type.js';
 
-const { blockWrapperPrefix, gridRules, interactiveRoles } = journeyTargetSelectors;
+const { blockWrapperPrefix, controlAttributes, gridRules, interactiveRoles, isGeneratedRowKey } =
+  journeyTargetSelectors;
 
 function blockIdOf(entry) {
   const id = entry.attributes.attr__id;
@@ -94,23 +95,68 @@ function matchesGridPart({ entry, part }) {
   return type.isNone(part.header) || value !== part.header;
 }
 
-// The innermost row or cell entry of any grid and the row index or column key it carries, else
-// null.
+// The innermost row or cell entry of any grid, the row index or column key it carries and the
+// rule it matched, else null.
 function findGridPart({ entries, kind }) {
   for (const [index, entry] of entries.entries()) {
     const rule = gridRules.find((candidate) => matchesGridPart({ entry, part: candidate[kind] }));
     if (rule) {
-      return { index, value: entry.attributes[`attr__${rule[kind].attribute}`] };
+      return { entry, index, rule, value: entry.attributes[`attr__${rule[kind].attribute}`] };
     }
   }
   return null;
 }
 
-// The journey target a posthog-js `$elements_chain` describes: the block wrappers the click
-// passed through (innermost first), the grid row and column, the control's text, and whether it
-// was a dropdown option. Pure, so the production pull runs it in Node on captured events. Total:
-// any string gives a target and never throws.
-function targetFromElementsChain(chain) {
+function markOf({ entry, attribute }) {
+  const value = entry.attributes[`attr__${attribute}`];
+  return type.isString(value) && value !== '' ? value : null;
+}
+
+// The row's own key, by the grid rule the row matched, unless the grid generated it: a generated
+// key changes between renders, so the row keeps its displayed index alone.
+function rowKeyOf(row) {
+  if (row === null) return null;
+  const { entry, rule } = row;
+  if (!matchesGridPart({ entry, part: rule.rowKey })) return null;
+  const rowKey = markOf({ entry, attribute: rule.rowKey.attribute });
+  return rowKey === null || isGeneratedRowKey(rowKey) ? null : rowKey;
+}
+
+// The innermost marked control the click passed through, as the block and key it is marked with,
+// else null. A cell control in a row with a generated key is no control target: its key repeats
+// in every row and the row has no key to tell them apart.
+function findMarkedControl(entries) {
+  const entry = entries.find(
+    (candidate) =>
+      markOf({ entry: candidate, attribute: controlAttributes.blockId }) !== null &&
+      markOf({ entry: candidate, attribute: controlAttributes.control }) !== null
+  );
+  if (type.isUndefined(entry)) return null;
+  const rowKey = markOf({ entry, attribute: controlAttributes.rowKey });
+  if (rowKey !== null && isGeneratedRowKey(rowKey)) return null;
+  return {
+    blockId: markOf({ entry, attribute: controlAttributes.blockId }),
+    control: markOf({ entry, attribute: controlAttributes.control }),
+    rowKey,
+  };
+}
+
+// The journey target a posthog-js `$elements_chain` describes, read by the rules describeElement
+// reads a DOM element by: the block wrappers the click passed through (innermost first), the grid
+// row, its key and the column, the control's text, and whether it was a dropdown option.
+//
+// A click inside a marked control (data-lf-block, data-lf-control) describes as that block's
+// control, with its row key when it sits in a keyed row and the column of its cell: no text or
+// nth, and the control's block leads block_ids, since a popup control sits in no block wrapper. A
+// row with a key the grid did not generate gives `row_key` beside `row`; the journey compiler
+// writes rowKey in place of row. With `rowKey: false` the target has no `row_key`: a row key can
+// be the app's data, so the PostHog enrichment and the production pull leave it out. A marked
+// control still describes as its block's control there, and a cell control keeps `row`. The key
+// is still read, so a cell control in a row with a generated key describes by its text, as dev.
+//
+// Pure, so the production pull runs it in Node on captured events. Total: any string gives a
+// target and never throws.
+function targetFromElementsChain(chain, { rowKey = true } = {}) {
   const entries = type.isString(chain) ? parseElementsChain(chain) : [];
   const blockIds = entries.map(blockIdOf).filter((blockId) => blockId !== null);
   const blockIndex = entries.findIndex((entry) => blockIdOf(entry) !== null);
@@ -120,14 +166,36 @@ function targetFromElementsChain(chain) {
   // A cell counts only inside a row: a Table summary row's cells sit in a row with no index.
   const cell =
     row === null ? null : findGridPart({ entries: inner.slice(0, row.index), kind: 'cell' });
-  return {
+  const target = {
     block_id: blockIds[0] ?? null,
     row: row === null ? null : parseRowIndex(row.value),
+    row_key: null,
     column: cell === null ? null : cell.value,
+    control: null,
     text: textOf(scope),
     option: inner.some(isOption),
     block_ids: blockIds,
   };
+  // The key of a pinned row (ag-grid `t-0`) names no journey row, as its index does not. A cell
+  // control in a pinned row is no control target either, so it describes by its text.
+  const inPinnedRow = row !== null && target.row === null;
+  if (!inPinnedRow) target.row_key = rowKeyOf(row);
+  const marked = findMarkedControl(entries);
+  const described =
+    marked === null || inPinnedRow
+      ? target
+      : {
+          ...target,
+          block_id: marked.blockId,
+          row_key: marked.rowKey,
+          control: marked.control,
+          text: null,
+          option: false,
+          block_ids: [marked.blockId, ...blockIds.filter((blockId) => blockId !== marked.blockId)],
+        };
+  if (rowKey) return described;
+  const { row_key: _rowKey, ...withoutRowKey } = described;
+  return withoutRowKey;
 }
 
 export default targetFromElementsChain;

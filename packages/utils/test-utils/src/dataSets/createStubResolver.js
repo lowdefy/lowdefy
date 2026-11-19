@@ -32,6 +32,10 @@ function createStubResolver({ connectionType, context, fallback, requestType, se
       return fallback(args);
     }
     session.sunk.push(record);
+    // A journey's stub counts its answers (listUnansweredStubs); a test's session.stub does not.
+    if (type.isNumber(stub.answered)) {
+      stub.answered += 1;
+    }
     if (type.isFunction(stub.fn)) {
       return stub.fn(record);
     }

@@ -20,6 +20,7 @@ import { markCredential } from '@lowdefy/node-utils';
 
 import addStepResult from './addStepResult.js';
 import authorizeRole from '../auth/organizations/authorizeRole.js';
+import authorizeViewAuthStep from '../auth/view/authorizeViewAuthStep.js';
 import evaluateRoutineOperators from './evaluateRoutineOperators.js';
 import isActiveMember from '../auth/organizations/isActiveMember.js';
 import provisionOrganization from '../auth/organizations/provisionOrganization.js';
@@ -55,6 +56,8 @@ async function handleAuthStep(context, routineContext, { step }) {
       configKey: step['~k'],
     });
   }
+
+  authorizeViewAuthStep(context, { step });
 
   // Checked before the caller - an auth-less app should hear "no auth
   // engine", not a misleading missing-caller error.

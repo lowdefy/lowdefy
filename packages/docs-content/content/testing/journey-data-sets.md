@@ -214,7 +214,7 @@ The browsers a data set journey opens stay on one host of the dev server. A requ
 
 **What is not redirected:**
 
-- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP, object storage) are never given the run's databases. Their requests are sunk, as described below. What does not go through a request resolver still reaches the real service: an agent calling its model provider through its connection is not sunk, and an `external` type with no request resolvers (such as `Mcp`) is refused by the click rails.
+- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP, object storage) are never given the run's databases. Their requests are sunk, as described below. What does not go through a request resolver still reaches the real service: an agent calling its model provider through its connection is not sunk, and an `external` type with no request resolvers (such as `Mcp`) is refused by the step rails.
 - Code that reads a database URI from anywhere but its connection's `properties`, such as a secret or environment variable read directly. A plugin type that declares `redirect` and does this breaks its declaration.
 - The auth engine. Data set journeys never reach it: their requests carry injected users, and `/api/auth/*` answers 404 for them.
 - Atlas Search (`$search`, `$vectorSearch`): pages whose requests use it fail on the in-memory database, which has no search engine.
@@ -275,9 +275,9 @@ The sunk request is recorded in `sunk` like any other, with its `connectionType`
 
 The dev server cannot check a `walled` or `external` declaration, since a connection's properties are evaluated later and may read secrets. It is your promise as the plugin author.
 
-## Clicks a data set journey refuses
+## Steps a data set journey refuses
 
-A data set journey fails two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. A click on a connection the data set cannot run is refused before it acts, naming the block and why; a click that runs an auth action fails once it has run:
+A data set journey checks every step that acts on a block and can fire its events: `click`, `open` (which fires a dropdown's `onOpenChange`), `fill` and `select` (which fire the input's `onChange`), and `press` (which fires the events of the blocks around the focused element, such as an input's `onPressEnter`, a button's `onClick` or a modal's `onCancel` on Escape, and of every shown block whose event `shortcut` the keys match). It fails two kinds of such step, so that it never reaches a real service and never fails for a reason that is not the app's. A step on a connection the data set cannot run is refused before it acts (an `open` before the dropdown opens), naming the block and why; a step that runs an auth action fails once it has run. The examples below are clicks; an `open`, `fill`, `select` or `press` names itself instead (`... so a data-set journey cannot fill it.`, `... cannot press a key that fires its events.`).
 
 - A click on a block whose events reach a connection, through a `Request` action or a `CallAPI` into an endpoint routine, whose type declares nothing, declares `external` but has no request resolvers, or that has no connection artifact. Connections whose type declares `redirect` or `walled` (such as `MongoDBCollection`) run against the run's databases, and connections whose type declares `external` have their requests sunk, so both can be clicked. The message names the declaration, so you know what to change:
 
@@ -289,7 +289,9 @@ A data set journey fails two kinds of click, so that it never reaches a real ser
 
 - A click that runs an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time. Unlike the connection check, this one is made while the click runs: the step fails only if the action executes, and the message names the block and the action (`Block "logout_button" ran the auth action Logout, which a data-set journey cannot run: ...`). A click whose auth action is skipped works, so you can test the paths that stop before it: a `Validate` that throws on an empty form, an endpoint that refuses a duplicate, an action with a `skip:` condition that is true.
 
-The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed by the connection check. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.
+Headless runs (`lowdefy test --headless`) refuse the same steps before they act. A headless `press` is Enter in the input filled last, and checks the blocks the browser checks: that input, the blocks around it up to an enclosing modal or drawer, and every shown block whose `shortcut` Enter fires. A headless run stops at an auth action instead, and reports that the journey needs a browser.
+
+The block is the one the step acts on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. A `select` checks the block of the option it picks, and a `press` checks every block it can fire: the blocks around the focused element (an open modal or drawer included) and each block with a matching `shortcut`. Request and endpoint ids computed by operators are not followed by the connection check. Journeys without `data:` act on anything. Cover such controls with a journey that runs off data sets, against a test database.
 
 ## Requests to outside services are sunk
 

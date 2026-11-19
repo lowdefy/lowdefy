@@ -56,7 +56,8 @@ function defaultReadConfigFile(name) {
 }
 
 // The requests and endpoint calls a headless journey made, as JSON: who made each, what it called
-// and the payload it sent, which a browser run does not record (variants replay them).
+// and the payload it sent, which a browser run does not record (variants replay them). detached
+// marks a detached CallApi a routine made, which the page never sent, so variants leave it out.
 function toCallRecord(call) {
   return JSON.parse(
     JSON.stringify({
@@ -68,6 +69,7 @@ function toCallRecord(call) {
       payload: call.payload,
       status: call.status,
       success: call.success,
+      detached: call.detached,
     })
   );
 }

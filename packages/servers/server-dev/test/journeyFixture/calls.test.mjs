@@ -85,6 +85,56 @@ fixtureTest('a call an allowed user makes writes, and expect.db sees the write',
   ]);
 });
 
+// A journey sent to the route takes literal values: a _ref inside a payload is data, posted to the
+// endpoint and written as sent, through the real route and runner.
+fixtureTest('a _ref inside a posted payload reaches the endpoint as written', async () => {
+  const result = await postJourney({
+    data: 'roles',
+    user: 'member',
+    steps: [
+      { call: { endpoint: 'log_activity', payload: { source: { _ref: 'x' } } } },
+      { expect: { status: 200 } },
+      {
+        expect: {
+          db: {
+            collection: 'items',
+            connectionId: 'fixture_db',
+            match: { kind: 'activity' },
+            equals: [{ kind: 'activity', source: { _ref: 'x' } }],
+          },
+        },
+      },
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
+// A whole payload that is one _ref is data too: the endpoint receives the object as sent and
+// writes it whole (log_payload), through the real route and runner.
+fixtureTest('a posted payload that is a whole _ref reaches the endpoint as written', async () => {
+  const result = await postJourney({
+    data: 'roles',
+    user: 'member',
+    steps: [
+      { call: { endpoint: 'log_payload', payload: { _ref: 'x' } } },
+      { expect: { status: 200 } },
+      {
+        expect: {
+          db: {
+            collection: 'items',
+            connectionId: 'fixture_db',
+            match: { kind: 'payload' },
+            equals: [{ kind: 'payload', payload: { _ref: 'x' } }],
+          },
+        },
+      },
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+});
+
 fixtureTest(
   'expect.db fails at its step when the database does not hold what it expects',
   async () => {
@@ -210,6 +260,48 @@ fixtureTest('stubs answer and fail requests in a browser run, as headless', asyn
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
   expect(result.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+});
+
+// An answer stub no request reaches fails a browser run at its last step, naming it, as headless:
+// the first stub answers every rate request, so the second, narrowed to USD, never answers.
+fixtureTest('an answer stub that never answered fails a browser run, naming it', async () => {
+  const file = path.join(
+    process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY ?? '',
+    'tests',
+    'journeys',
+    '_headless',
+    'stubs.yaml'
+  );
+  const [journey] = YAML.parse(fs.readFileSync(file, 'utf8'));
+  const result = await postJourney({
+    data: journey.data,
+    user: journey.user,
+    stubs: [
+      {
+        connectionType: 'AxiosHttp',
+        requestType: 'AxiosHttp',
+        answer: { status: 200, data: { rate: 1.5 } },
+      },
+      {
+        connectionType: 'AxiosHttp',
+        requestType: 'AxiosHttp',
+        endpoint: 'price_run',
+        match: { params: { currency: 'USD' } },
+        answer: { status: 200, data: { rate: 2 } },
+      },
+    ],
+    steps: [
+      { call: { endpoint: 'price_run', payload: { id: 'BR-1', currency: 'EUR' } } },
+      { expect: { status: 200 } },
+    ],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toMatchObject({
+    index: 1,
+    message:
+      'The AxiosHttp/AxiosHttp stub on endpoint "price_run" and match {"params":{"currency":"USD"}} never answered: no request the journey made matched it, or an earlier stub answered first, so nothing used its answer. A stub that names its request (requestId, endpoint, pageId or match) must answer; one keyed only by connectionType and requestType is a fallback and may go unused.',
+  });
+  expect(result.steps.map((step) => step.status)).toEqual(['ok', 'failed']);
 });
 
 // The second journey of tests/journeys/_headless/stubs.yaml in a browser run: the Save click's

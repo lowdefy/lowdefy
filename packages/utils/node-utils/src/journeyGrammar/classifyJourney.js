@@ -30,6 +30,7 @@ const HEADLESS_STEP_KEYS = [
   'fill',
   'goto',
   'hold',
+  'open',
   'press',
   'release',
   'request',
@@ -66,17 +67,33 @@ const HEADLESS_EXPECT_KEYS = [
   'url',
   'visible',
 ];
-// Target keys that read the DOM: a control's text, a grid row or column, a pick among matches.
+// Target keys that read the DOM: a control's text, a grid row as displayed or a column of it, a
+// pick among matches. A column in a row named by rowKey is read from the grid's data, as rowKey
+// and control are, so it is a DOM key only without rowKey.
 const DOM_TARGET_KEYS = ['text', 'containing', 'row', 'column', 'nth'];
 // Steps whose target is the step's value (a string or a target object).
-const TARGET_STEP_KEYS = ['click', 'fill', 'select'];
+const TARGET_STEP_KEYS = ['click', 'fill', 'open', 'select'];
 const TARGET_EXPECT_KEYS = ['visible', 'hidden'];
 
 function findDomTargetKey(target) {
   if (!type.isObject(target)) {
     return undefined;
   }
-  return DOM_TARGET_KEYS.find((key) => Object.hasOwn(target, key));
+  return DOM_TARGET_KEYS.find(
+    (key) => Object.hasOwn(target, key) && !(key === 'column' && Object.hasOwn(target, 'rowKey'))
+  );
+}
+
+// Why a target by a DOM key needs a browser, naming the key that runs headless where there is
+// one.
+function domTargetReason(domKey) {
+  if (domKey === 'row') {
+    return 'a target by row reads the displayed order; name the row with rowKey to run headless';
+  }
+  if (domKey === 'text') {
+    return 'a target by text reads the page; name the control with control on its block';
+  }
+  return `a target by "${domKey}" reads the page; a headless run targets blocks by blockId`;
 }
 
 // Steps that leave the focus where it is: a press goes to the element the step before them
@@ -114,7 +131,7 @@ function needsBrowser({ steps, index }) {
     const target = step[key];
     const domKey = findDomTargetKey(target);
     if (!type.isUndefined(domKey)) {
-      return `a target by "${domKey}" reads the page; a headless run targets blocks by blockId`;
+      return domTargetReason(domKey);
     }
     if (type.isObject(target) && Object.hasOwn(target, 'fromEmail')) {
       return 'a fill from an email reads the mail sink in a browser journey';
@@ -134,7 +151,7 @@ function needsBrowser({ steps, index }) {
   if (TARGET_EXPECT_KEYS.includes(expectKey)) {
     const domKey = findDomTargetKey(step.expect[expectKey]);
     if (!type.isUndefined(domKey)) {
-      return `a target by "${domKey}" reads the page; a headless run targets blocks by blockId`;
+      return domTargetReason(domKey);
     }
   }
   return undefined;

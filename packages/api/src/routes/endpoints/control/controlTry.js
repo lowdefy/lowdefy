@@ -17,6 +17,7 @@
 import { projectCaughtError } from '@lowdefy/helpers';
 
 import runRoutine from '../runRoutine.js';
+import settleCaughtFaults from './settleCaughtFaults.js';
 
 async function controlTry(context, routineContext, { control }) {
   context.logger.debug({
@@ -25,10 +26,14 @@ async function controlTry(context, routineContext, { control }) {
 
   // With a :catch, an error in :try is handled here: `caught` makes runRoutine log an expected
   // error (RequestError, ServiceError, UserError) at debug instead of as an error (nested
-  // controls and endpoint calls inherit it). Config, operator and internal errors are still
-  // reported through handleError. :catch and :finally run outside it, so their own errors are
-  // logged as usual.
-  const tryContext = control[':catch'] ? { ...routineContext, caught: true } : routineContext;
+  // controls and endpoint calls inherit it). A config, operator or internal error is a fault:
+  // runRoutine adds it to `caughtFaults` and settleCaughtFaults reports it once this try has
+  // ended, when it is known whether the :catch handled it or passed it on. :catch and :finally
+  // run outside it, so their own errors are logged as usual.
+  const caughtFaults = [];
+  const tryContext = control[':catch']
+    ? { ...routineContext, caught: true, caughtFaults }
+    : routineContext;
   let res = await runRoutine(context, tryContext, { routine: control[':try'] });
 
   if (res.status === 'error' && control[':catch']) {
@@ -53,6 +58,7 @@ async function controlTry(context, routineContext, { control }) {
     }
   }
 
+  await settleCaughtFaults({ faults: caughtFaults, res, routineContext });
   return res;
 }
 

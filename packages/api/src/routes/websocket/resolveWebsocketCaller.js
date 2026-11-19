@@ -20,7 +20,8 @@ import resolveAuthentication from '../../context/resolveAuthentication.js';
 
 // Resolves the caller a websocket is acting for now, from the headers of its
 // upgrade request - the session cookie, or the credentials an API strategy
-// reads. Resolution runs on a separate object, so the connection's context
+// reads - with the view session it was resolved from, if any, whose scopes
+// follow the grant as it stands now. Resolution runs on a separate object, so the connection's context
 // keeps the caller it was opened with and the two can be compared.
 //
 // A context with no auth engine has a caller that was fixed when the context
@@ -28,11 +29,11 @@ import resolveAuthentication from '../../context/resolveAuthentication.js';
 // pre-resolved caller. There is no session to follow, so the caller stays.
 async function resolveWebsocketCaller(context, { headers, strategies }) {
   if (type.isNone(context.auth)) {
-    return context.user;
+    return { user: context.user, viewSession: context.viewSession ?? null };
   }
   const resolved = { config: context.config, logger: context.logger };
   await resolveAuthentication(resolved, { auth: context.auth, headers, strategies });
-  return resolved.user;
+  return { user: resolved.user, viewSession: resolved.viewSession ?? null };
 }
 
 export default resolveWebsocketCaller;

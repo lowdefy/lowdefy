@@ -1,6 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -17,6 +14,10 @@
   limitations under the License.
 */
 
+/**
+ * @vitest-environment jsdom
+ */
+
 import { resolveTargetInDocument, targetFixtures } from '@lowdefy/e2e-utils/targets';
 
 import { pageInstanceKey } from '@lowdefy/helpers';
@@ -24,7 +25,7 @@ import { pageInstanceKey } from '@lowdefy/helpers';
 import getTrace from './getTrace.js';
 import { afterEach, beforeEach, describe, expect, test } from 'vitest';
 
-const TARGET_FIELDS = ['block_id', 'row', 'column', 'text', 'nth', 'option'];
+const TARGET_FIELDS = ['block_id', 'row', 'row_key', 'column', 'control', 'text', 'nth', 'option'];
 
 function targetFields(target) {
   return Object.fromEntries(TARGET_FIELDS.map((field) => [field, target[field]]));
@@ -144,6 +145,96 @@ test('describeElement skips hidden controls when it counts controls with the sam
   }
 });
 
+const MODAL_FOOTERS = `
+<div class="ant-modal-root" style="display: none;">
+  <div role="dialog"><button data-lf-block="delete_modal" data-lf-control="ok">OK</button></div>
+</div>
+<div class="ant-modal-root">
+  <div role="dialog"><button id="open-ok" data-lf-block="delete_modal" data-lf-control="ok">OK</button></div>
+</div>`;
+
+test('resolveTargetInDocument skips a control the DOM hides, such as a closed modal', () => {
+  document.body.innerHTML = MODAL_FOOTERS;
+  expect(
+    resolveTargetInDocument({ document, target: { block_id: 'delete_modal', control: 'ok' } })
+  ).toBe(select('#open-ok'));
+});
+
+test('resolveTargetInDocument resolves no control when several visible elements match', () => {
+  document.body.innerHTML = MODAL_FOOTERS.replace(' style="display: none;"', '');
+  expect(
+    resolveTargetInDocument({ document, target: { block_id: 'delete_modal', control: 'ok' } })
+  ).toBeNull();
+});
+
+test('resolveTargetInDocument narrows a control to the cell of its column', () => {
+  document.body.innerHTML = `
+<div id="bl-grid"><div class="ag-row" row-index="0" row-id="r1">
+  <div class="ag-cell" col-id="a"><button id="in-a" data-lf-block="grid" data-lf-control="go" data-lf-row-key="r1">Go</button></div>
+  <div class="ag-cell" col-id="b"><button id="in-b" data-lf-block="grid" data-lf-control="go" data-lf-row-key="r1">Go</button></div>
+</div></div>`;
+  const target = { block_id: 'grid', row_key: 'r1', control: 'go' };
+  expect(resolveTargetInDocument({ document, target })).toBeNull();
+  expect(resolveTargetInDocument({ document, target: { ...target, column: 'b' } })).toBe(
+    select('#in-b')
+  );
+});
+
+test('resolveTargetInDocument refuses a generated row key, as the runner does', () => {
+  document.body.innerHTML = `
+<div id="bl-grid"><div class="ag-row" row-index="0" row-id="__row_0">
+  <div class="ag-cell" col-id="a" aria-colindex="1"><button data-lf-block="grid" data-lf-control="go" data-lf-row-key="__row_0">Go</button></div>
+</div></div>`;
+  expect(
+    resolveTargetInDocument({ document, target: { block_id: 'grid', row_key: '__row_0' } })
+  ).toBeNull();
+  expect(
+    resolveTargetInDocument({
+      document,
+      target: { block_id: 'grid', row_key: '__row_0', control: 'go' },
+    })
+  ).toBeNull();
+});
+
+test('resolveTargetInDocument refuses a row key several rows carry, but not a row split across pinned containers', () => {
+  document.body.innerHTML = `
+<div id="bl-grid">
+  <div class="ag-pinned-left-cols-container"><div class="ag-row" row-index="0" row-id="r1">
+    <div id="r1-first" class="ag-cell" col-id="a" aria-colindex="1">A</div>
+  </div></div>
+  <div class="ag-center-cols-container"><div class="ag-row" row-index="0" row-id="r1">
+    <div class="ag-cell" col-id="b" aria-colindex="2">B</div>
+  </div></div>
+</div>`;
+  const target = { block_id: 'grid', row_key: 'r1' };
+  expect(resolveTargetInDocument({ document, target })).toBe(select('#r1-first'));
+  document.body.innerHTML = `
+<div id="bl-grid">
+  <div class="ag-row" row-index="0" row-id="r1"><div class="ag-cell" col-id="a" aria-colindex="1">A</div></div>
+  <div class="ag-row" row-index="1" row-id="r1"><div class="ag-cell" col-id="a" aria-colindex="1">A</div></div>
+</div>`;
+  expect(resolveTargetInDocument({ document, target })).toBeNull();
+  expect(resolveTargetInDocument({ document, target: { ...target, column: 'a' } })).toBeNull();
+});
+
+test('describeElement names a modal button by its control and block type', () => {
+  const lowdefy = createLowdefy();
+  lowdefy.contexts['page:orders'] = {
+    pageId: 'orders',
+    _internal: { RootSlots: { map: { delete_modal: { type: 'Modal' } } } },
+  };
+  document.body.innerHTML = MODAL_FOOTERS;
+  window.history.replaceState({}, '', '/orders');
+  expect(getTrace(lowdefy).describeElement(select('#open-ok'))).toMatchObject({
+    page_id: 'orders',
+    block_id: 'delete_modal',
+    block_type: 'Modal',
+    control: 'ok',
+    text: null,
+    block_ids: ['delete_modal'],
+  });
+});
+
 test('describeChain parses the chain and adds the page id and block type', () => {
   const lowdefy = createLowdefy();
   lowdefy.contexts['page:orders'] = {
@@ -159,11 +250,37 @@ test('describeChain parses the chain and adds the page id and block type', () =>
     block_type: 'Button',
     row: null,
     column: null,
+    control: null,
     text: 'Save',
     nth: null,
     option: false,
     block_ids: ['save_button'],
   });
+});
+
+test('describeChain reads a marked cell control by its key and displayed row, with no row key', () => {
+  const lowdefy = createLowdefy();
+  lowdefy.contexts['page:orders'] = {
+    pageId: 'orders',
+    _internal: { RootSlots: { map: { invoices: { type: 'AgGridAlpine' } } } },
+  };
+  window.history.replaceState({}, '', '/orders');
+  const chain =
+    'span:text="Pay";button:attr__data-lf-block="invoices"attr__data-lf-control="onPay"attr__data-lf-row-key="inv-2"text="Pay";div.ag-cell:attr__class="ag-cell"attr__col-id="actions";div.ag-row:attr__class="ag-row"attr__row-id="inv-2"attr__row-index="1";div:attr__id="bl-invoices"attr_id="bl-invoices"';
+  const described = getTrace(lowdefy).describeChain(chain);
+  expect(described).toEqual({
+    page_id: 'orders',
+    block_id: 'invoices',
+    block_type: 'AgGridAlpine',
+    row: 1,
+    column: 'actions',
+    control: 'onPay',
+    text: null,
+    nth: null,
+    option: false,
+    block_ids: ['invoices'],
+  });
+  expect(described).not.toHaveProperty('row_key');
 });
 
 function rememberTicket(lowdefy) {
@@ -285,4 +402,111 @@ test('describeElement gives nth null for a control that is the only match in its
   const { describeElement } = getTrace(createLowdefy());
   expect(describeElement(select('#bl-toolbar button:nth-of-type(1)')).nth).toBeNull();
   expect(describeElement(select('#bl-toolbar button:nth-of-type(2)')).nth).toBeNull();
+});
+
+test('describeElement describes a page layout nav item by its text on the layout block', () => {
+  // A page layout draws its nav Menu under a made-up id (`layout_menu`) with no journey marks.
+  document.body.innerHTML = `
+<div id="bl-layout">
+  <ul id="layout_menu" role="menu">
+    <li role="menuitem"><a href="/home"><span>Home</span></a></li>
+    <li role="menuitem"><a href="/orders"><span>Orders</span></a></li>
+  </ul>
+</div>`;
+  expect(getTrace(createLowdefy()).describeElement(select('a[href="/home"] span'))).toMatchObject({
+    block_id: 'layout',
+    control: null,
+    row_key: null,
+    text: 'Home',
+    block_ids: ['layout'],
+  });
+});
+
+const PINNED_GRID = `
+<div id="bl-grid">
+  <div class="ag-floating-top"><div class="ag-row" row-index="t-0" row-id="t-0">
+    <div class="ag-cell" col-id="actions" aria-colindex="1"><button id="pinned-go" data-lf-block="grid" data-lf-control="go" data-lf-row-key="t-0"><span>Go</span></button></div>
+  </div></div>
+  <div class="ag-center-cols-container"><div class="ag-row" row-index="0" row-id="r1">
+    <div class="ag-cell" col-id="actions" aria-colindex="1"><button id="row-go" data-lf-block="grid" data-lf-control="go" data-lf-row-key="r1"><span>Go</span></button></div>
+  </div></div>
+</div>`;
+
+test('describeElement describes a cell control in a pinned row by its text, with no row key', () => {
+  document.body.innerHTML = PINNED_GRID;
+  const { describeElement } = getTrace(createLowdefy());
+  expect(targetFields(describeElement(select('#pinned-go span')))).toEqual({
+    block_id: 'grid',
+    row: null,
+    row_key: null,
+    column: 'actions',
+    control: null,
+    text: 'Go',
+    nth: null,
+    option: false,
+  });
+  expect(describeElement(select('#row-go span'))).toMatchObject({
+    row: 0,
+    row_key: 'r1',
+    control: 'go',
+  });
+});
+
+test('describeElement describes a pinned row cell menu item in its popup by its text', () => {
+  document.body.innerHTML = `${PINNED_GRID}
+<div class="ant-dropdown"><ul role="menu">
+  <li id="pinned-edit" role="menuitem" data-lf-block="grid" data-lf-control="onEdit" data-lf-row-key="t-0"><span>Edit</span></li>
+</ul></div>`;
+  expect(getTrace(createLowdefy()).describeElement(select('#pinned-edit span'))).toMatchObject({
+    block_id: null,
+    row_key: null,
+    control: null,
+    text: 'Edit',
+  });
+});
+
+test('describeElement keeps the row index, not the key, when several rows carry the key', () => {
+  document.body.innerHTML = `
+<div id="bl-grid">
+  <div class="ag-row" row-index="0" row-id="r1">
+    <div class="ag-cell" col-id="name" aria-colindex="1">Ann</div>
+    <div class="ag-cell" col-id="actions" aria-colindex="2"><button data-lf-block="grid" data-lf-control="go" data-lf-row-key="r1"><span>Go</span></button></div>
+  </div>
+  <div class="ag-row" row-index="1" row-id="r1">
+    <div id="second-name" class="ag-cell" col-id="name" aria-colindex="1">Bob</div>
+    <div class="ag-cell" col-id="actions" aria-colindex="2"><button id="second-go" data-lf-block="grid" data-lf-control="go" data-lf-row-key="r1"><span>Go</span></button></div>
+  </div>
+</div>`;
+  const { describeElement } = getTrace(createLowdefy());
+  expect(describeElement(select('#second-name'))).toMatchObject({
+    block_id: 'grid',
+    row: 1,
+    row_key: null,
+    column: 'name',
+  });
+  expect(describeElement(select('#second-go span'))).toMatchObject({
+    block_id: 'grid',
+    row: 1,
+    row_key: null,
+    column: 'actions',
+    control: null,
+    text: 'Go',
+  });
+});
+
+test('describeElement keeps the key of a row AG Grid splits across pinned containers', () => {
+  document.body.innerHTML = `
+<div id="bl-grid">
+  <div class="ag-pinned-left-cols-container"><div class="ag-row" row-index="0" row-id="r1">
+    <div class="ag-cell" col-id="name" aria-colindex="1">Ann</div>
+  </div></div>
+  <div class="ag-center-cols-container"><div class="ag-row" row-index="0" row-id="r1">
+    <div class="ag-cell" col-id="actions" aria-colindex="2"><button id="split-go" data-lf-block="grid" data-lf-control="go" data-lf-row-key="r1"><span>Go</span></button></div>
+  </div></div>
+</div>`;
+  expect(getTrace(createLowdefy()).describeElement(select('#split-go span'))).toMatchObject({
+    row: 0,
+    row_key: 'r1',
+    control: 'go',
+  });
 });

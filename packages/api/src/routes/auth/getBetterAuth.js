@@ -39,6 +39,7 @@ function getBetterAuth({
   createSystemContext,
   dev,
   logger,
+  mcpJson,
   plugins,
   secrets,
 }) {
@@ -52,6 +53,7 @@ function getBetterAuth({
       dev,
       getAuth: () => instance,
       logger,
+      mcpJson,
       plugins,
       secrets,
     })

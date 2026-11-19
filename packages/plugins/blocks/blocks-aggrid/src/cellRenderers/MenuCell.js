@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Button, Dropdown } from 'antd';
-import { type } from '@lowdefy/helpers';
+import { journeyTargetSelectors, type } from '@lowdefy/helpers';
 import { renderHtml } from '@lowdefy/block-utils';
 import NullCell from './NullCell.js';
 import { resolvePath } from './resolveFieldRefs.js';
@@ -27,7 +27,7 @@ function resolveField(literalKey, fieldKey, item, data) {
 }
 
 function MenuCell(params) {
-  const { value, data, cellConfig, methods, components } = params;
+  const { blockId, value, data, cellConfig, methods, components, node } = params;
   const Icon = components?.Icon;
   const items = type.isArray(cellConfig?.items) ? cellConfig.items : [];
 
@@ -51,6 +51,7 @@ function MenuCell(params) {
   if (resolved.length === 0) return <NullCell />;
 
   const menuItems = resolved.map(({ idx, item, title, iconConfig, disabled }) => ({
+    ...journeyTargetSelectors.controlMarks({ blockId, control: item.eventName, rowKey: node?.id }),
     // Keyed by the item's index in the AUTHORED array, not by its position in the
     // resolved one, so onClick can find it back after hidden items have shifted
     // everything.

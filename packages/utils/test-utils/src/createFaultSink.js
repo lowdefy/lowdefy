@@ -23,13 +23,14 @@ import { recordForcedFailure } from './dataSets/index.js';
 // logged at error level and sent to error tracking; here each one is added to the call's
 // `faults`, with its config location resolved from the build as the server's log line has it
 // (error.source, "<file>:<line>"). An expected outcome, such as a refusal or a UserError,
-// never gets here, as on a server. A forced failure (a fail gate's, branded by isForcedFailure's
-// markForcedFailure) is the test's doing, not a
-// fault: it is recorded on the data session `session` by the call's request id instead
+// never gets here, as on a server. A fault a :catch of the routine handled is listed too, as
+// the server logs it too, marked `caught: true` (controlTry says so when it reports it, once its :catch has run). A forced
+// failure (a fail gate's, branded by isForcedFailure's markForcedFailure) is the test's doing, not
+// a fault: it is recorded on the data session `session` by the call's request id instead
 // (recordForcedFailure), where a check reads its message.
 function createFaultSink({ context, faults, session, testApp }) {
   const { LowdefyInternalError, loadAndResolveErrorLocation } = testApp.modules.errors;
-  return async function handleError(error) {
+  return async function handleError(error, { caught } = {}) {
     // Set first, as the servers do: reaching the sink is what makes the error handled.
     error.handled = true;
     if (isForcedFailure(error)) {
@@ -45,6 +46,9 @@ function createFaultSink({ context, faults, session, testApp }) {
         error.source = location.source;
         error.config = location.config;
       }
+    }
+    if (caught === true) {
+      error.caught = true;
     }
     faults.push(error);
   };

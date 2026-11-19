@@ -257,6 +257,12 @@ builds the fixture into `_server/parity-journey-fixture`, and each check runs th
 `LOWDEFY_JOURNEY_PARITY=report` records differences without failing, `=off` turns the check off.
 Each check is recorded in `apps/journey-fixture/.lowdefy/parity/<pid>.jsonl` (same, browser-only,
 browser-only at run time, needs a server host, mutant or different).
+The block stand-ins have parity journeys of their own: `standInParity.test.mjs` runs each journey
+in `apps/journey-fixture/tests/journeys/_parity/` (`popups.yaml` on the `popup_targets` page,
+`grids.yaml` on `grid_targets`) and fails unless it ran headless and matched. Those pages append
+every event they fire, with its payload, to state `log`, which the check compares, so a stand-in
+that fires a wrong event, order or payload fails its journey. A journey that checks `log` expects
+the `log` the browser gives, so a new journey's expectation comes from a browser run.
 
 The headless runner's own suites run over production builds of the fixture, no browser needed:
 
@@ -359,19 +365,41 @@ share one `mongod` (`getRunDataStore`), where the dev server has one per server 
   The keeper starts `mongod` with `startDataStoreReplSet`, the same replica set and
   `--wiredTigerCacheSizeGB 0.25` cap as the dev server's store, and writes its URI to the record.
 - **How the rest join.** They find the record and wait for the URI. Each has its own client and
-  its own databases, named `ld_p<pid>_<hex>_<n>`. `sweepOrphanDatabases({ perRun: true })` drops
-  this process's orphans and the databases of test processes that have exited, never those of a
-  file still running.
+  its own databases, named `ld_p<pid>_<hex>_<n>`, or `ld_p<pid>t<threadId>_<hex>_<n>` from a
+  worker thread. `sweepOrphanDatabases({ perRun: true })` drops this thread's orphans and the
+  databases of test processes that have exited, never those of a file still running.
+- **Files in worker threads.** A runner that runs test files in worker threads of one process
+  (vitest's `pool: 'threads'`) gives them one owner pid, so they share a store, and each thread
+  has its own session registry. The sweep therefore leaves every database of another thread of
+  this process: a thread cannot tell whether another still runs. Those go once the process has
+  exited, with the store or at the next sweep of another process.
 - **How it exits.** The owner is the `node --test` runner (the parent of a process with
   `NODE_TEST_CONTEXT` set), or the process itself outside one. The keeper polls the owner's pid
   every 250 ms and stops `mongod`, removing its directory and the record, once the owner is
   gone: finished, interrupted or killed. A killed keeper's `mongod` is stopped by
-  mongodb-memory-server's own helper, and the next join replaces a record whose keeper is gone.
+  mongodb-memory-server's own helper.
+- **It also exits when nobody uses it.** Every second the keeper counts the store's clients
+  other than its own (`countStoreClients`, from `$currentOp`). A test file holds its client from
+  its first session until it closes its test app or exits, so a count of 0 means no test process
+  uses the store. After
+  30 s with none, whatever the owner pid says, the keeper removes the record, so no new process
+  joins, and stops `mongod` at the next poll with no client. A process that joined in between
+  keeps the store up until it leaves. The next join starts a new store through the claim. This
+  is what stops a store whose owner never exits: a file adopted by a subreaper before it loaded
+  the harness names the subreaper as its owner. A store whose `mongod` stops answering is
+  stopped too.
+- **A dead record is replaced.** The next join replaces a record whose keeper is gone, and one
+  whose URI does not answer although its keeper pid lives (the pid was reused, or the keeper is
+  stopping): the join that cannot connect removes the record, if it still carries the same
+  token, and claims a new one. Three dead stores in a row are thrown. A keeper whose record was
+  removed or replaced this way (its `mongod` may only have been slow) lets it go as after an idle
+  release: it serves the clients it has and stops once they have left.
 - **A test file whose runner is gone owns its store.** A killed runner leaves its test files
   running under another parent (process 1, or a process that adopts orphans), which never
   exits. A file whose parent has changed since the harness loaded, or is process 1, is
   therefore its own owner (`pickRunOwnerPid`), and the store it starts stops when it does. So a
   run whose `node --test` is itself process 1, as a container's command, has a store per file.
+  A file adopted before it loaded the harness cannot tell; the idle stop covers it.
 
 A run therefore holds one `mongod` and one keeper however many files run at once, and none
 after it. After any run that starts one, `pgrep -fl 'mongod-|mongod '` shows what is left; the

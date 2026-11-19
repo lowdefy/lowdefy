@@ -36,6 +36,8 @@ function validatorAccepts(step) {
   }
   if (type.isObject(step) && type.isString(step.release)) {
     before = { hold: { requestId: step.release } };
+  } else if (type.isObject(step) && type.isObject(step.release)) {
+    before = { hold: step.release };
   }
   return type.isUndefined(validateJourneySteps({ steps: [before, step] }).error);
 }
@@ -111,11 +113,40 @@ const VALID_STEPS = [
   { webhook: { endpoint: 'payment_events', body: { id: 'evt_1' } } },
   { webhook: { endpoint: 'payment_events', body: 'raw text', query: { a: '1' } } },
   { webhook: { endpoint: 'payment_events', body: null, headers: { 'x-signature': 'abc' } } },
+  { click: { blockId: 'invoices', rowKey: 'inv-0042' } },
+  { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } },
+  { click: { blockId: 'invoices', rowKey: 'inv-0042', control: 'void' } },
+  { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'actions', control: 'void' } },
+  { click: { blockId: 'delete_modal', control: 'ok' } },
+  { expect: { visible: { blockId: 'invoices', rowKey: 'inv-0042' } } },
+  { expect: { visible: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } } },
+  { expect: { hidden: { blockId: 'invoices', rowKey: 'inv-0042' } } },
+  { expect: { text: { blockId: 'invoices', rowKey: 'inv-0042', contains: 'Paid' } } },
   ...Object.values(JOURNEY_STEP_EXAMPLES).flat(),
 ];
 
 const INVALID_STEPS = [
   'click submit',
+  { click: { rowKey: 'inv-0042' } },
+  { click: { control: 'ok' } },
+  { click: { blockId: 'invoices', rowKey: '' } },
+  { click: { blockId: 'invoices', rowKey: 42 } },
+  { click: { blockId: 'delete_modal', control: '' } },
+  { click: { blockId: 'invoices', rowKey: 'inv-0042', row: 0 } },
+  { click: { blockId: 'delete_modal', control: 'ok', text: 'OK' } },
+  { click: { blockId: 'delete_modal', control: 'ok', containing: 'OK' } },
+  { click: { blockId: 'delete_modal', control: 'ok', nth: 0 } },
+  { fill: { blockId: 'invoices', rowKey: 'inv-0042', column: 'name', value: 'Ada' } },
+  { fill: { blockId: 'actions', control: 'name', value: 'Ada' } },
+  { fill: { blockId: 'invoices', rowKey: 'inv-0042', fromEmail: { to: 'a@b.c', match: 'x' } } },
+  { select: { blockId: 'invoices', rowKey: 'inv-0042', value: 'Open' } },
+  { select: { blockId: 'actions', control: 'status', value: 'Open' } },
+  { open: { blockId: 'invoices', rowKey: 'inv-0042' } },
+  { open: { blockId: 'actions_menu', control: 'archive' } },
+  { expect: { visible: { blockId: 'delete_modal', control: 'ok' } } },
+  { expect: { hidden: { blockId: 'actions_menu', control: 'archive' } } },
+  { expect: { text: { blockId: 'actions_menu', control: 'archive', contains: 'Archive' } } },
+  { expect: { visible: { rowKey: 'inv-0042' } } },
   { expect: { sunk: { requestId: '' } } },
   { expect: { sunk: { count: -1 } } },
   { expect: { sunk: { match: 'EUR' } } },
@@ -215,7 +246,9 @@ const INVALID_STEPS = [
   { hold: { requestId: 'r', endpoint: 7 } },
   { hold: { requestId: 'r', times: 2 } },
   { release: '' },
-  { release: { requestId: 'r' } },
+  { release: { requestId: 'r', times: 2 } },
+  { release: { endpoint: 'e' } },
+  { release: ['r'] },
   { request: { pageId: 'orders', requestId: 'get_order', as: 'system' } },
   { webhook: 'payment_events' },
   { webhook: { endpoint: 'payment_events' } },

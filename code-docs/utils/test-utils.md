@@ -107,17 +107,17 @@ which runs one `@lowdefy/api` call in a context of its own, as a server runs one
 `createCallContext` builds that context with the fields the production server's middleware sets
 (`packages/servers/server/src/middleware/apiContext.js`). What differs:
 
-| Field         | In a test                                                                                         |
-| ------------- | ------------------------------------------------------------------------------------------------- |
-| caller        | Injected by `createInjectedApiContext`. No auth engine runs, so auth steps fail.                  |
-| `connections` | The app's real map, behind the data session's gate and sink (`createSessionConnections`).         |
-| `secrets`     | `test-secret-<NAME>` for every secret the build names, with `openTestApp({ secrets })` over them. |
-| `agents`      | Empty, so an agent call fails before it reaches a model provider.                                 |
-| origin        | None, and `CRON_SECRET` is gone, so a `detached: true` `CallApi` fails.                           |
-| `waitUntil`   | `trackSessionWork`, which `session.settled()` and `reset()` wait on.                              |
-| `handleError` | `createFaultSink`: lists the fault on the answer's `faults`, with its config `source`.            |
+| Field          | In a test                                                                                                                                                                                                                                                                   |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| caller         | Injected by `createInjectedApiContext`. No auth engine runs, so auth steps fail.                                                                                                                                                                                            |
+| `connections`  | The app's real map, behind the data session's gate and sink (`createSessionConnections`).                                                                                                                                                                                   |
+| `secrets`      | `test-secret-<NAME>` for every secret the build names, with `openTestApp({ secrets })` over them.                                                                                                                                                                           |
+| `agents`       | Empty, so an agent call fails before it reaches a model provider.                                                                                                                                                                                                           |
+| `sendDetached` | `createDetachedRecorder`: a `detached: true` `CallApi` is listed on the answer's `detached` as `{ endpointId, payload }` and its target never runs. There is no origin and `CRON_SECRET` is gone, so `handleEndpointCall` takes this seam instead of `sendDetachedRequest`. |
+| `waitUntil`    | `trackSessionWork`, which `session.settled()` and `reset()` wait on.                                                                                                                                                                                                        |
+| `handleError`  | `createFaultSink`: lists the fault on the answer's `faults`, with its config `source`, and `caught: true` when a `:catch` of the routine handled it without passing it on (`controlTry`'s `settleCaughtFaults` passes `{ caught }` once the `:catch` has run).              |
 
-The answer is `{ status, success, response, error, body, faults }`:
+The answer is `{ status, success, response, error, body, faults, detached }`:
 
 - `createResultAnswer` answers a call the route would answer 200. A routine that failed is a 200
   with `success: false`.
@@ -183,7 +183,11 @@ write that state.
 - **Journey stubs** are checked against the app before they are set (`checkJourneyStubTargets`,
   over `checkStubTarget`, the check `session.stub` runs): an answer stub on a connection or
   request type the app does not have would never answer, so the journey is refused, naming the
-  stub.
+  stub. Each journey answer stub counts `answered` (`createStubResolver`); `listUnansweredStubs`
+  lists the ones that name their request (`requestId`, `endpoint`, `pageId` or `match`) and no
+  request reached, and `describeAnswerStub` names one, so a journey fails on a stub that stood in
+  for nothing. A stub keyed only by its types is a fallback and may go unused. A test's `session.stub` counts nothing and is never reported:
+  it lasts across a file's tests.
 - **Pause gates** (`session.pauseBefore(stepId)`, `addPauseGate`) hold request steps only.
   `createGatedResolver` wraps every request resolver: the first routine to reach a request an
   open gate matches stops with its request built and not yet sent, and the gate records

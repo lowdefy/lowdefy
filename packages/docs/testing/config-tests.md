@@ -154,7 +154,7 @@ A journey also fails at the step that causes an app error, even when every expec
 
 - an action that fails with an error, such as a `Request` or `CallAPI` whose request throws, or an operator that throws,
 - an uncaught exception in the page, or an error the page reports to the dev server,
-- a request or endpoint that throws on the server, or answers with a 5xx.
+- a request or endpoint that throws on the server, or answers with a 5xx. An error the routine's own `:catch` handled does not count: the journey is judged by the routine's answer. The server still logs it in the terminal.
 
 Errors raised while the journey's first page opens (its `onInit` and `onMount` requests) fail the journey `on open`, before any step runs. Expected outcomes never fail a journey: a failed `Validate`, a `Throw` action or any other user error, and a 401 or 403 refusal. Only errors the journey's own browsers cause count: an error you raise in your own tab on the same dev server while journeys run does not fail them, and a journey's errors are reported in its result, not in the dev server's build status.
 
@@ -193,14 +193,27 @@ The full grammar, including the failure shape the route returns, is documented w
 
 A `blockId` reaches a block's own control — its button, input or link. Some controls are not blocks: the Edit and Delete buttons a grid renders in every row, the OK and Cancel of a confirm dialog, the items of a dropdown menu. Wherever a step takes a `blockId`, it also takes a target object that narrows the search:
 
-| Key          | Meaning                                                                                                                                                                                                                       |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `blockId`    | The block to search inside.                                                                                                                                                                                                   |
-| `row`        | A grid row, zero-based as displayed (`AgGrid*`, `Table` and `TableInput` blocks). Needs `blockId`.                                                                                                                            |
-| `column`     | A grid cell in that row, by the column's `field`, `colId` or `key`. Needs `blockId`.                                                                                                                                          |
-| `text`       | The interactive control whose visible text is exactly this (a button label, a tab, a menu item).                                                                                                                              |
-| `containing` | The innermost element whose visible text contains this, as the page shows it, even across elements (`Assigned to <b>Jane</b>`, a label and value side by side): a row of a list a person picks by the name or email it shows. |
-| `nth`        | When several elements match, the zero-based one to use.                                                                                                                                                                       |
+| Key          | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `blockId`    | The block to search inside.                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `row`        | A grid row, zero-based as displayed (`AgGrid*`, `Table` and `TableInput` blocks). Needs `blockId`. Browser only.                                                                                                                                                                                                                                                                                                                                                                        |
+| `rowKey`     | The grid row whose key is this, compared as text: the field the AgGrid `rowId` property names, else `id`, else `_id`; the `Table` `rowKey` property, else `_id`, else `id`. Clicks the row's first cell. Stays put when the grid sorts, and runs headless too. Needs `blockId`; not with `row`. A row whose data gives no key gets a generated one (`__row_<n>`) that changes between renders, so a `rowKey` that matches only a generated key fails: give rows an `id` or set `rowId`. |
+| `column`     | A grid cell in that row, by the column's `field`, `colId` or `key`. Needs `blockId`.                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `control`    | A control the block draws, by its key: `ok` or `cancel` on a `Modal` or `ConfirmModal`; a `DropdownButton` item's `eventName`; a `DropdownMenu` link's `id`; a `Menu` link's `pageId`, else `id`; with `rowKey`, the `eventName` of a grid cell's button, menu item or switch (`column` narrows it to one cell). Found wherever the block draws it, popups included, and a closed dropdown is opened first. Runs headless too. Needs `blockId`; not with `text`, `containing` or `nth`. |
+| `text`       | The interactive control whose visible text is exactly this (a button label, a tab, a menu item). Browser only.                                                                                                                                                                                                                                                                                                                                                                          |
+| `containing` | The innermost element whose visible text contains this, as the page shows it, even across elements (`Assigned to <b>Jane</b>`, a label and value side by side): a row of a list a person picks by the name or email it shows. Browser only.                                                                                                                                                                                                                                             |
+| `nth`        | When several elements match, the zero-based one to use. Browser only.                                                                                                                                                                                                                                                                                                                                                                                                                   |
+
+`click` takes `rowKey` and `control`, alone or together: `{ blockId, rowKey }`, `{ blockId, rowKey, column }`, `{ blockId, rowKey, control }` and `{ blockId, control }`. `expect.visible`, `expect.hidden` and `expect.text` take `rowKey`, with or without `column`, so "the row is gone" is a check that runs headless. `fill`, `select` and `open` take neither, and no expectation takes `control`: reach an input in a grid row with `row` and `column`, and check a control by its `text`.
+
+`row`, `text`, `containing` and `nth` read the page as it is drawn, so they keep a journey in the browser. To run it [headless](#headless-runs), name the row with `rowKey` and the control with `control` on its block.
+
+```yaml
+- click: { blockId: invoices, rowKey: inv-0042, column: actions, control: void } # the row's Void button
+- click: { blockId: void_modal, control: ok } # the modal's OK
+- expect: { hidden: { blockId: invoices, rowKey: inv-0042 } }
+- click: { blockId: invoice_actions, control: export } # opens the dropdown, then clicks its item
+```
 
 `text` on its own, with no `blockId`, searches the whole page — front-most layer first: an open dropdown menu, then an open dialog, then the page. That is how a confirm dialog's button is clicked while the grid behind its mask has a button with the same label.
 
@@ -251,7 +264,7 @@ steps:
   - expect: { error: API Endpoint "auditor_only" does not exist. }
 ```
 
-`expect: { db }` proves what a write stored, or that a refused one stored nothing. With `expect: { calls }`, a [headless run](#headless-runs) also checks the payload the page sent and the response it got, as partial matches on the last call. `expect: { calls }` counts the calls of the person acting when it runs; a call made `as` another user counts on that user.
+`expect: { db }` proves what a write stored, or that a refused one stored nothing. With `expect: { calls }`, a [headless run](#headless-runs) also checks the payload the page sent and the response it got, as partial matches on the last call. `expect: { calls }` counts the calls of the person acting when it runs; a call made `as` another user counts on that user. In a headless run, a `CallApi` with `detached: true` counts as a call to its endpoint, with the payload its step built, on the person whose call made it (on the person acting for a `webhook` step). A browser run does not see it.
 
 ```yaml
 name: a member saves an item with the name they typed
@@ -326,7 +339,7 @@ This runs `logs an activity from each source [form]`, `[import]` and `[api]`; `-
 
 Keep shared files under `tests/shared/`: every file under `tests/journeys/` is read as a journey. A changed shared file changes the hash of every journey that refers to it, so their [exercised](#hardening-journeys) entries go stale. [Data sets](/journey-data-sets) do not take `_ref`.
 
-The `lowdefy_run_journey` tool runs one inline journey, with no file to refer from, so it takes neither `cases` nor `_ref`: a `_case` or `_ref` in a journey sent to it is refused, naming where it is. Run a journey file that has them with `lowdefy test` or the `lowdefy_run_tests` tool.
+The `lowdefy_run_journey` tool runs one inline journey, with no file to refer from, so it takes neither `cases` nor `_ref`: a journey sent with `cases` is refused. A `_case` or `_ref` where a file's would stand for part of the journey (a step, a step list, a stub or the stub list, `user`, `data`, `pageId`, or `pathParams` and `urlQuery` or one of their values) is refused, naming where it is. Inside a value, such as a payload, a stub's answer or a `match`, it is sent as written. Run a journey file that has them with `lowdefy test` or the `lowdefy_run_tests` tool.
 
 ### Stubs and forced failures
 
@@ -361,6 +374,7 @@ steps:
 
 - **How often.** A failure fires on the next matching request, once, so a journey can fail a write and then retry it to show the routine recovers. `times: 3` fails the next 3, and `times: all` every one, for a routine that runs the request in a loop.
 - **A failure that never fired fails the journey**, naming it, so a check cannot pass while testing nothing.
+- **An answer stub that never answered fails the journey** too, naming its types and what narrows it: no request matched it, or an earlier stub answered first. Only a stub that names its request (`requestId`, `endpoint`, `pageId` or `match`) must answer; one keyed only by `connectionType` and `requestType` is a fallback, such as a shared stub list or a case whose branch makes no outside call, and may go unused.
 - **A forced failure is never an [app error](#app-errors).** A client only ever sees the generic message, so `expect: { error }` after the `call`, `request` or `webhook` reads the forced message from the server's record of the call. A webhook that fails answers its sender `500` with a fixed body, and `expect: { error }` still reads the forced message.
 - **An answer for a type the app does not have is refused.** An answer stub whose `connectionType` or `requestType` the app has no connection or request of would never answer, so the journey fails, naming the stub and the types the app has.
 - **`stubs` need `data`.** They live on the journey's data set session, and work the same headless, on the dev server and in the browser. So do `hold`, `release` and `expect: { sunk }`: a journey without `data` that uses them is refused, on every host. An answer computed from the request is a [test-utils test](/endpoint-tests)'s stub.
@@ -393,7 +407,7 @@ steps:
 - A `call` or `request` that reaches the held request is parked, and its step passes; the steps after it run. `expect` steps right after a parked call read nothing from it.
 - `release` lets the parked call go, waits for it to answer, and makes its answer the one the next `expect` steps read.
 - A `hold` no call reached, or a call still parked when the journey ends, fails the journey.
-- `hold` takes `requestId`, a request step's id in an endpoint routine or a page request's id, and `endpoint` or `pageId` when two routines share the id. Only `call` and `request` steps are parked: a click whose request reaches a held request fails the step. A page's double submit is the [`doubleSubmit` variant](#variants-lowdefy-journeys-variants)'s to test.
+- `hold` takes `requestId`, a request step's id in an endpoint routine or a page request's id, and `endpoint` or `pageId` when two routines share the id. `release` names the call to let go the same way: `release: <requestId>` lets the first call parked at that id go, and `release: { requestId, endpoint, pageId }` the one parked in that routine, so two holds on one id release in either order. Only `call` and `request` steps are parked: a click whose request reaches a held request fails the step. A page's double submit is the [`doubleSubmit` variant](#variants-lowdefy-journeys-variants)'s to test.
 - Check the outcome in the database, as above. An `Api` endpoint's `:reject` answers `200` with the reject message as its error.
 
 ### System calls and webhooks
@@ -637,12 +651,12 @@ Most of what a journey checks is the app's own logic: an event runs its actions,
 
 Nothing in a journey says which kind it is. Its steps decide: a journey runs headless when every step and check is in the left column.
 
-| Headless                                                                                           | Needs the browser                                                                                 |
-| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| `click`, `fill`, `select`, `press: Enter`, `wait` (`ms`, `request`, `state`), `goto`, `back`, `as` | `screenshot`, `email`, `open`, `press` other than `Enter`, a `fill` from an email, a double click |
-| Targets by `blockId`                                                                               | Targets by `text`, `containing`, `row`, `column` or `nth`                                         |
-| `expect`: `state`, `visible`, `hidden`, `calls`, `error`, `url`, `status`, `db`, `sunk`            | `expect`: `text`, `title`, `effect`                                                               |
-| `call`, `request`, `webhook`, `hold`, `release`                                                    |                                                                                                   |
+| Headless                                                                                                   | Needs the browser                                                                         |
+| ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `click`, `open`, `fill`, `select`, `press: Enter`, `wait` (`ms`, `request`, `state`), `goto`, `back`, `as` | `screenshot`, `email`, `press` other than `Enter`, a `fill` from an email, a double click |
+| Targets by `blockId`, `rowKey` (with or without `column`) and `control`                                    | Targets by `text`, `containing`, `row` or `nth`, and by `column` without `rowKey`         |
+| `expect`: `state`, `visible`, `hidden`, `calls`, `error`, `url`, `status`, `db`, `sunk`                    | `expect`: `text`, `title`, `effect`                                                       |
+| `call`, `request`, `webhook`, `hold`, `release`                                                            |                                                                                           |
 
 `hold`, `release` and a `call` `as: system` run only headless; a browser run refuses them. A journey's `stubs` work in both.
 
@@ -654,7 +668,7 @@ BROWSER-ONLY  saves an item and sees the message  step 3 (expect: { text }): exp
 1 passed, 0 failed of 1 journeys, 1 browser-only not run
 ```
 
-A journey can also turn out to need a browser while it runs. An auth action (`Login`, `Logout`, the sign-up and two-factor family), an action that uses a browser API (`CopyToClipboard`, `ScrollTo`, `SetFocus`, `GeolocationCurrentPosition`, `SetDarkMode`, `SetLocale`, `PdfMake`), or a click on a block with no `onClick` of its own (a browser lands it on a control inside the block) stops the journey there and lists it as browser-only.
+A journey can also turn out to need a browser while it runs. An auth action (`Login`, `Logout`, the sign-up and two-factor family), an action that uses a browser API (`CopyToClipboard`, `ScrollTo`, `SetFocus`, `GeolocationCurrentPosition`, `SetDarkMode`, `SetLocale`, `PdfMake`), a click on a block with no `onClick` of its own (a browser lands it on a control inside the block), or an `open`, a `rowKey` or a `control` target on a block the headless runner does not stand in for (it names the block and its type) stops the journey there and lists it as browser-only.
 
 `visible` and `hidden` read the block's `visible` and that of every block holding it, and whether each `Modal` or `Drawer` around it is open, not what is drawn. A journey whose meaning is "the person sees this" keeps a `text` target or an `expect: { text }`, which keeps it in the browser. The [lint](#lint) rule L8 names journeys that are browser-only only because of a target a `blockId` would replace.
 
@@ -665,7 +679,7 @@ lowdefy build
 lowdefy test --headless --build
 ```
 
-`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run. A `CallApi` with `detached: true` cannot run on a build, since it dispatches through the server's own route. The results are written to `.lowdefy/test/headless-run.json`.
+`--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run. A `CallApi` with `detached: true` is recorded instead of sent, since it dispatches through the server's own route: the routine carries on as on a server, the endpoint it starts never runs, and `expect: { calls }` reads it as a call to that endpoint, with its payload. An auth step cannot run on a build, since no auth engine runs: it fails as a config error. A routine that handles the failure in the `:catch` of its `:try` still passes, see below. The results are written to `.lowdefy/test/headless-run.json`.
 
 The app's real secrets are never read: every secret the build names reads the stand-in `test-secret-<NAME>`, and the values in the app's `.env` file are left out. To give a secret a test value, set `LOWDEFY_SECRET_<NAME>` in the environment of the command:
 
@@ -680,6 +694,8 @@ Every journey of the run reads `org-a` for `_secret: ORG_ID`, and a secret that 
 ```
 lowdefy test --headless
 ```
+
+A headless run does not count a server error that the routine's own `:catch` handled, and neither does a browser run: the routine dealt with it and answered, so the journey is judged by the answer and by what was written. An error that no `:catch` handles fails the journey at its step, and so does one the `:catch` passes on, as `:throw: { _error: true }` does.
 
 Without `--build`, a headless run uses the development server, as a plain `lowdefy test` does: it starts one, or uses the one `--url` names. Pages are built on demand, so a config edit needs no rebuild, and every journey runs on its own [data set](/journey-data-sets) session. A headless run starts no browser and takes no journey run slot, so it does not wait behind browser runs on the machine. What it exercised counts in `.lowdefy/test/exercised.json` for lint and `journeys harden`; it records no traces for session logs. The results are written to `.lowdefy/test/headless-run.json`.
 

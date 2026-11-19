@@ -16,8 +16,14 @@
 
 import { DefaultChatTransport } from 'ai';
 
+// fetchApi is the block's methods.fetchApi: a call to one of the app's own API
+// routes by its path. In a browser tab it is fetch under the app's basePath,
+// and the session cookie is sent (credentials). A page that runs on another
+// origin than its app, such as an MCP App view, calls the app's absolute
+// address with its bearer session and never a cookie, and a session that ended
+// mid-conversation is replaced and the call sent again.
 function createLowdefyChatTransport({
-  basePath = '',
+  fetchApi,
   pageId,
   agentId,
   conversationId,
@@ -28,13 +34,14 @@ function createLowdefyChatTransport({
 }) {
   // The server route takes the last path segment as the agentId — module-scoped
   // agent ids contain '/', so encode the agentId into a single segment.
-  const base = `${basePath}/api/agent/${pageId}/${encodeURIComponent(agentId)}`;
+  const base = `/api/agent/${pageId}/${encodeURIComponent(agentId)}`;
   const api = conversationId
     ? `${base}?conversationId=${encodeURIComponent(conversationId)}`
     : base;
   return new DefaultChatTransport({
     api,
     credentials: 'include',
+    fetch: (path, init) => fetchApi(path, init),
     body: () => {
       const sharedState = sharedStateRef?.current;
       return {

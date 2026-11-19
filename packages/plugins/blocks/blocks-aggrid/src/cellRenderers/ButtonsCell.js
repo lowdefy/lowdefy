@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { Button, Space, Tooltip } from 'antd';
-import { type } from '@lowdefy/helpers';
+import { journeyTargetSelectors, type } from '@lowdefy/helpers';
 import { renderHtml } from '@lowdefy/block-utils';
 import NullCell from './NullCell.js';
 import { resolvePath } from './resolveFieldRefs.js';
@@ -27,7 +27,7 @@ function resolveField(literalKey, fieldKey, btn, data) {
 }
 
 function ButtonsCell(params) {
-  const { value, data, cellConfig, methods, components } = params;
+  const { blockId, value, data, cellConfig, methods, components, node } = params;
   const Icon = components?.Icon;
   const buttons = type.isArray(cellConfig?.buttons) ? cellConfig.buttons : [];
   if (buttons.length === 0) return <NullCell />;
@@ -87,6 +87,11 @@ function ButtonsCell(params) {
             icon={iconNode}
             iconPlacement={btn.iconPlacement}
             onClick={onClick}
+            {...journeyTargetSelectors.controlMarks({
+              blockId,
+              control: btn.eventName,
+              rowKey: node?.id,
+            })}
           >
             {showTitle && renderHtml({ html: String(title), methods })}
           </Button>

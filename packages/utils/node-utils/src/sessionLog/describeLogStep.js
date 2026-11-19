@@ -19,13 +19,16 @@ import { type } from '@lowdefy/helpers';
 import describeLogValue from './describeLogValue.js';
 
 // A journey target as the log reads it: the blockId, then where in it (row,
-// column), then the control's text in quotes and which of several it was.
+// row key, column), then the control's key, its text in quotes and which of
+// several it was.
 function describeTarget(target) {
   if (type.isString(target)) return target;
   const parts = [];
   if (!type.isNone(target.blockId)) parts.push(target.blockId);
   if (!type.isNone(target.row)) parts.push(`row ${target.row}`);
+  if (!type.isNone(target.rowKey)) parts.push(`rowKey ${JSON.stringify(target.rowKey)}`);
   if (!type.isNone(target.column)) parts.push(`column ${target.column}`);
+  if (!type.isNone(target.control)) parts.push(`control ${target.control}`);
   if (!type.isNone(target.text)) parts.push(JSON.stringify(target.text));
   if (!type.isNone(target.nth)) parts.push(`nth ${target.nth}`);
   return parts.join(' ');

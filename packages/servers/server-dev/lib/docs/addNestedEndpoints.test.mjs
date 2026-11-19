@@ -17,7 +17,7 @@
 import addNestedEndpoints from './addNestedEndpoints.js';
 import addWriteFlags from './addWriteFlags.js';
 import collectExercised from './collectExercised.js';
-import readRoutineSteps from './readRoutineSteps.js';
+import { readRoutineSteps } from '@lowdefy/node-utils';
 import { expect, test } from 'vitest';
 
 function callApi({ id, endpointId, detached }) {

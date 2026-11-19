@@ -16,13 +16,19 @@
 
 import request from './request.js';
 
-// Endpoint calls from a bearer host (a native shell) carry no build id, so a
-// server build change never refuses them: endpoints are the stable contract a
-// shell's cached pages and its later offline outbox call across builds. Page
-// requests keep the build id on every host.
+// Endpoint calls carry the build id, so the server refuses a call from a client
+// still running an earlier build, as it does for page requests.
+//
+// A host that sets callsEndpointsAcrossBuilds (a native shell) sends none, so a
+// server build change never refuses its endpoint calls: endpoints are the
+// stable contract a shell's cached pages and its later offline outbox call
+// across builds. It is the host's own statement, not read from how the host
+// signs in: a page shown as an MCP App view also holds a bearer session, but it
+// is the web bundle of one build and is refused like a browser tab.
 function createCallAPI(lowdefy) {
   const { apiBase, buildId } = lowdefy;
-  const endpointBuildId = lowdefy._internal.host.authTransport === 'bearer' ? undefined : buildId;
+  const endpointBuildId =
+    lowdefy._internal.host.callsEndpointsAcrossBuilds === true ? undefined : buildId;
   function callAPI({ payload, endpointId, pageId, blockId }) {
     return request({
       buildId: endpointBuildId,
