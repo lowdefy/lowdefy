@@ -25,6 +25,7 @@ import watchOwner from '@lowdefy/node-utils/watchOwner.js';
 import createDevServerExclude from './lib/vite/createDevServerExclude.js';
 import createDevServerFsAllow from './lib/vite/createDevServerFsAllow.js';
 import keepIdleConnectionsOpen from './lib/vite/keepIdleConnectionsOpen.js';
+import prebundlePerPackageCopy from './lib/vite/prebundlePerPackageCopy.js';
 
 const devServerEntry = './src/app.js';
 
@@ -87,6 +88,11 @@ const lowdefyDependencies = Object.keys(packageJson.dependencies ?? {}).filter((
   name.startsWith('@lowdefy/')
 );
 
+// Source packages the server serves (Lowdefy's own on a Lowdefy checkout, linked plugins) can
+// depend on different versions of one package. Each is pre-bundled once per installed copy, so
+// every importer gets its own version, as in a production build (see prebundlePerPackageCopy).
+const packageCopies = prebundlePerPackageCopy();
+
 // The client runs in development, whatever NODE_ENV the dev server was started with.
 function createNodeEnvDefine({ mode }) {
   return {
@@ -97,6 +103,7 @@ function createNodeEnvDefine({ mode }) {
 export default defineConfig(({ mode }) => ({
   base: `${basePath}/`,
   plugins: [
+    packageCopies.plugin,
     react(),
     lowdefyWebSocket(),
     keepIdleConnectionsOpen(),
@@ -116,6 +123,7 @@ export default defineConfig(({ mode }) => ({
     // loading ignores clicks until a later task re-enables it.
     rolldownOptions: {
       transform: { define: createNodeEnvDefine({ mode }) },
+      plugins: [packageCopies.scanPlugin],
     },
     // There is no index.html in the root (the Hono app renders HTML), so the
     // dependency scanner has nothing to crawl and would discover client deps
@@ -132,7 +140,8 @@ export default defineConfig(({ mode }) => ({
     // shared libraries. They must share one React, the antd/X/cssinjs copies
     // whose context providers (App, ConfigProvider, StyleProvider) the client
     // renders, the dayjs whose global locale the client sets, and the server's
-    // @lowdefy packages (see lowdefyDependencies).
+    // @lowdefy packages (see lowdefyDependencies). Every other package an importer
+    // installs its own copy of is its own (see packageCopies).
     dedupe: [
       'react',
       'react-dom',
