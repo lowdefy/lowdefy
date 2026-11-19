@@ -61,7 +61,11 @@ function packageDirOf(file, name) {
 // resolve those ids in the scan and to serve each importer its own copy's pre-bundle.
 function prebundlePerPackageCopy() {
   let resolveFile;
-  let clientEnvironment;
+  // The environment the dependency scan resolves in: the dev server's client environment, or
+  // the scan environment of `vite optimize`, which the dev manager runs in a process of its own
+  // before it starts Vite. The scan resolves its entry files through that environment's plugins
+  // before it crawls their imports, so `plugin` meets it before scanPlugin needs it.
+  let scanEnvironment;
   const copyFiles = new Map();
   const copyIds = new Map();
 
@@ -103,12 +107,10 @@ function prebundlePerPackageCopy() {
       // Resolves without the optimiser, as Vite resolves optimizeDeps.include.
       resolveFile = createIdResolver(config, { asSrc: false, scan: true });
     },
-    configureServer(server) {
-      clientEnvironment = server.environments.client;
-    },
     async resolveId(id, importer, options) {
       if (this.environment.config.consumer !== 'client') return null;
       if (options.scan) {
+        scanEnvironment = this.environment;
         // The scan asks for the file of a copy id scanPlugin gave it.
         return copyFiles.get(id) ?? null;
       }
@@ -130,8 +132,8 @@ function prebundlePerPackageCopy() {
   const scanPlugin = {
     name: 'lowdefy:prebundle-per-package-copy-scan',
     async resolveId(id, importer, extraOptions) {
-      if (!clientEnvironment) return null;
-      const copyId = await copyIdFor(clientEnvironment, id, importer);
+      if (!scanEnvironment) return null;
+      const copyId = await copyIdFor(scanEnvironment, id, importer);
       if (!copyId) return null;
       // The scan records the dependency under the id it is asked to resolve. The optimiser's
       // bundle takes these plugins too; it never asks for a copy id (its importers are installed

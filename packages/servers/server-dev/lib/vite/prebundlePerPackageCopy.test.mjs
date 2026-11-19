@@ -18,7 +18,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { afterAll, expect, test } from 'vitest';
-import { createServer } from 'vite';
+import { createServer, optimizeDeps, resolveConfig } from 'vite';
 
 import prebundlePerPackageCopy from './prebundlePerPackageCopy.js';
 
@@ -99,9 +99,10 @@ async function servedVersions(environment, url) {
   return versions;
 }
 
-async function startServer(root) {
+function viteConfig(root) {
+  // A new instance per Vite process, as each process loads vite.config.js afresh.
   const packageCopies = prebundlePerPackageCopy();
-  const server = await createServer({
+  return {
     configFile: false,
     root,
     logLevel: 'silent',
@@ -113,20 +114,36 @@ async function startServer(root) {
       rolldownOptions: { plugins: [packageCopies.scanPlugin] },
     },
     server: { middlewareMode: true, ws: false },
-  });
+  };
+}
+
+async function startServer(root, { optimizeFirst }) {
+  if (optimizeFirst) {
+    // The dev manager runs `vite optimize` in a process of its own before it starts Vite, so
+    // the dev server starts on a warm cache and never scans.
+    await optimizeDeps(await resolveConfig(viteConfig(root), 'serve'), true, true);
+  }
+  const server = await createServer(viteConfig(root));
   await server.environments.client.listen(server);
   return server;
 }
 
-// The scan meets the importers in either order; each order must serve each importer its own copy.
+// The scan meets the importers in either order; each order must serve each importer its own
+// copy, whether the dev server scans or `vite optimize` scanned before it started.
 test.each([
-  { name: 'block-first', pluginFirst: false },
-  { name: 'plugin-first', pluginFirst: true },
-])('each importer is served its own copy of a package ($name)', async ({ name, pluginFirst }) => {
-  const root = writeFixture({ name, pluginFirst });
-  const server = await startServer(root);
+  { name: 'block-first', pluginFirst: false, optimizeFirst: false },
+  { name: 'plugin-first', pluginFirst: true, optimizeFirst: false },
+  { name: 'optimize-block-first', pluginFirst: false, optimizeFirst: true },
+  { name: 'optimize-plugin-first', pluginFirst: true, optimizeFirst: true },
+])('each importer is served its own copy of a package ($name)', async (options) => {
+  const root = writeFixture(options);
+  const server = await startServer(root, options);
   try {
     const environment = server.environments.client;
+    await environment.depsOptimizer.scanProcessing;
+    const { metadata } = environment.depsOptimizer;
+    const scannedIds = Object.keys({ ...metadata.optimized, ...metadata.discovered }).sort();
+
     expect(await servedVersions(environment, '/packages/block/index.js')).toEqual([
       'markdown@10.1.0',
       'lib@1.0.0',
@@ -140,10 +157,11 @@ test.each([
       'common@3.0.0',
     ]);
 
+    // The scan found every copy: serving discovered none, so no page reloads to take one in.
+    const ids = Object.keys(environment.depsOptimizer.metadata.optimized).sort();
+    expect(ids).toEqual(scannedIds);
     // The server's copy keeps its plain id, a dedupe package stays single, and a copy two
     // importers share is pre-bundled once.
-    const { optimized } = environment.depsOptimizer.metadata;
-    const ids = Object.keys(optimized).sort();
     expect(ids.filter((id) => !id.includes(' > '))).toEqual(['markdown', 'shared']);
     expect(ids.filter((id) => id.endsWith(' > markdown'))).toHaveLength(1);
     expect(ids.filter((id) => id.endsWith(' > lib'))).toHaveLength(2);
