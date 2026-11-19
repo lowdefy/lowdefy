@@ -3830,7 +3830,7 @@
         "blocks/input/TableInputGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "be37fa33e8ea20cb575f44eb75a011d61bea405f07115b4d8ade579a9b829641"
+      "hash": "c79b401fdda8ccd108976f117c19e20eba19a2e85e2f1e37d18b19e5c79c39ec"
     },
     "input-blocks/tagmultipleselector": {
       "files": [
@@ -4377,7 +4377,7 @@
         "blocks/display/TableGuide.md",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "527b3d8015993dca32fe3acea720436e1f70369ce7101c8990f5beec29c761b7"
+      "hash": "ba2725bd9fc62e2266f7f4b47b0a940371e52a6b815ced75cc5a709d598fd3b2"
     },
     "display-blocks/tablelight": {
       "files": [
