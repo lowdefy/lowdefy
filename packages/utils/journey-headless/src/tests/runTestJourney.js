@@ -49,6 +49,8 @@ const BLOCK_METAS = {
   Menu: { category: 'display' },
   Modal: { category: 'container' },
   Paragraph: { category: 'display' },
+  // A block from an app's own plugin, which no headless stand-in models.
+  PluginChain: { category: 'display' },
   Selector: { category: 'input', valueType: 'string' },
   Table: { category: 'input-container', valueType: 'object' },
   TextInput: { category: 'input', valueType: 'string' },

@@ -89,8 +89,9 @@ const REQUEST_WINDOW_STEP_KEYS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
  *
  * A journey whose steps need a browser (classifyJourney) is not run: it answers
  * { pageId, browserOnly: { index, step, reason }, steps: [] }. One that reaches an action only a
- * browser can carry out stops there and answers browserOnly for that step, with no `passed` and
- * no failure: it is not a failed journey but one this run cannot take.
+ * browser can carry out stops there and answers browserOnly for that step, or
+ * { phase: 'open', reason } when the page's open reached it, with no `passed` and no failure: it
+ * is not a failed journey but one this run cannot take.
  *
  * journey: { pageId?, pathParams?, urlQuery?, user?, steps }; user defaults to the host's. A
  * journey with no pageId opens no page, and every step must run without one (call, request, as,
@@ -177,6 +178,12 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       actual: error.message,
       message: error.message,
     };
+  }
+  // An open that reached something only a browser does (an onMount CallMethod on a block with no
+  // stand-in) leaves the journey to the browser, whatever the open raised after that point.
+  if (countBrowserOnly(actors) > 0) {
+    failure = undefined;
+    browserOnly = { phase: 'open', reason: findBrowserOnly({ actors, from: 0 }) };
   }
 
   for (let index = 0; index < steps.length; index += 1) {
