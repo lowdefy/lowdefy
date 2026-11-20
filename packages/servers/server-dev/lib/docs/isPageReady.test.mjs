@@ -182,6 +182,27 @@ test('isPageReady returns true when every websocket channel is connected', () =>
   expect(isPageReady()).toBe(true);
 });
 
+test('isPageReady returns false while a subscription the page holds open has not connected', () => {
+  const context = settledContext({ websockets: { orders: { connected: false, error: null } } });
+  context._internal.WebSockets = { active: new Set(['orders']) };
+  setWindow(context);
+
+  expect(isPageReady()).toBe(false);
+});
+
+test('isPageReady returns true with a declared subscription the page has not opened or has closed', () => {
+  const context = settledContext({
+    websockets: {
+      orders: { connected: true, error: null },
+      thread: { connected: false, error: null },
+    },
+  });
+  context._internal.WebSockets = { active: new Set(['orders']) };
+  setWindow(context);
+
+  expect(isPageReady()).toBe(true);
+});
+
 test('isPageReady returns true for a settled page with blocks, requests and websockets', () => {
   setWindow(
     settledContext({

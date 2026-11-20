@@ -175,10 +175,10 @@ test('a CallMethod opens and closes a Modal, and its content shows only while it
   expect(result.passed).toBe(true);
 });
 
-test('a CallMethod on a method no stand-in registers fails the journey naming the block and method', async () => {
+test("a CallMethod on a method a stand-in block's stand-in does not register fails the journey naming the block and method", async () => {
   const runHost = withHomeChanged((pageConfig) => {
     firstAction(findBlockConfig(pageConfig, 'open_modal_button')).params = {
-      blockId: 'home_title',
+      blockId: 'confirm_modal',
       method: 'scrollIntoView',
     };
   });
@@ -189,8 +189,29 @@ test('a CallMethod on a method no stand-in registers fails the journey naming th
   expect(result.passed).toBe(false);
   expect(result.failure.index).toBe(0);
   expect(result.failure.message).toContain(
-    'Failed to call method "scrollIntoView" on block "home_title"'
+    'Failed to call method "scrollIntoView" on block "confirm_modal"'
   );
+});
+
+test('a CallMethod on a block with no stand-in leaves the journey to the browser, naming the block, its type and the method', async () => {
+  const runHost = withHomeChanged((pageConfig) => {
+    firstAction(findBlockConfig(pageConfig, 'open_modal_button')).params = {
+      blockId: 'home_title',
+      method: 'scrollIntoView',
+    };
+  });
+  const result = await run({
+    journey: { pageId: 'home', steps: [{ click: 'open_modal_button' }] },
+    runHost,
+  });
+  expect(result.passed).toBeUndefined();
+  expect(result.failure).toBeUndefined();
+  expect(result.browserOnly).toEqual({
+    index: 0,
+    step: { click: 'open_modal_button' },
+    reason:
+      'Block "home_title" is of type Title, which has no headless stand-in for CallMethod scrollIntoView: the step runs in a browser.',
+  });
 });
 
 test('an action only a browser can carry out marks the journey browser-only, not failed', async () => {

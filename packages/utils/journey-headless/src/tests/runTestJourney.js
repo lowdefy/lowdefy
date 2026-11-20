@@ -29,8 +29,11 @@ import runHeadlessJourney from '../runHeadlessJourney.js';
 // - Record: appends { blockId, name: params, event } to the run's log, the event the action ran
 //   for, so a test reads which events fired, in order, with their payloads.
 // - Refuse: fails the event with a UserError, an expected outcome (success: false).
+// - Fail: fails the event with an Error, an app error.
+// - SetFocus: a browser-only action, which the runner replaces with its stub.
 // - Request: appends { blockId, name: 'request:<requestId>' } to the log, and sends nothing.
-// - CallMethod and SetState, as actions-core's.
+// - CallMethod, Link (to a pageId), SetState, Subscribe, Unsubscribe and Publish, as actions-core's.
+// A page's subscriptions are written as on a page, each with its events as action lists.
 // Its one operator is _state, as operators-js reads state with a path.
 
 const BLOCK_METAS = {
@@ -49,6 +52,8 @@ const BLOCK_METAS = {
   Menu: { category: 'display' },
   Modal: { category: 'container' },
   Paragraph: { category: 'display' },
+  // A block from an app's own plugin, which no headless stand-in models.
+  PluginChain: { category: 'display' },
   Selector: { category: 'input', valueType: 'string' },
   Table: { category: 'input-container', valueType: 'object' },
   TextInput: { category: 'input', valueType: 'string' },
@@ -85,8 +90,24 @@ function buildBlock({ block, pageId }) {
   return built;
 }
 
+// A subscription as the build writes it (buildSubscriptions): its client options defaulted and
+// its events as action lists.
+function buildSubscription(subscription) {
+  return {
+    payload: {},
+    ...subscription,
+    client: {
+      maxMessages: 100,
+      subscribeOnMount: true,
+      throttleRender: 250,
+      ...subscription.client,
+    },
+    events: buildEvents(subscription.events ?? {}),
+  };
+}
+
 function buildPage(pageConfig) {
-  const { id, ...rest } = pageConfig;
+  const { id, subscriptions = [], ...rest } = pageConfig;
   const root = buildBlock({ block: { type: 'Box', id, ...rest }, pageId: id });
   return {
     ...root,
@@ -95,7 +116,7 @@ function buildPage(pageConfig) {
     blockId: id,
     path: id,
     linkPaths: {},
-    subscriptions: [],
+    subscriptions: subscriptions.map(buildSubscription),
     requests: [],
   };
 }
@@ -126,13 +147,21 @@ async function runTestJourney({ dataSet, menus = [], pages, steps, stepTimeout =
         Record: ({ methods, params }) => {
           log.push({ blockId: methods.getBlockId(), name: params, event: methods.getEvent(true) });
         },
+        Fail: () => {
+          throw new Error('Failed.');
+        },
         Refuse: () => {
           throw new UserError('Refused.');
         },
         Request: ({ methods, params }) => {
           log.push({ blockId: methods.getBlockId(), name: `request:${params}` });
         },
+        SetFocus: () => undefined,
+        Link: ({ methods, params }) => methods.link({ pageId: params }),
+        Publish: ({ methods, params }) => methods.publish(params),
         SetState: ({ methods, params }) => methods.setState(params),
+        Subscribe: ({ methods, params }) => methods.subscribe(params),
+        Unsubscribe: ({ methods, params }) => methods.unsubscribe(params),
       },
       blockMetas: BLOCK_METAS,
       jsMap: {},

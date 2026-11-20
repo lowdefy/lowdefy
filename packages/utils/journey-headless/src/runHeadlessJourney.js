@@ -36,6 +36,7 @@ import checkStepReferences from './checkStepReferences.js';
 import createHeadlessActors from './createHeadlessActors.js';
 import createJourneyRaces from './createJourneyRaces.js';
 import findUnfiredFailGate from './findUnfiredFailGate.js';
+import noteSilentSubscriptions from './noteSilentSubscriptions.js';
 import runHeadlessStep from './runHeadlessStep.js';
 import toJsonValue from './toJsonValue.js';
 import toStepFailure from './toStepFailure.js';
@@ -89,8 +90,9 @@ const REQUEST_WINDOW_STEP_KEYS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
  *
  * A journey whose steps need a browser (classifyJourney) is not run: it answers
  * { pageId, browserOnly: { index, step, reason }, steps: [] }. One that reaches an action only a
- * browser can carry out stops there and answers browserOnly for that step, with no `passed` and
- * no failure: it is not a failed journey but one this run cannot take.
+ * browser can carry out stops there and answers browserOnly for that step, or
+ * { phase: 'open', reason } when the page's open reached it, with no `passed` and no failure: it
+ * is not a failed journey but one this run cannot take.
  *
  * journey: { pageId?, pathParams?, urlQuery?, user?, steps }; user defaults to the host's. A
  * journey with no pageId opens no page, and every step must run without one (call, request, as,
@@ -178,6 +180,13 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       message: error.message,
     };
   }
+  // An open that reached something only a browser does (an onMount CallMethod on a block with no
+  // stand-in, or a browser-only action) leaves the journey to the browser, over any failure the
+  // open raised, as a step's browser-only mark wins over its failure: the browser run judges it.
+  if (countBrowserOnly(actors) > 0) {
+    failure = undefined;
+    browserOnly = { phase: 'open', reason: findBrowserOnly({ actors, from: 0 }) };
+  }
 
   for (let index = 0; index < steps.length; index += 1) {
     const step = steps[index];
@@ -206,7 +215,10 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
         answer = stepAnswer;
       }
     } catch (error) {
-      stepFailure = toStepFailure({ error, index, step });
+      stepFailure = noteSilentSubscriptions({
+        actor: actors.current(),
+        failure: toStepFailure({ error, index, step }),
+      });
     }
     const durationMs = Date.now() - started;
     if (countBrowserOnly(actors) > triedBefore) {

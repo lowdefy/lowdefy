@@ -80,6 +80,15 @@ auth:
     roles:
       auditor:
         - auditor_only
+  websockets:
+    public:
+      - live_feed
+
+# The live feed pages/live_feed.yaml subscribes to on mount. A Channel sends only what a client
+# publishes, and nothing here publishes, so it never sends a message.
+websockets:
+  - id: live_feed
+    type: Channel
 
 api:
   - _ref: api/notify.yaml
@@ -125,3 +134,5 @@ pages:
   - _ref: pages/popup_targets.yaml
   - _ref: pages/grid_targets.yaml
   - _ref: pages/caught_faults.yaml
+  - _ref: pages/plugin_block.yaml
+  - _ref: pages/live_feed.yaml

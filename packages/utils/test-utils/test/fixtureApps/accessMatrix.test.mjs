@@ -62,6 +62,8 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'grid_targets',
     'handoff',
     'home',
+    'live_feed',
+    'plugin_block',
     'polling',
     'popup_parity',
     'popup_targets',

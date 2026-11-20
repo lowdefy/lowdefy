@@ -29,8 +29,8 @@ const DEFAULT_STEP_TIMEOUT = 5000;
 // set on that session. An unknown data set or
 // user refuses this journey alone. Answers in the result shape runJourney gives the reporter. A
 // journey that needs a browser (classifyJourney, or an action the runner reaches that only a
-// browser can carry out) answers `browserOnly` ({ index, step, reason }) and is neither passed
-// nor failed.
+// browser can carry out) answers `browserOnly` ({ index, step, reason }, or { phase: 'open',
+// reason } when opening the page reached it) and is neither passed nor failed.
 async function runJourneyHeadless({ app, context, item }) {
   const { filePath, journey } = item;
   const refused = checkJourneyItem({ item });

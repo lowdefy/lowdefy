@@ -1,0 +1,11 @@
+# Run headless on the fixture's production build by `lowdefy test --headless --build` in the cli
+# fixture tests (packages/cli/test/journeyFixture/headless.test.mjs), which see it listed as
+# browser-only on open: pages/plugin_block.yaml's onMount calls a method on a plugin block no
+# headless stand-in models. In a folder starting with "_" so the suite's own runs, and harden,
+# leave it out.
+- name: runs the plugin block's chain on mount
+  pageId: plugin_block
+  data: explore
+  user: member
+  steps:
+    - expect: { state: { path: chain_ran, equals: true } }

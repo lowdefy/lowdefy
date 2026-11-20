@@ -93,3 +93,29 @@ test('isContextSettled is true while the app onInitAsync sleeps in a Wait that e
     isContextSettled({ context: createContext(), deadline: DEADLINE, lowdefy: { appContext } })
   ).toBe(true);
 });
+
+function withChannels({ active, websockets }) {
+  const context = createContext();
+  context._internal.WebSockets = { active: new Set(active) };
+  context.websockets = websockets;
+  return context;
+}
+
+test('isContextSettled is false while a subscription the page holds open has not connected', () => {
+  const context = withChannels({
+    active: ['orders'],
+    websockets: { orders: { connected: false, error: null } },
+  });
+  expect(isContextSettled({ context, deadline: DEADLINE, lowdefy: {} })).toBe(false);
+});
+
+test('isContextSettled is true with a declared subscription the page has not opened or has closed', () => {
+  const context = withChannels({
+    active: ['orders'],
+    websockets: {
+      orders: { connected: true, error: null },
+      thread: { connected: false, error: null },
+    },
+  });
+  expect(isContextSettled({ context, deadline: DEADLINE, lowdefy: {} })).toBe(true);
+});

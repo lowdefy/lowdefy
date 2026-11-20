@@ -81,10 +81,15 @@ function isPageReady({ deadline } = {}) {
   const requests = Object.values(context.requests ?? {});
   if (requests.some((calls) => calls?.[0]?.loading)) return false;
 
-  // A subscription is settled once it has connected or failed; a page with no
-  // subscriptions has {} and passes.
-  const channels = Object.values(context.websockets ?? {});
-  if (channels.some((channel) => channel?.connected !== true && !channel?.error)) return false;
+  // A subscription the page holds open (WebSockets.active) is settled once it
+  // has connected or failed. One the page declares and has not opened
+  // (client.subscribeOnMount false) or has closed is not waited for. A page
+  // with no subscriptions has {} and passes.
+  const open = context._internal?.WebSockets?.active;
+  const channels = Object.entries(context.websockets ?? {}).filter(
+    ([websocketId]) => open === undefined || open.has(websocketId)
+  );
+  if (channels.some(([, channel]) => channel?.connected !== true && !channel?.error)) return false;
 
   // Lazy blocks on screen still showing their fallback (createLazyBlock in
   // @lowdefy/block-utils). The global is absent until a lazy block first

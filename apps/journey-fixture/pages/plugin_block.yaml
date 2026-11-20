@@ -1,0 +1,27 @@
+# The page whose onMount calls a method on a block of the app's own plugin (FixtureActionChain,
+# plugins/walled-fixture), which no headless stand-in models: the cli fixture tests
+# (packages/cli/test/journeyFixture/headless.test.mjs) see `lowdefy test --headless --build` list
+# its journey (tests/journeys/_headless/plugin_block.yaml) as browser-only on open, not failed.
+id: plugin_block
+type: Box
+events:
+  onMount:
+    - id: run_chain
+      type: CallMethod
+      params:
+        blockId: mount_chain
+        method: run
+blocks:
+  - id: plugin_block_title
+    type: Title
+    properties:
+      content: Plugin block
+      level: 2
+  - id: mount_chain
+    type: FixtureActionChain
+    events:
+      onRun:
+        - id: mark_ran
+          type: SetState
+          params:
+            chain_ran: true

@@ -17,10 +17,12 @@
 import describeStep from './lint/describeStep.js';
 
 // The line for a journey a headless run cannot take, naming the first step that needs a
-// browser: `BROWSER-ONLY  saves an item  step 3 (expect: { text }): expect "text" reads ...`.
+// browser: `BROWSER-ONLY  saves an item  step 3 (expect: { text }): expect "text" reads ...`, or
+// `on open` when opening the page needed it.
 function formatBrowserOnly({ result }) {
-  const { index, reason, step } = result.browserOnly;
-  return `BROWSER-ONLY  ${result.name}  ${describeStep({ step, index })}: ${reason}`;
+  const { index, phase, reason, step } = result.browserOnly;
+  const where = phase === 'open' ? 'on open' : describeStep({ step, index });
+  return `BROWSER-ONLY  ${result.name}  ${where}: ${reason}`;
 }
 
 export default formatBrowserOnly;

@@ -42,8 +42,8 @@ function describeErrorResponse({ status, data }) {
 // run's trace; an older server ignores the field and records nothing. A harden
 // run passes the config `mutant` to apply to this run's browsers. `headless`
 // asks the dev server to run the journey with no browser; a journey that needs
-// one answers `browserOnly` ({ index, step, reason }), neither passed nor
-// failed.
+// one answers `browserOnly` ({ index, step, reason }, or { phase: 'open',
+// reason } when opening the page needed it), neither passed nor failed.
 async function runJourney({ context, item, url, recordRun, mutant, headless = false }) {
   const { filePath, journey } = item;
   const refused = checkJourneyItem({ item });
