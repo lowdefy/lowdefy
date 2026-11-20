@@ -17,11 +17,17 @@
 import { validate } from '@lowdefy/ajv';
 import { type } from '@lowdefy/helpers';
 import {
+  findJourneyPlaceholder,
+  findStepNeedingPage,
+  validateJourneyDataSession,
+  validateJourneyStubs,
   validateJourneySteps,
   validateJourneyTags,
   validateJourneyUser,
 } from '@lowdefy/node-utils';
 
+import describeStep from './lint/describeStep.js';
+import expandCases from './expandCases.js';
 import journeySchema from './journeySchema.js';
 
 // ajv cannot compare two fields, so the one cross-field rule of the evidence
@@ -32,7 +38,60 @@ function checkMutationCounts({ evidence }) {
   return `Journey "evidence.mutation.killed" (${mutation.killed}) should not be more than "evidence.mutation.total" (${mutation.total}).`;
 }
 
+// A journey opens its pageId before its first step; one with no pageId opens
+// no page, so each of its steps must run without one.
+function checkPageId({ journey }) {
+  if (!type.isUndefined(journey.pageId)) return undefined;
+  const found = findStepNeedingPage({ steps: journey.steps });
+  if (type.isUndefined(found)) return undefined;
+  return `Journey should have required property "pageId": ${describeStep(
+    found
+  )} needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.`;
+}
+
+// The journey schema's root keys alone, with its message for a key it does not know. A row
+// fills in `_case` values and never adds a root key, so an unknown one is the journey's.
+const rootKeysSchema = {
+  type: 'object',
+  additionalProperties: false,
+  properties: Object.fromEntries(Object.keys(journeySchema.properties).map((key) => [key, {}])),
+  errorMessage: { additionalProperties: journeySchema.errorMessage.additionalProperties },
+};
+
+// A journey with a `cases` table is valid when its root keys are known, its table is valid and
+// each of its runs is, validated after its row is filled in, under the name as written.
+function validateCases({ journey }) {
+  try {
+    validate({ schema: rootKeysSchema, data: journey });
+  } catch (error) {
+    return { valid: false, message: error.message };
+  }
+  const { runs, error } = expandCases({ journey });
+  if (!type.isUndefined(error)) {
+    return { valid: false, message: error };
+  }
+  for (const [index, run] of runs.entries()) {
+    const validation = validateJourney({ journey: { ...run, name: journey.name } });
+    if (!validation.valid) {
+      return {
+        valid: false,
+        message: `Journey case "${journey.cases[index].name}": ${validation.message}`,
+      };
+    }
+  }
+  return { valid: true };
+}
+
 function validateJourney({ journey }) {
+  if (type.isObject(journey) && !type.isUndefined(journey.cases)) {
+    return validateCases({ journey });
+  }
+  // Refs are read and rows filled in by now, so a placeholder left would be sent as a literal
+  // object: a _case in a journey with no "cases", or one inside a row's value.
+  const { error: placeholderError } = findJourneyPlaceholder({ journey });
+  if (!type.isUndefined(placeholderError)) {
+    return { valid: false, message: placeholderError };
+  }
   try {
     validate({ schema: journeySchema, data: journey });
   } catch (error) {
@@ -41,6 +100,10 @@ function validateJourney({ journey }) {
   const mutationError = checkMutationCounts({ evidence: journey.evidence });
   if (!type.isUndefined(mutationError)) {
     return { valid: false, message: mutationError };
+  }
+  const { error: stubsError } = validateJourneyStubs({ stubs: journey.stubs });
+  if (!type.isUndefined(stubsError)) {
+    return { valid: false, message: stubsError };
   }
   const { error: userError } = validateJourneyUser({ user: journey.user, data: journey.data });
   if (!type.isUndefined(userError)) {
@@ -57,6 +120,18 @@ function validateJourney({ journey }) {
   const { error } = validateJourneySteps({ steps: journey.steps });
   if (!type.isUndefined(error)) {
     return { valid: false, message: error };
+  }
+  const { error: dataSessionError } = validateJourneyDataSession({
+    data: journey.data,
+    steps: journey.steps,
+    stubs: journey.stubs,
+  });
+  if (!type.isUndefined(dataSessionError)) {
+    return { valid: false, message: dataSessionError };
+  }
+  const pageIdError = checkPageId({ journey });
+  if (!type.isUndefined(pageIdError)) {
+    return { valid: false, message: pageIdError };
   }
   return { valid: true };
 }

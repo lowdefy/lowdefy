@@ -56,6 +56,13 @@ class Events {
       shortcut: type.isObject(actions) ? (actions.shortcut ?? null) : null,
       history: [],
       loading: false,
+      // The time, in ms since the epoch, until which a run of the event only sleeps in a Wait
+      // action (see createWait); null while it is working or not running.
+      waitingUntil: null,
+      // The runs of the event under way, and the time each one that sleeps in a Wait wakes. One
+      // event can run more than once at a time, and it is only waiting while all of them sleep.
+      runs: 0,
+      waits: [],
     };
   }
 
@@ -112,12 +119,15 @@ class Events {
       return result;
     }
     eventDescription.loading = true;
+    // An earlier run may still be sleeping in a Wait: with this run the event is working.
+    eventDescription.waitingUntil = null;
     this.block.update = true;
     // Only render flags changed, which no operator reads.
     this.context._internal.update({ changes: [] });
 
     const trace = getTrace(this.context._internal.lowdefy);
     const actionHandle = async () => {
+      eventDescription.runs += 1;
       // Copied only while a subscriber asked for state, so production pays no copy per event.
       const stateBefore = trace.wantsState() ? serializer.copy(this.context.state) : undefined;
       const res = await this.context._internal.Actions.callActions({
@@ -126,6 +136,7 @@ class Events {
         block: this.block,
         catchActions: eventDescription.catchActions,
         event,
+        eventDescription,
         eventName: name,
         progress,
       });
@@ -151,6 +162,7 @@ class Events {
           })
         );
       }
+      eventDescription.runs -= 1;
       eventDescription.loading = false;
       this.block.update = true;
       this.context._internal.update({ changes: ['eventLog'] });

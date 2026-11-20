@@ -17,6 +17,8 @@
 import { chromium } from 'playwright-core';
 import { test } from 'vitest';
 
+import checkParity from './checkParity.mjs';
+
 // What every fixture test file shares: the fixture server's url (set by
 // globalSetup.mjs), a test function that skips when there is no server, and
 // the two docs routes the tests drive.
@@ -32,7 +34,25 @@ async function postJson({ path, body }) {
   return { status: response.status, body: await response.json() };
 }
 
+// Posts a journey to the fixture's dev server, and checks it gives the same result headless
+// (checkParity.mjs). The browser's answer is what the test reads.
 async function postJourney(body) {
+  const journeyBody = { user: 'none', ...body };
+  const { status, body: result } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: journeyBody,
+  });
+  if (status !== 200) {
+    throw new Error(`Journey route answered ${status}: ${JSON.stringify(result)}`);
+  }
+  await checkParity({ body: journeyBody, browser: result });
+  return result;
+}
+
+// Posts a journey to the fixture's dev server with no parity check, for a test of the browser
+// runner alone: how it finds and refuses rowKey and control targets, and the data-set rails. The
+// block stand-ins' parity journeys are standInParity.test.mjs.
+async function postBrowserJourney(body) {
   const { status, body: result } = await postJson({
     path: '/lowdefy-docs/journey',
     body: { user: 'none', ...body },
@@ -60,4 +80,12 @@ async function launchChromium() {
   }
 }
 
-export { fixtureTest, launchChromium, fixtureUrl, listMutants, postJourney, postJson };
+export {
+  fixtureTest,
+  launchChromium,
+  fixtureUrl,
+  listMutants,
+  postBrowserJourney,
+  postJourney,
+  postJson,
+};

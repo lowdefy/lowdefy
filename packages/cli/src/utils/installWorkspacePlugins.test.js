@@ -37,7 +37,10 @@ async function setup({ dependencies, root = workspaceRoot }) {
   readFile.mockResolvedValue(JSON.stringify({ name: '@lowdefy/server', dependencies }));
 }
 
+// installWorkspacePlugins remembers what it installed for the life of the
+// process, so each test imports a fresh copy of it.
 beforeEach(() => {
+  vi.resetModules();
   vi.clearAllMocks();
 });
 
@@ -73,6 +76,49 @@ test('installWorkspacePlugins installs the linked workspace plugins in the paren
       },
     ],
   ]);
+});
+
+test('installWorkspacePlugins installs a plugin once per process', async () => {
+  const { spawnProcess } = await import('@lowdefy/node-utils');
+  const { default: installWorkspacePlugins } = await import('./installWorkspacePlugins.js');
+  await setup({
+    dependencies: { '@acme/plugins': 'link:../../../plugins/acme-plugins' },
+  });
+  await installWorkspacePlugins({ context, directory });
+  await installWorkspacePlugins({ context, directory });
+  expect(spawnProcess).toHaveBeenCalledTimes(1);
+});
+
+test('installWorkspacePlugins installs only the plugins added since its last install', async () => {
+  const { spawnProcess } = await import('@lowdefy/node-utils');
+  const { default: installWorkspacePlugins } = await import('./installWorkspacePlugins.js');
+  await setup({
+    dependencies: { '@acme/plugins': 'link:../../../plugins/acme-plugins' },
+  });
+  await installWorkspacePlugins({ context, directory });
+  await setup({
+    dependencies: {
+      '@acme/plugins': 'link:../../../plugins/acme-plugins',
+      '@acme/blocks': 'link:../../../plugins/acme-blocks',
+    },
+  });
+  await installWorkspacePlugins({ context, directory });
+  expect(spawnProcess.mock.calls.map(([{ args }]) => args)).toEqual([
+    ['install', '--frozen-lockfile', '--filter', '@acme/plugins...'],
+    ['install', '--frozen-lockfile', '--filter', '@acme/blocks...'],
+  ]);
+});
+
+test('installWorkspacePlugins installs a plugin again after its install failed', async () => {
+  const { spawnProcess } = await import('@lowdefy/node-utils');
+  const { default: installWorkspacePlugins } = await import('./installWorkspacePlugins.js');
+  await setup({
+    dependencies: { '@acme/plugins': 'link:../../../plugins/acme-plugins' },
+  });
+  spawnProcess.mockRejectedValueOnce(new Error('ERR_PNPM_OUTDATED_LOCKFILE'));
+  await installWorkspacePlugins({ context, directory }).catch((e) => e);
+  await installWorkspacePlugins({ context, directory });
+  expect(spawnProcess).toHaveBeenCalledTimes(2);
 });
 
 test('installWorkspacePlugins does nothing outside a pnpm workspace', async () => {

@@ -1,0 +1,138 @@
+type: upload-po
+kind: form
+action_group: order
+blocked_by:
+  - quoting
+description: Upload the signed purchase order to proceed with the order.
+# Reviewable form action (the only one in the demo): submit lands at in-review,
+# and a reviewer approves or requests changes via the shared module review
+# surface (templates/review.yaml.njk) — the standard counterpart to send-quote's
+# app-owned custom review page.
+access:
+  demo:
+    view: true
+    edit: true
+    review:
+      - admin
+# Advance the deal to `complete` when the reviewer approves the purchase
+# order — the last of the demo's three stages (prospecting / closing /
+# complete, see apps/demo/modules/deals/vars.yaml). Same idempotent $push
+# pattern as the qualification group's on_complete. This is also where
+# `close_date` gets stamped — the generic close date the deals module now
+# reads off the stored document (no more computed date math).
+hooks:
+  approve:
+    post:
+      routine:
+        - id: advance_deal_status
+          type: MongoDBUpdateOne
+          connectionId:
+            _module.connectionId: { id: deals-collection, module: { _var: ids.deals } }
+          properties:
+            filter:
+              _id:
+                _payload: context.workflow.entity.id
+              status.0.stage:
+                $ne: complete
+            update:
+              $set:
+                close_date:
+                  _date: now
+                updated:
+                  _ref:
+                    module: events
+                    component: change_stamp
+              $push:
+                status:
+                  $position: 0
+                  $each:
+                    - stage: complete
+                      created:
+                        _ref:
+                          module: events
+                          component: change_stamp
+        - :return:
+            deal_id:
+              _payload: context.workflow.entity.id
+form:
+  - key: form.po_number
+    component: text_input
+    title: PO number
+    required: true
+  - key: form.po_document
+    component: file_upload
+    title: PO document
+  # Role-scoped multi-select — a dropdown of contacts holding any of the given
+  # app roles; the block value is an array of denormalized (view-renderable) values.
+  - key: form.reviewers
+    component: role_contact_multiple
+    title: Reviewers
+    roles:
+      - admin
+      - manager
+# Per-verb page chrome — exercises the form-action formHeader / formFooter slots
+# (the only demo action that does). formHeader renders above the form fields
+# (below the authored description lead-in); formFooter renders below the comment.
+# The footer hosts a Modal opened from a buttons.extra button — the documented
+# "button → modal" pattern (docs/workflows/reference/authoring-grammar.md).
+pages:
+  edit:
+    formHeader:
+      - id: po_guidance
+        type: Alert
+        properties:
+          type: info
+          showIcon: true
+          message: Attach the counter-signed purchase order. Unsigned or draft copies are rejected at review.
+    formFooter:
+      - id: po_help_modal
+        type: Modal
+        properties:
+          title: Purchase order requirements
+        blocks:
+          - id: po_help_body
+            type: Markdown
+            properties:
+              content: |
+                A valid purchase order must include:
+
+                - The agreed **PO number**
+                - An authorised **signature**
+                - The quoted line items and total
+
+                Contact the account manager if any detail is missing.
+    buttons:
+      extra:
+        - id: open_po_help
+          type: Button
+          layout:
+            flex: 0 1 auto
+          properties:
+            title: PO requirements
+            icon: help
+          events:
+            onClick:
+              - id: show_po_help
+                type: CallMethod
+                params:
+                  blockId: po_help_modal
+                  method: toggleOpen
+status_map:
+  blocked:
+    demo:
+      message: Upload the purchase order once the quote is approved.
+  action-required:
+    demo:
+      message: Upload the purchase order.
+  in-progress:
+    demo:
+      message: Purchase order upload in progress.
+  in-review:
+    demo:
+      message: Purchase order awaiting approval.
+  changes-required:
+    demo:
+      message: Reviewer requested changes to the purchase order.
+  done:
+    demo:
+      message: Purchase order uploaded.

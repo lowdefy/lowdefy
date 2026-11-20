@@ -133,7 +133,7 @@ type: Box`;
 type: Box
 properties:
   title: [unclosed bracket`;
-    await expect(parseRefContent({ content, refDef: { path: 'test.yaml' } })).rejects.toThrow(
+    expect(() => parseRefContent({ content, refDef: { path: 'test.yaml' } })).toThrow(
       'YAML parse error in "test.yaml".'
     );
     try {
@@ -151,12 +151,12 @@ properties:
 type: Box
 properties:
   title: {{ title }}`;
-    await expect(
+    expect(() =>
       parseRefContent({
         content,
         refDef: { path: 'page.yaml.njk', vars: { title: '[unclosed bracket' } },
       })
-    ).rejects.toThrow('Nunjucks template "page.yaml.njk" produced invalid YAML.');
+    ).toThrow('Nunjucks template "page.yaml.njk" produced invalid YAML.');
     try {
       await parseRefContent({
         content,
@@ -174,7 +174,7 @@ describe('reserved ~deferred key', () => {
   test('throws ConfigError when source content contains a ~deferred key', async () => {
     const content = `component:
   "~deferred": anything`;
-    await expect(parseRefContent({ content, refDef: { path: 'page.yaml' } })).rejects.toThrow(
+    expect(() => parseRefContent({ content, refDef: { path: 'page.yaml' } })).toThrow(
       'The key "~deferred" is reserved by the Lowdefy build'
     );
   });

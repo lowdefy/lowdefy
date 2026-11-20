@@ -3,6 +3,51 @@
 How to run and write tests in the monorepo, including from parallel git worktrees. Coding
 rules for tests (naming, co-location, ES module mocking) live in `CLAUDE.md`.
 
+## Test levels
+
+Test each change at the lowest level that fails when the change breaks. Each kind of test has one
+way to write it (LDF-1022, "One way for each kind of test"); the first four levels are what a
+Lowdefy app's own tests use, and this repository has suites that prove each of them.
+
+| Level            | Proves                                                                                                                                                          | Runs on                                                            | Cost                                         | Suites here that cover it                                                                                |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Browser journey  | what a page shows, how it reacts, paths across pages, sign-up and sign-in                                                                                       | a dev server and a real Chromium                                   | seconds to tens of seconds a journey         | [Journey fixture app](#journey-fixture-app), [Auth journeys](#auth-journeys)                             |
+| Headless journey | a page's logic and state, what it sends and writes (by `blockId`); endpoint and server logic, page-less (`call`, `request`, `webhook`, `cases`, `stubs`, races) | a production build, in the CLI's process, no browser               | a build, then no browser time                | [Journey fixture app](#journey-fixture-app), `@lowdefy/journey-headless`' `test:fixture`                 |
+| The access table | who can reach which page and endpoint, as one committed `tests/access.yaml`                                                                                     | a production build, in the CLI's process (`lowdefy test --access`) | a build, then milliseconds for the whole app | [Endpoint test harness](#endpoint-test-harness) (`accessMatrix`), the CLI's `test` unit tests (the step) |
+| Unit test        | one function of a package, plugin or Lambda                                                                                                                     | vitest, no app                                                     | milliseconds                                 | [Unit tests](#unit-tests)                                                                                |
+| test-utils test  | only what a journey cannot say: a value computed in code, an answer computed from the request, rows generated in code                                           | a production build, in the test's process, a `mongod`              | a build, then 2 to 3 seconds a test file     | [Endpoint test harness](#endpoint-test-harness)                                                          |
+
+- **Each check has one way.** A page's logic, state and writes are a journey that targets blocks by
+  `blockId` and asserts with `expect.state`, `expect.calls` or `expect: { db }`, so it runs headless
+  (`lowdefy test --headless --build`); a write journey ends with `expect: { db }`. Endpoint and
+  server logic is a page-less journey: `call`, `request` and `webhook` steps; a `cases` table for
+  many cases of one check, with computed values written into its rows; `stubs` for outside answers
+  (`answer`) and forced failures (`fail`); `hold` and `release` for races; `as: system` for cron and
+  internal endpoints; `expect: { sunk }` for what an outside service was asked. A payload's shape is
+  the endpoint's `payloadSchema`, so journey cases test data scope. A browser journey, the most
+  expensive check, is for what a page shows. Never write a journey per role over every page: that
+  table is the access table's.
+- **A test-utils test is the escape hatch**, and its file says why a journey can't express it.
+  Apps no longer test with `@lowdefy/e2e-utils`; Lowdefy keeps it for its block e2e suites
+  ([Block tests](#block-tests)).
+- **Headless journeys on a build, test-utils tests and the access table read a build**, so a config
+  edit needs a build first. While editing an app, call the endpoint on the dev server
+  (`lowdefy_run_endpoint` or `lowdefy_run_request` with `user` and `data`), and run the tests once
+  before calling the change done.
+- **The access table proves nothing until `tests/access.yaml` is committed.** After a change to auth,
+  roles or the set of pages or endpoints, run `lowdefy build --no-client-build && lowdefy test --access`
+  once, before calling the change done; `lowdefy test --headless --build` checks it too. Accept a
+  change with `lowdefy test --update-access` and name each changed cell in the pull request. No test
+  calls `accessMatrix` to snapshot the table.
+- Block behaviour is covered by e2e specs, not by any of these ([Block tests](#block-tests)).
+
+`lowdefy agent-setup` writes the same rules into an app's `AGENTS.md`
+(`packages/cli/src/commands/agentSetup/testingRules.js`) and each journey skill
+(`skills/testLevel.js`). The user docs are `packages/docs/testing/config-tests.md` for journeys and
+their grammar, `endpoint-tests.md` for the test-utils escape hatch, `access-table.md` for the access
+table, and `e2e-utils-migration.md` for an app moving off e2e-utils. The package is described in
+[utils/test-utils.md](./utils/test-utils.md).
+
 ## Getting a worktree ready
 
 ```bash
@@ -65,9 +110,10 @@ What runs is React Native, not the Jest preset's mocks:
 
 - `Text` adds `overflow: 'hidden'` to its style, and passes an array: flatten a style
   (`StyleSheet.flatten`) before reading it.
-- Component methods are real: spy on what a test checks (`vi.spyOn(TextInput.prototype,
-  'focus')`, `vi.spyOn(Linking, 'openSettings')`). ScrollView's `scrollTo` is per instance, so a
-  test spies on the native command it sends (`ScrollViewCommands.scrollTo`).
+- Component methods are real: spy on what a test checks
+  (`vi.spyOn(TextInput.prototype, 'focus')`, `vi.spyOn(Linking, 'openSettings')`). ScrollView's
+  `scrollTo` is per instance, so a test spies on the native command it sends
+  (`ScrollViewCommands.scrollTo`).
 - `ActivityIndicator` draws its style on a View around the native indicator.
 - An iOS `Modal` stays mounted until the native side dismisses it, which never happens in a test.
 - `vi.mock` reaches imports, not a `require()` (a lazily required module, a test's own
@@ -109,15 +155,22 @@ pnpm test:mongodb
 (`pnpm --filter=@lowdefy/api test:mongodb`, `vitest.mongodb.config.js`), which drive engine code
 through a real BetterAuth instance and the MongoDB auth adapter, for example the tenant signup
 mint under concurrent sessions. Name an api test `*.mongodb.test.js` when it needs a real
-server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/server-dev`'s
-`*.mongodb.test.mjs` suites (`pnpm --filter=@lowdefy/server-dev test:mongodb`): the
-journey data sessions (`lib/docs/dataSets/openDataSession.mongodb.test.mjs`, which start the dev
-server's own data store), the data store's port, stop and replacement after its mongod dies
-(`getDataStore.mongodb.test.mjs`, which kills that mongod), and the data set journeys end to end
-(`dataSetJourneys.chromium.mongodb.test.mjs`: real Chromium over a build of a fixture app with
-tenant auth and a local module, with a database on the suite's MongoDB server standing in for the
-developer's, auth collections included, snapshotted before and compared after; skipped without a
-Chromium). To reproduce a race deterministically,
+server; the plain `pnpm test` run ignores those files. It also runs `@lowdefy/test-utils`'s
+`*.mongodb.test.js` suites (`pnpm --filter=@lowdefy/test-utils test:mongodb`,
+`vitest.mongodb.config.js`, no global setup): the data sessions
+(`src/dataSets/openDataSession.mongodb.test.js`, which start the data store's own mongod), the
+data store's port, stop and replacement after its mongod dies (`getDataStore.mongodb.test.js`,
+which kills that mongod), a test run's data store (`getRunDataStore.mongodb.test.js`: one mongod
+for every join, the cache cap, the sweep by run, the store gone once its owner process has
+exited, been killed or been interrupted, and a test file whose runner was killed) and a session
+put back to its data set
+(`reloadDataSession.mongodb.test.js`). And it runs `@lowdefy/server-dev`'s `*.mongodb.test.mjs` suites
+(`pnpm --filter=@lowdefy/server-dev test:mongodb`): a data session read back through the journey
+data cookie (`lib/docs/dataSets/readDataSession.mongodb.test.mjs`) and the data set journeys end
+to end (`dataSetJourneys.chromium.mongodb.test.mjs`: real Chromium over a build of a fixture app
+with tenant auth and a local module, with a database on the suite's MongoDB server standing in for
+the developer's, auth collections included, snapshotted before and compared after; skipped without
+a Chromium). To reproduce a race deterministically,
 pause one session inside the real adapter (wrap `adapter.create` from `auth.$context`) and
 run the other to completion before releasing it.
 
@@ -195,6 +248,192 @@ the complete path, before every release (see [CI](#ci)). Run it when
 changing the journey runner, journey cookies or mutants. Which page, data set and test covers
 which journey feature is listed under "Fixture app" in `code-docs/architecture/journeys.md`.
 
+`lowdefy test` runs one browser journey at a time by default. `--concurrency <n>` (1 to 3, or
+`LOWDEFY_JOURNEY_CONCURRENCY`; `concurrency` on `lowdefy_run_tests`) keeps up to n data-set
+journeys in flight through `runJourneyPool`, and runs journeys with no data set, or marked
+`serial: true`, alone after them. Headless runs always go one at a time. Every browser operation on
+the machine shares three browser slots, so at 2 or more another session's screenshot or state
+inspection can wait several journeys for a slot: in the large-app measurement with two runs at 2
+each, 7 of 13 screenshots waited over 60 s. When changing the pool, run the fixture's suite with
+`lowdefy test --url <fixture url> --concurrency 2`, then `--concurrency 1`, and compare. See
+"Running journeys side by side" in `code-docs/architecture/journeys.md`.
+
+### Headless parity
+
+The server-dev fixture suite also checks every journey it posts that `classifyJourney` calls
+headless gives the same result headless (`test/journeyFixture/checkParity.mjs`): its global setup
+builds the fixture into `_server/parity-journey-fixture`, and each check runs the journey with
+`@lowdefy/journey-headless` on that build. A difference fails the test;
+`LOWDEFY_JOURNEY_PARITY=report` records differences without failing, `=off` turns the check off.
+Each check is recorded in `apps/journey-fixture/.lowdefy/parity/<pid>.jsonl` (same, browser-only,
+browser-only at run time, needs a server host, mutant or different).
+The block stand-ins have parity journeys of their own: `standInParity.test.mjs` runs each journey
+in `apps/journey-fixture/tests/journeys/_parity/` (`popups.yaml` on the `popup_targets` page,
+`grids.yaml` on `grid_targets`) and fails unless it ran headless and matched. Those pages append
+every event they fire, with its payload, to state `log`, which the check compares, so a stand-in
+that fires a wrong event, order or payload fails its journey. A journey that checks `log` expects
+the `log` the browser gives, so a new journey's expectation comes from a browser run.
+
+The headless runner's own suites run over production builds of the fixture, no browser needed:
+
+```bash
+pnpm --filter=@lowdefy/journey-headless test           # unit tests
+pnpm --filter=@lowdefy/journey-headless test:fixture   # the runner over _server/test-utils-journey-fixture
+```
+
+Its fixture suite shares `_server/test-utils-journey-fixture` with `@lowdefy/test-utils`'
+fixture suite and the CLI's `headless.test.mjs`, so do not run them at once in one worktree.
+
+## Endpoint test harness
+
+`@lowdefy/test-utils` (`packages/utils/test-utils`, described in
+[utils/test-utils.md](./utils/test-utils.md)) opens a production build of an app in the
+test's own process: the access table (`app.accessMatrix`, whose one caller is `lowdefy test`'s
+access step), and sessions (`app.openSession`) that
+run the app's built endpoints and page requests as a named user on an in-memory MongoDB. Its
+tests are in three suites, all run after `pnpm build`:
+
+```bash
+pnpm --filter=@lowdefy/test-utils test           # unit tests, a few seconds, part of `pnpm test`
+pnpm --filter=@lowdefy/test-utils test:fixture   # the same harness over real builds of three apps
+pnpm --filter=@lowdefy/test-utils test:mongodb   # the data stores and data sessions, part of `pnpm test:mongodb`
+```
+
+| Suite          | Files                            | Needs                                                | Covers                                                                                                                                                                                                                                                         |
+| -------------- | -------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `test`         | `src/**/*.test.js`               | `pnpm build`; no app build, no install, no `mongod`  | the access table's outcomes, key order, 200 pages by 20 users, `openTestApp`'s refusals; what a session is made of that needs no database: answers, the wire payload, test secrets, stubs, pause gates, the fault sink, the run store's record; and `./assert` |
+| `test:fixture` | `test/fixtureApps/**/*.test.mjs` | `pnpm build`, three app builds, installs, a `mongod` | the table over real build artifacts, a `server-e2e` install; sessions over real builds (`sessions.test.mjs`); and `node --test` over three files sharing one data store, ended, killed and interrupted (`runStore.test.mjs`)                                   |
+| `test:mongodb` | `src/**/*.mongodb.test.js`       | `pnpm build`, a `mongod`; no app build               | the data sessions and both data stores (see [MongoDB tests](#mongodb-tests))                                                                                                                                                                                   |
+
+**`test`** writes its own build. `test/writeTestBuild.mjs` writes a config directory and a
+server directory to a temporary folder: `routes.json`, `api/*.json`, `auth.json`, `appMeta.json`
+and `refMap.json` under `build/`, the data sets under `tests/data/`, and a `node_modules` that
+links to `packages/servers/server/node_modules`, so `@lowdefy/api`, `helpers` and `errors` load
+from this workspace's built packages as they would from a built server's install. A test names
+only the auth config, routes, endpoints and users it is about. Add a test here when a hand-written
+artifact can show the behaviour: a gate outcome, a refusal, an ordering.
+
+**`test:fixture`** is kept out of `test`, and so out of the root `pnpm test`, because its global
+setup (`test/fixtureApps/globalSetup.mjs`, named in `vitest.fixture.config.js`) builds three apps
+once per run, one at a time, with `node scripts/build.mjs --skip-build --no-client-build`, each
+into a server copy of its own, so `_server/prod` and `_server/dev` are left alone. A build
+installs and takes about 10 seconds:
+
+| App                          | Server copy                                | What the suite reads from it                       |
+| ---------------------------- | ------------------------------------------ | -------------------------------------------------- |
+| `apps/journey-fixture`       | `_server/test-utils-journey-fixture`       | public pages, an endpoint gated to a role          |
+| `apps/auth-reference-tenant` | `_server/test-utils-auth-reference-tenant` | pages protected by default, a page gated to a role |
+| `apps/auth-reference`        | `_server/test-utils-auth-reference`        | a required second factor and its enrolment page    |
+
+Each app has a `tests/data/roles.yaml` data set whose users the access table tests check as. A
+test that needs to change a build or its config copies both to a temporary directory with
+`test/fixtureApps/copyFixtureApp.mjs`, which links the built server's `node_modules` instead of
+copying it. The session suite needs things `apps/journey-fixture` does not have (a role-gated
+endpoint that writes, a connection type that declares no `meta.dataSet`, an agent, an
+`InternalApi` and an `async` endpoint): `test/fixtureApps/writeSessionFixtures.mjs` writes them
+into such a copy's build, so the app, and the journey suites that count its pages and
+endpoints, stay as they are. The copy's operator map is the app's, so a hand-written artifact
+can use only operators the app already uses on the server. `--no-client-build` leaves out the Vite build, as `lowdefy build --no-client-build`
+does: the harness reads only `build/` and the server's `node_modules`. Add a test here only when
+it needs what a real build writes or a real install holds.
+
+`test/fixtureApps/docsSamples.test.mjs` runs every code sample of the user docs page
+(`packages/docs/testing/endpoint-tests.md`) on a copy of the `apps/journey-fixture` build, with the
+script the page gives. The page uses that app's ids for this reason.
+Run it after any edit to the page's samples, and after a change to the fixture app's endpoints,
+`handoff`, `rails` or `ticket` pages, or its `explore` data set.
+
+Run `test` for any change to the package. Run `test:fixture` as well when the change touches what
+the harness reads from a build or how it loads the server's packages (`openTestApp`, the access
+table, `importServerModule`, `loadSessionRuntime`), sessions and the context a call runs in
+(`createCallContext`, `createSessionConnections`), the gate it asks (`createInjectedApiContext`
+and `authorizeOutcome` in `@lowdefy/api`), what `@lowdefy/api` does with a call (`callEndpoint`,
+`callRequest`, `runDetachedEndpoint`, the tenant wall), the build artifacts it reads
+(`routes.json`, `api/*.json`, `auth.json`, `appMeta.json`, `refMap.json`, `build/plugins/`),
+`scripts/build.mjs`, or the three apps' auth config and data sets. The three suites named `test:fixture` use different server copies, so
+this one can run beside the journey fixture suites. CI runs it on the complete path, before every
+release (see [CI](#ci)).
+
+The package also holds the data session code the dev server runs journeys on, under
+`src/dataSets/` (export `./dataSets`; see "Data sets" in `code-docs/architecture/journeys.md`).
+Its unit tests run in the default `test`, with no built app and no `mongod`. Its
+`*.mongodb.test.js` suites start a real `mongod`, so the default run leaves them out and
+`pnpm --filter=@lowdefy/test-utils test:mongodb` runs them, as part of `pnpm test:mongodb` (see
+[MongoDB tests](#mongodb-tests)). A change under `src/dataSets/` also needs
+`@lowdefy/server-dev`'s tests and the journey `test:fixture` suites (`@lowdefy/server-dev`,
+`lowdefy`), since the journey runner imports the built `dist/dataSets`.
+
+### The data store of a test run
+
+An app runs its endpoint tests with `node --test`, one process a test file. The files of a run
+share one `mongod` (`getRunDataStore`), where the dev server has one per server process
+(`getDataStore`):
+
+- **Who starts it.** The first test process to open a session creates the run's record,
+  `<tmpdir>/lowdefy-test-store-<uid>/data-store-<owner pid>.json`, with the `wx` flag, so one process
+  wins, and starts the keeper (`dataStoreKeeperProcess.js`), detached and with no pipe to it.
+  The keeper starts `mongod` with `startDataStoreReplSet`, the same replica set and
+  `--wiredTigerCacheSizeGB 0.25` cap as the dev server's store, and writes its URI to the record.
+- **How the rest join.** They find the record and wait for the URI. Each has its own client and
+  its own databases, named `ld_p<pid>_<hex>_<n>`, or `ld_p<pid>t<threadId>_<hex>_<n>` from a
+  worker thread. `sweepOrphanDatabases({ perRun: true })` drops this thread's orphans and the
+  databases of test processes that have exited, never those of a file still running.
+- **Files in worker threads.** A runner that runs test files in worker threads of one process
+  (vitest's `pool: 'threads'`) gives them one owner pid, so they share a store, and each thread
+  has its own session registry. The sweep therefore leaves every database of another thread of
+  this process: a thread cannot tell whether another still runs. Those go once the process has
+  exited, with the store or at the next sweep of another process.
+- **How it exits.** The owner is the `node --test` runner (the parent of a process with
+  `NODE_TEST_CONTEXT` set), or the process itself outside one. The keeper polls the owner's pid
+  every 250 ms and stops `mongod`, removing its directory and the record, once the owner is
+  gone: finished, interrupted or killed. A killed keeper's `mongod` is stopped by
+  mongodb-memory-server's own helper.
+- **It also exits when nobody uses it.** Every second the keeper counts the store's clients
+  other than its own (`countStoreClients`, from `$currentOp`). A test file holds its client from
+  its first session until it closes its test app or exits, so a count of 0 means no test process
+  uses the store. After
+  30 s with none, whatever the owner pid says, the keeper removes the record, so no new process
+  joins, and stops `mongod` at the next poll with no client. A process that joined in between
+  keeps the store up until it leaves. The next join starts a new store through the claim. This
+  is what stops a store whose owner never exits: a file adopted by a subreaper before it loaded
+  the harness names the subreaper as its owner. A store whose `mongod` stops answering is
+  stopped too.
+- **A dead record is replaced.** The next join replaces a record whose keeper is gone, and one
+  whose URI does not answer although its keeper pid lives (the pid was reused, or the keeper is
+  stopping): the join that cannot connect removes the record, if it still carries the same
+  token, and claims a new one. Three dead stores in a row are thrown. A keeper whose record was
+  removed or replaced this way (its `mongod` may only have been slow) lets it go as after an idle
+  release: it serves the clients it has and stops once they have left.
+- **A test file whose runner is gone owns its store.** A killed runner leaves its test files
+  running under another parent (process 1, or a process that adopts orphans), which never
+  exits. A file whose parent has changed since the harness loaded, or is process 1, is
+  therefore its own owner (`pickRunOwnerPid`), and the store it starts stops when it does. So a
+  run whose `node --test` is itself process 1, as a container's command, has a store per file.
+  A file adopted before it loaded the harness cannot tell; the idle stop covers it.
+
+A run therefore holds one `mongod` and one keeper however many files run at once, and none
+after it. After any run that starts one, `pgrep -fl 'mongod-|mongod '` shows what is left; the
+binary's name carries a version suffix. A killed runner leaves its test file processes to
+finish on their own, as `node --test` does; their store is already gone, and one that opens a
+session after that starts a store of its own, which stops with it.
+
+Measured on 11 Nov 2026 (10 cores, 16 GB, Node 26, 20 files of 5 tests over
+`apps/journey-fixture`): a test process peaks at about 263 MB resident (235 to 268), the run's
+`mongod` at about 100 MB and the keeper at about 92 MB. One file alone takes 2.1 to 2.6 s.
+
+| `--test-concurrency` | 20 files     | Test processes at once |
+| -------------------- | ------------ | ---------------------- |
+| 2                    | 12.3 s       | about 0.5 GB           |
+| 4                    | 8.0 to 8.8 s | about 1.1 GB           |
+| 8                    | 7.1 s        | about 2.1 GB           |
+| Node's default (9)   | 6.9 s        | about 2.4 GB           |
+
+The default the docs and the agent rules give an app is `--test-concurrency=4`: going from 4 to
+Node's default of one process per core saves about a fifth of the time for more than twice the
+memory, on a machine that usually also runs a dev server and an agent. `node --test` takes the
+flag from the app's script; the harness cannot set it, since it runs inside the test processes.
+A larger app's test processes are larger than the fixture's.
+
 ## An app from another repository
 
 To run an app that lives in another repository (Pelican, a modules-mongodb demo app) on this
@@ -224,7 +463,8 @@ example `infisical run --env=local --path=/apps/my-app -- node scripts/dev.mjs .
 - **The app's repository must be installed** (`pnpm install` there). Plugins in
   `lowdefy.yaml` with a `workspace:` version are linked from the app's pnpm workspace as they
   are, so they need their `node_modules` and a built `dist`. Other plugins install from npm
-  into the server copy.
+  into the server copy, with any peer they declare that the server does not depend on (the
+  copy installs with `autoInstallPeers: false`).
 - **Build scripts.** pnpm 11 fails an install on a dependency build script that is neither
   allowed nor ignored. The server copy's `pnpm-workspace.yaml` carries the build approvals
   (`allowBuilds`, `onlyBuiltDependencies`, `ignoredBuiltDependencies`) of the app's own
@@ -239,6 +479,124 @@ example `infisical run --env=local --path=/apps/my-app -- node scripts/dev.mjs .
   dev server at a time (the server records itself in `<app>/.lowdefy/instance.json` and
   refuses a second), so to run a second copy of an app, or to keep the app's own checkout
   untouched, point the scripts at a separate git worktree of the app's repository.
+
+## Build bench
+
+`pnpm bench:build <app-dir>` builds an app with a baseline Lowdefy and with this checkout, and
+says whether the build output is identical. It is the proof for a change that should not alter
+build output. It needs the network and takes minutes, so it never runs in CI.
+
+```bash
+pnpm bench:build packages/docs                    # baseline: merge-base of HEAD and origin/develop
+pnpm bench:build packages/docs --self-check       # build the baseline twice; must be identical
+pnpm bench:build ../my-app --baseline v7.1.0      # any commit as baseline, any app folder
+pnpm bench:build packages/docs --skip-build       # this checkout is already built
+pnpm bench:build packages/docs --server e2e       # @lowdefy/server-e2e instead of the server
+pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in current
+pnpm bench:build packages/docs --keymap           # key and ref ids by what they point at
+```
+
+| Exit code | Meaning                                         |
+| --------- | ----------------------------------------------- |
+| 0         | Identical                                       |
+| 1         | Any difference                                  |
+| 2         | A build (or the harness) failed; its log prints |
+
+- **The large app.** `apps/build-bench` is the modules-mongodb demo app with its entity
+  modules repeated in sets, sized like a large production app (a key map of about 300 MB).
+  It is only ever built: `pnpm bench:build apps/build-bench`. Its README says how it is
+  generated.
+- **Baseline.** A detached worktree at `../lowdefy-bench-<sha7>`, installed and built on first
+  use and reused after. One left half-built by an interrupted run is rebuilt. Runs that need
+  the same baseline at once share it: one sets it up under a lock
+  (`../lowdefy-bench-<sha7>.lock`, holding its pid) while the others wait, and a lock whose
+  process has died is taken over.
+- **Each side** prepares its server at `_server/bench/<app-slug>/<side>/workspace/server`
+  with this checkout's `scripts/lib`, linked through `<side>/lowdefy` (a symlink to that
+  side's checkout), then runs its own CLI: `lowdefy build --no-client-build`. The same layout
+  for both sides keeps every relative path in the output equal. Logs land in
+  `_server/bench/<app-slug>/logs/`.
+- **Compared**: every file in the server's `build/`, its `package.json`, and the warnings and
+  errors in the CLI log, sorted. Each side's server path is replaced with `<server>`; nothing
+  else is normalised. `LOWDEFY_GIT_SHA` and the buildId are pinned; the rest of the
+  environment passes through, so `LOWDEFY_ENVIRONMENT=local pnpm bench:build <dir>` works.
+- **A self-check difference is a bug**, in the harness or the build, to fix at its source.
+  Never skip a file.
+- **Expected added files.** A file `--expect-added` names may exist in the current build only.
+  A `.gz` among them must gunzip to the plain file beside it, except `keyMap.json.gz`, which
+  holds the key map in columns: every key of `keyMap.json` must resolve from it to the same
+  path, ref, line and ignored checks, read by this checkout's `@lowdefy/errors`.
+- **Parts** (`scripts/lib/bench/`): `buildSide` runs one side's CLI build on a prepared server
+  and can run repeatedly; `compareBuilds` takes `comparers`, a map from a server-relative file
+  (`build/keyMap.json`) to a comparer used in place of the byte comparison, and
+  `defaultComparer` for every other file.
+
+**Key and ref ids by meaning.** A change that reshapes `keyMap.json` or renumbers key or ref
+ids on purpose proves itself with `pnpm bench:build <app-dir> --keymap`. Ids are compared by
+what they point at, not by value, each side's maps read with that side's own
+`resolveConfigLocation` (from its `packages/utils/errors/dist`):
+
+- Every JSON artifact is compared with each `~k` replaced by its source file, line and config
+  path, and each `~r` by its ref's file, line and parent chain. A file whose bytes match is
+  never decoded.
+- `keyMap.json` must describe the same locations, as many times each, whatever the ids:
+  a report lists the locations only one side has.
+- `refMap.json` must describe the same refs (file, line, original definition and parent
+  chain) the same way.
+
+So a build that numbers the same config differently (ids shifted by an earlier change, or a
+new id scheme) is identical, and a node that moved line or file is a difference in both the
+artifact holding it and `keyMap.json`. Every other file stays byte-identical.
+
+`pnpm bench:keymap <old> <new>` checks two key maps by id instead, for a change that keeps the
+ids and only reshapes the entries: every id must be on both sides and resolve to the same
+location. It reads two build folders (each holding `keyMap.json` and `refMap.json`) or two
+fixture `snapshot.json` files; `--old-errors <dist>` and `--new-errors <dist>` pick the
+readers, by default the baseline worktree's and this checkout's. It exits 0 when the maps say
+the same, 1 when they differ, and reports the counts and the first 20 differences. A million
+keys take seconds.
+
+### Bench report
+
+After the comparison the harness measures both sides and prints a markdown report, ready to
+paste into a pull request: the output verdict first, then sizes, timing and the top of the
+profile. The report (`report.md`), `report.json`, the probe lines, logs and every
+`.cpuprofile` land in `_server/bench/<app-slug>/<timestamp>/`.
+
+```bash
+pnpm bench:build packages/docs --runs 3       # timed runs per side (default 5)
+pnpm bench:build packages/docs --no-compare   # measure only
+pnpm bench:build packages/docs --no-time      # skip the timed runs
+pnpm bench:build packages/docs --no-profile   # skip the CPU profile runs
+```
+
+- **Probe.** Every Node process of a measured build loads `scripts/lib/bench/probe.mjs`
+  through `NODE_OPTIONS=--import`, beside the buildId pin, and appends one JSON line at exit:
+  argv, pid, start and end time, exit code, `maxRSS` and user and system CPU time. Neither side's code changes. A
+  config pass is a process running the server's `lowdefy/build.mjs`; the pass count comes
+  from these lines, never from the CLI log. The total runs from the first process's start to
+  the last one's end (the CLI's own span, installs included).
+- **Timing.** One warm-up build per side, discarded, then `--runs` builds per side,
+  alternating, so machine load falls on both sides alike. Each row is the median with its
+  min and max: config pass wall time (summed when there are two), the config pass's CPU time
+  (user + system, summed the same way), the whole `lowdefy build`, and the config pass's peak
+  memory. Other builds on the machine add noise; when the docs medians of two unchanged sides
+  differ by more than 10%, run again later. CPU time leaves out the time the config pass
+  waited for a core, so on a shared machine it is the number to judge a small change by. It
+  still counts slower running: on Apple silicon a pass that other load pushes onto efficiency
+  cores shows more CPU time too, so compare the ranges and run again while they overlap.
+- **Profile.** One more build per side with `--cpu-prof`. The config passes' main-thread
+  profiles are summarised by self time: per npm package (the nearest `package.json` with a
+  name, so linked `@lowdefy/*` packages are named too; node's own modules as `(node)`, V8
+  built-ins as `(native)`), per `@lowdefy/build` file (top 20), and `(garbage collector)`,
+  `(program)` and `(idle)`, each in seconds and as a share of the profiled passes.
+- **Sizes.** `build/keyMap.json`, `build/refMap.json` and the whole `build/` folder.
+- **In a pull request**, paste `report.md` for each app the change was measured on, and say
+  when the run shared the machine with other builds. Never name a client app.
+- **It cannot show the second config pass.** The linked `@lowdefy/build` finds every default
+  plugin in the monorepo's install, so no plugin is pending and both sides run one pass,
+  where a published `@lowdefy/build` runs two. The report counts passes and claims no saving
+  from fewer of them.
 
 ## Ports
 
@@ -375,8 +733,9 @@ dependency check and every package's tests, not stopping at the first failing pa
 ubuntu with Node 26 (Lowdefy servers are deployed on Linux, so CI runs no Windows
 jobs); `pnpm test:mongodb` (`test-mongodb.yml`); the journey fixture suites (`test:fixture` in
 `@lowdefy/server-dev` and `lowdefy`, which must pass tests, not skip them for want of
-Chromium); and every block e2e suite (`test-block-e2e.yml`). No coverage is collected: jest's
-coverage and its Codecov upload were dropped with the move to vitest.
+Chromium) and, in the same job, the endpoint test harness's fixture suite (`test:fixture` in
+`@lowdefy/test-utils`); and every block e2e suite (`test-block-e2e.yml`). No coverage is
+collected: jest's coverage and its Codecov upload were dropped with the move to vitest.
 
 A release runs the complete path twice: on the Release pull request from `develop` into `main`
 (every push), and on the publish push. `release.yaml` decides from the pushed commit's
@@ -399,14 +758,18 @@ A release runs the complete path twice: on the Release pull request from `develo
 CI does not run on its own, so run what the change needs before you push, and list the
 commands in the pull request body:
 
-| Change touches                                 | Run                                                                                                                             |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| any package                                    | `pnpm build` (more than one package), then each changed package's tests and its dependents' (`pnpm --filter=...<package> test`) |
-| several packages, root config, the lockfile    | `pnpm test` (the dependency check and every package)                                                                            |
-| `connection-mongodb`, tenancy, auth adapters   | `pnpm test:mongodb`                                                                                                             |
-| the journey runner, journey cookies or mutants | both `test:fixture` suites                                                                                                      |
-| blocks, `block-utils`, the engine              | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                            |
-| any JavaScript file                            | `pnpm exec eslint <changed files>` and `pnpm format:check` ([Linting](./linting.md))                                            |
+| Change touches                                  | Run                                                                                                                                 |
+| ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| any package                                     | `pnpm build` (more than one package), then each changed package's tests and its dependents' (`pnpm --filter=...<package> test`)     |
+| several packages, root config, the lockfile     | `pnpm test` (the dependency check and every package)                                                                                |
+| `connection-mongodb`, tenancy, auth adapters    | `pnpm test:mongodb`                                                                                                                 |
+| `test-utils/src/dataSets` (data sessions)       | `pnpm test:mongodb`, `@lowdefy/server-dev`'s tests, the journey `test:fixture` suites and `@lowdefy/test-utils`'s `test:fixture`    |
+| the journey runner, journey cookies or mutants  | the journey `test:fixture` suites (`@lowdefy/server-dev`, `lowdefy`)                                                                |
+| `test-utils`, the gate, the build it reads      | `pnpm --filter=@lowdefy/test-utils test`, and its `test:fixture` (see [Endpoint test harness](#endpoint-test-harness))              |
+| the endpoint tests docs page's code samples     | `pnpm --filter=@lowdefy/test-utils test:fixture docsSamples`, then `pnpm docs:content` and `pnpm --filter=@lowdefy/docs test`       |
+| the config tests docs page's page-less journeys | `pnpm --filter=@lowdefy/journey-headless test:fixture docsSamples`, then `pnpm docs:content` and `pnpm --filter=@lowdefy/docs test` |
+| blocks, `block-utils`, the engine               | that package's `e2e` (`pnpm --filter=<package> e2e`)                                                                                |
+| any JavaScript file                             | `pnpm exec eslint <changed files>` and `pnpm format:check` ([Linting](./linting.md))                                                |
 
 The developer may add the `ci` or `ci-full` label to run them again in CI.
 

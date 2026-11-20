@@ -117,6 +117,7 @@ These are from `@lowdefy/operators-js`:
 | `_subtract` | Subtract            |
 | `_multiply` | Multiply            |
 | `_divide`   | Divide              |
+| `_decimal`  | Exact decimal       |
 | `_math`     | Math operations     |
 
 ## Runtime Schema Validation

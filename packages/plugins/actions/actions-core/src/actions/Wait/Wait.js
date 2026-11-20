@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import { type, wait } from '@lowdefy/helpers';
+import { type } from '@lowdefy/helpers';
 
-function Wait({ params }) {
+// The engine owns the timer, so it can mark the event as only waiting while it runs.
+function Wait({ methods: { wait }, params }) {
   if (type.isNone(params) || !type.isInt(params.ms)) {
     throw new Error(`Wait action "ms" param should be an integer.`);
   }
-  return wait(params.ms);
+  return wait({ ms: params.ms });
 }
 
 export default Wait;

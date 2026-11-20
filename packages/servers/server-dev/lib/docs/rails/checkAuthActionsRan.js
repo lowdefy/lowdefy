@@ -15,6 +15,7 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { RAILED_STEPS } from '@lowdefy/node-utils';
 
 import JourneyStepError from '../JourneyStepError.js';
 import authEngineMethods from './authEngineMethods.js';
@@ -24,7 +25,7 @@ import readAuthActionRecorder from './readAuthActionRecorder.js';
 const RECORDER_KEY = '__lowdefyAuthActions';
 
 // On a data-set run (journey.dataSetRails), starts recording the auth-engine
-// actions the page executes, before a click acts. Journeys without a data set
+// actions the page executes, before a step acts. Journeys without a data set
 // record nothing.
 async function armAuthActionRecorder({ journey, page }) {
   if (type.isUndefined(journey.dataSetRails)) {
@@ -36,12 +37,16 @@ async function armAuthActionRecorder({ journey, page }) {
   });
 }
 
-// After a click on a data-set run has settled, fails the step when an
-// auth-engine action executed: its callers are injected and have no auth
-// session, so it fails for a harness reason. An action the chain skipped (a
-// validation that stopped it, a skip: condition) never runs, so a click that
-// only might reach one is fine. blockId is the clicked block, when known.
-async function checkAuthActionsRan({ journey, page, blockId }) {
+function capitalise(text) {
+  return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
+}
+
+// After a step (a click, open, fill, select or press, see railedSteps) on a data-set run has
+// settled, fails it when an auth-engine action executed: its callers are injected and have no
+// auth session, so it fails for a harness reason. An action the chain skipped (a validation that
+// stopped it, a skip: condition) never runs, so a step that only might reach one is fine.
+// blockId is the block the step acted on, when known.
+async function checkAuthActionsRan({ journey, page, blockId, step }) {
   if (type.isUndefined(journey.dataSetRails)) {
     return;
   }
@@ -50,14 +55,16 @@ async function checkAuthActionsRan({ journey, page, blockId }) {
   if (actions.length === 0) {
     return;
   }
-  const subject = type.isNone(blockId) ? 'A click' : `Block "${blockId}"`;
+  const words = RAILED_STEPS[step];
+  const subject = type.isNone(blockId) ? capitalise(words.step) : `Block "${blockId}"`;
+  const named = actions.join(', ');
   throw new JourneyStepError(
-    `${subject} ran the auth action ${actions.join(
-      ', '
-    )}, which a data-set journey cannot run: its users are injected and have no auth session. A click that skips the action (a failed validation, a skip condition) is fine.`,
+    `${subject} ran the auth action ${named}, which a data-set journey cannot run: its users are injected and have no auth session. ${capitalise(
+      words.step
+    )} that skips the action (a failed validation, a skip condition) is fine.`,
     {
-      expected: 'a click that runs no auth action',
-      actual: `a click that ran the auth action ${actions.join(', ')}`,
+      expected: `${words.step} that runs no auth action`,
+      actual: `${words.step} that ran the auth action ${named}`,
     }
   );
 }

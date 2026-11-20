@@ -116,7 +116,7 @@ test('journeySchema rejects an unknown step key', () => {
   const result = validateJourney({ journey });
   expect(result.valid).toBe(false);
   expect(result.message).toContain(
-    'Unknown journey step key. Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Unknown journey step key. Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
@@ -411,4 +411,294 @@ test.each(['../x', 'Staging', '-x', ''])('journeySchema refuses data %j', (data)
   const result = validateJourney({ journey: { ...minimalJourney, data } });
   expect(result.valid).toBe(false);
   expect(result.message).toMatch('Journey "data" should be a data set name');
+});
+
+test('journeySchema accepts a journey with no pageId whose steps all run without a page', () => {
+  expect(
+    validateJourney({
+      journey: {
+        name: 'a client of A is refused B ticket',
+        data: 'support-company-scope',
+        user: 'client_a',
+        steps: [
+          {
+            call: {
+              endpoint: 'tickets-add-comment',
+              payload: { ticket_id: 'T-TEST-B-0001', comment: { content: { html: '<p>x</p>' } } },
+            },
+          },
+          { expect: { status: 404 } },
+          { expect: { error: 'Ticket not found.' } },
+          { request: { pageId: 'ticket', requestId: 'get_ticket', as: 'none' } },
+          { expect: { status: 401 } },
+          { as: 'client_b' },
+          { wait: 100 },
+          { expect: { calls: { endpoint: 'tickets-add-comment', count: 1 } } },
+          { expect: { calls: { request: 'get_ticket', pageId: 'ticket', response: null } } },
+          {
+            expect: {
+              db: { collection: 'log-events', match: { ticket_ids: 'T-TEST-B-0001' }, count: 0 },
+            },
+          },
+        ],
+      },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('journeySchema refuses a journey with no pageId at the first step that needs a page', () => {
+  expect(
+    validateJourney({
+      journey: {
+        name: 'page-less',
+        steps: [
+          { call: { endpoint: 'orders-cancel' } },
+          { expect: { status: 403 } },
+          { click: 'cancel_button' },
+          { expect: { visible: 'cancelled' } },
+        ],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey should have required property "pageId": step 2 (click "cancel_button") needs a page. A journey with no pageId runs only call, request, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
+  });
+  expect(
+    validateJourney({
+      journey: {
+        name: 'page-less',
+        steps: [
+          { call: { endpoint: 'orders-cancel' } },
+          { expect: { calls: { request: 'get_order', count: 0 } } },
+        ],
+      },
+    }).message
+  ).toContain('step 1 (expect: { calls }) needs a page.');
+  expect(
+    validateJourney({
+      journey: {
+        name: 'page-less',
+        steps: [{ wait: { state: 'loaded' } }, { expect: { status: 200 } }],
+      },
+    }).message
+  ).toContain(
+    'Step 1: Step "expect.status" must follow a "call", "request", "release" or "webhook" step'
+  );
+});
+
+test('validateJourney accepts stubs, each an answer or a forced failure', () => {
+  expect(
+    validateJourney({
+      journey: {
+        ...minimalJourney,
+        data: 'finance-runs',
+        stubs: [
+          { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { data: 'pdf' } },
+          { requestId: 'update_run_lines', endpoint: 'billing-run-approve', fail: 'Write failed' },
+        ],
+      },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('validateJourney refuses a stub entry the stub grammar refuses, naming its place', () => {
+  expect(
+    validateJourney({
+      journey: {
+        ...minimalJourney,
+        data: 'finance-runs',
+        stubs: [
+          { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: null },
+          { requestId: 'save', fail: 'x', when: 'later' },
+        ],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey "stubs[1]": A forced failure stub does not take "when". It takes requestId, endpoint, pageId, fail, times.',
+  });
+  expect(validateJourney({ journey: { ...minimalJourney, stubs: { fail: 'x' } } })).toEqual({
+    valid: false,
+    message: 'Journey "stubs" should be a list of answer and forced failure stubs.',
+  });
+});
+
+test('validateJourney refuses stubs on a journey with no data set', () => {
+  expect(
+    validateJourney({
+      journey: { ...minimalJourney, stubs: [{ requestId: 'save', fail: 'Down' }] },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey "stubs" need a data set: stubs and forced failures live on the journey\'s data session. Give the journey a "data".',
+  });
+});
+
+test('validateJourney refuses hold and expect.sunk on a journey with no data set', () => {
+  const pageLess = { name: 'races the claim' };
+  expect(
+    validateJourney({
+      journey: {
+        ...pageLess,
+        steps: [{ hold: { requestId: 'claim_run' } }, { call: { endpoint: 'approve_run' } }],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Step 0: "hold" needs a data set: its gate lives on the journey\'s data session. Give the journey a "data".',
+  });
+  expect(
+    validateJourney({ journey: { ...pageLess, steps: [{ expect: { sunk: { count: 0 } } }] } })
+  ).toEqual({
+    valid: false,
+    message:
+      'Step 0: expect.sunk needs a data set: it reads the requests the journey\'s data session recorded. Give the journey a "data".',
+  });
+  expect(
+    validateJourney({
+      journey: { ...pageLess, data: 'races', steps: [{ expect: { sunk: { count: 0 } } }] },
+    })
+  ).toEqual({ valid: true });
+});
+
+test('validateJourney refuses a _case in a journey with no cases, and one a row fills in', () => {
+  expect(
+    validateJourney({
+      journey: {
+        name: 'calls the endpoint',
+        steps: [{ call: { endpoint: 'ping', payload: { id: { _case: 'id' } } } }],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey "steps[0].call.payload.id" is a _case placeholder, {"_case":"id"}, with no case row to fill it in: _case reads a key of a row of the journey\'s "cases" table.',
+  });
+  expect(
+    validateJourney({
+      journey: {
+        name: 'calls the endpoint',
+        cases: [{ name: 'nested', payload: { id: { _case: 'id' } } }],
+        steps: [{ call: { endpoint: 'ping', payload: { _case: 'payload' } } }],
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey case "nested": Journey "steps[0].call.payload.id" is a _case placeholder, {"_case":"id"}, with no case row to fill it in: _case reads a key of a row of the journey\'s "cases" table.',
+  });
+});
+
+test('validateJourney accepts a case table and validates each run after its row is filled in', () => {
+  const journey = {
+    name: 'opens each page',
+    pageId: { _case: 'page' },
+    cases: [
+      { name: 'orders', page: 'orders' },
+      { name: 'refunds', page: 'refunds' },
+    ],
+    steps: [{ click: 'submit' }],
+  };
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+  expect(
+    validateJourney({
+      journey: { ...journey, cases: [...journey.cases, { name: 'bad', page: 3 }] },
+    })
+  ).toEqual({
+    valid: false,
+    message: 'Journey case "bad": Journey "pageId" should be a string.',
+  });
+});
+
+test.each([true, false])('journeySchema accepts serial: %j', (serial) => {
+  expect(validateJourney({ journey: { ...minimalJourney, serial } })).toEqual({ valid: true });
+});
+
+test('journeySchema refuses a serial flag that is not a boolean, naming the key', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, serial: 'yes' } })).toEqual({
+    valid: false,
+    message: 'Journey "serial" should be true or false.',
+  });
+});
+
+test('journeySchema refuses an unknown top-level key, naming it and listing the known keys', () => {
+  expect(validateJourney({ journey: { ...minimalJourney, seriel: true } })).toEqual({
+    valid: false,
+    message:
+      'Journey has an unknown key "seriel". Keys are: name, description, pageId, data, user, pathParams, urlQuery, tags, variant, timeout, deprecated, serial, evidence, cases, stubs, steps.',
+  });
+});
+
+test('journeySchema names every unknown top-level key', () => {
+  const result = validateJourney({ journey: { ...minimalJourney, seriel: true, page: 'form' } });
+  expect(result.valid).toBe(false);
+  expect(result.message).toContain('Journey has unknown keys "seriel", "page".');
+});
+
+test('journeySchema shows an unknown key as written, not HTML-escaped', () => {
+  const result = validateJourney({ journey: { ...minimalJourney, "it's<a&b>": true } });
+  expect(result.message).toContain('Journey has an unknown key "it\'s<a&b>".');
+});
+
+test('journeySchema accepts every root key it lists', () => {
+  const journey = {
+    name: 'every key',
+    description: 'Uses every root key the schema lists.',
+    pageId: 'orders',
+    data: 'orders',
+    user: 'admin',
+    pathParams: { id: 'o1' },
+    urlQuery: { status: 'open' },
+    tags: ['smoke'],
+    variant: { of: 'opens an order', kind: 'double-submit', detail: 'double click "save"' },
+    timeout: 5000,
+    deprecated: false,
+    serial: true,
+    evidence: { mutation: { killed: 1, total: 2 } },
+    stubs: [{ requestId: 'save', fail: 'Down' }],
+    steps: [{ click: 'save' }],
+  };
+  expect(validateJourney({ journey })).toEqual({ valid: true });
+  expect(
+    validateJourney({
+      journey: {
+        ...journey,
+        user: { _case: 'user' },
+        cases: [
+          { name: 'admin', user: 'admin' },
+          { name: 'member', user: 'member' },
+        ],
+      },
+    })
+  ).toEqual({ valid: true });
+  expect(Object.keys(journeySchema.properties).sort()).toEqual(
+    [...Object.keys(journey), 'cases'].sort()
+  );
+});
+
+test('an unknown root key on a case-table journey names the journey, not a case row', () => {
+  expect(
+    validateJourney({
+      journey: {
+        ...minimalJourney,
+        cases: [{ name: 'one', id: 'a' }],
+        seriel: true,
+      },
+    })
+  ).toEqual({
+    valid: false,
+    message:
+      'Journey has an unknown key "seriel". Keys are: name, description, pageId, data, user, pathParams, urlQuery, tags, variant, timeout, deprecated, serial, evidence, cases, stubs, steps.',
+  });
+});
+
+test('a case-table journey with an unknown root key is refused before its table is checked', () => {
+  const result = validateJourney({
+    journey: { ...minimalJourney, cases: [{ id: 'a' }], seriel: true },
+  });
+  expect(result.message).toMatch(/^Journey has an unknown key "seriel"\./);
 });

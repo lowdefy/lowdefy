@@ -1,0 +1,150 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { getStepKey } from '@lowdefy/node-utils';
+import { get, type } from '@lowdefy/helpers';
+
+import collectBlockParents from './collectBlockParents.js';
+import expectAnswerError from './expectAnswerError.js';
+import expectAnswerStatus from './expectAnswerStatus.js';
+import expectCalls from './expectCalls.js';
+import expectDb from './expectDb.js';
+import expectSunk from './expectSunk.js';
+import HeadlessStepError from './HeadlessStepError.js';
+import isBlockShown from './isBlockShown.js';
+import isDeepEqual from './isDeepEqual.js';
+import pollUntil from './pollUntil.js';
+import quoteParkedRelease from './quoteParkedRelease.js';
+import toJsonValue from './toJsonValue.js';
+
+function readBlockId(target) {
+  return type.isString(target) ? target : target.blockId;
+}
+
+// Whether the block a check names is shown on the actor's page: null when it is not on the page.
+function readShown({ actor, blockId }) {
+  const { context } = actor.page;
+  const block = context._internal.RootSlots.map[blockId];
+  if (type.isNone(block)) {
+    return null;
+  }
+  const { parents } = collectBlockParents({ context });
+  return isBlockShown({ block, openBlocks: actor.page.openBlocks, parents });
+}
+
+async function expectState({ actor, params, timeout }) {
+  const { equals, path } = params;
+  const { held, value } = await pollUntil({
+    check: (read) => isDeepEqual(read, equals),
+    read: () => toJsonValue(get(actor.page.context.state, path)),
+    timeout,
+  });
+  if (!held) {
+    throw new HeadlessStepError(
+      `Expected state "${path}" to equal ${JSON.stringify(equals)} but found ${JSON.stringify(
+        value
+      )}.`,
+      { actual: value, expected: equals }
+    );
+  }
+}
+
+async function expectShown({ actor, params, shown, timeout }) {
+  const blockId = readBlockId(params);
+  const { held } = await pollUntil({
+    // A block that is not on the page is hidden, as a browser finds no element for it.
+    check: (read) => (shown ? read === true : read !== true),
+    read: () => readShown({ actor, blockId }),
+    timeout,
+  });
+  if (!held) {
+    const description = `block "${blockId}" to be ${shown ? 'visible' : 'hidden'}`;
+    throw new HeadlessStepError(`Expected ${description}.`, {
+      actual: shown ? 'not visible' : 'visible',
+      expected: description,
+    });
+  }
+}
+
+async function expectUrl({ actor, params, timeout }) {
+  const { contains } = params;
+  const { held, value } = await pollUntil({
+    check: (url) => type.isString(url) && url.includes(contains),
+    read: () => actor.url(),
+    timeout,
+  });
+  if (!held) {
+    throw new HeadlessStepError(
+      `Expected url to contain "${contains}" but found ${JSON.stringify(value)}.`,
+      { actual: value, expected: `url to contain "${contains}"` }
+    );
+  }
+}
+
+// A call parked at a pause gate has not answered: its answer is the release's, read after it.
+// `answer.release` names the release step that lets this call go, and `answer.hold` its hold when
+// another call is parked on the same release (createJourneyRaces).
+function checkAnswered(answer) {
+  if (!type.isString(answer?.parkedAt)) {
+    return;
+  }
+  throw new HeadlessStepError(
+    `The call before this step is parked at the gate on request "${answer.parkedAt}" and has not answered: read its answer after ${quoteParkedRelease(answer)}.`,
+    {
+      actual: `parked at request "${answer.parkedAt}"`,
+      expected: 'the answer of the call before this step',
+    }
+  );
+}
+
+// One expect step, with the browser runner's messages: on the current actor's page, on the answer
+// of the call or request step before it (`answer`, for status and error), on the data's
+// database, or on the requests the data session recorded instead of sending (sunk). After an interaction, expect.error is judged with the app errors
+// (createAppErrorWindows), so the step itself does nothing.
+async function runHeadlessExpect({ actor, answer, host, step, timeout }) {
+  const kind = getStepKey(step.expect);
+  const params = step.expect[kind];
+  switch (kind) {
+    case 'state':
+      return expectState({ actor, params, timeout });
+    case 'visible':
+      return expectShown({ actor, params, shown: true, timeout });
+    case 'hidden':
+      return expectShown({ actor, params, shown: false, timeout });
+    case 'calls':
+      return expectCalls({ actor, params });
+    case 'url':
+      return expectUrl({ actor, params, timeout });
+    case 'error':
+      checkAnswered(answer);
+      if (!type.isUndefined(answer)) {
+        expectAnswerError({ answer, text: params });
+      }
+      return undefined;
+    case 'status':
+      checkAnswered(answer);
+      return expectAnswerStatus({ answer, status: params });
+    case 'db':
+      return expectDb({ host, params, timeout });
+    case 'sunk':
+      return expectSunk({ params, session: host.dataSession, timeout });
+    default:
+      // The grammar admits nothing else; a check it gains is not passed unchecked.
+      throw new Error(`The headless journey runner has no expect "${kind}".`);
+  }
+}
+
+export default runHeadlessExpect;

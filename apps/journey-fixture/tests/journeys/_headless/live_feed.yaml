@@ -1,0 +1,10 @@
+# Run headless on the fixture's production build by `lowdefy test --headless --build` in the cli
+# fixture tests (packages/cli/test/journeyFixture/headless.test.mjs), which see it pass:
+# pages/live_feed.yaml subscribes to a websocket on mount, which succeeds headless and gets no
+# message. In a folder starting with "_" so the suite's own runs, and harden, leave it out.
+- name: opens a page that subscribes to a live feed
+  pageId: live_feed
+  data: explore
+  user: member
+  steps:
+    - expect: { state: { path: subscribed, equals: true } }

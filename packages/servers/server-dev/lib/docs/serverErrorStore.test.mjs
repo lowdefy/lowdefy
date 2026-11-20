@@ -48,3 +48,11 @@ test('serverErrorStore caps at 50 entries and drops the oldest', () => {
   expect(entries[0].index).toEqual(10);
   expect(entries[49].index).toEqual(59);
 });
+
+test("serverErrorStore keeps a forced failure that is no journey run's out of the store and the event bus", () => {
+  mockPublish.mockClear();
+  const before = serverErrorStore.list();
+  serverErrorStore.push({ message: 'Write failed on purpose', forced: true });
+  expect(serverErrorStore.list()).toEqual(before);
+  expect(mockPublish).not.toHaveBeenCalled();
+});

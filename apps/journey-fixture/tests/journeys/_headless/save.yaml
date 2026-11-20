@@ -1,0 +1,14 @@
+# Run headless on the fixture's production build by `lowdefy test --headless --build` in the cli
+# fixture tests (packages/cli/test/journeyFixture/headless.test.mjs), beside ../save.yaml, which
+# that run lists as browser-only. In a folder starting with "_" so the suite's own runs, and
+# harden, leave it out: they name it by path or not at all.
+- name: saves an item headless and sees it in state
+  pageId: home
+  data: explore
+  user: member
+  steps:
+    - fill: { blockId: name_input, value: Headless item }
+    - click: save_button
+    - wait: { request: save_item }
+    - expect: { state: { path: saved, equals: true } }
+    - expect: { state: { path: name_input, equals: Headless item } }

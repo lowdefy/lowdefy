@@ -146,3 +146,113 @@ test('MCP lowdefy_run_journey applies exercised to every run of a user list', as
   const full = await callWith({ exercised: true }, ['admin', 'member']);
   full.runs.forEach((run) => expect(run.exercised).toEqual(fullExercised));
 });
+
+test('MCP lowdefy_run_journey passes literal stubs with a data set to the run', async () => {
+  const client = await connectClient();
+  const stubs = [
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+    { requestId: 'save_price', fail: 'Write failed on purpose', times: 2 },
+  ];
+
+  await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { steps: [{ call: { endpoint: 'price_run' } }], data: 'stubs', stubs },
+  });
+
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ data: 'stubs', stubs }));
+  await client.close();
+});
+
+test('MCP lowdefy_run_journey refuses a _ref or _case left in the journey, pointing to lowdefy test', async () => {
+  const client = await connectClient();
+
+  const ref = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      steps: [{ call: { endpoint: 'price_run' } }],
+      data: 'stubs',
+      stubs: [{ _ref: 'tests/shared/stubs/rates.yaml' }],
+    },
+  });
+  expect(ref.isError).toBe(true);
+  expect(ref.content[0].text).toContain(
+    'Journey "stubs[0]" is a _ref, {"_ref":"tests/shared/stubs/rates.yaml"}, that was not read'
+  );
+  expect(ref.content[0].text).toContain('runs through lowdefy test (lowdefy_run_tests)');
+
+  const placeholder = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { steps: [{ _case: 'step' }] },
+  });
+  expect(placeholder.isError).toBe(true);
+  expect(placeholder.content[0].text).toContain(
+    'Journey "steps[0]" is a _case placeholder, {"_case":"step"}'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  await client.close();
+});
+
+test('MCP lowdefy_run_journey refuses a case table and a placeholder in pathParams or urlQuery', async () => {
+  const client = await connectClient();
+
+  const cases = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      cases: [{ source: 'form' }],
+      steps: [{ call: { endpoint: 'log_activity', payload: { source: { _case: 'source' } } } }],
+    },
+  });
+  expect(cases.isError).toBe(true);
+  expect(cases.content[0].text).toContain('takes no "cases" table');
+
+  const pathParams = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'ticket', pathParams: { _case: 'params' }, steps: [] },
+  });
+  expect(pathParams.isError).toBe(true);
+  expect(pathParams.content[0].text).toContain(
+    'Journey "pathParams" is a _case placeholder, {"_case":"params"}'
+  );
+
+  const pathParamsValue = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'ticket', pathParams: { ticket_id: { _ref: 'x' } }, steps: [] },
+  });
+  expect(pathParamsValue.isError).toBe(true);
+  expect(pathParamsValue.content[0].text).toContain('Journey "pathParams.ticket_id" is a _ref');
+
+  const notString = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'ticket', pathParams: { ticket_id: 1 }, steps: [] },
+  });
+  expect(notString.isError).toBe(true);
+  expect(notString.content[0].text).toContain('"pathParams" param must be an object of strings');
+
+  const urlQuery = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: { pageId: 'ticket', urlQuery: { id: { _ref: 'tests/shared/q.yaml' } }, steps: [] },
+  });
+  expect(urlQuery.isError).toBe(true);
+  expect(urlQuery.content[0].text).toContain('Journey "urlQuery.id" is a _ref');
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  await client.close();
+});
+
+test('MCP lowdefy_run_journey refuses a bad stub before running', async () => {
+  const client = await connectClient();
+
+  const badStub = await client.callTool({
+    name: 'lowdefy_run_journey',
+    arguments: {
+      steps: [{ call: { endpoint: 'price_run' } }],
+      data: 'stubs',
+      stubs: [{ requestId: 'save_price', fail: 'Down', times: 0 }],
+    },
+  });
+  expect(badStub.isError).toBe(true);
+  expect(badStub.content[0].text).toContain(
+    'Journey "stubs[0]": Journey stub "times" should be a whole number above 0 or "all".'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  await client.close();
+});

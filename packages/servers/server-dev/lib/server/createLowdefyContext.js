@@ -18,6 +18,7 @@ import { randomUUID } from 'node:crypto';
 import path from 'node:path';
 import {
   createApiContext,
+  createInjectedApiContext,
   createRequestSignal,
   normalizeInjectedCaller,
   ensureMcpOauthResource,
@@ -27,10 +28,14 @@ import {
 } from '@lowdefy/api';
 import { type } from '@lowdefy/helpers';
 import { getSecretsFromEnv } from '@lowdefy/node-utils';
+import {
+  applyDataSetRedirect,
+  createSessionConnections,
+  trackSessionWork,
+} from '@lowdefy/test-utils/dataSets';
 
 import agents from '../../build/plugins/agents.js';
 import appMeta from '../build/appMeta.js';
-import applyDataSetRedirect from './applyDataSetRedirect.js';
 import authJson from '../build/auth.js';
 import config from '../build/config.js';
 import connections from '../../build/plugins/connections.js';
@@ -52,7 +57,6 @@ import readDataSession from '../docs/dataSets/readDataSession.js';
 import readMergedMaps from './readMergedMaps.js';
 import readRecordingCookie from './recording/readRecordingCookie.js';
 import scrubSecrets from './scrubSecrets.js';
-import sinkExternalConnections from './sinkExternalConnections.js';
 import notifications, {
   interpolateProperties,
   renderEmail,
@@ -60,7 +64,6 @@ import notifications, {
 import operators from '../../build/plugins/operators/server.js';
 import resolveHeadlessUser from './auth/resolveHeadlessUser.js';
 import steps from '../../build/plugins/steps.js';
-import trackSessionWork from './trackSessionWork.js';
 import websockets from '../../build/plugins/websockets.js';
 
 const secrets = getSecretsFromEnv();
@@ -147,7 +150,7 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
   // Which browser context sent the request: errors it causes are stamped with
   // it, so a journey run claims only its own (see createHandleError).
   context.recording = readRecordingCookie(c.req.header('cookie'));
-  context.handleError = createHandleError({ context });
+  context.handleError = createHandleError({ context, dataSession });
   // The request's own middleware takes the context as soon as it can sink an
   // error: the auth steps below can throw, and the error handler reads the
   // context back to log the fault with its request id and location.
@@ -215,7 +218,19 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
       });
     }
   }
-  createApiContext(context);
+  if (type.isNone(context.auth)) {
+    // No auth engine ran (a mock or headless caller, a data-session hop, an
+    // app with no auth), so createApiContext alone would retain no
+    // organization binding and no enforcement facts, and the caller would meet
+    // a looser gate than production's. createInjectedApiContext takes both
+    // from the built auth config: the tenant wall's policy gate still engages
+    // under policy: tenant (a mock caller there must carry organizationId, or
+    // the wall fails closed - loudly, as it should), and a signed-out or
+    // unenrolled injected caller is answered as a signed-in app answers one.
+    createInjectedApiContext(context, { authJson });
+  } else {
+    createApiContext(context);
+  }
   // A journey's browser contexts carry a mutant cookie while `lowdefy journeys
   // harden` runs a mutant through them: their requests, and only theirs, read
   // the mutated artifact. The developer's own tabs carry none.
@@ -227,23 +242,17 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
     });
   }
   if (!type.isNone(dataSession)) {
-    applyDataSetRedirect({ context, session: dataSession, connections });
-    // Requests of connections that reach an outside service are recorded, never sent.
-    context.connections = sinkExternalConnections({
-      context,
+    // Requests of connections that reach an outside service are recorded, never sent, and the
+    // data session's stubs and gates apply, as on the build host.
+    const { gate, resolvers } = createSessionConnections({
       connections,
+      context,
       session: dataSession,
     });
+    applyDataSetRedirect({ context, session: dataSession, connections: gate });
+    context.connections = resolvers;
     context.dataSet = dataSession.name;
     context.waitUntil = trackSessionWork({ session: dataSession });
-  }
-  if (!context.auth && authJson.organizations) {
-    // Mock and headless callers run no auth engine, so createApiContext
-    // retains no organization binding. Derive the policy from the built auth
-    // config so the tenant wall's policy gate still engages under
-    // policy: tenant (a mock caller there must carry organizationId, or the
-    // wall fails closed - loudly, as it should).
-    context.organization = { policy: authJson.organizations.policy, pinned: null };
   }
   // Under policy: tenant, report walled collections that hold unstamped rows
   // (lazily-run-once, logged once per offending collection). It never blocks or

@@ -15,11 +15,14 @@
 */
 
 import crypto from 'node:crypto';
+import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
 import { wait } from '@lowdefy/helpers';
 
 import pageBuildRecords from './pageBuildRecords.js';
+import pruneJitMaps from './pruneJitMaps.js';
 import { expect, test } from 'vitest';
 
 function sha256(content) {
@@ -256,4 +259,68 @@ test('record marks a build that loaded app code, and only that build', async () 
 
   expect(pageBuildRecords.get('resolved').ranAppCode).toBe(true);
   expect(pageBuildRecords.get('plain').ranAppCode).toBe(false);
+});
+
+test('mapsFiles names the jitMaps file a build still running is writing, so a prune keeps it', async () => {
+  const buildDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-page-build-records-'));
+  const mapsFile = path.join(buildDirectory, 'jitMaps', 'abc123-1-1.json');
+  fs.mkdirSync(path.dirname(mapsFile));
+  let endWrite;
+  const writeEnded = new Promise((resolve) => {
+    endWrite = resolve;
+  });
+  const context = {
+    // The file is in place before the build that wrote it runs again, as after
+    // the rename of an atomic write.
+    writeBuildArtifact: async (filePath, content) => {
+      fs.writeFileSync(path.join(buildDirectory, filePath), content);
+      await writeEnded;
+    },
+  };
+  pageBuildRecords.trackMapWrites({ context });
+  const generation = 'in-flight-write';
+
+  const building = pageBuildRecords.record({
+    pageId: 'writing',
+    generation,
+    build: () => context.writeBuildArtifact('jitMaps/abc123-1-1.json', '{}', { atomic: true }),
+  });
+
+  // What a build context made at this moment prunes by.
+  expect(pageBuildRecords.get('writing')).toBeNull();
+  expect(pageBuildRecords.mapsFiles({ generation })).toEqual(['abc123-1-1.json']);
+  expect(pageBuildRecords.mapsFiles({ generation: 'another-generation' })).toEqual([]);
+  pruneJitMaps({ buildDirectory, keep: pageBuildRecords.mapsFiles({ generation }) });
+  expect(fs.existsSync(mapsFile)).toBe(true);
+
+  endWrite();
+  await building;
+  expect(pageBuildRecords.get('writing').mapsFiles).toEqual(['abc123-1-1.json']);
+  expect(pageBuildRecords.mapsFiles({ generation })).toEqual(['abc123-1-1.json']);
+  fs.rmSync(buildDirectory, { recursive: true, force: true });
+});
+
+test('a jitMaps write that fails is not recorded', async () => {
+  const error = new Error('ENOSPC');
+  let failWrite;
+  const writeFailed = new Promise((resolve, reject) => {
+    failWrite = () => reject(error);
+  });
+  const context = { keyMap: {}, refMap: {}, writeBuildArtifact: () => writeFailed };
+  pageBuildRecords.trackMapWrites({ context });
+  const generation = 'failed-write';
+
+  const building = pageBuildRecords.record({
+    pageId: 'unwritten',
+    context,
+    configDirectory: '/app',
+    generation,
+    build: () => context.writeBuildArtifact('jitMaps/abc123-2-1.json', '{}', { atomic: true }),
+  });
+  expect(pageBuildRecords.mapsFiles({ generation })).toEqual(['abc123-2-1.json']);
+
+  failWrite();
+  await expect(building).rejects.toBe(error);
+  expect(pageBuildRecords.get('unwritten').mapsFiles).toEqual([]);
+  expect(pageBuildRecords.mapsFiles({ generation })).toEqual([]);
 });

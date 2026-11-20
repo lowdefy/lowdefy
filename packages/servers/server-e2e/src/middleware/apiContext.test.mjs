@@ -15,17 +15,28 @@
 */
 
 import fs from 'fs';
+import fsPromises from 'fs/promises';
+import os from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import zlib from 'zlib';
 
 import { Hono } from 'hono';
-import { vi, afterAll, expect, test } from 'vitest';
+import { encodeColumnarKeyMap } from '@lowdefy/errors';
+import { serializer } from '@lowdefy/helpers';
+import { vi, afterAll, afterEach, beforeEach, describe, expect, test } from 'vitest';
 
 const secret = 'planted-e2e-secret';
 process.env.LOWDEFY_SECRET_TEST = secret;
 
+// The client-error route runs the real logClientError, so a test can follow a
+// client error's location through context.readMaps.
+const actualApi = await vi.importActual('@lowdefy/api');
 vi.doMock('@lowdefy/api', () => ({
-  createApiContext: vi.fn(),
+  isSameOriginRequest: actualApi.isSameOriginRequest,
+  logClientError: actualApi.logClientError,
+  parseRequestBody: actualApi.parseRequestBody,
+  createInjectedApiContext: vi.fn(),
   createRequestSignal: vi.fn(({ clientSignal }) => clientSignal),
   normalizeInjectedCaller: vi.fn((user) => user),
 }));
@@ -36,13 +47,18 @@ vi.doMock('../../lib/build/i18n.js', () => ({ default: {} }));
 vi.doMock('../../lib/server/log/createHandleError.js', () => ({
   default: vi.fn(() => vi.fn()),
 }));
+const loggers = [];
 vi.doMock('../../lib/server/log/createLogger.js', () => ({
-  default: vi.fn(() => ({
-    debug: vi.fn(),
-    info: vi.fn(),
-    warn: vi.fn(),
-    error: vi.fn(),
-  })),
+  default: vi.fn(() => {
+    const logger = {
+      debug: vi.fn(),
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+    };
+    loggers.push(logger);
+    return logger;
+  }),
 }));
 vi.doMock('../../lib/server/fileCache.js', () => ({ default: {} }));
 vi.doMock('../../lib/server/getE2eSecrets.js', () => ({
@@ -91,6 +107,9 @@ afterAll(() => {
 });
 
 const { default: apiContext } = await import('./apiContext.js');
+const { createInjectedApiContext } = await import('@lowdefy/api');
+const { default: authJson } = await import('../../lib/build/auth.js');
+const { default: getUser } = await import('../../lib/server/auth/getUser.js');
 
 function createApp() {
   const app = new Hono();
@@ -102,8 +121,16 @@ function createApp() {
       scrubbed: context.scrubSecrets(`token ${secret} end`),
     });
   });
+  app.get('/api/caller', (c) => {
+    const context = c.get('lowdefyContext');
+    return c.json({ organization: context.organization, user: context.user });
+  });
   return app;
 }
+
+afterEach(() => {
+  delete authJson.organizations;
+});
 
 test('apiContext sets mode to prod', async () => {
   const res = await createApp().request('/api/ping');
@@ -117,4 +144,274 @@ test('apiContext scrubSecrets redacts a planted secret', async () => {
   expect(res.status).toEqual(200);
   const body = await res.json();
   expect(body.scrubbed).toEqual('token [REDACTED] end');
+});
+
+test('apiContext builds every request context from the built auth config', async () => {
+  await createApp().request('/api/ping');
+  expect(createInjectedApiContext).toHaveBeenCalledTimes(1);
+  const [context, options] = createInjectedApiContext.mock.calls[0];
+  expect(context.mode).toEqual('prod');
+  expect(options).toEqual({ authJson });
+});
+
+test('a cookie user in a tenant-policy app gets the tenant policy binding, so the wall engages', async () => {
+  const actual = await vi.importActual('@lowdefy/api');
+  createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+  authJson.organizations = { policy: 'tenant' };
+  getUser.mockReturnValueOnce({ id: 'u_1', roles: ['admin'] });
+  const res = await createApp().request('/api/caller');
+  expect(await res.json()).toEqual({
+    organization: { policy: 'tenant', pinned: null },
+    user: { id: 'u_1', roles: ['admin'] },
+  });
+});
+
+test('a cookie user in an app that declares no organizations gets no organization binding', async () => {
+  const actual = await vi.importActual('@lowdefy/api');
+  createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+  getUser.mockReturnValueOnce({ id: 'u_1', roles: ['admin'] });
+  const res = await createApp().request('/api/caller');
+  expect(await res.json()).toEqual({ organization: null, user: { id: 'u_1', roles: ['admin'] } });
+});
+
+const { default: createErrorHandler } = await import('./errorHandler.js');
+
+// No auth engine runs in the e2e server, so the gate's enforcement facts come from the built auth
+// config (createInjectedApiContext). Each test sends a request through the apiContext middleware,
+// runs the real @lowdefy/api function on the context it built, and is answered by the server's
+// own error handler.
+describe('the gate an injected caller meets', () => {
+  const artifacts = {
+    'routes.json': [{ pageId: 'reports', path: 'reports' }],
+    'pages/reports.json': {
+      id: 'page:reports',
+      pageId: 'reports',
+      blockId: 'reports',
+      type: 'Box',
+      auth: { public: false },
+    },
+    'api/nightly.json': {
+      endpointId: 'nightly',
+      type: 'InternalApi',
+      auth: { public: false },
+      routine: [],
+    },
+  };
+  const authConfigured = {
+    authPages: { signIn: '/login', twoFactorEnrol: '/two-factor-enrol' },
+    configured: true,
+    pagesProtectedByDefault: true,
+    twoFactor: { required: true },
+  };
+  let actual;
+
+  // With no lowdefy_e2e_user cookie (getUser answers nothing) the caller is signed out.
+  async function send({ path: requestPath = '/api/gate', run }) {
+    const app = new Hono();
+    app.use('*', apiContext());
+    app.all('*', async (c) => {
+      const context = c.get('lowdefyContext');
+      context.readConfigFile = async (file) => artifacts[file] ?? null;
+      return c.json(await run(context));
+    });
+    app.onError(createErrorHandler({ logger: { error: vi.fn(), warn: vi.fn() } }));
+    const res = await app.request(requestPath, { method: 'POST' });
+    return { status: res.status, body: await res.json() };
+  }
+
+  beforeEach(async () => {
+    actual = await vi.importActual('@lowdefy/api');
+    createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+  });
+
+  afterEach(() => {
+    Object.keys(authConfigured).forEach((key) => {
+      delete authJson[key];
+    });
+  });
+
+  test('a signed-out caller asking for a missing request is told to authenticate with a 401, not that the request does not exist', async () => {
+    Object.assign(authJson, authConfigured);
+    const answer = await send({
+      path: '/api/request/reports/missing',
+      run: (context) =>
+        actual.callRequest(context, { pageId: 'reports', payload: {}, requestId: 'missing' }),
+    });
+    expect(answer).toEqual({
+      status: 401,
+      body: {
+        name: 'AuthenticationError',
+        message: 'Authentication required for request "missing".',
+      },
+    });
+  });
+
+  test('a signed-out caller asking for a missing endpoint is told to authenticate with a 401, not that the endpoint does not exist', async () => {
+    Object.assign(authJson, authConfigured);
+    const answer = await send({
+      path: '/api/endpoints/missing',
+      run: (context) => actual.callEndpoint(context, { endpointId: 'missing', payload: {} }),
+    });
+    expect(answer).toEqual({
+      status: 401,
+      body: {
+        name: 'AuthenticationError',
+        message: 'Authentication required for API endpoint "missing".',
+      },
+    });
+  });
+
+  test('a signed-out caller asking for an internal endpoint is told to authenticate with a 401, not that the endpoint does not exist', async () => {
+    Object.assign(authJson, authConfigured);
+    const answer = await send({
+      path: '/api/endpoints/nightly',
+      run: (context) => actual.callEndpoint(context, { endpointId: 'nightly', payload: {} }),
+    });
+    expect(answer).toEqual({
+      status: 401,
+      body: {
+        name: 'AuthenticationError',
+        message: 'Authentication required for API endpoint "nightly".',
+      },
+    });
+  });
+
+  test('a signed-out caller on an unknown path is unauthenticated, not not_found, when pages are protected by default', async () => {
+    Object.assign(authJson, authConfigured);
+    const answer = await send({
+      run: (context) => actual.getPageConfig(context, { path: 'no-such-page' }),
+    });
+    expect(answer).toEqual({ status: 200, body: { status: 'unauthenticated' } });
+  });
+
+  test('a cookie user carrying two_factor_enrolled false is asked to enrol on a protected page when a second factor is required', async () => {
+    Object.assign(authJson, authConfigured);
+    getUser.mockReturnValueOnce({ id: 'u_1', roles: [], two_factor_enrolled: false });
+    const answer = await send({
+      run: (context) => actual.getPageConfig(context, { path: 'reports' }),
+    });
+    expect(answer).toEqual({
+      status: 200,
+      body: { status: 'enrol_required', pageId: 'reports', pathParams: {} },
+    });
+  });
+
+  test('a cookie user with no two_factor_enrolled key opens a protected page when a second factor is required', async () => {
+    Object.assign(authJson, authConfigured);
+    getUser.mockReturnValueOnce({ id: 'u_1', roles: [] });
+    const answer = await send({
+      run: (context) => actual.getPageConfig(context, { path: 'reports' }),
+    });
+    expect(answer.body.status).toEqual('ok');
+    expect(answer.body.pageId).toEqual('reports');
+  });
+
+  test('an app with no auth configured gets no organization and no enforcement facts, and a signed-out caller is still told a missing request does not exist', async () => {
+    const answer = await send({
+      run: async (context) => ({
+        authEnforcement: context.authEnforcement,
+        organization: context.organization,
+        missingRequest: await actual
+          .callRequest(context, { pageId: 'reports', payload: {}, requestId: 'missing' })
+          .catch((error) => ({ name: error.name, message: error.message })),
+      }),
+    });
+    expect(answer.body).toEqual({
+      authEnforcement: null,
+      organization: null,
+      missingRequest: { name: 'ConfigError', message: 'Request "missing" does not exist.' },
+    });
+  });
+});
+
+// Each client-error test loads apiContext afresh, so readMaps' per-process load
+// starts unmade, and runs it with its working directory on a temp app whose
+// build folder holds the maps or not.
+async function createClientErrorApp({ withMaps }) {
+  const appDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-e2e-api-context-'));
+  const buildDirectory = path.join(appDirectory, 'build');
+  fs.mkdirSync(buildDirectory);
+  if (withMaps) {
+    const keyMap = {
+      k1: { s: 'root', p: 'k0', r: 'ref_0', l: 1 },
+      k2: { s: '.pages[0:home]', p: 'k1', r: 'ref_1', l: 1 },
+      k3: { s: '.blocks[0:header]', p: 'k2', l: 5 },
+    };
+    const refMap = { ref_0: { path: 'lowdefy.yaml' }, ref_1: { path: 'pages/home.yaml' } };
+    fs.writeFileSync(
+      path.join(buildDirectory, 'keyMap.json.gz'),
+      zlib.gzipSync(JSON.stringify(encodeColumnarKeyMap({ keyMap })))
+    );
+    fs.writeFileSync(
+      path.join(buildDirectory, 'refMap.json.gz'),
+      zlib.gzipSync(JSON.stringify(refMap))
+    );
+  }
+  vi.spyOn(process, 'cwd').mockReturnValue(appDirectory);
+  vi.resetModules();
+  const { default: freshApiContext } = await import('./apiContext.js');
+  const { default: clientErrorHandler } = await import('../routes/clientError.js');
+  const app = new Hono();
+  app.use('*', freshApiContext());
+  app.all('/api/client-error', clientErrorHandler);
+  return { app, appDirectory };
+}
+
+function postClientError(app) {
+  const error = new Error('Block failed');
+  error.configKey = 'k3';
+  return app.request('http://localhost/api/client-error', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      host: 'localhost',
+      origin: 'http://localhost',
+      'sec-fetch-site': 'same-origin',
+    },
+    body: JSON.stringify(serializer.serialize(error)),
+  });
+}
+
+function lastLoggedError() {
+  const logger = loggers.at(-1);
+  return logger.error.mock.calls.at(-1)[0];
+}
+
+function mapReads(readFile) {
+  return readFile.mock.calls
+    .map(([filePath]) => path.basename(String(filePath)))
+    .filter((name) => name.startsWith('keyMap.json') || name.startsWith('refMap.json'));
+}
+
+test('a client error resolves its location from the gzipped maps through context.readMaps', async () => {
+  const { app, appDirectory } = await createClientErrorApp({ withMaps: true });
+  try {
+    const res = await postClientError(app);
+    expect(res.status).toEqual(200);
+    const logged = lastLoggedError();
+    expect(logged.message).toEqual('Block failed');
+    expect(logged.source).toEqual(path.join(appDirectory, 'pages/home.yaml:5'));
+    expect(logged.config).toEqual('root.pages[0:home].blocks[0:header]');
+  } finally {
+    vi.restoreAllMocks();
+    fs.rmSync(appDirectory, { recursive: true, force: true });
+  }
+});
+
+test('a second client error on a build with no maps reads no map file', async () => {
+  const { app, appDirectory } = await createClientErrorApp({ withMaps: false });
+  const readFile = vi.spyOn(fsPromises, 'readFile');
+  try {
+    expect((await postClientError(app)).status).toEqual(200);
+    expect(lastLoggedError().source).toBeUndefined();
+    expect(mapReads(readFile).sort()).toEqual(['keyMap.json.gz', 'refMap.json.gz']);
+
+    readFile.mockClear();
+    expect((await postClientError(app)).status).toEqual(200);
+    expect(lastLoggedError().source).toBeUndefined();
+    expect(mapReads(readFile)).toEqual([]);
+  } finally {
+    vi.restoreAllMocks();
+    fs.rmSync(appDirectory, { recursive: true, force: true });
+  }
 });

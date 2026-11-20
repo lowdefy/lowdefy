@@ -19,9 +19,12 @@ import { inspect } from 'node:util';
 import {
   LowdefyInternalError,
   isExpectedError,
+  isForcedFailure,
   loadAndResolveErrorLocation,
 } from '@lowdefy/errors';
+import { type } from '@lowdefy/helpers';
 import { scrubCredentials } from '@lowdefy/node-utils';
+import { recordForcedFailure } from '@lowdefy/test-utils/dataSets';
 
 import errorRecordingStamp from '../recording/errorRecordingStamp.js';
 import serverErrorStore from '../../docs/serverErrorStore.js';
@@ -36,8 +39,36 @@ function shouldStore(error) {
   return !isExpectedError(error);
 }
 
-function createHandleError({ context }) {
-  return async function handleError(error) {
+// `dataSession` is the journey data session the request runs on, if any. A forced failure (a
+// journey's fail gate, branded by markForcedFailure) is the test's doing, not a fault: fail gates
+// live on a data session, so only a request on one can throw it. It is recorded there by the
+// request's id (recordForcedFailure), where the journey's checks read its message, and is logged
+// at debug. Its entry goes to the journey run's error buffer marked `forced`, so the run knows the 500 it
+// answered was forced, and never counts it as an app error or shows it to the agent.
+//
+// `caught` is true when a :catch of the routine handled the fault without passing it on
+// (controlTry's settleCaughtFaults says so). It is logged and stored all the same, so a caught typo
+// is still seen, and its entry is stamped `caught` so a journey judges the routine by its answer,
+// as a headless run does. An entry a journey run caused goes to that run's buffer only, never to
+// build status (serverErrorStore).
+function createHandleError({ context, dataSession }) {
+  return async function handleError(error, { caught } = {}) {
+    if (!type.isNone(dataSession) && isForcedFailure(error)) {
+      error.handled = true;
+      recordForcedFailure({ error, rid: context.rid, session: dataSession });
+      serverErrorStore.push({
+        timestamp: new Date().toISOString(),
+        name: error.name,
+        message: error.message,
+        forced: true,
+        endpointId: context.endpointId ?? null,
+        requestId: context.requestId ?? null,
+        pageId: context.pageId ?? null,
+        recording: errorRecordingStamp(context.recording),
+      });
+      context.logger.debug({ event: 'debug_forced_failure', err: error }, error.message);
+      return;
+    }
     try {
       // Set first, not after the log call: this function is the server's error
       // sink, so reaching it is what makes the error already-logged, and the catch
@@ -73,6 +104,7 @@ function createHandleError({ context }) {
           name: error.name,
           // Agents read the store through build-status, after this request's scope has ended.
           message: scrubCredentials(error.message),
+          caught: caught === true,
           source: error.source ?? null,
           config: error.config ?? null,
           hint: error.hint ?? null,

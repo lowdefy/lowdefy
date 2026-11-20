@@ -1,0 +1,20 @@
+type: schedule-followup
+kind: check
+action_group: quoting
+blocked_by:
+  - qualify
+description: Schedule a follow-up call with the deal contact within a week of qualification.
+access:
+  demo:
+    view: true
+    edit: true
+status_map:
+  blocked:
+    demo:
+      message: Schedule the follow-up call once the deal is qualified.
+  action-required:
+    demo:
+      message: Schedule the follow-up call.
+  done:
+    demo:
+      message: Follow-up call scheduled.

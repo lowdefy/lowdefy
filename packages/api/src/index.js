@@ -26,6 +26,7 @@ import createAsMetadataHandler from './routes/auth/createAsMetadataHandler.js';
 import createAssetLinks from './routes/mobile/createAssetLinks.js';
 import createChannelRegistry from './routes/websocket/createChannelRegistry.js';
 import createContentSecurityPolicy from './csp/createContentSecurityPolicy.js';
+import createInjectedApiContext from './context/createInjectedApiContext.js';
 import createMcpServer from './routes/mcp/createMcpServer.js';
 import createRequestSignal from './context/createRequestSignal.js';
 import createSystemContext from './context/createSystemContext.js';
@@ -70,6 +71,7 @@ import runDetachedEndpoint from './routes/endpoints/runDetachedEndpoint.js';
 import runLinkEndpoint from './routes/endpoints/runLinkEndpoint.js';
 import runWebhookEndpoint from './routes/endpoints/runWebhookEndpoint.js';
 import runScheduledEndpoint from './routes/endpoints/runScheduledEndpoint.js';
+import sendDetachedRequest from './routes/endpoints/sendDetachedRequest.js';
 import darkModeScript from './html/darkModeScript.js';
 import layerOrderScript from './html/layerOrderScript.js';
 import logMcpViews from './routes/mcp/logMcpViews.js';
@@ -87,6 +89,7 @@ export {
   createAssetLinks,
   createChannelRegistry,
   createContentSecurityPolicy,
+  createInjectedApiContext,
   createMcpServer,
   createRequestSignal,
   createSystemContext,
@@ -127,6 +130,7 @@ export {
   runLinkEndpoint,
   runWebhookEndpoint,
   runScheduledEndpoint,
+  sendDetachedRequest,
   darkModeScript,
   layerOrderScript,
   logMcpViews,

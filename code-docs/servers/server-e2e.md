@@ -119,6 +119,8 @@ function Auth({ children, session }) {
 
 Page protection works the same as production: `renderPage` builds the context (with the cookie session), `createApiContext` adds `authorize`, and `getPageConfig` returns `null` for pages the session may not view — which redirects to `/404`. No separate middleware is involved.
 
+No auth engine runs here, so the `apiContext` middleware builds the context with `createInjectedApiContext` (`@lowdefy/api`), which takes the organization policy and the gate's enforcement facts from the built `auth.json`. In an app with auth configured the cookie user, or a request with no cookie, is therefore answered as production answers a caller: a signed-out request for a missing or internal request or endpoint gets a 401 `AuthenticationError`, and a user carrying `two_factor_enrolled: false` under `auth.twoFactor.required` gets `enrol_required` on a protected page and a 403 `TwoFactorEnrolmentRequiredError` on a protected request or endpoint. A user with no such key passes. `renderPage` and `/api/page` answer every page outcome that is not `ok` the same way (a redirect to `/404`, a 404), so `unauthenticated` and `enrol_required` are not told apart from `not_found` over HTTP. See [Injected callers](../packages/api.md#injected-callers).
+
 ## API Routes
 
 | Route | Purpose |

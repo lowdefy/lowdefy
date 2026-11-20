@@ -1,0 +1,60 @@
+id: polling
+type: Box
+# The polling page tests (packages/servers/server-dev/test/journeyFixture/polling.test.mjs):
+# a page that polls with a Wait. It reads its request on open, and its
+# onMountAsync chain sleeps a minute and then reads it again, so one event is
+# in flight for as long as a journey has the page open, with nothing to do but
+# sleep. The read on open is still in flight when the page mounts, so the page
+# is never between the two.
+requests:
+  - id: load_polled
+    type: MongoDBFind
+    connectionId: fixture_db
+    properties:
+      query:
+        kind: polling
+events:
+  onInitAsync:
+    - id: load
+      type: Request
+      params: load_polled
+  onMountAsync:
+    - id: clock_wait
+      type: Wait
+      params:
+        ms: 60000
+    - id: clock_reload
+      type: Request
+      params: load_polled
+blocks:
+  - id: polling_title
+    type: Title
+    properties:
+      content: Polling
+      level: 2
+  - id: mark_button
+    type: Button
+    properties:
+      title: Mark
+    events:
+      onClick:
+        - id: set_marked
+          type: SetState
+          params:
+            marked: true
+  # A Wait the settle after a click can outlast: the click is not settled
+  # until the value it leads to is set.
+  - id: slow_mark_button
+    type: Button
+    properties:
+      title: Mark slowly
+    events:
+      onClick:
+        - id: slow_mark_wait
+          type: Wait
+          params:
+            ms: 1500
+        - id: set_slow_marked
+          type: SetState
+          params:
+            slow_marked: true

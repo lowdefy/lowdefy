@@ -30,10 +30,10 @@ const { default: endpointsHandler } = await import('./endpoints.js');
 
 const logger = { debug: vi.fn(), error: vi.fn(), info: vi.fn(), warn: vi.fn() };
 
-function createApp() {
+function createApp({ dataSet } = {}) {
   const app = new Hono();
   app.use('*', async (c, next) => {
-    c.set('lowdefyContext', { logger, handleError: vi.fn() });
+    c.set('lowdefyContext', { logger, handleError: vi.fn(), rid: 'rid-1', dataSet });
     await next();
   });
   app.all('/api/endpoints/*', endpointsHandler);
@@ -74,4 +74,22 @@ test('a webhook answer without contentType is still sent as JSON', async () => {
   expect(res.headers.get('content-type')).toMatch(/^application\/json\b/);
   expect(res.headers.get('x-content-type-options')).toBeNull();
   expect(await res.json()).toBe('token');
+});
+
+test("a webhook on a journey's data session names its request id in a header, and its body is unchanged", async () => {
+  const failed = { error: { code: 'internal_error', message: 'Webhook failed.' } };
+  mockRunWebhookEndpoint.mockResolvedValue({ status: 500, body: failed });
+  const res = await createApp({ dataSet: 'outside' }).request('/api/endpoints/hook', {
+    method: 'POST',
+    body: '{}',
+  });
+  expect(res.status).toBe(500);
+  expect(res.headers.get('x-lowdefy-journey-request-id')).toBe('rid-1');
+  expect(await res.json()).toEqual(failed);
+});
+
+test('a webhook on no data session names no request id', async () => {
+  mockRunWebhookEndpoint.mockResolvedValue({ status: 200, body: { ok: true } });
+  const res = await createApp().request('/api/endpoints/hook', { method: 'POST', body: '{}' });
+  expect(res.headers.get('x-lowdefy-journey-request-id')).toBeNull();
 });

@@ -25,6 +25,7 @@ import watchOwner from '@lowdefy/node-utils/watchOwner.js';
 import createDevServerExclude from './lib/vite/createDevServerExclude.js';
 import createDevServerFsAllow from './lib/vite/createDevServerFsAllow.js';
 import keepIdleConnectionsOpen from './lib/vite/keepIdleConnectionsOpen.js';
+import prebundlePerPackageCopy from './lib/vite/prebundlePerPackageCopy.js';
 
 const devServerEntry = './src/app.js';
 
@@ -76,16 +77,19 @@ function lowdefyWebSocket() {
 
 // The @lowdefy packages this server depends on. A linked plugin pinned to
 // another release brings its own copies, and the client would then mix
-// versions: the dev server pre-bundles one copy per package for every
-// importer (whichever its scan meets first, so the server's own code can get
-// a plugin's older @lowdefy/helpers without an export it imports), and a
-// production build bundles both, so blocks read module state the client never
+// versions: the dev server (see packageCopies) and a production build each
+// serve the plugin its own copy, so blocks read module state the client never
 // filled (the HTML enhancements it registers in @lowdefy/block-utils). The
 // server's copies are the ones its client and blocks were released with.
 const packageJson = JSON.parse(fs.readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
 const lowdefyDependencies = Object.keys(packageJson.dependencies ?? {}).filter((name) =>
   name.startsWith('@lowdefy/')
 );
+
+// Source packages the server serves (Lowdefy's own on a Lowdefy checkout, linked plugins) can
+// depend on different versions of one package. Each is pre-bundled once per installed copy, so
+// every importer gets its own version, as in a production build (see prebundlePerPackageCopy).
+const packageCopies = prebundlePerPackageCopy();
 
 // The client runs in development, whatever NODE_ENV the dev server was started with.
 function createNodeEnvDefine({ mode }) {
@@ -97,6 +101,7 @@ function createNodeEnvDefine({ mode }) {
 export default defineConfig(({ mode }) => ({
   base: `${basePath}/`,
   plugins: [
+    packageCopies.plugin,
     react(),
     lowdefyWebSocket(),
     keepIdleConnectionsOpen(),
@@ -116,6 +121,7 @@ export default defineConfig(({ mode }) => ({
     // loading ignores clicks until a later task re-enables it.
     rolldownOptions: {
       transform: { define: createNodeEnvDefine({ mode }) },
+      plugins: [packageCopies.scanPlugin],
     },
     // There is no index.html in the root (the Hono app renders HTML), so the
     // dependency scanner has nothing to crawl and would discover client deps
@@ -132,7 +138,8 @@ export default defineConfig(({ mode }) => ({
     // shared libraries. They must share one React, the antd/X/cssinjs copies
     // whose context providers (App, ConfigProvider, StyleProvider) the client
     // renders, the dayjs whose global locale the client sets, and the server's
-    // @lowdefy packages (see lowdefyDependencies).
+    // @lowdefy packages (see lowdefyDependencies). Every other package an importer
+    // installs its own copy of is its own (see packageCopies).
     dedupe: [
       'react',
       'react-dom',

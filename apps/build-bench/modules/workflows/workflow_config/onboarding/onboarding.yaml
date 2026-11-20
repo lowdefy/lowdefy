@@ -1,0 +1,72 @@
+type: onboarding
+# Second workflow on the deal — auto-started when sales-pipeline records a WON
+# outcome (see sales-pipeline/deal-outcome.yaml). Same entity as sales-pipeline
+# (the deal), so a won deal carries both workflows and WorkflowProgress renders
+# each as its own collapsible bar.
+entity:
+  connection_id: deals
+  ref_key: deal_ids
+  page_id: { _build.string.concat: [{ _var: ids.deals }, /view] }
+  title: Deal
+  data:
+    routine:
+      - id: load_deal
+        type: MongoDBAggregation
+        connectionId: deals
+        payload:
+          entity_id:
+            _payload: entity_id
+        properties:
+          pipeline:
+            - $match:
+                _id:
+                  _payload: entity_id
+      - :return:
+          name:
+            _step: load_deal.0.name
+          description:
+            _step: load_deal.0.description
+          sector:
+            _step: load_deal.0.attributes.sector
+          value:
+            _step: load_deal.0.value
+          close_date:
+            _step: load_deal.0.close_date
+          status:
+            _step: load_deal.0.status.0.stage
+  list_page_id: { _build.string.concat: [{ _var: ids.deals }, /all] }
+  list_title: Deals
+
+entity_view:
+  slot:
+    _ref:
+      path: modules/workflows/workflow_config/sales-pipeline/deal-detail-slot.yaml
+      vars:
+        ids:
+          _var: ids
+
+# Renders after sales-pipeline (display_order 1) in WorkflowProgress.
+display_order: 2
+
+starting_actions:
+  - type: kickoff
+    status: action-required
+  - type: handover
+    status: blocked
+
+action_groups:
+  - id: onboarding
+    title: Onboarding
+    icon: Rocket
+
+actions:
+  - _ref:
+      path: modules/workflows/workflow_config/onboarding/kickoff.yaml
+      vars:
+        ids:
+          _var: ids
+  - _ref:
+      path: modules/workflows/workflow_config/onboarding/handover.yaml
+      vars:
+        ids:
+          _var: ids

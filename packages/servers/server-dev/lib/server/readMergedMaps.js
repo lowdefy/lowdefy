@@ -46,16 +46,16 @@ async function listJitMapsFiles(jitMapsDirectory) {
   }
 }
 
-// <childId>-<generation>-<write>.json. Files of one build context can repeat
+// <childId>-<context serial>-<write>.json. Files of one build context can repeat
 // an entry (see writeJitMaps in @lowdefy/build), and the later write is the
 // more complete one, so files are applied in write order.
 function compareWriteOrder(a, b) {
-  const [childA, generationA, writeA] = path.basename(a, '.json').split('-');
-  const [childB, generationB, writeB] = path.basename(b, '.json').split('-');
+  const [childA, contextA, writeA] = path.basename(a, '.json').split('-');
+  const [childB, contextB, writeB] = path.basename(b, '.json').split('-');
   if (childA !== childB) {
     return childA < childB ? -1 : 1;
   }
-  return Number(generationA) - Number(generationB) || Number(writeA) - Number(writeB);
+  return Number(contextA) - Number(contextB) || Number(writeA) - Number(writeB);
 }
 
 // The dev server's key and ref maps: the config build's keyMap.json and

@@ -1,0 +1,373 @@
+# Seeds conversation documents for the signed-in user so the chat surface's own
+# state can be explored by hand: the rail's recency grouping (conversations
+# landing in Today / Previous 7 days / Older), the rail's soft-delete exclusion
+# (a conversation carrying a real deleted stamp that must NOT appear), and the
+# results panel's table-truncation copy (a table part whose row_count exceeds
+# the persisted row cap, so the panel says "first 200 of N rows").
+#
+# Separate from reporting-seed-example-report and reporting-seed-ownership
+# because those two are about the report surface — the presentation contract and
+# report ownership — while this one is about the chat surface's own conversation
+# state. Mixing them would blur what each file is for, and each has a different
+# reason to be re-run.
+#
+# Owner-scoped from _user, never a payload: a conversation belongs to whoever is
+# signed in, exactly as the live writers (save-conversation, set-conversation-
+# title) scope it. Every document carries the full live insert shape those two
+# writers produce as a union — owner, created, updated, title, messages,
+# data_parts, deleted — so a seeded conversation is indistinguishable from one
+# the endpoints wrote and sorts/filters identically.
+#
+# Idempotent: deterministic per-user ids, cleared then reinserted, so re-seeding
+# never duplicates and every conversation keeps a stable id and URL.
+id: reporting-seed-conversations
+type: Api
+routine:
+  - :if:
+      _eq:
+        - _user: id
+        - null
+    :then:
+      - :reject: You must be signed in to seed the conversation fixtures.
+  # Three stamps span the rail's three recency buckets. The grouping compares
+  # updated.timestamp as a YYYY-MM-DD string against today and today-minus-7-days,
+  # so today lands in Today, three days back in Previous 7 days, and forty days
+  # back in Older. Built in JS because mingo (the _mql engine) has no date
+  # arithmetic; the returned Date objects round-trip to BSON dates on insert.
+  - :set_state:
+      stamps:
+        _js: |
+          const DAY = 86400000;
+          const now = Date.now();
+          return {
+            today: new Date(now),
+            within_week: new Date(now - 3 * DAY),
+            older: new Date(now - 40 * DAY),
+          };
+  # 200 table rows generated rather than typed, so the grid has real-looking
+  # values under the exact column keys the seeded part's spec declares (region,
+  # category, channel, total). $range 0..199 yields 200 rows; row_count is set
+  # ABOVE 200 on the part below, which is what makes the panel's truncation line
+  # render.
+  - :set_state:
+      table_rows:
+        _mql.expr:
+          on: {}
+          expr:
+            $map:
+              input:
+                $range:
+                  - 0
+                  - 200
+              as: i
+              in:
+                region:
+                  $arrayElemAt:
+                    - - North
+                      - South
+                      - East
+                      - West
+                    - $mod:
+                        - $$i
+                        - 4
+                category:
+                  $arrayElemAt:
+                    - - Electronics
+                      - Clothing
+                      - Home
+                      - Toys
+                      - Sports
+                    - $mod:
+                        - $$i
+                        - 5
+                channel:
+                  $arrayElemAt:
+                    - - online
+                      - retail
+                      - partner
+                    - $mod:
+                        - $$i
+                        - 3
+                total:
+                  $add:
+                    - 50
+                    - $mod:
+                        - $multiply:
+                            - $$i
+                            - 37
+                        - 950
+  # Matched on the id prefix scoped to this user, so a re-seed clears exactly the
+  # documents this fixture owns and nothing the user authored by chatting.
+  - id: clear
+    type: MongoDBDeleteMany
+    connectionId: reporting-conversations
+    properties:
+      filter:
+        _id:
+          $regex:
+            _string.concat:
+              - "^seed-conversation-.*-"
+              - _user: id
+              - "$"
+  - id: insert_conversations
+    type: MongoDBInsertMany
+    connectionId: reporting-conversations
+    properties:
+      docs:
+        # Today bucket.
+        - _id:
+            _string.concat:
+              - "seed-conversation-today-"
+              - _user: id
+          owner:
+            user_id:
+              _user: id
+            name:
+              _user: profile.name
+          title: Which region leads on sales?
+          messages:
+            - id: seed-msg-today-user
+              role: user
+              parts:
+                - type: text
+                  text: Which region has the highest total sales?
+            - id: seed-msg-today-assistant
+              role: assistant
+              parts:
+                - type: text
+                  text: >-
+                    Across the demo orders, the West region has the highest
+                    total sales, followed by North.
+          data_parts: []
+          deleted: null
+          created:
+            timestamp:
+              _state: stamps.today
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+          updated:
+            timestamp:
+              _state: stamps.today
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+        # Today bucket, and the carrier of the truncated table part.
+        - _id:
+            _string.concat:
+              - "seed-conversation-table-"
+              - _user: id
+          owner:
+            user_id:
+              _user: id
+            name:
+              _user: profile.name
+          title: Every order, by region and channel
+          messages:
+            - id: seed-msg-table-user
+              role: user
+              parts:
+                - type: text
+                  text: Show me every order with its region, category and channel.
+            - id: seed-msg-table-assistant
+              role: assistant
+              parts:
+                - type: text
+                  text: >-
+                    Here is the full order listing. It is a large result, so the
+                    panel shows the first 200 rows.
+          # One data-report-table part in the exact shape emit-data-parts
+          # persists: { type, data: { id, created, title, rows, row_count, spec:
+          # { query, columns } } }. rows holds the 200 generated entries and
+          # row_count is set above 200, so the card's "first 200 of N rows" line
+          # renders. The spec's column keys match the generated row keys, and its
+          # query is the inert snapshot descriptor the card carries but never
+          # re-runs.
+          data_parts:
+            - type: data-report-table
+              data:
+                id:
+                  _string.concat:
+                    - "seed-part-table-"
+                    - _user: id
+                created:
+                  _state: stamps.today
+                title: All orders
+                rows:
+                  _state: table_rows
+                row_count: 964
+                spec:
+                  query:
+                    collection: demo_orders
+                    pipeline:
+                      - $project:
+                          _id: 0
+                          region: 1
+                          category: 1
+                          channel: 1
+                          total: 1
+                  columns:
+                    - key: region
+                      label: Region
+                    - key: category
+                      label: Category
+                    - key: channel
+                      label: Channel
+                    - key: total
+                      label: Total
+                      format:
+                        style: currency
+                        currency: USD
+          deleted: null
+          created:
+            timestamp:
+              _state: stamps.today
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+          updated:
+            timestamp:
+              _state: stamps.today
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+        # Previous 7 days bucket.
+        - _id:
+            _string.concat:
+              - "seed-conversation-week-"
+              - _user: id
+          owner:
+            user_id:
+              _user: id
+            name:
+              _user: profile.name
+          title: Activity logged this month
+          messages:
+            - id: seed-msg-week-user
+              role: user
+              parts:
+                - type: text
+                  text: How many activities were logged in the last month?
+            - id: seed-msg-week-assistant
+              role: assistant
+              parts:
+                - type: text
+                  text: >-
+                    Around 40 activities were logged against companies in the
+                    last month.
+          data_parts: []
+          deleted: null
+          created:
+            timestamp:
+              _state: stamps.within_week
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+          updated:
+            timestamp:
+              _state: stamps.within_week
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+        # Older bucket.
+        - _id:
+            _string.concat:
+              - "seed-conversation-older-"
+              - _user: id
+          owner:
+            user_id:
+              _user: id
+            name:
+              _user: profile.name
+          title: Contacts per company
+          messages:
+            - id: seed-msg-older-user
+              role: user
+              parts:
+                - type: text
+                  text: List the top 5 companies by number of contacts.
+            - id: seed-msg-older-assistant
+              role: assistant
+              parts:
+                - type: text
+                  text: >-
+                    These five companies have the most contacts on record.
+          data_parts: []
+          deleted: null
+          created:
+            timestamp:
+              _state: stamps.older
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+          updated:
+            timestamp:
+              _state: stamps.older
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+        # Soft-deleted: carries a real deleted change stamp rather than null, so
+        # the rail's exclusion filter (deleted.timestamp: { $exists: false }) is
+        # exercised against a stamp, not only against absence. Must never appear
+        # in the rail.
+        - _id:
+            _string.concat:
+              - "seed-conversation-deleted-"
+              - _user: id
+          owner:
+            user_id:
+              _user: id
+            name:
+              _user: profile.name
+          title: An old draft that was deleted
+          messages:
+            - id: seed-msg-deleted-user
+              role: user
+              parts:
+                - type: text
+                  text: Never mind, I will start over.
+          data_parts: []
+          created:
+            timestamp:
+              _state: stamps.within_week
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+          updated:
+            timestamp:
+              _state: stamps.within_week
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+          deleted:
+            timestamp:
+              _date: now
+            user:
+              name:
+                _user: profile.name
+              id:
+                _user: id
+  - :return:
+      ok: true
+      inserted:
+        _step: insert_conversations.insertedCount

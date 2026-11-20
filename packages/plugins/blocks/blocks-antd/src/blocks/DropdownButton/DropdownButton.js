@@ -16,7 +16,7 @@
 
 import React, { useCallback } from 'react';
 import { Button, ConfigProvider, Dropdown, Space } from 'antd';
-import { get, type } from '@lowdefy/helpers';
+import { get, journeyTargetSelectors, type } from '@lowdefy/helpers';
 
 import { cn, withBlockDefaults } from '@lowdefy/block-utils';
 import getDisabled from '../../getDisabled.js';
@@ -74,8 +74,10 @@ function DropdownButtonBlock({
     }
     const eventShortcut = item.eventName ? events[item.eventName]?.shortcut : undefined;
     const itemShortcut = eventShortcut ?? item.shortcut;
+    const key = item.eventName ?? `item-${i}`;
     return {
-      key: item.eventName ?? `item-${i}`,
+      ...journeyTargetSelectors.controlMarks({ blockId, control: key }),
+      key,
       label: (
         <span>
           {item.title}

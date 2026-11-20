@@ -470,46 +470,28 @@
       "path": "content/testing/journey-data-sets.md"
     },
     {
+      "slug": "testing/endpoint-tests",
+      "title": "Endpoint Tests",
+      "section": "Testing",
+      "path": "content/testing/endpoint-tests.md"
+    },
+    {
+      "slug": "testing/access-table",
+      "title": "Access Table",
+      "section": "Testing",
+      "path": "content/testing/access-table.md"
+    },
+    {
       "slug": "testing/explore-pull-request",
       "title": "Exploring a Pull Request",
       "section": "Testing",
       "path": "content/testing/explore-pull-request.md"
     },
     {
-      "slug": "testing/e2e-introduction",
-      "title": "E2E Testing",
+      "slug": "testing/e2e-utils-migration",
+      "title": "Moving from e2e-utils",
       "section": "Testing",
-      "path": "content/testing/e2e-introduction.md"
-    },
-    {
-      "slug": "testing/e2e-getting-started",
-      "title": "Getting Started",
-      "section": "Testing",
-      "path": "content/testing/e2e-getting-started.md"
-    },
-    {
-      "slug": "testing/e2e-writing-tests",
-      "title": "Writing Tests",
-      "section": "Testing",
-      "path": "content/testing/e2e-writing-tests.md"
-    },
-    {
-      "slug": "testing/e2e-mocking",
-      "title": "Mocking Requests",
-      "section": "Testing",
-      "path": "content/testing/e2e-mocking.md"
-    },
-    {
-      "slug": "testing/e2e-auth",
-      "title": "Testing Authentication",
-      "section": "Testing",
-      "path": "content/testing/e2e-auth.md"
-    },
-    {
-      "slug": "testing/e2e-configuration",
-      "title": "Configuration",
-      "section": "Testing",
-      "path": "content/testing/e2e-configuration.md"
+      "path": "content/testing/e2e-utils-migration.md"
     },
     {
       "slug": "input-blocks/inputgallery",
@@ -2192,6 +2174,14 @@
       "typeName": "_date"
     },
     {
+      "slug": "operators/_decimal",
+      "title": "_decimal",
+      "section": "Operators",
+      "path": "content/operators/_decimal.md",
+      "kind": "operator",
+      "typeName": "_decimal"
+    },
+    {
       "slug": "operators/_diff",
       "title": "_diff",
       "section": "Operators",
@@ -3105,7 +3095,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "2d8a2b03ae7b1a4d640223f23bebea31ef5d3c052652f566aa0b68adff4933da"
+      "hash": "ed77a2a91822b3e4a1890e9fac7b445399d43ed0ac73579867a5a1d531480dfe"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3144,7 +3134,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "67982e5e01dfa11e4591ba3569a8bf5df6f97f7c0f6557dff3e3bca209600e69"
+      "hash": "a25c53856faf0db8be8a6587216732e550bfc311c44712700ceecd07b9f5ddd2"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3256,7 +3246,7 @@
       "files": [
         "plugins/plugins-actions.yaml"
       ],
-      "hash": "439d52b09b29109750574822920287f6172bc2f603c9823ddb89b94737260f59"
+      "hash": "608d6ed6fceefc6d56658c749dc571db60ff298213379bdfa2ea8dbe19b2e6a4"
     },
     "plugins/plugins-connections": {
       "files": [
@@ -3281,7 +3271,7 @@
       "files": [
         "plugins/PostHog.yaml"
       ],
-      "hash": "54ef91d2b8cb0d977dda85e0f73fabdd399b489df3fbfbd4681d14dfce0f9d96"
+      "hash": "e5a1ddf5e10e59a440c3fe1098ab1690f084d94001976cca42e2096e1e134d45"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -3385,57 +3375,42 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "954e1aaacaf6abe246a4574fad5dee7e54b947b48652133da667e592e678f122"
+      "hash": "cefb34459227b116b5f81e700eded23081e1247962c9ff7d8309b824eb499ca9"
     },
     "testing/journey-data-sets": {
       "files": [
         "testing/journey-data-sets.md",
         "testing/journey-data-sets.yaml"
       ],
-      "hash": "b88281aa53a6a388dff04045c3be230aec6e959d2455f13dd8338cf040963c75"
+      "hash": "7e6321f527337621cc59135070bf6597e277191167cd8730382a17f2c4af42fe"
+    },
+    "testing/endpoint-tests": {
+      "files": [
+        "testing/endpoint-tests.md",
+        "testing/endpoint-tests.yaml"
+      ],
+      "hash": "898ce7c5c085a12bd0c7f0a99b01f284ab66c7b47b59d539cc6f8efb30e09b1e"
+    },
+    "testing/access-table": {
+      "files": [
+        "testing/access-table.md",
+        "testing/access-table.yaml"
+      ],
+      "hash": "90c044e9537ae6a9b72c4c9f99a6497f51f7e1d440c96b8ab13df1ca732d0fe1"
     },
     "testing/explore-pull-request": {
       "files": [
         "testing/explore-pull-request.md",
         "testing/explore-pull-request.yaml"
       ],
-      "hash": "1a36582512bc2878bc3240bafe50405d42d79defc567015892a3452dc9bb02b8"
+      "hash": "c97ee14faeeafe1ef3bdf5cbffabccb15dc5a3b0040ed60feb48ccaf1c569502"
     },
-    "testing/e2e-introduction": {
+    "testing/e2e-utils-migration": {
       "files": [
-        "testing/e2e-introduction.yaml"
+        "testing/e2e-utils-migration.md",
+        "testing/e2e-utils-migration.yaml"
       ],
-      "hash": "4d490055b0153e2278d13fae8029966bc7b313c0cb17155411bcbf19ca252150"
-    },
-    "testing/e2e-getting-started": {
-      "files": [
-        "testing/e2e-getting-started.yaml"
-      ],
-      "hash": "e8edb96355d7cceb727a2720833273f1909b71958a7a86c4386219ab20f03248"
-    },
-    "testing/e2e-writing-tests": {
-      "files": [
-        "testing/e2e-writing-tests.yaml"
-      ],
-      "hash": "beb914d1029677e1c1124c1127f362a4defe3e10160668c9ac864d010da5cbc5"
-    },
-    "testing/e2e-mocking": {
-      "files": [
-        "testing/e2e-mocking.yaml"
-      ],
-      "hash": "0ec5cfa5672c4f704ef5cecc27c969205274e9af3944c0f806b53ebffe7540ad"
-    },
-    "testing/e2e-auth": {
-      "files": [
-        "testing/e2e-auth.yaml"
-      ],
-      "hash": "7e21e6e51df915d906d23cdb8abd0272359092eed5b2eeaf6dbf0f6223a6f884"
-    },
-    "testing/e2e-configuration": {
-      "files": [
-        "testing/e2e-configuration.yaml"
-      ],
-      "hash": "cf462dd44839dba1d6f856407b6bf10deff9ace9e1eea27fba6c32d565c94ec7"
+      "hash": "1c5b8b42bccb49d997af889a9824066390ac6e9e758e8ddb7969d23d3114a0f0"
     },
     "input-blocks/inputgallery": {
       "files": [
@@ -4636,7 +4611,7 @@
         "blocks/container/Label.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "6462dcd1e088f79476551e4da47fdeca856b5fba465af19e5316fb680d371d6e"
+      "hash": "1f94ba97a6d2438e7272688c4740afe30eb16a3fcb4cd0fda2ee23880339ce5e"
     },
     "container-blocks/layout": {
       "files": [
@@ -4930,7 +4905,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "9c59a4cc32c479431602ec3ea4d3f4fe1650d001c69cea48c7d859d1b374d2ca"
+      "hash": "1e836000f854b09ae0b0c16257d295c350cc1c3c06be6c4c9e6d4c71aba5b16b"
     },
     "connections/mssql": {
       "files": [
@@ -5156,7 +5131,7 @@
         "actions/PostHogInit.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "37c86efeee835191f973bef8a9a198034bb9d2605e1bdaae1b98ee26dfb77d80"
+      "hash": "c699ed52e64af1f3460bd41166cbeba802b6e2e9eaa67f44935c33fa04cae3be"
     },
     "actions/posthogoptin": {
       "files": [
@@ -5402,6 +5377,13 @@
         "templates/operators.yaml.njk"
       ],
       "hash": "be0c1763f3c9dc2512d53e9e57652bf6c4640d3eb54b31c74dfba99c1b80b9c9"
+    },
+    "operators/_decimal": {
+      "files": [
+        "operators/_decimal.yaml",
+        "templates/operators.yaml.njk"
+      ],
+      "hash": "ee3510d56b687fb0441cd7f9afb2db795e2b0d7bbf96992b7aa60328b5aa5271"
     },
     "operators/_diff": {
       "files": [

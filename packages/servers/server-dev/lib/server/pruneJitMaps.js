@@ -17,17 +17,17 @@
 import fs from 'fs';
 import path from 'path';
 
-// Removes the jitMaps files of every build context but the one whose file
-// names start with `keep`, so the files on disk stay bounded by the pages
-// built since the last two page edits. A page build's temporary file (written
-// whole, then renamed to .json) is left for that build to rename.
+// Removes every jitMaps file but those named in `keep`. A page build's
+// temporary file (written whole, then renamed to .json) is left for that build
+// to rename.
 function pruneJitMaps({ buildDirectory, keep }) {
+  const keptFiles = new Set(keep);
   const jitMapsDirectory = path.join(buildDirectory, 'jitMaps');
   if (!fs.existsSync(jitMapsDirectory)) {
     return;
   }
   for (const file of fs.readdirSync(jitMapsDirectory)) {
-    if (file.endsWith('.json') && !file.startsWith(keep)) {
+    if (file.endsWith('.json') && !keptFiles.has(file)) {
       fs.rmSync(path.join(jitMapsDirectory, file), { force: true });
     }
   }

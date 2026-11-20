@@ -57,14 +57,14 @@ Versions are compared only when both are releases, or both have the same major v
 
 Agents manage the dev server with these tools, and never run `lowdefy dev`, choose ports, or kill processes themselves:
 
-| Tool                 | Purpose                                                                                                                                                                                                                                                          |
-| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `lowdefy_dev_start`  | Start the app's dev server (or return the running one) and wait until it is ready. `restart: true` when it seems stuck, or after secrets a wrapper injects have changed (`.env` and local plugin code need none); `clean: true` also deletes the build directory |
-| `lowdefy_dev_stop`   | Stop the app's dev server if the hub started it                                                                                                                                                                                                                  |
-| `lowdefy_dev_status` | Owner, state, URL and build status, without starting anything                                                                                                                                                                                                    |
-| `lowdefy_dev_logs`   | Recent output of a hub-started dev server, optionally filtered                                                                                                                                                                                                   |
-| `lowdefy_run_tests`  | Run the app's journeys against its dev server, as `lowdefy test` does: all of them, a folder or glob (`paths`), or a tagged section (`tags`), narrowed by name with `filter`. Returns a summary and the failures; all results go to `.lowdefy/test/results.json` |
-| `lowdefy_dev_list`   | Dev servers across the checkout's apps and other checkouts                                                                                                                                                                                                       |
+| Tool                 | Purpose                                                                                                                                                                                                                                                                                                               |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lowdefy_dev_start`  | Start the app's dev server (or return the running one) and wait until it is ready. `restart: true` when it seems stuck, or after secrets a wrapper injects have changed (`.env` and local plugin code need none); `clean: true` also deletes the build directory                                                      |
+| `lowdefy_dev_stop`   | Stop the app's dev server if the hub started it                                                                                                                                                                                                                                                                       |
+| `lowdefy_dev_status` | Owner, state, URL and build status, without starting anything                                                                                                                                                                                                                                                         |
+| `lowdefy_dev_logs`   | Recent output of a hub-started dev server, optionally filtered                                                                                                                                                                                                                                                        |
+| `lowdefy_run_tests`  | Run the app's journeys against its dev server, as `lowdefy test` does: all of them, a folder or glob (`paths`), or a tagged section (`tags`), narrowed by name with `filter`; `concurrency` runs up to 3 browser journeys at once. Returns a summary and the failures; all results go to `.lowdefy/test/results.json` |
+| `lowdefy_dev_list`   | Dev servers across the checkout's apps and other checkouts                                                                                                                                                                                                                                                            |
 
 The dev server itself also serves the MCP endpoint over streamable HTTP at `/lowdefy-docs/mcp`, for clients that connect by URL. Through `lowdefy mcp`, restart is `lowdefy_dev_start` with `restart: true` rather than `lowdefy_restart`.
 
@@ -263,7 +263,11 @@ Scheduled and detached-only endpoints are `InternalApi` by design, so a plain ru
 
 This is dev-only — enable it when you're comfortable with the agent writing to your dev data.
 
+Calling an endpoint or request directly is the way to check logic, calculations, permissions and what it writes while editing: pass `user` and `data` to act as a [data set](/journey-data-sets) user on a database of its own. To keep such a check as a regression test, write a journey that needs no browser: driven from the page, or a [page-less journey](/config-tests#page-less-journeys) with `call`, `request` or `webhook` steps for endpoint and server logic, with a `cases` table for many cases and `stubs` for outside services. An [endpoint test](/endpoint-tests) holds only what a journey cannot say, such as a value computed in code.
+
 ## Journeys — verify behaviour, not just layout
+
+A journey in the browser is the most expensive check an agent has, so keep `expect.text` for what only a browser shows: what a page shows, how it reacts and paths across pages. While editing, logic, permissions and what a request or endpoint writes are checked with `lowdefy_run_request` and `lowdefy_run_endpoint` above; their regression test is a journey that targets blocks by `blockId` and checks state, calls and the database, which needs no browser.
 
 A screenshot shows what rendered; it cannot tell the agent whether the form submits, the modal opens or the filter works. `lowdefy_run_journey` (or `POST /lowdefy-docs/journey`) opens a page headless and drives it through a declarative list of steps — a tiny Playwright — then reports what happened as data. Blocks are addressed by their `blockId`, through the same `#bl-<blockId>` DOM contract `@lowdefy/e2e-utils` uses, so a journey reads like the config it tests:
 
@@ -422,7 +426,7 @@ The kinds are `action-error`, `client-error`, `server-error`, `request-failed` (
 
 Screenshots taken before the failure are kept: over MCP they arrive as image content after the JSON (with the JSON listing only their names); over HTTP they are base64 in the JSON body.
 
-Malformed steps are answered before a browser opens — an unknown key returns `Unknown journey step "hover". Steps are: click, fill, select, press, back, goto, email, as, wait, screenshot, expect.` (a `400` on the HTTP route), distinct from the `502` a render that could not run returns.
+Malformed steps are answered before a browser opens — an unknown key returns `Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request.` (a `400` on the HTTP route), distinct from the `502` a render that could not run returns.
 
 To test auth itself — sign-up, email verification, sign-in, invitations, organization switching — pass `"user": "none"`: no caller is injected, the journey starts signed out, and the app's own sessions carry through its steps. [Config Tests](/config-tests#testing-sign-up-and-sign-in) covers the mail sink and the database these journeys need.
 

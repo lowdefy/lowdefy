@@ -32,9 +32,7 @@ test('addKeys accepts plugin-checks and records nothing for it', () => {
   const { components, context } = runAddKeys(['plugin-checks']);
   expect(context.errors).toEqual([]);
   expect(context.pluginCheckSlugRefs.size).toBe(0);
-  expect(context.keyMap[components.pages[0]['~k']]['~ignoreBuildChecks']).toEqual([
-    'plugin-checks',
-  ]);
+  expect(context.keyMap[components.pages[0]['~k']].i).toEqual(['plugin-checks']);
 });
 
 test('addKeys accepts built-in slugs and records nothing for them', () => {

@@ -56,6 +56,21 @@ vi.doMock('./acquireJourneyRunSlots.js', () => ({
   default: mockAcquireJourneyRunSlots,
 }));
 
+// The headless run's harness and runner, loaded only by --headless --build.
+const mockOpenTestApp = vi.fn();
+vi.doMock('@lowdefy/test-utils', () => ({ openTestApp: mockOpenTestApp }));
+const mockCreateBuildHost = vi.fn();
+const mockRunHeadlessJourney = vi.fn();
+const mockHostClose = vi.fn();
+vi.doMock('@lowdefy/journey-headless', () => ({
+  createBuildHost: mockCreateBuildHost,
+  runHeadlessJourney: mockRunHeadlessJourney,
+}));
+
+// The machine's memory pressure would hold a --concurrency run at one on a busy machine.
+const mockReadMemoryPressure = vi.fn(() => 'normal');
+vi.doMock('../hub/readMemoryPressure.js', () => ({ default: mockReadMemoryPressure }));
+
 let configDirectory;
 let context;
 let logs;
@@ -101,6 +116,13 @@ beforeEach(() => {
   mockAcquireJourneyRunSlots.mockResolvedValue({ release: mockReleaseSlots });
   mockPost.mockResolvedValue({ data: { passed: true, steps: [] } });
   mockGet.mockResolvedValue({ data: { buildId: 'build-1' } });
+  mockOpenTestApp.mockReset();
+  mockOpenTestApp.mockResolvedValue({ close: vi.fn() });
+  mockHostClose.mockReset();
+  mockCreateBuildHost.mockReset();
+  mockCreateBuildHost.mockResolvedValue({ close: mockHostClose });
+  mockRunHeadlessJourney.mockReset();
+  mockRunHeadlessJourney.mockResolvedValue({ pageId: 'form', passed: true, steps: [] });
 });
 
 afterEach(() => {
@@ -225,7 +247,7 @@ test('test reports a malformed journey file as a failure and still runs the othe
   expect(logs.error[2]).toEqual(
     '      Invalid journey file: Journey should have required property "steps".'
   );
-  expect(logs.info.some((line) => /^PASS  valid journey  \(1 steps, \d+ms\)$/.test(line))).toBe(
+  expect(logs.info.some((line) => /^PASS {2}valid journey {2}\(1 steps, \d+ms\)$/.test(line))).toBe(
     true
   );
   expect(logs.error[logs.error.length - 1]).toEqual('1 passed, 1 failed of 2 journeys');
@@ -753,6 +775,86 @@ test('test --lint lints a journey with a list of users once', async () => {
   );
 });
 
+// A page-less journey whose steps live in a shared file and whose rows fill in the endpoint and
+// the user.
+function writeCaseTable() {
+  writeConfigFile(
+    'tests/shared/comment-steps.yaml',
+    '- call: { endpoint: { _case: endpoint }, payload: { _case: payload } }\n- expect: { status: 400 }\n'
+  );
+  writeJourneyFile(
+    'cases.yaml',
+    `name: refuses another company
+data: tickets
+user: { _case: user }
+cases:
+  - { name: ticket, user: admin, endpoint: tickets-add-comment, payload: { ticket_id: T-B-1 } }
+  - { name: workflow, user: member, endpoint: workflow-submit, payload: { action_id: A-B-1 } }
+  - { name: note, user: stranger, endpoint: notes-add, payload: { note_id: N-B-1 } }
+steps:
+  _ref: tests/shared/comment-steps.yaml
+`
+  );
+}
+
+test('test runs a case table once per row, each named for its row, with its values filled in', async () => {
+  const { default: test } = await import('./test.js');
+  writeCaseTable();
+  await test({ context });
+  const bodies = mockPost.mock.calls.map(([, body]) => body);
+  expect(bodies.map((body) => body.user)).toEqual(['admin', 'member', 'stranger']);
+  expect(bodies[1].steps).toEqual([
+    { call: { endpoint: 'workflow-submit', payload: { action_id: 'A-B-1' } } },
+    { expect: { status: 400 } },
+  ]);
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringContaining('PASS  refuses another company [ticket]'),
+    expect.stringContaining('PASS  refuses another company [workflow]'),
+    expect.stringContaining('PASS  refuses another company [note]'),
+  ]);
+  expect(logs.info).toContain('3 passed, 0 failed of 3 journeys');
+});
+
+test('test --filter picks one row of a case table by its name', async () => {
+  const { default: test } = await import('./test.js');
+  writeCaseTable();
+  context.options.filter = '[workflow]';
+  await test({ context });
+  expect(mockPost).toHaveBeenCalledTimes(1);
+  expect(mockPost.mock.calls[0][1].steps[0]).toEqual({
+    call: { endpoint: 'workflow-submit', payload: { action_id: 'A-B-1' } },
+  });
+});
+
+test('test --lint lints a case table once, as its first row', async () => {
+  const { default: test } = await import('./test.js');
+  writeConfigFile('tests/data/tickets.yaml', 'users:\n  admin:\n    roles: [admin]\n');
+  writeCaseTable();
+  context.options = { lint: true };
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(logs.warn.filter((line) => line.startsWith('L5'))).toEqual([]);
+  expect([...logs.info, ...logs.error]).toContainEqual(
+    expect.stringMatching(/^Linted 1 journeys:/)
+  );
+});
+
+test('test refuses a case table beside a list of users once, as an invalid journey file', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile(
+    'cases.yaml',
+    'name: both\ndata: tickets\nuser: [admin, member]\ncases:\n  - { name: one }\nsteps:\n  - call: { endpoint: save }\n'
+  );
+  await test({ context });
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(logs.error).toContainEqual(
+    expect.stringContaining(
+      'Invalid journey file: Journey has "cases" and a list of users: write a row per user'
+    )
+  );
+  expect(logs.error).toContain('0 passed, 1 failed of 1 journeys');
+});
+
 // A journey refreshed with production evidence: `sessions` over the 30 days of
 // September, or the `months` given. No evidence when neither is given.
 function rankedJourneyYaml({ name, sessions, months, failures = 0, ...rest }) {
@@ -1064,4 +1166,674 @@ test('test frees the journey run slots when a signal stops the run', async () =>
     exit.mockRestore();
     once.mockRestore();
   }
+});
+
+test('test --build without --headless is refused before anything runs', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.options = { port: 3000, build: true };
+  await test({ context });
+  expect(logs.error[0]).toMatch(/^--build runs the headless journeys on the production build/);
+  expect(process.exitCode).toBe(1);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+});
+
+function dataJourneyYaml({ name, serial = false }) {
+  return `name: ${name}\npageId: form\ndata: base\n${
+    serial ? 'serial: true\n' : ''
+  }steps:\n  - click: submit\n`;
+}
+
+// Answers each post after the delay its journey's name maps to, counting the posts in flight.
+function delayedPosts({ delays }) {
+  const flight = { now: 0, max: 0, order: [] };
+  mockPost.mockImplementation(async (url, body) => {
+    const name = body.recording?.journey?.split('#')[1] ?? body.steps.length;
+    flight.now += 1;
+    flight.max = Math.max(flight.max, flight.now);
+    flight.order.push(name);
+    await new Promise((resolve) => setTimeout(resolve, delays[name] ?? 0));
+    flight.now -= 1;
+    return { data: { passed: true, steps: [] } };
+  });
+  return flight;
+}
+
+test('test --concurrency 2 keeps two data set journeys in flight and prints them in run order', async () => {
+  const { default: test } = await import('./test.js');
+  // The journey with no data set is first in the selection, and runs alone after the others.
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'no data' }));
+  writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'slow' }));
+  writeJourneyFile('c.yaml', dataJourneyYaml({ name: 'quick' }));
+  writeJourneyFile('d.yaml', dataJourneyYaml({ name: 'next' }));
+  context.options = { ...context.options, concurrency: '2' };
+  const flight = delayedPosts({ delays: { slow: 60 } });
+  await test({ context });
+  expect(flight.max).toBe(2);
+  expect(flight.order).toEqual(['slow', 'quick', 'next', 'no data']);
+  // quick and next finished before slow, and print after it, in run order; the alone journey
+  // first in the selection did not hold them back.
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringMatching(/^PASS {2}slow/),
+    expect.stringMatching(/^PASS {2}quick/),
+    expect.stringMatching(/^PASS {2}next/),
+    expect.stringMatching(/^PASS {2}no data/),
+  ]);
+  const run = JSON.parse(fs.readFileSync(path.join(context.directories.test, 'run.json'), 'utf8'));
+  expect(Object.keys(run.journeys)).toEqual([
+    'tests/journeys/a.yaml#no data',
+    'tests/journeys/b.yaml#slow',
+    'tests/journeys/c.yaml#quick',
+    'tests/journeys/d.yaml#next',
+  ]);
+  expect(logs.info[logs.info.length - 1]).toEqual('4 passed, 0 failed of 4 journeys');
+});
+
+test('test runs one journey at a time by default and a serial journey alone', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'first' }));
+  writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'second' }));
+  const flight = delayedPosts({ delays: {} });
+  await test({ context });
+  expect(flight.max).toBe(1);
+
+  context.options = { ...context.options, concurrency: '3' };
+  writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'first', serial: true }));
+  const serialFlight = delayedPosts({ delays: {} });
+  await test({ context });
+  expect(serialFlight.max).toBe(1);
+  expect(serialFlight.order).toEqual(['second', 'first']);
+});
+
+test('test --concurrency out of range is refused before a server starts', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.options = { ...context.options, concurrency: '4' };
+  await test({ context });
+  expect(logs.error).toEqual(['--concurrency must be an integer from 1 to 3. Received "4".']);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --concurrency with --headless is refused before anything opens', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.options = {
+    ...context.options,
+    headless: true,
+    build: true,
+    concurrency: '2',
+    typedOptions: ['headless', 'build', 'concurrency'],
+  };
+  await test({ context });
+  expect(logs.error).toEqual([
+    '--concurrency runs browser journeys side by side, and a headless run goes one at a time: drop --concurrency, or drop --headless to run the browser journeys side by side.',
+  ]);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless leaves a concurrency from lowdefy.yaml alone and runs one at a time', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'first' }));
+  writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'second' }));
+  context.options = {
+    ...context.options,
+    headless: true,
+    concurrency: 2,
+    typedOptions: ['headless'],
+  };
+  const flight = delayedPosts({ delays: {} });
+  await test({ context });
+  expect(flight.max).toBe(1);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless posts each journey headless to the dev server, takes no slots and lists browser-only ones', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'reads the title' }));
+  context.options = { ...context.options, headless: true };
+  // a.yaml is posted first and passes; b.yaml answers browser-only.
+  mockPost
+    .mockResolvedValueOnce({
+      data: { pageId: 'form', passed: true, steps: [], exercised: { pages: ['form'] } },
+    })
+    .mockResolvedValueOnce({
+      data: {
+        pageId: 'form',
+        browserOnly: {
+          index: 0,
+          step: { click: 'submit' },
+          reason: 'DownloadFile needs the browser.',
+        },
+        steps: [],
+      },
+    });
+  await test({ context });
+  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(mockStartDevServer).toHaveBeenCalledWith({ context });
+  expect(mockPost).toHaveBeenCalledTimes(2);
+  expect(mockPost.mock.calls.every(([, body]) => body.headless === true)).toBe(true);
+  expect(mockPost.mock.calls.every(([, body]) => body.recording === undefined)).toBe(true);
+  expect(logs.info).toContain(
+    'BROWSER-ONLY  reads the title  step 0 (click "submit"): DownloadFile needs the browser.'
+  );
+  expect(logs.info[logs.info.length - 1]).toBe(
+    '1 passed, 0 failed of 1 journeys, 1 browser-only not run'
+  );
+  expect(process.exitCode).toBeUndefined();
+  const written = JSON.parse(
+    fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8')
+  );
+  expect(written.mode).toBe('dev');
+  expect(written.journeys['tests/journeys/b.yaml#reads the title'].browserOnly.index).toBe(0);
+  expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
+  const exercised = JSON.parse(
+    fs.readFileSync(path.join(context.directories.test, 'exercised.json'), 'utf8')
+  );
+  expect(Object.keys(exercised.journeys)).toEqual(['tests/journeys/a.yaml#clicks submit']);
+});
+
+// The build's auth.json, which the build always writes: the access step reads whether auth is
+// configured and the roles it declares.
+function writeBuildAuth(auth = {}) {
+  fs.mkdirSync(context.directories.build, { recursive: true });
+  fs.writeFileSync(
+    path.join(context.directories.build, 'auth.json'),
+    JSON.stringify({
+      configured: false,
+      roles: [],
+      pages: { roles: {} },
+      api: { roles: {} },
+      ...auth,
+    })
+  );
+}
+
+function headlessContext() {
+  context.directories.server = path.join(configDirectory, '.lowdefy', 'server');
+  context.options = { ...context.options, headless: true, build: true };
+  writeBuildAuth();
+}
+
+test('test --headless --build runs headless journeys on the build with no server or slots, and lists the browser-only ones', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile(
+    'b.yaml',
+    journeyYaml({
+      name: 'reads the title',
+      steps: '  - click: submit\n  - expect: { text: { blockId: title, contains: Saved } }\n',
+    })
+  );
+  headlessContext();
+  await test({ context });
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(mockPost).not.toHaveBeenCalled();
+  expect(mockOpenTestApp).toHaveBeenCalledWith({
+    configDirectory,
+    secrets: {},
+    serverDirectory: context.directories.server,
+  });
+  const app = await mockOpenTestApp.mock.results[0].value;
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(1);
+  expect(mockCreateBuildHost).toHaveBeenCalledWith({
+    app,
+    data: undefined,
+    user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] },
+  });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledWith(
+    expect.objectContaining({ stepTimeout: 5000, configDirectory })
+  );
+  expect(mockHostClose).toHaveBeenCalledTimes(1);
+  expect(logs.info).toEqual([
+    expect.stringMatching(/^PASS {2}clicks submit {2}\(1 steps, \d+ms\)$/),
+    'BROWSER-ONLY  reads the title  step 1 (expect: { text }): expect "text" reads the page in a browser',
+    '1 passed, 0 failed of 1 journeys, 1 browser-only not run',
+  ]);
+  expect(process.exitCode).toBeUndefined();
+  const written = JSON.parse(
+    fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8')
+  );
+  expect(written.journeys['tests/journeys/a.yaml#clicks submit']).toEqual({ passed: true });
+  expect(written.journeys['tests/journeys/b.yaml#reads the title'].browserOnly.index).toBe(1);
+  expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
+});
+
+test('test --headless --build gives every journey the LOWDEFY_TEST_SECRET_ values of its environment, and never a LOWDEFY_SECRET_ value', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  process.env.LOWDEFY_TEST_SECRET_ORG_ID = 'org-a';
+  process.env.LOWDEFY_SECRET_ORG_ID = 'org-real';
+  process.env.LOWDEFY_SECRET_X = 'real';
+  const app = { close: vi.fn() };
+  mockOpenTestApp.mockResolvedValue(app);
+  try {
+    await test({ context });
+  } finally {
+    delete process.env.LOWDEFY_TEST_SECRET_ORG_ID;
+    delete process.env.LOWDEFY_SECRET_ORG_ID;
+    delete process.env.LOWDEFY_SECRET_X;
+  }
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(mockOpenTestApp).toHaveBeenCalledWith({
+    configDirectory,
+    secrets: { ORG_ID: 'org-a' },
+    serverDirectory: context.directories.server,
+  });
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(2);
+  mockCreateBuildHost.mock.calls.forEach(([options]) => {
+    expect(options.app).toBe(app);
+  });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(2);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless --build is refused with the harness message when the build cannot be read', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  headlessContext();
+  mockOpenTestApp.mockRejectedValue(new Error('No Lowdefy build found at "x".'));
+  await test({ context });
+  expect(logs.error).toEqual(['No Lowdefy build found at "x".']);
+  expect(mockCreateBuildHost).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build fails on a failed journey and does not repeat one the runner calls browser-only', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'downloads a file' }));
+  headlessContext();
+  context.options.repeat = '2';
+  mockRunHeadlessJourney.mockImplementation(async ({ journey }) => {
+    if (journey.name === 'downloads a file') {
+      return {
+        pageId: 'form',
+        steps: [],
+        browserOnly: {
+          index: 0,
+          step: { click: 'submit' },
+          reason: 'DownloadFile needs the browser.',
+        },
+      };
+    }
+    return {
+      pageId: 'form',
+      passed: false,
+      steps: [],
+      failure: { index: 0, step: { click: 'submit' }, message: 'Block "submit" is not visible.' },
+    };
+  });
+  await test({ context });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(3);
+  expect(logs.info).toContain(
+    'BROWSER-ONLY  downloads a file  step 0 (click "submit"): DownloadFile needs the browser.'
+  );
+  expect(logs.error[0]).toMatch(/^FAIL {3}clicks submit/);
+  expect(logs.error[logs.error.length - 1]).toBe(
+    '0 passed, 1 failed of 1 journeys, 1 browser-only not run'
+  );
+  expect(process.exitCode).toBe(1);
+});
+
+// One test app per run: the access step and every journey, and every repeat of one, use the app
+// openTestApp opened, each journey on a host (a fresh data session) of its own.
+function openOneApp() {
+  const app = { accessMatrix: vi.fn(), close: vi.fn() };
+  mockOpenTestApp.mockResolvedValue(app);
+  return app;
+}
+
+test('test --headless --build opens the build once and gives each journey a host of its own on it', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile(
+    'b.yaml',
+    `name: saves as a member\npageId: form\ndata: harden\nuser: member\nsteps:\n  - click: submit\n`
+  );
+  writeJourneyFile('c.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  const app = openOneApp();
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(3);
+  expect(mockCreateBuildHost.mock.calls.every(([{ app: given }]) => given === app)).toBe(true);
+  // The pool runs the journey on a data set first, then those with none, which run alone.
+  expect(mockCreateBuildHost.mock.calls.map(([{ data, user }]) => ({ data, user }))).toEqual([
+    { data: 'harden', user: 'member' },
+    { data: undefined, user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] } },
+    { data: undefined, user: { id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] } },
+  ]);
+  expect(mockHostClose).toHaveBeenCalledTimes(3);
+  expect(app.close).toHaveBeenCalledTimes(1);
+  expect(logs.info[logs.info.length - 1]).toBe('3 passed, 0 failed of 3 journeys');
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless --build refuses a journey whose data set is unknown and runs the others on the same app', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile(
+    'b.yaml',
+    `name: reads a missing data set\npageId: form\ndata: no-such-set\nsteps:\n  - click: submit\n`
+  );
+  writeJourneyFile('c.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  const app = openOneApp();
+  mockCreateBuildHost.mockImplementation(async ({ data }) => {
+    if (data === 'no-such-set') {
+      throw new Error('Data set "no-such-set" not found in tests/data.');
+    }
+    return { close: mockHostClose };
+  });
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(3);
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(2);
+  expect(logs.error.some((line) => line.includes('reads a missing data set'))).toBe(true);
+  expect(logs.error.some((line) => line.includes('Data set "no-such-set" not found'))).toBe(true);
+  expect(logs.error[logs.error.length - 1]).toBe('2 passed, 1 failed of 3 journeys');
+  expect(app.close).toHaveBeenCalledTimes(1);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build fails a journey that throws, runs the rest and closes the app once', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  const app = openOneApp();
+  mockRunHeadlessJourney.mockRejectedValueOnce(new Error('The runner broke.'));
+  await test({ context });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(2);
+  expect(logs.error.some((line) => line.includes('The runner broke.'))).toBe(true);
+  expect(logs.error[logs.error.length - 1]).toBe('1 passed, 1 failed of 2 journeys');
+  expect(mockHostClose).toHaveBeenCalledTimes(2);
+  expect(app.close).toHaveBeenCalledTimes(1);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build --repeat runs every repeat on the one app', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'clicks submit again' }));
+  headlessContext();
+  context.options.repeat = '3';
+  const app = openOneApp();
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(mockCreateBuildHost).toHaveBeenCalledTimes(6);
+  expect(mockCreateBuildHost.mock.calls.every(([{ app: given }]) => given === app)).toBe(true);
+  expect(mockHostClose).toHaveBeenCalledTimes(6);
+  expect(app.close).toHaveBeenCalledTimes(1);
+});
+
+// The build's access table as the harness handle's accessMatrix answers it.
+const builtTable = {
+  pages: { billing: { finance: 'allow', 'no-role': 'deny', none: 'deny' } },
+  endpoints: { approve: { finance: 'allow', 'no-role': 'deny', none: 'deny' } },
+};
+
+function accessFilePath() {
+  return path.join(configDirectory, 'tests', 'access.yaml');
+}
+
+function writeAccessYaml(table) {
+  fs.mkdirSync(path.dirname(accessFilePath()), { recursive: true });
+  fs.writeFileSync(accessFilePath(), YAML.stringify(table));
+}
+
+function openWithTable(table = builtTable) {
+  const app = { accessMatrix: vi.fn(async () => table), close: vi.fn() };
+  mockOpenTestApp.mockResolvedValue(app);
+  return app;
+}
+
+function accessContext(options) {
+  context.directories.server = path.join(configDirectory, '.lowdefy', 'server');
+  context.options = { ...context.options, ...options };
+  writeBuildAuth();
+}
+
+const firstFileCommand =
+  'lowdefy build --no-client-build --config-directory <app> && lowdefy test --update-access --config-directory <app>';
+
+// The commands name the app by its full path: the test's app is outside the working directory.
+function withApp(text) {
+  return text.replaceAll('<app>', configDirectory);
+}
+
+test('test --headless --build checks the access table first, then runs the journeys', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  headlessContext();
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  const app = openWithTable();
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(app.accessMatrix).toHaveBeenCalledWith({ data: 'roles' });
+  expect(app.close).toHaveBeenCalledTimes(1);
+  expect(logs.info[0]).toBe('PASS  access table  (1 pages, 1 endpoints)');
+  expect(logs.info[1]).toMatch(/^PASS {2}clicks submit/);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless --build fails on a changed cell, names it, and still runs the journeys', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  headlessContext();
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  openWithTable({
+    pages: builtTable.pages,
+    endpoints: { approve: { finance: 'allow', 'no-role': 'allow', none: 'deny' } },
+  });
+  await test({ context });
+  expect(logs.error).toEqual([
+    'FAIL  access table: tests/access.yaml differs from the build',
+    '      endpoints.approve.no-role: deny → allow',
+    withApp(
+      '      If these changes are meant, run "lowdefy test --update-access --config-directory <app>" and commit tests/access.yaml.'
+    ),
+  ]);
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(1);
+  expect(logs.info[logs.info.length - 1]).toBe('1 passed, 0 failed of 1 journeys');
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build checks the whole table on a filtered run', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'approves a run' }));
+  headlessContext();
+  context.options.filter = ['approves'];
+  writeAccessYaml({ data: 'roles', pages: builtTable.pages, endpoints: {} });
+  const app = openWithTable();
+  await test({ context });
+  expect(app.accessMatrix).toHaveBeenCalledTimes(1);
+  expect(logs.error).toContain('      endpoints.approve: added');
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(1);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build checks the table of an app with no journeys and keeps exit 0 when it matches', async () => {
+  const { default: test } = await import('./test.js');
+  headlessContext();
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  openWithTable();
+  await test({ context });
+  expect(logs.info).toEqual(['PASS  access table  (1 pages, 1 endpoints)']);
+  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/.']);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless --build exits 1 for an app with no journeys when the table differs', async () => {
+  const { default: test } = await import('./test.js');
+  headlessContext();
+  writeAccessYaml({ data: 'roles', pages: {}, endpoints: builtTable.endpoints });
+  openWithTable();
+  await test({ context });
+  expect(logs.error[1]).toBe('      pages.billing: added');
+  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/.']);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build refuses a build it cannot read once, before any journey, even with no journeys', async () => {
+  const { default: test } = await import('./test.js');
+  headlessContext();
+  mockOpenTestApp.mockRejectedValue(new Error('The build is older than the config.'));
+  await test({ context });
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(logs.error).toEqual(['The build is older than the config.']);
+  expect(logs.warn).toEqual([]);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --headless --build warns with the first-file command when the app has auth and no access file', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  headlessContext();
+  writeBuildAuth({ configured: true, roles: [{ id: 'finance' }] });
+  const app = openWithTable();
+  await test({ context });
+  expect(app.accessMatrix).not.toHaveBeenCalled();
+  expect(logs.warn).toEqual([
+    withApp(
+      `This app has auth and no tests/access.yaml, so who reaches which page and endpoint is not checked. Write it with "${firstFileCommand}", then commit the files it writes.`
+    ),
+  ]);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless --build prints nothing about access for an app without auth or access file', async () => {
+  const { default: test } = await import('./test.js');
+  headlessContext();
+  openWithTable();
+  await test({ context });
+  expect(logs.info).toEqual([]);
+  expect(logs.warn).toEqual(['No tests found. Add journeys to tests/journeys/.']);
+});
+
+test('test --access checks the table alone and runs no journeys', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  accessContext({ access: true });
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  openWithTable();
+  await test({ context });
+  expect(logs.info).toEqual(['PASS  access table  (1 pages, 1 endpoints)']);
+  expect(mockRunHeadlessJourney).not.toHaveBeenCalled();
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(process.exitCode).toBeUndefined();
+  expect(context.sendTelemetry).toHaveBeenCalled();
+});
+
+test('test --access fails with the first-file command when the app has no access file', async () => {
+  const { default: test } = await import('./test.js');
+  accessContext({ access: true });
+  openWithTable();
+  await test({ context });
+  expect(logs.error).toEqual([
+    withApp(
+      `No tests/access.yaml to check. Write it with "${firstFileCommand}", then commit the files it writes.`
+    ),
+  ]);
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --access with a journey option is refused before the build opens', async () => {
+  const { default: test } = await import('./test.js');
+  accessContext({ access: true, tag: ['smoke'], typedOptions: ['tag'] });
+  await test({ context });
+  expect(logs.error).toEqual([
+    '--access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.',
+  ]);
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --access with --concurrency is refused before the build opens', async () => {
+  const { default: test } = await import('./test.js');
+  accessContext({ access: true, concurrency: '2', typedOptions: ['concurrency'] });
+  await test({ context });
+  expect(logs.error).toEqual([
+    '--access checks the access table alone: drop --concurrency, or run "lowdefy test --concurrency <n>" to run the browser journeys side by side.',
+  ]);
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+});
+
+test('test --update-access writes the roles data set and the first table, and runs nothing else', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  accessContext({ updateAccess: true });
+  writeBuildAuth({ configured: true, roles: [{ id: 'finance' }] });
+  const app = openWithTable();
+  await test({ context });
+  expect(app.accessMatrix).toHaveBeenCalledWith({ data: 'roles' });
+  const roles = YAML.parse(
+    fs.readFileSync(path.join(configDirectory, 'tests', 'data', 'roles.yaml'), 'utf8')
+  );
+  expect(roles).toEqual({
+    users: {
+      finance: { id: 'finance', roles: ['finance'] },
+      'no-role': { id: 'no-role', roles: [] },
+    },
+  });
+  expect(YAML.parse(fs.readFileSync(accessFilePath(), 'utf8'))).toEqual({
+    data: 'roles',
+    ...builtTable,
+  });
+  expect(logs.info).toEqual([
+    'Wrote tests/data/roles.yaml with users finance, no-role.',
+    'Wrote tests/access.yaml: 1 pages and 1 endpoints as data set "roles". Commit the files written.',
+  ]);
+  expect(mockRunHeadlessJourney).not.toHaveBeenCalled();
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(process.exitCode).toBeUndefined();
+});
+
+test("test --update-access keeps the file's data set and lists what changed", async () => {
+  const { default: test } = await import('./test.js');
+  accessContext({ updateAccess: true });
+  writeAccessYaml({ data: 'staff', pages: builtTable.pages, endpoints: {} });
+  const app = openWithTable();
+  await test({ context });
+  expect(app.accessMatrix).toHaveBeenCalledWith({ data: 'staff' });
+  expect(YAML.parse(fs.readFileSync(accessFilePath(), 'utf8'))).toEqual({
+    data: 'staff',
+    ...builtTable,
+  });
+  expect(fs.existsSync(path.join(configDirectory, 'tests', 'data', 'roles.yaml'))).toBe(false);
+  expect(logs.info).toEqual(['Updated tests/access.yaml:', '      endpoints.approve: added']);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test on the dev server prints one line naming lowdefy test --access when the app has an access file', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  await test({ context });
+  expect(logs.info[0]).toBe(
+    withApp(
+      'tests/access.yaml is checked on the production build, not the dev server: run "lowdefy build --no-client-build --config-directory <app> && lowdefy test --access --config-directory <app>" to check it.'
+    )
+  );
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
+});
+
+test('test --lint prints nothing about access', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeAccessYaml({ data: 'roles', ...builtTable });
+  context.options = { ...context.options, lint: true };
+  await test({ context });
+  expect(logs.info.some((line) => line.includes('access'))).toBe(false);
+  expect(mockOpenTestApp).not.toHaveBeenCalled();
 });

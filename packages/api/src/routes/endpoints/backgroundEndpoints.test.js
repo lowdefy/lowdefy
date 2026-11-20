@@ -425,6 +425,56 @@ test('detached: true without a request origin on context is a LowdefyInternalErr
   expect(serializer.deserialize(result.error).name).toBe('LowdefyInternalError');
 });
 
+test('a host that sets context.sendDetached takes a detached call itself: no CRON_SECRET, origin or fetch', async () => {
+  delete process.env.CRON_SECRET;
+  const fetchMock = vi.fn();
+  global.fetch = fetchMock;
+  const mockReadConfigFile = vi.fn((path) => {
+    if (path === 'api/parent_ep.json') {
+      return {
+        endpointId: 'parent_ep',
+        type: 'Api',
+        auth: { public: true },
+        routine: [
+          {
+            id: 'endpoint:parent_ep:spawn',
+            stepId: 'spawn',
+            type: 'CallApi',
+            properties: { endpointId: 'child_ep', detached: true, payload: { a: 1 } },
+          },
+          { ':return': { spawned: { _step: 'spawn' } } },
+        ],
+      };
+    }
+    return null;
+  });
+  const context = testContext({
+    logger,
+    operators: operatorsServer,
+    readConfigFile: mockReadConfigFile,
+  });
+  delete context.origin;
+  const sendDetached = vi.fn();
+  context.sendDetached = sendDetached;
+  const result = await callEndpoint(context, {
+    blockId: 'b',
+    endpointId: 'parent_ep',
+    pageId: 'p',
+    payload: {},
+  });
+  await flush();
+  expect(result.success).toBe(true);
+  expect(serializer.deserialize(result.response)).toEqual({
+    spawned: { detached: true, endpointId: 'child_ep' },
+  });
+  expect(sendDetached).toHaveBeenCalledTimes(1);
+  expect(sendDetached.mock.calls[0][1]).toMatchObject({
+    endpointId: 'child_ep',
+    payload: { a: 1 },
+  });
+  expect(fetchMock).not.toHaveBeenCalled();
+});
+
 test('webhook endpoints: gated on webhook: true, payload is { body, query, headers }', async () => {
   const { default: runWebhookEndpoint } = await import('./runWebhookEndpoint.js');
   const mockReadConfigFile = vi.fn((path) => {

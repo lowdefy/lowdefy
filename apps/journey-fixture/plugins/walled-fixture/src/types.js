@@ -18,11 +18,19 @@
 // (packages/servers/server-dev/test/journeyFixture/walled.test.mjs). It holds
 // no database address: it names a walled MongoDBCollection connection and
 // reaches MongoDB only through the walled client, so it declares
-// meta.dataSet 'walled'.
+// meta.dataSet 'walled'. FixtureSignature is the webhook verifier of api/payment_events.yaml.
+// UndeclaredFixture declares no dataSet, so the step rails refuse a click that reaches it.
+// FixtureActionChain is a block no headless stand-in models (pages/plugin_block.yaml).
 export default {
-  connections: ['WalledFixture'],
+  blockMetas: {
+    FixtureActionChain: { category: 'display' },
+  },
+  blocks: ['FixtureActionChain'],
+  connections: ['FixtureSignature', 'UndeclaredFixture', 'WalledFixture'],
   connectionMetas: {
+    FixtureSignature: { tenant: false },
+    UndeclaredFixture: { tenant: false },
     WalledFixture: { tenant: false },
   },
-  requests: ['WalledFixtureInsert'],
+  requests: ['UndeclaredFixtureEcho', 'VerifyFixtureSignature', 'WalledFixtureInsert'],
 };

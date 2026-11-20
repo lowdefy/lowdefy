@@ -358,6 +358,12 @@ journeys
   .addOption(new Option('--mutant <id>', 'Run only this mutant, against the journeys on its path.'))
   .addOption(new Option('--list', 'List the sampled mutants and the time estimate, run nothing.'))
   .addOption(new Option('--json', 'Print the report as JSON.'))
+  .addOption(
+    new Option(
+      '--headless',
+      'Run each journey that needs no browser, and its mutant pairs, headless on the dev server; the rest run in the browser.'
+    )
+  )
   .addOption(options.port)
   .addOption(options.refResolver)
   .addOption(
@@ -662,6 +668,24 @@ program
     '[paths...]',
     'Journey files, directories or quoted globs (e.g. "tests/journeys/review/**") to run instead of the whole suite, anywhere under the config directory (tests/journeys/_candidates included).'
   )
+  .addOption(
+    new Option(
+      '--access',
+      'Only compare the access table of the production build (lowdefy build) with tests/access.yaml, and run no journeys. Every --headless --build run checks it too.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--update-access',
+      'Rewrite tests/access.yaml from the production build and run nothing else. With no file, also writes the tests/data/roles.yaml data set it is checked as, when missing.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--concurrency <n>',
+      'Run up to n browser journeys at once (1 to 3). Journeys with no data set, or marked serial, run alone after the rest. Default 1, or LOWDEFY_JOURNEY_CONCURRENCY. One at a time under --repeat or while memory is short; refused with --headless. At 2 or more, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
+    )
+  )
   .addOption(options.configDirectory)
   .addOption(options.devDirectory)
   .addOption(options.disableTelemetry)
@@ -697,8 +721,21 @@ program
   )
   .addOption(
     new Option(
+      '--headless',
+      'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. On the dev server, or on the production build with --build.'
+    )
+  )
+  .addOption(
+    new Option(
+      '--build',
+      'With --headless: run on the production build (lowdefy build) in this process, with no dev server and no browser, for CI. Pass --server-directory when the build is elsewhere.'
+    )
+  )
+  .addOption(options.serverDirectory)
+  .addOption(
+    new Option(
       '--lint',
-      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 pointless as) and run nothing.'
+      'Lint the journeys (L1 placeholders, L2 unasserted actions, L3 fixed waits, L4 writes without data, L5 named data set users, L6 final assertion, L7 pointless as, L8 targets a blockId would make headless) and run nothing.'
     )
   )
   .addOption(options.logLevel)
@@ -717,7 +754,18 @@ program
     )
   )
   .action((paths, commandOptions, command) =>
-    runCommand({ cliVersion, handler: test })({ ...commandOptions, paths }, command)
+    runCommand({ cliVersion, handler: test })(
+      {
+        ...commandOptions,
+        paths,
+        // The options typed on the command line, apart from those the environment set:
+        // --access refuses a typed --port, not a PORT in the shell.
+        typedOptions: Object.keys(commandOptions).filter(
+          (name) => command.getOptionValueSource(name) === 'cli'
+        ),
+      },
+      command
+    )
   );
 
 program

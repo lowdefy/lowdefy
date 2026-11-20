@@ -17,7 +17,7 @@
 import React from 'react';
 import { Button, Tooltip } from 'antd';
 import { renderHtml } from '@lowdefy/block-utils';
-import { type } from '@lowdefy/helpers';
+import { journeyTargetSelectors, type } from '@lowdefy/helpers';
 
 import resolveControlField from '../resolveControlField.js';
 import resolveControlFlag from '../resolveControlFlag.js';
@@ -35,7 +35,7 @@ function getTooltip({ button, showTitle, title }) {
 // Row buttons, key-compatible with the ag-grid buttons cell. With
 // `showOn: hover` they stay hidden until the row is hovered or focused (see
 // tableCells.css for the row contract).
-function ButtonsCell({ value, row, rowKey, column, methods, components, onEvent }) {
+function ButtonsCell({ blockId, value, row, rowKey, column, methods, components, onEvent }) {
   const { cell, compiled } = column;
   const buttons = type.isArray(cell.buttons) ? cell.buttons : [];
   const { Icon } = components;
@@ -92,6 +92,7 @@ function ButtonsCell({ value, row, rowKey, column, methods, components, onEvent 
         iconPlacement={button.iconPlacement}
         aria-label={showTitle || type.isNone(title) ? undefined : String(title)}
         onClick={onClick}
+        {...journeyTargetSelectors.controlMarks({ blockId, control: button.eventName, rowKey })}
       >
         {showTitle && renderHtml({ html: String(title), methods })}
       </Button>

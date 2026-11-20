@@ -1,0 +1,51 @@
+# Rendered by nunjucks with the set's `ids` (the module entry ids of its set):
+# a module _ref names its module literally, so a set's copy needs its own ids
+# written in. See README.md.
+- _ref:
+    module: layout
+    component: card
+    vars:
+      title: Workflows
+      blocks:
+        - _ref:
+            module: {{ ids.workflows }}
+            component: actions-on-entity
+            vars:
+              entity_id:
+                _url_query: _id
+              entity_connection_id:
+                _module.connectionId:
+                  { id: companies-collection, module: {{ ids.companies }} }
+- _ref:
+    module: {{ ids.activities }}
+    component: tile_activities
+    vars:
+      reference_field: company_ids
+      reference_value:
+        _url_query: _id
+      prefill:
+        company_ids:
+          - _url_query: _id
+      on_created:
+        - id: refetch_events
+          type: Request
+          params: get-events
+# Page owns the single check-action modal drop and its on_complete (Part 55
+# D1). The co-present activities tile keeps its own on_created refetch and
+# stays out of on_complete — a check submit changes workflow state, not
+# activities — so only the action steps (actions-on-entity) refresh here.
+- _ref:
+    module: {{ ids.workflows }}
+    component: check-action-modal
+    vars:
+      on_complete:
+        _build.array.concat:
+          - _ref:
+              module: {{ ids.workflows }}
+              component: entity-workflows-refetch
+              vars:
+                entity_id:
+                  _url_query: _id
+                entity_connection_id:
+                  _module.connectionId:
+                    { id: companies-collection, module: {{ ids.companies }} }

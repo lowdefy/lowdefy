@@ -22,13 +22,18 @@ import path from 'path';
 import flowLines from '../journeys/evidence/flowLines.js';
 import runAppTests from './runAppTests.js';
 import sequenceId from '../journeys/evidence/sequenceId.js';
-import { afterEach, beforeEach, expect, test } from 'vitest';
+import { afterEach, beforeEach, expect, test, vi } from 'vitest';
 
+// The machine's memory pressure would hold a concurrency run at one on a busy machine.
+vi.mock('../hub/readMemoryPressure.js', () => ({ default: () => 'normal' }));
+
+let bodies;
 let configDirectory;
 let server;
 let url;
 
 beforeEach(async () => {
+  bodies = [];
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-run-tests-'));
   fs.mkdirSync(path.join(configDirectory, 'tests', 'journeys'), { recursive: true });
   // Stands in for the dev server's POST /lowdefy-docs/journey.
@@ -43,10 +48,30 @@ beforeEach(async () => {
         res.end(JSON.stringify({ buildId: 'build-1' }));
         return;
       }
-      const { pageId } = JSON.parse(body);
+      const posted = JSON.parse(body);
+      bodies.push(posted);
+      const { pageId } = posted;
       res.setHeader('Content-Type', 'application/json');
+      if (pageId === 'shots') {
+        res.end(
+          JSON.stringify({
+            pageId,
+            browserOnly: {
+              index: 0,
+              step: { screenshot: true },
+              reason: 'step "screenshot" needs a browser',
+            },
+            steps: [],
+          })
+        );
+        return;
+      }
       if (pageId === 'orders') {
         res.end(JSON.stringify({ passed: true }));
+        return;
+      }
+      if (pageId === 'slow') {
+        setTimeout(() => res.end(JSON.stringify({ passed: true })), 80);
         return;
       }
       res.end(
@@ -78,8 +103,8 @@ function readResults(answer) {
   if (answer.resultFile === undefined) {
     return [];
   }
-  const { results, skipped } = JSON.parse(fs.readFileSync(answer.resultFile, 'utf8'));
-  return [...results, ...skipped];
+  const { results, browserOnly, skipped } = JSON.parse(fs.readFileSync(answer.resultFile, 'utf8'));
+  return [...results, ...browserOnly, ...skipped];
 }
 
 function writeJourney(fileName, journey) {
@@ -206,6 +231,48 @@ test('runAppTests reports each journey as it finishes', async () => {
     { done: 1, total: 2, name: 'orders list', class: 'PASS' },
     { done: 2, total: 2, name: 'refund button', class: 'FAIL' },
   ]);
+});
+
+test('runAppTests with concurrency 2 reports progress as journeys finish and results in selection order', async () => {
+  writeJourney('a-slow.yaml', {
+    name: 'slow list',
+    pageId: 'slow',
+    data: 'base',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  writeJourney('b-orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    data: 'base',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  const progress = [];
+
+  const answer = await runAppTests({
+    configDirectory,
+    url,
+    concurrency: 2,
+    onProgress: (event) => progress.push(event),
+  });
+
+  expect(progress).toEqual([
+    { done: 1, total: 2, name: 'orders list', class: 'PASS' },
+    { done: 2, total: 2, name: 'slow list', class: 'PASS' },
+  ]);
+  expect(answer.summary).toBe('2 passed, 0 failed of 2 journeys');
+  expect(readResults(answer).map((result) => result.name)).toEqual(['slow list', 'orders list']);
+});
+
+test('runAppTests refuses concurrency with headless, and one out of range, without running anything', async () => {
+  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [] });
+  expect(await runAppTests({ configDirectory, url, headless: true, concurrency: 2 })).toEqual({
+    summary:
+      'concurrency runs browser journeys side by side, and a headless run goes one at a time: drop concurrency, or drop headless to run the browser journeys side by side.',
+  });
+  expect(await runAppTests({ configDirectory, url, concurrency: 5 })).toEqual({
+    summary: 'concurrency must be an integer from 1 to 3. Received 5.',
+  });
+  expect(bodies).toEqual([]);
 });
 
 test('runAppTests runs only the journeys matching the filter', async () => {
@@ -497,4 +564,35 @@ test('runAppTests leaves a tagged run unrecorded', async () => {
   await runAppTests({ configDirectory, url, tags: ['smoke'] });
   expect(bodies).toHaveLength(1);
   expect(bodies[0]).not.toHaveProperty('recording');
+});
+
+test('runAppTests with headless posts every journey headless and reports a browser-only one apart', async () => {
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  writeJourney('shots.yaml', {
+    name: 'orders screenshot',
+    pageId: 'shots',
+    steps: [{ screenshot: true }],
+  });
+  const result = await runAppTests({ configDirectory, url, headless: true });
+  expect(bodies.map((posted) => posted.headless)).toEqual([true, true]);
+  expect(bodies.every((posted) => posted.recording === undefined)).toBe(true);
+  expect(result.summary).toBe('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(result.browserOnly).toEqual([
+    'BROWSER-ONLY  orders screenshot  step 0 (screenshot): step "screenshot" needs a browser',
+  ]);
+  expect(readResults(result)).toContainEqual({
+    name: 'orders screenshot',
+    filePath: 'tests/journeys/shots.yaml',
+    browserOnly: {
+      index: 0,
+      step: { screenshot: true },
+      reason: 'step "screenshot" needs a browser',
+    },
+    report:
+      'BROWSER-ONLY  orders screenshot  step 0 (screenshot): step "screenshot" needs a browser',
+  });
 });

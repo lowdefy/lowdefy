@@ -1,6 +1,3 @@
-/**
- * @vitest-environment jsdom
- */
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -17,8 +14,14 @@
   limitations under the License.
 */
 
+/**
+ * @vitest-environment jsdom
+ */
+
 import { targetFixtures } from '@lowdefy/e2e-utils/targets';
 import { filterElementsChain, targetFromElementsChain } from '@lowdefy/helpers';
+import compileRecord from '@lowdefy/node-utils/journeyCompiler/compileRecord.js';
+import stepIdentity from '@lowdefy/node-utils/journeyCompiler/stepIdentity.js';
 import { autocapturePropertiesForElement } from 'posthog-js/lib/src/autocapture.js';
 
 import enrichEvent from './enrichEvent.js';
@@ -41,14 +44,14 @@ function chainOf(element) {
 }
 
 // The production event posthog-js captures for a click on the element, through enrichEvent with a
-// trace whose describeChain reads the chain as the engine's does, and `configTexts` as the page's
-// config text.
+// trace whose describeChain reads the chain as the engine's does (control marks, no row key), and
+// `configTexts` as the page's config text.
 function enrichedClick({ element, configTexts }) {
   resetPostHogState();
   postHogState.trace = createFakeTrace({
     configTexts,
     describeChain: (chain) => ({
-      ...targetFromElementsChain(chain),
+      ...targetFromElementsChain(chain, { rowKey: false }),
       page_id: 'orders',
       block_type: null,
       nth: null,
@@ -67,7 +70,9 @@ function chainTarget({ target, blockIds }) {
   return {
     block_id: target.block_id,
     row: target.row,
+    row_key: target.row_key,
     column: target.column,
+    control: target.control,
     text: target.text,
     option: target.option,
     block_ids: blockIds,
@@ -137,3 +142,64 @@ test('enrichEvent masks lowdefy_text as it masks $el_text', () => {
   });
   expect(properties).not.toHaveProperty('lowdefy_text');
 });
+
+test('enrichEvent sends a marked cell control by its key and displayed row, with no text or row key', () => {
+  document.body.innerHTML = `
+<div id="bl-invoices"><div class="ag-row" row-index="1" row-id="inv-2"><div class="ag-cell" col-id="actions">
+  <button data-lf-block="invoices" data-lf-control="onPay" data-lf-row-key="inv-2"><span>Pay</span></button>
+</div></div></div>`;
+  const properties = enrichedClick({
+    element: document.querySelector('button span'),
+    configTexts: ['Pay'],
+  });
+  expect(properties).toMatchObject({
+    lowdefy_block_id: 'invoices',
+    lowdefy_row: 1,
+    lowdefy_column: 'actions',
+    lowdefy_control: 'onPay',
+  });
+  expect(properties).not.toHaveProperty('lowdefy_text');
+  expect(JSON.stringify(properties)).not.toContain('inv-2');
+  expect(properties.$elements_chain).toContain('attr__data-lf-control="onPay"');
+});
+
+// The click step a trace record compiles to, as the journey compiler writes it.
+function clickStepOf(target) {
+  return compileRecord({ record: { kind: 'click', target } }).steps[0];
+}
+
+// The production record's target for an enriched click, as `lowdefy journeys pull posthog` maps the
+// lowdefy_* properties (postHogRowToRecord in @lowdefy/cli): a control click has no text token.
+function pulledTarget(properties) {
+  return {
+    block_id: properties.lowdefy_block_id ?? null,
+    block_type: properties.lowdefy_block_type ?? null,
+    row: properties.lowdefy_row ?? null,
+    column: properties.lowdefy_column ?? null,
+    control: properties.lowdefy_control ?? null,
+    text_token: null,
+    nth: null,
+    option: properties.lowdefy_option === true,
+  };
+}
+
+test.each(
+  targetFixtures
+    .filter((fixture) => fixture.target.control !== null)
+    .map((fixture) => [fixture.name, fixture])
+)(
+  'a production click on a marked control has the step identity of its dev recording: %s',
+  (name, fixture) => {
+    document.body.innerHTML = fixture.html;
+    const properties = enrichedClick({
+      element: document.querySelector(fixture.clicked ?? fixture.element),
+      configTexts: [],
+    });
+    // The dev recorder's target is the fixture's: the engine's tests check describeElement on it.
+    const dev = clickStepOf(fixture.target);
+    const production = clickStepOf(pulledTarget(properties));
+    expect(production.click.control).toBe(fixture.target.control);
+    expect(stepIdentity({ step: production })).toBe(stepIdentity({ step: dev }));
+    expect(JSON.stringify(properties)).not.toContain('data-lf-row-key');
+  }
+);

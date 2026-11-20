@@ -37,6 +37,7 @@ const LOWDEFY_PROPERTIES = [
   'lowdefy_block_type',
   'lowdefy_row',
   'lowdefy_column',
+  'lowdefy_control',
   'lowdefy_option',
   'lowdefy_event_scope',
   'lowdefy_event_name',

@@ -40,7 +40,8 @@ function parseList(value) {
 }
 
 // The options of `lowdefy journeys harden`, with their defaults: at most 200
-// mutants (0: no cap), seed 0, 4 workers.
+// mutants (0: no cap), seed 0, 4 workers, journeys in the browser unless
+// --headless.
 function parseHardenOptions(options) {
   const max = parseInteger({ value: options.max, name: 'max', fallback: 200, min: 0 });
   if (max.error) return { error: max.error };
@@ -66,6 +67,7 @@ function parseHardenOptions(options) {
     mutant: options.mutant ?? null,
     list: options.list === true,
     json: options.json === true,
+    headless: options.headless === true,
   };
 }
 

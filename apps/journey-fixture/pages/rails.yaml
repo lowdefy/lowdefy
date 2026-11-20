@@ -6,6 +6,32 @@
 # declares dataSet: redirect) works. The auth rail acts at runtime:
 # logout_button runs Logout, so its click fails, while skipped_logout_button's
 # Logout is skipped (nothing in state allows it), so its click passes.
+# rails_modal's OK button sits in the modal's portal, outside every block
+# wrapper; its onOk calls a request on rails_undeclared (a connection type that
+# declares no dataSet), so a click on { blockId: rails_modal, control: ok } is
+# refused as the modal's. rails_dropdown's item does the same, and its
+# onOpenChange sets rails_dropdown_opened: the rails refuse the click before the
+# runner opens the dropdown to show the item, so the state is never set.
+# The rails check open, fill and select steps the same way: rails_menu's
+# onOpenChange sets rails_menu_opened and then calls the undeclared request, so
+# an open is refused before it hovers the menu and the state is never set, and
+# so is a click on it, which lands on rails_menu_label in its content and opens
+# the dropdown, so the rails check the label, then the dropdown;
+# rails_fill_input's and rails_selector's onChange call it too, so a fill or a
+# select is refused before it types or picks, a select on rails_choice_box (the
+# container around rails_selector) as rails_selector's. rails_radio_box holds two
+# radio groups: a select on it checks the group the option is in, so Gamma
+# (rails_railed_radio, whose onChange calls the undeclared request) is refused
+# and Alpha (rails_safe_radio) is picked. A press is checked against the
+# focused block and every block whose shortcut it fires: mod+k fires
+# rails_shortcut_button's onClick, which calls the undeclared request, so the
+# press is refused; mod+j fires rails_safe_shortcut_button's, which only sets
+# state; Enter in rails_enter_logout_input runs Logout, so the auth rail fails it.
+# Escape in rails_escape_modal (focus sits in its portal, outside every block
+# wrapper) fires its onCancel, which calls the undeclared request, so the press
+# is refused as the modal's. Enter in rails_escape_modal_note, an input in that
+# modal, is refused as the modal's too, in the browser and headless: the rails
+# check every block around the focused input, up to the modal.
 id: rails
 type: Box
 requests:
@@ -14,6 +40,11 @@ requests:
     connectionId: rails_external
     properties:
       url: /hook
+  - id: call_undeclared
+    type: UndeclaredFixtureEcho
+    connectionId: rails_undeclared
+    properties:
+      value: rails
   - id: save_rail_item
     type: MongoDBInsertOne
     connectionId: fixture_db
@@ -91,3 +122,178 @@ blocks:
     properties:
       type: success
       message: Rail item saved
+  - id: open_rails_modal_button
+    type: Button
+    properties:
+      title: Open rails modal
+    events:
+      onClick:
+        - id: open_rails_modal
+          type: CallMethod
+          params:
+            blockId: rails_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: rails_modal
+    type: Modal
+    properties:
+      title: Call the undeclared service?
+    events:
+      onOk:
+        - id: call_undeclared
+          type: Request
+          params: call_undeclared
+    blocks:
+      - id: rails_modal_body
+        type: Paragraph
+        properties:
+          content: Its OK button calls a request a data set cannot redirect.
+  - id: rails_dropdown
+    type: DropdownButton
+    properties:
+      title: Rails actions
+      items:
+        - title: Call undeclared
+          eventName: onCallUndeclared
+    events:
+      onOpenChange:
+        - id: set_rails_dropdown_opened
+          type: SetState
+          params:
+            rails_dropdown_opened: true
+      onCallUndeclared:
+        - id: call_undeclared_from_dropdown
+          type: Request
+          params: call_undeclared
+  - id: rails_menu
+    type: DropdownMenu
+    properties:
+      links:
+        - id: rails_menu_settings
+          type: MenuLink
+          properties:
+            title: Settings
+    events:
+      onOpenChange:
+        - id: set_rails_menu_opened
+          type: SetState
+          params:
+            rails_menu_opened: true
+        - id: call_undeclared_on_open
+          type: Request
+          params: call_undeclared
+    blocks:
+      - id: rails_menu_label
+        type: Button
+        properties:
+          title: Rails menu
+  - id: rails_fill_input
+    type: TextInput
+    properties:
+      title: Rails note
+    events:
+      onChange:
+        - id: call_undeclared_on_fill
+          type: Request
+          params: call_undeclared
+  # A container: a select on it picks in rails_selector, so the rails check rails_selector.
+  - id: rails_choice_box
+    type: Box
+    blocks:
+      - id: rails_selector
+        type: Selector
+        properties:
+          title: Rails choice
+          options:
+            - First
+            - Second
+        events:
+          onChange:
+            - id: call_undeclared_on_select
+              type: Request
+              params: call_undeclared
+  - id: rails_radio_box
+    type: Box
+    blocks:
+      - id: rails_safe_radio
+        type: RadioSelector
+        properties:
+          title: Safe choice
+          options:
+            - Alpha
+            - Beta
+      - id: rails_railed_radio
+        type: RadioSelector
+        properties:
+          title: Railed choice
+          options:
+            - Gamma
+            - Delta
+        events:
+          onChange:
+            - id: call_undeclared_on_radio
+              type: Request
+              params: call_undeclared
+  - id: rails_shortcut_button
+    type: Button
+    properties:
+      title: Railed shortcut
+    events:
+      onClick:
+        shortcut: mod+k
+        try:
+          - id: call_undeclared_on_shortcut
+            type: Request
+            params: call_undeclared
+  - id: rails_safe_shortcut_button
+    type: Button
+    properties:
+      title: Safe shortcut
+    events:
+      onClick:
+        shortcut: mod+j
+        try:
+          - id: set_rails_shortcut_ran
+            type: SetState
+            params:
+              rails_shortcut_ran: true
+  - id: rails_enter_logout_input
+    type: TextInput
+    properties:
+      title: Sign out on enter
+    events:
+      onPressEnter:
+        - id: sign_out_on_enter
+          type: Logout
+  - id: open_rails_escape_modal_button
+    type: Button
+    properties:
+      title: Open escape modal
+    events:
+      onClick:
+        - id: open_rails_escape_modal
+          type: CallMethod
+          params:
+            blockId: rails_escape_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: rails_escape_modal
+    type: Modal
+    properties:
+      title: Escape calls the undeclared service
+    events:
+      onCancel:
+        - id: call_undeclared_on_cancel
+          type: Request
+          params: call_undeclared
+    blocks:
+      - id: rails_escape_modal_body
+        type: Paragraph
+        properties:
+          content: Escape closes it, and its onCancel calls a request a data set cannot redirect.
+      - id: rails_escape_modal_note
+        type: TextInput
+        properties:
+          title: Escape modal note

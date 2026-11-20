@@ -109,6 +109,9 @@ test('init Events', async () => {
       bubble: false,
       history: [],
       loading: false,
+      waitingUntil: null,
+      runs: 0,
+      waits: [],
     },
   });
 });
@@ -212,6 +215,9 @@ test('triggerEvent x1', async () => {
       bubble: false,
       history: [],
       loading: true,
+      waitingUntil: null,
+      runs: 1,
+      waits: [],
     },
   });
   await promise;
@@ -359,6 +365,9 @@ test('registerEvent then triggerEvent x1', async () => {
       history: [],
       internal: true,
       loading: false,
+      waitingUntil: null,
+      runs: 0,
+      waits: [],
     },
   });
   await button.triggerEvent({ name: 'onClick', event: { x: 1 } });
@@ -452,7 +461,10 @@ test('triggerEvent skip', async () => {
           },
         ],
         "loading": false,
+        "runs": 0,
         "shortcut": null,
+        "waitingUntil": null,
+        "waits": [],
       },
     }
   `);
@@ -574,7 +586,10 @@ test('triggerEvent skip tests === true', async () => {
           },
         ],
         "loading": false,
+        "runs": 0,
         "shortcut": null,
+        "waitingUntil": null,
+        "waits": [],
       },
     }
   `);
@@ -715,6 +730,9 @@ test('Actions try catch arrays', async () => {
       bubble: false,
       history: [],
       loading: false,
+      waitingUntil: null,
+      runs: 0,
+      waits: [],
     },
   });
 });
@@ -757,6 +775,9 @@ test('Actions try catch arrays and debounce.immediate == true (leading edge)', a
       bubble: false,
       history: [],
       loading: false,
+      waitingUntil: null,
+      runs: 0,
+      waits: [],
     },
   });
   const firstClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
@@ -871,6 +892,9 @@ test('Actions try catch arrays and debounce.immediate == undefined (trailing edg
       bubble: false,
       history: [],
       loading: false,
+      waitingUntil: null,
+      runs: 0,
+      waits: [],
     },
   });
   const firstClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });
@@ -982,6 +1006,9 @@ test('Actions try catch arrays and debounce.immediate == false default ms (trail
       bubble: false,
       history: [],
       loading: false,
+      waitingUntil: null,
+      runs: 0,
+      waits: [],
     },
   });
   const firstClick = button.triggerEvent({ name: 'onClick', event: { x: 1 } });

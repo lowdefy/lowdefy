@@ -95,8 +95,9 @@ async function runRoutine(context, routineContext, { routine }) {
     }
     // An expected error inside a :try with a :catch is handled by that :catch, so it is logged
     // once, at debug (a provider's 404 in a waterfall is not a fault). The :catch can still
-    // rethrow it. Any other caught error still goes to handleError below, so its config location
-    // is resolved and it reaches the dev error feed and error tracking; the :catch runs as well.
+    // rethrow it. Any other caught error is still reported through handleError below, so its
+    // config location is resolved and it reaches the dev error feed and error tracking; the
+    // :catch runs as well.
     if (routineContext.caught === true && expectedCaughtErrorNames.has(error.name)) {
       if (!error.handled) {
         context.logger.debug({ event: 'debug_routine_caught_error', err: error }, error.message);
@@ -115,9 +116,18 @@ async function runRoutine(context, routineContext, { routine }) {
       return { status: 'error', error };
     }
     // handleError sets error.handled once it has logged, so a nested runRoutine
-    // re-throwing this error does not log it again.
+    // re-throwing this error does not log it again. Inside a :try with a :catch the fault is
+    // left to that try (routineContext.caughtFaults): whether it was caught is known only once
+    // the :catch has run, as a :catch can pass it on (`:throw: { _error: true }`). controlTry
+    // reports it then (settleCaughtFaults), before the routine answers; it is marked handled
+    // now, so it is listed once.
     if (!error.handled) {
-      await context.handleError(error);
+      if (routineContext.caught === true) {
+        error.handled = true;
+        routineContext.caughtFaults.push({ context, error });
+      } else {
+        await context.handleError(error, { caught: false });
+      }
     }
     return { status: 'error', error };
   }

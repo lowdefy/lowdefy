@@ -1,0 +1,20 @@
+type: site-visit
+kind: check
+action_group: quoting
+# Authored description renders as the lead-in on the check surface too (not just
+# form pages) — here it tells the visitor what to bring back, not just "go".
+description: |
+  Capture access notes, rough measurements, and photos of the install location.
+  These feed the quote — an inaccurate site read is the main cause of revised
+  quotes later.
+access:
+  demo:
+    view: true
+    edit: true
+status_map:
+  action-required:
+    demo:
+      message: Complete the site visit.
+  done:
+    demo:
+      message: Site visit completed.

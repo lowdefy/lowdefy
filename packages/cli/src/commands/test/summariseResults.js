@@ -14,27 +14,39 @@
   limitations under the License.
 */
 
-function skippedText({ skipped }) {
-  return skipped > 0 ? `, ${skipped} deprecated skipped` : '';
+function skippedText({ skipped, browserOnly }) {
+  const deprecated = skipped > 0 ? `, ${skipped} deprecated skipped` : '';
+  const needBrowser = browserOnly > 0 ? `, ${browserOnly} browser-only not run` : '';
+  return `${deprecated}${needBrowser}`;
 }
 
-// The closing line of a run: how many journeys passed, were flaky and
-// failed, and how many `deprecated: true` journeys it skipped. `failed`
-// counts flaky journeys too, since either fails the run.
-function summariseResults({ results, skipped }) {
+// How many passes came after an alone rerun, said only when any did.
+function contendedText({ contended }) {
+  return contended > 0 ? ` (${contended} after an alone rerun)` : '';
+}
+
+// The closing line of a run: how many journeys passed (and how many of those
+// passed only when rerun alone after failing beside others), were flaky and
+// failed, how many `deprecated: true` journeys it skipped and, on a headless
+// run, how many it could not take without a browser. `failed` counts flaky
+// journeys too, since either fails the run; browser-only journeys fail
+// nothing.
+function summariseResults({ results, skipped, browserOnly = 0 }) {
   const passed = results.filter((result) => result.class === 'PASS').length;
+  const contended = results.filter((result) => result.contended === true).length;
   const flaky = results.filter((result) => result.class === 'FLAKY').length;
   const failed = results.length - passed - flaky;
-  const skippedSuffix = skippedText({ skipped });
+  const passedText = `${passed} passed${contendedText({ contended })}`;
+  const skippedSuffix = skippedText({ skipped, browserOnly });
   if (flaky === 0) {
     return {
       failed,
-      text: `${passed} passed, ${failed} failed of ${results.length} journeys${skippedSuffix}`,
+      text: `${passedText}, ${failed} failed of ${results.length} journeys${skippedSuffix}`,
     };
   }
   return {
     failed: failed + flaky,
-    text: `${passed} passed, ${flaky} flaky, ${failed} failed of ${results.length} journeys${skippedSuffix}`,
+    text: `${passedText}, ${flaky} flaky, ${failed} failed of ${results.length} journeys${skippedSuffix}`,
   };
 }
 

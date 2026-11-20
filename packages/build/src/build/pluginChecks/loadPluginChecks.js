@@ -74,10 +74,17 @@ function findChecksProblem(checks) {
 // One package's `./checks`, as one of:
 // - { status: 'loaded', checks, schemaLevel }: the rules, keyed by kind and
 //   type, and the level of the package's schema findings (undefined: warning);
-// - { status: 'none' }: installed, with no `./checks`;
+// - { status: 'none' }: installed with no `./checks`, or a default package
+//   with none, installed or not;
 // - { status: 'pending' }: not installed, so its rules are unknown;
 // - { status: 'failed', message }: `./checks` threw on load or has the wrong shape.
+// The build knows which default packages export `./checks` (typesMap.hasChecks,
+// from createDefaultTypesMap), and those that do are its dependencies, so a
+// default package is never pending.
 async function loadPluginChecks({ context, packageName }) {
+  if (context.typesMap.hasChecks?.[packageName] === false) {
+    return { status: 'none' };
+  }
   let checksModule;
   try {
     checksModule = await importPluginModule({ context, specifier: `${packageName}/checks` });

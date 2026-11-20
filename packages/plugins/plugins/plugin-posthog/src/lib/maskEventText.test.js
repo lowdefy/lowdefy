@@ -96,7 +96,9 @@ test('maskEventText leaves a masked chain that still targets the block, row, col
   ).toEqual({
     block_id: 'grid',
     row: 4,
+    row_key: null,
     column: 'actions',
+    control: null,
     text: 'Assign',
     option: false,
     block_ids: ['grid'],
@@ -106,11 +108,74 @@ test('maskEventText leaves a masked chain that still targets the block, row, col
   ).toEqual({
     block_id: 'customer',
     row: null,
+    row_key: null,
     column: null,
+    control: null,
     text: null,
     option: true,
     block_ids: ['customer'],
   });
+});
+
+// A grid cell button marked as the grid's control, in a row keyed by a record id.
+const CONTROL_CHAIN = [
+  'span:nth-child="1"nth-of-type="1"text="Assign"',
+  'button.ant-btn:attr__data-lf-block="grid"attr__data-lf-control="onAssign"attr__data-lf-row-key="cust-jane"attr__type="button"nth-child="1"nth-of-type="1"text="Assign"',
+  'div.ag-cell:attr__col-id="actions"attr__role="gridcell"nth-child="2"nth-of-type="2"',
+  'div.ag-row:attr__row-id="cust-jane"attr__row-index="4"attr__role="row"nth-child="5"nth-of-type="5"',
+  'div:attr__id="bl-grid"attr_id="bl-grid"nth-child="1"nth-of-type="1"',
+].join(';');
+
+test("maskEventText keeps a control mark's block and control key and drops its row key", () => {
+  const { properties } = mask({ $elements_chain: CONTROL_CHAIN });
+  expect(properties.$elements_chain).toContain('attr__data-lf-block="grid"');
+  expect(properties.$elements_chain).toContain('attr__data-lf-control="onAssign"');
+  expect(properties.$elements_chain).not.toContain('cust-jane');
+  expect(targetFromElementsChain(properties.$elements_chain, { rowKey: false })).toEqual({
+    block_id: 'grid',
+    row: 4,
+    column: 'actions',
+    control: 'onAssign',
+    text: null,
+    option: false,
+    block_ids: ['grid'],
+  });
+});
+
+test("maskEventText keeps a control mark's block and control key in $elements and drops its row key", () => {
+  const { properties } = mask({
+    $elements: [
+      {
+        tag_name: 'button',
+        'attr__data-lf-block': 'grid',
+        'attr__data-lf-control': 'onAssign',
+        'attr__data-lf-row-key': 'cust-jane',
+        nth_child: 1,
+        nth_of_type: 1,
+      },
+    ],
+  });
+  expect(properties.$elements).toEqual([
+    {
+      tag_name: 'button',
+      'attr__data-lf-block': 'grid',
+      'attr__data-lf-control': 'onAssign',
+      nth_child: 1,
+      nth_of_type: 1,
+    },
+  ]);
+});
+
+test('maskEventText keeps a control mark when isConfigText throws, as it keeps other structure', () => {
+  const trace = createFakeTrace({
+    isConfigText: () => {
+      throw new Error('config text failed');
+    },
+  });
+  const { properties } = mask({ $elements_chain: CONTROL_CHAIN }, { trace });
+  expect(properties.$elements_chain).toContain('attr__data-lf-control="onAssign"');
+  expect(properties.$elements_chain).not.toContain('cust-jane');
+  expect(properties.$elements_chain).not.toContain('text="Assign"');
 });
 
 // A tab keyed by record inside a Tabs block, then a submenu popup keyed by record: library ids

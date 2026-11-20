@@ -1,0 +1,23 @@
+# Rendered by nunjucks with the set's `ids` (the module entry ids of its set):
+# a module _ref names its module literally, so a set's copy needs its own ids
+# written in. See README.md.
+- _ref:
+    module: {{ ids.activities }}
+    component: tile_activities
+    vars:
+      reference_field: contacts
+      reference_value:
+        _url_query: _id
+      prefill:
+        # ContactSelector's value is an array of contact objects
+        # ({contact_id, name, email, ...}), not bare IDs — see
+        # search_contacts.yaml's $project + getContactsData.js. Prefill
+        # must match that shape so the block's data-enrichment hook can
+        # extract `contact_id` and populate the display.
+        contacts:
+          - contact_id:
+              _url_query: _id
+      on_created:
+        - id: refetch_events
+          type: Request
+          params: get-events

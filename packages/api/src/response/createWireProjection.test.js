@@ -21,6 +21,7 @@ import {
   RequestError,
   ServiceError,
   UserError,
+  markForcedFailure,
 } from '@lowdefy/errors';
 import { projectCaughtError, serializer } from '@lowdefy/helpers';
 
@@ -313,4 +314,18 @@ test('createWireProjection marks a projected caught UserError as a Lowdefy error
   expect(payload['~e'].name).toBe('UserError');
   expect(payload['~e'].message).toBe('Order rejected.');
   expect(payload['~e'].isLowdefyError).toBe(true);
+});
+
+test("createWireProjection carries a test's forced failure mark, with the generic message", () => {
+  const forced = markForcedFailure(new ServiceError('Write failed on purpose'));
+  const node = serialize(forced)['~e'];
+  expect(node.forced).toBe(true);
+  expect(node.message).not.toContain('on purpose');
+  expect(serialize(new ServiceError('Timed out'))['~e']).not.toHaveProperty('forced');
+});
+
+test('createWireProjection does not mark a plain error that carries forced: true as forced', () => {
+  const error = new ServiceError('Upstream timed out');
+  error.forced = true;
+  expect(serialize(error)['~e']).not.toHaveProperty('forced');
 });

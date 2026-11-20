@@ -21,6 +21,10 @@ const mockRunJourney = vi.fn();
 vi.doMock('../../../lib/docs/runJourney.js', () => ({
   default: mockRunJourney,
 }));
+const mockRunJourneyHeadless = vi.fn();
+vi.doMock('../../../lib/docs/runJourneyHeadless.js', () => ({
+  default: mockRunJourneyHeadless,
+}));
 vi.doMock('../../../lib/build/config.js', () => ({
   default: { basePath: '/app' },
 }));
@@ -124,7 +128,7 @@ test('docsJourneyHandler returns 400 naming an unknown step', async () => {
 
   expect(result.status).toBe(400);
   expect(result.data.error).toEqual(
-    'Step 0: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
@@ -176,6 +180,110 @@ test('docsJourneyHandler refuses a list of users with 400: one POST is one run',
   expect(result.status).toBe(400);
   expect(result.data.error).toBe(
     'POST /lowdefy-docs/journey runs one user. For a list of data set users, post once per user, or use lowdefy test or lowdefy_run_journey, which run the journey once as each. Received ["admin","member"].'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler passes the journey stubs to the runner with its data set', async () => {
+  const stubs = [
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+    { requestId: 'save_price', fail: 'Write failed on purpose', times: 'all' },
+  ];
+  const c = createContext({
+    steps: [{ call: { endpoint: 'price_run' } }],
+    data: 'stubs',
+    user: 'finance',
+    stubs,
+  });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(200);
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ data: 'stubs', stubs }));
+});
+
+test('docsJourneyHandler answers 400 for a _case or _ref left in the posted journey', async () => {
+  const placeholder = await docsJourneyHandler(
+    createContext({
+      data: 'scope',
+      user: { _case: 'user' },
+      steps: [{ call: { endpoint: 'tickets-add-comment' } }],
+    })
+  );
+  expect(placeholder.status).toBe(400);
+  expect(placeholder.data.error).toBe(
+    'Journey "user" is a _case placeholder, {"_case":"user"}, with no case row to fill it in: _case reads a key of a row of the journey\'s "cases" table. A journey sent here takes literal values: a journey file with cases or _ref runs through lowdefy test (lowdefy_run_tests), which reads them.'
+  );
+  const ref = await docsJourneyHandler(
+    createContext({
+      data: 'scope',
+      steps: [{ call: { endpoint: 'ping' } }, { _ref: 'tests/shared/steps/check.yaml' }],
+    })
+  );
+  expect(ref.status).toBe(400);
+  expect(ref.data.error).toMatch(
+    /^Journey "steps\[1\]" is a _ref, \{"_ref":"tests\/shared\/steps\/check.yaml"\}, that was not read/
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler answers 400 for a placeholder in pathParams or urlQuery', async () => {
+  const pathParams = await docsJourneyHandler(
+    createContext({ pageId: 'ticket', pathParams: { _case: 'params' }, steps: [] })
+  );
+  expect(pathParams.status).toBe(400);
+  expect(pathParams.data.error).toMatch(/^Journey "pathParams" is a _case placeholder/);
+  const pathParamsValue = await docsJourneyHandler(
+    createContext({ pageId: 'ticket', pathParams: { ticket_id: { _ref: 'x' } }, steps: [] })
+  );
+  expect(pathParamsValue.status).toBe(400);
+  expect(pathParamsValue.data.error).toMatch(/^Journey "pathParams.ticket_id" is a _ref/);
+  const urlQuery = await docsJourneyHandler(
+    createContext({ pageId: 'ticket', urlQuery: { _ref: 'tests/shared/q.yaml' }, steps: [] })
+  );
+  expect(urlQuery.status).toBe(400);
+  expect(urlQuery.data.error).toMatch(/^Journey "urlQuery" is a _ref/);
+  const value = await docsJourneyHandler(
+    createContext({ pageId: 'ticket', urlQuery: { id: { _case: 'id' } }, steps: [] })
+  );
+  expect(value.status).toBe(400);
+  expect(value.data.error).toMatch(/^Journey "urlQuery.id" is a _case placeholder/);
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler answers 400 for a posted case table', async () => {
+  const result = await docsJourneyHandler(
+    createContext({
+      data: 'scope',
+      cases: [{ source: 'form' }],
+      steps: [{ call: { endpoint: 'log_activity', payload: { source: { _case: 'source' } } } }],
+    })
+  );
+  expect(result.status).toBe(400);
+  expect(result.data.error).toBe(
+    'A journey sent here runs once and takes no "cases" table: case tables run through lowdefy test (lowdefy_run_tests), one run per row. Send one row\'s values in place of each _case, or run the journey file. Received "cases": [{"source":"form"}].'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler sends a _ref inside a payload to the endpoint as written', async () => {
+  const steps = [{ call: { endpoint: 'save_config', payload: { _ref: 'x' } } }];
+  const result = await docsJourneyHandler(createContext({ data: 'scope', steps }));
+  expect(result.status).toBe(200);
+  expect(mockRunJourney).toHaveBeenCalledWith(expect.objectContaining({ steps }));
+});
+
+test('docsJourneyHandler answers 400 with the message for a bad stub', async () => {
+  const badStub = await docsJourneyHandler(
+    createContext({
+      steps: [{ call: { endpoint: 'price_run' } }],
+      data: 'stubs',
+      stubs: [{ requestId: 'save_price', fail: 'Down', times: 0 }],
+    })
+  );
+  expect(badStub.status).toBe(400);
+  expect(badStub.data.error).toBe(
+    'Journey "stubs[0]": Journey stub "times" should be a whole number above 0 or "all". Received 0.'
   );
   expect(mockRunJourney).not.toHaveBeenCalled();
 });
@@ -398,4 +506,62 @@ test('docsJourneyHandler returns 400 for a malformed recording', async () => {
     expect(result.status).toBe(400);
   }
   expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler runs a journey with no pageId whose steps only call the server', async () => {
+  const steps = [{ call: { endpoint: 'orders-cancel' } }, { expect: { status: 403 } }];
+  const c = createContext({ steps, user: 'member', data: 'roles' });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(200);
+  expect(mockRunJourney).toHaveBeenCalledWith(
+    expect.objectContaining({ pageId: undefined, steps, user: 'member', data: 'roles' })
+  );
+});
+
+test('docsJourneyHandler returns 400 for a journey with no pageId and a step that needs a page', async () => {
+  const c = createContext({
+    steps: [{ call: { endpoint: 'orders-cancel' } }, { click: 'cancel_button' }],
+  });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toBe(
+    'POST /lowdefy-docs/journey requires a "pageId" string: step 1 (click) needs a page. Received undefined. E.g. {"pageId": "home", "steps": [{"click": "submit"}]}.'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});
+
+test('docsJourneyHandler runs a headless journey with no browser runner, and answers its browserOnly', async () => {
+  mockRunJourneyHeadless.mockResolvedValue({
+    pageId: 'form',
+    browserOnly: {
+      index: 0,
+      step: { screenshot: true },
+      reason: 'step "screenshot" needs a browser',
+    },
+    steps: [],
+  });
+  const c = createContext({ pageId: 'form', steps: [{ screenshot: true }], headless: true });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  expect(mockRunJourneyHeadless).toHaveBeenCalledWith(
+    expect.objectContaining({ origin: 'http://localhost:3227', pageId: 'form', by: 'test' })
+  );
+  expect(result.status).toBe(200);
+  expect(result.data.browserOnly.index).toBe(0);
+});
+
+test('docsJourneyHandler returns 400 when headless is not a boolean', async () => {
+  const c = createContext({ pageId: 'form', steps: [{ click: 'a' }], headless: 'yes' });
+
+  const result = await docsJourneyHandler(c);
+
+  expect(result.status).toBe(400);
+  expect(result.data.error).toBe('The "headless" param must be true or false. Received "yes".');
+  expect(mockRunJourneyHeadless).not.toHaveBeenCalled();
 });

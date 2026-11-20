@@ -22,12 +22,33 @@ import { type } from '@lowdefy/helpers';
 // context, no launch in flight, and no getBrowser() call for idleTimeout ms.
 // The last one covers a caller between getBrowser() and its first
 // newContext, which holds the browser without a context yet.
+//
+// A browser can also break while it stays connected: its newContext or
+// newPage answers `Target crashed` from then on. openPage reports that with
+// retire(browser), and the next getBrowser() launches a new browser. The
+// retired one closes once its last context closes, so calls already running
+// on it end as they would have.
 function createBrowserLifecycle({ launch, idleTimeout }) {
   // Cached as a promise so concurrent calls awaiting a launch share it.
   let browserPromise = null;
+  // The browser browserPromise resolved to, null while a launch is in
+  // flight, so retire() can tell whether a browser is still the one handed out.
+  let currentBrowser = null;
   let launching = 0;
   let openContexts = 0;
   let idleTimer = null;
+  // Open contexts per browser with any open, so a retired browser closes when
+  // its last one does.
+  const contextsByBrowser = new Map();
+  const retired = new Set();
+
+  function closeRetiredIfUnused(browser) {
+    if (!retired.has(browser) || contextsByBrowser.has(browser)) {
+      return;
+    }
+    retired.delete(browser);
+    browser.close().catch(() => {});
+  }
 
   function closeIfIdle() {
     idleTimer = null;
@@ -36,6 +57,7 @@ function createBrowserLifecycle({ launch, idleTimeout }) {
     }
     const closing = browserPromise;
     browserPromise = null;
+    currentBrowser = null;
     closing.then((browser) => browser.close()).catch(() => {});
   }
 
@@ -50,7 +72,13 @@ function createBrowserLifecycle({ launch, idleTimeout }) {
     launching += 1;
     const launched = launch();
     browserPromise = launched;
+    currentBrowser = null;
     launched
+      .then((browser) => {
+        if (browserPromise === launched) {
+          currentBrowser = browser;
+        }
+      })
       .catch(() => {
         // Forget a failed launch so the next call retries instead of
         // replaying the rejection forever.
@@ -84,19 +112,41 @@ function createBrowserLifecycle({ launch, idleTimeout }) {
     return browserPromise;
   }
 
-  // Counts a context until it closes. Playwright emits close for every way a
-  // context ends: context.close(), browser.close() or a browser crash.
-  function trackContext(context) {
+  // Stops handing out a browser that is connected but broken. Concurrent
+  // callers that hit the same crash share one relaunch: only the first call
+  // for the current browser retires it, and a browser already replaced is
+  // left alone.
+  function retire(browser) {
+    if (browser !== currentBrowser) {
+      return;
+    }
+    browserPromise = null;
+    currentBrowser = null;
+    retired.add(browser);
+    closeRetiredIfUnused(browser);
+  }
+
+  // Counts a context of browser until it closes. Playwright emits close for
+  // every way a context ends: context.close(), browser.close() or a browser crash.
+  function trackContext({ browser, context }) {
     openContexts += 1;
+    contextsByBrowser.set(browser, (contextsByBrowser.get(browser) ?? 0) + 1);
     context.on('close', () => {
       openContexts -= 1;
+      const left = contextsByBrowser.get(browser) - 1;
+      if (left === 0) {
+        contextsByBrowser.delete(browser);
+      } else {
+        contextsByBrowser.set(browser, left);
+      }
+      closeRetiredIfUnused(browser);
       if (openContexts === 0) {
         armIdleClose();
       }
     });
   }
 
-  return { getBrowser, trackContext };
+  return { getBrowser, retire, trackContext };
 }
 
 export default createBrowserLifecycle;

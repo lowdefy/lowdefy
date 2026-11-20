@@ -123,3 +123,38 @@ test('compactTestResults leaves omitted out when everything fits', () => {
 
   expect(answer.omitted).toBeUndefined();
 });
+
+test('compactTestResults lists the journeys a headless run left to a browser as their lines', () => {
+  const answer = compactTestResults({
+    results: [passing(1)],
+    browserOnly: [
+      {
+        name: 'uploads a file',
+        filePath: 'tests/journeys/upload.yaml',
+        browserOnly: { index: 2, step: { upload: 'file' }, reason: 'upload needs a browser' },
+        report: 'BROWSER-ONLY  uploads a file  step 3 (upload): upload needs a browser',
+      },
+    ],
+    skipped: [],
+  });
+
+  expect(answer).toEqual({
+    failed: [],
+    browserOnly: ['BROWSER-ONLY  uploads a file  step 3 (upload): upload needs a browser'],
+    passed: ['PASS  journey 1  (12 steps, 3400ms)'],
+    skipped: [],
+  });
+});
+
+test('compactTestResults counts the journeys that passed after an alone rerun', () => {
+  const answer = compactTestResults({
+    results: [{ ...passing(1), contended: true }, passing(2), { ...passing(3), contended: true }],
+    skipped: [],
+  });
+  expect(answer.contended).toBe(2);
+});
+
+test('compactTestResults leaves contended out when no journey was rerun alone', () => {
+  const answer = compactTestResults({ results: [passing(1), failing(2)], skipped: [] });
+  expect(answer).not.toHaveProperty('contended');
+});

@@ -48,8 +48,9 @@ import MongoDBUpdateOne from '../connections/MongoDBCollection/MongoDBUpdateOne/
 // call the same wall functions the stock requests call.
 //
 // Values cross the stock resolvers in their request/response form (serialize /
-// deserialize), the same round trip a request's properties take, so ObjectIds
-// and Dates survive; exotic BSON types (Decimal128, Binary) are not preserved.
+// deserialize), the same round trip a request's properties take, so ObjectIds,
+// Dates and Decimal128 values survive (a decimal crosses as its exact string,
+// never as a double); other exotic BSON types (Binary, Long) are not preserved.
 // No cursor ever leaves: find and aggregate return arrays.
 //
 // With no tenant and no tenantGuard (a non-tenant app) the wall functions are

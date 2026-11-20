@@ -1,0 +1,111 @@
+type: deal-outcome
+kind: form
+action_group: closing
+description: |
+  Record the deal outcome — won or lost, with a reason. Stamps `outcome` on the
+  deal so the workspace shows the Won/Lost badge.
+access:
+  demo:
+    view: true
+    edit: true
+form:
+  # Driven by an `enum` map rather than an `options` array, so the buttons carry
+  # the won/lost colours and the read-only surfaces show "Won" / "Lost" instead
+  # of the stored slug. The stored value is still the slug.
+  - key: form.outcome_type
+    component: button_selector
+    title: Outcome
+    required: true
+    enum:
+      won:
+        title: Won
+        color: "#52c41a"
+        icon: check-circle
+      lost:
+        title: Lost
+        color: "#ff4d4f"
+        icon: close-circle
+    # Clear a stale reason when the outcome flips so the filtered list re-applies.
+    on_change:
+      - id: reset_reason_on_outcome_change
+        type: SetState
+        params:
+          form.reason: null
+  # Reason filtered by the chosen outcome. Values are the module's
+  # outcome_reasons slugs (so the deals badge resolves them); the map is inlined
+  # because the workflow config can't read the deals module's outcome_reasons var.
+  - key: form.reason
+    component: selector
+    title: Reason
+    required: true
+    options:
+      _js:
+        fn: |
+          const reasons = args.reasons;
+          const oc = state('form.outcome_type');
+          return Object.keys(reasons)
+            .filter((k) => (oc ? reasons[k].outcome === oc : true))
+            .map((k) => ({ label: reasons[k].title, value: k }));
+        args:
+          reasons:
+            price-accepted: { title: Price accepted, outcome: won }
+            best-fit: { title: Best fit, outcome: won }
+            no-budget: { title: No budget, outcome: lost }
+            lost-to-competitor: { title: Lost to competitor, outcome: lost }
+# Post-submit stamps the deal's `outcome` field (type + reason). The deals
+# module's outcome surface reads deal.outcome.* (not the workflow form_data),
+# so this hook is what makes the Won/Lost badge appear.
+hooks:
+  submit:
+    post:
+      routine:
+        - id: stamp_outcome
+          type: MongoDBUpdateOne
+          connectionId:
+            _module.connectionId: { id: deals-collection, module: { _var: ids.deals } }
+          properties:
+            filter:
+              _id:
+                _payload: context.workflow.entity.id
+            update:
+              - $set:
+                  outcome:
+                    type:
+                      _payload: form.outcome_type
+                    reason:
+                      _payload: form.reason
+                  updated:
+                    _ref:
+                      module: events
+                      component: change_stamp
+        # On WON, auto-start the onboarding workflow on this deal — the second
+        # workflow on the entity, rendered as its own WorkflowProgress bar.
+        # Skipped on lost (skip when outcome_type != won).
+        - id: start_onboarding_on_won
+          type: CallApi
+          skip:
+            _ne:
+              - _payload: form.outcome_type
+              - won
+          properties:
+            endpointId:
+              _module.endpointId:
+                id: onboarding-start
+                module: { _var: ids.workflows }
+            payload:
+              entity:
+                id:
+                  _payload: context.workflow.entity.id
+        - :return:
+            deal_id:
+              _payload: context.workflow.entity.id
+status_map:
+  action-required:
+    demo:
+      message: Record the deal outcome.
+  in-progress:
+    demo:
+      message: Recording the outcome.
+  done:
+    demo:
+      message: Outcome recorded.

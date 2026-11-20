@@ -104,6 +104,44 @@ test('agentSetup creates .mcp.json, the Claude Code skill, and AGENTS.md from sc
   expect(agentsMd).toContain('When you finish work in a git worktree you created for the task');
   expect(agentsMd).toContain('### Testing a change');
   expect(agentsMd).toContain('Test each change at the lowest level');
+  expect(agentsMd).toContain(
+    'call the request or endpoint on the dev server with `lowdefy_run_request` or `lowdefy_run_endpoint`, passing `user` and `data`'
+  );
+  expect(agentsMd).toContain(
+    "A page's logic and state, and what it sends and writes: a journey (`tests/journeys/`) that needs no browser."
+  );
+  expect(agentsMd).toContain('A write journey ends with `expect: { db }` on what was stored.');
+  expect(agentsMd).toContain(
+    'Endpoint and server logic: a journey with no `pageId` and `call`, `request` or `webhook` steps.'
+  );
+  expect(agentsMd).toContain(
+    'Many cases of one check are one journey with a `cases` table, one run per row'
+  );
+  expect(agentsMd).toContain("outside services (the journey's `stubs` with an `answer`");
+  expect(agentsMd).toContain('races (`hold` and `release`)');
+  expect(agentsMd).toContain('Keep shared rows, stubs and steps under `tests/shared/`');
+  expect(agentsMd).toContain(
+    'Only what a journey cannot say is a Node test on `@lowdefy/test-utils` (`tests/endpoints/`)'
+  );
+  expect(agentsMd).toContain("The test file says why a journey can't express it.");
+  expect(agentsMd).toContain(
+    'Where the app has such tests, run them once, before you call the change done.'
+  );
+  expect(agentsMd).toContain('every config edit needs a build first');
+  expect(agentsMd).toContain(
+    "`lowdefy build --no-client-build && node --test --test-concurrency=4 'tests/endpoints/**/*.test.mjs'`"
+  );
+  expect(agentsMd).toContain('The check is `tests/access.yaml`.');
+  expect(agentsMd).toContain(
+    '`lowdefy build --no-client-build && lowdefy test --access` once, before you call the change done'
+  );
+  expect(agentsMd).toContain(
+    'commit the file, and say in the pull request which cells changed and why.'
+  );
+  expect(agentsMd).toContain(
+    'An app with auth and no `tests/access.yaml` gets one with `lowdefy build --no-client-build && lowdefy test --update-access`'
+  );
+  expect(agentsMd).not.toContain('accessMatrix');
   expect(agentsMd).toContain('`lowdefy test --config-directory <app>`');
   expect(agentsMd).not.toContain('tier: edge');
   expect(agentsMd).not.toContain('localhost:');

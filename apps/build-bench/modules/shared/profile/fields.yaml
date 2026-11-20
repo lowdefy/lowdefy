@@ -1,0 +1,14 @@
+- id: profile.phone_number
+  type: PhoneNumberInput
+  properties:
+    title: Phone Number
+
+- id: profile.department
+  type: TextInput
+  properties:
+    title: Department
+
+- id: profile.job_title
+  type: TextInput
+  properties:
+    title: Job Title

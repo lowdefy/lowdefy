@@ -22,7 +22,7 @@ import { expect } from 'vitest';
 // A walled-client plugin under a data set: the fixture app's local plugin type
 // declares meta.dataSet 'walled' and writes through the walled client to the
 // fixture_db connection it names. A data-set journey clicks through that write:
-// the click rails let it through, the gate passes the plugin connection
+// the step rails let it through, the gate passes the plugin connection
 // unchanged and redirects fixture_db, so the row lands in the session database
 // and never in the fixture's own.
 

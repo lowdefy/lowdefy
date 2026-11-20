@@ -1,0 +1,14 @@
+fields:
+  show_honorific: true
+  profile:
+    _ref: modules/shared/profile/fields.yaml
+# OAuth provider display metadata layered over _build.authConfig.providers.
+providers:
+  - id: github
+    label: GitHub
+    icon: GitBranch
+request_stages:
+  write: []
+# Access tokens tile on the account page (member tokens for scripts calling the
+# app's MCP route). The app needs auth.oauthProvider for the tokens to work.
+mcp_tokens: true

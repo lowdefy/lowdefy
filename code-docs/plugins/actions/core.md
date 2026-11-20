@@ -281,6 +281,8 @@ Delay before next action:
     ms: 1000 # milliseconds
 ```
 
+`Wait` calls the engine's `wait` action method, which marks the event as waiting until the time the wait ends (`waitingUntil`, see the engine's "Loading and waiting"), so the dev server's readiness check can tell an event that sleeps from one that works.
+
 ## Fetch
 
 Client-side HTTP request (no secrets):

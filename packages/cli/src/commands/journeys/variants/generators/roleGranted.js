@@ -50,10 +50,14 @@ function currentRoleKeys({ journey, dataSet, names }) {
 // role matrix from production use, else each data set user's role set), the
 // same steps as a data set user with exactly that set. A set no user has is
 // listed for the developer to add. When the start page has auth.roles, a set
-// holding none of them is left to the refused variant. A variant that passes
+// holding none of them is not written. A variant that passes
 // is kept as a persona of the journey, not a copy: its comment names the user
 // list to set on the original journey, and the variant file is then deleted.
-function roleGranted({ journey, dataSet, roleMatrix, pageConfigs }) {
+// On a row of a case-table journey (`caseTable`, from generateVariants), which
+// takes no user list, its comment says to add its rows to the table instead,
+// with the key the journey's `_case` user reads (`caseTable.userKey`), or to
+// make the user such a placeholder first.
+function roleGranted({ journey, dataSet, roleMatrix, pageConfigs, caseTable }) {
   if (type.isNone(dataSet)) {
     return { skipped: 'the journey declares no data: set' };
   }
@@ -94,7 +98,13 @@ function roleGranted({ journey, dataSet, roleMatrix, pageConfigs }) {
       overrides: { user: name },
       steps: journey.steps,
     };
-    if (!type.isNull(names)) {
+    if (!type.isNone(caseTable)) {
+      variant.comments = {
+        0: type.isNull(caseTable.userKey)
+          ? `Passes? Keep ${name} as rows of "${caseTable.journeyName}", not a copy: set its user to { _case: user }, give each row its user, add these rows with user: ${name}, renamed, and delete this file.`
+          : `Passes? Keep ${name} as rows of "${caseTable.journeyName}", not a copy: add these rows to its cases with ${caseTable.userKey}: ${name}, renamed, and delete this file.`,
+      };
+    } else if (!type.isNull(names)) {
       variant.comments = {
         0: `Passes? Keep ${name} as a persona of "${journey.name}", not a copy: set its user to [${[
           ...names,

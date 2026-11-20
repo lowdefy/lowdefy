@@ -71,6 +71,7 @@ import createTwoFactorVerify from './createTwoFactorVerify.js';
 import createUnsubscribe from './createUnsubscribe.js';
 import createUpdateSession from './createUpdateSession.js';
 import createValidate from './createValidate.js';
+import createWait from './createWait.js';
 
 function getActionMethods(props) {
   return {
@@ -131,6 +132,7 @@ function getActionMethods(props) {
     unsubscribe: createUnsubscribe(props),
     updateSession: createUpdateSession(props),
     validate: createValidate(props),
+    wait: createWait(props),
   };
 }
 

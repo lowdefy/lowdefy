@@ -28,6 +28,7 @@ import {
 } from '@lowdefy/errors';
 
 import captureSentryError from '../sentry/captureSentryError.js';
+import readMaps from './readMaps.js';
 import redactUrlQuery from './redactUrlQuery.js';
 import scrubSecrets from '../scrubSecrets.js';
 import serializeErrorForLog from './serializeErrorForLog.js';
@@ -91,6 +92,10 @@ function createHandleError({ context }) {
             error,
             readConfigFile: context.readConfigFile,
             configDirectory: context.configDirectory,
+            // Imported, not read from context.readMaps: the auth-hook system
+            // context is built from a fixed field list and has no readMaps.
+            readMaps: () =>
+              readMaps({ buildDirectory: context.buildDirectory, logger: context.logger }),
           });
 
       // Attach resolved location to error for consistency

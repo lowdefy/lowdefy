@@ -15,11 +15,10 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { getStepKey, normaliseBlockId } from '@lowdefy/node-utils';
+import { getStepKey, normaliseBlockId, pageBlocks } from '@lowdefy/node-utils';
 
 import getPageConfig from './getPageConfig.js';
 import JourneyStepError from './JourneyStepError.js';
-import pageBlocks from './pageBlocks.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readPageArtifact from './readPageArtifact.js';
 
@@ -127,7 +126,7 @@ async function checkRequestId({ requestId, pageId, currentPageId }) {
     const config = await getPageConfig({ pageId });
     if (config === null) {
       throw unknownReference({
-        message: `There is no page "${pageId}" to count request "${requestId}" on.`,
+        message: `There is no page "${pageId}" for request "${requestId}".`,
         expected: `a page "${pageId}"`,
         actual: `no page "${pageId}"`,
       });
@@ -158,6 +157,23 @@ function checkEndpointId({ endpointId }) {
     expected: `an endpoint "${endpointId}"`,
     actual: `no endpoint "${endpointId}"`,
   });
+}
+
+// A webhook step posts to an endpoint declared `webhook`; the route answers any other as one that
+// does not exist.
+function checkWebhookId({ endpointId }) {
+  const endpoint = readBuildArtifact({ name: `api/${endpointId}.json` });
+  if (endpoint === null) {
+    checkEndpointId({ endpointId });
+    return;
+  }
+  if (type.isNone(endpoint.webhook) || endpoint.webhook === false) {
+    throw unknownReference({
+      message: `Endpoint "${endpointId}" is not a webhook endpoint: a webhook step posts to an endpoint declared "webhook". Call it with a "call" step instead.`,
+      expected: `a webhook endpoint "${endpointId}"`,
+      actual: `endpoint "${endpointId}" declares no "webhook"`,
+    });
+  }
 }
 
 function checkPageId({ pageId }) {
@@ -195,8 +211,32 @@ function checkActorName({ journey, name }) {
   });
 }
 
+// A call or request names who it calls as by a data set user's name (or "none", or an inline
+// user object). A name the data set does not have is refused before the call, as the headless
+// runner refuses it, rather than called as the journey's own user.
+function checkCallerName({ journey, key, name }) {
+  if (!type.isString(name) || name === 'none') {
+    return;
+  }
+  if (Object.prototype.hasOwnProperty.call(journey.dataSetUsers ?? {}, name)) {
+    return;
+  }
+  const where = type.isUndefined(journey.dataSetUsers)
+    ? 'the journey declares no data set to find that user in.'
+    : `it is not a user of the data set. ${describeKnown({
+        ids: Object.keys(journey.dataSetUsers),
+        noun: 'user',
+      })}`.trim();
+  throw unknownReference({
+    message: `"as" on the ${key} step names "${name}", but ${where}`,
+    expected: 'a data set user, "none" or a user object',
+    actual: `no data set user "${name}"`,
+  });
+}
+
 // Checked at the start of every step, before it acts, against the current
-// build: a misspelt blockId, requestId, endpointId, goto pageId or `as` name
+// build: a misspelt blockId, requestId, endpointId, goto pageId or `as` name, or the endpoint or
+// request a call or request step posts to,
 // fails its step and names the unknown id, instead of passing a step that
 // asserts something is absent (expect.hidden, expect.calls with count 0) or
 // opening the not-found page. Ids are read from the actor's current page (a
@@ -211,6 +251,25 @@ async function checkStepReferences({ journey, page, step }) {
   }
   if (key === 'goto') {
     checkPageId({ pageId: type.isString(step.goto) ? step.goto : step.goto.pageId });
+    return;
+  }
+  if (key === 'call') {
+    checkCallerName({ journey, key, name: step.call.as });
+    checkEndpointId({ endpointId: step.call.endpoint });
+    return;
+  }
+  if (key === 'webhook') {
+    checkWebhookId({ endpointId: step.webhook.endpoint });
+    return;
+  }
+  if (key === 'request') {
+    checkCallerName({ journey, key, name: step.request.as });
+    const shownPage = await readShownPage({ page });
+    await checkRequestId({
+      requestId: step.request.requestId,
+      pageId: step.request.pageId,
+      currentPageId: shownPage?.pageId ?? null,
+    });
     return;
   }
   const calls = key === 'expect' && getStepKey(step.expect) === 'calls' ? step.expect.calls : null;

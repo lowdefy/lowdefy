@@ -48,8 +48,8 @@ function describeUsage({ row, journey, usageWindow, ranked }) {
 // applied) to a popularity tier of that selection, as `lowdefy test --tier`
 // and lowdefy_run_tests' `tier` do. Tiers are cut by computeTiers over the
 // distinct journeys of the selection, one per file and place in the file, so
-// a journey with a list of users is tiered once and all its persona runs go
-// with it. An unranked journey runs in every tier. A `deprecated: true`
+// a journey with a list of users or a case table is tiered once and all its
+// runs go with it. An unranked journey runs in every tier. A `deprecated: true`
 // journey never runs, named directly or not; it is returned in `skipped`,
 // once per journey. An item the runner will refuse (a file that does not
 // parse, a journey that does not validate) stays selected so the run reports
@@ -106,7 +106,7 @@ async function selectTier({ context, selected, tier, usageWindow, fullTierOption
     }
     const usage = describeUsage({
       row,
-      journey: item.personaOf ?? item.journey,
+      journey: item.expandedFrom ?? item.journey,
       usageWindow,
       ranked,
     });

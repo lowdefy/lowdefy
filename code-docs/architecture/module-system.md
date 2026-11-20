@@ -171,6 +171,8 @@ Phase 3 (`buildModules`) scopes IDs by prefixing with `{entryId}/`:
 
 By Phase 3, all `_module.*Id` operators have already been resolved to concrete string IDs by the walker. Phase 3 only does structural ID scoping (prefixing) and merging into the app's `components`.
 
+The merged pages and endpoints are the same objects the manifest holds. In the dev server's config build (`shallowBuild`), `releaseMergedModuleEntities` then deletes `pages` and `api` from every `moduleEntry.manifest`, once `collectSkeletonSourceFiles` has read the pages lists' refs. Nothing reads them from the manifest after that: a page build resolves a page from its source file (`resolvePageSource`), and the endpoints are in `build/api`. Left on the manifest they are most of `context.modules`, which the manager keeps for as long as it runs and which `build/modules.json` carries to every page build context. A manifest's `vars`, `components`, `menus`, `exports`, `connections` and `auth` stay.
+
 ## Connection Remapping
 
 When the module entry specifies `connections: { users-db: my-app-mongodb }`:

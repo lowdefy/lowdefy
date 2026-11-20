@@ -85,13 +85,10 @@
 
 - _ref: testing/config-tests.yaml
 - _ref: testing/journey-data-sets.yaml
+- _ref: testing/endpoint-tests.yaml
+- _ref: testing/access-table.yaml
 - _ref: testing/explore-pull-request.yaml
-- _ref: testing/e2e-introduction.yaml
-- _ref: testing/e2e-getting-started.yaml
-- _ref: testing/e2e-writing-tests.yaml
-- _ref: testing/e2e-mocking.yaml
-- _ref: testing/e2e-auth.yaml
-- _ref: testing/e2e-configuration.yaml
+- _ref: testing/e2e-utils-migration.yaml
 
 - _ref: blocks/input/InputGallery.yaml
 - _ref: blocks/input/AutoComplete.yaml
@@ -311,6 +308,7 @@
 - _ref: operators/_credential.yaml
 - _ref: operators/_cron.yaml
 - _ref: operators/_date.yaml
+- _ref: operators/_decimal.yaml
 - _ref: operators/_diff.yaml
 - _ref: operators/_divide.yaml
 - _ref: operators/_eq.yaml

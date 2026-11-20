@@ -33,18 +33,22 @@ vi.doMock('./dataSets/resolveJourneyDataSet.js', () => ({
   default: mockResolveJourneyDataSet,
 }));
 const mockOpenDataSession = vi.fn();
-vi.doMock('./dataSets/openDataSession.js', () => ({
-  default: mockOpenDataSession,
-}));
 const mockGetDataStore = vi.fn();
-vi.doMock('./dataSets/getDataStore.js', () => ({ default: mockGetDataStore }));
+vi.doMock('@lowdefy/test-utils/dataSets', async (importOriginal) => ({
+  ...(await importOriginal()),
+  getDataStore: mockGetDataStore,
+  openDataSession: mockOpenDataSession,
+}));
 vi.doMock('./readDevAuthMode.js', () => ({
   default: () => ({ authConfigured: true, mockUserActive: false }),
 }));
 vi.doMock('./collectExercised.js', () => ({ default: async () => ({}) }));
 // The plugin connection map lives in a running server's build directory.
 vi.doMock('./readConnectionPlugins.js', () => ({
-  default: async () => ({ MongoDBCollection: { meta: { dataSet: 'redirect' } } }),
+  default: async () => ({
+    AxiosHttp: { meta: { dataSet: 'external' }, requests: { AxiosHttp: async () => null } },
+    MongoDBCollection: { meta: { dataSet: 'redirect' } },
+  }),
 }));
 
 vi.doMock('./observe/waitForClientErrorReports.js', () => ({
@@ -96,7 +100,12 @@ beforeEach(() => {
   });
   mockGetBrowser.mockResolvedValue({});
   mockGetDataStore.mockResolvedValue({ client: {}, uri: 'mongodb://memory/' });
-  mockOpenDataSession.mockResolvedValue({ id: 'session1', cookie: 'session1', close });
+  mockOpenDataSession.mockResolvedValue({
+    id: 'session1',
+    cookie: 'session1',
+    session: { stubs: [], failGates: [], forced: [], sunk: [], work: new Set() },
+    close,
+  });
   mockResolveJourneyDataSet.mockResolvedValue({ dataSet, user: { id: 'u_1', roles: ['admin'] } });
   mockOpenPage.mockImplementation(async () => ({
     context: {
@@ -144,7 +153,7 @@ test('runJourney opens a data session, gives every actor its cookie and data set
     data: 'sample',
     user: 'owner',
   });
-  expect(mockOpenDataSession).toHaveBeenCalledWith({ dataSet });
+  expect(mockOpenDataSession).toHaveBeenCalledWith({ dataSet, logger: expect.anything() });
   expect(mockOpenPage.mock.calls.map(([options]) => [options.user, options.dataCookie])).toEqual([
     [{ id: 'u_1', roles: ['admin'] }, 'session1'],
     [dataSet.users.outsider, 'session1'],
@@ -270,5 +279,58 @@ test('runJourney closes the data session when no browser can be fetched', async 
   const result = await runJourney({ origin, pageId: 'tickets', steps: [], data: 'sample' });
   expect(result.error).toMatch(/No Chromium available/);
   expect(close).toHaveBeenCalledTimes(1);
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
+test('runJourney sets the journey stubs on the data session it opens', async () => {
+  const session = { stubs: [], failGates: [], forced: [], sunk: [], work: new Set() };
+  mockOpenDataSession.mockResolvedValue({ id: 'session1', cookie: 'session1', session, close });
+  await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [],
+    data: 'sample',
+    user: 'owner',
+    stubs: [
+      { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+      { requestId: 'save_price', fail: 'Write failed on purpose', times: 2 },
+    ],
+  });
+  expect(session.stubs).toMatchObject([
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+  ]);
+  expect(session.failGates).toMatchObject([
+    { requestId: 'save_price', message: 'Write failed on purpose', times: 2, fired: 0 },
+  ]);
+});
+
+test('runJourney refuses an answer stub on a request type the app does not have, before the data set loads', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [],
+    data: 'sample',
+    stubs: [{ connectionType: 'AxiosHttp', requestType: 'AxiosPost', answer: null }],
+  });
+  expect(result).toEqual({
+    error:
+      'Journey "stubs[0]": Request type "AxiosPost" is not a request of connection type "AxiosHttp". Its request types are "AxiosHttp".',
+    refused: true,
+  });
+  expect(mockOpenDataSession).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
+test('runJourney refuses expect.sunk on a journey with no data set, before any browser opens', async () => {
+  const result = await runJourney({
+    origin,
+    pageId: 'tickets',
+    steps: [{ expect: { sunk: { count: 0 } } }],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 0: expect.sunk needs a data set: it reads the requests the journey\'s data session recorded. Give the journey a "data".',
+    refused: true,
+  });
   expect(mockOpenPage).not.toHaveBeenCalled();
 });

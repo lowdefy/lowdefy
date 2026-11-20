@@ -46,6 +46,7 @@ function renderTitle({ node, methods }) {
 // `skeleton` (the table is loading its first rows) every cell renders its
 // column type's skeleton instead, under the same header.
 function buildAntdColumns({
+  blockId,
   nodes,
   compiledByKey,
   sort,
@@ -61,6 +62,7 @@ function buildAntdColumns({
         key: node.key,
         title: renderTitle({ node, methods }),
         children: buildAntdColumns({
+          blockId,
           nodes: node.children,
           compiledByKey,
           sort,
@@ -91,7 +93,15 @@ function buildAntdColumns({
       render: skeleton
         ? (_, row, index) => <SkeletonCell column={column} rowIndex={index} />
         : (_, row) =>
-            renderCell({ column, row, rowKey: getRowKey(row), methods, components, onEvent }),
+            renderCell({
+              blockId,
+              column,
+              row,
+              rowKey: getRowKey(row),
+              methods,
+              components,
+              onEvent,
+            }),
     };
   });
 }

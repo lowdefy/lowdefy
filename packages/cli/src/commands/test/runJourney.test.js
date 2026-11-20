@@ -57,6 +57,26 @@ test('runJourney posts the journey to the REST route and reports a pass', async 
   expect(result.durationMs).toEqual(expect.any(Number));
 });
 
+test("runJourney reports the route's own duration and its wait for a browser slot", async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({
+    data: { pageId: 'form', passed: false, steps: [], durationMs: 4200, waitedMs: 61000 },
+  });
+  const result = await runJourney({ item, url });
+  expect(result).toMatchObject({ passed: false, durationMs: 4200, waitedMs: 61000 });
+});
+
+test('runJourney reports its own POST time against an older server that sends no timing', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  const now = vi.spyOn(Date, 'now');
+  now.mockReturnValueOnce(1000).mockReturnValueOnce(3500);
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [] } });
+  const result = await runJourney({ item, url });
+  now.mockRestore();
+  expect(result.durationMs).toBe(2500);
+  expect(result.waitedMs).toBeUndefined();
+});
+
 test('runJourney returns the failure from a failed journey response', async () => {
   const { default: runJourney } = await import('./runJourney.js');
   const failure = {
@@ -210,6 +230,20 @@ test('runJourney posts data and passes the data set and warnings through', async
   expect(result).toMatchObject({ passed: true, data, warnings: ['w'] });
 });
 
+test('runJourney posts the journey stubs with its data set', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}] } });
+  const stubs = [
+    { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { rate: 1.5 } },
+    { requestId: 'save_price', fail: 'Write failed on purpose', times: 2 },
+  ];
+  await runJourney({
+    item: { ...item, journey: { ...journey, data: 'stubs', user: 'finance', stubs } },
+    url,
+  });
+  expect(mockPost.mock.calls.at(-1)[1]).toMatchObject({ data: 'stubs', stubs });
+});
+
 test('runJourney does not apply the name limit to a persona run name', async () => {
   const { default: runJourney } = await import('./runJourney.js');
   mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [{}], state: {} } });
@@ -219,8 +253,7 @@ test('runJourney does not apply the name limit to a persona run name', async () 
     item: {
       filePath: '/app/j.yaml',
       journey: persona,
-      persona: 'control_owner',
-      personaOf: authored,
+      expandedFrom: authored,
     },
     url,
   });
@@ -231,7 +264,7 @@ test('runJourney does not apply the name limit to a persona run name', async () 
     item: {
       filePath: '/app/j.yaml',
       journey: { ...tooLong, name: `${tooLong.name} [owner]` },
-      personaOf: tooLong,
+      expandedFrom: tooLong,
     },
     url,
   });
