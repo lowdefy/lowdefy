@@ -185,6 +185,24 @@ test('a journey that waits on a live message fails on that wait', async () => {
   expect(result.passed).toBe(false);
   expect(result.browserOnly).toBeUndefined();
   expect(result.failure.index).toBe(1);
+  expect(result.failure.message).toBe(
+    'Expected state "got_message" to equal true but found null. The page holds websocket subscription "feed", which gets no messages headless: a step that waits on a live message passes only in a browser.'
+  );
+});
+
+test('a step that fails on a page holding no open subscription says nothing of websockets', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        subscriptions: [{ ...feed, client: { subscribeOnMount: false } }],
+        blocks: [{ id: 'title', type: 'Paragraph' }],
+      },
+    ],
+    steps: [{ expect: { state: { path: 'got_message', equals: true } } }],
+    stepTimeout: 200,
+  });
+  expect(result.failure.message).toBe('Expected state "got_message" to equal true but found null.');
 });
 
 test('a Publish marks the journey browser-only at that step', async () => {

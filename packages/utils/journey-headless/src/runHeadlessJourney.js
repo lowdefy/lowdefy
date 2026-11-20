@@ -36,6 +36,7 @@ import checkStepReferences from './checkStepReferences.js';
 import createHeadlessActors from './createHeadlessActors.js';
 import createJourneyRaces from './createJourneyRaces.js';
 import findUnfiredFailGate from './findUnfiredFailGate.js';
+import noteSilentSubscriptions from './noteSilentSubscriptions.js';
 import runHeadlessStep from './runHeadlessStep.js';
 import toJsonValue from './toJsonValue.js';
 import toStepFailure from './toStepFailure.js';
@@ -214,7 +215,10 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
         answer = stepAnswer;
       }
     } catch (error) {
-      stepFailure = toStepFailure({ error, index, step });
+      stepFailure = noteSilentSubscriptions({
+        actor: actors.current(),
+        failure: toStepFailure({ error, index, step }),
+      });
     }
     const durationMs = Date.now() - started;
     if (countBrowserOnly(actors) > triedBefore) {

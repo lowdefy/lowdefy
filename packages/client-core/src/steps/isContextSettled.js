@@ -37,9 +37,9 @@ function isInitAsyncSettled({ context, deadline }) {
 // the epoch), could wait out: its onInit and onInitAsync (and the app's) are done, no block event
 // is running (an onClick's action chain, an onMountAsync), no request is loading and every
 // subscription the page holds open has connected or failed. A subscription the page declares and
-// has not opened (client.subscribeOnMount false) or has closed is not waited for. An event sleeping in a Wait action past the deadline (a
-// page that polls with a Wait) does not count as running. The dev server's isPageReady reads a
-// browser tab the same way.
+// has not opened (client.subscribeOnMount false) or has closed is not waited for. An event
+// sleeping in a Wait action past the deadline (a page that polls with a Wait) does not count as
+// running. The dev server's isPageReady reads a browser tab the same way.
 function isContextSettled({ context, deadline, lowdefy }) {
   if (context._internal?.onInitDone !== true) return false;
   if (!isInitAsyncSettled({ context, deadline })) return false;
