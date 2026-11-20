@@ -123,8 +123,6 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
   }
 
   async function show({ page, urlQuery }) {
-    // The page shown before unmounts, which closes its subscriptions (WebSocketsEffect).
-    actor.page?.context._internal.WebSockets.unsubscribeAll();
     const config = serializer.deserialize({ pageConfig: page.pageConfig, rootConfig });
     const { lowdefy, globals, appContext } = client;
     globals.window.location = createLocation({ path: page.matchedPath, urlQuery });
@@ -141,6 +139,14 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       lowdefy,
       pathParams: page.pathParams,
     });
+    // The web client keeps a page's Context mounted while its context stays the same (a static
+    // page shown again), so its subscriptions stay as they are. Another context unmounts the page
+    // shown before, which closes its subscriptions (WebSocketsEffect).
+    const previousContext = actor.page?.context;
+    const sameContext = previousContext === context;
+    if (!type.isUndefined(previousContext) && !sameContext) {
+      previousContext._internal.WebSockets.unsubscribeAll();
+    }
     actor.page = {
       context,
       matchedPath: page.matchedPath,
@@ -159,7 +165,9 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     registerBlockStandIns({ actor });
     // The web client's WebSocketsEffect opens the page's subscriptions once onInit has run, before
     // the blocks' onMount; the websocket client is inert (createActorClient).
-    context._internal.WebSockets.subscribeAll();
+    if (!sameContext) {
+      context._internal.WebSockets.subscribeAll();
+    }
     await fireMountEvents({
       context,
       mounted: actor.page.mounted,

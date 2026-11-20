@@ -36,7 +36,8 @@ function isInitAsyncSettled({ context, deadline }) {
 // A page context with nothing left running that the caller, who waits until `deadline` (ms since
 // the epoch), could wait out: its onInit and onInitAsync (and the app's) are done, no block event
 // is running (an onClick's action chain, an onMountAsync), no request is loading and every
-// subscription has connected or failed. An event sleeping in a Wait action past the deadline (a
+// subscription the page holds open has connected or failed. A subscription the page declares and
+// has not opened (client.subscribeOnMount false) or has closed is not waited for. An event sleeping in a Wait action past the deadline (a
 // page that polls with a Wait) does not count as running. The dev server's isPageReady reads a
 // browser tab the same way.
 function isContextSettled({ context, deadline, lowdefy }) {
@@ -51,8 +52,10 @@ function isContextSettled({ context, deadline, lowdefy }) {
   if (running) return false;
   const requests = Object.values(context.requests ?? {});
   if (requests.some((calls) => calls?.[0]?.loading)) return false;
-  const channels = Object.values(context.websockets ?? {});
-  return channels.every((channel) => channel?.connected === true || Boolean(channel?.error));
+  const open = context._internal?.WebSockets?.active;
+  return Object.entries(context.websockets ?? {})
+    .filter(([websocketId]) => type.isUndefined(open) || open.has(websocketId))
+    .every(([, channel]) => channel?.connected === true || Boolean(channel?.error));
 }
 
 export default isContextSettled;

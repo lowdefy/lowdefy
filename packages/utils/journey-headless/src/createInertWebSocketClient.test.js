@@ -31,20 +31,45 @@ const feed = {
   },
 };
 
-test('a subscribe resolves at once and calls onConnected, and an unsubscribe does nothing', async () => {
+test('a subscribe resolves on the next tick and then calls onConnected', async () => {
   const reasons = [];
   const client = createInertWebSocketClient({ onBrowserOnly: (reason) => reasons.push(reason) });
   const calls = [];
-  await expect(
-    client.subscribe({
-      websocketId: 'feed',
-      payload: {},
-      handlers: { onConnected: () => calls.push('onConnected') },
-    })
-  ).resolves.toBeUndefined();
+  const subscribed = client.subscribe({
+    websocketId: 'feed',
+    payload: {},
+    handlers: { onConnected: () => calls.push('onConnected') },
+  });
+  expect(calls).toEqual([]);
+  await expect(subscribed).resolves.toBeUndefined();
   expect(calls).toEqual(['onConnected']);
-  expect(client.unsubscribe({ websocketId: 'feed' })).toBeUndefined();
   expect(reasons).toEqual([]);
+});
+
+test('an unsubscribe, or a subscribe that replaces it, settles a subscribe not yet answered with no onConnected', async () => {
+  const client = createInertWebSocketClient({ onBrowserOnly: () => undefined });
+  const calls = [];
+  const first = client.subscribe({
+    websocketId: 'feed',
+    payload: {},
+    handlers: { onConnected: () => calls.push('first') },
+  });
+  const second = client.subscribe({
+    websocketId: 'feed',
+    payload: { page: 2 },
+    handlers: { onConnected: () => calls.push('second') },
+  });
+  await expect(first).resolves.toBeUndefined();
+  await expect(second).resolves.toBeUndefined();
+  const third = client.subscribe({
+    websocketId: 'feed',
+    payload: {},
+    handlers: { onConnected: () => calls.push('third') },
+  });
+  expect(client.unsubscribe({ websocketId: 'feed' })).toBeUndefined();
+  await expect(third).resolves.toBeUndefined();
+  await new Promise((resolve) => setTimeout(resolve, 10));
+  expect(calls).toEqual(['second']);
 });
 
 test('a publish tells onBrowserOnly and fails', async () => {
@@ -56,7 +81,7 @@ test('a publish tells onBrowserOnly and fails', async () => {
   expect(reasons).toEqual(['Publish to "feed" needs the browser.']);
 });
 
-test('a page that subscribes on mount opens with no app error and fires onSubscribe before onMount', async () => {
+test('a page that subscribes on mount opens with no app error and fires onSubscribe after onMount starts', async () => {
   const started = Date.now();
   const { errors, log, result } = await runTestJourney({
     pages: [
@@ -68,17 +93,20 @@ test('a page that subscribes on mount opens with no app error and fires onSubscr
       },
     ],
     steps: [{ expect: { visible: 'title' } }],
+    stepTimeout: 3000,
   });
   expect(result.failure).toBeUndefined();
   expect(result.browserOnly).toBeUndefined();
   expect(result.passed).toBe(true);
   expect(errors).toEqual([]);
-  expect(readLog(log).map(([name]) => name)).toEqual(['onSubscribe', 'onMount']);
-  // No subscribe timeout is waited out.
+  // As in a browser, where the server's ack comes a round trip after the blocks mount.
+  expect(readLog(log).map(([name]) => name)).toEqual(['onMount', 'onSubscribe']);
+  // Neither the subscribe timeout (10 s) nor a settle cap (3 s here) is waited out.
   expect(Date.now() - started).toBeLessThan(2000);
 });
 
-test('a subscription with subscribeOnMount false opens on a Subscribe action', async () => {
+test('a subscription with subscribeOnMount false opens on a Subscribe action, and no settle waits on it while it is closed', async () => {
+  const started = Date.now();
   const { errors, log, result } = await runTestJourney({
     pages: [
       {
@@ -96,12 +124,54 @@ test('a subscription with subscribeOnMount false opens on a Subscribe action', a
         ],
       },
     ],
-    steps: [{ click: 'open_feed' }, { click: 'close_feed' }],
+    steps: [
+      { expect: { visible: 'open_feed' } },
+      { click: 'open_feed' },
+      { click: 'close_feed' },
+      { expect: { visible: 'open_feed' } },
+    ],
+    stepTimeout: 3000,
   });
   expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
   expect(errors).toEqual([]);
   expect(readLog(log).map(([name]) => name)).toEqual(['onSubscribe']);
+  // Each settle would wait its cap (3 s) on a declared channel that is not open.
+  expect(Date.now() - started).toBeLessThan(2000);
+});
+
+// WebSockets.subscribe returns early for a channel already open with the same payload, so
+// onSubscribe fires again only for a channel that was closed.
+test('a link to the page shown keeps its subscriptions, and another page closes them', async () => {
+  const { errors, log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        subscriptions: [feed],
+        blocks: [
+          button({ id: 'stay', actions: [{ id: 'link', type: 'Link', params: 'home' }] }),
+          button({ id: 'leave', actions: [{ id: 'link', type: 'Link', params: 'second' }] }),
+        ],
+      },
+      {
+        id: 'second',
+        blocks: [
+          button({ id: 'come_back', actions: [{ id: 'link', type: 'Link', params: 'home' }] }),
+        ],
+      },
+    ],
+    steps: [
+      { click: 'stay' },
+      { expect: { visible: 'stay' } },
+      { click: 'leave' },
+      { click: 'come_back' },
+      { expect: { visible: 'stay' } },
+    ],
+  });
+  expect(errors).toEqual([]);
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(readLog(log).map(([name]) => name)).toEqual(['onSubscribe', 'onSubscribe']);
 });
 
 test('a journey that waits on a live message fails on that wait', async () => {

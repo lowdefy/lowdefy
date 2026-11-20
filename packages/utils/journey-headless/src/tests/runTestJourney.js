@@ -32,7 +32,7 @@ import runHeadlessJourney from '../runHeadlessJourney.js';
 // - Fail: fails the event with an Error, an app error.
 // - SetFocus: a browser-only action, which the runner replaces with its stub.
 // - Request: appends { blockId, name: 'request:<requestId>' } to the log, and sends nothing.
-// - CallMethod, SetState, Subscribe, Unsubscribe and Publish, as actions-core's.
+// - CallMethod, Link (to a pageId), SetState, Subscribe, Unsubscribe and Publish, as actions-core's.
 // A page's subscriptions are written as on a page, each with its events as action lists.
 // Its one operator is _state, as operators-js reads state with a path.
 
@@ -157,6 +157,7 @@ async function runTestJourney({ dataSet, menus = [], pages, steps, stepTimeout =
           log.push({ blockId: methods.getBlockId(), name: `request:${params}` });
         },
         SetFocus: () => undefined,
+        Link: ({ methods, params }) => methods.link({ pageId: params }),
         Publish: ({ methods, params }) => methods.publish(params),
         SetState: ({ methods, params }) => methods.setState(params),
         Subscribe: ({ methods, params }) => methods.subscribe(params),

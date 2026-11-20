@@ -15,23 +15,47 @@
 */
 
 // Stands in for client-core's websocket client (createWebSocketClient) on a headless page, which
-// has no server socket. A subscribe succeeds at once, as the server's ack would answer it: the
-// engine's onConnected runs (the channel reads connected, its onSubscribe event fires), and no
-// message ever arrives. A page that only holds a live feed runs headless; a journey that waits
-// for a live message fails on that wait. An unsubscribe has nothing to close. A publish needs the
-// server's channel, so it tells onBrowserOnly, which marks the journey browser-only, and throws as
-// a browser-only action's stub does.
+// has no server socket. A subscribe succeeds on the next tick, as the server's ack answers it a
+// round trip later: the subscribe resolves and the engine's onConnected runs (the channel reads
+// connected, its onSubscribe event fires), after what the page started at once, such as its
+// blocks' onMount. No message ever arrives. A page that only holds a live feed runs headless; a
+// journey that waits for a live message fails on that wait. An unsubscribe, or a subscribe that
+// replaces one not yet answered, settles the earlier subscribe without onConnected, as the real
+// client releases it. A publish needs the server's channel, so it tells onBrowserOnly, which marks
+// the journey browser-only, and throws as a browser-only action's stub does.
 function createInertWebSocketClient({ onBrowserOnly }) {
+  // websocketId → { resolve, timer } for a subscribe not yet answered.
+  const pending = new Map();
+
+  function release(websocketId) {
+    const waiting = pending.get(websocketId);
+    if (waiting) {
+      clearTimeout(waiting.timer);
+      pending.delete(websocketId);
+      waiting.resolve();
+    }
+  }
+
   return {
     publish: async ({ websocketId }) => {
       const reason = `Publish to "${websocketId}" needs the browser.`;
       onBrowserOnly(reason);
       throw new Error(reason);
     },
-    subscribe: async ({ handlers }) => {
-      handlers.onConnected();
+    subscribe: ({ handlers, websocketId }) => {
+      release(websocketId);
+      return new Promise((resolve) => {
+        const timer = setTimeout(() => {
+          pending.delete(websocketId);
+          resolve();
+          handlers.onConnected();
+        }, 0);
+        pending.set(websocketId, { resolve, timer });
+      });
     },
-    unsubscribe: () => undefined,
+    unsubscribe: ({ websocketId }) => {
+      release(websocketId);
+    },
   };
 }
 
