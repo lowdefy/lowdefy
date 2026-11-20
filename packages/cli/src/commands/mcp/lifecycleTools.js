@@ -111,7 +111,7 @@ const lifecycleTools = [
         headless: {
           type: 'boolean',
           description:
-            'No browser, much faster. A journey that needs one is listed as browserOnly with that step.',
+            'No browser, much faster. A journey that needs one is listed as browserOnly with that step, or phase "open".',
         },
         concurrency: {
           type: 'integer',

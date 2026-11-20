@@ -65,6 +65,37 @@ test('an onMount CallMethod on a plugin block with no stand-in leaves the journe
   expect(readLog(log)).toEqual([['after']]);
 });
 
+test('a browser-only action during the open leaves the journey to the browser on open', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        events: { onMount: [{ id: 'focus', type: 'SetFocus', params: { blockId: 'home' } }] },
+        blocks: [{ id: 'text', type: 'Paragraph' }],
+      },
+    ],
+    steps: [{ expect: { visible: 'text' } }],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.browserOnly).toEqual({ phase: 'open', reason: 'SetFocus needs the browser.' });
+});
+
+test('an app error during an open with no browser-only mark still fails the journey on open', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        events: { onMount: [{ id: 'fail', type: 'Fail' }] },
+        blocks: [{ id: 'chain', type: 'PluginChain' }],
+      },
+    ],
+    steps: [{ expect: { visible: 'chain' } }],
+  });
+  expect(result.browserOnly).toBeUndefined();
+  expect(result.passed).toBe(false);
+  expect(result.failure.phase).toBe('open');
+});
+
 test("a stand-in block's unknown method still fails the step", async () => {
   const { result } = await runTestJourney({
     pages: [

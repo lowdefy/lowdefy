@@ -180,7 +180,8 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     };
   }
   // An open that reached something only a browser does (an onMount CallMethod on a block with no
-  // stand-in) leaves the journey to the browser, whatever the open raised after that point.
+  // stand-in, or a browser-only action) leaves the journey to the browser, over any failure the
+  // open raised, as a step's browser-only mark wins over its failure: the browser run judges it.
   if (countBrowserOnly(actors) > 0) {
     failure = undefined;
     browserOnly = { phase: 'open', reason: findBrowserOnly({ actors, from: 0 }) };

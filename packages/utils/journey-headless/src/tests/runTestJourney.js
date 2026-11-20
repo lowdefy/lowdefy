@@ -29,6 +29,8 @@ import runHeadlessJourney from '../runHeadlessJourney.js';
 // - Record: appends { blockId, name: params, event } to the run's log, the event the action ran
 //   for, so a test reads which events fired, in order, with their payloads.
 // - Refuse: fails the event with a UserError, an expected outcome (success: false).
+// - Fail: fails the event with an Error, an app error.
+// - SetFocus: a browser-only action, which the runner replaces with its stub.
 // - Request: appends { blockId, name: 'request:<requestId>' } to the log, and sends nothing.
 // - CallMethod and SetState, as actions-core's.
 // Its one operator is _state, as operators-js reads state with a path.
@@ -128,12 +130,16 @@ async function runTestJourney({ dataSet, menus = [], pages, steps, stepTimeout =
         Record: ({ methods, params }) => {
           log.push({ blockId: methods.getBlockId(), name: params, event: methods.getEvent(true) });
         },
+        Fail: () => {
+          throw new Error('Failed.');
+        },
         Refuse: () => {
           throw new UserError('Refused.');
         },
         Request: ({ methods, params }) => {
           log.push({ blockId: methods.getBlockId(), name: `request:${params}` });
         },
+        SetFocus: () => undefined,
         SetState: ({ methods, params }) => methods.setState(params),
       },
       blockMetas: BLOCK_METAS,

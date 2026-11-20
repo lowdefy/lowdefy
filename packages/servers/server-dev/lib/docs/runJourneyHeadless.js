@@ -93,7 +93,8 @@ function toObservedEvent(payload) {
 // with the calls it made and their payloads (calls).
 // A journey whose steps need a browser answers { pageId, browserOnly: { index, step, reason },
 // steps: [] }, before any data is loaded; one that reaches an action only a browser can carry out
-// answers browserOnly for that step. Refusals ({ error, refused }) are runJourney's. `stubs`, the
+// answers browserOnly for that step, or { phase: 'open', reason } when the page's open reached
+// it. Refusals ({ error, refused }) are runJourney's. `stubs`, the
 // journey's answer stubs and fail gates (validated by the caller), are set on its data session.
 async function runJourneyHeadless({
   origin,
