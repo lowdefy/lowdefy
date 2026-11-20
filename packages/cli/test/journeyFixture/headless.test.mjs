@@ -172,6 +172,30 @@ test('--headless --build lists a journey whose open calls a plugin block method 
   });
 });
 
+// pages/live_feed.yaml subscribes to a websocket on mount: headless, the subscribe succeeds at once
+// and no message arrives, so the journey passes with no app error and no subscribe timeout (10 s)
+// waited out.
+test('--headless --build passes a journey whose page subscribes to a websocket on mount', async () => {
+  const { code, output } = await runCli([
+    'test',
+    '--headless',
+    '--build',
+    '--config-directory',
+    configDirectory,
+    '--server-directory',
+    serverDirectory,
+    path.join(configDirectory, 'tests', 'journeys', '_headless', 'live_feed.yaml'),
+  ]);
+  const passed = output.match(
+    /PASS {2}opens a page that subscribes to a live feed {2}\(1 steps?, (\d+)ms\)/
+  );
+  expect(passed).not.toBeNull();
+  expect(Number(passed[1])).toBeLessThan(5000);
+  expect(output).not.toContain('client-error');
+  expect(output).toContain('1 passed, 0 failed of 1 journeys');
+  expect(code).toBe(0);
+});
+
 test('--headless --build with no build exits non-zero with the test harness message', async () => {
   const missing = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-no-build-'));
   try {
@@ -260,3 +284,28 @@ devServerTest(
     });
   }
 );
+
+// The live feed journey passes in the browser, where the page's subscription opens on the dev
+// server's websocket, and headless, where it succeeds with no socket.
+devServerTest('the live feed journey passes in the browser and headless', async () => {
+  const journey = {
+    pageId: 'live_feed',
+    user: 'none',
+    steps: [{ expect: { state: { path: 'subscribed', equals: true } } }],
+  };
+  const post = async (body) => {
+    const response = await fetch(`${fixtureUrl}/lowdefy-docs/journey`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    return response.json();
+  };
+  const browser = await post(journey);
+  expect(browser.failure).toBeUndefined();
+  expect(browser.passed).toBe(true);
+  const headless = await post({ ...journey, headless: true });
+  expect(headless.failure).toBeUndefined();
+  expect(headless.browserOnly).toBeUndefined();
+  expect(headless.passed).toBe(true);
+});
