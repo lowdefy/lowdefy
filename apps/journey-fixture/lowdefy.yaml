@@ -125,3 +125,4 @@ pages:
   - _ref: pages/popup_targets.yaml
   - _ref: pages/grid_targets.yaml
   - _ref: pages/caught_faults.yaml
+  - _ref: pages/plugin_block.yaml

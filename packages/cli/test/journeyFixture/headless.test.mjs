@@ -139,6 +139,39 @@ test('--headless --build runs a case table journey once per row', async () => {
   expect(code).toBe(0);
 });
 
+// pages/plugin_block.yaml's onMount calls a method on a block of the app's own plugin, which no
+// headless stand-in models: the journey is browser-only on open, not failed.
+test('--headless --build lists a journey whose open calls a plugin block method as browser-only', async () => {
+  const { code, output } = await runCli([
+    'test',
+    '--headless',
+    '--build',
+    '--config-directory',
+    configDirectory,
+    '--server-directory',
+    serverDirectory,
+    path.join(configDirectory, 'tests', 'journeys', '_headless', 'plugin_block.yaml'),
+  ]);
+  expect(output).toContain(
+    `BROWSER-ONLY  runs the plugin block's chain on mount  on open: Block "mount_chain" is of type FixtureActionChain, which has no headless stand-in for CallMethod run: the step runs in a browser.`
+  );
+  expect(output).not.toContain('FAIL');
+  expect(output).toContain('0 passed, 0 failed of 0 journeys, 1 browser-only not run');
+  expect(code).toBe(0);
+  const written = JSON.parse(
+    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json'), 'utf8')
+  );
+  expect(written.journeys).toEqual({
+    "tests/journeys/_headless/plugin_block.yaml#runs the plugin block's chain on mount": {
+      browserOnly: {
+        phase: 'open',
+        reason:
+          'Block "mount_chain" is of type FixtureActionChain, which has no headless stand-in for CallMethod run: the step runs in a browser.',
+      },
+    },
+  });
+});
+
 test('--headless --build with no build exits non-zero with the test harness message', async () => {
   const missing = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-no-build-'));
   try {
@@ -193,5 +226,37 @@ devServerTest(
       fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json'), 'utf8')
     );
     expect(written.mode).toBe('dev');
+  }
+);
+
+// The plugin block's journey that the headless runs list as browser-only passes in a browser,
+// where the block's component registers its run method, and the dev server's headless run answers
+// browserOnly on open for it.
+devServerTest(
+  'the plugin block journey passes in the browser and is browser-only on open headless',
+  async () => {
+    const journey = {
+      pageId: 'plugin_block',
+      user: 'none',
+      steps: [{ expect: { state: { path: 'chain_ran', equals: true } } }],
+    };
+    const post = async (body) => {
+      const response = await fetch(`${fixtureUrl}/lowdefy-docs/journey`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+      return response.json();
+    };
+    const browser = await post(journey);
+    expect(browser.failure).toBeUndefined();
+    expect(browser.passed).toBe(true);
+    const headless = await post({ ...journey, headless: true });
+    expect(headless.passed).toBeUndefined();
+    expect(headless.browserOnly).toEqual({
+      phase: 'open',
+      reason:
+        'Block "mount_chain" is of type FixtureActionChain, which has no headless stand-in for CallMethod run: the step runs in a browser.',
+    });
   }
 );

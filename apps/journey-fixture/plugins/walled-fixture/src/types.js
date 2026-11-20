@@ -20,7 +20,12 @@
 // reaches MongoDB only through the walled client, so it declares
 // meta.dataSet 'walled'. FixtureSignature is the webhook verifier of api/payment_events.yaml.
 // UndeclaredFixture declares no dataSet, so the step rails refuse a click that reaches it.
+// FixtureActionChain is a block no headless stand-in models (pages/plugin_block.yaml).
 export default {
+  blockMetas: {
+    FixtureActionChain: { category: 'display' },
+  },
+  blocks: ['FixtureActionChain'],
   connections: ['FixtureSignature', 'UndeclaredFixture', 'WalledFixture'],
   connectionMetas: {
     FixtureSignature: { tenant: false },
