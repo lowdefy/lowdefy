@@ -19,8 +19,9 @@ import createMemoryStore from './createMemoryStore.js';
 // The platform @lowdefy/client-core reaches (HOST_KEYS in createLowdefyCore.js), for a page with
 // no browser. Requests and endpoint calls do not reach fetch: openHeadlessPage replaces callRequest
 // and callAPI with the host's in-process calls, so a fetch here is a call the runner does not
-// know, and fails. WebSockets need the browser. The build and caller checks never fire, since no
-// response comes over HTTP.
+// know, and fails. No socket opens either: createActorClient replaces the websocket client with an
+// inert one, so a WebSocket here is a socket the runner does not know. The build and caller checks
+// never fire, since no response comes over HTTP.
 function createNodeClientHost({ globals, router }) {
   return {
     fetch: (url) => {
@@ -37,7 +38,7 @@ function createNodeClientHost({ globals, router }) {
     sessionStorage: createMemoryStore(),
     storage: createMemoryStore(),
     WebSocket: function HeadlessWebSocket() {
-      throw new Error('WebSocket subscriptions need the browser.');
+      throw new Error('A headless page opens no WebSocket.');
     },
     websocketUrl: (path) => `ws://localhost${path}`,
   };

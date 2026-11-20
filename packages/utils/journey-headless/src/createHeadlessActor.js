@@ -46,7 +46,8 @@ function readQuery(query) {
 //   lowdefy object, as the web client's router does, and joins the history. back() goes back one
 //   page, by a full load when that page was opened by an earlier load.
 // - Showing a page runs what the web client's components run: the app's and the page's onInit
-//   and onInitAsync, then onMount on every block it mounts. Popup blocks (Modal, Drawer,
+//   and onInitAsync, then its subscriptions open (each succeeds and no message arrives), then
+//   onMount on every block it mounts. Popup blocks (Modal, Drawer,
 //   ConfirmModal) start closed; the methods their stand-ins register open them, fire their open
 //   and close events and mount their content through setOpen (registerBlockStandIns).
 // - page.standIns holds what each block's stand-in keeps for the shown page, by block id
@@ -122,6 +123,8 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
   }
 
   async function show({ page, urlQuery }) {
+    // The page shown before unmounts, which closes its subscriptions (WebSocketsEffect).
+    actor.page?.context._internal.WebSockets.unsubscribeAll();
     const config = serializer.deserialize({ pageConfig: page.pageConfig, rootConfig });
     const { lowdefy, globals, appContext } = client;
     globals.window.location = createLocation({ path: page.matchedPath, urlQuery });
@@ -154,6 +157,9 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     await context._internal.runOnInit(progress);
     context._internal.runOnInitAsync(progress);
     registerBlockStandIns({ actor });
+    // The web client's WebSocketsEffect opens the page's subscriptions once onInit has run, before
+    // the blocks' onMount; the websocket client is inert (createActorClient).
+    context._internal.WebSockets.subscribeAll();
     await fireMountEvents({
       context,
       mounted: actor.page.mounted,

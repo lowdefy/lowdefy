@@ -20,6 +20,7 @@ import { ConfigError } from '@lowdefy/errors';
 
 import browserOnlyActions from './browserOnlyActions.js';
 import createBrowserActionStub from './createBrowserActionStub.js';
+import createInertWebSocketClient from './createInertWebSocketClient.js';
 import createNodeClientHost from './createNodeClientHost.js';
 import createNodeGlobals from './createNodeGlobals.js';
 import createPageCalls from './createPageCalls.js';
@@ -35,6 +36,8 @@ import createSinkLogger from './createSinkLogger.js';
 // - handleError and the logger: errors go to the host's error sink.
 // - an action only a browser can carry out is a stub that tells onBrowserOnly why the journey
 //   needs the browser.
+// - the websocket client is inert (createInertWebSocketClient): a subscribe succeeds and no
+//   message arrives, and a publish tells onBrowserOnly.
 // Every completed event's trace payload goes to onTrace, as a browser journey's step observer
 // reads them. Returns { globals, lowdefy, appContext }.
 function createActorClient({ actor, host, onBrowserOnly, onTrace, plugins, rootConfig, router }) {
@@ -67,6 +70,7 @@ function createActorClient({ actor, host, onBrowserOnly, onTrace, plugins, rootC
   const pageCalls = createPageCalls({ calls: actor.calls, host, user: actor.user });
   lowdefy._internal.callAPI = pageCalls.callAPI;
   lowdefy._internal.callRequest = pageCalls.callRequest;
+  lowdefy._internal.websocketClient = createInertWebSocketClient({ onBrowserOnly });
   lowdefy._internal.handleError = async (error) => {
     host.errorSink.add({ error, source: 'client' });
   };
