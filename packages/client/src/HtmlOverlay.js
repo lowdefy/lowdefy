@@ -16,6 +16,7 @@
 
 import React, { useEffect, useId, useImperativeHandle, useRef } from 'react';
 import { Popconfirm, Popover, Tooltip } from 'antd';
+import { journeyTargetSelectors } from '@lowdefy/helpers';
 
 // The target lives in HTML React does not own, so antd cannot wrap it. antd's
 // trigger resolves its anchor from the child's ref, so a child that renders
@@ -35,7 +36,9 @@ function isTop(entry) {
   return dismissable[dismissable.length - 1] === entry;
 }
 
-function ConfirmOverlay({ content, Icon, onClose, onConfirm, popupClassName, target }) {
+// A confirm a ClickableHtml data-event asks marks its buttons as the block's ok and cancel
+// controls, as ConfirmModal's are, so a journey answers it by key.
+function ConfirmOverlay({ blockId, content, Icon, onClose, onConfirm, popupClassName, target }) {
   const messageId = `${useId().replace(/[^a-zA-Z0-9_-]/g, '')}-message`;
   const cancelRef = useRef(null);
   return (
@@ -45,9 +48,16 @@ function ConfirmOverlay({ content, Icon, onClose, onConfirm, popupClassName, tar
         // once the popup is placed so focusing it cannot scroll the page.
         if (open) cancelRef.current?.focus();
       }}
-      cancelButtonProps={{ 'aria-describedby': messageId, ref: cancelRef }}
+      cancelButtonProps={{
+        'aria-describedby': messageId,
+        ref: cancelRef,
+        ...journeyTargetSelectors.controlMarks({ blockId, control: 'cancel' }),
+      }}
       icon={<Icon properties={{ name: 'warning', title: '' }} />}
-      okButtonProps={{ 'aria-describedby': messageId }}
+      okButtonProps={{
+        'aria-describedby': messageId,
+        ...journeyTargetSelectors.controlMarks({ blockId, control: 'ok' }),
+      }}
       onCancel={() => onClose('cancel')}
       onConfirm={onConfirm}
       open={true}
@@ -61,7 +71,7 @@ function ConfirmOverlay({ content, Icon, onClose, onConfirm, popupClassName, tar
   );
 }
 
-function HtmlOverlay({ content, Icon, kind, onClose, onConfirm, target }) {
+function HtmlOverlay({ blockId, content, Icon, kind, onClose, onConfirm, target }) {
   const popupClassName = `lowdefy-html-${kind}-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
   useEffect(() => {
@@ -93,6 +103,7 @@ function HtmlOverlay({ content, Icon, kind, onClose, onConfirm, target }) {
   if (kind === 'confirm') {
     return (
       <ConfirmOverlay
+        blockId={blockId}
         content={content}
         Icon={Icon}
         onClose={onClose}

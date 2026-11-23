@@ -25,6 +25,7 @@ import findDataEventRule from './findDataEventRule.js';
 import getDataEvent from './getDataEvent.js';
 import HTML_ENHANCERS from './htmlEnhancers/htmlEnhancers.js';
 import NATIVE_INTERACTIVE from './htmlEnhancers/nativeInteractive.js';
+import markDataEventControls from './markDataEventControls.js';
 import { getHtmlEnhancements } from './registerHtmlEnhancements.js';
 import runHtmlEnhancers from './runHtmlEnhancers.js';
 
@@ -114,6 +115,15 @@ class HtmlComponent extends React.Component {
     const findOverlayTarget = this.createOverlayTargetFinder();
     this.runCleanups();
     this.div.innerHTML = DOMPurify.sanitize(htmlString, this.props.sanitizeOptions);
+    // A block that fires data events (ClickableHtml) names its block, so a journey can target
+    // its elements by event and data-id.
+    if (!type.isNone(this.props.blockId) && this.props.onDataEvent) {
+      markDataEventControls({
+        blockId: this.props.blockId,
+        dataEvents: this.props.dataEvents,
+        root: this.div,
+      });
+    }
     this.appliedDiv = this.div;
     this.appliedHtml = htmlString;
 
@@ -322,6 +332,7 @@ class HtmlComponent extends React.Component {
     if (overlay.kind === 'popover') {
       content = (
         <HtmlComponent
+          blockId={this.props.blockId}
           dataEvents={this.props.dataEvents}
           div={true}
           html={overlay.html}
@@ -337,6 +348,7 @@ class HtmlComponent extends React.Component {
     return (
       <React.Suspense fallback={null}>
         <HtmlOverlay
+          blockId={this.props.blockId}
           content={content}
           kind={overlay.kind}
           onClose={this.closeOverlay}

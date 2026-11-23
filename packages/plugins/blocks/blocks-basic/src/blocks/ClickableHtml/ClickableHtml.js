@@ -22,9 +22,12 @@ import { withBlockDefaults, HtmlComponent } from '@lowdefy/block-utils';
 // markup has its own action chain. Its other data-* attributes are the event
 // object. HtmlComponent finds the target, including inside data-popover
 // content, and prevents the element's default action. Only the events listed
-// in properties.dataEvents fire, since the markup can hold data.
+// in properties.dataEvents fire, since the markup can hold data. blockId marks
+// each listed element as a journey control: { blockId, control: <its event>,
+// rowKey: <its data-id> } (markDataEventControls).
 const ClickableHtml = ({ blockId, classNames, events, properties, methods, styles }) => (
   <HtmlComponent
+    blockId={blockId}
     dataEvents={properties.dataEvents}
     div={true}
     events={events}
