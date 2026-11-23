@@ -95,9 +95,11 @@ async function expectBlockText({ actor, params, timeout }) {
     return;
   }
   const expected = `block "${blockId}" text to contain "${contains}"`;
-  if (!reading.shown) {
+  // The browser waits for the block's wrapper, which a block the page holds draws even while it
+  // is hidden or a closed Modal: its text then reads "".
+  if (!reading.onPage) {
     throw new HeadlessStepError(`Expected block "${blockId}" to contain text "${contains}".`, {
-      actual: `block "${blockId}" is not shown`,
+      actual: `no block "${blockId}" on the page`,
       expected,
     });
   }

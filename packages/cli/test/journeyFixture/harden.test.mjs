@@ -251,10 +251,11 @@ function verdictsOf({ report, file }) {
 }
 
 fixtureTest(
-  'harden --headless gives a headless journey the verdicts a browser run gives it, and runs save.yaml in the browser',
+  "harden --headless gives headless journeys the verdicts a browser run gives them, save.yaml's text check included",
   async () => {
     const journeys = path.join(configDirectory, 'tests', 'journeys');
     const headlessFile = 'tests/journeys/_headless/save.yaml';
+    const textFile = 'tests/journeys/save.yaml';
     const args = [
       'journeys',
       'harden',
@@ -268,7 +269,11 @@ fixtureTest(
       '--log-level',
       'error',
     ];
-    const browserRun = await runCli([...args, path.join(journeys, '_headless', 'save.yaml')]);
+    const browserRun = await runCli([
+      ...args,
+      path.join(journeys, '_headless', 'save.yaml'),
+      path.join(journeys, 'save.yaml'),
+    ]);
     expect(browserRun.code).toBe(0);
     const headlessRun = await runCli([
       ...args,
@@ -283,15 +288,18 @@ fixtureTest(
     const browserVerdicts = verdictsOf({ report: browserReport, file: headlessFile });
     expect(Object.values(browserVerdicts)).toContain('killed');
     expect(verdictsOf({ report: headlessReport, file: headlessFile })).toEqual(browserVerdicts);
+    const browserTextVerdicts = verdictsOf({ report: browserReport, file: textFile });
+    expect(Object.values(browserTextVerdicts)).toContain('killed');
+    expect(verdictsOf({ report: headlessReport, file: textFile })).toEqual(browserTextVerdicts);
     expect(headlessReport.journeys.map(({ file }) => file).sort()).toEqual([
       'tests/journeys/_headless/save.yaml',
       'tests/journeys/save.yaml',
     ]);
-    // save.yaml checks text, so its pairs ran in the browser; the headless journey's ran headless.
+    // save.yaml's text check reads the Alert's text model (LDF-1147), so its pairs ran headless
+    // too.
     expect(headlessReport.pairs).toEqual({
-      headless: Object.keys(verdictsOf({ report: headlessReport, file: headlessFile })).length,
-      browser: Object.keys(verdictsOf({ report: headlessReport, file: 'tests/journeys/save.yaml' }))
-        .length,
+      headless: Object.keys(browserVerdicts).length + Object.keys(browserTextVerdicts).length,
+      browser: 0,
     });
   }
 );

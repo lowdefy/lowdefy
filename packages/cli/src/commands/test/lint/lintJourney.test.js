@@ -342,11 +342,22 @@ test('L8 does not report a journey that a check of what the person sees keeps in
   const problems = lintJourney({
     journey: journey([
       { click: { blockId: 'assign_button', text: 'Assign' } },
-      { expect: { text: { blockId: 'assigned_alert', contains: 'Assigned' } } },
+      { expect: { title: { contains: 'Assigned' } } },
     ]),
     exercisedEntry: entry(),
   });
   expect(rules(problems, 'L8')).toEqual([]);
+});
+
+test('L8 reports a text target in a journey whose text check runs headless', () => {
+  const problems = lintJourney({
+    journey: journey([
+      { click: { blockId: 'assign_button', text: 'Assign' } },
+      { expect: { text: { blockId: 'assigned_alert', contains: 'Assigned' } } },
+    ]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(problems, 'L8').map(({ stepIndex }) => stepIndex)).toEqual([0]);
 });
 
 test('L8 still says a journey a grid row keeps in the browser runs headless with the control its run clicked', () => {

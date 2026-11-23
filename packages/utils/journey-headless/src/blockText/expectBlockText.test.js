@@ -114,7 +114,9 @@ test("a text in a closed Modal is not found, and is once it opens, in the Modal'
     contains: 'Inside',
   });
   expect(closed.passed).toBe(false);
-  expect(closed.failure.message).toBe('Expected block "dialog" to contain text "Inside".');
+  expect(closed.failure.message).toBe(
+    'Expected block "dialog" text to contain "Inside" but found "".'
+  );
   const opened = await check({
     blocks: [openButton, modal],
     blockId: 'dialog',

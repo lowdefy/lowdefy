@@ -81,8 +81,9 @@ function readPiece({ cache, parse, piece }) {
 // reads the block's innerText and, for a Modal or Drawer, its portal's: a block inside another
 // Modal or Drawer is drawn in that one's portal, so it is not in the text. A block is drawn when
 // isBlockShown says so and every block holding it, up to the checked one, draws the area it sits
-// in. Returns { shown, runs, units, unmodeled, open, text }:
-// - shown: whether the block is on the page and shown;
+// in. Returns { onPage, shown, runs, units, unmodeled, open, text }:
+// - onPage: whether the page holds the block, shown or not (its wrapper is in the page);
+// - shown: whether it is shown, so its text is drawn;
 // - runs and units: readHtmlPieces', over every piece;
 // - unmodeled: the drawn blocks with no text model, whose text the run cannot read;
 // - open: why some of the text is not known, each naming its block;
@@ -92,9 +93,18 @@ function readBlockText({ actor, blockId, cache, parse }) {
   const { page } = actor;
   const { context } = page;
   const { blockMetas } = context._internal.lowdefy._internal;
-  const reading = { shown: false, runs: [], units: [], unmodeled: [], open: [], text: '' };
+  const reading = {
+    onPage: false,
+    shown: false,
+    runs: [],
+    units: [],
+    unmodeled: [],
+    open: [],
+    text: '',
+  };
   const found = findBlock({ blockId, slots: context._internal.RootSlots });
   if (found === null) return reading;
+  reading.onPage = true;
   const { parents } = collectBlockParents({ context });
   const rendered = new Set(
     collectRenderedBlocks({
