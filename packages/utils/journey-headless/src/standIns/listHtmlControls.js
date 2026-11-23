@@ -24,7 +24,11 @@ const { dataEventKeyAttribute } = journeyTargetSelectors;
 // an inline display: none or visibility: hidden, as a reader without layout tells it
 // (e2e-utils' resolveTargetInDocument reads the same).
 function isHiddenBelow({ element, stop }) {
-  for (let current = element; current !== null && current !== stop; current = current.parentElement) {
+  for (
+    let current = element;
+    current !== null && current !== stop;
+    current = current.parentElement
+  ) {
     if (current.hidden) return true;
     const { style } = current;
     if (style && (style.display === 'none' || style.visibility === 'hidden')) return true;

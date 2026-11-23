@@ -28,7 +28,13 @@ import mergeNetworkSnapshots from './mergeNetworkSnapshots.js';
 // page-reading click landed on (`controls`, from the step results the browser
 // runner wrote: [{ stepIndex, blockId, control, rowKey }]), which lint L8
 // suggests as the step's target.
-async function collectExercised({ snapshots, observed, readConfigFile, requestSchemas, steps = [] }) {
+async function collectExercised({
+  snapshots,
+  observed,
+  readConfigFile,
+  requestSchemas,
+  steps = [],
+}) {
   const network = mergeNetworkSnapshots({ snapshots });
   const { endpoints, unfollowed } = await addNestedEndpoints({
     endpoints: network.endpoints,

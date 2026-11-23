@@ -28,7 +28,11 @@ const CARDS = [
   '<span data-event="onOpen" data-id="issue-3" hidden>Hidden</span>',
 ].join('');
 
-function cardsPage({ dataEvents = ['onOpen', 'onMerge', 'onAdd'], events = {}, html = CARDS } = {}) {
+function cardsPage({
+  dataEvents = ['onOpen', 'onMerge', 'onAdd'],
+  events = {},
+  html = CARDS,
+} = {}) {
   return {
     id: 'home',
     blocks: [
@@ -127,7 +131,9 @@ test('ClickableHtml reaches an element in popover content a trigger opens', asyn
   const html =
     '<span data-popover="more">More</span><div data-popover-content="more" hidden><p data-event="onDelete" data-id="42">Delete</p></div><div data-popover-content="orphan" hidden><p data-event="onDelete" data-id="43">Delete</p></div>';
   const { log, result } = await runTestJourney({
-    pages: [cardsPage({ dataEvents: ['onDelete'], html, events: { onDelete: [record('onDelete')] } })],
+    pages: [
+      cardsPage({ dataEvents: ['onDelete'], html, events: { onDelete: [record('onDelete')] } }),
+    ],
     steps: [
       { click: { blockId: 'cards', control: 'onDelete', rowKey: '42' } },
       { expect: { hidden: { blockId: 'cards', control: 'onDelete', rowKey: '42' } } },

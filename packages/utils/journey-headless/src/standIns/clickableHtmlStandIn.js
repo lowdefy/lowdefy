@@ -181,7 +181,10 @@ async function expect({ actor, block, kind, target, timeout }) {
   if (count > 1) {
     throw new HeadlessStepError(
       `Expected ${description}, and matched ${count} elements; give each its own data-id and name it with rowKey.`,
-      { actual: `${count} elements`, expected: `exactly one element with ${describeTarget(target)}` }
+      {
+        actual: `${count} elements`,
+        expected: `exactly one element with ${describeTarget(target)}`,
+      }
     );
   }
 }

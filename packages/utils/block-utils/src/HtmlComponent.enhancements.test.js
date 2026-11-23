@@ -371,7 +371,11 @@ test('HtmlComponent marks the listed data-event elements of a block as its journ
 
 test('HtmlComponent writes no journey control marks without a blockId', () => {
   const { container } = render(
-    <HtmlComponent dataEvents={['onOpen']} html='<div data-event="onOpen">Open</div>' onDataEvent={vi.fn()} />
+    <HtmlComponent
+      dataEvents={['onOpen']}
+      html='<div data-event="onOpen">Open</div>'
+      onDataEvent={vi.fn()}
+    />
   );
   expect(container.querySelector('[data-event]').hasAttribute('data-lf-block')).toBe(false);
 });

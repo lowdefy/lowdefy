@@ -25,19 +25,21 @@ import { withBlockDefaults, HtmlComponent } from '@lowdefy/block-utils';
 // in properties.dataEvents fire, since the markup can hold data. blockId marks
 // each listed element as a journey control: { blockId, control: <its event>,
 // rowKey: <its data-id> } (markDataEventControls).
-const ClickableHtml = ({ blockId, classNames, events, properties, methods, styles }) => (
-  <HtmlComponent
-    blockId={blockId}
-    dataEvents={properties.dataEvents}
-    div={true}
-    events={events}
-    html={properties.html}
-    id={blockId}
-    methods={methods}
-    className={classNames?.element}
-    style={styles?.element}
-    onDataEvent={methods.triggerEvent}
-  />
-);
+function ClickableHtml({ blockId, classNames, events, properties, methods, styles }) {
+  return (
+    <HtmlComponent
+      blockId={blockId}
+      dataEvents={properties.dataEvents}
+      div={true}
+      events={events}
+      html={properties.html}
+      id={blockId}
+      methods={methods}
+      className={classNames?.element}
+      style={styles?.element}
+      onDataEvent={methods.triggerEvent}
+    />
+  );
+}
 
 export default withBlockDefaults(ClickableHtml);
