@@ -254,3 +254,90 @@ test('ClickableHtml expect.visible fails on a missing element and on several', a
     'Expected ClickableHtml "cards" element with data-event "onOpen" to be visible, and matched 2 elements; give each its own data-id and name it with rowKey.'
   );
 });
+
+test('ClickableHtml prefers a shown element to one in a popover, and else takes the first popover that holds one', async () => {
+  const html =
+    '<button data-event="onArchive" data-id="1">Archive</button><span data-popover="m1">More</span><div data-popover-content="m1" hidden><p data-event="onArchive" data-id="1">Archive</p><p data-event="onRestore" data-id="1">Restore</p></div><span data-popover="m2">More</span><div data-popover-content="m2" hidden><p data-event="onRestore" data-id="2">Restore</p></div>';
+  const { log, result } = await runTestJourney({
+    pages: [
+      cardsPage({
+        dataEvents: ['onArchive', 'onRestore'],
+        html,
+        events: { onArchive: [record('onArchive')], onRestore: [record('onRestore')] },
+      }),
+    ],
+    steps: [
+      { click: { blockId: 'cards', control: 'onArchive', rowKey: '1' } },
+      { click: { blockId: 'cards', control: 'onRestore' } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['onArchive', { id: '1' }],
+    ['onRestore', { id: '1' }],
+  ]);
+});
+
+test('ClickableHtml refuses a disabled element', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      cardsPage({ html: '<button data-event="onMerge" data-id="p1" disabled>Merge</button>' }),
+    ],
+    steps: [{ click: { blockId: 'cards', control: 'onMerge', rowKey: 'p1' } }],
+  });
+  expect(result.failure.message).toBe(
+    'The element with data-event "onMerge" and data-id "p1" in ClickableHtml "cards" is disabled.'
+  );
+  expect(log).toEqual([]);
+});
+
+test('ClickableHtml closes an open confirm when its html changes', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          {
+            id: 'cards',
+            type: 'ClickableHtml',
+            properties: {
+              dataEvents: [{ name: 'onDelete', confirm: true }],
+              html: { _state: 'html' },
+            },
+            events: {
+              onMount: [
+                {
+                  id: 'set',
+                  type: 'SetState',
+                  params: { html: '<button data-event="onDelete" data-id="1">Delete</button>' },
+                },
+              ],
+              onDelete: [record('onDelete')],
+            },
+          },
+          {
+            id: 'refresh',
+            type: 'Button',
+            events: {
+              onClick: [
+                {
+                  id: 'refresh_html',
+                  type: 'SetState',
+                  params: { html: '<button data-event="onDelete" data-id="1">Delete 1</button>' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+    steps: [
+      { click: { blockId: 'cards', control: 'onDelete', rowKey: '1' } },
+      { expect: { visible: { blockId: 'cards', control: 'ok' } } },
+      { click: 'refresh' },
+      { expect: { hidden: { blockId: 'cards', control: 'ok' } } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  expect(log).toEqual([]);
+});

@@ -522,6 +522,8 @@ async function openDropdown({ page, target, trigger, timeout }) {
 // its data-popover trigger opens the popover. The trigger of the popover whose hidden content
 // holds the control the selector names, or null when no popover holds it.
 async function findPopoverTrigger({ page, target, selector }) {
+  // A block the page does not draw (hidden) has no wrapper, and evaluate would wait for one.
+  if ((await getBlock(page, target.blockId).count()) === 0) return null;
   const id = await getBlock(page, target.blockId).evaluate((wrapper, controlSelector) => {
     const content = [...wrapper.querySelectorAll('[data-popover-content]')].find(
       (element) => element.querySelector(controlSelector) !== null
@@ -786,12 +788,19 @@ function readsPage(target) {
   return namesMatches(target) || !type.isUndefined(target.nth) || !type.isUndefined(target.row);
 }
 
-// The control target the element a page-reading click lands on carries (its control marks: a
+// The control target the element a page-reading click lands on (at its centre) carries (its control marks: a
 // ClickableHtml element, a grid cell's button, a modal's ok), when it names that one visible
 // element, else null. Lint L8 reads it from the journey's measured run to suggest the target.
 async function readMarkedControl({ locator }) {
   const marked = await locator.evaluate((element, attributes) => {
-    const node = element.closest(`[${attributes.blockId}][${attributes.control}]`);
+    // The click lands at the element's centre, on what is drawn there: a button inside a card.
+    const box = element.getBoundingClientRect();
+    const hit = element.ownerDocument.elementFromPoint(
+      box.left + box.width / 2,
+      box.top + box.height / 2
+    );
+    const clicked = hit !== null && element.contains(hit) ? hit : element;
+    const node = clicked.closest(`[${attributes.blockId}][${attributes.control}]`);
     if (node === null) return null;
     const mark = (name) => {
       const value = node.getAttribute(attributes[name]);

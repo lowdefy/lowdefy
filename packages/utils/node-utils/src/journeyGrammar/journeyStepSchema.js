@@ -57,7 +57,7 @@ const TARGET_PROPERTIES = {
   control: {
     ...nonEmptyString,
     description:
-      "The key of a control the block draws: ok or cancel on a Modal or ConfirmModal, a DropdownButton item's eventName, a DropdownMenu link's id, a Menu link's pageId (else id), the eventName of a grid cell's button, menu item or switch (with rowKey), a ClickableHtml element's data-event (with rowKey, its data-id), and ok or cancel on the confirm a ClickableHtml event asks. Opens the block's dropdown, or the ClickableHtml popover that holds it, first when it is closed. Runs headless. Needs blockId; not with text, containing or nth.",
+      "The key of a control the block draws: ok or cancel on a Modal or ConfirmModal, a DropdownButton item's eventName, a DropdownMenu link's id, a Menu link's pageId (else id), the eventName of a grid cell's button, menu item or switch (with rowKey), a ClickableHtml element's data-event (with rowKey, its data-id), and ok or cancel on the confirm a ClickableHtml event asks. Opens the block's dropdown, or the ClickableHtml popover that holds it, first when it is closed. Runs headless (in an expectation, on a ClickableHtml only). Needs blockId; not with text, containing or nth.",
   },
   nth: { ...index, description: 'Zero-based pick among several matches.' },
 };
@@ -110,7 +110,8 @@ function target({ refuse = [] } = {}) {
 }
 
 // expect.visible and expect.hidden read a row by key or a control by key: a ClickableHtml
-// element (its data-event and data-id), an open confirm's ok or a modal's footer button.
+// element (its data-event and data-id) or its open confirm's ok, headless too, or any other
+// block's control, which a headless run leaves to the browser at that step.
 const EXPECT_TARGET = target();
 
 // A null value is a placeholder, so it must be marked from: shape.

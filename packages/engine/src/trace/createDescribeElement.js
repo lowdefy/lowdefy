@@ -114,8 +114,9 @@ const markedControlSelector = `[${controlAttributes.blockId}]:not([${controlAttr
 // pinned row's, or carried by several rows) is no control target: its key repeats from row to row
 // and nothing tells its row apart, so the click describes by its row and text instead. The row is
 // looked up in the block, since a cell's menu draws its items in a popup outside the row. Nor is
-// a control whose marks another visible element carries (two ClickableHtml elements with one
-// data-event and no data-id, or the same data-id): the runner refuses several matches.
+// a control whose marks another visible element carries, in its cell when it sits in one (two
+// ClickableHtml elements with one data-event and no data-id, or the same data-id): the runner
+// refuses several matches.
 function findMarkedControl(element) {
   const node = element.closest(markedControlSelector);
   if (node === null) return null;
@@ -128,7 +129,10 @@ function findMarkedControl(element) {
     if (!namesOneRow({ root, rowKey })) return null;
   }
   const marked = { blockId, control, rowKey: rowKey === '' ? null : rowKey };
-  const matches = [...ownerDocument.querySelectorAll(controlSelector(marked))].filter(
+  // A cell control is named with its column, so the runner looks in that cell alone.
+  const cell = node.closest(gridSelector({ kind: 'cell' }));
+  const root = cell ?? ownerDocument;
+  const matches = [...root.querySelectorAll(controlSelector(marked))].filter(
     (match) => match === node || (isElementVisible(match) && !isHiddenInDom(match))
   );
   if (matches.length > 1) return null;

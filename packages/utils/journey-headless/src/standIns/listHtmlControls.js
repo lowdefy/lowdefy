@@ -36,38 +36,42 @@ function isHiddenBelow({ element, stop }) {
   return false;
 }
 
-// Whether a person reaches the element: shown in the block, or, for `reach: 'click'`, shown in
-// popover content a data-popover trigger in the html opens (the browser runner opens it first).
-function isReached({ element, reach, root }) {
+// Where a person reaches the element: 'shown' in the block, 'popover' when it is shown in popover
+// content a data-popover trigger in the html opens (the browser runner opens it when no shown
+// element matches), else null.
+function findReach({ element, root }) {
   const content = element.closest('[data-popover-content]');
   if (content === null) {
-    return !isHiddenBelow({ element, stop: root });
+    return isHiddenBelow({ element, stop: root }) ? null : 'shown';
   }
-  if (reach !== 'click' || isHiddenBelow({ element, stop: content })) {
-    return false;
+  if (isHiddenBelow({ element, stop: content })) {
+    return null;
   }
   const id = content.getAttribute('data-popover-content');
-  return [...root.querySelectorAll('[data-popover]')].some(
+  const opened = [...root.querySelectorAll('[data-popover]')].some(
     (trigger) =>
       trigger.getAttribute('data-popover') === id &&
       trigger.closest('[data-popover-content]') === null &&
       !isHiddenBelow({ element: trigger, stop: root })
   );
+  return opened ? 'popover' : null;
 }
 
 // The controls a ClickableHtml block draws, as markDataEventControls marks them in the browser:
 // each data-event element whose event the block's dataEvents lists, keyed by its event, with its
 // data-id as its row key (null without one), the event object the browser builds from it
 // (getDataEvent) and whether a click asks first (the event's confirm, or data-confirm on the
-// element, as confirmEnhancer asks). reach `shown` keeps the elements the page shows, `click`
-// also those in popover content a click reaches once the popover opens. parse is loadHtmlDom's.
-function listHtmlControls({ block, parse, reach }) {
+// element, as confirmEnhancer asks), whether it is disabled, and where it is reached: `shown`, or
+// `popover` with the popover content element it is in (findReach). Elements the html hides are
+// left out. parse is loadHtmlDom's.
+function listHtmlControls({ block, parse }) {
   const { dataEvents, html } = block.eval.properties ?? {};
   const root = parse(type.isNone(html) ? '' : String(html));
   return [...root.querySelectorAll('[data-event]')].flatMap((element) => {
     const name = element.getAttribute('data-event');
     const rule = findDataEventRule({ dataEvents, name });
-    if (rule === null || !isReached({ element, reach, root })) {
+    const reach = rule === null ? null : findReach({ element, root });
+    if (reach === null) {
       return [];
     }
     const rowKey = element.getAttribute(dataEventKeyAttribute);
@@ -77,6 +81,9 @@ function listHtmlControls({ block, parse, reach }) {
         rowKey: type.isNone(rowKey) || rowKey === '' ? null : rowKey,
         dataEvent: getDataEvent(element),
         confirm: rule.confirm || element.hasAttribute('data-confirm'),
+        disabled: element.matches(':disabled'),
+        reach,
+        popover: reach === 'popover' ? element.closest('[data-popover-content]') : null,
       },
     ];
   });

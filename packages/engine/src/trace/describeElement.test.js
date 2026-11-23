@@ -536,3 +536,20 @@ test('describeElement names a ClickableHtml element by its control only when no 
     text: null,
   });
 });
+
+test('describeElement keeps a cell control whose key another cell of its row shares, by its column', () => {
+  const { describeElement } = getTrace(createLowdefy());
+  document.body.innerHTML = `
+<div id="bl-people"><div class="lf-table">
+  <div class="lf-table-row" data-row-index="0" data-row-key="a1">
+    <div class="lf-table-gridcell" role="gridcell" data-col-key="active"><button id="first" data-lf-block="people" data-lf-control="onToggle" data-lf-row-key="a1">On</button></div>
+    <div class="lf-table-gridcell" role="gridcell" data-col-key="admin"><button data-lf-block="people" data-lf-control="onToggle" data-lf-row-key="a1">On</button></div>
+  </div>
+</div></div>`;
+  expect(targetFields(describeElement(select('#first')))).toMatchObject({
+    block_id: 'people',
+    row_key: 'a1',
+    column: 'active',
+    control: 'onToggle',
+  });
+});

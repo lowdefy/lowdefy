@@ -30,11 +30,12 @@ import loadHtmlDom from './loadHtmlDom.js';
 // click on a data-event element its dataEvents lists fires that event with the element's other
 // data-* attributes as the event object. A journey names the element as { blockId, control:
 // <its data-event>, rowKey: <its data-id> } (markDataEventControls marks it so in the browser). An
-// element in popover content is reached too: the browser runner opens its popover first, and the
-// popover closes as the event fires. An event that asks first (confirm in dataEvents, or
+// element in popover content is reached too, when no shown element matches: the browser runner
+// then opens the first popover holding a match, and the popover closes as the event fires. A
+// disabled element refuses the click. An event that asks first (confirm in dataEvents, or
 // data-confirm on the element) opens a confirm (state.confirm, its event, and state.open) whose
 // buttons are the block's ok and cancel controls: ok fires the event, cancel drops it, and a click
-// anywhere else closes it, as a click outside does (leave).
+// anywhere else, or new html, closes it, as a click outside (leave) or HtmlComponent does.
 
 const CONFIRM_BUTTONS = ['ok', 'cancel'];
 
@@ -75,10 +76,31 @@ function matchControls({ controls, target }) {
   );
 }
 
-// The one element the target names, as the browser clicks only a single visible match: none
-// fails naming the elements the block has, and several fail with the count.
-function findOneElement({ block, controls, target }) {
+// The elements a click would choose from, as the browser runner chooses: the shown matches, else,
+// when none is shown, the matches in the first popover (in the html's order) that holds one,
+// which the runner opens.
+function clickMatches({ controls, target }) {
   const matches = matchControls({ controls, target });
+  const shown = matches.filter((control) => control.reach === 'shown');
+  if (shown.length > 0) {
+    return shown;
+  }
+  const [first] = matches;
+  return type.isUndefined(first) ? [] : matches.filter(({ popover }) => popover === first.popover);
+}
+
+// The one element the target names, as the browser clicks only a single visible match: none
+// fails naming the elements the block has, and several fail with the count. A disabled one
+// refuses the click, as a browser cannot click it.
+function findOneElement({ block, controls, target }) {
+  const matches = clickMatches({ controls, target });
+  if (matches.length === 1 && matches[0].disabled) {
+    const description = describeBlock(block);
+    throw new HeadlessStepError(
+      `The element with ${describeTarget(target)} in ${description} is disabled.`,
+      { actual: 'disabled', expected: `an enabled element in ${description}` }
+    );
+  }
   if (matches.length === 1) {
     return matches[0];
   }
@@ -102,15 +124,30 @@ function findOneElement({ block, controls, target }) {
   );
 }
 
+function readHtml(block) {
+  const { html } = block.eval.properties ?? {};
+  return type.isNone(html) ? '' : String(html);
+}
+
 function closeConfirm(state) {
   state.confirm = undefined;
+  state.confirmHtml = undefined;
   state.open = false;
 }
 
+// A confirm is never carried to new html (confirmEnhancer has no retarget): it closes when the
+// block's html changes, as HtmlComponent's carryOverlay closes it.
+function readConfirm({ block, state }) {
+  if (!type.isUndefined(state.confirm) && state.confirmHtml !== readHtml(block)) {
+    closeConfirm(state);
+  }
+  return state.confirm;
+}
+
 // A click on ok or cancel while the confirm is open answers it.
-function answersConfirm({ state, target }) {
+function answersConfirm({ block, state, target }) {
   return (
-    !type.isUndefined(state.confirm) &&
+    !type.isUndefined(readConfirm({ block, state })) &&
     type.isUndefined(target.rowKey) &&
     CONFIRM_BUTTONS.includes(String(target.control))
   );
@@ -118,7 +155,7 @@ function answersConfirm({ state, target }) {
 
 async function click({ actor, block, state, target }) {
   refuseTarget({ block, target });
-  if (answersConfirm({ state, target })) {
+  if (answersConfirm({ block, state, target })) {
     const { confirm } = state;
     closeConfirm(state);
     if (String(target.control) === 'ok') {
@@ -131,11 +168,12 @@ async function click({ actor, block, state, target }) {
   const parse = await loadHtmlDom();
   const control = findOneElement({
     block,
-    controls: listHtmlControls({ block, parse, reach: 'click' }),
+    controls: listHtmlControls({ block, parse }),
     target,
   });
   if (control.confirm) {
     state.confirm = control.dataEvent;
+    state.confirmHtml = readHtml(block);
     state.open = true;
     return;
   }
@@ -160,10 +198,13 @@ async function expect({ actor, block, kind, target, timeout }) {
     if (current === null) {
       return 0;
     }
-    if (answersConfirm({ state: readStandInState({ actor, block: current }), target })) {
+    const state = readStandInState({ actor, block: current });
+    if (answersConfirm({ block: current, state, target })) {
       return 1;
     }
-    const controls = listHtmlControls({ block: current, parse, reach: 'shown' });
+    const controls = listHtmlControls({ block: current, parse }).filter(
+      (control) => control.reach === 'shown'
+    );
     return matchControls({ controls, target }).length;
   };
   const { held, value: count } = await pollUntil({
