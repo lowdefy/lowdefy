@@ -41,6 +41,7 @@ import createLogout from './createLogout.js';
 import createMagicLinkVerify from './createMagicLinkVerify.js';
 import createMcpOpenLink from './createMcpOpenLink.js';
 import createMcpSendMessage from './createMcpSendMessage.js';
+import createMcpUpdateModelContext from './createMcpUpdateModelContext.js';
 import createDisplayMessage from './createDisplayMessage.js';
 import createOauth2Consent from './createOauth2Consent.js';
 import createOauth2Continue from './createOauth2Continue.js';
@@ -103,6 +104,7 @@ function getActionMethods(props) {
     magicLinkVerify: createMagicLinkVerify(props),
     mcpOpenLink: createMcpOpenLink(props),
     mcpSendMessage: createMcpSendMessage(props),
+    mcpUpdateModelContext: createMcpUpdateModelContext(props),
     oauth2Consent: createOauth2Consent(props),
     oauth2Continue: createOauth2Continue(props),
     passkeyDelete: createPasskeyDelete(props),

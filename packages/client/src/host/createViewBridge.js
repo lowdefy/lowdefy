@@ -52,7 +52,9 @@ function createViewBridge({ view }) {
   }
 
   // Asks the app for a view session through the host. The model never sees
-  // this call or its answer.
+  // this call or its answer. writable says whether the session's grant covers
+  // writes; a session that does not say is taken as read-only, so a page hides
+  // controls the app might refuse rather than show them.
   async function mintSession() {
     const result = await host.callServerTool({ name: VIEW_SESSION_TOOL, arguments: {} });
     if (result?.isError === true) {
@@ -65,7 +67,23 @@ function createViewBridge({ view }) {
         `The "${VIEW_SESSION_TOOL}" result carries no "${VIEW_SESSION_META_KEY}" token in _meta.`
       );
     }
-    return { expiresAt: session.expiresAt ?? null, token: session.token };
+    return {
+      expiresAt: session.expiresAt ?? null,
+      token: session.token,
+      writable: session.writable === true,
+    };
+  }
+
+  // Sets the context the host gives the model on its next turn, without a
+  // message: ui/update-model-context. A host caches the loader across deploys,
+  // and a loader cached before this call existed hands over no function for it.
+  function updateModelContext({ text }) {
+    if (!type.isFunction(host.updateModelContext)) {
+      throw new Error(
+        'This view was opened by an older version of the app and cannot update the model context. Open the view again.'
+      );
+    }
+    return host.updateModelContext({ text });
   }
 
   return {
@@ -92,6 +110,7 @@ function createViewBridge({ view }) {
       view.resumePath = path;
     },
     showFallback: ({ message } = {}) => view.showFallback({ message }),
+    updateModelContext,
   };
 }
 

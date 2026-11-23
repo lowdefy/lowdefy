@@ -439,9 +439,16 @@ test('lowdefy_view_session returns the bearer in the result _meta with nothing i
       'lowdefy/viewSession': {
         token: signSessionToken({ secret: 'secret', token }),
         expiresAt: '2026-11-12T10:15:00.000Z',
+        writable: true,
       },
     },
   });
+});
+
+test('lowdefy_view_session says a read-only grant is not writable', async () => {
+  const client = await connect(createContext({ mcpAuth: oauthMcpAuth(['mcp:read']) }));
+  const result = await client.callTool({ name: 'lowdefy_view_session', arguments: {} });
+  expect(result._meta['lowdefy/viewSession'].writable).toBe(false);
 });
 
 test('lowdefy_view_session does not run afterToolCall, which still runs for the app tools', async () => {

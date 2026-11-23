@@ -23,6 +23,8 @@ test('_mcp returns null for every key when the page is not inside a host', () =>
   expect(_mcp({ params: 'displayMode' })).toBe(null);
   expect(_mcp({ mcp: null, params: 'embedded' })).toBe(null);
   expect(_mcp({ mcp: null, params: 'displayMode' })).toBe(null);
+  expect(_mcp({ params: 'writable' })).toBe(null);
+  expect(_mcp({ mcp: null, params: 'writable' })).toBe(null);
 });
 
 test('_mcp embedded is true inside a host', () => {
@@ -41,8 +43,13 @@ test('_mcp displayMode returns the display mode the host reports now', () => {
   expect(_mcp({ mcp, params: 'displayMode' })).toBe('pip');
 });
 
+test('_mcp writable is true on a write grant and false on a read-only grant', () => {
+  expect(_mcp({ mcp: { getWritable: () => true }, params: 'writable' })).toBe(true);
+  expect(_mcp({ mcp: { getWritable: () => false }, params: 'writable' })).toBe(false);
+});
+
 test('_mcp throws on an unknown key, inside and outside a host', () => {
-  const message = '_mcp only returns values for displayMode, embedded.';
+  const message = '_mcp only returns values for displayMode, embedded, writable.';
   expect(() => _mcp({ params: 'theme' })).toThrow(message);
   expect(() => _mcp({ mcp: { getDisplayMode: () => 'inline' }, params: 'theme' })).toThrow(message);
   expect(() => _mcp({ params: { key: 'embedded' } })).toThrow(message);
@@ -50,11 +57,12 @@ test('_mcp throws on an unknown key, inside and outside a host', () => {
   expect(() => _mcp({})).toThrow(message);
 });
 
-test('_mcp is dynamic, reads mcp:displayMode for displayMode and is pure for embedded', () => {
+test('_mcp is dynamic, reads mcp:displayMode for displayMode and is pure for embedded and writable', () => {
   expect(_mcp.dynamic).toBe(true);
   expect(_mcp.tracking({ params: 'displayMode' })).toEqual({
     kind: 'read',
     keys: ['mcp:displayMode'],
   });
   expect(_mcp.tracking({ params: 'embedded' })).toEqual({ kind: 'pure' });
+  expect(_mcp.tracking({ params: 'writable' })).toEqual({ kind: 'pure' });
 });

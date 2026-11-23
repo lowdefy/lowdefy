@@ -95,6 +95,10 @@ const typeManifest = {
       package: '@lowdefy/actions-core',
       version: 7,
     },
+    McpUpdateModelContext: {
+      package: '@lowdefy/actions-core',
+      version: 7,
+    },
     OAuthConsent: {
       package: '@lowdefy/actions-core',
       version: 7,

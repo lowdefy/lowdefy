@@ -110,9 +110,11 @@ than its app. The production server's `client/view.jsx` entry passes `Client` th
   (`getViewSocketProtocols.js`): the websocket client passes them to `new host.WebSocket` in
   place of a header.
 
-`createMcp.js` builds `lowdefy._internal.mcp` (`getDisplayMode`, `onContextChange`, `openLink`,
-`sendMessage`) from `host.view.bridge`, and `null` on a host with no `view`. The `_mcp` operator
-and the `McpSendMessage` and `McpOpenLink` actions read it. `McpEffect.js`, mounted in
+`createMcp.js` builds `lowdefy._internal.mcp` (`getDisplayMode`, `getWritable`,
+`onContextChange`, `openLink`, `sendMessage`, `updateModelContext`) from `host.view`, and `null`
+on a host with no `view`. The `_mcp` operator and the `McpSendMessage`, `McpUpdateModelContext`
+and `McpOpenLink` actions read it. `getWritable` is the `writable` flag of the latest view session
+(`createViewSession.js` keeps it), which the view mints before the page renders. `McpEffect.js`, mounted in
 `Context.js`, re-evaluates the blocks that read `_mcp: displayMode` when the host context changes.
 
 Every block gets `methods.fetchApi(path, init)` and the prop `apiBase`, so a block that calls the

@@ -38,6 +38,7 @@ const reportingMethods = new Set([
   'getUser',
   'mcpOpenLink',
   'mcpSendMessage',
+  'mcpUpdateModelContext',
   'request',
   'setGlobal',
   'setState',

@@ -57,6 +57,7 @@ test('createViewBridge mints a session by calling the session tool through the h
   await expect(bridge.mintSession()).resolves.toEqual({
     expiresAt: '2026-01-01T00:15:00.000Z',
     token: 'token-1',
+    writable: true,
   });
   expect(view.host.callServerTool).toHaveBeenCalledWith({
     name: 'lowdefy_view_session',
@@ -117,4 +118,41 @@ test('createViewBridge starts at the address the previous client left, over the 
   const view = createFakeViewLoader({ path: '/tasks/1' });
   createViewBridge({ view }).setResumePath('/tasks/2?tab=files');
   expect(createViewBridge({ view }).getViewPath()).toBe('/tasks/2?tab=files');
+});
+
+test('createViewBridge says a session of a read-only grant is not writable', async () => {
+  const bridge = createViewBridge({ view: createFakeViewLoader({ writable: false }) });
+  await expect(bridge.mintSession()).resolves.toMatchObject({ writable: false });
+});
+
+test('createViewBridge takes a session that does not say it is writable as read-only', async () => {
+  const view = createFakeViewLoader();
+  view.host.callServerTool = vi.fn(async () => ({
+    content: [],
+    _meta: { 'lowdefy/viewSession': { token: 'token-1' } },
+  }));
+  const bridge = createViewBridge({ view });
+  await expect(bridge.mintSession()).resolves.toEqual({
+    expiresAt: null,
+    token: 'token-1',
+    writable: false,
+  });
+});
+
+test('createViewBridge sends the model context through the host', async () => {
+  const view = createFakeViewLoader();
+  const bridge = createViewBridge({ view });
+  await bridge.updateModelContext({ text: 'The person renamed step 2.' });
+  expect(view.host.updateModelContext.mock.calls).toEqual([
+    [{ text: 'The person renamed step 2.' }],
+  ]);
+});
+
+test('createViewBridge says to open the view again when its cached loader cannot update the model context', () => {
+  const view = createFakeViewLoader();
+  delete view.host.updateModelContext;
+  const bridge = createViewBridge({ view });
+  expect(() => bridge.updateModelContext({ text: 'Hello' })).toThrow(
+    'This view was opened by an older version of the app and cannot update the model context. Open the view again.'
+  );
 });
