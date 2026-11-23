@@ -23,13 +23,13 @@ import createViewHost from './host/createViewHost.js';
 import createWebHost from './host/createWebHost.js';
 import createFakeViewLoader from './test/createFakeViewLoader.js';
 
-function createViewLowdefy({ basePath = '' } = {}) {
-  const loader = createFakeViewLoader({ basePath });
+function createViewLowdefy({ basePath = '', writable } = {}) {
+  const loader = createFakeViewLoader({ basePath, writable });
   const router = createViewRouter({ basePath, path: '/tickets/12?tab=notes' });
   const host = createViewHost({
     bridge: createViewBridge({ view: loader }),
     router,
-    window: { document: {}, fetch: vi.fn() },
+    window: { document: {}, fetch: vi.fn(async () => ({ status: 200 })) },
   });
   const lowdefy = {
     basePath,
@@ -86,6 +86,41 @@ test('sendMessage rejects when the call to the host fails', async () => {
   const { loader, mcp } = createViewLowdefy();
   loader.host.sendMessage.mockRejectedValueOnce(new Error('Method not found'));
   await expect(mcp.sendMessage({ text: 'Hello' })).rejects.toThrow('Method not found');
+});
+
+test('getWritable is true once the view signs in on a write grant', async () => {
+  const { lowdefy, mcp } = createViewLowdefy({ writable: true });
+  expect(mcp.getWritable()).toBe(null);
+  await lowdefy._internal.host.view.fetchApi('/api/user');
+  expect(mcp.getWritable()).toBe(true);
+});
+
+test('getWritable is false once the view signs in on a read-only grant', async () => {
+  const { lowdefy, mcp } = createViewLowdefy({ writable: false });
+  await lowdefy._internal.host.view.fetchApi('/api/user');
+  expect(mcp.getWritable()).toBe(false);
+});
+
+test('updateModelContext sends the text to the host', async () => {
+  const { loader, mcp } = createViewLowdefy();
+  await expect(mcp.updateModelContext({ text: 'Step 2 was renamed.' })).resolves.toBe(undefined);
+  expect(loader.host.updateModelContext.mock.calls).toEqual([[{ text: 'Step 2 was renamed.' }]]);
+  expect(loader.host.sendMessage).not.toHaveBeenCalled();
+});
+
+test('updateModelContext rejects when the host answers with an error result', async () => {
+  const { loader, mcp } = createViewLowdefy();
+  loader.host.updateModelContext.mockResolvedValueOnce({ isError: true });
+  await expect(mcp.updateModelContext({ text: 'Hello' })).rejects.toMatchObject({
+    name: 'UserError',
+    message: 'The MCP host refused the model context.',
+  });
+});
+
+test('updateModelContext rejects when the call to the host fails', async () => {
+  const { loader, mcp } = createViewLowdefy();
+  loader.host.updateModelContext.mockRejectedValueOnce(new Error('Context update denied'));
+  await expect(mcp.updateModelContext({ text: 'Hello' })).rejects.toThrow('Context update denied');
 });
 
 test('openLink asks the host to open an http or https url', async () => {

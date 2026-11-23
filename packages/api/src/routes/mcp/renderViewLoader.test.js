@@ -220,6 +220,7 @@ test('the loader hands the client entry one object and loads the boot answer fro
     'callServerTool',
     'openLink',
     'sendMessage',
+    'updateModelContext',
   ]);
   expect(view.host.info).toEqual({ name: 'host', version: '1' });
   expect(view.host.capabilities).toEqual({ openLinks: {} });
@@ -239,19 +240,24 @@ test('the loader hands the client entry one object and loads the boot answer fro
   expect(fallbackTexts(frame.document)).toBe(null);
 });
 
-test('the host bridge calls a server tool, opens a link and sends a message through the host', async () => {
+test('the host bridge calls a server tool, opens a link, sends a message and updates the model context through the host', async () => {
   const frame = runLoader({ fetch: bootFetch() });
   await connectHost(frame);
   const { host } = frame.window.__LOWDEFY_VIEW__;
   const session = host.callServerTool({ name: 'lowdefy_view_session' });
   host.openLink({ url: 'https://app.example.com/base/runs' });
   host.sendMessage({ text: 'Done.' });
-  expect(frame.posted.slice(-3).map(({ method, params }) => ({ method, params }))).toEqual([
+  host.updateModelContext({ text: 'Step 2 is now "Call the client".' });
+  expect(frame.posted.slice(-4).map(({ method, params }) => ({ method, params }))).toEqual([
     { method: 'tools/call', params: { name: 'lowdefy_view_session', arguments: {} } },
     { method: 'ui/open-link', params: { url: 'https://app.example.com/base/runs' } },
     {
       method: 'ui/message',
       params: { role: 'user', content: [{ type: 'text', text: 'Done.' }] },
+    },
+    {
+      method: 'ui/update-model-context',
+      params: { content: [{ type: 'text', text: 'Step 2 is now "Call the client".' }] },
     },
   ]);
   frame.host.answer('tools/call', { content: [], _meta: { 'lowdefy/viewSession': {} } });

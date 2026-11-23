@@ -53,8 +53,9 @@ function getLinkUrl({ lowdefy, params }) {
 }
 
 // What a page can read from and ask of the MCP host it is shown in as a view: lowdefy._internal.mcp,
-// which the _mcp operator and the McpSendMessage and McpOpenLink actions use. Null for a page that
-// is not a view (the browser host has no host.view), where _mcp reads null and both actions fail.
+// which the _mcp operator and the McpSendMessage, McpUpdateModelContext and McpOpenLink actions
+// use. Null for a page that is not a view (the browser host has no host.view), where _mcp reads
+// null and the actions fail.
 function createMcp({ lowdefy }) {
   const { view } = lowdefy._internal.host;
   if (type.isNone(view)) {
@@ -84,14 +85,24 @@ function createMcp({ lowdefy }) {
     assertNotRefused({ message: 'The MCP host refused the message.', result });
   }
 
+  async function updateModelContext({ text }) {
+    const result = await bridge.updateModelContext({ text });
+    assertNotRefused({ message: 'The MCP host refused the model context.', result });
+  }
+
   return {
     // 'inline', 'fullscreen' or 'pip'; null when the host names none.
     getDisplayMode: () => bridge.getDisplayMode(),
     // Called on every change of the host's context, the display mode among them. Returns a
     // function that stops the listener.
     onContextChange: (listener) => bridge.onContextChange(() => listener()),
+    // Whether the view session's grant covers writes. The view signs in before the page renders,
+    // so a page reads true or false. It is a hint for what to show: the app refuses a write on a
+    // read-only grant whatever the page shows.
+    getWritable: () => view.isWritable(),
     openLink,
     sendMessage,
+    updateModelContext,
   };
 }
 

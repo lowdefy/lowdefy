@@ -37,6 +37,7 @@ function sentToken(init) {
 
 // The view's session with its app: a bearer token minted through the host
 // bridge and kept in tokenStore, and the two ways calls are sent with it.
+// isWritable() says whether the latest session's grant covers writes.
 //
 // A view session lasts minutes and is never extended, so a 401 to a call that
 // carried the token is expected: a new session is minted and the call is sent
@@ -62,6 +63,9 @@ function createViewSession({
   let heldExpiresAt = null;
   // When each new session asked for with renew was minted.
   let renewals = [];
+  // Whether the grant of the latest session covers writes, or null before the
+  // first session.
+  let writable = null;
 
   // The app says when a session ends by its own clock. A time that has passed
   // by this clock as the session arrives means the two clocks disagree by more
@@ -83,9 +87,10 @@ function createViewSession({
     if (minting === null) {
       minting = bridge
         .mintSession()
-        .then(({ expiresAt, token }) => {
+        .then(({ expiresAt, token, writable: sessionWritable }) => {
           tokenStore.set(token);
           heldExpiresAt = readExpiresAt(expiresAt);
+          writable = sessionWritable;
           return token;
         })
         .finally(() => {
@@ -179,7 +184,7 @@ function createViewSession({
     return mint();
   }
 
-  return { fetch: sessionFetch, fetchApi, getToken };
+  return { fetch: sessionFetch, fetchApi, getToken, isWritable: () => writable };
 }
 
 export default createViewSession;
