@@ -3113,7 +3113,7 @@
         "concepts/advanced/dynamic-page-content.yaml",
         "version.yaml"
       ],
-      "hash": "acdeb0d9965fef5e604324667440865b8bd7c58aca4bc09ab7d0b8aa51b67f16"
+      "hash": "80eac384292186530102446d68826d1c0be59dc66241c8dfc44e6e19b27035c3"
     },
     "concepts/ai-agent-docs": {
       "files": [
@@ -5244,7 +5244,7 @@
         "actions/Throw.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "17bab33a713352036fb69cc8e665c5fd721ae21585bdc5415bce0e5a4b994269"
+      "hash": "a7aa07c6b5866d1aa2cced99c9c5f62aba433a626e209ed7446ecb2061bbb37f"
     },
     "actions/updatesession": {
       "files": [
