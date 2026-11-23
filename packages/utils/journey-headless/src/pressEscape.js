@@ -47,24 +47,24 @@ function isDropdownOpen({ block, state }) {
 }
 
 // The open Modals, Drawers and ConfirmModals, in the order they opened (page.openBlocks keeps
-// it), and the blocks whose dropdown, search or confirm is open.
+// it), and the blocks whose dropdown, search or confirm is open, in page order.
 function readOpenOverlays({ actor, blocks }) {
   const byId = new Map(blocks.map((block) => [block.id, block]));
+  // A popup in a list row the page has since removed stays in openBlocks; it is on no stack.
   const popups = [...actor.page.openBlocks].map((id) => byId.get(id)).filter(Boolean);
-  const dropdowns = [];
-  actor.page.standIns.forEach(({ block, state }) => {
-    if (byId.has(block.id) && isDropdownOpen({ block, state })) {
-      dropdowns.push(block);
-    }
+  const dropdowns = blocks.filter((block) => {
+    const kept = actor.page.standIns.get(block.id);
+    return !type.isUndefined(kept) && isDropdownOpen({ block, state: kept.state });
   });
   return { dropdowns, popups };
 }
 
 // What a browser's Escape closes: the overlay that opened last, as antd's portals keep them on one
-// stack (the newest closes) and rc-dropdown, rc-select and ClickableHtml's overlay close their own.
-// The stand-ins keep the open state but not when a dropdown opened beside a popup, so a dropdown
-// counts as the newest only when it sits in the newest popup's content (it opened after the
-// popup did, which showed it). Returns { block } to close, or { reason } it needs a browser.
+// stack and close the newest. rc-dropdown closes every open dropdown on Escape, wherever it is on
+// the stack, so with more than one open the browser closes more than the newest. The stand-ins
+// keep no order between a dropdown and a popup, so a dropdown (a searching selector's search
+// included) counts as the newest only in the newest popup's content: it opened after the popup
+// did, which showed it. Returns { block } to close, or { reason } it needs a browser.
 function findEscapeTarget({ actor, blocks, parents }) {
   const { dropdowns, popups } = readOpenOverlays({ actor, blocks });
   const top = popups.at(-1);
@@ -117,9 +117,8 @@ function findEarlyReason({ actor, blocks, focused }) {
   return undefined;
 }
 
-// A press of Escape headless (runHeadlessStep). A searching selector with the focus and its
-// dropdown open closes it; otherwise Escape closes the overlay that opened last (findEscapeTarget)
-// through its stand-in's escape part: a Modal fires onCancel, a Drawer onClose, a dropdown
+// A press of Escape headless (runHeadlessStep). It closes the overlay that opened last
+// (findEscapeTarget) through its stand-in's escape part: a searching selector closes its search, a Modal fires onCancel, a Drawer onClose, a dropdown
 // onOpenChange { open: false }, a ClickableHtml confirm drops its event. Anything a headless run
 // does not model leaves the step to the browser, naming why (findEarlyReason, findEscapeTarget, a
 // ConfirmModal's dialog). On a data-set journey the press is checked against the rails first, as
@@ -134,10 +133,7 @@ async function pressEscape({ actor, rails }) {
     actor.browserOnly.push(early);
     return;
   }
-  const focusedOpen =
-    focused !== null &&
-    isDropdownOpen({ block: focused, state: readStandInState({ actor, block: focused }) });
-  const target = focusedOpen ? { block: focused } : findEscapeTarget({ actor, blocks, parents });
+  const target = findEscapeTarget({ actor, blocks, parents });
   if (!type.isUndefined(target.reason)) {
     actor.browserOnly.push(target.reason);
     return;

@@ -92,11 +92,12 @@ async function click({ actor, block, target }) {
 }
 
 // Escape on the open Modal, when it is the overlay that opened last: rc-dialog calls antd's
-// handleCancel unless keyboard is false, which does nothing while onOk runs (confirmLoading),
-// else fires onCancel; the block then closes, as its Cancel button does, unless onCancel failed
-// or bounced. antd's closable and maskClosable leave Escape alone.
+// handleCancel unless keyboard is false, which fires onCancel; the block then closes, as its
+// Cancel button does, unless onCancel failed or bounced. antd's closable and maskClosable leave
+// Escape alone. handleCancel does nothing while onOk runs (confirmLoading), which a headless step
+// never meets: the step that clicked OK settles once onOk has finished.
 async function escape({ actor, block }) {
-  if (block.eval.properties?.keyboard === false || block.Events.events.onOk?.loading === true) {
+  if (block.eval.properties?.keyboard === false) {
     return;
   }
   const response = await fireEvent({ actor, block, name: 'onCancel' });
