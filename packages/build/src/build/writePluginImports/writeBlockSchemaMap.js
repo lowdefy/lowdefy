@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import loadPluginTypeSchema from './loadPluginTypeSchema.js';
 
 // A block's headlessMethods ({ [method]: the event it fires }) is what a headless journey runs
 // for a CallMethod on a block with no stand-in (@lowdefy/journey-headless registerBlockStandIns):
 // carried only when the block declares it.
 function readHeadlessMethods(headlessMethods) {
-  return headlessMethods == null ? {} : { headlessMethods };
+  return type.isNone(headlessMethods) ? {} : { headlessMethods };
 }
 
 async function writeBlockSchemaMap({ components, context }) {
