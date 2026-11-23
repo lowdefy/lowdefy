@@ -302,3 +302,41 @@ test("an onMount that finishes after its block unmounted does not end the new mo
   expect(result.passed).toBe(true);
   expect(names(log)).toEqual(['slow_block', 'slow_block', 'content']);
 });
+
+test('an open Modal that hides shows closed again, so its content does not mount again', async () => {
+  const button = (id, actions) => ({ id, type: 'Button', events: { onClick: actions } });
+  const { log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        events: { onInit: [setState({ shown: true })] },
+        blocks: [
+          button('open', [
+            {
+              id: 'open_modal',
+              type: 'CallMethod',
+              params: { blockId: 'modal', method: 'setOpen', args: [{ open: true }] },
+            },
+          ]),
+          button('hide', [setState({ shown: false })]),
+          button('show', [setState({ shown: true })]),
+          {
+            id: 'modal',
+            type: 'Modal',
+            visible: { _state: 'shown' },
+            blocks: [{ id: 'panel', type: 'Box', events: { onMount: [record('panel')] } }],
+          },
+        ],
+      },
+    ],
+    steps: [
+      { click: 'open' },
+      { expect: { visible: 'panel' } },
+      { click: 'hide' },
+      { click: 'show' },
+      { expect: { hidden: 'panel' } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  expect(names(log)).toEqual(['panel']);
+});

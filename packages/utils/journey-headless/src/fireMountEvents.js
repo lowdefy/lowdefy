@@ -15,13 +15,15 @@
 */
 
 import { collectMounts } from './collectMountOrder.js';
+import unmountComponent from './standIns/unmountComponent.js';
 import unmountContent from './standIns/unmountContent.js';
 
 // Brings a page's mounts up to date with what the web client's Block components render
 // (client/src/block/Block.js, CategorySwitch.js and MountEvents.js), as React does after a render:
-// - A block that is hidden or shows its skeleton renders none of its content (collectMounts'
-//   dropped): the mounted blocks inside it unmount (unmountContent), so they mount again, firing
-//   onMount, once it renders them again.
+// - A block that is hidden or shows its skeleton renders neither its component nor any of its
+//   content (collectMounts' dropped): its component's state starts again (unmountComponent: an
+//   open Modal shows closed again), and the mounted blocks inside it unmount (unmountContent), so
+//   they mount again, firing onMount, once it renders them again.
 // - Every block it now reaches that is not in page.mounted mounts: its onMount fires, all started
 //   in mount order as React runs their effects, and its onMountAsync once its own onMount has
 //   finished, which nothing waits for. The block is then in page.mountFinished, so it is no
@@ -41,9 +43,12 @@ async function fireMountEvents({ actor, onMountFinished = () => undefined }) {
     openBlocks,
     slots: context._internal.RootSlots,
   });
-  dropped
-    .filter(({ content }) => content.some((block) => mounted.has(block)))
-    .forEach(({ block }) => unmountContent({ actor, block }));
+  dropped.forEach(({ block, content }) => {
+    unmountComponent({ actor, block });
+    if (content.some((inside) => mounted.has(inside))) {
+      unmountContent({ actor, block });
+    }
+  });
   const blocks = mounts.map(({ block }) => block).filter((block) => !mounted.has(block));
   const tokens = new Map(blocks.map((block) => [block, {}]));
   tokens.forEach((token, block) => mounted.set(block, token));
