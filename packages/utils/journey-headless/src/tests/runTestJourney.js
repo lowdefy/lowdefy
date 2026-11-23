@@ -58,8 +58,9 @@ const BLOCK_METAS = {
   RadioSelector: { category: 'input', valueType: 'any' },
   // A block from an app's own plugin, which no headless stand-in models.
   PluginChain: { category: 'display' },
-  // A plugin block whose meta declares its run method fires onRun headless.
-  PluginRunChain: { category: 'display', headlessMethods: { run: 'onRun' } },
+  // A plugin block whose meta declares its run method fires onRun headless, and its merge method,
+  // which changes only what the block draws, a no-op.
+  PluginRunChain: { category: 'display', headlessMethods: { run: 'onRun', merge: null } },
   Selector: { category: 'input', valueType: 'string' },
   Table: { category: 'input-container', valueType: 'object' },
   TextInput: { category: 'input', valueType: 'string' },

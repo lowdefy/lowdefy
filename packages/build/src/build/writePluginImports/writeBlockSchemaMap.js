@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { checkHeadlessMethods } from '@lowdefy/block-utils';
 import { type } from '@lowdefy/helpers';
 
 import loadPluginTypeSchema from './loadPluginTypeSchema.js';
@@ -51,9 +52,12 @@ async function writeBlockSchemaMap({ components, context }) {
       // typesMap block metas come from extractBlockTypes (block-utils), which
       // keeps only what the client needs — hazards are read from the plugin's
       // own meta module, the same source as the schema.
-      // headlessMethods ({ [method]: the event it fires }) is what a headless journey runs for a
-      // CallMethod on a block with no stand-in (@lowdefy/journey-headless registerBlockStandIns).
+      // headlessMethods ({ [method]: the event it fires, or null for a no-op }) is what a headless
+      // journey runs for a CallMethod on a block with no stand-in (@lowdefy/journey-headless
+      // registerBlockStandIns). A declaration that is neither fails the build, naming the block
+      // type and the method (checkHeadlessMethods).
       const headlessMethods = typesMapMeta.headlessMethods ?? meta?.headlessMethods;
+      checkHeadlessMethods({ blockType: block.typeName, headlessMethods });
       blockMetas[block.typeName] = {
         category: typesMapMeta.category,
         ...(!type.isNone(typesMapMeta.valueType) && { valueType: typesMapMeta.valueType }),
@@ -62,6 +66,7 @@ async function writeBlockSchemaMap({ components, context }) {
         ...(!type.isNone(headlessMethods) && { headlessMethods }),
       };
     } else if (meta) {
+      checkHeadlessMethods({ blockType: block.typeName, headlessMethods: meta.headlessMethods });
       blockMetas[block.typeName] = {
         category: meta.category,
         ...(!type.isNone(meta.valueType) && { valueType: meta.valueType }),

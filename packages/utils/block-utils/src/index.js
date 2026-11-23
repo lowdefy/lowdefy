@@ -19,6 +19,7 @@ import { getSafeHref } from '@lowdefy/helpers';
 import blockDefaultProps from './blockDefaultProps.js';
 import blockSchema from './blockSchema.js';
 import buildBlockSchema from './buildBlockSchema.js';
+import checkHeadlessMethods from './checkHeadlessMethods.js';
 import cn from './cn.js';
 import createLazyBlock from './createLazyBlock.js';
 import createScanFilter from './createScanFilter.js';
@@ -36,6 +37,7 @@ export {
   blockDefaultProps,
   blockSchema,
   buildBlockSchema,
+  checkHeadlessMethods,
   cn,
   createLazyBlock,
   createScanFilter,
