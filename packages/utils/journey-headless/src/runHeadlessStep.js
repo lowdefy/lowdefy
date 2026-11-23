@@ -28,6 +28,7 @@ import findTextWritingLabel from './findTextWritingLabel.js';
 import INLINE_OPTION_TYPES from './INLINE_OPTION_TYPES.js';
 import leaveDropdowns from './leaveDropdowns.js';
 import pointerClick from './pointerClick.js';
+import pressEscape from './pressEscape.js';
 import readStandInState from './readStandInState.js';
 import runHeadlessCall from './runHeadlessCall.js';
 import runHeadlessExpect from './runHeadlessExpect.js';
@@ -48,6 +49,21 @@ function isStandInTarget(target) {
   return (
     type.isObject(target) && (Object.hasOwn(target, 'rowKey') || Object.hasOwn(target, 'control'))
   );
+}
+
+const INPUT_FOCUS_KEYS = ['fill', 'select'];
+const POINTER_KEYS = ['click', 'open'];
+
+// Where the focus is, for a press of Escape (pressEscape): a fill or select puts it in the input
+// it acts on, and a click or open moves it off every input. A goto, back or `as` shows another
+// page, whose focus starts on no input.
+function noteFocus({ actor, key }) {
+  if (INPUT_FOCUS_KEYS.includes(key)) {
+    actor.page.inputFocused = true;
+  }
+  if (POINTER_KEYS.includes(key)) {
+    actor.page.inputFocused = false;
+  }
 }
 
 // Runs a part of the block's stand-in (BLOCK_STAND_INS) with what it keeps for the block, after
@@ -171,7 +187,9 @@ async function runStandInExpect({ actor, step, stepTimeout }) {
 // a fill, which the stand-in has no press for, needs the browser. Any other fill is refused where
 // the browser's would be (checkFillTarget); a ColorSelector's fill clicks its picker first, as the
 // browser's does (fillColorSelector). wait.request waits for a call made since the last
-// interaction: `since` is the actor's call count when that window opened.
+// interaction: `since` is the actor's call count when that window opened. A press of Escape
+// closes the overlay that opened last, or the open dropdown of the searching selector that has the
+// focus (pressEscape), which needs to know where the focus is (noteFocus).
 //
 // On a data-set journey (rails: the run's createDataSetRails, else null), a click, open, fill,
 // select or press is checked against the rails on the block it acts on before it acts, as the
@@ -181,6 +199,11 @@ async function runStandInExpect({ actor, step, stepTimeout }) {
 async function runHeadlessStep({ actors, answer, host, rails, since, step, stepTimeout }) {
   const key = getStepKey(step);
   const actor = actors.current();
+  noteFocus({ actor, key });
+  if (key === 'press' && step.press === 'Escape') {
+    await pressEscape({ actor, rails });
+    return undefined;
+  }
   if (key === 'click' && (await runBlockClick({ actor, rails, step, stepTimeout }))) {
     return undefined;
   }
@@ -235,10 +258,10 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
       return undefined;
     }
   }
-  // A press is Enter in the input the step runner filled last (classifyJourney leaves every other
-  // press to the browser). It is checked as the browser checks a press (checkHeadlessPressRails).
-  // With no input filled, or one no longer on the page, the step runner refuses the press itself,
-  // saying why.
+  // Any other press is Enter in the input the step runner filled last (classifyJourney leaves
+  // every key but Enter and Escape to the browser). It is checked as the browser checks a press
+  // (checkHeadlessPressRails). With no input filled, or one no longer on the page, the step runner
+  // refuses the press itself, saying why.
   if (key === 'press') {
     const focused = actor.page.context._internal.RootSlots.map[actor.stepRunner.lastInputBlockId()];
     if (!type.isNone(focused)) {

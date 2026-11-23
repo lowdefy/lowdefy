@@ -119,8 +119,13 @@ function needsBrowser({ steps, index }) {
   if (!HEADLESS_STEP_KEYS.includes(key)) {
     return `step "${key}" needs a browser`;
   }
+  // Escape closes the overlay that opened last, which the headless runner works out when it runs
+  // (a step it cannot model then runs in a browser), wherever the focus is.
+  if (key === 'press' && step.press === 'Escape') {
+    return undefined;
+  }
   if (key === 'press' && step.press !== 'Enter') {
-    return `press "${step.press}" needs a browser; a headless run presses only Enter`;
+    return `press "${step.press}" needs a browser; a headless run presses only Enter and Escape`;
   }
   // A browser presses Enter on whatever has the focus; a headless run presses it on the input
   // filled last, which has the focus only when the fill is the step before it.

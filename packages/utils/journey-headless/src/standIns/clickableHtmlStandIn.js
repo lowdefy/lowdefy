@@ -185,6 +185,17 @@ function leave({ state }) {
   closeConfirm(state);
 }
 
+// Escape closes the open confirm and drops its event, as HtmlOverlay does for the newest popover
+// or confirm.
+function escape({ state }) {
+  closeConfirm(state);
+}
+
+// Whether the confirm is open: new html has closed it (readConfirm).
+function isOpen({ block, state }) {
+  return !type.isUndefined(readConfirm({ block, state }));
+}
+
 // expect.visible or expect.hidden on an element by event and data-id, read from the html the page
 // shows (popover content is closed), or on the open confirm's ok or cancel. The step runner does
 // not wait for the block, so the check reads whether it shows, as the browser waits up to
@@ -235,4 +246,4 @@ function registerMethods({ actor, block }) {
   leaveMethodsToBrowser({ actor, block });
 }
 
-export default { click, expect, leave, registerMethods };
+export default { click, escape, expect, isOpen, leave, registerMethods };

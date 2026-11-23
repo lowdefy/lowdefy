@@ -181,6 +181,18 @@ function close({ actor, block, state }) {
   return isSearchDelayed(block) ? Promise.resolve() : afterEvent(searching);
 }
 
+// Escape in the search box closes the dropdown. A MultipleSelector keeps its search, with no
+// event, so a select after it still picks from the options the search leaves; the others clear it
+// as the focus leaving them does (close): a single select fires onSearch { value: '' } as its
+// dropdown closes, and a TreeMultipleSelector as it clears.
+function escape({ actor, block, state }) {
+  if (block.type === 'MultipleSelector') {
+    state.open = false;
+    return Promise.resolve();
+  }
+  return close({ actor, block, state });
+}
+
 // The blocks register methods in the browser (setData, from blocks-antd's useSetData), which no
 // stand-in models, so a CallMethod on one marks the journey browser-only, as on a block with no
 // stand-in.
@@ -188,4 +200,4 @@ function registerMethods({ actor, block }) {
   leaveMethodsToBrowser({ actor, block });
 }
 
-export default { blur: close, checkFill, fill, leave: close, registerMethods, select };
+export default { blur: close, checkFill, escape, fill, leave: close, registerMethods, select };

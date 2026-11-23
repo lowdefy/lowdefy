@@ -63,12 +63,21 @@ test.each([
   ['screenshot', { screenshot: 'home' }, 'step "screenshot" needs a browser'],
   ['email', { email: { to: 'a@example.com' } }, 'step "email" needs a browser'],
   [
-    'press other than Enter',
-    { press: 'Escape' },
-    'press "Escape" needs a browser; a headless run presses only Enter',
+    'press other than Enter or Escape',
+    { press: 'Tab' },
+    'press "Tab" needs a browser; a headless run presses only Enter and Escape',
   ],
 ])('classifyJourney names a %s step as needing the browser', (_, step, reason) => {
   expect(classify([{ click: 'a' }, step])).toEqual({ headless: false, index: 1, step, reason });
+});
+
+test.each([
+  ['a click', [{ click: 'open_modal_button' }]],
+  ['a fill', [{ fill: { blockId: 'name_input', value: 'Ada' } }]],
+  ['a select', [{ select: { blockId: 'kind', value: 'Item' } }]],
+  ['no step', []],
+])('classifyJourney runs press Escape after %s headless', (_, before) => {
+  expect(classify([...before, { press: 'Escape' }])).toEqual({ headless: true });
 });
 
 test.each([

@@ -63,6 +63,16 @@ function setDrawerOpen({ actor, block, open }) {
   actor.track(closeDrawer({ actor, block }));
 }
 
+// Escape on the open Drawer, when it is the overlay that opened last: rc-drawer calls the block's
+// close unless keyboard is false, which fires onClose and closes it unless onClose failed or
+// bounced.
+async function escape({ actor, block }) {
+  if (block.eval.properties?.keyboard === false) {
+    return;
+  }
+  await closeDrawer({ actor, block });
+}
+
 function registerMethods({ actor, block }) {
   block.registerMethod('setOpen', ({ open } = {}) =>
     setDrawerOpen({ actor, block, open: Boolean(open) })
@@ -74,4 +84,4 @@ function registerMethods({ actor, block }) {
   });
 }
 
-export default { registerMethods };
+export default { escape, registerMethods };

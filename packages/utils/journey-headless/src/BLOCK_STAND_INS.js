@@ -56,6 +56,13 @@ import tableStandIn from './standIns/tableStandIn.js';
 //   selector closes its dropdown and clears its search; blurInputs).
 // - expect({ kind, target, timeout }): expect.visible or expect.hidden (kind) with a rowKey or a
 //   control.
+// - escape(): a press of Escape, when the block is the overlay that opened last (pressEscape): a
+//   Modal fires onCancel, a Drawer onClose, a dropdown closes, a searching selector closes its
+//   search, a ClickableHtml confirm drops its event. A block whose stand-in has none leaves the
+//   press to the browser.
+// - isOpen(): whether the block's dropdown or confirm is open, for a stand-in whose state.open
+//   something else can end (a ClickableHtml's new html closes its confirm). Without it, state.open
+//   says.
 // The step runner answers a step a block's stand-in has no part for in a browser, naming the block
 // and its type (runHeadlessStep). The match is by exact type: a block installed under a type
 // prefix, or any other block, has no stand-in.
