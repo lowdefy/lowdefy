@@ -17,7 +17,6 @@
 import { type } from '@lowdefy/helpers';
 
 import HeadlessStepError from '../HeadlessStepError.js';
-import readHtmlText from '../readHtmlText.js';
 import fireEvent, { afterEvent } from './fireEvent.js';
 import leaveMethodsToBrowser from './leaveMethodsToBrowser.js';
 
@@ -103,20 +102,17 @@ function readFilterString(option) {
 }
 
 // A select after a search picks from the options the search leaves in the dropdown: an option it
-// hides does not appear, and the browser's select fails. The option is the one whose label shows
-// the step's text (readHtmlText), as the step runner finds it; the filter reads the label's html,
-// as filterSelectorOption does. An option that is not there at all is left to the step runner,
+// hides does not appear, and the browser's select fails. The option is the one the step runner
+// picks, by the text its label shows (readOptionTexts); the filter reads the label's html, as
+// filterSelectorOption does. An option that is not there at all is left to the step runner,
 // which names the options there are.
-async function refuseHiddenOption({ block, state, value }) {
+async function refuseHiddenOption({ actor, block, state, value }) {
   const search = state.searchValue ?? '';
   if (search === '' || !SEARCH_SELECTORS[block.type].filtersOptions) {
     return;
   }
-  const options = block.eval.properties?.options ?? [];
-  const texts = await Promise.all(
-    options.map(async (item) => (await readHtmlText(readOptionText(item))).trim())
-  );
-  const option = options[texts.indexOf(String(value))];
+  const texts = await actor.stepRunner.readOptionTexts({ block });
+  const option = (block.eval.properties?.options ?? [])[texts.indexOf(String(value))];
   if (
     option === undefined ||
     readFilterString(option).toLowerCase().includes(search.toLowerCase())
@@ -134,7 +130,7 @@ async function refuseHiddenOption({ block, state, value }) {
 }
 
 async function select({ actor, block, state, step }) {
-  await refuseHiddenOption({ block, state, value: step.select.value });
+  await refuseHiddenOption({ actor, block, state, value: step.select.value });
   await actor.stepRunner.run({ step });
   const { multiple } = SEARCH_SELECTORS[block.type];
   if (!multiple || block.eval.properties?.autoClearSearchValue !== false) {

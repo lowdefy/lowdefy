@@ -24,6 +24,7 @@ import checkHeadlessRails from './checkHeadlessRails.js';
 import checkFillTarget from './checkFillTarget.js';
 import fillColorSelector from './fillColorSelector.js';
 import findContentTrigger from './findContentTrigger.js';
+import findTextWritingLabel from './findTextWritingLabel.js';
 import leaveDropdowns from './leaveDropdowns.js';
 import pointerClick from './pointerClick.js';
 import readStandInState from './readStandInState.js';
@@ -31,6 +32,7 @@ import runHeadlessCall from './runHeadlessCall.js';
 import runHeadlessExpect from './runHeadlessExpect.js';
 import runHeadlessWebhook from './runHeadlessWebhook.js';
 import standInMissing from './standInMissing.js';
+import waitForNextTask from './waitForNextTask.js';
 import waitForRequestCall from './waitForRequestCall.js';
 import waitForShownBlock from './waitForShownBlock.js';
 
@@ -213,7 +215,15 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
   if (key === 'select') {
     const block = await waitForShownBlock({ actor, target: step.select, timeout: stepTimeout });
     checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'select' });
+    const textWritten = await findTextWritingLabel({ actor, block });
+    if (textWritten !== null) {
+      actor.browserOnly.push(textWritten);
+      return undefined;
+    }
     await leaveDropdowns({ actor, except: block, targetBlock: block });
+    // A browser's select clicks the block open before it picks the option, so a selector the
+    // click closed clears its search (a task later) before the pick's onChange.
+    await waitForNextTask();
     const standIn = BLOCK_STAND_INS[block.type];
     if (type.isFunction(standIn?.select)) {
       await standIn.select({ actor, block, state: readStandInState({ actor, block }), step });

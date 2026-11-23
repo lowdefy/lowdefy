@@ -149,6 +149,8 @@ function createRunner({ capture, hostName = 'headless run', readLabelText } = {}
       shown = false;
     },
     lastInputBlockId: () => runner.lastInputBlockId(),
+    optionLabels: (blockId) => runner.optionLabels({ block: page.map[blockId] }),
+    readOptionTexts: (blockId) => runner.readOptionTexts({ block: page.map[blockId] }),
     run: (step) => runner.run({ step }),
     setLastInputBlockId: (blockId) => runner.setLastInputBlockId(blockId),
   };
@@ -223,7 +225,7 @@ test('a select step matches the option label, or the value of an option without 
 });
 
 test("a select step matches the text the host reads from an option's label", async () => {
-  const stripTags = (label) => label.replace(/<[^>]*>/g, '').replace('&amp;', '&');
+  const stripTags = ({ label }) => label.replace(/<[^>]*>/g, '').replace('&amp;', '&');
   const { run, state } = createRunner({ readLabelText: stripTags });
   await run({ select: { blockId: 'space', value: 'Sales & Ops' } });
   expect(state.space).toBe('sales');
@@ -233,10 +235,30 @@ test("a select step matches the text the host reads from an option's label", asy
 
 test('a select step waits for a host that reads label text asynchronously', async () => {
   const { run, state } = createRunner({
-    readLabelText: async (label) => label.replace(/<[^>]*>/g, ''),
+    readLabelText: async ({ label }) => label.replace(/<[^>]*>/g, ''),
   });
   await run({ select: { blockId: 'space', value: 'No space' } });
   expect(state.space).toBe(null);
+});
+
+test('optionLabels and readOptionTexts read the options a select matches', async () => {
+  const { optionLabels, readOptionTexts } = createRunner({
+    readLabelText: ({ label }) => label.replace(/<[^>]*>/g, ''),
+  });
+  expect(optionLabels('priority')).toEqual(['Low', 'High', 'none']);
+  expect(await readOptionTexts('space')).toEqual(['No space', 'Sales &amp; Ops']);
+});
+
+test('readLabelText is given the block whose label it reads', async () => {
+  const seen = [];
+  const { run } = createRunner({
+    readLabelText: ({ block, label }) => {
+      seen.push(block.blockId);
+      return label;
+    },
+  });
+  await run({ select: { blockId: 'priority', value: 'High' } });
+  expect(seen).toEqual(['priority', 'priority', 'priority']);
 });
 
 test('without readLabelText a label is its own text, its surrounding whitespace aside', async () => {
