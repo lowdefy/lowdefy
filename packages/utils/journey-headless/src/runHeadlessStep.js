@@ -25,6 +25,7 @@ import checkFillTarget from './checkFillTarget.js';
 import fillColorSelector from './fillColorSelector.js';
 import findContentTrigger from './findContentTrigger.js';
 import findTextWritingLabel from './findTextWritingLabel.js';
+import INLINE_OPTION_TYPES from './INLINE_OPTION_TYPES.js';
 import leaveDropdowns from './leaveDropdowns.js';
 import pointerClick from './pointerClick.js';
 import readStandInState from './readStandInState.js';
@@ -221,9 +222,12 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
       return undefined;
     }
     await leaveDropdowns({ actor, except: block, targetBlock: block });
-    // A browser's select clicks the block open before it picks the option, so a selector the
-    // click closed clears its search (a task later) before the pick's onChange.
-    await waitForNextTask();
+    // A browser's select on a dropdown clicks the block open before it picks the option, so a
+    // selector that click closed clears its search (a task later) before the pick's onChange. An
+    // inline option is one click, whose onChange starts first, as after any other click.
+    if (!INLINE_OPTION_TYPES.has(block.type)) {
+      await waitForNextTask();
+    }
     const standIn = BLOCK_STAND_INS[block.type];
     if (type.isFunction(standIn?.select)) {
       await standIn.select({ actor, block, state: readStandInState({ actor, block }), step });

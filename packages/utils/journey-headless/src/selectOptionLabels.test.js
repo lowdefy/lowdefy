@@ -36,6 +36,12 @@ function spacePage({ spaces }) {
         properties: { options: spaces },
         events: { onChange: [record('space.onChange')] },
       },
+      {
+        id: 'tier',
+        type: 'RadioSelector',
+        properties: { options: [{ label: '<b>Gold</b> tier', value: 'gold' }] },
+        events: { onChange: [record('tier.onChange')] },
+      },
     ],
   };
 }
@@ -53,11 +59,29 @@ test("another selector's closing onSearch starts before a select's onChange, on 
       { select: { blockId: 'space', value: 'Sales' } },
     ],
   });
+  expect(result.failure).toBeUndefined();
   expect(result.passed).toBe(true);
   expect(readLog(log)).toEqual([
     ['company.onSearch', { value: 'Audit' }],
     ['company.onSearch', { value: '' }],
     ['space.onChange', { value: 'sales' }],
+  ]);
+});
+
+test("a radio select is one click, so its onChange starts before another selector's closing onSearch", async () => {
+  const { log, result } = await runTestJourney({
+    pages: [spacePage({ spaces: SPACES })],
+    steps: [
+      { fill: { blockId: 'company', value: 'Audit' } },
+      { select: { blockId: 'tier', value: 'Gold tier' } },
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['company.onSearch', { value: 'Audit' }],
+    ['tier.onChange', { value: 'gold' }],
+    ['company.onSearch', { value: '' }],
   ]);
 });
 

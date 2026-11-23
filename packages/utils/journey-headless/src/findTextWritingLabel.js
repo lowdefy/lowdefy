@@ -32,7 +32,10 @@ async function findTextWritingLabel({ actor, block }) {
   const parse = await loadHtmlDom();
   const written = actor.stepRunner
     .optionLabels({ block })
-    .some((label) => parse(label).querySelector(TEXT_WRITING_ENHANCERS) !== null);
+    .some(
+      (label) =>
+        label.includes('data-') && parse(label).querySelector(TEXT_WRITING_ENHANCERS) !== null
+    );
   if (!written) {
     return null;
   }

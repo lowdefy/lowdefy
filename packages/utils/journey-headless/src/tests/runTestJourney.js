@@ -54,6 +54,7 @@ const BLOCK_METAS = {
   Modal: { category: 'container' },
   MultipleSelector: { category: 'input', valueType: 'array' },
   Paragraph: { category: 'display' },
+  RadioSelector: { category: 'input', valueType: 'any' },
   // A block from an app's own plugin, which no headless stand-in models.
   PluginChain: { category: 'display' },
   // A plugin block whose meta declares its run method fires onRun headless.

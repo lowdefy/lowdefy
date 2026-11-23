@@ -127,3 +127,23 @@
             - event: locked_picker.onChange
               payload:
                 value: North
+# A radio option is one click, with no open click first, so the pick's onChange starts before the
+# TreeSelector clears its search a task later.
+- name: a radio select after a search closes a TreeSelector, which clears its search after the pick
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_tree, value: No }
+    - select: { blockId: shade_radio, value: Dark }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_tree.onSearch
+              payload:
+                value: 'No'
+            - event: shade_radio.onChange
+              payload:
+                value: Dark
+            - event: region_tree.onSearch
+              payload:
+                value: ''
