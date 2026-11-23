@@ -220,5 +220,5 @@ function matchHtmlText({ root, target }) {
   return { elements, uncertain: null };
 }
 
-export { exactTextPattern, normalize };
+export { exactTextPattern, hasHidingClass, normalize, TEXT_WRITING };
 export default matchHtmlText;

@@ -17,6 +17,7 @@
 import { getStepKey } from '@lowdefy/node-utils';
 import { get, type } from '@lowdefy/helpers';
 
+import expectBlockText from './blockText/expectBlockText.js';
 import collectBlockParents from './collectBlockParents.js';
 import expectAnswerError from './expectAnswerError.js';
 import expectAnswerStatus from './expectAnswerStatus.js';
@@ -110,7 +111,8 @@ function checkAnswered(answer) {
   );
 }
 
-// One expect step, with the browser runner's messages: on the current actor's page, on the answer
+// One expect step, with the browser runner's messages: on the current actor's page (text reads the
+// text a block's text models say it draws, expectBlockText), on the answer
 // of the call or request step before it (`answer`, for status and error), on the data's
 // database, or on the requests the data session recorded instead of sending (sunk). After an interaction, expect.error is judged with the app errors
 // (createAppErrorWindows), so the step itself does nothing.
@@ -128,6 +130,8 @@ async function runHeadlessExpect({ actor, answer, host, step, timeout }) {
       return expectCalls({ actor, params });
     case 'url':
       return expectUrl({ actor, params, timeout });
+    case 'text':
+      return expectBlockText({ actor, params, timeout });
     case 'error':
       checkAnswered(answer);
       if (!type.isUndefined(answer)) {

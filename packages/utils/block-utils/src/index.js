@@ -20,6 +20,7 @@ import blockDefaultProps from './blockDefaultProps.js';
 import blockSchema from './blockSchema.js';
 import buildBlockSchema from './buildBlockSchema.js';
 import checkHeadlessMethods from './checkHeadlessMethods.js';
+import checkHeadlessText from './checkHeadlessText.js';
 import cn from './cn.js';
 import createLazyBlock from './createLazyBlock.js';
 import createScanFilter from './createScanFilter.js';
@@ -38,6 +39,7 @@ export {
   blockSchema,
   buildBlockSchema,
   checkHeadlessMethods,
+  checkHeadlessText,
   cn,
   createLazyBlock,
   createScanFilter,

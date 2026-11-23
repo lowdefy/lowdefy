@@ -233,23 +233,39 @@ test('classifyJourney names a column without rowKey as needing the browser, also
   );
 });
 
-test.each(['text', 'title', 'effect'])(
-  'classifyJourney names expect %s as needing the browser',
+test('classifyJourney leaves expect text on a block to the run, which reads its text models', () => {
+  expect(classify([{ click: 'a' }, { expect: { text: { blockId: 'a', contains: 'x' } } }])).toEqual(
+    { headless: true }
+  );
+});
+
+test.each(['text', 'containing', 'row', 'rowKey', 'column', 'nth'])(
+  'classifyJourney names expect text with %s as needing the browser',
   (key) => {
-    const values = {
-      text: { blockId: 'a', contains: 'x' },
-      title: { equals: 'x' },
-      effect: true,
-    };
-    const step = { expect: { [key]: values[key] } };
-    expect(classify([{ click: 'a' }, step])).toEqual({
+    const values = { text: 'Edit', containing: 'Ed', row: 0, rowKey: 'r1', column: 'name', nth: 1 };
+    const step = { expect: { text: { blockId: 'grid', contains: 'x', [key]: values[key] } } };
+    expect(classify([step])).toEqual({
       headless: false,
-      index: 1,
+      index: 0,
       step,
-      reason: `expect "${key}" reads the page in a browser`,
+      reason: `expect "text" with ${key} reads the page in a browser; a headless run reads a block's text by blockId alone`,
     });
   }
 );
+
+test.each(['title', 'effect'])('classifyJourney names expect %s as needing the browser', (key) => {
+  const values = {
+    title: { equals: 'x' },
+    effect: true,
+  };
+  const step = { expect: { [key]: values[key] } };
+  expect(classify([{ click: 'a' }, step])).toEqual({
+    headless: false,
+    index: 1,
+    step,
+    reason: `expect "${key}" reads the page in a browser`,
+  });
+});
 
 test('classifyJourney names a fill from an email and a double click as needing the browser', () => {
   expect(
@@ -263,10 +279,6 @@ test('classifyJourney names a fill from an email and a double click as needing t
 
 test('classifyJourney names the first step that needs the browser', () => {
   expect(
-    classify([
-      { click: 'a' },
-      { expect: { text: { blockId: 'a', contains: 'x' } } },
-      { screenshot: true },
-    ]).index
+    classify([{ click: 'a' }, { expect: { title: { equals: 'x' } } }, { screenshot: true }]).index
   ).toBe(1);
 });

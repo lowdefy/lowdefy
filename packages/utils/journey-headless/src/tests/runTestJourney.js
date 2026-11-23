@@ -42,8 +42,11 @@ const BLOCK_METAS = {
   AgGridBalham: { category: 'display' },
   AgGridLowdefy: { category: 'display' },
   AgGridMaterial: { category: 'display' },
+  Alert: { category: 'container' },
   antd_DropdownMenu: { category: 'container' },
   Box: { category: 'container' },
+  Card: { category: 'container' },
+  Descriptions: { category: 'container' },
   Button: { category: 'display' },
   ClickableHtml: { category: 'display' },
   ColorSelector: { category: 'input', valueType: 'string' },
@@ -51,6 +54,9 @@ const BLOCK_METAS = {
   Drawer: { category: 'container' },
   DropdownButton: { category: 'display' },
   DropdownMenu: { category: 'container' },
+  Html: { category: 'display' },
+  Icon: { category: 'display' },
+  Markdown: { category: 'display' },
   Menu: { category: 'display' },
   Modal: { category: 'container' },
   MultipleSelector: { category: 'input', valueType: 'array' },
@@ -58,6 +64,13 @@ const BLOCK_METAS = {
   RadioSelector: { category: 'input', valueType: 'any' },
   // A block from an app's own plugin, which no headless stand-in models.
   PluginChain: { category: 'display' },
+  // A block from an app's own plugin whose meta declares the properties it draws as text.
+  PluginBanner: { category: 'display', headlessText: ['title', 'body.text'] },
+  // A container from an app's own plugin whose meta declares its text but not its areas.
+  PluginPanel: { category: 'container', headlessText: ['title'] },
+  Statistic: { category: 'display' },
+  Tag: { category: 'display' },
+  Title: { category: 'display' },
   // A plugin block whose meta declares its run method fires onRun headless, and its merge method,
   // which changes only what the block draws, a no-op.
   PluginRunChain: { category: 'display', headlessMethods: { run: 'onRun', merge: null } },

@@ -55,7 +55,9 @@ function needsInProcess(step) {
   }
   return undefined;
 }
-// Checks a headless run reads from the engine, the calls it recorded or the data session.
+// Checks a headless run reads from the engine, the calls it recorded or the data session. A text
+// check reads the text a block draws from its evaluated properties (LDF-1147); when the block may
+// draw text the run cannot read, the step runs in a browser.
 const HEADLESS_EXPECT_KEYS = [
   'calls',
   'db',
@@ -64,6 +66,7 @@ const HEADLESS_EXPECT_KEYS = [
   'state',
   'status',
   'sunk',
+  'text',
   'url',
   'visible',
 ];
@@ -79,6 +82,9 @@ const HTML_TEXT_KEYS = ['text', 'containing'];
 // Steps whose target is the step's value (a string or a target object).
 const TARGET_STEP_KEYS = ['click', 'fill', 'open', 'select'];
 const TARGET_EXPECT_KEYS = ['visible', 'hidden'];
+// The target keys beside blockId that narrow an expect.text to part of the block: a grid row or
+// cell, or the elements a text or containing names, which a headless text check does not read.
+const TEXT_PART_KEYS = ['text', 'containing', 'row', 'rowKey', 'column', 'nth'];
 
 // Keys that narrow a target to a grid row or cell or a block's control, which a headless run
 // resolves through the block's stand-in and never by the text beside them.
@@ -171,6 +177,13 @@ function needsBrowser({ steps, index }) {
   const expectKey = getStepKey(step.expect);
   if (!HEADLESS_EXPECT_KEYS.includes(expectKey)) {
     return `expect "${expectKey}" reads the page in a browser`;
+  }
+  if (expectKey === 'text') {
+    const partKey = TEXT_PART_KEYS.find((key) => Object.hasOwn(step.expect.text, key));
+    if (!type.isUndefined(partKey)) {
+      return `expect "text" with ${partKey} reads the page in a browser; a headless run reads a block's text by blockId alone`;
+    }
+    return undefined;
   }
   if (TARGET_EXPECT_KEYS.includes(expectKey)) {
     const domKey = findDomTargetKey({ readsHtmlText: true, target: step.expect[expectKey] });

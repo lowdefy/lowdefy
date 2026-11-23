@@ -14,19 +14,27 @@
   limitations under the License.
 */
 
-import { checkHeadlessMethods } from '@lowdefy/block-utils';
+import { checkHeadlessMethods, checkHeadlessText } from '@lowdefy/block-utils';
 import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import loadPluginTypeSchema from './loadPluginTypeSchema.js';
 
-// A bad headlessMethods declaration is a mistake in the plugin's meta, so it fails the build as a
-// ConfigError, not as a Lowdefy internal error.
+// A bad headlessMethods or headlessText declaration is a mistake in the plugin's meta, so it fails
+// the build as a ConfigError, not as a Lowdefy internal error.
 function checkBlockHeadlessMethods({ block, headlessMethods }) {
   try {
     checkHeadlessMethods({ blockType: block.typeName, headlessMethods });
   } catch (error) {
     throw new ConfigError(error.message, { received: headlessMethods });
+  }
+}
+
+function checkBlockHeadlessText({ block, headlessText }) {
+  try {
+    checkHeadlessText({ blockType: block.typeName, headlessText });
+  } catch (error) {
+    throw new ConfigError(error.message, { received: headlessText });
   }
 }
 
@@ -67,23 +75,30 @@ async function writeBlockSchemaMap({ components, context }) {
       // journey runs for a CallMethod on a block with no stand-in (@lowdefy/journey-headless
       // registerBlockStandIns). A declaration that is neither fails the build, naming the block
       // type and the method (checkBlockHeadlessMethods).
+      // headlessText (the property paths the block draws as text) is what a headless journey reads
+      // as the text of a block it has no text model for (@lowdefy/journey-headless readTextModel).
       const headlessMethods = typesMapMeta.headlessMethods ?? meta?.headlessMethods;
+      const headlessText = typesMapMeta.headlessText ?? meta?.headlessText;
       checkBlockHeadlessMethods({ block, headlessMethods });
+      checkBlockHeadlessText({ block, headlessText });
       blockMetas[block.typeName] = {
         category: typesMapMeta.category,
         ...(!type.isNone(typesMapMeta.valueType) && { valueType: typesMapMeta.valueType }),
         ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
         hazards: typesMapMeta.hazards ?? meta?.hazards ?? [],
         ...(!type.isNone(headlessMethods) && { headlessMethods }),
+        ...(!type.isNone(headlessText) && { headlessText }),
       };
     } else if (meta) {
       checkBlockHeadlessMethods({ block, headlessMethods: meta.headlessMethods });
+      checkBlockHeadlessText({ block, headlessText: meta.headlessText });
       blockMetas[block.typeName] = {
         category: meta.category,
         ...(!type.isNone(meta.valueType) && { valueType: meta.valueType }),
         ...(meta.initValue !== undefined && { initValue: meta.initValue }),
         hazards: meta.hazards ?? [],
         ...(!type.isNone(meta.headlessMethods) && { headlessMethods: meta.headlessMethods }),
+        ...(!type.isNone(meta.headlessText) && { headlessText: meta.headlessText }),
       };
     }
   }
