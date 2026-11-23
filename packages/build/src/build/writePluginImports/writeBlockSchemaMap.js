@@ -60,7 +60,7 @@ async function writeBlockSchemaMap({ components, context }) {
       // own meta module, the same source as the schema.
       blockMetas[block.typeName] = {
         category: typesMapMeta.category,
-        ...(typesMapMeta.valueType != null && { valueType: typesMapMeta.valueType }),
+        ...(!type.isNone(typesMapMeta.valueType) && { valueType: typesMapMeta.valueType }),
         ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
         hazards: typesMapMeta.hazards ?? meta?.hazards ?? [],
         ...readHeadlessMethods(typesMapMeta.headlessMethods ?? meta?.headlessMethods),
@@ -68,7 +68,7 @@ async function writeBlockSchemaMap({ components, context }) {
     } else if (meta) {
       blockMetas[block.typeName] = {
         category: meta.category,
-        ...(meta.valueType != null && { valueType: meta.valueType }),
+        ...(!type.isNone(meta.valueType) && { valueType: meta.valueType }),
         ...(meta.initValue !== undefined && { initValue: meta.initValue }),
         hazards: meta.hazards ?? [],
         ...readHeadlessMethods(meta.headlessMethods),

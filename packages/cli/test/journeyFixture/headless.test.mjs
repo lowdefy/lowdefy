@@ -179,6 +179,30 @@ test("--headless --build runs a plugin block's declared method and lists an unde
   });
 });
 
+// pages/live_feed.yaml subscribes to a websocket on mount: headless, the subscribe succeeds at once
+// and no message arrives, so the journey passes with no app error and no subscribe timeout (10 s)
+// waited out.
+test('--headless --build passes a journey whose page subscribes to a websocket on mount', async () => {
+  const { code, output } = await runCli([
+    'test',
+    '--headless',
+    '--build',
+    '--config-directory',
+    configDirectory,
+    '--server-directory',
+    serverDirectory,
+    path.join(configDirectory, 'tests', 'journeys', '_headless', 'live_feed.yaml'),
+  ]);
+  const passed = output.match(
+    /PASS {2}opens a page that subscribes to a live feed {2}\(1 steps?, (\d+)ms\)/
+  );
+  expect(passed).not.toBeNull();
+  expect(Number(passed[1])).toBeLessThan(5000);
+  expect(output).not.toContain('client-error');
+  expect(output).toContain('1 passed, 0 failed of 1 journeys');
+  expect(code).toBe(0);
+});
+
 test('--headless --build with no build exits non-zero with the test harness message', async () => {
   const missing = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-no-build-'));
   try {

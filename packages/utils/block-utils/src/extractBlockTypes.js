@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import collectNativeIgnoredPaths from './collectNativeIgnoredPaths.js';
 
 function extractBlockTypes(metas) {
@@ -24,7 +26,7 @@ function extractBlockTypes(metas) {
   for (const [name, meta] of entries) {
     icons[name] = meta.icons ?? [];
     const entry = { category: meta.category };
-    if (meta.valueType != null) entry.valueType = meta.valueType;
+    if (!type.isNone(meta.valueType)) entry.valueType = meta.valueType;
     if (meta.initValue !== undefined) entry.initValue = meta.initValue;
     if (meta.slots !== undefined) entry.slots = meta.slots;
     if (meta.cssKeys) entry.cssKeys = Object.keys(meta.cssKeys);

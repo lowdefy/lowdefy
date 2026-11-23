@@ -87,6 +87,81 @@ test('a method the meta does not declare on the same block stays browser-only', 
   expect(log).toEqual([]);
 });
 
+const HIDDEN_RUN_REASON =
+  'Block "chain" is of type PluginRunChain, which has no headless stand-in for CallMethod run: the step runs in a browser.';
+
+test('a declared method on a hidden block stays browser-only, as the browser renders no component for it', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        events: {
+          onMount: [
+            { id: 'run_chain', type: 'CallMethod', params: { blockId: 'chain', method: 'run' } },
+          ],
+        },
+        blocks: [
+          {
+            id: 'chain',
+            type: 'PluginRunChain',
+            visible: false,
+            events: { onRun: [record('onRun')] },
+          },
+        ],
+      },
+    ],
+    steps: [{ expect: { hidden: 'chain' } }],
+  });
+  expect(result.passed).toBeUndefined();
+  expect(result.browserOnly).toEqual({ phase: 'open', reason: HIDDEN_RUN_REASON });
+  expect(log).toEqual([]);
+});
+
+test('a declared method inside a closed Modal stays browser-only until the Modal opens', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          methodButton({ id: 'open', blockId: 'modal', method: 'setOpen', args: [{ open: true }] }),
+          methodButton({ id: 'go', blockId: 'chain', method: 'run' }),
+          {
+            id: 'modal',
+            type: 'Modal',
+            blocks: [{ id: 'chain', type: 'PluginRunChain', events: { onRun: [record('onRun')] } }],
+          },
+        ],
+      },
+    ],
+    steps: [{ click: 'open' }, { click: 'go' }],
+  });
+  expect(result.browserOnly).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['onRun']]);
+  const closed = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          methodButton({ id: 'go', blockId: 'chain', method: 'run' }),
+          {
+            id: 'modal',
+            type: 'Modal',
+            blocks: [{ id: 'chain', type: 'PluginRunChain', events: { onRun: [record('onRun')] } }],
+          },
+        ],
+      },
+    ],
+    steps: [{ click: 'go' }],
+  });
+  expect(closed.result.browserOnly).toEqual({
+    index: 0,
+    step: { click: 'go' },
+    reason: HIDDEN_RUN_REASON,
+  });
+  expect(closed.log).toEqual([]);
+});
+
 test('a declaration that names no event fails, naming the block type and the method', () => {
   const block = { type: 'PluginChain', registerMethod: () => undefined };
   expect(() =>
