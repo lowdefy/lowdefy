@@ -100,7 +100,7 @@ _ref:
 
             ## Events
 
-            In `ClickableHtml`, an element with `data-event="onName"` fires the block event `onName` when clicked, and its default browser action is prevented. The event object holds the element's other `data-*` attributes with snake_case keys, so `data-event="onEdit" data-record-id="42"` gives `{ record_id: "42" }`. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. `Html` fires no events.
+            In `ClickableHtml`, an element with `data-event="onName"` fires the block event `onName` when clicked, and its default browser action is prevented. The event object holds the element's other `data-*` attributes with snake_case keys, so `data-event="onEdit" data-id="42" data-record-type="invoice"` gives `{ id: "42", record_type: "invoice" }`. Targets that are not links or buttons become keyboard focusable, and Enter or Space clicks them. A [journey](/config-tests#targets) names the element by its event and its `data-id`: `{ blockId, control: onEdit, rowKey: "42" }`. `Html` fires no events.
 
             The block's `dataEvents` property lists the events its HTML may fire. A `data-event` whose name is not listed does nothing, and a click on it logs a console warning; with no `dataEvents` the HTML fires no events. List an event by name, or as `{ name, confirm }` to make every click on it ask first (see [Confirm before an event](#confirm-before-an-event)):
 
