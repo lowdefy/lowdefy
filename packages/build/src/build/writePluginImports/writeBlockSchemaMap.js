@@ -18,13 +18,6 @@ import { type } from '@lowdefy/helpers';
 
 import loadPluginTypeSchema from './loadPluginTypeSchema.js';
 
-// A block's headlessMethods ({ [method]: the event it fires }) is what a headless journey runs
-// for a CallMethod on a block with no stand-in (@lowdefy/journey-headless registerBlockStandIns):
-// carried only when the block declares it.
-function readHeadlessMethods(headlessMethods) {
-  return type.isNone(headlessMethods) ? {} : { headlessMethods };
-}
-
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
   const allMetas = {};
@@ -58,12 +51,15 @@ async function writeBlockSchemaMap({ components, context }) {
       // typesMap block metas come from extractBlockTypes (block-utils), which
       // keeps only what the client needs — hazards are read from the plugin's
       // own meta module, the same source as the schema.
+      // headlessMethods ({ [method]: the event it fires }) is what a headless journey runs for a
+      // CallMethod on a block with no stand-in (@lowdefy/journey-headless registerBlockStandIns).
+      const headlessMethods = typesMapMeta.headlessMethods ?? meta?.headlessMethods;
       blockMetas[block.typeName] = {
         category: typesMapMeta.category,
         ...(!type.isNone(typesMapMeta.valueType) && { valueType: typesMapMeta.valueType }),
         ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
         hazards: typesMapMeta.hazards ?? meta?.hazards ?? [],
-        ...readHeadlessMethods(typesMapMeta.headlessMethods ?? meta?.headlessMethods),
+        ...(!type.isNone(headlessMethods) && { headlessMethods }),
       };
     } else if (meta) {
       blockMetas[block.typeName] = {
@@ -71,7 +67,7 @@ async function writeBlockSchemaMap({ components, context }) {
         ...(!type.isNone(meta.valueType) && { valueType: meta.valueType }),
         ...(meta.initValue !== undefined && { initValue: meta.initValue }),
         hazards: meta.hazards ?? [],
-        ...readHeadlessMethods(meta.headlessMethods),
+        ...(!type.isNone(meta.headlessMethods) && { headlessMethods: meta.headlessMethods }),
       };
     }
   }
