@@ -109,3 +109,21 @@
   pageId: search_targets
   steps:
     - fill: { blockId: locked_picker, value: North }
+- name: a select on another Selector after a search closes a TreeSelector, which clears its search
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_tree, value: No }
+    - select: { blockId: locked_picker, value: North }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_tree.onSearch
+              payload:
+                value: 'No'
+            - event: region_tree.onSearch
+              payload:
+                value: ''
+            - event: locked_picker.onChange
+              payload:
+                value: North

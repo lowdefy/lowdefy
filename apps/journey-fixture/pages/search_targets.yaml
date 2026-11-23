@@ -133,6 +133,16 @@ blocks:
       options:
         - North
         - South
+    events:
+      onChange:
+        - id: log_locked_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: locked_picker.onChange
+                    payload: { _event: true }
   - id: done_button
     type: Button
     properties:
