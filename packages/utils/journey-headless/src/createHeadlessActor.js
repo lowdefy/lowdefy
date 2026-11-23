@@ -113,8 +113,12 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
   // updaters when it updates the block, as it re-renders a Block component. Then it registers the
   // methods of the blocks that now render (registerBlockStandIns), as a component registers them
   // as it renders, before React runs the onMount effects: a panel that mounts once a skeleton
-  // ends can call a method of a block that mounts with it.
-  function checkMounts(page) {
+  // ends can call a method of a block that mounts with it. A page no longer shown is left alone
+  // (a navigation can replace it while its onInit runs). Async, so whatever throws reaches track.
+  async function checkMounts(page) {
+    if (actor.page !== page) {
+      return;
+    }
     const { context, watched } = page;
     collectBlockParents({ context }).blocks.forEach((block) => {
       if (!watched.has(block.id)) {
@@ -188,7 +192,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       context,
       matchedPath: page.matchedPath,
       mountCheckScheduled: false,
-      mounted: new Set(),
+      mounted: new Map(),
       mountFinished: new Set(),
       onUpdate: () => scheduleMountCheck(shown),
       openBlocks: new Set(),

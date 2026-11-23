@@ -43,8 +43,8 @@ function unmountContent({ actor, block }) {
     .filter((content) => isInsideBlock({ block: content, container: block, parents }))
     .filter((content) => !isInConfirmDialog({ block: content, container: block, parents }))
     .forEach((content) => {
-      mounted.delete(content.id);
-      mountFinished.delete(content.id);
+      mounted.delete(content);
+      mountFinished.delete(content);
       if (content.type === 'ConfirmModal') {
         return;
       }

@@ -42,7 +42,7 @@ function readShown({ actor, blockId }) {
     return null;
   }
   const { parents } = collectBlockParents({ context });
-  return isBlockShown({ block, openBlocks: actor.page.openBlocks, parents });
+  return isBlockShown({ block, page: actor.page, parents });
 }
 
 async function expectState({ actor, params, timeout }) {

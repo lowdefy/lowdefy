@@ -114,7 +114,7 @@ test("a block's own onMount loads it until it finishes (mountFinished)", () => {
   const frame = block('frame', true, { events: { onMount: {} }, skeleton: SKELETON });
   const slots = slotsOf([frame], { frame: [[block('panel')]] });
   expect(ids(collectMountOrder({ slots }))).toEqual(['frame']);
-  expect(ids(collectMountOrder({ mountFinished: new Set(['frame']), slots }))).toEqual([
+  expect(ids(collectMountOrder({ mountFinished: new Set([frame]), slots }))).toEqual([
     'panel',
     'frame',
   ]);

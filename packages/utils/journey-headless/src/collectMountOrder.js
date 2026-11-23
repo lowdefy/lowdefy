@@ -21,10 +21,9 @@ import SLOTS_KEEP_OWN_LOADING from './SLOTS_KEEP_OWN_LOADING.js';
 
 // Whether a block is loading, as the web client's Block component works it out (Block.js): its
 // own onMount is still running (MountEvents' waitForMount), its parent passed its loading down,
-// or its own `loading` is set. mountFinished holds the ids of the blocks whose onMount finished.
+// or its own `loading` is set. mountFinished holds the blocks whose onMount finished.
 function isLoading({ block, mountFinished, parentLoading }) {
-  const mountRunning =
-    Object.hasOwn(block.Events.events, 'onMount') && !mountFinished.has(block.id);
+  const mountRunning = Object.hasOwn(block.Events.events, 'onMount') && !mountFinished.has(block);
   return mountRunning || parentLoading || Boolean(block.eval?.loading);
 }
 

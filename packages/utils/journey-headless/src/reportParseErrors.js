@@ -22,7 +22,7 @@ import collectBlockParents from './collectBlockParents.js';
 function reportParseErrors({ handleError, page }) {
   const { context, mounted, reportedParseErrors } = page;
   collectBlockParents({ context })
-    .blocks.filter((block) => mounted.has(block.id))
+    .blocks.filter((block) => mounted.has(block))
     .forEach((block) => {
       (block.eval?.parseErrors ?? []).forEach((error) => {
         const key = `${block.id}:${error.message}`;

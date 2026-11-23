@@ -31,14 +31,16 @@ function findContentControl({ actor, block }) {
   const { context, mountFinished, openBlocks } = actor.page;
   const { blockMetas } = context._internal.lowdefy._internal;
   const { parents } = collectBlockParents({ context });
-  const control = collectRenderedBlocks({
+  const rendered = collectRenderedBlocks({
     mountFinished,
     openBlocks,
     slots: context._internal.RootSlots,
-  }).find(
+  });
+  const renderedSet = new Set(rendered);
+  const control = rendered.find(
     (content) =>
       isInsideBlock({ block: content, container: block, parents }) &&
-      isBlockShown({ block: content, openBlocks, parents }) &&
+      isBlockShown({ block: content, page: actor.page, parents, rendered: renderedSet }) &&
       (blockMetas[content.type]?.category === 'input' ||
         Object.hasOwn(content.Events.events, 'onClick'))
   );
