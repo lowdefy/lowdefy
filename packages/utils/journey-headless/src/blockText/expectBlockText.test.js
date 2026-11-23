@@ -82,19 +82,21 @@ test('a text check that may run across elements a layout breaks runs in a browse
   );
 });
 
-test('a text check names a class the CSS may hide the text by', async () => {
+test("a text check reads breakpoint classes at the browser runner's 1280px width", async () => {
   const blocks = [
     {
       id: 'count',
       type: 'Html',
       properties: {
-        html: '<span class="max-[899px]:hidden">0 of 3 done</span><span class="min-[900px]:hidden">0/3</span>',
+        html: '<span class="max-[899px]:hidden">0 of 3 done</span><span class="min-[900px]:hidden">0/3</span><span class="hover:hidden">Hover me</span>',
       },
     },
   ];
-  expect((await check({ blocks, contains: '0 of 3 done' })).browserOnly.reason).toBe(
-    'Block "home" may show "0 of 3 done" in an element a class (hidden, md:hidden) the page\'s CSS may hide: the step runs in a browser.'
+  expect((await check({ blocks, contains: '0 of 3 done' })).passed).toBe(true);
+  expect((await check({ blocks, contains: '0/3' })).browserOnly.reason).toBe(
+    'Block "home" may show "0/3" in an element a class (hidden, md:hidden) the page\'s CSS may hide: the step runs in a browser.'
   );
+  expect((await check({ blocks, contains: 'Hover me' })).browserOnly).toBeDefined();
 });
 
 test('a text check reads a case the CSS may change as open, never as missing', async () => {
@@ -447,7 +449,7 @@ test("a block's own style or class that changes how text reads keeps its text fr
     {
       id: 'row',
       type: 'Box',
-      style: { display: 'flex' },
+      style: { display: 'flex', whiteSpace: 'nowrap' },
       blocks: [{ id: 'cell', type: 'Html', properties: { html: 'In a row' } }],
     },
   ];

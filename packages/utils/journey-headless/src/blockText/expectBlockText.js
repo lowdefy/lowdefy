@@ -64,6 +64,11 @@ function describeOpen({ blockId, contains, reading }) {
       '; '
     )}): ${BROWSER}.`;
   }
+  if (reading.styled.length > 0) {
+    return `Block "${blockId}" may show "${contains}" in text whose style or class may change how it reads (${listTypes(
+      reading.styled
+    )}): ${BROWSER}.`;
+  }
   if (reading.classHidden.some((run) => runShows({ run, contains }))) {
     return `Block "${blockId}" may show "${contains}" in an element a class (hidden, md:hidden) the page's CSS may hide: ${BROWSER}.`;
   }

@@ -23,6 +23,7 @@ import POPUP_BLOCK_TYPES from '../POPUP_BLOCK_TYPES.js';
 import describeBlock from '../standIns/describeBlock.js';
 import markdownToHtml from './markdownToHtml.js';
 import normalizeShownText from './normalizeShownText.js';
+import { mayApplyClass } from './readClassToken.js';
 import readHtmlPieces from './readHtmlPieces.js';
 import readTextModel from './readTextModel.js';
 
@@ -85,8 +86,9 @@ function readPiece({ cache, parse, piece }) {
 
 // Classes and styles on a block that change how its text reads: a case transform, kept white space
 // or a class that may hide it (Tailwind's, as readHtmlPieces reads them in html).
+// A class counts when it may apply at the browser runner's width (readClassToken).
 const STYLED_CLASS =
-  /(^|:)(uppercase|lowercase|capitalize|hidden|invisible|whitespace-(pre|pre-line|pre-wrap|break-spaces))$/;
+  /^(uppercase|lowercase|capitalize|hidden|invisible|whitespace-(pre|pre-line|pre-wrap|break-spaces))$/;
 // Style properties on a block that change how its text reads, as React's camelCase or CSS's
 // kebab-case, and whether a value does.
 const STYLED_PROPERTIES = {
@@ -94,8 +96,9 @@ const STYLED_PROPERTIES = {
   textTransform: (value) => value !== 'none',
   'text-transform': (value) => value !== 'none',
   visibility: (value) => value === 'hidden',
-  whiteSpace: () => true,
-  'white-space': () => true,
+  // nowrap and normal collapse white space as readHtmlPieces' runs assume.
+  whiteSpace: (value) => /^(pre|break-spaces)/.test(String(value)),
+  'white-space': (value) => /^(pre|break-spaces)/.test(String(value)),
 };
 
 // Whether a style object (a block's style, or one of its per-element styles) changes how text reads.
@@ -120,7 +123,7 @@ function collectClassTokens(value) {
 function isStyled(block) {
   return (
     isStyledStyle(block.eval?.style) ||
-    collectClassTokens(block.eval?.class).some((token) => STYLED_CLASS.test(token))
+    mayApplyClass({ tokens: collectClassTokens(block.eval?.class), pattern: STYLED_CLASS })
   );
 }
 
@@ -155,10 +158,11 @@ function findHiddenPopup({ block, ancestors, page }) {
 // isBlockShown says so and every block holding it, up to the checked one, draws the area it sits
 // in. A block whose own style or class (or a holding block's) may change how its text reads
 // (isStyled) adds no runs. A block not shown because a closed Modal or Drawer holds it leaves the
-// text open when antd keeps that popup's content in the page (findHiddenPopup). Returns { onPage, shown, runs, classHidden, units, unmodeled, open, text }:
+// text open when antd keeps that popup's content in the page (findHiddenPopup). Returns { onPage, shown, runs, classHidden, styled, units, unmodeled, open, text }:
 // - onPage: whether the web client renders the block, so its wrapper is in the page;
 // - shown: whether it is shown, so its text is drawn;
 // - runs, classHidden and units: readHtmlPieces', over every piece;
+// - styled: the blocks whose style or class keeps their text out of the runs (isStyled);
 // - unmodeled: the drawn blocks with no text model, whose text the run cannot read;
 // - open: why some of the text is not known, each naming its block;
 // - text: the runs joined with breaks, for a failure's message.
@@ -172,6 +176,7 @@ function readBlockText({ actor, blockId, cache, parse }) {
     shown: false,
     runs: [],
     classHidden: [],
+    styled: [],
     units: [],
     unmodeled: [],
     open: [],
@@ -205,7 +210,8 @@ function readBlockText({ actor, blockId, cache, parse }) {
     return reading;
   }
   reading.shown = true;
-  const styledAbove = ancestorsOf(found.block).some(isStyled);
+  const styledAncestor = ancestorsOf(found.block).find(isStyled);
+  if (!type.isUndefined(styledAncestor)) reading.styled.push(styledAncestor);
   function visit({ block, slots, styled }) {
     const model = readTextModel({ block, blockMetas });
     if (model === null) {
@@ -221,7 +227,9 @@ function readBlockText({ actor, blockId, cache, parse }) {
       i18n: actor.i18n,
       properties: block.eval?.properties ?? {},
     });
-    const blockStyled = styled || isStyled(block);
+    const ownStyle = !styled && isStyled(block);
+    if (ownStyle) reading.styled.push(block);
+    const blockStyled = styled || ownStyle;
     if (open !== null) reading.open.push(`${describeBlock(block)}: ${open}`);
     pieces.forEach((piece) => {
       const read = readPiece({
@@ -259,7 +267,7 @@ function readBlockText({ actor, blockId, cache, parse }) {
       });
     });
   }
-  visit({ ...found, styled: styledAbove });
+  visit({ ...found, styled: reading.styled.length > 0 });
   reading.open = [...new Set(reading.open)];
   reading.text = reading.runs
     .map((run) => (run.pre ? run.text : run.text.replace(/[ \t\n\r\f]+/g, ' ').trim()))

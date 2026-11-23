@@ -14,8 +14,9 @@
   limitations under the License.
 */
 
-import { hasHidingClass, TEXT_WRITING } from '../standIns/matchHtmlText.js';
+import { TEXT_WRITING } from '../standIns/matchHtmlText.js';
 import isPlainText from './isPlainText.js';
+import { mayApplyClass } from './readClassToken.js';
 import normalizeShownText from './normalizeShownText.js';
 
 // Elements whose text nodes a browser's innerText reads with no break around them, unless their
@@ -55,20 +56,21 @@ const UNREAD_TAGS = new Set(['HEAD', 'NOSCRIPT', 'SCRIPT', 'STYLE', 'TEMPLATE'])
 // Elements whose text innerText may or may not read: form controls draw their value, which
 // innerText leaves out, and svg draws only some of its text.
 const CONTROL_TAGS = new Set(['INPUT', 'OPTION', 'SELECT', 'SVG', 'TEXTAREA']);
-// Classes that lay an element out as a block, a flex or grid box, or out of flow (Tailwind's, with
-// or without a breakpoint), and the attributes block-utils' html css lays out as an inline flex
-// box (createHtmlCss).
+// Utilities that lay an element out as a block, a flex or grid box, or out of flow (Tailwind's), and
+// the attributes block-utils' html css lays out as an inline flex box (createHtmlCss). A class
+// counts when it may apply at the browser runner's width (readClassToken).
 const LAYOUT_CLASS =
-  /(^|:)(block|inline-block|flex|inline-flex|grid|inline-grid|table|table-.+|flow-root|list-item|contents|float-.+|absolute|fixed|sticky)$/;
-const FLEX_CLASS = /(^|:)(flex|inline-flex|grid|inline-grid)$/;
+  /^(block|inline-block|flex|inline-flex|grid|inline-grid|table|table-.+|flow-root|list-item|contents|float-.+|absolute|fixed|sticky)$/;
+const FLEX_CLASS = /^(flex|inline-flex|grid|inline-grid)$/;
 const FLEX_ATTRIBUTES = ['data-avatar', 'data-lf-copy', 'data-status', 'data-tag'];
-const TRANSFORM_CLASS = /(^|:)(uppercase|lowercase|capitalize)$/;
-const PRE_CLASS = /(^|:)whitespace-(pre|pre-line|pre-wrap|break-spaces)$/;
+const TRANSFORM_CLASS = /^(uppercase|lowercase|capitalize)$/;
+const PRE_CLASS = /^whitespace-(pre|pre-line|pre-wrap|break-spaces)$/;
+const HIDING_CLASS = /^(hidden|invisible)$/;
 // White space as CSS collapses it; a no-break space is not.
 const CSS_SPACE = /[ \t\n\r\f]+/g;
 
 function hasClass({ element, pattern }) {
-  return [...(element.classList ?? [])].some((token) => pattern.test(token));
+  return mayApplyClass({ tokens: [...(element.classList ?? [])], pattern });
 }
 
 function isFlexBox(element) {
@@ -191,7 +193,7 @@ function readHtmlPieces({ root, pre = false }) {
     const mayHide =
       context.mayHide ||
       invisible ||
-      hasHidingClass({ element, root: element.parentElement }) ||
+      hasClass({ element, pattern: HIDING_CLASS }) ||
       element.hasAttribute('data-popover-content');
     const next = {
       hidden: hidden || writes,
