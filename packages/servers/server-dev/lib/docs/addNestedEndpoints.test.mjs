@@ -182,5 +182,6 @@ test('collectExercised merges actors, adds nested endpoints and writes, and pass
       { scope: 'page', pageId: 'tickets', blockId: 'save', eventName: 'onClick', actionIds: ['a'] },
     ],
     rendered: { tickets: ['save'] },
+    controls: [],
   });
 });

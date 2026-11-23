@@ -76,15 +76,16 @@ export default {
 };
 ```
 
-| Field        | Type         | Description                                                             |
-| ------------ | ------------ | ----------------------------------------------------------------------- |
-| `category`   | string       | Block category (`container`, `input`, `display`, `list`, `context`)     |
-| `icons`      | string[]     | Icon names the block renders (semantic names)                           |
-| `valueType`  | string\|null | Value type for input blocks (e.g., `'string'`, `'number'`)              |
-| `cssKeys`    | object       | Map of CSS key names to descriptions (e.g., `{ element: '...' }`)       |
-| `events`     | object       | Map of event names to descriptions (e.g., `{ onClick: '...' }`)         |
-| `properties` | object       | JSON Schema for the block's properties                                  |
-| `slots`      | string[]     | Named slot names for containers (e.g., `['content', 'title', 'extra']`) |
+| Field             | Type         | Description                                                                                                                                                                                       |
+| ----------------- | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `category`        | string       | Block category (`container`, `input`, `display`, `list`, `context`)                                                                                                                               |
+| `icons`           | string[]     | Icon names the block renders (semantic names)                                                                                                                                                     |
+| `valueType`       | string\|null | Value type for input blocks (e.g., `'string'`, `'number'`)                                                                                                                                        |
+| `cssKeys`         | object       | Map of CSS key names to descriptions (e.g., `{ element: '...' }`)                                                                                                                                 |
+| `events`          | object       | Map of event names to descriptions (e.g., `{ onClick: '...' }`)                                                                                                                                   |
+| `properties`      | object       | JSON Schema for the block's properties                                                                                                                                                            |
+| `slots`           | string[]     | Named slot names for containers (e.g., `['content', 'title', 'extra']`)                                                                                                                           |
+| `headlessMethods` | object       | Methods a headless journey runs without the component: `{ [method]: the block event it fires }` (e.g., `{ run: 'onRun' }`). Any other method on a block with no headless stand-in is browser-only |
 
 ### Metas Barrel (`metas.js`)
 
@@ -183,7 +184,7 @@ Each block has:
 
 ## Runtime Schema Validation
 
-Each block's `meta.js` file includes a `properties` JSON Schema. At build time, `writeBlockSchemaMap` imports the `metas` barrel from each package, calls `buildBlockSchema(meta)` to generate a full block schema (including `class`, `style`, `events`, and container `blocks`/`areas`), and writes `plugins/blockSchemas.json`. It also writes `plugins/blockMetas.json` with runtime metadata (category, valueType, initValue).
+Each block's `meta.js` file includes a `properties` JSON Schema. At build time, `writeBlockSchemaMap` imports the `metas` barrel from each package, calls `buildBlockSchema(meta)` to generate a full block schema (including `class`, `style`, `events`, and container `blocks`/`areas`), and writes `plugins/blockSchemas.json`. It also writes `plugins/blockMetas.json` with runtime metadata (category, valueType, initValue, hazards, and `headlessMethods` when the block declares it).
 
 When a `BlockError` occurs at runtime, the server validates the `received` properties against the block's schema and produces a diagnostic `ConfigError` with a human-readable message:
 

@@ -149,6 +149,19 @@ export default {
 };
 ```
 
+A headless journey (`lowdefy test --headless`) loads no block component, so a `CallMethod` on one of your blocks needs the browser and the journey is listed browser-only there. A method that only fires one of the block's own events can say so in `meta.headlessMethods`, as `{ method: event }`. A headless journey then runs the event for it, with the method's first argument as `_event`, and `CallMethod` waits for its actions, as in the browser:
+
+```js
+// src/blocks/ActionChain/meta.js: registers run, which fires onRun
+export default {
+  category: 'display',
+  headlessMethods: { run: 'onRun' },
+  // ...events, properties
+};
+```
+
+A method left out of `headlessMethods`, or one called while the block is hidden, stays browser-only.
+
 See the [default Lowdefy block packages](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks) for full examples.
 
 ### Named export files

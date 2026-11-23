@@ -19,14 +19,18 @@ import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 // Before a click, open or select acts on targetBlock, every dropdown open on the page but
 // `except` (the block whose own stand-in takes the step) hears the pointer leave it, as a click
 // outside or the mouse leaving does in a browser: its stand-in closes it, firing its
-// onOpenChange { open: false }. A fill or press moves no pointer and leaves it open.
-function leaveDropdowns({ actor, except, targetBlock }) {
+// onOpenChange { open: false }. A fill or press moves no pointer and leaves it open. Resolves once
+// what each leave returns resolves: a searching selector clears its search on the pointer's
+// mousedown, so its onSearch runs before the click that follows unless a debounce delays it.
+async function leaveDropdowns({ actor, except, targetBlock }) {
+  const left = [];
   actor.page.standIns.forEach(({ block, state }) => {
     if (state.open !== true || block === except) {
       return;
     }
-    BLOCK_STAND_INS[block.type]?.leave?.({ actor, block, state, targetBlock });
+    left.push(BLOCK_STAND_INS[block.type]?.leave?.({ actor, block, state, targetBlock }));
   });
+  await Promise.all(left);
 }
 
 export default leaveDropdowns;

@@ -315,7 +315,10 @@ test('DropdownMenu that holds a ColorSelector opens on its fill, which clicks th
     ],
   });
   expect(result.passed).toBe(true);
-  expect(readLog(log)).toEqual([['onOpenChange', { open: true }], ['onChange']]);
+  expect(readLog(log)).toEqual([
+    ['onOpenChange', { open: true }],
+    ['onChange', { value: '#1677ff' }],
+  ]);
 });
 
 test('DropdownMenu stays open through the Escape a ColorSelector fill inside it presses', async () => {
@@ -324,7 +327,10 @@ test('DropdownMenu stays open through the Escape a ColorSelector fill inside it 
     steps: [{ open: 'menu' }, { fill: { blockId: 'colour', value: '#1677ff' } }],
   });
   expect(result.passed).toBe(true);
-  expect(readLog(log)).toEqual([['onOpenChange', { open: true }], ['onChange']]);
+  expect(readLog(log)).toEqual([
+    ['onOpenChange', { open: true }],
+    ['onChange', { value: '#1677ff' }],
+  ]);
 });
 
 test('DropdownMenu closes when a ColorSelector fill clicks the picker outside it', async () => {
@@ -336,7 +342,7 @@ test('DropdownMenu closes when a ColorSelector fill clicks the picker outside it
   expect(readLog(log)).toEqual([
     ['onOpenChange', { open: true }],
     ['onOpenChange', { open: false }],
-    ['onChange'],
+    ['onChange', { value: '#1677ff' }],
   ]);
 });
 

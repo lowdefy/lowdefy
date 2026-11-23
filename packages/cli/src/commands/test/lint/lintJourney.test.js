@@ -21,11 +21,19 @@ function journey(steps, extra = {}) {
   return { name: 'assigns a ticket', pageId: 'tickets', steps, ...extra };
 }
 
-function entry({ events = [], requests = [], endpoints = [] } = {}) {
+function entry({ events = [], requests = [], endpoints = [], controls = [] } = {}) {
   return {
     hash: 'h',
     passed: true,
-    exercised: { pages: ['tickets'], appEvents: true, requests, endpoints, events, rendered: {} },
+    exercised: {
+      pages: ['tickets'],
+      appEvents: true,
+      requests,
+      endpoints,
+      events,
+      rendered: {},
+      controls,
+    },
   };
 }
 
@@ -347,4 +355,47 @@ test('L8 does not report a page-wide text target, a grid target or a journey tha
   expect(lint([{ click: { text: 'Assign' } }])).toEqual([]);
   expect(lint([{ click: { blockId: 'grid', row: 0, text: 'Open' } }])).toEqual([]);
   expect(lint([{ click: 'assign_button' }, { expect: { visible: 'assigned_alert' } }])).toEqual([]);
+});
+
+test('L8 suggests the control its measured run clicked for a click that reads the page', () => {
+  const steps = [
+    { click: { blockId: 'issue_cards', containing: 'micromatch 4.0.5: 1 advisory' } },
+    { expect: { db: { collection: 'issues', connectionId: 'db', match: {}, equals: [] } } },
+    { click: { blockId: 'pairs', text: 'Merge', nth: 0 } },
+    { click: { text: 'OK' } },
+  ];
+  const controls = [
+    { stepIndex: 0, blockId: 'issue_cards', control: 'onOpenIssue', rowKey: 'issue-17' },
+    { stepIndex: 2, blockId: 'pairs', control: 'onMerge', rowKey: 'pair-1' },
+    { stepIndex: 3, blockId: 'pairs', control: 'ok', rowKey: null },
+  ];
+  const problems = lintJourney({ journey: journey(steps), exercisedEntry: entry({ controls }) });
+  expect(rules(problems, 'L8').map(({ message }) => message)).toEqual([
+    'step 0 (click "issue_cards") names block "issue_cards" and reads the page for its containing: target { blockId: issue_cards, control: onOpenIssue, rowKey: issue-17 }, the control its measured run clicked, and the journey runs headless.',
+    'step 2 (click "pairs") names block "pairs" and reads the page for its text and nth: target { blockId: pairs, control: onMerge, rowKey: pair-1 }, the control its measured run clicked, and the journey runs headless.',
+    'step 3 (click "OK") reads the page for its text: target { blockId: pairs, control: ok }, the control its measured run clicked, and the journey runs headless.',
+  ]);
+});
+
+test('L8 falls back to the blockId alone where no control was recorded, and reports nothing when a step stays in the browser', () => {
+  const steps = [
+    { click: { blockId: 'issue_cards', containing: 'micromatch' } },
+    { click: { blockId: 'other_list', containing: 'Archive' } },
+    { expect: { db: { collection: 'issues', connectionId: 'db', match: {}, equals: [] } } },
+  ];
+  const controls = [
+    { stepIndex: 0, blockId: 'issue_cards', control: 'onOpenIssue', rowKey: 'issue-17' },
+  ];
+  const problems = lintJourney({ journey: journey(steps), exercisedEntry: entry({ controls }) });
+  expect(rules(problems, 'L8').map(({ message }) => message)).toEqual([
+    'step 0 (click "issue_cards") names block "issue_cards" and reads the page for its containing: target { blockId: issue_cards, control: onOpenIssue, rowKey: issue-17 }, the control its measured run clicked, and the journey runs headless.',
+    'step 1 (click "other_list") names block "other_list" and reads the page for its containing: target { blockId: other_list } alone and the journey runs headless.',
+  ]);
+  const withRow = [
+    { click: { blockId: 'issue_cards', containing: 'micromatch' } },
+    { expect: { visible: { blockId: 'grid', row: 0 } } },
+  ];
+  expect(
+    rules(lintJourney({ journey: journey(withRow), exercisedEntry: entry({ controls }) }), 'L8')
+  ).toEqual([]);
 });

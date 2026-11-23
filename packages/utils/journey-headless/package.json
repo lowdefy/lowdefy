@@ -37,6 +37,7 @@
     "test:fixture": "vitest run --config vitest.fixture.config.js"
   },
   "dependencies": {
+    "@lowdefy/block-utils": "7.4.0",
     "@lowdefy/blocks-antd": "7.4.0",
     "@lowdefy/client": "7.4.0",
     "@lowdefy/client-core": "7.4.0",

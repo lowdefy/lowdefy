@@ -97,13 +97,14 @@ function getStepKey(step) {
 const TARGET_KEYS = ['blockId', 'text', 'containing', 'row', 'rowKey', 'column', 'control', 'nth'];
 
 // Why a step refuses a target key, naming the browser form to use instead. No
-// covered block has an input in a row, and a block's control shows only while
-// its popup is open, so only click (and an expectation on a row) takes them.
+// covered block has an input in a row, and a control is clicked or seen, never
+// typed into or read for its text, so only click and expect.visible and
+// expect.hidden take them.
 const REFUSED_TARGET_KEY_REASONS = {
   rowKey:
     'a row named by key is clicked or expected; reach an input in a grid row with "row" (the displayed row) and "column"',
   control:
-    'a control named by key is clicked; reach it with "text" (its exact text) instead, after a click or an open that shows it',
+    'a control named by key is clicked, or expected visible or hidden; reach it with "text" (its exact text) instead, after a click or an open that shows it',
 };
 
 function isNonEmptyString(value) {
@@ -797,9 +798,9 @@ function validateExpect(params) {
     case 'state':
       return validateExpectState(value);
     case 'visible':
-      return validateTarget({ key: 'expect.visible', params: value, refusedKeys: ['control'] });
+      return validateTarget({ key: 'expect.visible', params: value });
     case 'hidden':
-      return validateTarget({ key: 'expect.hidden', params: value, refusedKeys: ['control'] });
+      return validateTarget({ key: 'expect.hidden', params: value });
     case 'calls':
       return validateCalls(value);
     case 'text':

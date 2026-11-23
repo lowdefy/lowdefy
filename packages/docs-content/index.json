@@ -3097,7 +3097,7 @@
       "files": [
         "concepts/advanced/html-attributes.yaml"
       ],
-      "hash": "05ec5c7d8575e929eba0bc2796c87462ad1193d5b97af876d968050437cc343c"
+      "hash": "deb3c92bad80dbc1b3fbdfdd185c6ad368220f39dc5089611f75873713782390"
     },
     "reference/cli": {
       "files": [
@@ -3248,7 +3248,7 @@
       "files": [
         "plugins/plugins-dev.yaml"
       ],
-      "hash": "c849265cbb2a25baaeb5a6d053e7dec13dede8ce549017edfec610eabd761569"
+      "hash": "a22880503fc106b243551daa6e48c4083208d849c34b8c47d9699a9c10f42c4c"
     },
     "plugins/plugins-actions": {
       "files": [
@@ -3383,7 +3383,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "cefb34459227b116b5f81e700eded23081e1247962c9ff7d8309b824eb499ca9"
+      "hash": "993d6d7952635fe780d89571b7e6b9e548f7b788d874cf39018aeb504c80272d"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -4066,7 +4066,7 @@
         "blocks/display/ClickableHtml.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "79c704011c4f5fbce7331c706d9fa0277856d188484f6efa9ebba6402e1c5fbf"
+      "hash": "541873f429cdf816930ef43ade1cffb7e9e92d0d23849301cb6a943b2665ae59"
     },
     "display-blocks/dangeroushtml": {
       "files": [

@@ -121,6 +121,8 @@ const VALID_STEPS = [
   { expect: { visible: { blockId: 'invoices', rowKey: 'inv-0042' } } },
   { expect: { visible: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } } },
   { expect: { hidden: { blockId: 'invoices', rowKey: 'inv-0042' } } },
+  { expect: { visible: { blockId: 'issue_cards', control: 'onOpen', rowKey: 'issue-17' } } },
+  { expect: { hidden: { blockId: 'delete_modal', control: 'ok' } } },
   { expect: { text: { blockId: 'invoices', rowKey: 'inv-0042', contains: 'Paid' } } },
   ...Object.values(JOURNEY_STEP_EXAMPLES).flat(),
 ];
@@ -143,8 +145,6 @@ const INVALID_STEPS = [
   { select: { blockId: 'actions', control: 'status', value: 'Open' } },
   { open: { blockId: 'invoices', rowKey: 'inv-0042' } },
   { open: { blockId: 'actions_menu', control: 'archive' } },
-  { expect: { visible: { blockId: 'delete_modal', control: 'ok' } } },
-  { expect: { hidden: { blockId: 'actions_menu', control: 'archive' } } },
   { expect: { text: { blockId: 'actions_menu', control: 'archive', contains: 'Archive' } } },
   { expect: { visible: { rowKey: 'inv-0042' } } },
   { expect: { sunk: { requestId: '' } } },

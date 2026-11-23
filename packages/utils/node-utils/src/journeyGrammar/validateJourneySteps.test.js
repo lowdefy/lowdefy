@@ -1049,7 +1049,7 @@ test.each([
 const ROW_KEY_REFUSAL =
   'a row named by key is clicked or expected; reach an input in a grid row with "row" (the displayed row) and "column"';
 const CONTROL_REFUSAL =
-  'a control named by key is clicked; reach it with "text" (its exact text) instead, after a click or an open that shows it';
+  'a control named by key is clicked, or expected visible or hidden; reach it with "text" (its exact text) instead, after a click or an open that shows it';
 
 test.each([
   [{ fill: { blockId: 'invoices', rowKey: 'inv-0042', value: 'Ada' } }, 'fill', 'rowKey'],
@@ -1064,12 +1064,6 @@ test.each([
   [{ open: { blockId: 'invoices', rowKey: 'inv-0042' } }, 'open', 'rowKey'],
   [{ open: { blockId: 'actions_menu', control: 'archive' } }, 'open', 'control'],
   [
-    { expect: { visible: { blockId: 'delete_modal', control: 'ok' } } },
-    'expect.visible',
-    'control',
-  ],
-  [{ expect: { hidden: { blockId: 'actions_menu', control: 'x' } } }, 'expect.hidden', 'control'],
-  [
     { expect: { text: { blockId: 'actions_menu', control: 'x', contains: 'Archive' } } },
     'expect.text',
     'control',
@@ -1079,6 +1073,18 @@ test.each([
   expect(validateJourneySteps({ steps: [step] }).error).toContain(
     `Step 0: Step "${key}" takes no "${refused}": ${reason}.`
   );
+});
+
+test('validateJourneySteps takes control, with or without rowKey, on expect.visible and expect.hidden', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { visible: { blockId: 'delete_modal', control: 'ok' } } },
+        { expect: { visible: { blockId: 'issue_cards', control: 'onOpen', rowKey: 'issue-17' } } },
+        { expect: { hidden: { blockId: 'issue_cards', control: 'onOpen', rowKey: 'issue-17' } } },
+      ],
+    }).error
+  ).toBeUndefined();
 });
 
 test('validateJourneySteps leaves refused target keys out of the keys it lists', () => {

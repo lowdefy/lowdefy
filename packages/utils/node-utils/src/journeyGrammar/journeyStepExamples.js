@@ -22,6 +22,7 @@ const JOURNEY_STEP_EXAMPLES = {
     { click: 'save_button' },
     { click: { blockId: 'delete_modal', control: 'ok' } },
     { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } },
+    { click: { blockId: 'issue_cards', control: 'onOpenIssue', rowKey: 'issue-17' } },
     { click: { text: 'OK' } },
   ],
   open: [{ open: 'status_selector' }],
@@ -74,6 +75,7 @@ const JOURNEY_STEP_EXAMPLES = {
   'expect.hidden': [
     { expect: { hidden: 'error_alert' } },
     { expect: { hidden: { blockId: 'invoices', rowKey: 'inv-0042' } } },
+    { expect: { hidden: { blockId: 'issue_cards', control: 'onOpenIssue', rowKey: 'issue-17' } } },
   ],
   'expect.text': [{ expect: { text: { blockId: 'title', contains: 'Orders' } } }],
   'expect.url': [{ expect: { url: { contains: '/orders' } } }],

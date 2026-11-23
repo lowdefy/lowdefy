@@ -18,8 +18,10 @@ import { type } from '@lowdefy/helpers';
 
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import collectBlockParents from './collectBlockParents.js';
+import collectMountOrder from './collectMountOrder.js';
 import readStandInState from './readStandInState.js';
 import leaveMethodsToBrowser from './standIns/leaveMethodsToBrowser.js';
+import registerHeadlessMethods from './standIns/registerHeadlessMethods.js';
 
 const LIST_METHODS = ['moveItemDown', 'moveItemUp', 'pushItem', 'removeItem', 'unshiftItem'];
 
@@ -28,12 +30,21 @@ const LIST_METHODS = ['moveItemDown', 'moveItemUp', 'pushItem', 'removeItem', 'u
 // Drawer's setOpen and toggleOpen, a ConfirmModal's open; BLOCK_STAND_INS), and a list block's
 // item methods are its own engine methods, as the List component registers them. A method a
 // stand-in block's stand-in does not register fails CallMethod, which names the block and the
-// method. A block whose type has no stand-in leaves every other method to the browser
-// (leaveMethodsToBrowser): its component, which registers them, is not loaded. Run again after
-// the page changes, since list rows add blocks.
+// method. A block whose type has no stand-in registers the methods its meta declares for a
+// headless run (meta.headlessMethods: { [method]: the event it fires }; registerHeadlessMethods)
+// once the browser would render it, as its component registers them as it renders: not while it
+// is hidden, or inside a hidden block or a closed Modal (collectMountOrder). Every other method,
+// and a declared one before then, is left to the browser (leaveMethodsToBrowser): its component,
+// which registers them, is not loaded. Run again after the page changes, since list rows add
+// blocks and a block may show.
 function registerBlockStandIns({ actor }) {
-  const { context } = actor.page;
+  const { context, openBlocks } = actor.page;
   const { blockMetas } = context._internal.lowdefy._internal;
+  const rendered = new Set(
+    collectMountOrder({ openBlocks, slots: context._internal.RootSlots }).filter(
+      (block) => block.eval?.visible !== false
+    )
+  );
   collectBlockParents({ context }).blocks.forEach((block) => {
     const standIn = BLOCK_STAND_INS[block.type];
     if (!type.isUndefined(standIn)) {
@@ -42,6 +53,9 @@ function registerBlockStandIns({ actor }) {
     }
     if (blockMetas[block.type]?.category === 'list') {
       LIST_METHODS.forEach((method) => block.registerMethod(method, block[method]));
+    }
+    if (rendered.has(block)) {
+      registerHeadlessMethods({ block, headlessMethods: blockMetas[block.type]?.headlessMethods });
     }
     leaveMethodsToBrowser({ actor, block });
   });

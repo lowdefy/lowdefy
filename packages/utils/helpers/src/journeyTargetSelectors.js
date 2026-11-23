@@ -126,6 +126,11 @@ function controlSelector({ blockId, control, rowKey }) {
   )}]${rowPart}`;
 }
 
+// A ClickableHtml element names a journey control by the event it fires (data-event), and the
+// row it stands for by this attribute: `{ blockId, control: onOpen, rowKey: '42' }` names
+// `<div data-event="onOpen" data-id="42">`. Its value is also the event's `id`.
+const dataEventKeyAttribute = 'data-id';
+
 // The DOM attributes that mark one control: spread them onto the element (or a menu item, which
 // antd passes to its <li>). A control drawn with no block id (a component used outside a block)
 // carries no marks, and a row key is written only in a grid row.
@@ -153,6 +158,7 @@ const journeyTargetSelectors = {
   controlAttributes,
   controlMarks,
   controlSelector,
+  dataEventKeyAttribute,
   // The elements that open a dropdown: antd's Dropdown trigger and a Table cell menu's button.
   dropdownTrigger: '.ant-dropdown-trigger, .lf-table-menu-trigger',
   // The options of a dropdown, the elements a `select` step clicks.

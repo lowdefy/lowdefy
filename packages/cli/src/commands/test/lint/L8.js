@@ -48,51 +48,115 @@ function isReplaceable(target) {
   );
 }
 
+// The keys of a target that read the page, as the message names them.
+function pageKeys(target) {
+  return [...PAGE_KEYS, 'row'].filter((key) => Object.hasOwn(target, key));
+}
+
+// The control a click that reads the page landed on in the journey's measured browser run: the
+// clicked element carried its control marks (a ClickableHtml element by its data-event and
+// data-id, a grid cell's button, a modal's ok), which the browser runner records
+// (exercised.controls), else null. The measured run is of this journey as written (readExercised
+// checks its hash), so its step indexes are this journey's.
+function readRecordedControl({ exercisedEntry, index, step }) {
+  const target = readTarget(step);
+  if (getStepKey(step) !== 'click' || !type.isObject(target) || pageKeys(target).length === 0) {
+    return null;
+  }
+  const controls = exercisedEntry?.exercised?.controls ?? [];
+  const control = controls.find((recorded) => recorded.stepIndex === index);
+  if (type.isUndefined(control)) {
+    return null;
+  }
+  const controlTarget = { blockId: control.blockId, control: control.control };
+  if (!type.isNone(control.rowKey)) {
+    controlTarget.rowKey = control.rowKey;
+  }
+  return controlTarget;
+}
+
+function keepTarget([targetKey]) {
+  return !PAGE_KEYS.includes(targetKey);
+}
+
 function replaceTarget(step) {
   const key = getStepKey(step);
-  const keep = ([targetKey]) => !PAGE_KEYS.includes(targetKey);
   if (key === 'expect') {
     const expectation = getStepKey(step.expect);
     return {
       expect: {
-        [expectation]: Object.fromEntries(Object.entries(step.expect[expectation]).filter(keep)),
+        [expectation]: Object.fromEntries(
+          Object.entries(step.expect[expectation]).filter(keepTarget)
+        ),
       },
     };
   }
-  return { [key]: Object.fromEntries(Object.entries(step[key]).filter(keep)) };
+  return { [key]: Object.fromEntries(Object.entries(step[key]).filter(keepTarget)) };
+}
+
+// What L8 would write in place of a step: the recorded control when its measured run clicked
+// one, else the blockId alone when that names the same control, else nothing.
+function findReplacement({ exercisedEntry, index, step }) {
+  const control = readRecordedControl({ exercisedEntry, index, step });
+  if (control !== null) {
+    const count = type.isUndefined(step.click.count) ? {} : { count: step.click.count };
+    return { kind: 'control', target: control, step: { click: { ...control, ...count } } };
+  }
+  if (isReplaceable(readTarget(step))) {
+    return { kind: 'block', step: replaceTarget(step) };
+  }
+  return null;
+}
+
+function formatTarget(target) {
+  return `{ ${Object.entries(target)
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(', ')} }`;
+}
+
+function describeProblem({ replacement, step, index }) {
+  const target = readTarget(step);
+  const keys = pageKeys(target).join(' and ');
+  const names = type.isString(target.blockId) ? ` names block "${target.blockId}" and` : '';
+  if (replacement.kind === 'control') {
+    return `${describeStep({ step, index })}${names} reads the page for its ${keys}: target ${formatTarget(
+      replacement.target
+    )}, the control its measured run clicked, and the journey runs headless.`;
+  }
+  return `${describeStep({ step, index })}${names} reads the page for its ${keys}: target { blockId: ${
+    target.blockId
+  } } alone and the journey runs headless.`;
 }
 
 // L8: a journey that runs only in the browser, and only because some of its targets read the page
-// (text, containing or nth) on a block they already name by blockId, could run headless, the fast
-// level, if those targets named the block alone. Each such step is reported with the blockId to
-// use. A check of what the person sees (expect: { text }) is never reported: under
+// (text, containing, nth or row), could run headless, the fast level, if those targets named
+// their control by key. Each such step is reported with the target to use: the control its
+// measured browser run clicked (a ClickableHtml element's { blockId, control, rowKey }), else the
+// blockId alone where the target already names its block and no grid row or cell. A check of
+// what the person sees (expect: { text }) is never reported: under
 // write-journeys-assert-the-store a write journey proves its write with expect: { db }, and a text
 // check is the optional browser check of what the page shows, the journey's to keep.
-function L8({ journey }) {
+function L8({ journey, exercisedEntry }) {
   if (classifyJourney({ journey }).headless) {
     return [];
   }
-  const replaced = journey.steps.map((step) =>
-    isReplaceable(readTarget(step)) ? replaceTarget(step) : step
+  const replacements = journey.steps.map((step, index) =>
+    findReplacement({ exercisedEntry, index, step })
   );
+  const replaced = journey.steps.map((step, index) => replacements[index]?.step ?? step);
   if (!classifyJourney({ journey: { ...journey, steps: replaced } }).headless) {
     return [];
   }
   return journey.steps.flatMap((step, index) => {
-    const target = readTarget(step);
-    if (!isReplaceable(target)) {
+    const replacement = replacements[index];
+    if (replacement === null) {
       return [];
     }
-    const keys = PAGE_KEYS.filter((key) => Object.hasOwn(target, key)).join(' and ');
     return [
       {
         severity: 'warning',
         stepIndex: index,
-        message: `${describeStep({ step, index })} names block "${
-          target.blockId
-        }" and reads the page for its ${keys}: target { blockId: ${
-          target.blockId
-        } } alone and the journey runs headless.`,
+        message: describeProblem({ replacement, step, index }),
       },
     ];
   });

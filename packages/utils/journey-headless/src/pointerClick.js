@@ -31,7 +31,7 @@ import readStandInState from './readStandInState.js';
 async function pointerClick({ actor, block, click }) {
   const trigger = findContentTrigger({ actor, block });
   const state = trigger === null ? null : readStandInState({ actor, block: trigger });
-  leaveDropdowns({ actor, except: trigger, targetBlock: block });
+  await leaveDropdowns({ actor, except: trigger, targetBlock: block });
   await click?.();
   if (trigger === null || actor.page.standIns.get(trigger.id)?.state !== state) {
     return;

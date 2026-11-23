@@ -339,3 +339,62 @@ test('an open popover closes when the new HTML no longer has its trigger', () =>
   );
   expect(screen.queryByTestId('overlay-popover')).toBeNull();
 });
+
+test('HtmlComponent marks the listed data-event elements of a block as its journey controls, in its popover too', () => {
+  const onDataEvent = vi.fn();
+  const { container } = render(
+    <HtmlComponent
+      blockId="issues"
+      dataEvents={['onOpen', 'onArchive']}
+      html='<div data-event="onOpen" data-id="issue-1">Issue</div><span data-event="onOpen">All</span><span data-event="onUnlisted" data-id="x">No</span><span data-popover="menu">Actions</span><div data-popover-content="menu" hidden><p data-event="onArchive" data-id="7">Archive</p></div>'
+      onDataEvent={onDataEvent}
+    />
+  );
+  const card = container.querySelector('[data-id="issue-1"]');
+  expect(card.getAttribute('data-lf-block')).toBe('issues');
+  expect(card.getAttribute('data-lf-control')).toBe('onOpen');
+  expect(card.getAttribute('data-lf-row-key')).toBe('issue-1');
+  const all = container.querySelector('span[data-event="onOpen"]');
+  expect(all.getAttribute('data-lf-control')).toBe('onOpen');
+  expect(all.hasAttribute('data-lf-row-key')).toBe(false);
+  expect(container.querySelector('[data-event="onUnlisted"]').hasAttribute('data-lf-block')).toBe(
+    false
+  );
+  fireEvent.click(container.querySelector('[data-popover]'));
+  const archive = screen.getByTestId('overlay-popover').querySelector('[data-event="onArchive"]');
+  expect(archive.getAttribute('data-lf-block')).toBe('issues');
+  expect(archive.getAttribute('data-lf-row-key')).toBe('7');
+  // The marks are the runner's, not the event's data.
+  fireEvent.click(card);
+  expect(onDataEvent).toHaveBeenCalledWith({ name: 'onOpen', event: { id: 'issue-1' } });
+});
+
+test('HtmlComponent writes no journey control marks without a blockId', () => {
+  const { container } = render(
+    <HtmlComponent
+      dataEvents={['onOpen']}
+      html='<div data-event="onOpen">Open</div>'
+      onDataEvent={vi.fn()}
+    />
+  );
+  expect(container.querySelector('[data-event]').hasAttribute('data-lf-block')).toBe(false);
+});
+
+test('HtmlComponent passes its blockId to the confirm overlay it opens', () => {
+  const overlays = [];
+  function RecordingOverlay(props) {
+    overlays.push(props);
+    return null;
+  }
+  registerHtmlEnhancements({ HtmlOverlay: RecordingOverlay, Icon, icons });
+  const { container } = render(
+    <HtmlComponent
+      blockId="issues"
+      dataEvents={[{ name: 'onDelete', confirm: 'Delete?' }]}
+      html='<button data-event="onDelete" data-id="3">Delete</button>'
+      onDataEvent={vi.fn()}
+    />
+  );
+  fireEvent.click(container.querySelector('button'));
+  expect(overlays.at(-1)).toMatchObject({ blockId: 'issues', kind: 'confirm' });
+});

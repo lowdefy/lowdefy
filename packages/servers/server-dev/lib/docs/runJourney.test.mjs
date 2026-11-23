@@ -131,6 +131,8 @@ function createLocator({ selector, page }) {
       page.evaluatedAll.push(selector);
       return fn(page.elementsFor(selector), arg);
     }),
+    // The fake page draws no elements, so a clicked element carries no control marks.
+    evaluate: vi.fn(async () => null),
     allInnerTexts: vi.fn(async () => [page.texts[selector] ?? '']),
     page: vi.fn(() => page),
   };
@@ -2384,6 +2386,7 @@ test('runJourney reports the exercised network path merged across actors, with n
     unfollowed: 0,
     events: [],
     rendered: {},
+    controls: [],
   });
 });
 

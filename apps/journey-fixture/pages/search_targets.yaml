@@ -1,0 +1,176 @@
+id: search_targets
+type: Box
+# Searching selectors a journey fills, for the parity journeys in
+# tests/journeys/_parity/search_selectors.yaml
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1136). A fill types
+# into a selector's search box, so the block fires onSearch { value } and keeps its value. Each runs
+# in the browser and headless and must end with the same state `log`: onSearch appends its event,
+# onChange the block's value. company_picker loads its options from its onSearch, after a 300 ms
+# debounce, as a page that searches a server list does; region_tree and region_trees are the tree
+# selectors; note_input takes the focus from a picker; locked_picker has search off; shade_radio is
+# picked with one click on its option.
+blocks:
+  - id: search_targets_title
+    type: Title
+    properties:
+      content: Search targets
+      level: 2
+  - id: company_picker
+    type: Selector
+    properties:
+      title: Company
+      options:
+        _if_none:
+          - _state: company_options
+          - []
+    events:
+      onSearch:
+        debounce:
+          ms: 300
+        try:
+          - id: log_company_search
+            type: SetState
+            params:
+              log:
+                _array.concat:
+                  - _if_none: [{ _state: log }, []]
+                  - - event: company_picker.onSearch
+                      payload: { _event: true }
+          - id: search_companies
+            type: CallAPI
+            params:
+              endpointId: search_companies
+              payload:
+                search:
+                  _event: value
+          - id: set_company_options
+            type: SetState
+            params:
+              company_options:
+                _actions: search_companies.response.response.companies
+      onChange:
+        - id: log_company_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: company_picker.onChange
+                    value: { _state: company_picker }
+  - id: tag_picker
+    type: MultipleSelector
+    properties:
+      title: Tags
+      options:
+        - Green
+        - Grey
+        - Red
+    events:
+      onSearch:
+        - id: log_tag_search
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: tag_picker.onSearch
+                    payload: { _event: true }
+      onChange:
+        - id: log_tag_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: tag_picker.onChange
+                    value: { _state: tag_picker }
+  - id: region_tree
+    type: TreeSelector
+    properties:
+      title: region_tree
+      options:
+        - label: North
+          value: north
+        - label: South
+          value: south
+    events:
+      onSearch:
+        - id: log_region_tree_search
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: region_tree.onSearch
+                    payload: { _event: true }
+  - id: region_trees
+    type: TreeMultipleSelector
+    properties:
+      title: region_trees
+      options:
+        - label: North
+          value: north
+        - label: South
+          value: south
+    events:
+      onSearch:
+        - id: log_region_trees_search
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: region_trees.onSearch
+                    payload: { _event: true }
+  - id: note_input
+    type: TextInput
+    properties:
+      title: Note
+  - id: locked_picker
+    type: Selector
+    properties:
+      title: Locked
+      showSearch: false
+      options:
+        - North
+        - South
+    events:
+      onChange:
+        - id: log_locked_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: locked_picker.onChange
+                    payload: { _event: true }
+  - id: shade_radio
+    type: RadioSelector
+    properties:
+      title: Shade
+      options:
+        - Light
+        - Dark
+    events:
+      onChange:
+        - id: log_shade_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: shade_radio.onChange
+                    payload: { _event: true }
+  - id: done_button
+    type: Button
+    properties:
+      title: Done
+    events:
+      onClick:
+        - id: log_done
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: done_button.onClick

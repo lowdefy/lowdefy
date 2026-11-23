@@ -18,11 +18,14 @@ import { getStepKey } from '@lowdefy/node-utils';
 import { type } from '@lowdefy/helpers';
 
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
+import blurInputs from './blurInputs.js';
 import checkHeadlessPressRails from './checkHeadlessPressRails.js';
 import checkHeadlessRails from './checkHeadlessRails.js';
 import checkFillTarget from './checkFillTarget.js';
 import fillColorSelector from './fillColorSelector.js';
 import findContentTrigger from './findContentTrigger.js';
+import findTextWritingLabel from './findTextWritingLabel.js';
+import INLINE_OPTION_TYPES from './INLINE_OPTION_TYPES.js';
 import leaveDropdowns from './leaveDropdowns.js';
 import pointerClick from './pointerClick.js';
 import readStandInState from './readStandInState.js';
@@ -30,6 +33,7 @@ import runHeadlessCall from './runHeadlessCall.js';
 import runHeadlessExpect from './runHeadlessExpect.js';
 import runHeadlessWebhook from './runHeadlessWebhook.js';
 import standInMissing from './standInMissing.js';
+import waitForNextTask from './waitForNextTask.js';
 import waitForRequestCall from './waitForRequestCall.js';
 import waitForShownBlock from './waitForShownBlock.js';
 
@@ -55,7 +59,7 @@ async function runStandIn({ actor, block, part, what, ...args }) {
     actor.browserOnly.push(standInMissing({ block, what }));
     return;
   }
-  leaveDropdowns({ actor, except: block, targetBlock: block });
+  await leaveDropdowns({ actor, except: block, targetBlock: block });
   await standIn[part]({ actor, block, state: readStandInState({ actor, block }), ...args });
   await actor.settle();
 }
@@ -111,16 +115,14 @@ async function runBlockClick({ actor, rails, step, stepTimeout }) {
   return true;
 }
 
-// expect.visible or expect.hidden on a grid row by key goes to the grid's stand-in. A block that
-// is not on the page has no rows: the check reads it as runHeadlessExpect does. Resolves true when
-// the check is done.
-async function runRowExpect({ actor, step, stepTimeout }) {
+// expect.visible or expect.hidden on a grid row by key, or on a control a block draws (a
+// ClickableHtml element), goes to the block's stand-in. A block that is not on the page has no
+// rows or controls: the check reads it as runHeadlessExpect does. Resolves true when the check is
+// done.
+async function runStandInExpect({ actor, step, stepTimeout }) {
   const kind = getStepKey(step.expect);
   const target = step.expect[kind];
-  if (!['visible', 'hidden'].includes(kind) || !type.isObject(target)) {
-    return false;
-  }
-  if (!Object.hasOwn(target, 'rowKey')) {
+  if (!['visible', 'hidden'].includes(kind) || !isStandInTarget(target)) {
     return false;
   }
   const block = actor.page?.context._internal.RootSlots.map[target.blockId];
@@ -129,7 +131,12 @@ async function runRowExpect({ actor, step, stepTimeout }) {
   }
   const standIn = BLOCK_STAND_INS[block.type];
   if (!type.isFunction(standIn?.expect)) {
-    actor.browserOnly.push(standInMissing({ block, what: `expect.${kind} on a rowKey` }));
+    actor.browserOnly.push(
+      standInMissing({
+        block,
+        what: `expect.${kind} on a ${Object.hasOwn(target, 'control') ? 'control' : 'rowKey'}`,
+      })
+    );
     return true;
   }
   await standIn.expect({
@@ -152,16 +159,19 @@ async function runRowExpect({ actor, step, stepTimeout }) {
 // checks the engine, the answer or the data (runHeadlessExpect). Resolves the answer of a call,
 // request or webhook, and undefined for any other step.
 //
-// Before a block step acts, its block must be shown, as the browser waits for a visible target.
-// A click on a rowKey or control target, an open, a plain click a component answers itself (a
-// dropdown's trigger) and expect.visible or hidden on a rowKey go to the block's stand-in
-// (BLOCK_STAND_INS); a block with no stand-in for the step marks the journey browser-only
+// Before a block step acts, its block must be shown, as the browser waits for a visible target. A
+// click on a rowKey or control target, an open, a plain click a component answers itself (a
+// dropdown's trigger) and expect.visible or hidden on a rowKey or control go to the block's
+// stand-in (BLOCK_STAND_INS); a block with no stand-in for the step marks the journey browser-only
 // (actor.browserOnly), naming the block and its type, as a click on a block with no onClick of its
 // own does, which in a browser lands on a control inside it. A click, open or select first closes
-// any other open dropdown (leaveDropdowns). A fill is refused where the browser's would be
-// (checkFillTarget); a ColorSelector's fill clicks its picker first, as the browser's does
-// (fillColorSelector). wait.request waits for a call made since the last interaction: `since` is
-// the actor's call count when that window opened.
+// any other open dropdown (leaveDropdowns), and a fill the browser would not refuse blurs the input
+// that had the focus (blurInputs). A fill or select on a block whose stand-in has a part for it
+// goes to the stand-in (a searching selector's fill types into its search box); an Enter after such
+// a fill, which the stand-in has no press for, needs the browser. Any other fill is refused where
+// the browser's would be (checkFillTarget); a ColorSelector's fill clicks its picker first, as the
+// browser's does (fillColorSelector). wait.request waits for a call made since the last
+// interaction: `since` is the actor's call count when that window opened.
 //
 // On a data-set journey (rails: the run's createDataSetRails, else null), a click, open, fill,
 // select or press is checked against the rails on the block it acts on before it acts, as the
@@ -183,7 +193,21 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
   if (key === 'fill') {
     const block = await waitForShownBlock({ actor, target: step.fill, timeout: stepTimeout });
     checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'fill' });
+    const standIn = BLOCK_STAND_INS[block.type];
+    if (type.isFunction(standIn?.fill)) {
+      standIn.checkFill({ block });
+      await blurInputs({ actor, except: block });
+      await standIn.fill({
+        actor,
+        block,
+        state: readStandInState({ actor, block }),
+        value: step.fill.value,
+      });
+      await actor.settle();
+      return undefined;
+    }
     checkFillTarget({ block, value: step.fill.value });
+    await blurInputs({ actor, except: block });
     if (block.type === 'ColorSelector') {
       await fillColorSelector({ actor, block, step });
       return undefined;
@@ -192,7 +216,24 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
   if (key === 'select') {
     const block = await waitForShownBlock({ actor, target: step.select, timeout: stepTimeout });
     checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'select' });
-    leaveDropdowns({ actor, targetBlock: block });
+    const textWritten = await findTextWritingLabel({ actor, block });
+    if (textWritten !== null) {
+      actor.browserOnly.push(textWritten);
+      return undefined;
+    }
+    await leaveDropdowns({ actor, except: block, targetBlock: block });
+    // A browser's select on a dropdown clicks the block open before it picks the option, so a
+    // selector that click closed clears its search (a task later) before the pick's onChange. An
+    // inline option is one click, whose onChange starts first, as after any other click.
+    if (!INLINE_OPTION_TYPES.has(block.type)) {
+      await waitForNextTask();
+    }
+    const standIn = BLOCK_STAND_INS[block.type];
+    if (type.isFunction(standIn?.select)) {
+      await standIn.select({ actor, block, state: readStandInState({ actor, block }), step });
+      await actor.settle();
+      return undefined;
+    }
   }
   // A press is Enter in the input the step runner filled last (classifyJourney leaves every other
   // press to the browser). It is checked as the browser checks a press (checkHeadlessPressRails).
@@ -202,6 +243,11 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
     const focused = actor.page.context._internal.RootSlots.map[actor.stepRunner.lastInputBlockId()];
     if (!type.isNone(focused)) {
       checkHeadlessPressRails({ actor, focused, key: step.press, rails });
+      const standIn = BLOCK_STAND_INS[focused.type];
+      if (type.isFunction(standIn?.fill) && !type.isFunction(standIn.press)) {
+        actor.browserOnly.push(standInMissing({ block: focused, what: 'press "Enter"' }));
+        return undefined;
+      }
     }
   }
   if (key === 'wait' && type.isString(step.wait.request)) {
@@ -232,7 +278,7 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
       await actors.current().settle();
       return;
     case 'expect':
-      if (await runRowExpect({ actor, step, stepTimeout })) {
+      if (await runStandInExpect({ actor, step, stepTimeout })) {
         return;
       }
       await runHeadlessExpect({ actor, answer, host, step, timeout: stepTimeout });

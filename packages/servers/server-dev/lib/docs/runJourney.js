@@ -379,6 +379,7 @@ async function runJourneyInBrowser({
       observed: journey.actors.observed(),
       readConfigFile,
       requestSchemas: await readConfigFile('plugins/requestSchemas.json'),
+      steps: results,
     });
     const result = {
       pageId: pageId ?? null,

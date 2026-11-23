@@ -77,6 +77,7 @@ auth:
       - log_payload
       - caught_operator
       - rethrown_operator
+      - search_companies
     roles:
       auditor:
         - auditor_only
@@ -106,6 +107,7 @@ api:
   - _ref: api/log_payload.yaml
   - _ref: api/caught_operator.yaml
   - _ref: api/rethrown_operator.yaml
+  - _ref: api/search_companies.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -131,6 +133,9 @@ pages:
   - _ref: pages/containing_split.yaml
   - _ref: pages/controls.yaml
   - _ref: pages/popup_parity.yaml
+  - _ref: pages/clickable_targets.yaml
+  - _ref: pages/search_targets.yaml
+  - _ref: pages/input_events.yaml
   - _ref: pages/popup_targets.yaml
   - _ref: pages/grid_targets.yaml
   - _ref: pages/caught_faults.yaml

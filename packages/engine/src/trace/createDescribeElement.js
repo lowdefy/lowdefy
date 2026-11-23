@@ -26,6 +26,7 @@ import isElementVisible from './isElementVisible.js';
 const {
   blockWrapperPrefix,
   controlAttributes,
+  controlSelector,
   dropdownOption,
   gridPartSelector,
   gridRules,
@@ -93,28 +94,49 @@ function rowKeyOf({ row, root }) {
   return rowKey === '' || !namesOneRow({ root, rowKey }) ? null : rowKey;
 }
 
+// Whether the DOM itself hides an element: it or an ancestor carries `hidden` or an inline
+// `display: none` or `visibility: hidden` (a closed modal, a ClickableHtml popover's content
+// waiting in the html). resolveTargetInDocument skips such a control, which matters where there
+// is no layout (jsdom); a browser's layout tells it too (isElementVisible).
+function isHiddenInDom(element) {
+  for (let current = element; current !== null; current = current.parentElement) {
+    if (current.hidden) return true;
+    const { style } = current;
+    if (style && (style.display === 'none' || style.visibility === 'hidden')) return true;
+  }
+  return false;
+}
+
 const markedControlSelector = `[${controlAttributes.blockId}]:not([${controlAttributes.blockId}=""])[${controlAttributes.control}]:not([${controlAttributes.control}=""])`;
 
 // The innermost marked control the element sits in, as the block and key it is marked with, else
 // null. A cell control whose row key names no single journey row of its block (generated, a
 // pinned row's, or carried by several rows) is no control target: its key repeats from row to row
 // and nothing tells its row apart, so the click describes by its row and text instead. The row is
-// looked up in the block, since a cell's menu draws its items in a popup outside the row.
+// looked up in the block, since a cell's menu draws its items in a popup outside the row. Nor is
+// a control whose marks another visible element carries, in its cell when it sits in one (two
+// ClickableHtml elements with one data-event and no data-id, or the same data-id): the runner
+// refuses several matches.
 function findMarkedControl(element) {
   const node = element.closest(markedControlSelector);
   if (node === null) return null;
+  const { ownerDocument } = element;
   const blockId = node.getAttribute(controlAttributes.blockId);
+  const control = node.getAttribute(controlAttributes.control);
   const rowKey = node.getAttribute(controlAttributes.rowKey);
   if (rowKey !== null && rowKey !== '') {
-    const { ownerDocument } = element;
     const root = ownerDocument.getElementById(`${blockWrapperPrefix}${blockId}`) ?? ownerDocument;
     if (!namesOneRow({ root, rowKey })) return null;
   }
-  return {
-    blockId,
-    control: node.getAttribute(controlAttributes.control),
-    rowKey: rowKey === '' ? null : rowKey,
-  };
+  const marked = { blockId, control, rowKey: rowKey === '' ? null : rowKey };
+  // A cell control is named with its column, so the runner looks in that cell alone.
+  const cell = node.closest(gridSelector({ kind: 'cell' }));
+  const root = cell ?? ownerDocument;
+  const matches = [...root.querySelectorAll(controlSelector(marked))].filter(
+    (match) => match === node || (isElementVisible(match) && !isHiddenInDom(match))
+  );
+  if (matches.length > 1) return null;
+  return marked;
 }
 
 function ancestorsOf(element) {

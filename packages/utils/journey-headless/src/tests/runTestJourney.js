@@ -44,6 +44,7 @@ const BLOCK_METAS = {
   antd_DropdownMenu: { category: 'container' },
   Box: { category: 'container' },
   Button: { category: 'display' },
+  ClickableHtml: { category: 'display' },
   ColorSelector: { category: 'input', valueType: 'string' },
   ConfirmModal: { category: 'container' },
   Drawer: { category: 'container' },
@@ -51,12 +52,18 @@ const BLOCK_METAS = {
   DropdownMenu: { category: 'container' },
   Menu: { category: 'display' },
   Modal: { category: 'container' },
+  MultipleSelector: { category: 'input', valueType: 'array' },
   Paragraph: { category: 'display' },
+  RadioSelector: { category: 'input', valueType: 'any' },
   // A block from an app's own plugin, which no headless stand-in models.
   PluginChain: { category: 'display' },
+  // A plugin block whose meta declares its run method fires onRun headless.
+  PluginRunChain: { category: 'display', headlessMethods: { run: 'onRun' } },
   Selector: { category: 'input', valueType: 'string' },
   Table: { category: 'input-container', valueType: 'object' },
   TextInput: { category: 'input', valueType: 'string' },
+  TreeMultipleSelector: { category: 'input', valueType: 'array' },
+  TreeSelector: { category: 'input', valueType: 'any' },
 };
 
 function buildEvents(events) {

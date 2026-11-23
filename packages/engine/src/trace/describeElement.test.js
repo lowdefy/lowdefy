@@ -510,3 +510,46 @@ test('describeElement keeps the key of a row AG Grid splits across pinned contai
     control: 'go',
   });
 });
+
+test('describeElement names a ClickableHtml element by its control only when no other visible element carries its marks', () => {
+  const { describeElement } = getTrace(createLowdefy());
+  document.body.innerHTML = `
+<div id="bl-list"><div id="list" data-lf-html="">
+  <span data-event="onAdd" data-lf-block="list" data-lf-control="onAdd" role="button">Add</span>
+  <span data-event="onAdd" data-lf-block="list" data-lf-control="onAdd" role="button">Add more</span>
+  <span id="one" data-event="onClear" data-lf-block="list" data-lf-control="onClear" role="button">Clear</span>
+  <div data-popover-content="more" hidden><span data-event="onClear" data-lf-block="list" data-lf-control="onClear">Clear</span></div>
+</div></div>`;
+  expect(targetFields(describeElement(select('[data-lf-control="onAdd"]')))).toEqual({
+    block_id: 'list',
+    row: null,
+    row_key: null,
+    column: null,
+    control: null,
+    text: 'Add',
+    nth: null,
+    option: false,
+  });
+  expect(targetFields(describeElement(select('#one')))).toMatchObject({
+    block_id: 'list',
+    control: 'onClear',
+    text: null,
+  });
+});
+
+test('describeElement keeps a cell control whose key another cell of its row shares, by its column', () => {
+  const { describeElement } = getTrace(createLowdefy());
+  document.body.innerHTML = `
+<div id="bl-people"><div class="lf-table">
+  <div class="lf-table-row" data-row-index="0" data-row-key="a1">
+    <div class="lf-table-gridcell" role="gridcell" data-col-key="active"><button id="first" data-lf-block="people" data-lf-control="onToggle" data-lf-row-key="a1">On</button></div>
+    <div class="lf-table-gridcell" role="gridcell" data-col-key="admin"><button data-lf-block="people" data-lf-control="onToggle" data-lf-row-key="a1">On</button></div>
+  </div>
+</div></div>`;
+  expect(targetFields(describeElement(select('#first')))).toMatchObject({
+    block_id: 'people',
+    row_key: 'a1',
+    column: 'active',
+    control: 'onToggle',
+  });
+});

@@ -42,11 +42,11 @@ function createPage() {
       meta,
       eval: { properties, visible },
       Events: { events: {} },
-      triggerEvent: async ({ name }) => {
+      triggerEvent: async ({ name, event }) => {
         const handler = handlers[name];
         if (handler === undefined) return;
         block.Events.events[name] = { loading: true };
-        await handler();
+        await handler(event);
         block.Events.events[name].loading = false;
       },
     };
@@ -64,8 +64,9 @@ function createPage() {
     blockId: 'title',
     input: true,
     handlers: {
-      onChange: async () => {
+      onChange: async (event) => {
         state.echo = state.title;
+        state.changeEvent = event;
       },
       onPressEnter: async () => {
         state.entered = true;
@@ -77,6 +78,16 @@ function createPage() {
     input: true,
     properties: {
       options: [{ label: 'Low', value: 'low' }, { label: 'High', value: 'high' }, 'none'],
+    },
+  });
+  addBlock({
+    blockId: 'space',
+    input: true,
+    properties: {
+      options: [
+        { label: '<span class="dot"></span><span>No space</span>', value: null },
+        { label: ' Sales &amp; Ops ', value: 'sales' },
+      ],
     },
   });
   addBlock({
@@ -114,7 +125,7 @@ function createPage() {
   return { context, map, state };
 }
 
-function createRunner({ capture, hostName = 'headless run' } = {}) {
+function createRunner({ capture, hostName = 'headless run', readLabelText } = {}) {
   const page = createPage();
   const lowdefy = { contexts: { 'page:form': page.context } };
   let shown = true;
@@ -124,6 +135,7 @@ function createRunner({ capture, hostName = 'headless run' } = {}) {
     getPageContext: () =>
       shown ? { context: page.context, page: { pageId: 'form' } } : { error: 'No page is open.' },
     hostName,
+    readLabelText,
     timeout: 300,
   });
   async function fail(step) {
@@ -137,7 +149,10 @@ function createRunner({ capture, hostName = 'headless run' } = {}) {
       shown = false;
     },
     lastInputBlockId: () => runner.lastInputBlockId(),
+    optionLabels: (blockId) => runner.optionLabels({ block: page.map[blockId] }),
+    readOptionTexts: (blockId) => runner.readOptionTexts({ block: page.map[blockId] }),
     run: (step) => runner.run({ step }),
+    setLastInputBlockId: (blockId) => runner.setLastInputBlockId(blockId),
   };
 }
 
@@ -174,6 +189,12 @@ test('a fill step sets the input value, then runs its onChange', async () => {
   expect(state.echo).toBe('Quarterly');
 });
 
+test("a fill step's onChange gets { value }, the event an input's view fires", async () => {
+  const { run, state } = createRunner();
+  await run({ fill: { blockId: 'title', value: 'Quarterly' } });
+  expect(state.changeEvent).toEqual({ value: 'Quarterly' });
+});
+
 test('a press Enter step runs the onPressEnter of the input filled last', async () => {
   const { run, state } = createRunner();
   await run({ fill: { blockId: 'title', value: 'Quarterly' } });
@@ -188,12 +209,65 @@ test('lastInputBlockId names the input a press acts on: none, then the one fille
   expect(lastInputBlockId()).toBe('title');
 });
 
+test('setLastInputBlockId names the input a press acts on: one a host typed into itself', async () => {
+  const { lastInputBlockId, run, setLastInputBlockId } = createRunner();
+  await run({ fill: { blockId: 'title', value: 'Quarterly' } });
+  setLastInputBlockId('search');
+  expect(lastInputBlockId()).toBe('search');
+});
+
 test('a select step matches the option label, or the value of an option without one', async () => {
   const { run, state } = createRunner();
   await run({ select: { blockId: 'priority', value: 'High' } });
   expect(state.priority).toBe('high');
   await run({ select: { blockId: 'priority', value: 'none' } });
   expect(state.priority).toBe('none');
+});
+
+test("a select step matches the text the host reads from an option's label", async () => {
+  const stripTags = ({ label }) => label.replace(/<[^>]*>/g, '').replace('&amp;', '&');
+  const { run, state } = createRunner({ readLabelText: stripTags });
+  await run({ select: { blockId: 'space', value: 'Sales & Ops' } });
+  expect(state.space).toBe('sales');
+  await run({ select: { blockId: 'space', value: 'No space' } });
+  expect(state.space).toBe(null);
+});
+
+test('a select step waits for a host that reads label text asynchronously', async () => {
+  const { run, state } = createRunner({
+    readLabelText: async ({ label }) => label.replace(/<[^>]*>/g, ''),
+  });
+  await run({ select: { blockId: 'space', value: 'No space' } });
+  expect(state.space).toBe(null);
+});
+
+test('optionLabels and readOptionTexts read the options a select matches', async () => {
+  const { optionLabels, readOptionTexts } = createRunner({
+    readLabelText: ({ label }) => label.replace(/<[^>]*>/g, ''),
+  });
+  expect(optionLabels('priority')).toEqual(['Low', 'High', 'none']);
+  expect(await readOptionTexts('space')).toEqual(['No space', 'Sales &amp; Ops']);
+});
+
+test('readLabelText is given the block whose label it reads', async () => {
+  const seen = [];
+  const { run } = createRunner({
+    readLabelText: ({ block, label }) => {
+      seen.push(block.blockId);
+      return label;
+    },
+  });
+  await run({ select: { blockId: 'priority', value: 'High' } });
+  expect(seen).toEqual(['priority', 'priority', 'priority']);
+});
+
+test('without readLabelText a label is its own text, its surrounding whitespace aside', async () => {
+  const { fail, run, state } = createRunner();
+  await run({ select: { blockId: 'space', value: 'Sales &amp; Ops' } });
+  expect(state.space).toBe('sales');
+  expect(await fail({ select: { blockId: 'space', value: 'No space' } })).toBe(
+    'Block "space" has no option "No space". Its options are ["<span class=\\"dot\\"></span><span>No space</span>","Sales &amp; Ops"].'
+  );
 });
 
 test('a select step on a block whose value is a list ticks the option and keeps the rest', async () => {

@@ -30,6 +30,10 @@ function readOptionLabel(option) {
   return String(option);
 }
 
+function readPlainText({ label }) {
+  return label;
+}
+
 function readOptionValue(option) {
   return type.isObject(option) ? option.value : option;
 }
@@ -40,15 +44,21 @@ function readOptionValue(option) {
  * as the block's own view does when it is pressed or typed in, and waits for the page to settle
  * (at most 5 s, never failing the step):
  * - `{ click: target }`: the block's onClick.
- * - `{ fill: { blockId, value } }`: sets the input's value, then its onChange.
- * - `{ select: { blockId, value } }`: the option whose label (or value) is `value`; a block whose
- *   value is a list ticks it.
+ * - `{ fill: { blockId, value } }`: sets the input's value, then its onChange with `{ value }`, as
+ *   a text, number or colour input's view fires it.
+ * - `{ select: { blockId, value } }`: the option whose label (or value) shows `value` as its text,
+ *   surrounding whitespace aside; a block whose value is a list ticks it.
  * - `{ press: 'Enter' }`: the onPressEnter of the input filled last.
  * - `{ wait: { ms } | { request } | { state } }`.
  * - `{ screenshot: name? }`: the root view as a base64 PNG, on a host that passes `capture`.
  * Resolves `{ ok: true, settled }` (and `image` for a screenshot); throws when the step cannot run.
+ * optionLabels({ block }) lists the label of each of a block's options as a string, and
+ * readOptionTexts({ block }) the text each shows, which a select matches; a host's stand-ins read
+ * options through them, so they find the option the select picks.
  * lastInputBlockId() is the input filled or selected in last, which a press acts on, or null
- * before any.
+ * before any. setLastInputBlockId(blockId) records an input a host typed into itself, so a press
+ * after it acts on that input: a headless run types into a selector's search box (journey-headless'
+ * searchSelectorStandIn) without setting the selector's value.
  *
  * @param {Object} params
  * @param {() => Promise<string>} [params.capture] Captures the root view as a base64 PNG. A host
@@ -57,9 +67,20 @@ function readOptionValue(option) {
  * @param {({ lowdefy }) => { context, page } | { error }} params.getPageContext The engine context
  *   of the page the host shows, with `page.pageId`, or an error saying why there is none.
  * @param {string} params.hostName What runs the steps, as refusals name it: "phone", "headless run".
+ * @param {({ block, label }) => string | Promise<string>} [params.readLabelText] The text an option's
+ *   label shows on the host, for the block that draws it. A web block that draws its labels as html
+ *   shows the html's text, so a headless run of a web app reads it; without the hook a label is its
+ *   own text, as a native picker draws it.
  * @param {number} [params.timeout] How long a step waits for its block or condition, in ms.
  */
-function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeout = 5000 }) {
+function createStepRunner({
+  capture,
+  getLowdefy,
+  getPageContext,
+  hostName,
+  readLabelText = readPlainText,
+  timeout = 5000,
+}) {
   if (!type.isFunction(getLowdefy)) {
     throw new Error('createStepRunner needs a getLowdefy function.');
   }
@@ -106,7 +127,7 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
   async function setInputValue({ block, lowdefy, value }) {
     block.setValue(value);
     lastInputBlockId = block.blockId;
-    block.triggerEvent({ name: 'onChange' });
+    block.triggerEvent({ name: 'onChange', event: { value } });
     return settle(lowdefy);
   }
 
@@ -118,6 +139,17 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
     return setInputValue({ block, lowdefy, value: target.value });
   }
 
+  function optionLabels({ block }) {
+    return (block.eval.properties?.options ?? []).map(readOptionLabel);
+  }
+
+  async function readOptionTexts({ block }) {
+    const texts = await Promise.all(
+      optionLabels({ block }).map((label) => readLabelText({ block, label }))
+    );
+    return texts.map((text) => text.trim());
+  }
+
   async function select({ lowdefy, target }) {
     if (!type.isObject(target) || !Object.hasOwn(target, 'value')) {
       throw new Error(
@@ -126,15 +158,16 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
     }
     const block = await findInput({ lowdefy, target });
     const options = block.eval.properties?.options ?? [];
-    const option = options.find((item) => readOptionLabel(item) === String(target.value));
-    if (option === undefined) {
+    const texts = await readOptionTexts({ block });
+    const index = texts.indexOf(String(target.value));
+    if (index === -1) {
       throw new Error(
         `Block "${block.blockId}" has no option "${target.value}". Its options are ${JSON.stringify(
-          options.map(readOptionLabel)
+          texts
         )}.`
       );
     }
-    const value = readOptionValue(option);
+    const value = readOptionValue(options[index]);
     // A block whose value is a list (a checkbox group) ticks the option and never unticks it, as
     // the browser's select does.
     if (block.meta?.valueType === 'array') {
@@ -221,7 +254,17 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
     }
   }
 
-  return { lastInputBlockId: () => lastInputBlockId, run };
+  function setLastInputBlockId(blockId) {
+    lastInputBlockId = blockId;
+  }
+
+  return {
+    lastInputBlockId: () => lastInputBlockId,
+    optionLabels,
+    readOptionTexts,
+    run,
+    setLastInputBlockId,
+  };
 }
 
 export default createStepRunner;

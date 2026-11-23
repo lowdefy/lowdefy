@@ -38,6 +38,15 @@ test('extractBlockTypes keeps the action and operator types a block registers it
   });
 });
 
+test('extractBlockTypes keeps the methods a block declares for headless journeys', () => {
+  const types = extractBlockTypes({
+    ActionChain: { category: 'display', headlessMethods: { run: 'onRun' }, properties: {} },
+  });
+  expect(types.blockMetas).toEqual({
+    ActionChain: { category: 'display', headlessMethods: { run: 'onRun' } },
+  });
+});
+
 test('extractBlockTypes lists the property paths a native meta marks nativeIgnored', () => {
   const types = extractBlockTypes({
     Card: {

@@ -260,3 +260,32 @@ test('writeBlockSchemaMap writes the schema and hazards of a default block whose
   expect(written['plugins/blockSchemas.json']).toEqual({ Html: schema });
   expect(written['plugins/blockMetas.json']).toEqual({ Html: { category: 'display', hazards } });
 });
+
+test('writeBlockSchemaMap carries a plugin block meta headlessMethods into blockMetas', async () => {
+  const components = {
+    imports: {
+      blocks: [
+        { package: 'custom-plugin', typeName: 'CustomChain', originalTypeName: 'CustomChain' },
+        { package: 'custom-plugin', typeName: 'CustomBlock', originalTypeName: 'CustomBlock' },
+      ],
+    },
+  };
+  const context = {
+    typesMap: {
+      schemas: { blocks: {} },
+      blockMetas: {
+        CustomChain: { category: 'display', headlessMethods: { run: 'onRun' } },
+        CustomBlock: { category: 'display' },
+      },
+    },
+    writeBuildArtifact: mockWriteBuildArtifact,
+  };
+  await writeBlockSchemaMap({ components, context });
+  const metasCall = mockWriteBuildArtifact.mock.calls.find(
+    (call) => call[0] === 'plugins/blockMetas.json'
+  );
+  expect(JSON.parse(metasCall[1])).toEqual({
+    CustomChain: { category: 'display', hazards: [], headlessMethods: { run: 'onRun' } },
+    CustomBlock: { category: 'display', hazards: [] },
+  });
+});

@@ -518,12 +518,32 @@ async function openDropdown({ page, target, trigger, timeout }) {
   await trigger.click({ timeout, button: opensOn === 'contextMenu' ? 'right' : 'left' });
 }
 
+// A ClickableHtml element in popover content waits hidden in the block's html until a click on
+// its data-popover trigger opens the popover. The trigger of the popover whose hidden content
+// holds the control the selector names, or null when no popover holds it.
+async function findPopoverTrigger({ page, target, selector }) {
+  // A block the page does not draw (hidden) has no wrapper, and evaluate would wait for one.
+  if ((await getBlock(page, target.blockId).count()) === 0) return null;
+  const id = await getBlock(page, target.blockId).evaluate((wrapper, controlSelector) => {
+    const content = [...wrapper.querySelectorAll('[data-popover-content]')].find(
+      (element) => element.querySelector(controlSelector) !== null
+    );
+    return content?.getAttribute('data-popover-content') ?? null;
+  }, selector);
+  if (id === null) return null;
+  return getBlock(page, target.blockId)
+    .locator(`[data-popover="${id.replace(/["\\]/g, '\\$&')}"]`)
+    .filter({ visible: true })
+    .first();
+}
+
 // The one visible control a `control` target names. When none shows it reveals the control as a
 // person would: it hovers the target's row (a Table's `showOn: hover` buttons mount only then),
 // then opens the first closed dropdown trigger in the scope (the cell, else the row, else the
-// block) and waits for its popup. Several visible matches fail with the count, as a `text` that
-// matches several controls does; none within the timeout fails naming what was tried.
-// beforeReveal (a click's step rails) runs once, before the first hover or open.
+// block) and waits for its popup, or opens the ClickableHtml popover that holds it. Several visible
+// matches fail with the count, as a `text` that matches several controls does; none within the
+// timeout fails naming what was tried. beforeReveal (a click's step rails) runs once, before the
+// first hover or open.
 async function locateControl({ page, target, timeout, beforeReveal }) {
   const deadline = Date.now() + timeout;
   const description = describeTarget(target);
@@ -534,6 +554,7 @@ async function locateControl({ page, target, timeout, beforeReveal }) {
   await waitForLoadingBlocks({ page, timeout });
   let hoveredRow = type.isUndefined(target.rowKey);
   let openedOf = 0;
+  let openedPopover = false;
   let revealChecked = type.isUndefined(beforeReveal);
   const checkBeforeReveal = async () => {
     if (!revealChecked) {
@@ -573,6 +594,23 @@ async function locateControl({ page, target, timeout, beforeReveal }) {
       await checkBeforeReveal();
       await openDropdown({ page, target, trigger: triggers.first(), timeout: remaining });
       continue;
+    }
+    if (!openedPopover) {
+      openedPopover = true;
+      const popoverTrigger = await findPopoverTrigger({
+        page,
+        target,
+        selector: controlSelector({
+          blockId: target.blockId,
+          control: target.control,
+          rowKey: target.rowKey,
+        }),
+      });
+      if (popoverTrigger !== null && (await popoverTrigger.count()) > 0) {
+        await checkBeforeReveal();
+        await popoverTrigger.click({ timeout: remaining });
+        continue;
+      }
     }
     if (Date.now() >= deadline) {
       const tried =
@@ -723,6 +761,7 @@ async function runOpen({ journey, page, step, timeout }) {
 async function runClick({ journey, page, step, timeout }) {
   const { count = 1, ...target } = normaliseTarget(step.click);
   const rails = createStepRails({ journey, page, target, step: 'click' });
+  let control = null;
   await actOnTarget({
     target,
     action: async () => {
@@ -735,10 +774,53 @@ async function runClick({ journey, page, step, timeout }) {
       const locator = await resolveClickLocator({ located, target, timeout });
       await rails.check(locator);
       await restOnHoverDropdownItem({ page, target, locator, timeout });
+      if (readsPage(target)) {
+        control = await readMarkedControl({ locator });
+      }
       await locator.click({ timeout, clickCount: count });
     },
   });
-  return { blockId: rails.blockId() };
+  return { blockId: rails.blockId(), control };
+}
+
+// Whether a click target reads the page: its text, the words shown, a pick among matches or a
+// displayed row.
+function readsPage(target) {
+  return namesMatches(target) || !type.isUndefined(target.nth) || !type.isUndefined(target.row);
+}
+
+// The control target the element a page-reading click lands on (at its centre) carries (its control
+// marks: a ClickableHtml element, a grid cell's button, a modal's ok), when it names that one
+// visible element, else null. Lint L8 reads it from the journey's measured run to suggest the
+// target.
+async function readMarkedControl({ locator }) {
+  const marked = await locator.evaluate((element, attributes) => {
+    // The click lands at the element's centre, on what is drawn there: a button inside a card.
+    const box = element.getBoundingClientRect();
+    const hit = element.ownerDocument.elementFromPoint(
+      box.left + box.width / 2,
+      box.top + box.height / 2
+    );
+    const clicked = hit !== null && element.contains(hit) ? hit : element;
+    const node = clicked.closest(`[${attributes.blockId}][${attributes.control}]`);
+    if (node === null) return null;
+    const mark = (name) => {
+      const value = node.getAttribute(attributes[name]);
+      return value === '' ? null : value;
+    };
+    const target = { blockId: mark('blockId'), control: mark('control'), rowKey: mark('rowKey') };
+    const selector = Object.entries(target)
+      .filter(([, value]) => value !== null)
+      .map(([name, value]) => `[${attributes[name]}="${value.replace(/["\\]/g, '\\$&')}"]`)
+      .join('');
+    const visible = [...element.ownerDocument.querySelectorAll(selector)].filter((match) =>
+      match.checkVisibility()
+    );
+    return visible.length === 1 ? target : null;
+  }, journeyTargetSelectors.controlAttributes);
+  if (marked === null || type.isNone(marked.blockId) || type.isNone(marked.control)) return null;
+  if (!type.isNone(marked.rowKey) && isGeneratedRowKey(marked.rowKey)) return null;
+  return marked;
 }
 
 // antd's Dropdown waits mouseEnterDelay (0.15 s; the blocks do not set it) after the pointer
@@ -1220,10 +1302,43 @@ async function expectState({ page, params, timeout }) {
   }
 }
 
+// A control target is expected as it is clicked: the one visible element marked with its block,
+// key and row key, wherever antd draws it. Several visible fail with the count, as the click
+// would.
+async function expectVisibleControl({ page, target, timeout }) {
+  const description = describeTarget(target);
+  const matches = controlMatches({ page, target });
+  try {
+    await matches.first().waitFor({ state: 'visible', timeout });
+  } catch (error) {
+    throw new JourneyStepError(`Expected ${description} to be visible.`, {
+      expected: `${description} to be visible`,
+      actual: cleanMessage(error),
+    });
+  }
+  const count = await matches.count();
+  if (count > 1) {
+    throw new JourneyStepError(
+      `Expected ${description} to be visible, and matched ${plural({
+        count,
+        word: 'visible control',
+      })}; add a rowKey to name one.`,
+      {
+        expected: `exactly one visible control for ${description}`,
+        actual: plural({ count, word: 'control' }),
+      }
+    );
+  }
+}
+
 async function expectVisible({ page, params, timeout }) {
   const target = normaliseTarget(params);
   const description = describeTarget(target);
   await refuseGeneratedRowKey({ page, target });
+  if (!type.isUndefined(target.control)) {
+    await expectVisibleControl({ page, target, timeout });
+    return;
+  }
   try {
     const located = await resolveTarget({ page, target });
     await located.waitFor({ state: 'visible', timeout });
@@ -1243,7 +1358,9 @@ async function expectHidden({ page, params, timeout }) {
   const description = describeTarget(target);
   await refuseGeneratedRowKey({ page, target });
   try {
-    const located = await resolveTarget({ page, target });
+    const located = type.isUndefined(target.control)
+      ? await resolveTarget({ page, target })
+      : controlMatches({ page, target });
     await located.filter({ visible: true }).first().waitFor({ state: 'hidden', timeout });
   } catch (error) {
     throw new JourneyStepError(`Expected ${description} to be hidden.`, {
@@ -1652,7 +1769,11 @@ async function runJourneySteps({ journey, steps }) {
         });
       }
       await journey.actors.sampleRendered();
-      results.push({ index, step, status: 'ok', durationMs: Date.now() - started });
+      const result = { index, step, status: 'ok', durationMs: Date.now() - started };
+      if (!type.isNone(ran?.control)) {
+        result.control = ran.control;
+      }
+      results.push(result);
     } catch (error) {
       failure = toFailure({ error, index, step });
       results.push({ index, step, status: 'failed', durationMs: Date.now() - started });

@@ -145,6 +145,12 @@ function createGridStandIn({ fix, readGrid }) {
   // its data and the column is shown. The step runner does not wait for the block, so the check
   // reads whether it shows, as the browser waits up to `timeout` ms.
   async function expect({ actor, block, kind, target, timeout }) {
+    if (!type.isUndefined(target.control)) {
+      actor.browserOnly.push(
+        `expect.${kind} on a control of ${describeBlock(block)}: the headless stand-in reads a grid's rows, not its cell controls, so the step runs in a browser.`
+      );
+      return;
+    }
     refuseGeneratedRowKey({ block, fix, rowKey: target.rowKey });
     const shown = kind === 'visible';
     const read = () => {
