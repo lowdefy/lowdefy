@@ -30,7 +30,8 @@ import { fixtureTest, postJourney } from './fixtureClient.mjs';
 // `log` as { event, payload }, and the check compares `log`, so a stand-in that fires a wrong
 // event, fires one in the wrong order or sends a different payload fails its journey's parity.
 // popups.yaml covers Modal, Drawer, ConfirmModal, DropdownButton, DropdownMenu and Menu on the
-// popup_targets page; grids.yaml covers AgGrid and Table on grid_targets.
+// popup_targets page; grids.yaml covers AgGrid and Table on grid_targets; clickable_html.yaml
+// covers ClickableHtml on clickable_targets.
 
 const parityDirectory = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -44,7 +45,11 @@ function readJourneys(file) {
   ]);
 }
 
-const journeys = [...readJourneys('popups.yaml'), ...readJourneys('grids.yaml')];
+const journeys = [
+  ...readJourneys('popups.yaml'),
+  ...readJourneys('grids.yaml'),
+  ...readJourneys('clickable_html.yaml'),
+];
 
 // The journeys that must fail, in both runners at the same step, with what the browser's message
 // says: the disabled button is found and refused, not missing.

@@ -1,0 +1,69 @@
+# Parity journeys for the ClickableHtml stand-in (LDF-1134), on the clickable_targets page. Each
+# runs in the browser and headless (packages/servers/server-dev/test/journeyFixture/
+# standInParity.test.mjs) and must end with the same state `log`, the events the page fired in
+# order with their event objects. In a folder starting with "_" so the suite's own runs, and
+# harden, leave it out.
+- name: a ClickableHtml element fires its event with its data-* attributes
+  pageId: clickable_targets
+  steps:
+    - click: { blockId: issue_cards, control: onOpen, rowKey: issue-2 }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: issue_cards.onOpen
+              payload:
+                id: issue-2
+                severity: high
+- name: a ClickableHtml event fires after its confirm, and the card is gone
+  pageId: clickable_targets
+  steps:
+    - click: { blockId: issue_cards, control: onDismiss, rowKey: issue-1 }
+    - expect: { visible: { blockId: issue_cards, control: ok } }
+    - click: { blockId: issue_cards, control: ok }
+    - expect: { hidden: { blockId: issue_cards, control: onOpen, rowKey: issue-1 } }
+    - expect: { visible: { blockId: issue_cards, control: onOpen, rowKey: issue-2 } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: issue_cards.onDismiss
+              payload:
+                id: issue-1
+- name: a ClickableHtml confirm's cancel fires nothing
+  pageId: clickable_targets
+  steps:
+    - click: { blockId: issue_cards, control: onDismiss, rowKey: issue-1 }
+    - click: { blockId: issue_cards, control: cancel }
+    - expect: { hidden: { blockId: issue_cards, control: cancel } }
+    - expect: { visible: { blockId: issue_cards, control: onOpen, rowKey: issue-1 } }
+    - click: { blockId: issue_cards, control: onOpen, rowKey: issue-1 }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: issue_cards.onOpen
+              payload:
+                id: issue-1
+                severity: moderate
+- name: a ClickableHtml element in a popover fires once its popover opens
+  pageId: clickable_targets
+  steps:
+    - click: { blockId: issue_cards, control: onArchive, rowKey: issue-2 }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: issue_cards.onArchive
+              payload:
+                id: issue-2
+- name: a ClickableHtml element with no data-id is named by its event alone
+  pageId: clickable_targets
+  steps:
+    - click: { blockId: issue_cards, control: onRefresh }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: issue_cards.onRefresh
+              payload: {}
