@@ -1,7 +1,9 @@
 # The page whose onMount calls a method on a block of the app's own plugin (FixtureActionChain,
-# plugins/walled-fixture), which no headless stand-in models: the cli fixture tests
-# (packages/cli/test/journeyFixture/headless.test.mjs) see `lowdefy test --headless --build` list
-# its journey (tests/journeys/_headless/plugin_block.yaml) as browser-only on open, not failed.
+# plugins/walled-fixture), which no headless stand-in models. Its meta declares that `run` fires
+# onRun, so the cli fixture tests (packages/cli/test/journeyFixture/headless.test.mjs) see
+# `lowdefy test --headless --build` pass the mount journey (tests/journeys/_headless/
+# plugin_block.yaml). The stop button calls `stop`, which the meta leaves undeclared, so that
+# journey is browser-only at its click.
 id: plugin_block
 type: Box
 events:
@@ -25,3 +27,19 @@ blocks:
           type: SetState
           params:
             chain_ran: true
+      onStop:
+        - id: mark_stopped
+          type: SetState
+          params:
+            chain_stopped: true
+  - id: stop_chain_button
+    type: Button
+    properties:
+      title: Stop chain
+    events:
+      onClick:
+        - id: stop_chain
+          type: CallMethod
+          params:
+            blockId: mount_chain
+            method: stop
