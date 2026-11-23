@@ -240,14 +240,14 @@ test('a journey whose steps need a browser is not run and names the first such s
   const result = await run({
     journey: {
       pageId: 'home',
-      steps: [{ click: 'save_button' }, { click: { text: 'Save' } }],
+      steps: [{ click: 'save_button' }, { open: { text: 'Save' } }],
     },
   });
   expect(result).toEqual({
     pageId: 'home',
     browserOnly: {
       index: 1,
-      step: { click: { text: 'Save' } },
+      step: { open: { text: 'Save' } },
       reason: 'a target by text reads the page; name the control with control on its block',
     },
     steps: [],
