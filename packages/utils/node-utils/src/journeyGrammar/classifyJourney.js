@@ -71,16 +71,27 @@ const HEADLESS_EXPECT_KEYS = [
 // pick among matches. A column in a row named by rowKey is read from the grid's data, as rowKey
 // and control are, so it is a DOM key only without rowKey.
 const DOM_TARGET_KEYS = ['text', 'containing', 'row', 'column', 'nth'];
+// Target keys a headless run reads from a ClickableHtml's html on a click, expect.visible or
+// expect.hidden (LDF-1146): a `text` or `containing` target, with the `nth` that picks among its
+// matches. Whether a ClickableHtml shows it is known only when the step runs, which then leaves
+// the step to the browser when none does.
+const HTML_TEXT_KEYS = ['text', 'containing'];
 // Steps whose target is the step's value (a string or a target object).
 const TARGET_STEP_KEYS = ['click', 'fill', 'open', 'select'];
 const TARGET_EXPECT_KEYS = ['visible', 'hidden'];
 
-function findDomTargetKey(target) {
+// The first DOM key of a target, or undefined. With `readsHtmlText` (a click, expect.visible or
+// expect.hidden) a `text` or `containing` target is no DOM key, nor the `nth` beside it.
+function findDomTargetKey({ readsHtmlText, target }) {
   if (!type.isObject(target)) {
     return undefined;
   }
+  const htmlText = readsHtmlText && HTML_TEXT_KEYS.some((key) => Object.hasOwn(target, key));
   return DOM_TARGET_KEYS.find(
-    (key) => Object.hasOwn(target, key) && !(key === 'column' && Object.hasOwn(target, 'rowKey'))
+    (key) =>
+      Object.hasOwn(target, key) &&
+      !(key === 'column' && Object.hasOwn(target, 'rowKey')) &&
+      !(htmlText && [...HTML_TEXT_KEYS, 'nth'].includes(key))
   );
 }
 
@@ -134,7 +145,7 @@ function needsBrowser({ steps, index }) {
   }
   if (TARGET_STEP_KEYS.includes(key)) {
     const target = step[key];
-    const domKey = findDomTargetKey(target);
+    const domKey = findDomTargetKey({ readsHtmlText: key === 'click', target });
     if (!type.isUndefined(domKey)) {
       return domTargetReason(domKey);
     }
@@ -154,7 +165,7 @@ function needsBrowser({ steps, index }) {
     return `expect "${expectKey}" reads the page in a browser`;
   }
   if (TARGET_EXPECT_KEYS.includes(expectKey)) {
-    const domKey = findDomTargetKey(step.expect[expectKey]);
+    const domKey = findDomTargetKey({ readsHtmlText: true, target: step.expect[expectKey] });
     if (!type.isUndefined(domKey)) {
       return domTargetReason(domKey);
     }

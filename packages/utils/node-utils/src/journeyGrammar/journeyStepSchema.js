@@ -37,11 +37,12 @@ const TARGET_PROPERTIES = {
   text: {
     type: 'string',
     description:
-      'Exact text of the interactive control to use. Without blockId it searches the whole page, which reaches confirm dialog buttons, modal footers, dropdown menu items and email links.',
+      'Exact text of the interactive control to use. Without blockId it searches the whole page, which reaches confirm dialog buttons, modal footers, dropdown menu items and email links. A click, visible or hidden by text runs headless when it lands in a ClickableHtml.',
   },
   containing: {
     ...nonEmptyString,
-    description: 'Text the element shows, e.g. the email address a list row shows.',
+    description:
+      'Text the element shows, e.g. the email address a list row shows. A click, visible or hidden by containing runs headless when it lands in a ClickableHtml.',
   },
   row: {
     ...index,
@@ -454,7 +455,7 @@ const journeyStepSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Journey step',
   description:
-    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, rowKey, column, control, nth }; fill, select and expect.text need a blockId, and so do rowKey and control. rowKey (a grid row by its key) and control (a control the block draws, by its key) run headless and in the browser; text, containing, row and nth read the page and run in the browser only. click, expect.visible and expect.hidden take rowKey and control, expect.text takes rowKey; fill, select and open take neither. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request, release or webhook step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it, with its endpoint or pageId when two holds share the id. A request takes no "as": "system". A journey with no pageId runs only call, request, hold, release, webhook, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
+    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, rowKey, column, control, nth }; fill, select and expect.text need a blockId, and so do rowKey and control. rowKey (a grid row by its key) and control (a control the block draws, by its key) run headless and in the browser; row and nth read the page and run in the browser only. A click, expect.visible or expect.hidden by text or containing (and nth beside them) runs headless when what it names is in the html of a ClickableHtml block, and in the browser otherwise. click, expect.visible and expect.hidden take rowKey and control, expect.text takes rowKey; fill, select and open take neither. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request, release or webhook step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it, with its endpoint or pageId when two holds share the id. A request takes no "as": "system". A journey with no pageId runs only call, request, hold, release, webhook, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
   oneOf: Object.values(JOURNEY_STEP_SCHEMAS),
 };
 

@@ -103,7 +103,21 @@ const DOM_TARGET_REASONS = {
 };
 
 test.each(Object.keys(DOM_TARGET_REASONS))(
-  'classifyJourney names a target by %s as needing the browser',
+  'classifyJourney names a fill target by %s as needing the browser',
+  (key) => {
+    const value = ['row', 'nth'].includes(key) ? 0 : 'x';
+    const step = { fill: { blockId: 'grid', [key]: value, value: 'a' } };
+    expect(classify([step])).toEqual({
+      headless: false,
+      index: 0,
+      step,
+      reason: DOM_TARGET_REASONS[key],
+    });
+  }
+);
+
+test.each(['row', 'column', 'nth'])(
+  'classifyJourney names a click target by %s as needing the browser',
   (key) => {
     const value = ['row', 'nth'].includes(key) ? 0 : 'x';
     const step = { click: { blockId: 'grid', [key]: value } };
@@ -115,6 +129,22 @@ test.each(Object.keys(DOM_TARGET_REASONS))(
     });
   }
 );
+
+test('classifyJourney leaves a click, visible or hidden by text or containing to the run, which reads ClickableHtml', () => {
+  const steps = [
+    { click: { text: 'Archive' } },
+    { click: { blockId: 'issue_cards', containing: 'lodash' } },
+    { click: { containing: 'Refresh', nth: 1 } },
+    { expect: { visible: { text: 'Archive' } } },
+    { expect: { hidden: { blockId: 'issue_cards', containing: 'lodash', nth: 0 } } },
+  ];
+  expect(classify(steps)).toEqual({ headless: true });
+});
+
+test('classifyJourney still names a text target with a row as needing the browser', () => {
+  const step = { click: { blockId: 'grid', row: 0, text: 'Edit' } };
+  expect(classify([step]).reason).toBe(DOM_TARGET_REASONS.row);
+});
 
 test('classifyJourney calls hold and release headless and marks the first as needing the runner in process', () => {
   const steps = [
@@ -156,19 +186,12 @@ test('classifyJourney calls a call as system and a webhook headless, and marks t
 
 test('classifyJourney keeps inProcess on a journey that also needs the browser', () => {
   expect(
-    classify([{ hold: { requestId: 'claim_run' } }, { click: { text: 'Save' } }])
+    classify([{ hold: { requestId: 'claim_run' } }, { fill: { text: 'Name', value: 'Ada' } }])
   ).toMatchObject({
     headless: false,
     index: 1,
     inProcess: { index: 0, step: { hold: { requestId: 'claim_run' } } },
   });
-});
-
-test('classifyJourney names a visible check by text as needing the browser', () => {
-  const step = { expect: { visible: { text: 'Saved' } } };
-  expect(classify([step]).reason).toBe(
-    'a target by text reads the page; name the control with control on its block'
-  );
 });
 
 test('classifyJourney calls rowKey, control and open targets headless', () => {
