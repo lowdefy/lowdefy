@@ -111,16 +111,14 @@ async function runBlockClick({ actor, rails, step, stepTimeout }) {
   return true;
 }
 
-// expect.visible or expect.hidden on a grid row by key goes to the grid's stand-in. A block that
-// is not on the page has no rows: the check reads it as runHeadlessExpect does. Resolves true when
-// the check is done.
-async function runRowExpect({ actor, step, stepTimeout }) {
+// expect.visible or expect.hidden on a grid row by key, or on a control a block draws (a
+// ClickableHtml element), goes to the block's stand-in. A block that is not on the page has no
+// rows or controls: the check reads it as runHeadlessExpect does. Resolves true when the check is
+// done.
+async function runStandInExpect({ actor, step, stepTimeout }) {
   const kind = getStepKey(step.expect);
   const target = step.expect[kind];
-  if (!['visible', 'hidden'].includes(kind) || !type.isObject(target)) {
-    return false;
-  }
-  if (!Object.hasOwn(target, 'rowKey')) {
+  if (!['visible', 'hidden'].includes(kind) || !isStandInTarget(target)) {
     return false;
   }
   const block = actor.page?.context._internal.RootSlots.map[target.blockId];
@@ -129,7 +127,12 @@ async function runRowExpect({ actor, step, stepTimeout }) {
   }
   const standIn = BLOCK_STAND_INS[block.type];
   if (!type.isFunction(standIn?.expect)) {
-    actor.browserOnly.push(standInMissing({ block, what: `expect.${kind} on a rowKey` }));
+    actor.browserOnly.push(
+      standInMissing({
+        block,
+        what: `expect.${kind} on a ${Object.hasOwn(target, 'control') ? 'control' : 'rowKey'}`,
+      })
+    );
     return true;
   }
   await standIn.expect({
@@ -154,7 +157,7 @@ async function runRowExpect({ actor, step, stepTimeout }) {
 //
 // Before a block step acts, its block must be shown, as the browser waits for a visible target.
 // A click on a rowKey or control target, an open, a plain click a component answers itself (a
-// dropdown's trigger) and expect.visible or hidden on a rowKey go to the block's stand-in
+// dropdown's trigger) and expect.visible or hidden on a rowKey or control go to the block's stand-in
 // (BLOCK_STAND_INS); a block with no stand-in for the step marks the journey browser-only
 // (actor.browserOnly), naming the block and its type, as a click on a block with no onClick of its
 // own does, which in a browser lands on a control inside it. A click, open or select first closes
@@ -232,7 +235,7 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
       await actors.current().settle();
       return;
     case 'expect':
-      if (await runRowExpect({ actor, step, stepTimeout })) {
+      if (await runStandInExpect({ actor, step, stepTimeout })) {
         return;
       }
       await runHeadlessExpect({ actor, answer, host, step, timeout: stepTimeout });

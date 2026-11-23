@@ -486,3 +486,13 @@ test('Table methods leave the journey to the browser at the call, naming the met
     expect(log).toEqual([]);
   }
 });
+
+test("Table expect on a cell control is the browser's", async () => {
+  const { result } = await runTestJourney({
+    pages: tablePage(),
+    steps: [{ expect: { visible: { blockId: 'people', rowKey: 'a1', control: 'edit' } } }],
+  });
+  expect(result.browserOnly.reason).toBe(
+    'expect.visible on a control of Table "people": the headless stand-in reads a grid\'s rows, not its cell controls, so the step runs in a browser.'
+  );
+});

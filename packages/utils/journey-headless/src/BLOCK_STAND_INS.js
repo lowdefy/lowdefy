@@ -15,6 +15,7 @@
 */
 
 import agGridStandIn from './standIns/agGridStandIn.js';
+import clickableHtmlStandIn from './standIns/clickableHtmlStandIn.js';
 import confirmModalStandIn from './standIns/confirmModalStandIn.js';
 import drawerStandIn from './standIns/drawerStandIn.js';
 import dropdownButtonStandIn from './standIns/dropdownButtonStandIn.js';
@@ -45,7 +46,8 @@ import tableStandIn from './standIns/tableStandIn.js';
 // - leave({ targetBlock }): another click, open or select is about to act (on targetBlock), and
 //   the block's dropdown is open (state.open): close it as a click outside or the mouse leaving
 //   does.
-// - expect({ kind, target, timeout }): expect.visible or expect.hidden (kind) with a rowKey.
+// - expect({ kind, target, timeout }): expect.visible or expect.hidden (kind) with a rowKey or a
+//   control.
 // The step runner answers a step a block's stand-in has no part for in a browser, naming the block
 // and its type (runHeadlessStep). The match is by exact type: a block installed under a type
 // prefix, or any other block, has no stand-in.
@@ -54,6 +56,7 @@ const BLOCK_STAND_INS = {
   AgGridBalham: agGridStandIn,
   AgGridLowdefy: agGridStandIn,
   AgGridMaterial: agGridStandIn,
+  ClickableHtml: clickableHtmlStandIn,
   ConfirmModal: confirmModalStandIn,
   Drawer: drawerStandIn,
   DropdownButton: dropdownButtonStandIn,

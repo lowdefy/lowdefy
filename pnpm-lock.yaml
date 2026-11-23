@@ -3303,6 +3303,9 @@ importers:
 
   packages/utils/journey-headless:
     dependencies:
+      '@lowdefy/block-utils':
+        specifier: 7.4.0
+        version: link:../block-utils
       '@lowdefy/blocks-antd':
         specifier: 7.4.0
         version: link:../../plugins/blocks/blocks-antd
