@@ -17,8 +17,7 @@
                 value: Audit
             - event: company_picker.onChange
               value: avis
-# The search box clears as the click's mousedown closes the dropdown, and its onSearch waits out
-# the debounce, so the click's event comes first.
+# The dropdown closes a task after the click's mousedown, so the click's event comes first.
 - name: a click elsewhere after a search closes a Selector, which clears its search
   pageId: search_targets
   steps:
@@ -51,6 +50,60 @@
             - event: tag_picker.onChange
               value:
                 - Green
+            - event: done_button.onClick
+- name: a fill of another input blurs a Selector, which clears its search
+  pageId: search_targets
+  steps:
+    - fill: { blockId: company_picker, value: Audit }
+    - fill: { blockId: note_input, value: Call back }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_picker.onSearch
+              payload:
+                value: Audit
+            - event: company_picker.onSearch
+              payload:
+                value: ''
+- name: a select of an option the search hides is refused
+  pageId: search_targets
+  steps:
+    - fill: { blockId: tag_picker, value: Gr }
+    - select: { blockId: tag_picker, value: Red }
+# A single select closes a task after the mousedown, so the click's event comes first, with no
+# debounce too.
+- name: a TreeSelector clears its search with onSearch as a click elsewhere closes it
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_tree, value: No }
+    - click: done_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_tree.onSearch
+              payload:
+                value: 'No'
+            - event: done_button.onClick
+            - event: region_tree.onSearch
+              payload:
+                value: ''
+- name: a TreeMultipleSelector clears its search with onSearch as it loses the focus
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_trees, value: So }
+    - click: done_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_trees.onSearch
+              payload:
+                value: So
+            - event: region_trees.onSearch
+              payload:
+                value: ''
             - event: done_button.onClick
 - name: a fill on a Selector with search off is refused
   pageId: search_targets

@@ -60,6 +60,10 @@ const REFUSED_AT = {
     index: 0,
     message: 'element is not enabled',
   },
+  'search_selectors.yaml: a select of an option the search hides is refused': {
+    index: 1,
+    message: 'No option with text "Red" appeared',
+  },
   'search_selectors.yaml: a fill on a Selector with search off is refused': {
     index: 0,
     message: 'element is not editable',

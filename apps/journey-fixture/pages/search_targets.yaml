@@ -6,7 +6,8 @@ type: Box
 # into a selector's search box, so the block fires onSearch { value } and keeps its value. Each
 # runs in the browser and headless and must end with the same state `log`: onSearch appends its
 # event, onChange the block's value. company_picker loads its options from its onSearch, after a
-# 300 ms debounce, as a page that searches a server list does; locked_picker has search off.
+# 300 ms debounce, as a page that searches a server list does; region_tree and region_trees are
+# the tree selectors; note_input takes the focus from a picker; locked_picker has search off.
 blocks:
   - id: search_targets_title
     type: Title
@@ -82,6 +83,48 @@ blocks:
                 - _if_none: [{ _state: log }, []]
                 - - event: tag_picker.onChange
                     value: { _state: tag_picker }
+  - id: region_tree
+    type: TreeSelector
+    properties:
+      title: region_tree
+      options:
+        - label: North
+          value: north
+        - label: South
+          value: south
+    events:
+      onSearch:
+        - id: log_region_tree_search
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: region_tree.onSearch
+                    payload: { _event: true }
+  - id: region_trees
+    type: TreeMultipleSelector
+    properties:
+      title: region_trees
+      options:
+        - label: North
+          value: north
+        - label: South
+          value: south
+    events:
+      onSearch:
+        - id: log_region_trees_search
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: region_trees.onSearch
+                    payload: { _event: true }
+  - id: note_input
+    type: TextInput
+    properties:
+      title: Note
   - id: locked_picker
     type: Selector
     properties:
