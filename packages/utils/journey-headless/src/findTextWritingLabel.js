@@ -24,18 +24,22 @@ import loadHtmlDom from './standIns/loadHtmlDom.js';
 const TEXT_WRITING_ENHANCERS = '[data-avatar], [data-format], [data-time]';
 
 // Why a select on the block needs the browser: one of its html labels uses an enhancer that writes
-// its text. null when the block draws plain labels or none of its labels does.
+// its text. null when the block draws plain labels or none of its labels does. jsdom loads only
+// for a label with a data-* attribute, since most selects have none and the load is slow.
 async function findTextWritingLabel({ actor, block }) {
   if (!HTML_LABEL_TYPES.has(block.type)) {
     return null;
   }
-  const parse = await loadHtmlDom();
-  const written = actor.stepRunner
+  const labels = actor.stepRunner
     .optionLabels({ block })
-    .some(
-      (label) =>
-        label.includes('data-') && parse(label).querySelector(TEXT_WRITING_ENHANCERS) !== null
-    );
+    .filter((label) => label.includes('data-'));
+  if (labels.length === 0) {
+    return null;
+  }
+  const parse = await loadHtmlDom();
+  const written = labels.some(
+    (label) => parse(label).querySelector(TEXT_WRITING_ENHANCERS) !== null
+  );
   if (!written) {
     return null;
   }
