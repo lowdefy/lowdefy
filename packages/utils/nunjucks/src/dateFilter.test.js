@@ -148,7 +148,7 @@ describe('nunjucksFilter - return nunjucks errors', () => {
   test('using no arg', () => {
     env.addFilter('date', dateFilter);
     dateFilter.setDefaultFormat(testDefFormat);
-    expect(renderNunjucks('date', '{{ false | date }}')).toEqual('Invalid Date');
+    expect(renderNunjucks('date', '{{ false | date }}')).toEqual('Invalid date');
     dateFilter.setDefaultFormat(null);
   });
 });
@@ -159,17 +159,17 @@ describe('dateFilter - edge cases', () => {
     expect(dateFilter(undefined)).toEqual('');
   });
   test('booleans', () => {
-    expect(dateFilter(true)).toEqual('Invalid Date');
-    expect(dateFilter(false)).toEqual('Invalid Date');
+    expect(dateFilter(true)).toEqual('Invalid date');
+    expect(dateFilter(false)).toEqual('Invalid date');
   });
   test('strings', () => {
-    expect(dateFilter('')).toEqual('Invalid Date');
-    expect(dateFilter('x')).toEqual('Invalid Date');
+    expect(dateFilter('')).toEqual('Invalid date');
+    expect(dateFilter('x')).toEqual('Invalid date');
     expect(dateFilter('2020-01-02')).toEqual(dayjs('2020-01-02').format());
   });
   test('arrays and objects', () => {
-    expect(dateFilter([])).toEqual('Invalid Date');
-    expect(dateFilter({})).toEqual('Invalid Date');
+    expect(dateFilter([])).toEqual('Invalid date');
+    expect(dateFilter({})).toEqual('Invalid date');
   });
   test('numbers', () => {
     expect(dateFilter(0)).toEqual(dayjs(0).format());
@@ -177,5 +177,128 @@ describe('dateFilter - edge cases', () => {
     expect(dateFilter(-1)).toEqual(dayjs(-1).format());
     expect(dateFilter(0.1)).toEqual(dayjs(0.1).format());
     expect(dateFilter(-0.1)).toEqual(dayjs(-0.1).format());
+  });
+});
+
+// Expected values are moment 2.30.1's output for the same date and token, which templates
+// written for the moment date filter rely on.
+describe('dateFilter - moment format tokens', () => {
+  const date = '2026-08-28T09:11:07.123Z';
+  const newYear = '2027-01-01T00:05:09.007Z';
+
+  test.each([
+    ['M', '8'],
+    ['Mo', '8th'],
+    ['MM', '08'],
+    ['MMM', 'Aug'],
+    ['MMMM', 'August'],
+    ['Q', '3'],
+    ['Qo', '3rd'],
+    ['D', '28'],
+    ['Do', '28th'],
+    ['DD', '28'],
+    ['DDD', '240'],
+    ['DDDo', '240th'],
+    ['DDDD', '240'],
+    ['d', '5'],
+    ['do', '5th'],
+    ['dd', 'Fr'],
+    ['ddd', 'Fri'],
+    ['dddd', 'Friday'],
+    ['e', '5'],
+    ['E', '5'],
+    ['w', '35'],
+    ['wo', '35th'],
+    ['ww', '35'],
+    ['W', '35'],
+    ['Wo', '35th'],
+    ['WW', '35'],
+    ['YY', '26'],
+    ['YYYY', '2026'],
+    ['YYYYYY', '+002026'],
+    ['Y', '2026'],
+    ['y', '2026'],
+    ['yo', '2026th'],
+    ['N', 'AD'],
+    ['NN', 'AD'],
+    ['NNN', 'AD'],
+    ['NNNN', 'Anno Domini'],
+    ['NNNNN', 'AD'],
+    ['gg', '26'],
+    ['gggg', '2026'],
+    ['GG', '26'],
+    ['GGGG', '2026'],
+    ['A', 'AM'],
+    ['a', 'am'],
+    ['H', '9'],
+    ['HH', '09'],
+    ['h', '9'],
+    ['hh', '09'],
+    ['k', '9'],
+    ['kk', '09'],
+    ['m', '11'],
+    ['mm', '11'],
+    ['s', '7'],
+    ['ss', '07'],
+    ['S', '1'],
+    ['SS', '12'],
+    ['SSS', '123'],
+    ['SSSS', '1230'],
+    ['SSSSSSSSS', '123000000'],
+    ['z', ''],
+    ['zz', ''],
+    ['Z', '+00:00'],
+    ['ZZ', '+0000'],
+    ['X', '1787908267'],
+    ['x', '1787908267123'],
+    ['LT', '9:11 AM'],
+    ['LTS', '9:11:07 AM'],
+    ['L', '08/28/2026'],
+    ['l', '8/28/2026'],
+    ['LL', 'August 28, 2026'],
+    ['ll', 'Aug 28, 2026'],
+    ['LLL', 'August 28, 2026 9:11 AM'],
+    ['lll', 'Aug 28, 2026 9:11 AM'],
+    ['LLLL', 'Friday, August 28, 2026 9:11 AM'],
+    ['llll', 'Fri, Aug 28, 2026 9:11 AM'],
+  ])('%s', (format, expected) => {
+    expect(dateFilter(date, format)).toEqual(expected);
+  });
+
+  test.each([
+    ['DDDD', '001'],
+    ['DDDo', '1st'],
+    ['k', '24'],
+    ['SS', '00'],
+    ['w', '1'],
+    ['W', '53'],
+    ['gg', '27'],
+    ['gggg', '2027'],
+    ['GG', '26'],
+    ['GGGG', '2026'],
+  ])('%s at the turn of the year', (format, expected) => {
+    expect(dateFilter(newYear, format)).toEqual(expected);
+  });
+
+  test('a date in UTC mode prints the zone name', () => {
+    expect(dateFilter(dayjs.utc(date), 'z')).toEqual('UTC');
+    expect(dateFilter(dayjs.utc(date), 'zz')).toEqual('Coordinated Universal Time');
+  });
+
+  test('tokens mixed with text and escapes', () => {
+    expect(dateFilter(date, 'dddd, Do MMMM YYYY [at] LT, [week] Wo, DDDo [day]')).toEqual(
+      'Friday, 28th August 2026 at 9:11 AM, week 35th, 240th day'
+    );
+    expect(dateFilter(date, '[Do Mo LTS] Do')).toEqual('Do Mo LTS 28th');
+  });
+
+  test('through a nunjucks template', () => {
+    expect(env.renderString("{{ t | date('Do MMM YYYY') }}", { t: date })).toEqual('28th Aug 2026');
+    expect(env.renderString("{{ t | date('lll') }}", { t: date })).toEqual('Aug 28, 2026 9:11 AM');
+  });
+
+  test("an invalid date prints moment's text", () => {
+    expect(dateFilter('x', 'LL')).toEqual('Invalid date');
+    expect(dateFilter('x', 'Do')).toEqual('Invalid date');
   });
 });
