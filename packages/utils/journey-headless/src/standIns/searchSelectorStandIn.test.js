@@ -23,9 +23,6 @@ const COMPANIES = [
   { label: 'Audit Bravo', value: 'bravo' },
 ];
 
-// The headless select fires onChange with no event value yet (LDF-1138), so the log reads
-// ['onChange'] where a browser gives { value }.
-
 // A picker whose onSearch loads its options, as a page that searches a list on the server does:
 // the options are [] until a search sets them, after a trailing-edge debounce.
 function pickerPage({ type = 'Selector', properties = {}, debounce = { ms: 300 } } = {}) {
@@ -76,7 +73,10 @@ test('a fill waits for a debounced onSearch, so the select after it finds the op
   });
   expect(result.passed).toBe(true);
   // The pick clears the search with no onSearch, so the closing dropdown fires none either.
-  expect(readLog(log)).toEqual([['onSearch', { value: 'Audit' }], ['onChange']]);
+  expect(readLog(log)).toEqual([
+    ['onSearch', { value: 'Audit' }],
+    ['onChange', { value: 'avis' }],
+  ]);
 });
 
 test('a select with no search first fails on a Selector whose options a search loads', async () => {
@@ -126,7 +126,7 @@ test('a fill of another input after a search blurs a Selector, whose onSearch cl
   expect(result.passed).toBe(true);
   expect(readLog(log)).toEqual([
     ['onSearch', { value: 'Audit' }],
-    ['note.onChange'],
+    ['note.onChange', { value: 'Call back' }],
     ['onSearch', { value: '' }],
   ]);
 });
@@ -142,7 +142,11 @@ test('a MultipleSelector fill fires onSearch, and the focus leaving clears the s
     ],
   });
   expect(result.passed).toBe(true);
-  expect(readLog(log)).toEqual([['onSearch', { value: 'Audit' }], ['onChange'], ['done.onClick']]);
+  expect(readLog(log)).toEqual([
+    ['onSearch', { value: 'Audit' }],
+    ['onChange', { value: ['bravo'] }],
+    ['done.onClick'],
+  ]);
 });
 
 test('a MultipleSelector that keeps its search after a pick still fires nothing as it closes', async () => {
@@ -161,7 +165,11 @@ test('a MultipleSelector that keeps its search after a pick still fires nothing 
     ],
   });
   expect(result.passed).toBe(true);
-  expect(readLog(log)).toEqual([['onSearch', { value: 'Audit' }], ['onChange'], ['done.onClick']]);
+  expect(readLog(log)).toEqual([
+    ['onSearch', { value: 'Audit' }],
+    ['onChange', { value: ['bravo'] }],
+    ['done.onClick'],
+  ]);
 });
 
 test('a TreeMultipleSelector clears a search it kept with onSearch as the focus leaves', async () => {
@@ -182,7 +190,7 @@ test('a TreeMultipleSelector clears a search it kept with onSearch as the focus 
   expect(result.passed).toBe(true);
   expect(readLog(log)).toEqual([
     ['onSearch', { value: 'Audit' }],
-    ['onChange'],
+    ['onChange', { value: ['bravo'] }],
     ['onSearch', { value: '' }],
     ['done.onClick'],
   ]);
@@ -259,7 +267,10 @@ test('Enter after a search fill needs the browser, where it picks the highlighte
     reason:
       'Block "company" is of type Selector, which has no headless stand-in for press "Enter": the step runs in a browser.',
   });
-  expect(readLog(log)).toEqual([['note.onChange'], ['onSearch', { value: 'Audit' }]]);
+  expect(readLog(log)).toEqual([
+    ['note.onChange', { value: 'Call back' }],
+    ['onSearch', { value: 'Audit' }],
+  ]);
 });
 
 test('a select after a search refuses an option the search hides, as the browser shows none', async () => {
@@ -279,6 +290,55 @@ test('a select after a search refuses an option the search hides, as the browser
   expect(result.failure.index).toBe(1);
   expect(result.failure.message).toBe(
     'No option with text "Zulu Ltd" appeared in the dropdown of block "company": the search "audit" hides it.'
+  );
+});
+
+// blocks-antd draws an option label as html, and the browser runner picks by the text it shows.
+const SPACES = [
+  { label: '<span class="dot"></span><span>No space</span>', value: null },
+  { label: '<span class="dot"></span><span>Sales &amp; Ops</span>', value: 'sales' },
+];
+
+test('a select picks an option by the text its html label shows', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [pickerPage({ properties: { options: SPACES } })],
+    steps: [
+      { select: { blockId: 'company', value: 'Sales & Ops' } },
+      { expect: { state: { path: 'company', equals: 'sales' } } },
+      { select: { blockId: 'company', value: 'No space' } },
+      { expect: { state: { path: 'company', equals: null } } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['onChange', { value: 'sales' }],
+    ['onChange', { value: null }],
+  ]);
+});
+
+test('a select names the text each html label shows when none matches', async () => {
+  const { result } = await runTestJourney({
+    pages: [pickerPage({ properties: { options: SPACES } })],
+    steps: [{ select: { blockId: 'company', value: 'Marketing' } }],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toContain(
+    'Block "company" has no option "Marketing". Its options are ["No space","Sales & Ops"].'
+  );
+});
+
+test('a select after a search refuses an html-labelled option the search hides', async () => {
+  const { result } = await runTestJourney({
+    pages: [pickerPage({ properties: { options: SPACES }, debounce: null })],
+    steps: [
+      { fill: { blockId: 'company', value: 'sales' } },
+      { select: { blockId: 'company', value: 'No space' } },
+    ],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(1);
+  expect(result.failure.message).toBe(
+    'No option with text "No space" appeared in the dropdown of block "company": the search "sales" hides it.'
   );
 });
 

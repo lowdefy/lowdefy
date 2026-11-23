@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import HeadlessStepError from '../HeadlessStepError.js';
+import readHtmlText from '../readHtmlText.js';
 import fireEvent, { afterEvent } from './fireEvent.js';
 import leaveMethodsToBrowser from './leaveMethodsToBrowser.js';
 
@@ -102,16 +103,20 @@ function readFilterString(option) {
 }
 
 // A select after a search picks from the options the search leaves in the dropdown: an option it
-// hides does not appear, and the browser's select fails. An option that is not there at all is
-// left to the step runner, which names the options there are.
-function refuseHiddenOption({ block, state, value }) {
+// hides does not appear, and the browser's select fails. The option is the one whose label shows
+// the step's text (readHtmlText), as the step runner finds it; the filter reads the label's html,
+// as filterSelectorOption does. An option that is not there at all is left to the step runner,
+// which names the options there are.
+async function refuseHiddenOption({ block, state, value }) {
   const search = state.searchValue ?? '';
   if (search === '' || !SEARCH_SELECTORS[block.type].filtersOptions) {
     return;
   }
-  const option = (block.eval.properties?.options ?? []).find(
-    (item) => readOptionText(item) === String(value)
+  const options = block.eval.properties?.options ?? [];
+  const texts = await Promise.all(
+    options.map(async (item) => (await readHtmlText(readOptionText(item))).trim())
   );
+  const option = options[texts.indexOf(String(value))];
   if (
     option === undefined ||
     readFilterString(option).toLowerCase().includes(search.toLowerCase())
@@ -129,7 +134,7 @@ function refuseHiddenOption({ block, state, value }) {
 }
 
 async function select({ actor, block, state, step }) {
-  refuseHiddenOption({ block, state, value: step.select.value });
+  await refuseHiddenOption({ block, state, value: step.select.value });
   await actor.stepRunner.run({ step });
   const { multiple } = SEARCH_SELECTORS[block.type];
   if (!multiple || block.eval.properties?.autoClearSearchValue !== false) {

@@ -21,6 +21,7 @@ import { serializer, type } from '@lowdefy/helpers';
 import createActorClient from './createActorClient.js';
 import createLocation from './createLocation.js';
 import fireMountEvents from './fireMountEvents.js';
+import readHtmlText from './readHtmlText.js';
 import registerBlockStandIns from './registerBlockStandIns.js';
 import reportParseErrors from './reportParseErrors.js';
 
@@ -260,6 +261,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     getLowdefy: () => client?.lowdefy,
     getPageContext,
     hostName: 'headless run',
+    readLabelText: readHtmlText,
     timeout: stepTimeout,
   });
   return actor;

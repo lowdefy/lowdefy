@@ -30,6 +30,10 @@ function readOptionLabel(option) {
   return String(option);
 }
 
+function readPlainText(label) {
+  return label;
+}
+
 function readOptionValue(option) {
   return type.isObject(option) ? option.value : option;
 }
@@ -40,9 +44,10 @@ function readOptionValue(option) {
  * as the block's own view does when it is pressed or typed in, and waits for the page to settle
  * (at most 5 s, never failing the step):
  * - `{ click: target }`: the block's onClick.
- * - `{ fill: { blockId, value } }`: sets the input's value, then its onChange.
- * - `{ select: { blockId, value } }`: the option whose label (or value) is `value`; a block whose
- *   value is a list ticks it.
+ * - `{ fill: { blockId, value } }`: sets the input's value, then its onChange with `{ value }`, the
+ *   event the block's view fires.
+ * - `{ select: { blockId, value } }`: the option whose label (or value) shows `value` as its text,
+ *   surrounding whitespace aside; a block whose value is a list ticks it.
  * - `{ press: 'Enter' }`: the onPressEnter of the input filled last.
  * - `{ wait: { ms } | { request } | { state } }`.
  * - `{ screenshot: name? }`: the root view as a base64 PNG, on a host that passes `capture`.
@@ -59,9 +64,19 @@ function readOptionValue(option) {
  * @param {({ lowdefy }) => { context, page } | { error }} params.getPageContext The engine context
  *   of the page the host shows, with `page.pageId`, or an error saying why there is none.
  * @param {string} params.hostName What runs the steps, as refusals name it: "phone", "headless run".
+ * @param {(label: string) => string | Promise<string>} [params.readLabelText] The text an option's
+ *   label shows on the host. A web page draws a label as html, so a headless run of a web app reads
+ *   the text the html shows; without it the label is its own text, as a native picker draws it.
  * @param {number} [params.timeout] How long a step waits for its block or condition, in ms.
  */
-function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeout = 5000 }) {
+function createStepRunner({
+  capture,
+  getLowdefy,
+  getPageContext,
+  hostName,
+  readLabelText = readPlainText,
+  timeout = 5000,
+}) {
   if (!type.isFunction(getLowdefy)) {
     throw new Error('createStepRunner needs a getLowdefy function.');
   }
@@ -108,7 +123,7 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
   async function setInputValue({ block, lowdefy, value }) {
     block.setValue(value);
     lastInputBlockId = block.blockId;
-    block.triggerEvent({ name: 'onChange' });
+    block.triggerEvent({ name: 'onChange', event: { value } });
     return settle(lowdefy);
   }
 
@@ -128,15 +143,18 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
     }
     const block = await findInput({ lowdefy, target });
     const options = block.eval.properties?.options ?? [];
-    const option = options.find((item) => readOptionLabel(item) === String(target.value));
-    if (option === undefined) {
+    const texts = await Promise.all(
+      options.map(async (item) => (await readLabelText(readOptionLabel(item))).trim())
+    );
+    const index = texts.indexOf(String(target.value));
+    if (index === -1) {
       throw new Error(
         `Block "${block.blockId}" has no option "${target.value}". Its options are ${JSON.stringify(
-          options.map(readOptionLabel)
+          texts
         )}.`
       );
     }
-    const value = readOptionValue(option);
+    const value = readOptionValue(options[index]);
     // A block whose value is a list (a checkbox group) ticks the option and never unticks it, as
     // the browser's select does.
     if (block.meta?.valueType === 'array') {
