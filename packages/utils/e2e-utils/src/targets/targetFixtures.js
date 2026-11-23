@@ -29,6 +29,14 @@
 //   does not: it folds into a select step.
 // - variants: other runner targets that resolve to the same element.
 
+// A ClickableHtml block as HtmlComponent draws it: each data-event element its dataEvents lists
+// marked with the block, its event and its data-id (markDataEventControls).
+const clickableHtml = `
+<div id="bl-page"><div id="bl-issues"><div id="issues" data-testid="issues" data-lf-html="">
+  <div data-event="onOpen" data-id="issue-1" data-lf-block="issues" data-lf-control="onOpen" data-lf-row-key="issue-1" tabindex="0"><b>micromatch</b> 1 advisory <button data-event="onMerge" data-id="issue-1" data-lf-block="issues" data-lf-control="onMerge" data-lf-row-key="issue-1">Merge</button></div>
+  <div data-event="onOpen" data-id="issue-2" data-lf-block="issues" data-lf-control="onOpen" data-lf-row-key="issue-2" tabindex="0"><b>lodash</b> 2 advisories</div>
+</div></div></div>`;
+
 function target(fields) {
   return {
     block_id: null,
@@ -450,6 +458,25 @@ const targetFixtures = [
     blockIds: ['people'],
     resolvable: true,
     variants: [{ block_id: 'people', row_key: 'a1' }],
+  },
+  {
+    name: 'ClickableHtml element by its data-event and data-id, by control and row key',
+    html: clickableHtml,
+    element: '[data-lf-row-key="issue-2"]',
+    clicked: '[data-lf-row-key="issue-2"] b',
+    target: target({ block_id: 'issues', row_key: 'issue-2', control: 'onOpen' }),
+    blockIds: ['issues'],
+    resolvable: true,
+    variants: [],
+  },
+  {
+    name: 'ClickableHtml button inside an element of another event, by its own control',
+    html: clickableHtml,
+    element: '[data-lf-control="onMerge"][data-lf-row-key="issue-1"]',
+    target: target({ block_id: 'issues', row_key: 'issue-1', control: 'onMerge' }),
+    blockIds: ['issues'],
+    resolvable: true,
+    variants: [],
   },
 ];
 
