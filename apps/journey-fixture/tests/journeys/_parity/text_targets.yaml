@@ -1,0 +1,106 @@
+# Parity journeys for text and containing targets inside a ClickableHtml (LDF-1146), on the
+# text_targets page. Each runs in the browser and headless
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs) and must end with the
+# same state `log`, the events the page fired in order with their event objects. In a folder
+# starting with "_" so the suite's own runs, and harden, leave it out.
+- name: a containing target picks a ClickableHtml row with no data-id
+  pageId: text_targets
+  steps:
+    - expect: { visible: { containing: beta@example.com } }
+    - click: { containing: Beta Corp }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_rows.onPick
+              payload:
+                name: Beta Corp
+- name: a text target scoped to its block picks among equal texts with nth
+  pageId: text_targets
+  steps:
+    - click: { blockId: company_rows, text: Open, nth: 1 }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_rows.onOpenRow
+              payload:
+                row: '2'
+- name: a text target that matches several ClickableHtml elements fails, naming them
+  pageId: text_targets
+  steps:
+    - click: { text: Open }
+- name: a text target opens a ClickableHtml popover and clicks the button in it
+  pageId: text_targets
+  steps:
+    - expect: { hidden: { text: Archive } }
+    - click: { text: More }
+    - expect: { visible: { text: Archive } }
+    - click: { text: Archive }
+    - expect: { hidden: { text: Archive } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_rows.onArchive
+              payload:
+                scope: all
+- name: a text target answers a ClickableHtml confirm with its OK button
+  pageId: text_targets
+  steps:
+    - click: { text: Remove }
+    - expect: { visible: { containing: Remove every company? } }
+    - click: { text: OK }
+    - expect: { hidden: { containing: Remove every company? } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_rows.onRemove
+              payload: {}
+- name: a text target no ClickableHtml shows runs in a browser
+  pageId: text_targets
+  steps:
+    - click: { text: Save }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: save_button.onClick
+- name: a second click on a ClickableHtml popover's trigger closes it, and so does a click outside
+  pageId: text_targets
+  steps:
+    - click: { text: More }
+    - expect: { visible: { text: Archive } }
+    - click: { text: More }
+    - expect: { hidden: { containing: Archive } }
+    - click: { text: More }
+    - click: { containing: acme@example.com }
+    - expect: { hidden: { text: Archive } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_rows.onPick
+              payload:
+                name: Acme Ltd
+- name: a containing target ignores case and fails on the two innermost elements it matches
+  pageId: text_targets
+  steps:
+    - click: { containing: acme }
+- name: nth on visible and hidden counts the matches, and Cancel drops a ClickableHtml confirm
+  pageId: text_targets
+  steps:
+    - expect: { visible: { blockId: company_rows, text: Open, nth: 1 } }
+    - expect: { hidden: { blockId: company_rows, text: Open, nth: 2 } }
+    - click: { text: Remove }
+    - click: { text: Cancel }
+    - expect: { hidden: { text: Cancel } }
+    - click: { blockId: company_rows, text: Open, nth: 0 }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_rows.onOpenRow
+              payload:
+                row: '1'

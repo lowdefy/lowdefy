@@ -36,7 +36,8 @@ import { fixtureTest, postJourney } from './fixtureClient.mjs';
 // an html label's text on input_events; skeleton_loading.yaml covers content that mounts once a
 // loading skeleton ends, on skeleton_loading; escape.yaml covers press Escape on the overlay that
 // opened last, on escape_targets; plugin_block.yaml covers a plugin block method its meta declares
-// a headless no-op, on plugin_block.
+// a headless no-op, on plugin_block; text_targets.yaml covers text and containing targets inside a
+// ClickableHtml, on text_targets.
 
 const parityDirectory = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -59,6 +60,7 @@ const journeys = [
   ...readJourneys('skeleton_loading.yaml'),
   ...readJourneys('escape.yaml'),
   ...readJourneys('plugin_block.yaml'),
+  ...readJourneys('text_targets.yaml'),
 ];
 
 // The journeys that must fail, in both runners at the same step, with what the browser's message
@@ -80,11 +82,29 @@ const REFUSED_AT = {
     index: 2,
     message: 'No option with text "Red" appeared',
   },
+  'text_targets.yaml: a text target that matches several ClickableHtml elements fails, naming them':
+    {
+      index: 0,
+      message: 'Matched 2 controls with text "Open" in the page',
+    },
+  'text_targets.yaml: a containing target ignores case and fails on the two innermost elements it matches':
+    {
+      index: 0,
+      message: 'Matched 2 elements containing "acme" in the page',
+    },
 };
 
-// Each journey here must have run headless and matched, not been left to the browser: the parity
-// check records how it compared each journey (checkParity.mjs).
-function expectComparedHeadless() {
+// The journeys a headless run must leave to the browser when the step runs, with what its reason
+// says: the step names text no ClickableHtml shows.
+const BROWSER_ONLY_AT_RUN_TIME = {
+  'text_targets.yaml: a text target no ClickableHtml shows runs in a browser':
+    'Button "save_button" may show the text "Save"',
+};
+
+// Each journey here must have run headless and matched, not been left to the browser, unless
+// BROWSER_ONLY_AT_RUN_TIME lists it: the parity check records how it compared each journey
+// (checkParity.mjs).
+function expectComparedHeadless(name) {
   if (process.env.LOWDEFY_JOURNEY_FIXTURE_PARITY_SERVER === undefined) {
     return;
   }
@@ -101,6 +121,11 @@ function expectComparedHeadless() {
     .split('\n')
     .map((line) => JSON.parse(line))
     .filter((entry) => entry.test === testName);
+  if (Object.hasOwn(BROWSER_ONLY_AT_RUN_TIME, name)) {
+    expect(entries.map((entry) => entry.kind)).toEqual(['browser-only at run time']);
+    expect(entries[0].reason).toContain(BROWSER_ONLY_AT_RUN_TIME[name]);
+    return;
+  }
   expect(entries.map((entry) => entry.kind)).toEqual(['same']);
 }
 
@@ -123,5 +148,5 @@ fixtureTest.each(journeys)('%s', async (name, journey) => {
     expect(result.failure).toBeUndefined();
     expect(result.passed).toBe(true);
   }
-  expectComparedHeadless();
+  expectComparedHeadless(name);
 });

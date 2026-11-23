@@ -1,0 +1,106 @@
+id: text_targets
+type: Box
+# ClickableHtml elements a journey names by the text they show ({ text } or { containing }), for
+# the parity journeys in tests/journeys/_parity/text_targets.yaml
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1146). Each runs in
+# the browser and headless and must end with the same state. Every event appends
+# { event, payload } to state `log`. The rows carry no data-id and fire the same event, so only
+# what they show names one; each row's Open button has the same text; More opens a popover with an
+# Archive button; Remove asks first; Save is a Button block, which no ClickableHtml draws.
+events:
+  onInit:
+    - id: init_companies
+      type: SetState
+      params:
+        companies:
+          - name: Acme Ltd
+            email: acme@example.com
+          - name: Beta Corp
+            email: beta@example.com
+blocks:
+  - id: text_targets_title
+    type: Title
+    properties:
+      content: Text targets
+      level: 2
+  - id: company_rows
+    type: ClickableHtml
+    properties:
+      dataEvents:
+        - onPick
+        - onOpenRow
+        - onArchive
+        - name: onRemove
+          confirm: Remove every company?
+      html:
+        _nunjucks:
+          on:
+            companies:
+              _state: companies
+          template: |
+            {% for company in companies %}
+            <div style="display: flex; gap: 12px; padding: 4px 0">
+              <div data-event="onPick" data-name="{{ company.name }}" style="cursor: pointer; display: flex; gap: 8px">
+                <span>{{ company.name }}</span>
+                <span>{{ company.email }}</span>
+              </div>
+              <button data-event="onOpenRow" data-row="{{ loop.index }}">Open</button>
+            </div>
+            {% endfor %}
+            <p>
+              <span data-popover="more" style="cursor: pointer">More</span>
+              <button data-event="onRemove">Remove</button>
+            </p>
+            <div data-popover-content="more">
+              <button data-event="onArchive" data-scope="all">Archive</button>
+            </div>
+    events:
+      onPick:
+        - id: log_pick
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: company_rows.onPick
+                    payload: { _event: true }
+      onOpenRow:
+        - id: log_open_row
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: company_rows.onOpenRow
+                    payload: { _event: true }
+      onArchive:
+        - id: log_archive
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: company_rows.onArchive
+                    payload: { _event: true }
+      onRemove:
+        - id: log_remove
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: company_rows.onRemove
+                    payload: { _event: true }
+  - id: save_button
+    type: Button
+    properties:
+      title: Save
+    events:
+      onClick:
+        - id: log_save
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: save_button.onClick
