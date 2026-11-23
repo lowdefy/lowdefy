@@ -43,6 +43,8 @@ test.each([
   expect(res.headers.get('x-lowdefy-build')).toBe('build-2');
 });
 
+const TIMEOUT_MS = 20;
+
 // The request timeout answers 504 while the handler runs on, on the same context, so
 // the stamp sets its header on a 504 already sent (LDF-591): a magic-link send that
 // stalls past the timeout. A rebuild of that 504 from its read body threw "Response
@@ -50,15 +52,19 @@ test.each([
 test('stampBuildId reports no fault when the request times out', async () => {
   const faults = [];
   let lateChain;
+  // The header the stamp set on the late chain, read once the chain has finished.
+  let lateBuild;
   const app = new Hono();
-  app.use('/api/*', requestTimeout({ timeoutMs: 20 }));
+  app.use('/api/*', requestTimeout({ timeoutMs: TIMEOUT_MS }));
   app.use('/api/*', (c, next) => {
-    lateChain = next();
+    lateChain = next().then(() => {
+      lateBuild = c.res.headers.get('x-lowdefy-build');
+    });
     return lateChain;
   });
   app.use('/api/auth/*', stampBuildId({ buildId: 'build-2' }));
   app.post('/api/auth/sign-in/magic-link', async (c) => {
-    await new Promise((resolve) => setTimeout(resolve, 60));
+    await new Promise((resolve) => setTimeout(resolve, TIMEOUT_MS * 3));
     return c.json({ status: true });
   });
   app.onError((error, c) => {
@@ -72,4 +78,5 @@ test('stampBuildId reports no fault when the request times out', async () => {
   await res.text();
   await lateChain;
   expect(faults).toEqual([]);
+  expect(lateBuild).toBe('build-2');
 });
