@@ -12,3 +12,5 @@ feat(journey-headless): Headless text and containing targets inside ClickableHtm
 - The step goes to the browser at run time, naming why, when no `ClickableHtml` shows the text, another block may show it too, the match sits behind an open popup's mask, or the answer depends on layout, on text an html enhancer writes, on a link, or on the confirm's labels in an app with i18n locales.
 - `classifyJourney` no longer lists these steps as needing a browser; `fill`, `select` and `open` by text, `row`, and `nth` on its own still do.
 - Lint L8 keeps recommending the `control` (or `blockId`) target for such a step, which holds when the text changes. A headless run on the dev server records the control a text click landed on, which L8 reads.
+- While a `ClickableHtml` popover or confirm is open, a headless click on anything but it, or the element that opened it, now goes to the browser, for `control` targets too: antd draws the overlay beside its target, where it may cover what the click aims at. Before, a headless run closed the confirm as a click outside would.
+- A headless run reads the content of a closed `<details>` in a `ClickableHtml` as hidden.
