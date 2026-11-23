@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import HeadlessStepError from '../HeadlessStepError.js';
 import fireEvent, { afterEvent } from './fireEvent.js';
 
@@ -89,9 +91,17 @@ async function select({ actor, block, state, step }) {
   state.open = multiple;
 }
 
+// Whether a trailing-edge debounce holds the block's onSearch, so its actions run after the step
+// that follows has started, in a browser as here.
+function isSearchDelayed(block) {
+  const debounce = block.Events.events.onSearch?.debounce;
+  return !type.isNone(debounce) && debounce.immediate !== true;
+}
+
 // The focus leaving the block closes its dropdown, by a click elsewhere (leave) or a fill of
-// another input (blur). Resolves once its onSearch has finished, as the browser's runs on the
-// mousedown or blur, before the click or typing that follows.
+// another input (blur). The browser closes it on the mousedown or blur, before the click or
+// typing that follows, so the onSearch it fires runs first: this resolves once that onSearch has
+// finished, or at once when a debounce delays it (isSearchDelayed).
 function close({ actor, block, state }) {
   state.open = false;
   const searched = (state.searchValue ?? '') !== '';
@@ -99,7 +109,8 @@ function close({ actor, block, state }) {
   if (!searched || !SEARCH_SELECTORS[block.type].searchOnLeave) {
     return Promise.resolve();
   }
-  return afterEvent(search({ actor, block, value: '' }));
+  const searching = search({ actor, block, value: '' });
+  return isSearchDelayed(block) ? Promise.resolve() : afterEvent(searching);
 }
 
 export default { blur: close, fill, leave: close, select };

@@ -19,8 +19,8 @@ import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 // Before a fill types into `except`, every other block whose stand-in keeps a focus it can lose
 // (a searching selector's search box) hears it blur, as the focus moving to the filled input does
 // in a browser: a searching selector closes its dropdown and clears its search. A click, open or
-// select elsewhere does the same through leaveDropdowns. Resolves once the events a blur returns
-// have finished, before the fill types.
+// select elsewhere does the same through leaveDropdowns. Resolves once what each blur returns
+// resolves, before the fill types.
 async function blurInputs({ actor, except }) {
   const blurred = [];
   actor.page.standIns.forEach(({ block, state }) => {

@@ -90,7 +90,7 @@ test('a select with no search first fails on a Selector whose options a search l
 
 test('a click elsewhere after a search closes a Selector, which clears its search with onSearch', async () => {
   const { log, result } = await runTestJourney({
-    pages: [pickerPage({ debounce: undefined })],
+    pages: [pickerPage({ debounce: null })],
     steps: [{ fill: { blockId: 'company', value: 'Audit' } }, { click: 'done' }],
   });
   expect(result.passed).toBe(true);
@@ -101,9 +101,22 @@ test('a click elsewhere after a search closes a Selector, which clears its searc
   ]);
 });
 
+test('a click elsewhere runs first when a debounce delays the onSearch that clears the search', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [pickerPage()],
+    steps: [{ fill: { blockId: 'company', value: 'Audit' } }, { click: 'done' }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['onSearch', { value: 'Audit' }],
+    ['done.onClick'],
+    ['onSearch', { value: '' }],
+  ]);
+});
+
 test('a fill of another input after a search blurs a Selector, which clears its search with onSearch', async () => {
   const { log, result } = await runTestJourney({
-    pages: [pickerPage({ debounce: undefined })],
+    pages: [pickerPage({ debounce: null })],
     steps: [
       { fill: { blockId: 'company', value: 'Audit' } },
       { fill: { blockId: 'note', value: 'Call back' } },
@@ -119,7 +132,7 @@ test('a fill of another input after a search blurs a Selector, which clears its 
 
 test('a MultipleSelector fill fires onSearch, and the focus leaving clears the search with no event', async () => {
   const { log, result } = await runTestJourney({
-    pages: [pickerPage({ type: 'MultipleSelector', debounce: undefined })],
+    pages: [pickerPage({ type: 'MultipleSelector', debounce: null })],
     steps: [
       { fill: { blockId: 'company', value: 'Audit' } },
       { select: { blockId: 'company', value: 'Audit Bravo' } },
@@ -137,7 +150,7 @@ test('a MultipleSelector that keeps its search after a pick still fires nothing 
       pickerPage({
         type: 'MultipleSelector',
         properties: { autoClearSearchValue: false },
-        debounce: undefined,
+        debounce: null,
       }),
     ],
     steps: [
@@ -156,7 +169,7 @@ test('a TreeMultipleSelector clears a search it kept with onSearch as the focus 
       pickerPage({
         type: 'TreeMultipleSelector',
         properties: { autoClearSearchValue: false },
-        debounce: undefined,
+        debounce: null,
       }),
     ],
     steps: [
@@ -176,7 +189,7 @@ test('a TreeMultipleSelector clears a search it kept with onSearch as the focus 
 
 test('a TreeSelector fill fires onSearch with the text', async () => {
   const { log, result } = await runTestJourney({
-    pages: [pickerPage({ type: 'TreeSelector', debounce: undefined })],
+    pages: [pickerPage({ type: 'TreeSelector', debounce: null })],
     steps: [{ fill: { blockId: 'company', value: 'Audit' } }],
   });
   expect(result.passed).toBe(true);
@@ -185,7 +198,7 @@ test('a TreeSelector fill fires onSearch with the text', async () => {
 
 test('a fill of the text already searched fires nothing, as the search box does not change', async () => {
   const { log, result } = await runTestJourney({
-    pages: [pickerPage({ debounce: undefined })],
+    pages: [pickerPage({ debounce: null })],
     steps: [
       { fill: { blockId: 'company', value: 'Audit' } },
       { fill: { blockId: 'company', value: 'Audit' } },
@@ -201,7 +214,7 @@ test('a fill of the text already searched fires nothing, as the search box does 
 
 test('a fill types a number as text, as the browser does', async () => {
   const { log } = await runTestJourney({
-    pages: [pickerPage({ debounce: undefined })],
+    pages: [pickerPage({ debounce: null })],
     steps: [{ fill: { blockId: 'company', value: 42 } }],
   });
   expect(readLog(log)).toEqual([['onSearch', { value: '42' }]]);
@@ -232,7 +245,7 @@ test('a fill on a disabled Selector fails', async () => {
 
 test('Enter after a search fill needs the browser, where it picks the highlighted option', async () => {
   const { log, result } = await runTestJourney({
-    pages: [pickerPage({ debounce: undefined })],
+    pages: [pickerPage({ debounce: null })],
     steps: [
       { fill: { blockId: 'note', value: 'Call back' } },
       { fill: { blockId: 'company', value: 'Audit' } },
