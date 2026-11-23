@@ -52,6 +52,7 @@ const BLOCK_METAS = {
   DropdownMenu: { category: 'container' },
   Menu: { category: 'display' },
   Modal: { category: 'container' },
+  MultipleSelector: { category: 'input', valueType: 'array' },
   Paragraph: { category: 'display' },
   // A block from an app's own plugin, which no headless stand-in models.
   PluginChain: { category: 'display' },
@@ -60,6 +61,8 @@ const BLOCK_METAS = {
   Selector: { category: 'input', valueType: 'string' },
   Table: { category: 'input-container', valueType: 'object' },
   TextInput: { category: 'input', valueType: 'string' },
+  TreeMultipleSelector: { category: 'input', valueType: 'array' },
+  TreeSelector: { category: 'input', valueType: 'any' },
 };
 
 function buildEvents(events) {

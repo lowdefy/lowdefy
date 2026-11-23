@@ -138,6 +138,7 @@ function createRunner({ capture, hostName = 'headless run' } = {}) {
     },
     lastInputBlockId: () => runner.lastInputBlockId(),
     run: (step) => runner.run({ step }),
+    setLastInputBlockId: (blockId) => runner.setLastInputBlockId(blockId),
   };
 }
 
@@ -186,6 +187,13 @@ test('lastInputBlockId names the input a press acts on: none, then the one fille
   expect(lastInputBlockId()).toBe(null);
   await run({ fill: { blockId: 'title', value: 'Quarterly' } });
   expect(lastInputBlockId()).toBe('title');
+});
+
+test('setLastInputBlockId names the input a press acts on: one a host typed into itself', async () => {
+  const { lastInputBlockId, run, setLastInputBlockId } = createRunner();
+  await run({ fill: { blockId: 'title', value: 'Quarterly' } });
+  setLastInputBlockId('search');
+  expect(lastInputBlockId()).toBe('search');
 });
 
 test('a select step matches the option label, or the value of an option without one', async () => {

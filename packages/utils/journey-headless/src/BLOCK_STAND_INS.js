@@ -22,6 +22,7 @@ import dropdownButtonStandIn from './standIns/dropdownButtonStandIn.js';
 import dropdownMenuStandIn from './standIns/dropdownMenuStandIn.js';
 import menuStandIn from './standIns/menuStandIn.js';
 import modalStandIn from './standIns/modalStandIn.js';
+import searchSelectorStandIn from './standIns/searchSelectorStandIn.js';
 import tableStandIn from './standIns/tableStandIn.js';
 
 // What a block's component does for the engine in the browser, done headless, by block type: a
@@ -43,9 +44,15 @@ import tableStandIn from './standIns/tableStandIn.js';
 //   trigger (a DropdownMenu's), after that block's own click (pointerClick). claimed: a block on
 //   the way handled the click, so the engine skips this block's events for it (isClickClaimed).
 // - open(): an open step on the block.
+// - fill({ value }) and select({ step }): a fill or select on the block, which the stand-in takes
+//   in place of client-core's step runner (a searching selector types into its search box, so a
+//   fill fires onSearch and leaves its value alone). A block whose stand-in has a fill but no
+//   press leaves an Enter after that fill to the browser.
 // - leave({ targetBlock }): another click, open or select is about to act (on targetBlock), and
 //   the block's dropdown is open (state.open): close it as a click outside or the mouse leaving
 //   does.
+// - blur(): a fill is about to type into another block, so the focus leaves this one (a searching
+//   selector closes its dropdown and clears its search; blurInputs).
 // - expect({ kind, target, timeout }): expect.visible or expect.hidden (kind) with a rowKey or a
 //   control.
 // The step runner answers a step a block's stand-in has no part for in a browser, naming the block
@@ -63,7 +70,11 @@ const BLOCK_STAND_INS = {
   DropdownMenu: dropdownMenuStandIn,
   Menu: menuStandIn,
   Modal: modalStandIn,
+  MultipleSelector: searchSelectorStandIn,
+  Selector: searchSelectorStandIn,
   Table: tableStandIn,
+  TreeMultipleSelector: searchSelectorStandIn,
+  TreeSelector: searchSelectorStandIn,
 };
 
 export default BLOCK_STAND_INS;

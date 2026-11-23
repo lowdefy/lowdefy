@@ -48,7 +48,9 @@ function readOptionValue(option) {
  * - `{ screenshot: name? }`: the root view as a base64 PNG, on a host that passes `capture`.
  * Resolves `{ ok: true, settled }` (and `image` for a screenshot); throws when the step cannot run.
  * lastInputBlockId() is the input filled or selected in last, which a press acts on, or null
- * before any.
+ * before any. setLastInputBlockId(blockId) records an input a host typed into itself, so a press
+ * after it acts on that input: a headless run types into a selector's search box (journey-headless'
+ * searchSelectorStandIn) without setting the selector's value.
  *
  * @param {Object} params
  * @param {() => Promise<string>} [params.capture] Captures the root view as a base64 PNG. A host
@@ -221,7 +223,11 @@ function createStepRunner({ capture, getLowdefy, getPageContext, hostName, timeo
     }
   }
 
-  return { lastInputBlockId: () => lastInputBlockId, run };
+  function setLastInputBlockId(blockId) {
+    lastInputBlockId = blockId;
+  }
+
+  return { lastInputBlockId: () => lastInputBlockId, run, setLastInputBlockId };
 }
 
 export default createStepRunner;
