@@ -47,6 +47,7 @@ function readPiece({ cache, parse, piece }) {
   if (!type.isUndefined(piece.text)) {
     return {
       runs: piece.unsure ? [] : [{ text: piece.text, pre: piece.pre === true }],
+      classHidden: [],
       units: [normalizeShownText(piece.text)],
       open: null,
     };
@@ -55,6 +56,7 @@ function readPiece({ cache, parse, piece }) {
     const asHtml = readPiece({ cache, parse, piece: { html: piece.either, unsure: true } });
     return {
       runs: [],
+      classHidden: [],
       units: [...asHtml.units, normalizeShownText(piece.either)],
       open: asHtml.open,
     };
@@ -73,7 +75,12 @@ function readPiece({ cache, parse, piece }) {
     cache.set(key, readHtmlPieces({ root: parse(html), pre: piece.pre === true }));
   }
   const read = cache.get(key);
-  return { runs: piece.unsure ? [] : read.runs, units: read.units, open: read.open ?? open };
+  return {
+    runs: piece.unsure ? [] : read.runs,
+    classHidden: piece.unsure ? [] : read.classHidden,
+    units: read.units,
+    open: read.open ?? open,
+  };
 }
 
 // The text a browser's text check reads in a block (LDF-1147): its own text and the text of the
@@ -81,10 +88,10 @@ function readPiece({ cache, parse, piece }) {
 // reads the block's innerText and, for a Modal or Drawer, its portal's: a block inside another
 // Modal or Drawer is drawn in that one's portal, so it is not in the text. A block is drawn when
 // isBlockShown says so and every block holding it, up to the checked one, draws the area it sits
-// in. Returns { onPage, shown, runs, units, unmodeled, open, text }:
+// in. Returns { onPage, shown, runs, classHidden, units, unmodeled, open, text }:
 // - onPage: whether the page holds the block, shown or not (its wrapper is in the page);
 // - shown: whether it is shown, so its text is drawn;
-// - runs and units: readHtmlPieces', over every piece;
+// - runs, classHidden and units: readHtmlPieces', over every piece;
 // - unmodeled: the drawn blocks with no text model, whose text the run cannot read;
 // - open: why some of the text is not known, each naming its block;
 // - text: the runs joined with breaks, for a failure's message.
@@ -97,6 +104,7 @@ function readBlockText({ actor, blockId, cache, parse }) {
     onPage: false,
     shown: false,
     runs: [],
+    classHidden: [],
     units: [],
     unmodeled: [],
     open: [],
@@ -134,6 +142,7 @@ function readBlockText({ actor, blockId, cache, parse }) {
     pieces.forEach((piece) => {
       const read = readPiece({ cache, parse, piece });
       reading.runs.push(...read.runs);
+      reading.classHidden.push(...read.classHidden);
       reading.units.push(...read.units);
       if (read.open !== null) reading.open.push(`${describeBlock(block)}: ${read.open}`);
     });

@@ -108,42 +108,63 @@ function transformsCase(element) {
 }
 
 // The text an html string shows, as far as the html says without laying it out (root is the
-// parsed html, loadHtmlDom's parse). Returns { runs, units, open }:
+// parsed html, loadHtmlDom's parse). Returns { runs, classHidden, units, open }:
 // - runs: the stretches of text a browser draws with no break inside them, each { text, pre }:
 //   the text nodes between two elements that may break a line, joined. A run leaves out text
 //   that may not show or may show changed: hidden by the html or by a class the page's CSS may
 //   hide by, inside an element whose text an html enhancer writes, or under a case transform.
 //   pre says the run keeps its white space as written (a <pre>, or a white-space style or class);
 //   otherwise a browser collapses it.
+// - classHidden: the runs inside an element a class may hide, which a browser may or may not
+//   draw (a responsive class such as max-[899px]:hidden), for a reason that names them.
 // - units: the html's text as a browser's innerText may read it, with white space and case taken
 //   out (normalizeShownText): once with the elements a class may hide shown and once hidden.
 // - open: why the html's text is not all known (an html enhancer writes some of it), else null.
 // `pre` says the html is drawn where white space is kept (a Descriptions item).
-function readHtmlPieces({ root, pre = false }) {
+// Collects runs: text added while it reads as written joins the current run, and a break, a
+// change in white space handling or text that may not read as written ends it.
+function createRuns() {
   const runs = [];
   let run = null;
+  return {
+    runs,
+    flush() {
+      if (run !== null && run.text !== '') runs.push(run);
+      run = null;
+    },
+    add({ text, keep }) {
+      if (run !== null && run.pre !== keep) this.flush();
+      if (run === null) run = { text: '', pre: keep };
+      run.text += text;
+    },
+  };
+}
+
+function readHtmlPieces({ root, pre = false }) {
+  const sure = createRuns();
+  const classHidden = createRuns();
   let open = null;
   const shown = [];
   const strict = [];
   function flush() {
-    if (run !== null && run.text !== '') runs.push(run);
-    run = null;
-  }
-  function add({ text, keep }) {
-    if (run !== null && run.pre !== keep) flush();
-    if (run === null) run = { text: '', pre: keep };
-    run.text += text;
+    sure.flush();
+    classHidden.flush();
   }
   function visit(node, context) {
     if (node.nodeType === node.TEXT_NODE) {
       if (context.hidden) return;
       shown.push(node.nodeValue);
       if (!context.mayHide) strict.push(node.nodeValue);
-      if (context.sure) {
-        add({ text: node.nodeValue, keep: context.keep });
-      } else {
-        flush();
-      }
+      [
+        [sure, context.sure && !context.mayHide],
+        [classHidden, context.sure && context.mayHide],
+      ].forEach(([runs, reads]) => {
+        if (reads) {
+          runs.add({ text: node.nodeValue, keep: context.keep });
+        } else {
+          runs.flush();
+        }
+      });
       return;
     }
     if (node.nodeType !== node.ELEMENT_NODE || UNREAD_TAGS.has(node.tagName)) return;
@@ -168,7 +189,6 @@ function readHtmlPieces({ root, pre = false }) {
       keep: context.keep || keepsSpace(element),
       sure:
         context.sure &&
-        !mayHide &&
         !writes &&
         !transformsCase(element) &&
         !CONTROL_TAGS.has(element.tagName.toUpperCase()),
@@ -183,7 +203,8 @@ function readHtmlPieces({ root, pre = false }) {
   );
   flush();
   return {
-    runs,
+    runs: sure.runs,
+    classHidden: classHidden.runs,
     units: [normalizeShownText(shown.join('')), normalizeShownText(strict.join(''))],
     open,
   };

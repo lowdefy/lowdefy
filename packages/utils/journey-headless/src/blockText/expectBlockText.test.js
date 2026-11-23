@@ -82,6 +82,21 @@ test('a text check that may run across elements a layout breaks runs in a browse
   );
 });
 
+test('a text check names a class the CSS may hide the text by', async () => {
+  const blocks = [
+    {
+      id: 'count',
+      type: 'Html',
+      properties: {
+        html: '<span class="max-[899px]:hidden">0 of 3 done</span><span class="min-[900px]:hidden">0/3</span>',
+      },
+    },
+  ];
+  expect((await check({ blocks, contains: '0 of 3 done' })).browserOnly.reason).toBe(
+    'Block "home" may show "0 of 3 done" in an element a class (hidden, md:hidden) the page\'s CSS may hide: the step runs in a browser.'
+  );
+});
+
 test('a text check reads a case the CSS may change as open, never as missing', async () => {
   const blocks = [
     { id: 'label', type: 'Html', properties: { html: '<span class="uppercase">draft</span>' } },
