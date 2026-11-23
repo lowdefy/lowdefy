@@ -75,6 +75,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'selectors',
     'shared_alpha',
     'shared_beta',
+    'skeleton_loading',
     'storage',
     'targets',
     'ticket',
