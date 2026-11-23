@@ -1,0 +1,333 @@
+id: escape_targets
+type: Box
+# Overlays a journey closes with press Escape, for the parity journeys in
+# tests/journeys/_parity/escape.yaml
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1144). Each runs in
+# the browser and headless and must end with the same state `log`. Every event appends
+# { event, payload } to it, so a missing, extra or reordered event shows in the end state.
+# escape_modal holds a TextInput with no onEscape and a button that opens escape_drawer over it;
+# locked_modal has keyboard: false, so Escape leaves it open; export_menu is a DropdownButton;
+# colour_picker is a Selector a fill searches; task_cards is a ClickableHtml whose onDelete asks
+# first.
+blocks:
+  - id: escape_targets_title
+    type: Title
+    properties:
+      content: Escape targets
+      level: 2
+  - id: open_escape_modal_button
+    type: Button
+    properties:
+      title: Open modal
+    events:
+      onClick:
+        - id: open_escape_modal
+          type: CallMethod
+          params:
+            blockId: escape_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: escape_modal
+    type: Modal
+    properties:
+      title: Edit the task
+    events:
+      onOpen:
+        - id: log_modal_open
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: escape_modal.onOpen
+                    payload: { _event: true }
+      onCancel:
+        - id: log_modal_cancel
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: escape_modal.onCancel
+                    payload: { _event: true }
+      onClose:
+        - id: log_modal_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: escape_modal.onClose
+                    payload: { _event: true }
+      afterOpenChange:
+        - id: log_modal_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: escape_modal.afterOpenChange
+                    payload: { _event: true }
+      afterClose:
+        - id: log_modal_after_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: escape_modal.afterClose
+                    payload: { _event: true }
+    blocks:
+      - id: task_note
+        type: TextInput
+        properties:
+          title: Note
+      - id: task_colour
+        type: Selector
+        properties:
+          title: Task colour
+          options:
+            - Green
+            - Red
+        events:
+          onSearch:
+            - id: log_task_colour_search
+              type: SetState
+              params:
+                log:
+                  _array.concat:
+                    - _if_none: [{ _state: log }, []]
+                    - - event: task_colour.onSearch
+                        payload: { _event: true }
+      - id: task_actions
+        type: DropdownButton
+        properties:
+          title: Actions
+          items:
+            - title: Archive
+              eventName: onArchive
+        events:
+          onOpenChange:
+            - id: log_task_actions_open_change
+              type: SetState
+              params:
+                log:
+                  _array.concat:
+                    - _if_none: [{ _state: log }, []]
+                    - - event: task_actions.onOpenChange
+                        payload: { _event: true }
+      - id: open_inner_drawer_button
+        type: Button
+        properties:
+          title: Open details
+        events:
+          onClick:
+            - id: open_inner_drawer
+              type: CallMethod
+              params:
+                blockId: escape_drawer
+                method: setOpen
+                args:
+                  - open: true
+  - id: open_escape_drawer_button
+    type: Button
+    properties:
+      title: Open drawer
+    events:
+      onClick:
+        - id: open_escape_drawer
+          type: CallMethod
+          params:
+            blockId: escape_drawer
+            method: setOpen
+            args:
+              - open: true
+  - id: escape_drawer
+    type: Drawer
+    properties:
+      title: Details
+    events:
+      onOpen:
+        - id: log_drawer_open
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: escape_drawer.onOpen
+                    payload: { _event: true }
+      onClose:
+        - id: log_drawer_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: escape_drawer.onClose
+                    payload: { _event: true }
+      afterOpenChange:
+        - id: log_drawer_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: escape_drawer.afterOpenChange
+                    payload: { _event: true }
+      afterClose:
+        - id: log_drawer_after_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: escape_drawer.afterClose
+                    payload: { _event: true }
+    blocks:
+      - id: drawer_details
+        type: Paragraph
+        properties:
+          content: The task's details.
+  - id: open_locked_modal_button
+    type: Button
+    properties:
+      title: Open locked modal
+    events:
+      onClick:
+        - id: open_locked_modal
+          type: CallMethod
+          params:
+            blockId: locked_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: locked_modal
+    type: Modal
+    properties:
+      title: Finish the import
+      keyboard: false
+    events:
+      onOpen:
+        - id: log_locked_open
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: locked_modal.onOpen
+                    payload: { _event: true }
+      onCancel:
+        - id: log_locked_cancel
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: locked_modal.onCancel
+                    payload: { _event: true }
+      onClose:
+        - id: log_locked_close
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: locked_modal.onClose
+                    payload: { _event: true }
+      afterOpenChange:
+        - id: log_locked_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: locked_modal.afterOpenChange
+                    payload: { _event: true }
+    blocks:
+      - id: import_step_button
+        type: Button
+        properties:
+          title: Next step
+        events:
+          onClick:
+            - id: log_import_step
+              type: SetState
+              params:
+                log:
+                  _array.concat:
+                    - _if_none: [{ _state: log }, []]
+                    - - event: import_step_button.onClick
+  - id: export_menu
+    type: DropdownButton
+    properties:
+      title: Export
+      items:
+        - title: CSV
+          eventName: onCsv
+    events:
+      onOpenChange:
+        - id: log_export_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: export_menu.onOpenChange
+                    payload: { _event: true }
+      onCsv:
+        - id: log_export_csv
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: export_menu.onCsv
+  - id: colour_picker
+    type: Selector
+    properties:
+      title: Colour
+      options:
+        - Green
+        - Grey
+        - Red
+    events:
+      onSearch:
+        - id: log_colour_search
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: colour_picker.onSearch
+                    payload: { _event: true }
+      onChange:
+        - id: log_colour_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: colour_picker.onChange
+                    value: { _state: colour_picker }
+  - id: task_cards
+    type: ClickableHtml
+    properties:
+      dataEvents:
+        - name: onDelete
+          confirm: Delete this task?
+      html: |
+        <div style="display: flex; gap: 12px; padding: 4px 0">
+          <span>Write the report</span>
+          <button data-event="onDelete" data-id="task-1">Delete</button>
+        </div>
+    events:
+      onDelete:
+        - id: log_delete
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: task_cards.onDelete
+                    payload: { _event: true }

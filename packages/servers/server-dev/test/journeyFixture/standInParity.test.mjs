@@ -34,7 +34,8 @@ import { fixtureTest, postJourney } from './fixtureClient.mjs';
 // covers ClickableHtml on clickable_targets; search_selectors.yaml covers the searching selectors'
 // fill on search_targets; input_events.yaml covers the onChange event a fill fires and a select by
 // an html label's text on input_events; skeleton_loading.yaml covers content that mounts once a
-// loading skeleton ends, on skeleton_loading.
+// loading skeleton ends, on skeleton_loading; escape.yaml covers press Escape on the overlay that
+// opened last, on escape_targets.
 
 const parityDirectory = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -55,6 +56,7 @@ const journeys = [
   ...readJourneys('search_selectors.yaml'),
   ...readJourneys('input_events.yaml'),
   ...readJourneys('skeleton_loading.yaml'),
+  ...readJourneys('escape.yaml'),
 ];
 
 // The journeys that must fail, in both runners at the same step, with what the browser's message
@@ -71,6 +73,10 @@ const REFUSED_AT = {
   'search_selectors.yaml: a fill on a Selector with search off is refused': {
     index: 0,
     message: 'element is not editable',
+  },
+  "escape.yaml: Escape closes a MultipleSelector's dropdown and keeps its search": {
+    index: 2,
+    message: 'No option with text "Red" appeared',
   },
 };
 

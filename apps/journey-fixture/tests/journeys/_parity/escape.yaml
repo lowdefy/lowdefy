@@ -1,0 +1,375 @@
+# Parity journeys for press Escape headless (LDF-1144), on the escape_targets page. Each runs in
+# the browser and headless (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs)
+# and must end with the same state `log`, the events the page fired in order with their payloads.
+# Escape closes the overlay that opened last. In a folder starting with "_" so the suite's own runs,
+# and harden, leave it out.
+- name: Escape on an open Modal fires onCancel and closes it
+  pageId: escape_targets
+  steps:
+    - click: open_escape_modal_button
+    # afterOpenChange fires once the open animation ends; a person presses Escape after it.
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+    - press: Escape
+    - expect: { hidden: task_note }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+            - event: escape_modal.onCancel
+            - event: escape_modal.onClose
+            - event: escape_modal.afterClose
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: false
+- name: Escape after a fill in a Modal closes the Modal
+  pageId: escape_targets
+  steps:
+    - click: open_escape_modal_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+    - fill: { blockId: task_note, value: Call back }
+    - press: Escape
+    - expect: { hidden: task_note }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+            - event: escape_modal.onCancel
+            - event: escape_modal.onClose
+            - event: escape_modal.afterClose
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: false
+- name: Escape on an open Drawer fires onClose and closes it
+  pageId: escape_targets
+  steps:
+    - click: open_escape_drawer_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_drawer.onOpen
+            - event: escape_drawer.afterOpenChange
+              payload:
+                drawerOpen: true
+                open: true
+    - press: Escape
+    - expect: { hidden: drawer_details }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_drawer.onOpen
+            - event: escape_drawer.afterOpenChange
+              payload:
+                drawerOpen: true
+                open: true
+            - event: escape_drawer.onClose
+            - event: escape_drawer.afterOpenChange
+              payload:
+                drawerOpen: false
+                open: false
+            - event: escape_drawer.afterClose
+- name: Escape closes a Drawer opened over a Modal, then the Modal
+  pageId: escape_targets
+  steps:
+    - click: open_escape_modal_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+    - click: open_inner_drawer_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+            - event: escape_drawer.onOpen
+            - event: escape_drawer.afterOpenChange
+              payload:
+                drawerOpen: true
+                open: true
+    - press: Escape
+    - expect: { hidden: drawer_details }
+    - expect: { visible: task_note }
+    - press: Escape
+    - expect: { hidden: task_note }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+            - event: escape_drawer.onOpen
+            - event: escape_drawer.afterOpenChange
+              payload:
+                drawerOpen: true
+                open: true
+            - event: escape_drawer.onClose
+            - event: escape_drawer.afterOpenChange
+              payload:
+                drawerOpen: false
+                open: false
+            - event: escape_drawer.afterClose
+            - event: escape_modal.onCancel
+            - event: escape_modal.onClose
+            - event: escape_modal.afterClose
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: false
+- name: Escape leaves a Modal with keyboard false open
+  pageId: escape_targets
+  steps:
+    - click: open_locked_modal_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: locked_modal.onOpen
+            - event: locked_modal.afterOpenChange
+              payload:
+                open: true
+    - press: Escape
+    # The step after Escape clicks inside the Modal, which a closed Modal would hide.
+    - click: import_step_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: locked_modal.onOpen
+            - event: locked_modal.afterOpenChange
+              payload:
+                open: true
+            - event: import_step_button.onClick
+- name: Escape closes an open DropdownButton
+  pageId: escape_targets
+  steps:
+    - click: export_menu
+    - press: Escape
+    # A click on the closed button opens it again.
+    - click: export_menu
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: export_menu.onOpenChange
+              payload:
+                open: true
+            - event: export_menu.onOpenChange
+              payload:
+                open: false
+            - event: export_menu.onOpenChange
+              payload:
+                open: true
+- name: Escape closes a Selector's search
+  pageId: escape_targets
+  steps:
+    - fill: { blockId: colour_picker, value: gr }
+    - press: Escape
+    - select: { blockId: colour_picker, value: Red }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: colour_picker.onSearch
+              payload:
+                value: gr
+            - event: colour_picker.onSearch
+              payload:
+                value: ''
+            - event: colour_picker.onChange
+              value: Red
+- name: Escape closes a ClickableHtml confirm without firing its event
+  pageId: escape_targets
+  steps:
+    - click: { blockId: task_cards, control: onDelete, rowKey: task-1 }
+    - expect: { visible: { blockId: task_cards, control: ok } }
+    - press: Escape
+    - expect: { hidden: { blockId: task_cards, control: ok } }
+    - click: { blockId: task_cards, control: onDelete, rowKey: task-1 }
+    - click: { blockId: task_cards, control: ok }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: task_cards.onDelete
+              payload:
+                id: task-1
+- name: Escape closes a dropdown in a Modal, then the Modal
+  pageId: escape_targets
+  steps:
+    - click: open_escape_modal_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+    - click: task_actions
+    - press: Escape
+    - expect: { visible: task_note }
+    # The dropdown is still fading out; the browser's Escape waits for it, so this one closes the
+    # Modal.
+    - press: Escape
+    - expect: { hidden: task_note }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+            - event: task_actions.onOpenChange
+              payload:
+                open: true
+            - event: task_actions.onOpenChange
+              payload:
+                open: false
+            - event: escape_modal.onCancel
+            - event: escape_modal.onClose
+            - event: escape_modal.afterClose
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: false
+- name: Escape closes a Selector's search in a Modal, then the Modal
+  pageId: escape_targets
+  steps:
+    - click: open_escape_modal_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+    - fill: { blockId: task_colour, value: re }
+    - press: Escape
+    - press: Escape
+    - expect: { hidden: task_note }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+            - event: task_colour.onSearch
+              payload:
+                value: re
+            - event: task_colour.onSearch
+              payload:
+                value: ''
+            - event: escape_modal.onCancel
+            - event: escape_modal.onClose
+            - event: escape_modal.afterClose
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: false
+- name: Escape straight after a Modal opens waits for it to open, then closes it
+  pageId: escape_targets
+  steps:
+    - click: open_escape_modal_button
+    - press: Escape
+    - expect: { hidden: task_note }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: escape_modal.onOpen
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: true
+            - event: escape_modal.onCancel
+            - event: escape_modal.onClose
+            - event: escape_modal.afterClose
+            - event: escape_modal.afterOpenChange
+              payload:
+                open: false
+- name: Escape closes a hover DropdownMenu
+  pageId: popup_targets
+  steps:
+    - open: view_menu
+    - press: Escape
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: view_menu.onOpenChange
+              payload:
+                open: true
+            - event: view_menu.onOpenChange
+              payload:
+                open: false
+- name: Escape closes a TreeSelector's search
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_tree, value: 'no' }
+    - press: Escape
+    - fill: { blockId: note_input, value: Call back }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_tree.onSearch
+              payload:
+                value: 'no'
+            - event: region_tree.onSearch
+              payload:
+                value: ''
+- name: Escape closes a TreeMultipleSelector's search
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_trees, value: 'no' }
+    - press: Escape
+    - fill: { blockId: note_input, value: Call back }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_trees.onSearch
+              payload:
+                value: 'no'
+            - event: region_trees.onSearch
+              payload:
+                value: ''
+- name: Escape closes a MultipleSelector's dropdown and keeps its search
+  pageId: search_targets
+  steps:
+    - fill: { blockId: tag_picker, value: gr }
+    - press: Escape
+    - select: { blockId: tag_picker, value: Red }
