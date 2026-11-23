@@ -3,12 +3,12 @@ type: Box
 # Searching selectors a journey fills, for the parity journeys in
 # tests/journeys/_parity/search_selectors.yaml
 # (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1136). A fill types
-# into a selector's search box, so the block fires onSearch { value } and keeps its value. Each
-# runs in the browser and headless and must end with the same state `log`: onSearch appends its
-# event, onChange the block's value. company_picker loads its options from its onSearch, after a
-# 300 ms debounce, as a page that searches a server list does; region_tree and region_trees are
-# the tree selectors; note_input takes the focus from a picker; locked_picker has search off; shade_radio is picked
-# with one click on its option.
+# into a selector's search box, so the block fires onSearch { value } and keeps its value. Each runs
+# in the browser and headless and must end with the same state `log`: onSearch appends its event,
+# onChange the block's value. company_picker loads its options from its onSearch, after a 300 ms
+# debounce, as a page that searches a server list does; region_tree and region_trees are the tree
+# selectors; note_input takes the focus from a picker; locked_picker has search off; shade_radio is
+# picked with one click on its option.
 blocks:
   - id: search_targets_title
     type: Title

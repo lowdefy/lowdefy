@@ -540,9 +540,10 @@ async function findPopoverTrigger({ page, target, selector }) {
 // The one visible control a `control` target names. When none shows it reveals the control as a
 // person would: it hovers the target's row (a Table's `showOn: hover` buttons mount only then),
 // then opens the first closed dropdown trigger in the scope (the cell, else the row, else the
-// block) and waits for its popup, or opens the ClickableHtml popover that holds it. Several visible matches fail with the count, as a `text` that
-// matches several controls does; none within the timeout fails naming what was tried.
-// beforeReveal (a click's step rails) runs once, before the first hover or open.
+// block) and waits for its popup, or opens the ClickableHtml popover that holds it. Several visible
+// matches fail with the count, as a `text` that matches several controls does; none within the
+// timeout fails naming what was tried. beforeReveal (a click's step rails) runs once, before the
+// first hover or open.
 async function locateControl({ page, target, timeout, beforeReveal }) {
   const deadline = Date.now() + timeout;
   const description = describeTarget(target);
@@ -788,9 +789,10 @@ function readsPage(target) {
   return namesMatches(target) || !type.isUndefined(target.nth) || !type.isUndefined(target.row);
 }
 
-// The control target the element a page-reading click lands on (at its centre) carries (its control marks: a
-// ClickableHtml element, a grid cell's button, a modal's ok), when it names that one visible
-// element, else null. Lint L8 reads it from the journey's measured run to suggest the target.
+// The control target the element a page-reading click lands on (at its centre) carries (its control
+// marks: a ClickableHtml element, a grid cell's button, a modal's ok), when it names that one
+// visible element, else null. Lint L8 reads it from the journey's measured run to suggest the
+// target.
 async function readMarkedControl({ locator }) {
   const marked = await locator.evaluate((element, attributes) => {
     // The click lands at the element's centre, on what is drawn there: a button inside a card.

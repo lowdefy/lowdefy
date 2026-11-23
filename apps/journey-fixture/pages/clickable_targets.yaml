@@ -1,7 +1,8 @@
 id: clickable_targets
 type: Box
-# A ClickableHtml list a journey names by key ({ blockId, control: <data-event>, rowKey: <data-id> }),
-# for the parity journeys in tests/journeys/_parity/clickable_html.yaml
+# A ClickableHtml list a journey names by key
+# ({ blockId, control: <data-event>, rowKey: <data-id> }), for the parity journeys in
+# tests/journeys/_parity/clickable_html.yaml
 # (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1134). Each runs in
 # the browser and headless and must end with the same state. Every event appends { event, payload }
 # to state `log`, so a missing or extra event, or a different event object, shows in the end state.

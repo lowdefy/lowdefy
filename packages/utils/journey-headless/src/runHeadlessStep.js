@@ -159,19 +159,19 @@ async function runStandInExpect({ actor, step, stepTimeout }) {
 // checks the engine, the answer or the data (runHeadlessExpect). Resolves the answer of a call,
 // request or webhook, and undefined for any other step.
 //
-// Before a block step acts, its block must be shown, as the browser waits for a visible target.
-// A click on a rowKey or control target, an open, a plain click a component answers itself (a
-// dropdown's trigger) and expect.visible or hidden on a rowKey or control go to the block's stand-in
-// (BLOCK_STAND_INS); a block with no stand-in for the step marks the journey browser-only
+// Before a block step acts, its block must be shown, as the browser waits for a visible target. A
+// click on a rowKey or control target, an open, a plain click a component answers itself (a
+// dropdown's trigger) and expect.visible or hidden on a rowKey or control go to the block's
+// stand-in (BLOCK_STAND_INS); a block with no stand-in for the step marks the journey browser-only
 // (actor.browserOnly), naming the block and its type, as a click on a block with no onClick of its
 // own does, which in a browser lands on a control inside it. A click, open or select first closes
 // any other open dropdown (leaveDropdowns), and a fill the browser would not refuse blurs the input
-// that had the focus (blurInputs). A fill or select on a block whose stand-in has a part
-// for it goes to the stand-in (a searching selector's fill types into its search box); an Enter
-// after such a fill, which the stand-in has no press for, needs the browser. Any other fill is
-// refused where the browser's would be (checkFillTarget); a ColorSelector's fill clicks its picker
-// first, as the browser's does (fillColorSelector). wait.request waits for a call made since the last interaction: `since` is
-// the actor's call count when that window opened.
+// that had the focus (blurInputs). A fill or select on a block whose stand-in has a part for it
+// goes to the stand-in (a searching selector's fill types into its search box); an Enter after such
+// a fill, which the stand-in has no press for, needs the browser. Any other fill is refused where
+// the browser's would be (checkFillTarget); a ColorSelector's fill clicks its picker first, as the
+// browser's does (fillColorSelector). wait.request waits for a call made since the last
+// interaction: `since` is the actor's call count when that window opened.
 //
 // On a data-set journey (rails: the run's createDataSetRails, else null), a click, open, fill,
 // select or press is checked against the rails on the block it acts on before it acts, as the

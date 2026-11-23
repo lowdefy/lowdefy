@@ -15,10 +15,10 @@
 */
 
 // A block of the fixture app's own plugin, which no headless stand-in models: it renders nothing
-// and registers a `run` method that fires its onRun event, as an app's action-chain block does,
-// and a `stop` method that fires onStop. Its meta (types.js) declares `run` in headlessMethods, so
-// a headless run fires onRun for a CallMethod run; `stop` is left undeclared, so the headless
-// runner leaves a CallMethod stop to the browser (packages/cli/test/journeyFixture/headless.test.mjs,
+// and registers a `run` method that fires its onRun event, as an app's action-chain block does, and
+// a `stop` method that fires onStop. Its meta (types.js) declares `run` in headlessMethods, so a
+// headless run fires onRun for a CallMethod run; `stop` is left undeclared, so the headless runner
+// leaves a CallMethod stop to the browser (packages/cli/test/journeyFixture/headless.test.mjs,
 // pages/plugin_block.yaml). It imports no React, since the plugin installs none, and registers its
 // methods as it renders.
 function FixtureActionChain({ methods }) {
