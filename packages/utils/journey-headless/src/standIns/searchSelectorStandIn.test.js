@@ -16,7 +16,7 @@
 
 import { expect, test } from 'vitest';
 
-import runTestJourney, { readLog, record } from '../tests/runTestJourney.js';
+import runTestJourney, { methodButton, readLog, record } from '../tests/runTestJourney.js';
 
 const COMPANIES = [
   { label: 'Audit Avis', value: 'avis' },
@@ -88,16 +88,17 @@ test('a select with no search first fails on a Selector whose options a search l
   expect(result.failure.message).toContain('has no option "Audit Avis"');
 });
 
-test('a click elsewhere after a search closes a Selector, which clears its search with onSearch', async () => {
+test('a click elsewhere after a search closes a Selector, whose onSearch clears the search after the click', async () => {
   const { log, result } = await runTestJourney({
     pages: [pickerPage({ debounce: null })],
     steps: [{ fill: { blockId: 'company', value: 'Audit' } }, { click: 'done' }],
   });
   expect(result.passed).toBe(true);
+  // rc-select closes a single select a task after the mousedown, so the click's event starts first.
   expect(readLog(log)).toEqual([
     ['onSearch', { value: 'Audit' }],
-    ['onSearch', { value: '' }],
     ['done.onClick'],
+    ['onSearch', { value: '' }],
   ]);
 });
 
@@ -114,7 +115,7 @@ test('a click elsewhere runs first when a debounce delays the onSearch that clea
   ]);
 });
 
-test('a fill of another input after a search blurs a Selector, which clears its search with onSearch', async () => {
+test('a fill of another input after a search blurs a Selector, whose onSearch clears the search after the typing', async () => {
   const { log, result } = await runTestJourney({
     pages: [pickerPage({ debounce: null })],
     steps: [
@@ -125,8 +126,8 @@ test('a fill of another input after a search blurs a Selector, which clears its 
   expect(result.passed).toBe(true);
   expect(readLog(log)).toEqual([
     ['onSearch', { value: 'Audit' }],
-    ['onSearch', { value: '' }],
     ['note.onChange'],
+    ['onSearch', { value: '' }],
   ]);
 });
 
@@ -259,4 +260,70 @@ test('Enter after a search fill needs the browser, where it picks the highlighte
       'Block "company" is of type Selector, which has no headless stand-in for press "Enter": the step runs in a browser.',
   });
   expect(readLog(log)).toEqual([['note.onChange'], ['onSearch', { value: 'Audit' }]]);
+});
+
+test('a select after a search refuses an option the search hides, as the browser shows none', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      pickerPage({
+        properties: { options: [...COMPANIES, { label: 'Zulu Ltd', value: 'zulu' }] },
+        debounce: null,
+      }),
+    ],
+    steps: [
+      { fill: { blockId: 'company', value: 'audit' } },
+      { select: { blockId: 'company', value: 'Zulu Ltd' } },
+    ],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(1);
+  expect(result.failure.message).toBe(
+    'No option with text "Zulu Ltd" appeared in the dropdown of block "company": the search "audit" hides it.'
+  );
+});
+
+test('a select after a search matches the search against the option filterString, case ignored', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      pickerPage({
+        properties: {
+          options: [{ label: 'Zulu Ltd', value: 'zulu', filterString: 'Zulu Ltd zulu.invalid' }],
+        },
+        debounce: null,
+      }),
+    ],
+    steps: [
+      { fill: { blockId: 'company', value: 'ZULU.INV' } },
+      { select: { blockId: 'company', value: 'Zulu Ltd' } },
+      { expect: { state: { path: 'company', equals: 'zulu' } } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+});
+
+test('a fill the browser refuses moves no focus, so a searching selector keeps its search', async () => {
+  const page = pickerPage({ debounce: null });
+  page.blocks.push({ id: 'locked', type: 'TextInput', properties: { disabled: true } });
+  const { log, result } = await runTestJourney({
+    pages: [page],
+    steps: [
+      { fill: { blockId: 'company', value: 'Audit' } },
+      { fill: { blockId: 'locked', value: 'x' } },
+    ],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(1);
+  expect(readLog(log)).toEqual([['onSearch', { value: 'Audit' }]]);
+});
+
+test('a CallMethod on a searching selector, such as setData, needs the browser', async () => {
+  const page = pickerPage({ debounce: null });
+  page.blocks.push(methodButton({ id: 'load', blockId: 'company', method: 'setData' }));
+  const { result } = await runTestJourney({ pages: [page], steps: [{ click: 'load' }] });
+  expect(result.browserOnly).toEqual({
+    index: 0,
+    step: { click: 'load' },
+    reason:
+      'Block "company" is of type Selector, which has no headless stand-in for CallMethod setData: the step runs in a browser.',
+  });
 });

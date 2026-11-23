@@ -162,8 +162,8 @@ async function runStandInExpect({ actor, step, stepTimeout }) {
 // (BLOCK_STAND_INS); a block with no stand-in for the step marks the journey browser-only
 // (actor.browserOnly), naming the block and its type, as a click on a block with no onClick of its
 // own does, which in a browser lands on a control inside it. A click, open or select first closes
-// any other open dropdown (leaveDropdowns), and a fill blurs the input that had the focus
-// (blurInputs). A fill or select on a block whose stand-in has a part
+// any other open dropdown (leaveDropdowns), and a fill the browser would not refuse blurs the input
+// that had the focus (blurInputs). A fill or select on a block whose stand-in has a part
 // for it goes to the stand-in (a searching selector's fill types into its search box); an Enter
 // after such a fill, which the stand-in has no press for, needs the browser. Any other fill is
 // refused where the browser's would be (checkFillTarget); a ColorSelector's fill clicks its picker
@@ -190,9 +190,10 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
   if (key === 'fill') {
     const block = await waitForShownBlock({ actor, target: step.fill, timeout: stepTimeout });
     checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'fill' });
-    await blurInputs({ actor, except: block });
     const standIn = BLOCK_STAND_INS[block.type];
     if (type.isFunction(standIn?.fill)) {
+      standIn.checkFill({ block });
+      await blurInputs({ actor, except: block });
       await standIn.fill({
         actor,
         block,
@@ -203,6 +204,7 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
       return undefined;
     }
     checkFillTarget({ block, value: step.fill.value });
+    await blurInputs({ actor, except: block });
     if (block.type === 'ColorSelector') {
       await fillColorSelector({ actor, block, step });
       return undefined;

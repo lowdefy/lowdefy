@@ -44,10 +44,11 @@ import tableStandIn from './standIns/tableStandIn.js';
 //   trigger (a DropdownMenu's), after that block's own click (pointerClick). claimed: a block on
 //   the way handled the click, so the engine skips this block's events for it (isClickClaimed).
 // - open(): an open step on the block.
-// - fill({ value }) and select({ step }): a fill or select on the block, which the stand-in takes
-//   in place of client-core's step runner (a searching selector types into its search box, so a
-//   fill fires onSearch and leaves its value alone). A block whose stand-in has a fill but no
-//   press leaves an Enter after that fill to the browser.
+// - checkFill(), fill({ value }) and select({ step }): a fill or select on the block, which the
+//   stand-in takes in place of client-core's step runner (a searching selector types into its
+//   search box, so a fill fires onSearch and leaves its value alone). checkFill refuses what the
+//   browser's fill refuses, before the focus moves. A block whose stand-in has a fill but no press
+//   leaves an Enter after that fill to the browser.
 // - leave({ targetBlock }): another click, open or select is about to act (on targetBlock), and
 //   the block's dropdown is open (state.open): close it as a click outside or the mouse leaving
 //   does.
