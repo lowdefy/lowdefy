@@ -26,6 +26,20 @@ const GRID_KEYS = ['row', 'column'];
 const TARGET_STEPS = ['click', 'fill', 'select'];
 const TARGET_EXPECTATIONS = ['visible', 'hidden'];
 
+// Whether a step's target reads text a headless run looks for in ClickableHtml blocks when it
+// runs (a click, expect.visible or expect.hidden by text or containing), so classifyJourney calls
+// it headless while the run may still leave it to the browser.
+function readsTextAtRunTime(step) {
+  const key = getStepKey(step);
+  const target = readTarget(step);
+  return (
+    (key === 'click' || key === 'expect') &&
+    type.isObject(target) &&
+    ['text', 'containing'].some((targetKey) => Object.hasOwn(target, targetKey)) &&
+    !GRID_KEYS.some((targetKey) => Object.hasOwn(target, targetKey))
+  );
+}
+
 function readTarget(step) {
   const key = getStepKey(step);
   if (TARGET_STEPS.includes(key)) {
@@ -114,35 +128,54 @@ function formatTarget(target) {
     .join(', ')} }`;
 }
 
-function describeProblem({ replacement, step, index }) {
+// atRunTime: the journey already classifies headless, and only its text targets may send it to
+// the browser when it runs, so the message says what the target gains rather than that the
+// journey becomes headless.
+function describeProblem({ atRunTime, replacement, step, index }) {
   const target = readTarget(step);
   const keys = pageKeys(target).join(' and ');
   const names = type.isString(target.blockId) ? ` names block "${target.blockId}" and` : '';
   if (replacement.kind === 'control') {
+    const gain = atRunTime
+      ? 'which runs headless without reading the page'
+      : 'and the journey runs headless';
     return `${describeStep({ step, index })}${names} reads the page for its ${keys}: target ${formatTarget(
       replacement.target
-    )}, the control its measured run clicked, and the journey runs headless.`;
+    )}, the control its measured run clicked, ${gain}.`;
   }
+  const gain = atRunTime
+    ? ', which runs headless without reading the page'
+    : ' and the journey runs headless';
   return `${describeStep({ step, index })}${names} reads the page for its ${keys}: target { blockId: ${
     target.blockId
-  } } alone and the journey runs headless.`;
+  } } alone${gain}.`;
 }
 
 // L8: a journey that runs only in the browser, and only because some of its targets read the page
 // (text, containing, nth or row), could run headless, the fast level, if those targets named
 // their control by key. Each such step is reported with the target to use: the control its
-// measured browser run clicked (a ClickableHtml element's { blockId, control, rowKey }), else the
-// blockId alone where the target already names its block and no grid row or cell. A check of
-// what the person sees (expect: { text }) is never reported: under
-// write-journeys-assert-the-store a write journey proves its write with expect: { db }, and a text
-// check is the optional browser check of what the page shows, the journey's to keep.
+// measured run clicked (a ClickableHtml element's { blockId, control, rowKey }), else the
+// blockId alone where the target already names its block and no grid row or cell. A journey whose
+// only such targets are a click, visible or hidden by text or containing classifies headless: the
+// run reads them in ClickableHtml blocks (LDF-1146) and leaves the step to the browser when none
+// shows the text. Those steps are reported too, since a control or blockId target runs headless
+// wherever the block draws the control and holds when the text changes. A check of what the
+// person sees (expect: { text }) is never reported: under write-journeys-assert-the-store a write
+// journey proves its write with expect: { db }, and a text check is the optional browser check of
+// what the page shows, the journey's to keep.
 function L8({ journey, exercisedEntry }) {
-  if (classifyJourney({ journey }).headless) {
-    return [];
-  }
+  const atRunTime = classifyJourney({ journey }).headless;
   const replacements = journey.steps.map((step, index) =>
     findReplacement({ exercisedEntry, index, step })
   );
+  if (
+    atRunTime &&
+    !replacements.some(
+      (replacement, index) => replacement !== null && readsTextAtRunTime(journey.steps[index])
+    )
+  ) {
+    return [];
+  }
   const replaced = journey.steps.map((step, index) => replacements[index]?.step ?? step);
   if (!classifyJourney({ journey: { ...journey, steps: replaced } }).headless) {
     return [];
@@ -156,7 +189,7 @@ function L8({ journey, exercisedEntry }) {
       {
         severity: 'warning',
         stepIndex: index,
-        message: describeProblem({ replacement, step, index }),
+        message: describeProblem({ atRunTime, replacement, step, index }),
       },
     ];
   });
