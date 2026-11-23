@@ -192,7 +192,18 @@ _ref:
             };
             ```
 
-            A method left out of `headlessMethods`, or one called while the block is hidden, stays browser-only.
+            A method that changes only what the block draws, sets no state and calls nothing, such as one that folds new rows into the block's own view, can be declared `null`. A headless `CallMethod` on it does nothing and resolves with no value, so the journey goes on; a check of what it drew, such as an `expect: { text }` on the block, still needs the browser:
+
+            ```js
+            // src/blocks/Timeline/meta.js: merge redraws the timeline, refresh fires onRefresh
+            export default {
+              category: 'display',
+              headlessMethods: { merge: null, refresh: 'onRefresh' },
+              // ...events, properties
+            };
+            ```
+
+            Declare `null` only for such a method: one that sets state, fires an event or calls a request would pass headless where the browser fails. A method left out of `headlessMethods`, or one called while the block is hidden, stays browser-only. Any value other than an event name or `null` fails the build, naming the block type and the method.
 
             See the [default Lowdefy block packages](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks) for full examples.
 

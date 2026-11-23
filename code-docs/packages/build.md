@@ -376,7 +376,7 @@ Each function:
 3. Prioritizes custom schemas from `context.typesMap.schemas` over package schemas
 4. Writes a JSON map: `{ "TypeName": { type, properties/params, ... } }`
 
-**Block schemas** are generated from `meta.js` files: `writeBlockSchemaMap` imports the `metas` export from each block package (e.g., `@lowdefy/blocks-antd/metas`), then calls `buildBlockSchema(meta)` from `@lowdefy/block-utils` to generate full JSON Schemas. It falls back to importing from `/schemas` for backward compatibility with older plugin packages. In addition to `plugins/blockSchemas.json`, it also writes `plugins/blockMetas.json` with runtime metadata (category, valueType, initValue, hazards, and `headlessMethods` when a block declares it, which the headless journey runner reads) from `context.typesMap.blockMetas` or the meta objects.
+**Block schemas** are generated from `meta.js` files: `writeBlockSchemaMap` imports the `metas` export from each block package (e.g., `@lowdefy/blocks-antd/metas`), then calls `buildBlockSchema(meta)` from `@lowdefy/block-utils` to generate full JSON Schemas. It falls back to importing from `/schemas` for backward compatibility with older plugin packages. In addition to `plugins/blockSchemas.json`, it also writes `plugins/blockMetas.json` with runtime metadata (category, valueType, initValue, hazards, and `headlessMethods` when a block declares it, which the headless journey runner reads; `checkHeadlessMethods` from `@lowdefy/block-utils` fails the build on a value that is neither an event name nor `null`) from `context.typesMap.blockMetas` or the meta objects.
 
 **Action and operator schemas** are imported from a `/schemas` entry point:
 

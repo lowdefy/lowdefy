@@ -176,7 +176,18 @@ export default extractBlockTypes(metas);
 
 - `blocks` — array of block type names
 - `icons` — map of block name → icon name arrays
-- `blockMetas` — map of block name → `{ category, valueType?, initValue?, slots?, cssKeys?, actions?, operators?, headlessMethods? }` (cssKeys are reduced to an array of key names). `actions` and `operators` list the types a block runs through events it registers itself (`methods.registerEvent`, such as a file block's `Request`); the build adds them to every page that uses the block (`countImpliedClientTypes`), since each page loads only its own plugin code. `headlessMethods` (`{ [method]: event }`) names the methods that only fire one of the block's own events, so a headless journey runs them without the component (`@lowdefy/journey-headless` `registerHeadlessMethods`).
+- `blockMetas` — map of block name → `{ category, valueType?, initValue?, slots?, cssKeys?, actions?, operators?, headlessMethods? }` (cssKeys are reduced to an array of key names). `actions` and `operators` list the types a block runs through events it registers itself (`methods.registerEvent`, such as a file block's `Request`); the build adds them to every page that uses the block (`countImpliedClientTypes`), since each page loads only its own plugin code. `headlessMethods` (`{ [method]: event or null }`) names the methods a headless journey runs without the component (`@lowdefy/journey-headless` `registerHeadlessMethods`): an event name for a method that only fires that block event, `null` for one that changes only what the block draws, which runs as a no-op.
+
+### checkHeadlessMethods({ blockType, headlessMethods })
+
+Checks a block meta's `headlessMethods`: each value must be a block event name or `null`. Anything else throws, naming the block type and the method. `writeBlockSchemaMap` runs it at build time and `@lowdefy/journey-headless` `registerHeadlessMethods` as it registers the methods, so both refuse the same declarations with the same message.
+
+```javascript
+import { checkHeadlessMethods } from '@lowdefy/block-utils';
+
+checkHeadlessMethods({ blockType: 'app_Timeline', headlessMethods: { merge: null } }); // passes
+checkHeadlessMethods({ blockType: 'app_Timeline', headlessMethods: { merge: false } }); // throws
+```
 
 ### buildBlockSchema(meta)
 
@@ -257,6 +268,7 @@ const RichText = ({ properties }) => {
 | ---------------------------------- | ---------------------------------------- |
 | `src/extractBlockTypes.js`         | Derive types from metas barrel           |
 | `src/buildBlockSchema.js`          | Generate JSON Schema from meta           |
+| `src/checkHeadlessMethods.js`      | Check a meta's `headlessMethods`         |
 | `src/cn.js`                        | Tailwind class merging (clsx + twMerge)  |
 | `src/renderHtml.js`                | HTML sanitization                        |
 | `src/ErrorBoundary.js`             | Error boundary component                 |
