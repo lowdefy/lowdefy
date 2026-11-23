@@ -278,6 +278,43 @@ test('a data-set journey pressing Escape on a modal whose onCancel reaches an un
   expect(log).toEqual([]);
 });
 
+test('a data-set journey pressing Escape on a dropdown in a modal whose onCancel reaches an undeclared connection is refused', async () => {
+  const step = { press: 'Escape' };
+  const page = {
+    ...PRESS_PAGE,
+    blocks: PRESS_PAGE.blocks.map((block) =>
+      block.id === 'dialog'
+        ? {
+            ...block,
+            blocks: [
+              ...block.blocks,
+              {
+                id: 'dialog_actions',
+                type: 'DropdownButton',
+                properties: { items: [{ title: 'Archive', eventName: 'onArchive' }] },
+              },
+            ],
+          }
+        : block
+    ),
+  };
+  const { result } = await runTestJourney({
+    dataSet: DATA_SET,
+    pages: [page],
+    steps: [{ click: 'open_dialog' }, { click: 'dialog_actions' }, step],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual(
+    refusedFailure({
+      blockId: 'dialog',
+      index: 2,
+      step,
+      act: 'press a key that fires its events',
+      noun: 'a press',
+    })
+  );
+});
+
 test('a data-set journey pressing Escape on an open dropdown that reaches no undeclared connection closes it', async () => {
   const { log, result } = await runTestJourney({
     dataSet: DATA_SET,

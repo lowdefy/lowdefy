@@ -54,6 +54,8 @@ function readQuery(query) {
 //   a loading block's skeleton held back mounts once it stops loading. Popup blocks (Modal, Drawer,
 //   ConfirmModal) start closed; the methods their stand-ins register open them, fire their open
 //   and close events and mount their content through setOpen (registerBlockStandIns).
+// - page.inputFocused and page.pointerBlockId say whether an input has the focus and which block
+//   the pointer rests on, for a press of Escape (runHeadlessStep's noteFocus).
 // - page.standIns holds what each block's stand-in keeps for the shown page, by block id
 //   (readStandInState): a dropdown's open state and selected keys, a confirm dialog's status.
 //   track(promise) holds an event a stand-in fired until settle, and sends its error to the
@@ -195,8 +197,10 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       mounted: new Map(),
       mountFinished: new Set(),
       onUpdate: () => scheduleMountCheck(shown),
+      inputFocused: false,
       openBlocks: new Set(),
       pageId: page.pageId,
+      pointerBlockId: null,
       reportedParseErrors: new Set(),
       standIns: new Map(),
       urlQuery: urlQuery ?? {},

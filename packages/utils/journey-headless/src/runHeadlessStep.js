@@ -54,14 +54,36 @@ function isStandInTarget(target) {
 const INPUT_FOCUS_KEYS = ['fill', 'select'];
 const POINTER_KEYS = ['click', 'open'];
 
-// Where the focus is, for a press of Escape (pressEscape): a fill or select puts it in the input
-// it acts on, and a click or open moves it off every input. A goto, back or `as` shows another
-// page, whose focus starts on no input.
-function noteFocus({ actor, key }) {
+// Whether an open step only hovers its block, as the browser runner's openDropdown does for a
+// dropdown that opens on hover (a DropdownMenu unless its trigger says otherwise): the pointer
+// moves and the focus stays where it was.
+function opensOnHover({ actor, target }) {
+  if (!type.isString(target) && !type.isUndefined(target.rowKey ?? target.row ?? target.column)) {
+    return false;
+  }
+  const block = actor.page.context._internal.RootSlots.map[target.blockId ?? target];
+  if (type.isNone(block)) {
+    return false;
+  }
+  const trigger =
+    block.eval.properties?.trigger ?? (block.type === 'DropdownMenu' ? 'hover' : 'click');
+  return trigger === 'hover';
+}
+
+// Where the focus and the pointer are, for a press of Escape (pressEscape): a fill or select puts
+// the focus in the input it acts on; a click or open moves the pointer to its block
+// (page.pointerBlockId), and moves the focus off every input unless it only hovers. A goto, back
+// or `as` shows another page, whose focus starts on no input.
+function noteFocus({ actor, key, step }) {
   if (INPUT_FOCUS_KEYS.includes(key)) {
     actor.page.inputFocused = true;
   }
-  if (POINTER_KEYS.includes(key)) {
+  if (!POINTER_KEYS.includes(key)) {
+    return;
+  }
+  const target = step[key];
+  actor.page.pointerBlockId = type.isString(target) ? target : target.blockId;
+  if (key === 'click' || !opensOnHover({ actor, target })) {
     actor.page.inputFocused = false;
   }
 }
@@ -199,7 +221,7 @@ async function runStandInExpect({ actor, step, stepTimeout }) {
 async function runHeadlessStep({ actors, answer, host, rails, since, step, stepTimeout }) {
   const key = getStepKey(step);
   const actor = actors.current();
-  noteFocus({ actor, key });
+  noteFocus({ actor, key, step });
   if (key === 'press' && step.press === 'Escape') {
     await pressEscape({ actor, rails });
     return undefined;

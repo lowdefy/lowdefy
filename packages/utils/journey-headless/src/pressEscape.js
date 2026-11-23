@@ -23,6 +23,7 @@ import collectBlockParents from './collectBlockParents.js';
 import ESCAPE_PASSING_INPUT_TYPES from './ESCAPE_PASSING_INPUT_TYPES.js';
 import findShortcutBlocks from './findShortcutBlocks.js';
 import POPUP_BLOCK_TYPES from './POPUP_BLOCK_TYPES.js';
+import readShownBlock from './readShownBlock.js';
 import readStandInState from './readStandInState.js';
 import describeBlock from './standIns/describeBlock.js';
 import isInsideBlock from './standIns/isInsideBlock.js';
@@ -33,7 +34,7 @@ const BROWSER = 'the step runs in a browser';
 // The input that has the focus, or null: the one filled or selected in last, while no click, open
 // or closing popup has moved the focus since (page.inputFocused, kept by runHeadlessStep).
 function readFocusedInput({ actor }) {
-  if (actor.page.inputFocused !== true) {
+  if (!actor.page.inputFocused) {
     return null;
   }
   return actor.page.context._internal.RootSlots.map[actor.stepRunner.lastInputBlockId()] ?? null;
@@ -68,6 +69,12 @@ function readOpenOverlays({ actor, blocks }) {
 function findEscapeTarget({ actor, blocks, parents }) {
   const { dropdowns, popups } = readOpenOverlays({ actor, blocks });
   const top = popups.at(-1);
+  const pointerPopup = findPointerPopup({ actor, parents, top });
+  if (!type.isUndefined(pointerPopup)) {
+    return {
+      reason: `The pointer rests on ${describeBlock(pointerPopup)}, whose tooltip or popover a browser shows on top of what Escape would close: ${BROWSER}.`,
+    };
+  }
   if (dropdowns.length > 1) {
     const names = dropdowns.map((block) => `"${block.blockId}"`).join(', ');
     return {
@@ -91,13 +98,108 @@ function findEscapeTarget({ actor, blocks, parents }) {
   return { block: top };
 }
 
-// Why Escape needs a browser before it looks at what is open, or undefined: a shortcut binds it,
-// a Modal or Drawer renders while closed (forceRender keeps it on the browser's Escape stack), or
-// the focus is in an input that handles Escape itself.
+// Block types that bind their items' `shortcut`s (blocks-antd's useItemShortcuts: tabs, menu
+// links, dropdown items) on a document listener that a key pressed in an input skips.
+const ITEM_SHORTCUT_TYPES = new Set(['DropdownButton', 'DropdownMenu', 'Menu', 'Tabs']);
+const SHORTCUT_MODIFIERS = ['alt', 'ctrl', 'mod', 'shift'];
+
+// Whether useItemShortcuts' matchesShortcut fires `shortcut` on a press of Escape alone: its last
+// part names the key, and a modifier it asks for is not held.
+function itemShortcutIsEscape(shortcut) {
+  const parts = shortcut.toLowerCase().split('+');
+  return parts.at(-1) === 'escape' && !SHORTCUT_MODIFIERS.some((part) => parts.includes(part));
+}
+
+// Whether a `shortcut` anywhere in the block's properties (a tab's, a link's, an item's) is
+// Escape.
+function bindsItemEscape(value) {
+  if (type.isArray(value)) {
+    return value.some(bindsItemEscape);
+  }
+  if (!type.isObject(value)) {
+    return false;
+  }
+  return Object.entries(value).some(([key, inner]) =>
+    key === 'shortcut' && type.isString(inner)
+      ? itemShortcutIsEscape(inner)
+      : bindsItemEscape(inner)
+  );
+}
+
+// Block types whose component can show a tooltip or popover under the pointer on its own: a grid's
+// buttons cells give an icon-only button its title as a tooltip.
+const POINTER_POPUP_TYPES = new Set([
+  'AgGridAlpine',
+  'AgGridBalham',
+  'AgGridLowdefy',
+  'AgGridMaterial',
+  'Popover',
+  'Table',
+  'TableLight',
+  'Tooltip',
+]);
+
+// Whether the block can show a tooltip or popover where the pointer rests: a Button with a
+// tooltip (its own, or its title when the title is hidden, as Button.js works it out), html with
+// a data-tooltip or data-popover element, or a type in POINTER_POPUP_TYPES.
+function drawsPointerPopup(block) {
+  const properties = block.eval.properties ?? {};
+  if (POINTER_POPUP_TYPES.has(block.type)) {
+    return true;
+  }
+  if (block.type === 'Button') {
+    const titleHidden =
+      properties.hideTitle === true ||
+      (properties.shape === 'circle' && type.isNone(properties.title));
+    return type.isString(properties.tooltip) || (titleHidden && !type.isNone(properties.title));
+  }
+  if (block.type === 'Html' || block.type === 'ClickableHtml') {
+    const html = String(properties.html ?? '');
+    return html.includes('data-tooltip') || html.includes('data-popover');
+  }
+  return false;
+}
+
+// The block the pointer rests on, or one holding it, that can show a popup there, or undefined. A
+// tooltip or popover is a trigger popup on antd's Escape stack, opened after what Escape would
+// close, so it takes the Escape (its show delay makes the browser's answer a race). A block behind
+// the newest popup's mask has lost the pointer, so it shows none.
+function findPointerPopup({ actor, parents, top }) {
+  let current = readShownBlock({ actor, blockId: actor.page.pointerBlockId });
+  if (
+    current !== null &&
+    !type.isUndefined(top) &&
+    top.eval.properties?.mask !== false &&
+    !isInsideBlock({ block: current, container: top, parents })
+  ) {
+    return undefined;
+  }
+  while (current) {
+    if (drawsPointerPopup(current)) {
+      return current;
+    }
+    current = parents.get(current.id);
+  }
+  return undefined;
+}
+
+// Why Escape needs a browser before it looks at what is open, or undefined: an event shortcut
+// binds it, an item shortcut does while no input has the focus, a Modal or Drawer renders while
+// closed (forceRender keeps it on the browser's Escape stack), or the focus is in an input that
+// handles Escape itself.
 function findEarlyReason({ actor, blocks, focused }) {
   const [shortcut] = findShortcutBlocks({ actor, key: 'Escape' });
   if (!type.isUndefined(shortcut)) {
     return `Block "${shortcut}" binds Escape as an event shortcut, which a headless press does not fire: ${BROWSER}.`;
+  }
+  const items = blocks.find(
+    (block) =>
+      ITEM_SHORTCUT_TYPES.has(block.type) &&
+      block.visibleEval?.output !== false &&
+      bindsItemEscape(block.eval.properties ?? {})
+  );
+  if (focused === null && !type.isUndefined(items)) {
+    return `${describeBlock(items)} binds Escape as an item shortcut, which a headless press does not fire: ${BROWSER}.`;
   }
   const forced = blocks.find(
     (block) => POPUP_BLOCK_TYPES.has(block.type) && block.eval.properties?.forceRender === true
@@ -117,14 +219,32 @@ function findEarlyReason({ actor, blocks, focused }) {
   return undefined;
 }
 
+// The block a click left the focus on, when no input has it, for the rails: the block the pointer
+// rests on, when it is the overlay Escape closes or inside it (a button clicked in a Modal, a
+// dropdown's trigger). A browser checks it and every block around it up to the popup. A
+// ClickableHtml confirm takes the focus into its own popup, which only the block's control mark
+// names, so its block alone is checked.
+function readPointerFocus({ actor, block, parents }) {
+  const pointer = readShownBlock({ actor, blockId: actor.page.pointerBlockId });
+  if (pointer === null || block.type === 'ClickableHtml') {
+    return null;
+  }
+  if (pointer.id === block.id || isInsideBlock({ block: pointer, container: block, parents })) {
+    return pointer;
+  }
+  return null;
+}
+
 // A press of Escape headless (runHeadlessStep). It closes the overlay that opened last
-// (findEscapeTarget) through its stand-in's escape part: a searching selector closes its search, a Modal fires onCancel, a Drawer onClose, a dropdown
-// onOpenChange { open: false }, a ClickableHtml confirm drops its event. Anything a headless run
-// does not model leaves the step to the browser, naming why (findEarlyReason, findEscapeTarget, a
-// ConfirmModal's dialog). On a data-set journey the press is checked against the rails first, as
-// the browser runner checks it: the focused input and the blocks around it, and the overlay it
-// closes, whose portal or wrapper holds the focus in a browser. Closing a popup hands the focus
-// back to where it was before the popup opened, so no input has it after.
+// (findEscapeTarget) through its stand-in's escape part: a searching selector closes its search,
+// a Modal fires onCancel, a Drawer onClose, a dropdown onOpenChange { open: false }, a
+// ClickableHtml confirm drops its event. Anything a headless run does not model leaves the step to
+// the browser, naming why (findEarlyReason, findEscapeTarget, a ConfirmModal's dialog). On a
+// data-set journey the press is checked against the rails first, as the browser runner checks it:
+// the block with the focus (the focused input, else the block a click left it on in the overlay,
+// readPointerFocus) and the blocks around it, and the overlay it closes, whose portal or wrapper
+// holds the focus in a browser. Closing a popup hands the focus back to where it was before the
+// popup opened, so no input has it after.
 async function pressEscape({ actor, rails }) {
   const { blocks, parents } = collectBlockParents({ context: actor.page.context });
   const focused = readFocusedInput({ actor });
@@ -144,8 +264,9 @@ async function pressEscape({ actor, rails }) {
     actor.browserOnly.push(standInMissing({ block, what: 'press "Escape"' }));
     return;
   }
-  if (focused !== null) {
-    checkHeadlessPressRails({ actor, focused, key: 'Escape', rails });
+  const around = focused ?? readPointerFocus({ actor, block, parents });
+  if (around !== null) {
+    checkHeadlessPressRails({ actor, focused: around, key: 'Escape', rails });
   }
   checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'press' });
   await standIn.escape({ actor, block, state: readStandInState({ actor, block }) });

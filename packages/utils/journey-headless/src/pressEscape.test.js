@@ -370,3 +370,61 @@ test('Escape on a page with a forceRender Modal runs in a browser', async () => 
     'Modal "modal" renders while closed (forceRender), which puts it on a browser\'s Escape stack from the start: the step runs in a browser.'
   );
 });
+
+test('Escape with the pointer on a Button with a tooltip in the Modal runs in a browser', async () => {
+  const hint = { id: 'hint', type: 'Button', properties: { tooltip: 'A hint' } };
+  const page = escapePage();
+  page.blocks[1].blocks.push({ ...hint, events: { onClick: [record('hint.onClick')] } });
+  const { result } = await runTestJourney({
+    pages: [page],
+    steps: [{ click: 'open_modal' }, { click: 'hint' }, { press: 'Escape' }],
+  });
+  expect(result.browserOnly.reason).toBe(
+    'The pointer rests on Button "hint", whose tooltip or popover a browser shows on top of what Escape would close: the step runs in a browser.'
+  );
+});
+
+test('Escape with the pointer on a Button with a tooltip behind the Modal mask closes the Modal', async () => {
+  const opener = methodButton({ id: 'open_tip', blockId: 'modal', method: 'setOpen', args: OPEN });
+  const { log, result } = await runTestJourney({
+    pages: [escapePage({ extra: [{ ...opener, properties: { tooltip: 'Opens it' } }] })],
+    steps: [{ click: 'open_tip' }, { press: 'Escape' }, { expect: { hidden: 'note' } }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([...MODAL_OPENED, ...MODAL_CANCELLED]);
+});
+
+test('An open that hovers a DropdownMenu leaves the focus in the input filled before it', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      escapePage({
+        modal: { noteEvents: { onEscape: [record('note.onEscape')] } },
+        extra: [VIEW_MENU],
+      }),
+    ],
+    steps: [
+      { click: 'open_modal' },
+      { fill: { blockId: 'note', value: 'x' } },
+      { open: 'view_menu' },
+      { press: 'Escape' },
+    ],
+  });
+  expect(result.browserOnly.reason).toBe(
+    'The focus is in TextInput "note", which fires its own onEscape: the step runs in a browser.'
+  );
+});
+
+test('Escape while a Menu binds it as an item shortcut runs in a browser', async () => {
+  const menu = {
+    id: 'side_menu',
+    type: 'Menu',
+    properties: { links: [{ id: 'close', properties: { title: 'Close', shortcut: 'Escape' } }] },
+  };
+  const { result } = await runTestJourney({
+    pages: [escapePage({ extra: [menu] })],
+    steps: [{ click: 'open_modal' }, { press: 'Escape' }],
+  });
+  expect(result.browserOnly.reason).toBe(
+    'Menu "side_menu" binds Escape as an item shortcut, which a headless press does not fire: the step runs in a browser.'
+  );
+});
