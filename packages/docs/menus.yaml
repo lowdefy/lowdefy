@@ -1333,6 +1333,9 @@
             - id: McpSendMessage
               type: MenuLink
               pageId: McpSendMessage
+            - id: McpUpdateModelContext
+              type: MenuLink
+              pageId: McpUpdateModelContext
             - id: SetDarkMode
               type: MenuLink
               pageId: SetDarkMode
