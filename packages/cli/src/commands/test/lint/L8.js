@@ -116,7 +116,10 @@ function findReplacement({ exercisedEntry, index, step }) {
     const count = type.isUndefined(step.click.count) ? {} : { count: step.click.count };
     return { kind: 'control', target: control, step: { click: { ...control, ...count } } };
   }
-  if (isReplaceable(readTarget(step))) {
+  // expect.hidden by text on a block says the text is gone, not the block, so the blockId alone
+  // would check the opposite of what it means while the block shows.
+  const hiddenByText = getStepKey(step) === 'expect' && getStepKey(step.expect) === 'hidden';
+  if (isReplaceable(readTarget(step)) && !hiddenByText) {
     return { kind: 'block', step: replaceTarget(step) };
   }
   return null;

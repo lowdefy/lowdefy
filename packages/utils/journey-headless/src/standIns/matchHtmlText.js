@@ -34,6 +34,8 @@ import isHiddenBelow from './isHiddenBelow.js';
 // - Some enhancers write the text an element shows (a formatted time or number, an avatar's
 //   initials, an icon, a copy button). The html is read with and without those elements' text;
 //   when the two disagree, the answer depends on text the enhancer writes.
+// - The page's CSS may hide an element by a class (`hidden`, `md:hidden`, `invisible`). The html is
+//   read with such elements shown and hidden; when the two disagree, the answer depends on CSS.
 // Either way the reply says so in `uncertain`, and the step runs in a browser.
 
 // Elements whose shown text an html enhancer writes or adds to.
@@ -56,11 +58,28 @@ function enhance(root) {
   });
 }
 
+// A class that hides an element in common CSS (Tailwind's hidden and invisible, with or without
+// a breakpoint).
+const HIDING_CLASS = /(^|:)(hidden|invisible)$/;
+
+function hasHidingClass({ element, root }) {
+  for (
+    let current = element;
+    current !== null && current !== root;
+    current = current.parentElement
+  ) {
+    if ([...(current.classList ?? [])].some((token) => HIDING_CLASS.test(token))) return true;
+  }
+  return false;
+}
+
 // Whether a browser draws the element: the html hides nothing between it and the root, and it
-// waits in no popover's content, which ClickableHtml's CSS hides until the popover opens.
-function isShown({ element, root }) {
+// waits in no popover's content, which ClickableHtml's CSS hides until the popover opens. With
+// `hideClassed`, an element a hiding class marks counts as hidden too.
+function isShown({ element, root, hideClassed = false }) {
   return (
     !isHiddenBelow({ element, stop: root }) &&
+    !(hideClassed && hasHidingClass({ element, root })) &&
     (element.closest('[data-popover-content]') === null ||
       !root.contains(element.closest('[data-popover-content]')))
   );
@@ -79,25 +98,25 @@ function exactTextPattern(text) {
   return new RegExp(`^\\s*${escapeRegExp(text)}\\s*$`);
 }
 
-function matchExactText({ root, text, skip }) {
+function matchExactText({ root, text, skip, hideClassed }) {
   const exact = exactTextPattern(text);
   return [...root.querySelectorAll('*')].filter(
     (element) =>
       isInteractiveControl(element) &&
-      isShown({ element, root }) &&
+      isShown({ element, root, hideClassed }) &&
       exact.test(readNodeText(element, skip))
   );
 }
 
 function normalize(text) {
-  return text.replace(/[​­]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+  return text.replace(/[\u200b\u00ad]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
 }
 
 // An element's text as a browser's innerText reads it, as far as the html says: a hidden element
 // reads as its textContent (innerText of an element that is not drawn), a drawn one as the text of
 // its drawn descendants, with nothing or a space (`spaced`) between elements.
-function readInnerText({ element, root, skip, spaced }) {
-  if (!isShown({ element, root })) {
+function readInnerText({ element, root, skip, spaced, hideClassed }) {
+  if (!isShown({ element, root, hideClassed })) {
     return element.textContent ?? '';
   }
   function read(node) {
@@ -108,7 +127,7 @@ function readInnerText({ element, root, skip, spaced }) {
       node.nodeType !== node.ELEMENT_NODE ||
       UNREAD_ELEMENTS.has(node.tagName) ||
       skip(node) ||
-      !isShown({ element: node, root })
+      !isShown({ element: node, root, hideClassed })
     ) {
       return '';
     }
@@ -121,7 +140,7 @@ function readInnerText({ element, root, skip, spaced }) {
   return read(element);
 }
 
-function matchContaining({ root, containing, skip, spaced }) {
+function matchContaining({ root, containing, skip, spaced, hideClassed }) {
   const needle = normalize(containing);
   const matches = [];
   function visit(element) {
@@ -137,7 +156,7 @@ function matchContaining({ root, containing, skip, spaced }) {
     if (childMatches) {
       return true;
     }
-    if (!normalize(readInnerText({ element, root, skip, spaced })).includes(needle)) {
+    if (!normalize(readInnerText({ element, root, skip, spaced, hideClassed })).includes(needle)) {
       return false;
     }
     matches.push(element);
@@ -149,7 +168,7 @@ function matchContaining({ root, containing, skip, spaced }) {
       matches.push(input);
     }
   });
-  return matches.filter((element) => isShown({ element, root }));
+  return matches.filter((element) => isShown({ element, root, hideClassed }));
 }
 
 function sameElements(first, second) {
@@ -190,6 +209,12 @@ function matchHtmlText({ root, target }) {
       elements,
       uncertain:
         'what matches depends on text an html enhancer writes (data-time, data-format, data-avatar, data-icon or data-copy)',
+    };
+  }
+  if (!sameElements(elements, match({ skip: readAll, spaced: false, hideClassed: true }))) {
+    return {
+      elements,
+      uncertain: "what matches depends on a class (hidden, invisible) the page's CSS may hide",
     };
   }
   return { elements, uncertain: null };

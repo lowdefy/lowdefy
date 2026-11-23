@@ -132,11 +132,12 @@ function buildPage(pageConfig) {
 
 // Runs `steps` on the first of `pages`, with the root config's `menus`. Resolves
 // { result, log }: the journey's result and the Record log.
-async function runTestJourney({ dataSet, menus = [], pages, steps, stepTimeout = 300 }) {
+async function runTestJourney({ dataSet, i18n, menus = [], pages, steps, stepTimeout = 300 }) {
   const log = [];
   const built = Object.fromEntries(pages.map((page) => [page.id, buildPage(page)]));
   const rootConfig = {
     home: { pageId: pages[0].id },
+    ...(i18n === undefined ? {} : { i18n }),
     menus,
     pagePaths: Object.fromEntries(pages.map((page) => [page.id, page.id])),
   };

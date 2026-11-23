@@ -187,9 +187,16 @@ function openPopover({ block, parse, root, state, trigger }) {
 }
 
 // A confirm is never carried to new html (confirmEnhancer has no retarget): it closes when the
-// block's html changes, as HtmlComponent's carryOverlay closes it.
+// html of the component that asked it changes, as HtmlComponent's carryOverlay closes it. That is
+// the block's html, or for a confirm asked from inside the popover, the popover's content, which
+// its own HtmlComponent shows.
 function readConfirm({ block, state }) {
-  if (!type.isUndefined(state.confirm) && state.confirmHtml !== readHtml(block)) {
+  const { confirm } = state;
+  if (type.isUndefined(confirm)) {
+    return undefined;
+  }
+  const html = confirm.inPopover ? readPopover({ block, state })?.html : readHtml(block);
+  if (state.confirmHtml !== html) {
     closeConfirm(state);
   }
   return state.confirm;
@@ -236,7 +243,7 @@ function findPopoverTrigger({ content, root }) {
 
 function askConfirm({ block, dataEvent, inPopover, message, state }) {
   state.confirm = { ...dataEvent, inPopover, message };
-  state.confirmHtml = readHtml(block);
+  state.confirmHtml = inPopover ? state.popover.html : readHtml(block);
   syncOpen(state);
 }
 
@@ -260,8 +267,6 @@ async function click({ actor, block, state, target }) {
     answerConfirm({ actor, block, control: String(target.control), state });
     return;
   }
-  // A click on another element is a click outside the open confirm.
-  closeConfirm(state);
   const parse = await loadHtmlDom();
   const root = parse(readHtml(block));
   const control = findOneElement({
@@ -269,11 +274,20 @@ async function click({ actor, block, state, target }) {
     controls: listHtmlControls({ block, parse }),
     target,
   });
-  // A shown element is outside the open popover. One in a popover is clicked in that popover,
-  // which the browser runner opens when it is closed.
-  closePopover(state);
+  // While the popover or confirm is open, only an element in the open popover is clear of it.
+  readConfirm({ block, state });
+  const inOpenPopover =
+    type.isUndefined(state.confirm) &&
+    control.reach === 'popover' &&
+    control.popover.getAttribute('data-popover-content') === readPopover({ block, state })?.id;
+  if (isOpen({ block, state }) && !inOpenPopover) {
+    actor.browserOnly.push(describeCover({ block, state }));
+    return;
+  }
+  // One in a popover is clicked in that popover, which the browser runner opens when it is
+  // closed.
   const inPopover = control.reach === 'popover';
-  if (inPopover) {
+  if (inPopover && !inOpenPopover) {
     const trigger = findPopoverTrigger({ content: control.popover, root });
     if (trigger !== null) {
       openPopover({ block, parse, root, state, trigger });
@@ -289,8 +303,26 @@ async function click({ actor, block, state, target }) {
     });
     return;
   }
-  closePopover(state);
+  if (inPopover) {
+    closePopover(state);
+  }
   fireEvent({ actor, block, name: control.dataEvent.name, event: control.dataEvent.event });
+}
+
+// The control a click landed on, for lint L8 (actor.landedControl), as the browser runner records
+// it (readMarkedControl): only when it is the one shown element with its data-event and data-id,
+// counting the open popover's, so the target L8 suggests names one element.
+function readLandedControl({ block, control, parse, state }) {
+  const popoverId = state.popover?.id;
+  const same = listHtmlControls({ block, parse }).filter(
+    (item) =>
+      item.key === control.control &&
+      item.rowKey === control.rowKey &&
+      (item.reach === 'shown' ||
+        (item.reach === 'popover' &&
+          item.popover.getAttribute('data-popover-content') === popoverId))
+  );
+  return same.length === 1 ? { blockId: block.blockId, ...control } : undefined;
 }
 
 // Whether a press on the matched element lands inside the open popover or on its trigger, which
@@ -315,14 +347,38 @@ function isConfirmTarget({ match, state }) {
   );
 }
 
+// Why a click while the block shows its popover or confirm needs a browser: antd draws the
+// overlay over the page beside what opened it, and a browser's click on anything it covers lands
+// on the overlay instead. A headless page has no layout to tell what it covers.
+function describeCover({ block, state }) {
+  const overlay = type.isUndefined(state.confirm) ? 'popover' : 'confirm';
+  return `${describeBlock(
+    block
+  )} has its ${overlay} open, which may cover what the step clicks: the step runs in a browser.`;
+}
+
+// Whether a click on the match is one the open overlay cannot cover: in the open confirm or on
+// the element that asked it, else in the open popover or on its trigger.
+function isClearOfOverlay({ match, state }) {
+  if (!type.isUndefined(state.confirm)) {
+    return match.where === 'confirm' || isConfirmTarget({ match, state });
+  }
+  return type.isUndefined(state.popover) || isOnPopover({ match, state });
+}
+
 // A click on an element a `text` or `containing` target matched (textMatches), as a browser
-// clicks it: the press first closes the overlay on top (the confirm, else the popover) unless it
-// lands in it or on what opened it (HtmlOverlay's mousedown), then HtmlComponent answers the
-// click (listHtmlTextMatches' readAction). A data-event element fires its event, or asks first;
-// a popover trigger opens its popover, or closes it when it is open.
+// clicks it. A click the open popover or confirm may cover goes to the browser
+// (isClearOfOverlay). Otherwise HtmlComponent answers it (listHtmlTextMatches' readAction): a
+// data-event element fires its event, or asks first; a popover trigger opens its popover, or
+// closes it when it is open; a second click on the element whose confirm is open keeps it.
 async function clickMatch({ actor, block, match, state }) {
   readConfirm({ block, state });
   readPopover({ block, state });
+  if (!isClearOfOverlay({ match, state })) {
+    actor.browserOnly.push(describeCover({ block, state }));
+    return;
+  }
+  const parse = await loadHtmlDom();
   if (match.where === 'confirm') {
     if (match.action.kind === 'confirm') {
       actor.landedControl = { blockId: block.blockId, control: match.action.control, rowKey: null };
@@ -330,21 +386,14 @@ async function clickMatch({ actor, block, match, state }) {
     }
     return;
   }
+  // A second click on the element whose confirm is open keeps it open (confirmEnhancer).
   if (!type.isUndefined(state.confirm)) {
-    if (isConfirmTarget({ match, state })) {
-      return;
-    }
-    closeConfirm(state);
-  } else if (!type.isUndefined(state.popover) && !isOnPopover({ match, state })) {
-    closePopover(state);
+    return;
   }
   const { action } = match;
   if (action.kind === 'event') {
-    actor.landedControl = { blockId: block.blockId, ...action.control };
+    actor.landedControl = readLandedControl({ block, control: action.control, parse, state });
     if (action.confirm) {
-      if (match.where === 'html') {
-        closePopover(state);
-      }
       askConfirm({
         block,
         dataEvent: action.dataEvent,
@@ -367,7 +416,7 @@ async function clickMatch({ actor, block, match, state }) {
     if (!wasOpen) {
       openPopover({
         block,
-        parse: await loadHtmlDom(),
+        parse,
         root: match.root,
         state,
         trigger: action.trigger,
@@ -392,11 +441,13 @@ function textMatches({ block, i18n, overlays, parse, state, target }) {
   });
 }
 
-// Another block's click, open or select closes the confirm and the popover, as a click outside
-// them does.
-function leave({ state }) {
-  closeConfirm(state);
-  closePopover(state);
+// Another block's click, open or select while the popover or confirm is open goes to the browser:
+// the overlay may cover what it clicks (describeCover). A click it misses would close only the
+// newest overlay (HtmlOverlay's mousedown).
+function leave({ actor, block, state }) {
+  if (isOpen({ block, state })) {
+    actor.browserOnly.push(describeCover({ block, state }));
+  }
 }
 
 // Escape closes the newest of the open confirm and popover, and a confirm drops its event, as

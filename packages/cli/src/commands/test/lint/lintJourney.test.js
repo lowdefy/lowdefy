@@ -411,3 +411,14 @@ test('L8 falls back to the blockId alone where no control was recorded, and repo
     rules(lintJourney({ journey: journey(withRow), exercisedEntry: entry({ controls }) }), 'L8')
   ).toEqual([]);
 });
+
+test('L8 never offers the blockId alone for expect.hidden by text, which would check the opposite', () => {
+  const problems = lintJourney({
+    journey: journey([
+      { click: { blockId: 'assign_button', text: 'Assign' } },
+      { expect: { hidden: { blockId: 'issue_cards', containing: 'micromatch' } } },
+    ]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(problems, 'L8').map(({ stepIndex }) => stepIndex)).toEqual([0]);
+});

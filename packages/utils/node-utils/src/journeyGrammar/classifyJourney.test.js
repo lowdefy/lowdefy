@@ -141,9 +141,18 @@ test('classifyJourney leaves a click, visible or hidden by text or containing to
   expect(classify(steps)).toEqual({ headless: true });
 });
 
-test('classifyJourney still names a text target with a row as needing the browser', () => {
-  const step = { click: { blockId: 'grid', row: 0, text: 'Edit' } };
-  expect(classify([step]).reason).toBe(DOM_TARGET_REASONS.row);
+test('classifyJourney still names a text target with a row, a rowKey or a column as needing the browser', () => {
+  expect(classify([{ click: { blockId: 'grid', row: 0, text: 'Edit' } }]).reason).toBe(
+    DOM_TARGET_REASONS.text
+  );
+  expect(classify([{ click: { blockId: 'grid', rowKey: 'r1', text: 'Edit' } }]).reason).toBe(
+    DOM_TARGET_REASONS.text
+  );
+  expect(
+    classify([
+      { expect: { visible: { blockId: 'grid', rowKey: 'r1', column: 'a', containing: 'x' } } },
+    ]).reason
+  ).toBe(DOM_TARGET_REASONS.containing);
 });
 
 test('classifyJourney calls hold and release headless and marks the first as needing the runner in process', () => {

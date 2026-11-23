@@ -74,6 +74,8 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     browserOnly: [],
     calls: [],
     history: [],
+    // The app's i18n config, which the web client hands lowdefy.i18n and antd's locale reads.
+    i18n: rootConfig.i18n ?? null,
     landedControl: undefined,
     leftApp: null,
     messages: [],

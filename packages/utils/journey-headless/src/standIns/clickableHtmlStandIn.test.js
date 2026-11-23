@@ -175,7 +175,7 @@ test('ClickableHtml asks before an event its dataEvents confirms: ok fires it, c
   expect(readLog(cancel.log)).toEqual([]);
 });
 
-test('ClickableHtml asks before an element with data-confirm, and a click elsewhere closes the confirm', async () => {
+test('ClickableHtml asks before an element with data-confirm, and a click elsewhere while it is open goes to the browser', async () => {
   const html =
     '<button data-event="onDelete" data-id="7" data-confirm="Delete 7?">Delete</button><span data-event="onOpen" data-id="7">Open</span>';
   const { log, result } = await runTestJourney({
@@ -188,12 +188,18 @@ test('ClickableHtml asks before an element with data-confirm, and a click elsewh
     ],
     steps: [
       { click: { blockId: 'cards', control: 'onDelete', rowKey: '7' } },
+      { expect: { visible: { blockId: 'cards', control: 'ok' } } },
       { click: { blockId: 'cards', control: 'onOpen', rowKey: '7' } },
-      { expect: { hidden: { blockId: 'cards', control: 'ok' } } },
     ],
   });
-  expect(result.passed).toBe(true);
-  expect(readLog(log)).toEqual([['onOpen', { id: '7' }]]);
+  // The confirm antd draws beside the button may cover the element, and takes the click then.
+  expect(result.browserOnly).toEqual({
+    index: 2,
+    step: { click: { blockId: 'cards', control: 'onOpen', rowKey: '7' } },
+    reason:
+      'ClickableHtml "cards" has its confirm open, which may cover what the step clicks: the step runs in a browser.',
+  });
+  expect(log).toEqual([]);
 });
 
 test('ClickableHtml expect.visible and expect.hidden read the html as it changes', async () => {
@@ -317,9 +323,9 @@ test('ClickableHtml closes an open confirm when its html changes', async () => {
           },
           {
             id: 'refresh',
-            type: 'Button',
+            type: 'TextInput',
             events: {
-              onClick: [
+              onChange: [
                 {
                   id: 'refresh_html',
                   type: 'SetState',
@@ -334,7 +340,7 @@ test('ClickableHtml closes an open confirm when its html changes', async () => {
     steps: [
       { click: { blockId: 'cards', control: 'onDelete', rowKey: '1' } },
       { expect: { visible: { blockId: 'cards', control: 'ok' } } },
-      { click: 'refresh' },
+      { fill: { blockId: 'refresh', value: 'x' } },
       { expect: { hidden: { blockId: 'cards', control: 'ok' } } },
     ],
   });

@@ -67,16 +67,14 @@
           path: log
           equals:
             - event: save_button.onClick
-- name: a second click on a ClickableHtml popover's trigger closes it, and so does a click outside
+- name: a second click on a ClickableHtml popover's trigger closes it, and the row under it takes a click again
   pageId: text_targets
   steps:
     - click: { text: More }
     - expect: { visible: { text: Archive } }
     - click: { text: More }
     - expect: { hidden: { containing: Archive } }
-    - click: { text: More }
     - click: { containing: acme@example.com }
-    - expect: { hidden: { text: Archive } }
     - expect:
         state:
           path: log
@@ -104,3 +102,27 @@
             - event: company_rows.onOpenRow
               payload:
                 row: '1'
+- name: a confirm asked from inside a ClickableHtml popover closes alone on Cancel, and OK closes both
+  pageId: text_targets
+  steps:
+    - click: { text: More }
+    - click: { text: Archive one }
+    - expect: { visible: { containing: Archive this one? } }
+    - click: { text: Cancel }
+    - expect: { visible: { text: Archive one } }
+    - click: { text: Archive one }
+    - click: { text: OK }
+    - expect: { hidden: { text: Archive one } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_rows.onArchive
+              payload:
+                scope: one
+                confirm: Archive this one?
+- name: a click while a ClickableHtml popover is open runs in a browser, which knows what it covers
+  pageId: text_targets
+  steps:
+    - click: { text: More }
+    - click: save_button

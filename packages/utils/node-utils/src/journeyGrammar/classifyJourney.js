@@ -80,13 +80,21 @@ const HTML_TEXT_KEYS = ['text', 'containing'];
 const TARGET_STEP_KEYS = ['click', 'fill', 'open', 'select'];
 const TARGET_EXPECT_KEYS = ['visible', 'hidden'];
 
+// Keys that narrow a target to a grid row or cell or a block's control, which a headless run
+// resolves through the block's stand-in and never by the text beside them.
+const BLOCK_PART_KEYS = ['row', 'rowKey', 'column', 'control'];
+
 // The first DOM key of a target, or undefined. With `readsHtmlText` (a click, expect.visible or
-// expect.hidden) a `text` or `containing` target is no DOM key, nor the `nth` beside it.
+// expect.hidden) a `text` or `containing` target that names no row, cell or control is no DOM
+// key, nor the `nth` beside it.
 function findDomTargetKey({ readsHtmlText, target }) {
   if (!type.isObject(target)) {
     return undefined;
   }
-  const htmlText = readsHtmlText && HTML_TEXT_KEYS.some((key) => Object.hasOwn(target, key));
+  const htmlText =
+    readsHtmlText &&
+    HTML_TEXT_KEYS.some((key) => Object.hasOwn(target, key)) &&
+    !BLOCK_PART_KEYS.some((key) => Object.hasOwn(target, key));
   return DOM_TARGET_KEYS.find(
     (key) =>
       Object.hasOwn(target, key) &&

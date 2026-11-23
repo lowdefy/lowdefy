@@ -22,6 +22,10 @@ import matchHtmlText, { exactTextPattern, normalize } from './matchHtmlText.js';
 
 const { dataEventKeyAttribute } = journeyTargetSelectors;
 
+// Controls a browser's click at a matched element's centre could land on instead of the element.
+const INNER_CONTROLS =
+  '[data-event], [data-popover], [data-copy], a, button, input, select, textarea';
+
 // The labels antd's en_US locale gives a Popconfirm's buttons, which a ClickableHtml confirm
 // shows. An app with i18n locales may show others.
 const CONFIRM_BUTTON_TEXT = { ok: 'OK', cancel: 'Cancel' };
@@ -46,7 +50,7 @@ function closestInRoot({ element, root, selector }) {
 // - { kind: 'disabled' }: the element is disabled, which a browser refuses to click;
 // - { kind: 'browser', reason }: something a headless run does not model (a link, a copy button,
 //   an element inside a disabled control, a trigger in a popover, an element that both fires an
-//   event and opens a popover).
+//   event and opens a popover, or one holding another control its centre may land on).
 function readAction({ block, element, root, where }) {
   const within = (selector) => closestInRoot({ element, root, selector });
   if (within('a') !== null) {
@@ -60,6 +64,12 @@ function readAction({ block, element, root, where }) {
   }
   if (within(':disabled') !== null) {
     return { kind: 'browser', reason: 'it is inside a disabled control' };
+  }
+  if (element.querySelector(INNER_CONTROLS) !== null) {
+    return {
+      kind: 'browser',
+      reason: 'it holds another control, which a click at its centre may land on',
+    };
   }
   const eventElement = within('[data-event]');
   const dataEvent = eventElement === null ? null : getDataEvent(eventElement);
@@ -169,15 +179,18 @@ function matchConfirm({ block, confirm, i18n, target }) {
 // matches in the order the page shows them (the html, then the popover, then the confirm), each
 // { block, where (html, popover or confirm), element and the parsed root it is in, action (readAction, or a confirm button's
 // { kind: 'confirm', control }), description }, and why the html alone cannot tell the matches
-// (null when it can). html is the block's html, popover the open popover's content html (null
+// (null when it can), and layered: whether the html or popover draws a menu or dialog role, a
+// layer a browser looks in first for a `text` target with no blockId. html is the block's html, popover the open popover's content html (null
 // when none is open) and confirm the open confirm ({ message }, or null).
 function listHtmlTextMatches({ block, confirm, html, i18n, overlays, parse, popover, target }) {
   const parts = [{ where: 'html', html }];
   if (overlays && !type.isNone(popover)) {
     parts.push({ where: 'popover', html: popover });
   }
+  let layered = false;
   const read = parts.map(({ where, html: partHtml }) => {
     const root = parse(partHtml);
+    layered = layered || root.querySelector('[role="menu"], [role="dialog"]') !== null;
     const { elements, uncertain } = matchHtmlText({ root, target });
     return { matches: toMatches({ block, elements, root, where }), uncertain };
   });
@@ -187,6 +200,7 @@ function listHtmlTextMatches({ block, confirm, html, i18n, overlays, parse, popo
   return {
     matches: read.flatMap(({ matches }) => matches),
     uncertain: read.find(({ uncertain }) => uncertain !== null)?.uncertain ?? null,
+    layered,
   };
 }
 

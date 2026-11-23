@@ -134,6 +134,7 @@ test("a text target names the open confirm's OK or Cancel by antd's en_US labels
   expect(localised).toEqual({
     matches: [],
     uncertain: 'the open confirm labels its buttons in the app locale',
+    layered: false,
   });
   const untold = await list({ confirm: { message: null }, html: '', target: { containing: 'x' } });
   expect(untold.uncertain).toBe('the open confirm shows text in the app locale');

@@ -154,10 +154,12 @@ function pickMatch({ actor, read, target }) {
 }
 
 // Reads the target until a ClickableHtml shows a match, or what it read says where else to look,
-// for at most `timeout` ms, as the browser waits for a first match to show.
+// for at most `timeout` ms, as the browser waits for a first match to show. With no ClickableHtml
+// in the scope there is nothing to wait for, and the step goes to the browser at once.
 async function waitForReading({ actor, parse, target, timeout }) {
   const { value } = await pollUntil({
     check: (read) =>
+      (read.scopeShown !== false && read.htmlBlocks === 0) ||
       read.matches.length > 0 ||
       read.other !== null ||
       read.layer !== null ||
@@ -234,9 +236,17 @@ async function expectText({ actor, kind, target, timeout }) {
   } in ${describeWhere(target)} to be ${kind}`;
   if (kind === 'visible') {
     const first = read();
-    if (first.matches.length <= nth && first.other !== null) {
-      actor.browserOnly.push(describeOther({ read: first, target }));
-      return;
+    // Another block that may show the text, or no ClickableHtml to wait for, sends the check to
+    // the browser at once. A scope not shown yet is waited for, as a browser waits.
+    if (first.scopeShown && first.matches.length <= nth) {
+      if (first.other !== null) {
+        actor.browserOnly.push(describeOther({ read: first, target }));
+        return;
+      }
+      if (first.htmlBlocks === 0) {
+        actor.browserOnly.push(describeNone({ target }));
+        return;
+      }
     }
     const { value } = await pollUntil({
       check: (reading) => decided(reading) || reading.matches.length > nth,

@@ -6,7 +6,7 @@ type: Box
 # the browser and headless and must end with the same state. Every event appends
 # { event, payload } to state `log`. The rows carry no data-id and fire the same event, so only
 # what they show names one; each row's Open button has the same text; More opens a popover with an
-# Archive button; Remove asks first; Save is a Button block, which no ClickableHtml draws.
+# Archive button and an Archive one button that asks first; Remove asks first; Save is a Button block, which no ClickableHtml draws.
 events:
   onInit:
     - id: init_companies
@@ -53,6 +53,7 @@ blocks:
             </p>
             <div data-popover-content="more">
               <button data-event="onArchive" data-scope="all">Archive</button>
+              <button data-event="onArchive" data-scope="one" data-confirm="Archive this one?">Archive one</button>
             </div>
     events:
       onPick:

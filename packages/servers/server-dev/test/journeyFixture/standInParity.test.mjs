@@ -95,10 +95,12 @@ const REFUSED_AT = {
 };
 
 // The journeys a headless run must leave to the browser when the step runs, with what its reason
-// says: the step names text no ClickableHtml shows.
+// says: the step names text no ClickableHtml shows, or clicks while a popover may cover it.
 const BROWSER_ONLY_AT_RUN_TIME = {
   'text_targets.yaml: a text target no ClickableHtml shows runs in a browser':
     'Button "save_button" may show the text "Save"',
+  'text_targets.yaml: a click while a ClickableHtml popover is open runs in a browser, which knows what it covers':
+    'ClickableHtml "company_rows" has its popover open, which may cover what the step clicks',
 };
 
 // Each journey here must have run headless and matched, not been left to the browser, unless
