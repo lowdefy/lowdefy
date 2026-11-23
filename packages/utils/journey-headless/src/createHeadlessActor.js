@@ -108,9 +108,12 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     return host.readPageConfig({ pageId, path, pathParams, urlQuery, user });
   }
 
-  // Checks the page's mounts against what the web client now renders (fireMountEvents), and
-  // watches every block of the page first, list rows added since included: the engine calls a
-  // block's updaters when it updates the block, as it re-renders a Block component.
+  // Checks the page's mounts against what the web client now renders (fireMountEvents). First it
+  // watches every block of the page, list rows added since included: the engine calls a block's
+  // updaters when it updates the block, as it re-renders a Block component. Then it registers the
+  // methods of the blocks that now render (registerBlockStandIns), as a component registers them
+  // as it renders, before React runs the onMount effects: a panel that mounts once a skeleton
+  // ends can call a method of a block that mounts with it.
   function checkMounts(page) {
     const { context, watched } = page;
     collectBlockParents({ context }).blocks.forEach((block) => {
@@ -118,6 +121,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
         watched.set(block.id, context._internal.updaters.register(block.id, page.onUpdate));
       }
     });
+    registerBlockStandIns({ actor });
     return fireMountEvents({ actor, onMountFinished: page.onUpdate });
   }
 

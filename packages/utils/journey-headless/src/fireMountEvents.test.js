@@ -209,3 +209,35 @@ test('a hidden block mounts its content once it shows, and again after it hides 
   expect(result.passed).toBe(true);
   expect(names(log)).toEqual(['panel', 'panel']);
 });
+
+test('content that mounts once loading ends can run a method of a block that mounts with it', async () => {
+  const { errors, log, result } = await runTestJourney({
+    pages: [
+      recordPage({
+        panel: {
+          events: {
+            onMount: [
+              {
+                id: 'run_reload',
+                type: 'CallMethod',
+                params: { blockId: 'panel_reload', method: 'run' },
+              },
+            ],
+          },
+          blocks: [
+            {
+              id: 'panel_reload',
+              type: 'PluginRunChain',
+              events: { onRun: [recordState('record.id')] },
+            },
+          ],
+        },
+      }),
+    ],
+    steps: [{ expect: { visible: 'panel' } }],
+  });
+  expect(result.passed).toBe(true);
+  expect(result.browserOnly).toBeUndefined();
+  expect(errors).toEqual([]);
+  expect(names(log)).toEqual(['c1']);
+});
