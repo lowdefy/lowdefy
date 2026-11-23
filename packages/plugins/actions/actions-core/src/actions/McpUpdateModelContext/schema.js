@@ -24,6 +24,7 @@ export default {
     properties: {
       text: {
         type: 'string',
+        minLength: 1,
         description: 'The context for the model, such as what the person changed in the view.',
       },
     },

@@ -2,7 +2,7 @@
 
 A Lowdefy app can expose its API endpoints as tools to an MCP client — Claude, ChatGPT, an IDE assistant — over the Model Context Protocol. When those tools touch anything but public data, the client has to prove who is calling, and Lowdefy handles that by turning the app itself into an **OAuth 2.1 authorization server**: the assistant runs a normal browser authorization, the user signs in, chooses the organization to work in, and grants consent, and the app mints an access token the assistant sends on every tool call.
 
-This page is about the _authenticated_ MCP surface. Exposing tools to an app's own agents, and the `mcp` array on an agent (the app acting as an MCP _client_), are covered in [MCP tools for agents](/agent-mcp-tools) and the [`Mcp` connection](/Mcp). Here the app is the _server_, and the caller is an outside assistant.
+This page is about the *authenticated* MCP surface. Exposing tools to an app's own agents, and the `mcp` array on an agent (the app acting as an MCP *client*), are covered in [MCP tools for agents](/agent-mcp-tools) and the [`Mcp` connection](/Mcp). Here the app is the *server*, and the caller is an outside assistant.
 
 ## One resource, one address
 
@@ -10,12 +10,12 @@ There is a single MCP resource for the whole deployment, served at `/api/mcp`. T
 
 This is the Linear model — one link, the workspace is a property of the authorization rather than the address — and it is deliberate. An earlier design keyed the resource per organization (`/api/mcp/{organization_id}`); that put the organization in the URL, the RFC 8707 `resource` parameter, and the token audience, and needed a per-organization resource row kept in sync. The single resource deletes all of that: one address to paste, one audience, and the organization rides the token.
 
-| Route                                                  | Purpose                                                                                                                                           |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `POST /api/mcp`                                        | The MCP resource — streamable HTTP transport. Tools are listed and called here, per request, authorized against the bearer token.                 |
-| `GET /.well-known/oauth-protected-resource/api/mcp`    | RFC 9728 protected-resource metadata: the resource URI, the authorization server, and the scopes it supports. Public and constant per deployment. |
-| `GET /.well-known/oauth-authorization-server/api/auth` | RFC 8414 authorization-server metadata, re-exposed at the path a client derives from the issuer.                                                  |
-| `/api/auth/*`                                          | The authorization server itself — authorize, token, registration, and the OAuth endpoints the consent and picker pages call.                      |
+| Route | Purpose |
+| ----- | ------- |
+| `POST /api/mcp` | The MCP resource — streamable HTTP transport. Tools are listed and called here, per request, authorized against the bearer token. |
+| `GET /.well-known/oauth-protected-resource/api/mcp` | RFC 9728 protected-resource metadata: the resource URI, the authorization server, and the scopes it supports. Public and constant per deployment. |
+| `GET /.well-known/oauth-authorization-server/api/auth` | RFC 8414 authorization-server metadata, re-exposed at the path a client derives from the issuer. |
+| `/api/auth/*` | The authorization server itself — authorize, token, registration, and the OAuth endpoints the consent and picker pages call. |
 
 The `/.well-known` documents derive their URIs from the pinned canonical URL (`BETTER_AUTH_URL`, else the current environment's `url`), never from a request `Host` header, so they are the same for every caller. They mount **only when `auth.oauthProvider` is configured** — an app that is not an authorization server has nothing to discover, and its MCP tools are all public (see the rule below).
 
@@ -31,7 +31,7 @@ auth:
     dynamicClientRegistration: false
 ```
 
-- **`consentPage`** _(required)_ — the Lowdefy page id of your consent screen. The authorization flow redirects the signed-in user here to approve or deny the client. The engine builds the redirect as `${origin}${basePath}${consentPage}`, joined with no separator, so **the leading slash is required**.
+- **`consentPage`** *(required)* — the Lowdefy page id of your consent screen. The authorization flow redirects the signed-in user here to approve or deny the client. The engine builds the redirect as `${origin}${basePath}${consentPage}`, joined with no separator, so **the leading slash is required**.
 - **`postLoginPage`** — the page where a signed-in user chooses which organization the authorization acts in. It is shown after login and before consent. It is **required under `organizations.policy: tenant`** (the build fails without it) and is skipped under `pinned`, where there is only ever one organization to act in.
 - **`dynamicClientRegistration`** — allow unregistered MCP clients to self-register per RFC 7591. Off by default; pre-registered clients are the primary path. Turn it on for public assistants you cannot pre-register.
 
@@ -93,14 +93,14 @@ mcp:
 
 The endpoint is called with this payload:
 
-| Field         | Value                                                                                    |
-| ------------- | ---------------------------------------------------------------------------------------- |
-| `tool`        | The tool name the client called.                                                         |
-| `endpoint_id` | The `id` of the tool's `mcp.endpoints` entry.                                            |
-| `scope`       | The `scope` of that entry.                                                               |
-| `payload`     | The arguments the tool was called with.                                                  |
-| `success`     | `true` when the tool's endpoint succeeded, `false` when its routine errored or rejected. |
-| `response`    | The tool endpoint's response, or `null` when `success` is `false`.                       |
+| Field | Value |
+| ----- | ----- |
+| `tool` | The tool name the client called. |
+| `endpoint_id` | The `id` of the tool's `mcp.endpoints` entry. |
+| `scope` | The `scope` of that entry. |
+| `payload` | The arguments the tool was called with. |
+| `success` | `true` when the tool's endpoint succeeded, `false` when its routine errored or rejected. |
+| `response` | The tool endpoint's response, or `null` when `success` is `false`. |
 
 - **It cannot change the reply.** A hook endpoint that throws, is refused, or ends in an error or reject is logged as a warning naming the hook and the tool, and the client gets its reply as if there were no hook.
 - **It runs as the tool's caller.** The hook sees the same user, so `_user` is the person the agent acts for, and the hook endpoint's auth is checked against that caller like a `CallApi` step. Give it auth every tool caller passes, or calls by the others are logged as refused.
@@ -122,7 +122,7 @@ The 401 challenge is decided once, at the route boundary, before the MCP transpo
 
 > **Never list an MCP endpoint id in `auth.api.public`.**
 
-One public tool suppresses the 401 challenge for the _whole_ route. The build sets `mcp.json`'s `hasPublicTool` flag when any exposed endpoint is public, and the `/api/mcp` route then serves an anonymous caller a `200` with the public tools instead of a `401` with the `WWW-Authenticate` challenge. A freshly added assistant reports "connected, 1 tool" and **never runs the OAuth flow** — only a _stale_ token would take the challenge branch. Every protected tool then sits behind a door the client was never told to knock on.
+One public tool suppresses the 401 challenge for the *whole* route. The build sets `mcp.json`'s `hasPublicTool` flag when any exposed endpoint is public, and the `/api/mcp` route then serves an anonymous caller a `200` with the public tools instead of a `401` with the `WWW-Authenticate` challenge. A freshly added assistant reports "connected, 1 tool" and **never runs the OAuth flow** — only a *stale* token would take the challenge branch. Every protected tool then sits behind a door the client was never told to knock on.
 
 So a protected app keeps its `auth.api` gates and leaves every `mcp.endpoints` id out of the public list:
 
@@ -134,7 +134,7 @@ auth:
     # flips mcp.json hasPublicTool, and /api/mcp then serves anonymous
     # callers a 200 with that tool instead of the 401 challenge.
     public:
-      - webhooks/stripe # a webhook receiver, not an MCP tool
+      - webhooks/stripe   # a webhook receiver, not an MCP tool
 ```
 
 The build has a matching guard from the other direction: a protected or role-gated MCP endpoint **requires** `auth.oauthProvider`. Without the authorization server there is no way to authenticate the caller, so the build fails rather than shipping an unreachable tool — make the endpoint public (accepting the trade above) or configure `oauthProvider`.
@@ -147,11 +147,11 @@ The build has a matching guard from the other direction: a protected or role-gat
 4. The flow redirects to `consentPage`. The user approves the client and the requested scopes — or, if they have already consented for this client in this organization, consent is skipped.
 5. The app mints an access token whose **`organization_id` claim is the chosen organization** (the consent `referenceId`), and the assistant sends it as a `Bearer` token on every `/api/mcp` call.
 
-Consent is recorded per **(client, user, organization)**. Re-authorizing into an organization the user has already consented for skips the consent screen; a first authorization into a _different_ organization asks for consent again, for that organization.
+Consent is recorded per **(client, user, organization)**. Re-authorizing into an organization the user has already consented for skips the consent screen; a first authorization into a *different* organization asks for consent again, for that organization.
 
 ### How a token becomes a caller
 
-On every `/api/mcp` request the token is verified in-process against the authorization server's own signing keys: the issuer and audience must match the resource, and the token must carry both a `sub` (the user) and an `organization_id` claim. The claim is not trusted on its own — the **consent row for `(client, user, organization)` must still exist**. That liveness read on every call is what makes switching and disconnecting take effect _immediately_: revoke the grant and the next call is refused at once, not at the token's expiry.
+On every `/api/mcp` request the token is verified in-process against the authorization server's own signing keys: the issuer and audience must match the resource, and the token must carry both a `sub` (the user) and an `organization_id` claim. The claim is not trusted on its own — the **consent row for `(client, user, organization)` must still exist**. That liveness read on every call is what makes switching and disconnecting take effect *immediately*: revoke the grant and the next call is refused at once, not at the token's expiry.
 
 The caller is then resolved as a member of that organization, exactly as a session caller is — same membership wall, same role source, same `_user` shape — with one extra field: **`_user.auth_method` is `'mcp'`**, so a routine can tell an assistant apart from a browser without any app-side plumbing.
 
@@ -176,12 +176,12 @@ A token that cannot be verified (for example, an opaque token minted because the
 
 Both pages are ordinary Lowdefy pages that read the authorization request from the URL query, show the user what is being asked, and finish the flow with client actions. Four actions do the work:
 
-| Action                  | What it does                                                                                                                       |
-| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `ListOrganizations`     | Returns the caller's organization memberships — the rows the picker renders.                                                       |
-| `SetActiveOrganization` | Sets the caller's active organization. The picker calls it for the chosen organization.                                            |
-| `OAuthContinue`         | Continues the authorization after the organization is chosen (`POST /api/auth/oauth2/continue`). Returns `{ url }` to redirect to. |
-| `OAuthConsent`          | Approves (`accept: true`) or denies (`accept: false`) the client. Returns `{ url }` to redirect to.                                |
+| Action | What it does |
+| ------ | ------------ |
+| `ListOrganizations` | Returns the caller's organization memberships — the rows the picker renders. |
+| `SetActiveOrganization` | Sets the caller's active organization. The picker calls it for the chosen organization. |
+| `OAuthContinue` | Continues the authorization after the organization is chosen (`POST /api/auth/oauth2/continue`). Returns `{ url }` to redirect to. |
+| `OAuthConsent` | Approves (`accept: true`) or denies (`accept: false`) the client. Returns `{ url }` to redirect to. |
 
 ### The organization picker (`postLoginPage`)
 
@@ -247,7 +247,7 @@ The deny button is identical with `params: { accept: false }`. Read `_url_query:
 
 ## Switching organization from the assistant
 
-An assistant connected to one organization switches by _disconnecting_ — the client then re-runs the authorization and the user picks a different organization. Expose a tool that revokes the calling grant with the `RevokeMcpGrant` step:
+An assistant connected to one organization switches by *disconnecting* — the client then re-runs the authorization and the user picks a different organization. Expose a tool that revokes the calling grant with the `RevokeMcpGrant` step:
 
 ```yaml
 id: switch-organization
@@ -384,7 +384,7 @@ A refused token gets a `401` whose challenge says why, with no `resource_metadat
 WWW-Authenticate: Bearer error="invalid_token", error_description="This token has expired."
 ```
 
-The three reasons are _This token was switched off or does not exist_, _This token has expired_, and _This token's member can no longer use it_. The last covers a member who left or was removed, a deleted or banned user, and a token for an organization other than a pinned app's own. A token works only for the member row it was made for, so a member who leaves and rejoins holds none of their old tokens.
+The three reasons are *This token was switched off or does not exist*, *This token has expired*, and *This token's member can no longer use it*. The last covers a member who left or was removed, a deleted or banned user, and a token for an organization other than a pinned app's own. A token works only for the member row it was made for, so a member who leaves and rejoins holds none of their old tokens.
 
 ### Switching a token off
 
@@ -452,7 +452,7 @@ Here the `ticket` page has `path: /tickets/{ticket_id}`. A call to `open_ticket`
 
 `view` on an `endpoints` entry addresses a page the way the `Link` action does:
 
-- **`pageId`** _(required)_: the page that shows this tool. A fixed string, not an operator.
+- **`pageId`** *(required)*: the page that shows this tool. A fixed string, not an operator.
 - **`pathParams`**: a value for every placeholder in the page's `path`. The build fails if one is missing.
 - **`urlQuery`**: the page's URL query.
 - **`entrypoint`**: list the view in Claude outside a conversation. Default `false`. Claude calls an entry point with no arguments, so the build refuses `entrypoint: true` on a tool whose `payloadSchema` has required properties. Claude shows entry points only to organizations that have that feature.

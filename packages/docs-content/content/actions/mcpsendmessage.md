@@ -15,13 +15,11 @@ The action fails when the host refuses the message, so its `catch` actions run. 
 #### Parameters
 
 ###### object
-
-- `text: string`: **Required** - The text of the message to send.
+  - `text: string`: __Required__ - The text of the message to send.
 
 #### Examples
 
 ###### Ask the host about the record the page shows:
-
 ```yaml
 - id: ask_button
   type: Button
@@ -43,7 +41,6 @@ The action fails when the host refuses the message, so its `catch` actions run. 
 ```
 
 ###### Tell the person when the host refuses the message:
-
 ```yaml
 events:
   onClick:

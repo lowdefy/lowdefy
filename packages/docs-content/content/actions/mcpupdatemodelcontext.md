@@ -17,13 +17,11 @@ The action fails when the host refuses the context, so its `catch` actions run. 
 #### Parameters
 
 ###### object
-
-- `text: string`: **Required** - The context for the model, such as what the person changed.
+  - `text: string`: __Required__ - The context for the model, such as what the person changed.
 
 #### Examples
 
 ###### Tell the model what the person saved:
-
 ```yaml
 - id: save_button
   type: Button
@@ -43,17 +41,13 @@ The action fails when the host refuses the context, so its `catch` actions run. 
         params:
           text:
             _string.concat:
-              - 'The person renamed step '
-              - _state: step.number
-              - ' to "'
-              - _state: step.title
-              - '".'
+              - 'The person saved the steps of this sequence. They are now: '
+              - _json.stringify:
+                  - _state: steps
 ```
-
-In the browser `_mcp: embedded` is `null`, so the action is skipped.
+The text holds every step, not only the one that changed, since it replaces what the page sent before. In the browser `_mcp: embedded` is `null`, so the action is skipped.
 
 ###### Tell the person when the host refuses the context:
-
 ```yaml
 events:
   onChange:

@@ -120,7 +120,20 @@ test('updateModelContext rejects when the host answers with an error result', as
 test('updateModelContext rejects when the call to the host fails', async () => {
   const { loader, mcp } = createViewLowdefy();
   loader.host.updateModelContext.mockRejectedValueOnce(new Error('Context update denied'));
-  await expect(mcp.updateModelContext({ text: 'Hello' })).rejects.toThrow('Context update denied');
+  await expect(mcp.updateModelContext({ text: 'Hello' })).rejects.toMatchObject({
+    name: 'UserError',
+    message: 'The MCP host refused the model context: Context update denied',
+  });
+});
+
+test('updateModelContext says to open the view again when the cached loader cannot send it', async () => {
+  const { loader, mcp } = createViewLowdefy();
+  delete loader.host.updateModelContext;
+  await expect(mcp.updateModelContext({ text: 'Hello' })).rejects.toMatchObject({
+    name: 'UserError',
+    message:
+      'The MCP host refused the model context: This view was opened by an older version of the app and cannot update the model context. Open the view again.',
+  });
 });
 
 test('openLink asks the host to open an http or https url', async () => {

@@ -5115,7 +5115,7 @@
         "actions/McpUpdateModelContext.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "dff2f936f6f831848e022709970dd357c7422112a5b1d4e66b54f194d8df8e71"
+      "hash": "90074590ca4af03af13bf45a4c1439ecc5d4b49381f66799acb5c30d0e081530"
     },
     "actions/pdfmake": {
       "files": [
@@ -6004,7 +6004,7 @@
       "files": [
         "actions/index.yaml"
       ],
-      "hash": "8877aa81d502b9d35695fea4962a8ecd6df32b1e784f8f75d08c432fa2633d27"
+      "hash": "94b3837a66611be31de76bc669f55d9b3b71b349cacebb3ce689e972d2dddba7"
     },
     "reference/connections-reference": {
       "files": [

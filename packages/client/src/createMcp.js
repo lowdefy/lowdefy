@@ -85,8 +85,17 @@ function createMcp({ lowdefy }) {
     assertNotRefused({ message: 'The MCP host refused the message.', result });
   }
 
+  // Unlike ui/message, a host refuses ui/update-model-context with an error response, which the
+  // loader hands over as a rejected call. That is the host's answer too, so it is a UserError.
   async function updateModelContext({ text }) {
-    const result = await bridge.updateModelContext({ text });
+    let result;
+    try {
+      result = await bridge.updateModelContext({ text });
+    } catch (error) {
+      throw new UserError(`The MCP host refused the model context: ${error.message}`, {
+        cause: error,
+      });
+    }
     assertNotRefused({ message: 'The MCP host refused the model context.', result });
   }
 
