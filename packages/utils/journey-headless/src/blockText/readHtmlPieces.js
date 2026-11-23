@@ -14,7 +14,6 @@
   limitations under the License.
 */
 
-import isHiddenBelow from '../standIns/isHiddenBelow.js';
 import { hasHidingClass, TEXT_WRITING } from '../standIns/matchHtmlText.js';
 import isPlainText from './isPlainText.js';
 import normalizeShownText from './normalizeShownText.js';
@@ -178,9 +177,20 @@ function readHtmlPieces({ root, pre = false }) {
       open =
         'an html enhancer writes some of its text (data-time, data-format, data-avatar, data-icon or data-copy)';
     }
-    const hidden = context.hidden || isHiddenBelow({ element, stop: element.parentElement });
+    // As isHiddenBelow reads the html, except visibility: hidden, which hides the element's text
+    // but not a child's that sets it visible again, so it may hide.
+    const invisible = element.style?.visibility === 'hidden';
+    const parent = element.parentElement;
+    const closedDetails =
+      parent !== null &&
+      parent.tagName === 'DETAILS' &&
+      !parent.hasAttribute('open') &&
+      element.tagName !== 'SUMMARY';
+    const hidden =
+      context.hidden || element.hidden || element.style?.display === 'none' || closedDetails;
     const mayHide =
       context.mayHide ||
+      invisible ||
       hasHidingClass({ element, root: element.parentElement }) ||
       element.hasAttribute('data-popover-content');
     const next = {

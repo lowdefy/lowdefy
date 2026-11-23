@@ -109,7 +109,11 @@ function matchExactText({ root, text, skip, hideClassed }) {
 }
 
 function normalize(text) {
-  return text.replace(/[\u200b\u00ad]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+  return text
+    .replace(/[\u200b\u00ad]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
 }
 
 // An element's text as a browser's innerText reads it, as far as the html says: a hidden element

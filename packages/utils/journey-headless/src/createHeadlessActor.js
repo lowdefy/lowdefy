@@ -56,6 +56,8 @@ function readQuery(query) {
 //   and close events and mount their content through setOpen (registerBlockStandIns).
 // - page.inputFocused and page.pointerBlockId say whether an input has the focus and which block
 //   the pointer rests on, for a press of Escape (runHeadlessStep's noteFocus).
+// - page.openedBlocks holds the popups opened on the shown page at any time: antd keeps their
+//   content in the page, hidden, once they close (unless destroyOnHidden), which a text check reads.
 // - page.standIns holds what each block's stand-in keeps for the shown page, by block id
 //   (readStandInState): a dropdown's open state and selected keys, a confirm dialog's status.
 //   track(promise) holds an event a stand-in fired until settle, and sends its error to the
@@ -161,6 +163,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     }
     if (open) {
       openBlocks.add(block.id);
+      actor.page.openedBlocks.add(block.id);
       track(checkMounts(actor.page));
     } else {
       openBlocks.delete(block.id);
@@ -204,6 +207,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       onUpdate: () => scheduleMountCheck(shown),
       inputFocused: false,
       openBlocks: new Set(),
+      openedBlocks: new Set(),
       pageId: page.pageId,
       pointerBlockId: null,
       reportedParseErrors: new Set(),

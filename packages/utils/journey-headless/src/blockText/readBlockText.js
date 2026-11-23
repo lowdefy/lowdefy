@@ -65,7 +65,7 @@ function readPiece({ cache, parse, piece }) {
   let open = null;
   if (!type.isUndefined(piece.markdown)) {
     ({ html, open } = markdownToHtml({
-      markdown: piece.markdown,
+      markdown: piece.sanitize === true ? parse.sanitize(piece.markdown) : piece.markdown,
       raw: piece.raw === true,
       skipHtml: piece.skipHtml === true,
     }));
@@ -83,13 +83,80 @@ function readPiece({ cache, parse, piece }) {
   };
 }
 
+// Classes and styles on a block that change how its text reads: a case transform, kept white space
+// or a class that may hide it (Tailwind's, as readHtmlPieces reads them in html).
+const STYLED_CLASS =
+  /(^|:)(uppercase|lowercase|capitalize|hidden|invisible|whitespace-(pre|pre-line|pre-wrap|break-spaces))$/;
+// Style properties on a block that change how its text reads, as React's camelCase or CSS's
+// kebab-case, and whether a value does.
+const STYLED_PROPERTIES = {
+  display: (value) => value === 'none',
+  textTransform: (value) => value !== 'none',
+  'text-transform': (value) => value !== 'none',
+  visibility: (value) => value === 'hidden',
+  whiteSpace: () => true,
+  'white-space': () => true,
+};
+
+// Whether a style object (a block's style, or one of its per-element styles) changes how text reads.
+function isStyledStyle(style) {
+  if (!type.isObject(style)) return false;
+  return Object.entries(style).some(([key, value]) =>
+    type.isObject(value)
+      ? isStyledStyle(value)
+      : Object.hasOwn(STYLED_PROPERTIES, key) && STYLED_PROPERTIES[key](value)
+  );
+}
+
+function collectClassTokens(value) {
+  if (type.isString(value)) return value.split(/\s+/);
+  if (type.isArray(value)) return value.flatMap(collectClassTokens);
+  if (type.isObject(value)) return Object.values(value).flatMap(collectClassTokens);
+  return [];
+}
+
+// Whether a block's own `style` or `class` may change how the text inside it reads, so its runs
+// may not show as written.
+function isStyled(block) {
+  return (
+    isStyledStyle(block.eval?.style) ||
+    collectClassTokens(block.eval?.class).some((token) => STYLED_CLASS.test(token))
+  );
+}
+
+// The blocks holding a block, nearest first.
+function listAncestors({ block, parents }) {
+  const ancestors = [];
+  for (let parent = parents.get(block.id); !type.isNone(parent); parent = parents.get(parent.id)) {
+    ancestors.push(parent);
+  }
+  return ancestors;
+}
+
+// The closed Modal or Drawer, the block itself or one holding it, whose content antd keeps in the
+// page hidden: forceRender draws it before it opens, and once opened it stays after it closes,
+// unless destroyOnHidden. A browser's check then reads that hidden text. Null when there is none.
+function findHiddenPopup({ block, ancestors, page }) {
+  return (
+    [block, ...ancestors].find(
+      (candidate) =>
+        POPUP_BLOCK_TYPES.has(candidate.type) &&
+        !page.openBlocks.has(candidate.id) &&
+        candidate.eval?.properties?.destroyOnHidden !== true &&
+        (candidate.eval?.properties?.forceRender === true || page.openedBlocks.has(candidate.id))
+    ) ?? null
+  );
+}
+
 // The text a browser's text check reads in a block (LDF-1147): its own text and the text of the
 // blocks inside it a browser draws, each from its text model (readTextModel). The browser runner
 // reads the block's innerText and, for a Modal or Drawer, its portal's: a block inside another
 // Modal or Drawer is drawn in that one's portal, so it is not in the text. A block is drawn when
 // isBlockShown says so and every block holding it, up to the checked one, draws the area it sits
-// in. Returns { onPage, shown, runs, classHidden, units, unmodeled, open, text }:
-// - onPage: whether the page holds the block, shown or not (its wrapper is in the page);
+// in. A block whose own style or class (or a holding block's) may change how its text reads
+// (isStyled) adds no runs. A block not shown because a closed Modal or Drawer holds it leaves the
+// text open when antd keeps that popup's content in the page (findHiddenPopup). Returns { onPage, shown, runs, classHidden, units, unmodeled, open, text }:
+// - onPage: whether the web client renders the block, so its wrapper is in the page;
 // - shown: whether it is shown, so its text is drawn;
 // - runs, classHidden and units: readHtmlPieces', over every piece;
 // - unmodeled: the drawn blocks with no text model, whose text the run cannot read;
@@ -112,7 +179,6 @@ function readBlockText({ actor, blockId, cache, parse }) {
   };
   const found = findBlock({ blockId, slots: context._internal.RootSlots });
   if (found === null) return reading;
-  reading.onPage = true;
   const { parents } = collectBlockParents({ context });
   const rendered = new Set(
     collectRenderedBlocks({
@@ -121,10 +187,26 @@ function readBlockText({ actor, blockId, cache, parse }) {
       slots: context._internal.RootSlots,
     })
   );
+  // The browser finds the block's wrapper only while the web client renders it.
+  reading.onPage = rendered.has(found.block);
   const isShown = (block) => isBlockShown({ block, page, parents, rendered });
-  if (!isShown(found.block)) return reading;
+  const ancestorsOf = (block) => listAncestors({ block, parents });
+  if (!isShown(found.block)) {
+    const popup = findHiddenPopup({
+      block: found.block,
+      ancestors: ancestorsOf(found.block),
+      page,
+    });
+    if (popup !== null) {
+      reading.open.push(
+        `${describeBlock(popup)}: it is closed, and antd keeps its content in the page hidden, which a browser's check reads`
+      );
+    }
+    return reading;
+  }
   reading.shown = true;
-  function visit({ block, slots }) {
+  const styledAbove = ancestorsOf(found.block).some(isStyled);
+  function visit({ block, slots, styled }) {
     const model = readTextModel({ block, blockMetas });
     if (model === null) {
       reading.unmodeled.push(block);
@@ -133,14 +215,20 @@ function readBlockText({ actor, blockId, cache, parse }) {
     const subSlotsList = slots.subSlots[block.id] ?? [];
     const areaNames = new Set(subSlotsList.flatMap((subSlots) => Object.keys(subSlots.slots)));
     const { pieces, areas, open } = model({
+      ancestors: ancestorsOf(block),
       areaNames,
       block,
       i18n: actor.i18n,
       properties: block.eval?.properties ?? {},
     });
+    const blockStyled = styled || isStyled(block);
     if (open !== null) reading.open.push(`${describeBlock(block)}: ${open}`);
     pieces.forEach((piece) => {
-      const read = readPiece({ cache, parse, piece });
+      const read = readPiece({
+        cache,
+        parse,
+        piece: blockStyled ? { ...piece, unsure: true } : piece,
+      });
       reading.runs.push(...read.runs);
       reading.classHidden.push(...read.classHidden);
       reading.units.push(...read.units);
@@ -149,19 +237,29 @@ function readBlockText({ actor, blockId, cache, parse }) {
     subSlotsList.forEach((subSlots) => {
       Object.entries(subSlots.slots).forEach(([area, slot]) => {
         slot.blocks.forEach((child) => {
-          if (!isShown(child) || POPUP_BLOCK_TYPES.has(child.type)) return;
+          if (!isShown(child)) return;
+          // A Modal or Drawer draws in a portal, outside the block, unless a Drawer's getContainer
+          // places it elsewhere, which may be inside.
+          if (POPUP_BLOCK_TYPES.has(child.type)) {
+            if (!type.isNone(child.eval?.properties?.getContainer)) {
+              reading.open.push(
+                `${describeBlock(child)}: its getContainer may draw it inside the block`
+              );
+            }
+            return;
+          }
           if (areas === null) {
             reading.open.push(
               `${describeBlock(block)}: it draws the blocks inside it, which its headlessText does not cover`
             );
             return;
           }
-          if (areas.includes(area)) visit({ block: child, slots: subSlots });
+          if (areas.includes(area)) visit({ block: child, slots: subSlots, styled: blockStyled });
         });
       });
     });
   }
-  visit(found);
+  visit({ ...found, styled: styledAbove });
   reading.open = [...new Set(reading.open)];
   reading.text = reading.runs
     .map((run) => (run.pre ? run.text : run.text.replace(/[ \t\n\r\f]+/g, ' ').trim()))

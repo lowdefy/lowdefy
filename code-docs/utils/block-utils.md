@@ -176,7 +176,7 @@ export default extractBlockTypes(metas);
 
 - `blocks` — array of block type names
 - `icons` — map of block name → icon name arrays
-- `blockMetas` — map of block name → `{ category, valueType?, initValue?, slots?, cssKeys?, actions?, operators?, headlessMethods? }` (cssKeys are reduced to an array of key names). `actions` and `operators` list the types a block runs through events it registers itself (`methods.registerEvent`, such as a file block's `Request`); the build adds them to every page that uses the block (`countImpliedClientTypes`), since each page loads only its own plugin code. `headlessMethods` (`{ [method]: event or null }`) names the methods a headless journey runs without the component (`@lowdefy/journey-headless` `registerHeadlessMethods`): an event name for a method that only fires that block event, `null` for one that changes only what the block draws, which runs as a no-op.
+- `blockMetas` — map of block name → `{ category, valueType?, initValue?, slots?, cssKeys?, actions?, operators?, headlessMethods?, headlessText? }` (cssKeys are reduced to an array of key names). `actions` and `operators` list the types a block runs through events it registers itself (`methods.registerEvent`, such as a file block's `Request`); the build adds them to every page that uses the block (`countImpliedClientTypes`), since each page loads only its own plugin code. `headlessMethods` (`{ [method]: event or null }`) names the methods a headless journey runs without the component (`@lowdefy/journey-headless` `registerHeadlessMethods`): an event name for a method that only fires that block event, `null` for one that changes only what the block draws, which runs as a no-op. `headlessText` (a list of property paths) names the properties a block draws as visible text, which a headless `expect: { text }` reads for a block type it has no text model for (`@lowdefy/journey-headless` `readTextModel`).
 
 ### checkHeadlessMethods({ blockType, headlessMethods })
 
@@ -187,6 +187,17 @@ import { checkHeadlessMethods } from '@lowdefy/block-utils';
 
 checkHeadlessMethods({ blockType: 'app_Timeline', headlessMethods: { merge: null } }); // passes
 checkHeadlessMethods({ blockType: 'app_Timeline', headlessMethods: { merge: false } }); // throws
+```
+
+### checkHeadlessText({ blockType, headlessText })
+
+Checks a block meta's `headlessText`: a list of non-empty property paths, or none. Anything else throws, naming the block type (and the index of a bad path). `writeBlockSchemaMap` runs it at build time and `@lowdefy/journey-headless` `readTextModel` as it reads a block's text, so both refuse the same declarations with the same message.
+
+```js
+import { checkHeadlessText } from '@lowdefy/block-utils';
+
+checkHeadlessText({ blockType: 'app_Banner', headlessText: ['title', 'body.text'] }); // passes
+checkHeadlessText({ blockType: 'app_Banner', headlessText: 'title' }); // throws
 ```
 
 ### buildBlockSchema(meta)
@@ -269,6 +280,7 @@ const RichText = ({ properties }) => {
 | `src/extractBlockTypes.js`         | Derive types from metas barrel           |
 | `src/buildBlockSchema.js`          | Generate JSON Schema from meta           |
 | `src/checkHeadlessMethods.js`      | Check a meta's `headlessMethods`         |
+| `src/checkHeadlessText.js`         | Check a meta's `headlessText`            |
 | `src/cn.js`                        | Tailwind class merging (clsx + twMerge)  |
 | `src/renderHtml.js`                | HTML sanitization                        |
 | `src/ErrorBoundary.js`             | Error boundary component                 |

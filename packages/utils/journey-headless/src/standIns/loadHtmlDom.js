@@ -31,15 +31,19 @@ function loadDom() {
   return loading;
 }
 
-// Resolves parse(html): the html as HtmlComponent draws it, in a detached root element. parse is
-// synchronous, so a check that polls can read the html again on each try.
+// Resolves parse(html): the html as HtmlComponent draws it, in a detached root element, and
+// parse.sanitize(text), DOMPurify's string. parse is synchronous, so a check that polls can read
+// the html again on each try.
 async function loadHtmlDom() {
   const { document, purify } = await loadDom();
-  return function parse(html) {
+  function parse(html) {
     const root = document.createElement('div');
     root.innerHTML = purify.sanitize(html);
     return root;
-  };
+  }
+  // DangerousMarkdown sanitises its markdown as a string before react-markdown reads it.
+  parse.sanitize = (text) => purify.sanitize(text);
+  return parse;
 }
 
 export default loadHtmlDom;

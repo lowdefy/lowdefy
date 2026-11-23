@@ -319,3 +319,221 @@ test('Markdown is read as react-markdown draws it', async () => {
   expect((await check({ blocks, contains: '<b>raw</b>' })).passed).toBe(true);
   expect((await check({ blocks, contains: 'Missing' })).passed).toBe(false);
 });
+
+const closeButton = methodButton({
+  id: 'close',
+  blockId: 'dialog',
+  method: 'setOpen',
+  args: [{ open: false }],
+});
+
+test("a closed Modal's content that antd keeps in the page leaves a check open", async () => {
+  const reopened = await check({
+    blocks: [openButton, closeButton, modal],
+    blockId: 'dialog_body',
+    contains: 'Inside',
+    steps: [{ click: 'open' }, { click: 'close' }],
+  });
+  expect(reopened.browserOnly.reason).toContain(
+    'Modal "dialog": it is closed, and antd keeps its content in the page hidden'
+  );
+  const forced = await check({
+    blocks: [{ ...modal, properties: { ...modal.properties, forceRender: true } }],
+    blockId: 'dialog',
+    contains: 'Inside',
+  });
+  expect(forced.browserOnly.reason).toContain('it is closed, and antd keeps its content');
+  const destroyed = await check({
+    blocks: [
+      openButton,
+      closeButton,
+      { ...modal, properties: { ...modal.properties, destroyOnHidden: true } },
+    ],
+    blockId: 'dialog',
+    contains: 'Inside',
+    steps: [{ click: 'open' }, { click: 'close' }],
+  });
+  expect(destroyed.passed).toBe(false);
+});
+
+test('a block the web client does not render fails as the browser does, finding no wrapper', async () => {
+  const blocks = [{ id: 'gone', type: 'Html', visible: false, properties: { html: 'Hidden' } }];
+  const result = await check({ blocks, blockId: 'gone', contains: 'Hidden' });
+  expect(result.failure.message).toBe('Expected block "gone" to contain text "Hidden".');
+});
+
+test('a Drawer drawn in place by getContainer leaves its holder open', async () => {
+  const blocks = [
+    methodButton({ id: 'open', blockId: 'side', method: 'setOpen', args: [{ open: true }] }),
+    {
+      id: 'side',
+      type: 'Drawer',
+      properties: { getContainer: false },
+      blocks: [{ id: 'side_body', type: 'Html', properties: { html: 'Inline drawer' } }],
+    },
+  ];
+  const result = await check({ blocks, contains: 'Inline drawer', steps: [{ click: 'open' }] });
+  expect(result.browserOnly.reason).toContain('Drawer "side": its getContainer may draw it inside');
+});
+
+test("a Modal's footer reads as antd draws it: none while loading or with footer false, empty for a null label", async () => {
+  const open = [{ click: 'open' }];
+  const withProperties = (properties) => [
+    openButton,
+    { ...modal, properties: { ...modal.properties, ...properties } },
+  ];
+  const loading = await check({
+    blocks: withProperties({ loading: true }),
+    blockId: 'dialog',
+    contains: 'OK',
+    steps: open,
+  });
+  expect(loading.passed).toBe(false);
+  const footerless = {
+    ...modal,
+    properties: { title: 'Edit company', footer: false },
+    slots: {
+      footer: {
+        blocks: [{ id: 'footer_note', type: 'Html', properties: { html: 'Footer note' } }],
+      },
+    },
+  };
+  const noFooter = await check({
+    blocks: [openButton, footerless],
+    blockId: 'dialog',
+    contains: 'Footer note',
+    steps: open,
+  });
+  expect(noFooter.passed).toBe(false);
+  const nullLabel = await check({
+    blocks: withProperties({ okText: null }),
+    blockId: 'dialog',
+    contains: 'OK',
+    steps: open,
+  });
+  expect(nullLabel.passed).toBe(false);
+  const chinese = await check({
+    blocks: withProperties({ okText: '确定', cancelText: '取消' }),
+    blockId: 'dialog',
+    contains: '确定',
+    steps: open,
+  });
+  expect(chinese.browserOnly.reason).toContain('antd spaces a two-character Chinese button label');
+});
+
+test("a ConfigProvider's locale above a Modal leaves its default labels open", async () => {
+  const blocks = [
+    openButton,
+    { id: 'provider', type: 'ConfigProvider', properties: { locale: 'fr_FR' }, blocks: [modal] },
+  ];
+  const result = await check({
+    blocks,
+    blockId: 'dialog',
+    contains: 'Annuler',
+    steps: [{ click: 'open' }],
+  });
+  expect(result.browserOnly.reason).toContain('its footer buttons are labelled in the app locale');
+});
+
+test("a block's own style or class that changes how text reads keeps its text from passing", async () => {
+  const blocks = [
+    {
+      id: 'shout',
+      type: 'Title',
+      style: { textTransform: 'uppercase' },
+      properties: { content: 'Draft' },
+    },
+    { id: 'quiet', type: 'Title', class: 'md:hidden', properties: { content: 'Small screens' } },
+    {
+      id: 'row',
+      type: 'Box',
+      style: { display: 'flex' },
+      blocks: [{ id: 'cell', type: 'Html', properties: { html: 'In a row' } }],
+    },
+  ];
+  expect(
+    (await check({ blocks, blockId: 'shout', contains: 'Draft' })).browserOnly.reason
+  ).toContain('may show "Draft"');
+  expect(
+    (await check({ blocks, blockId: 'quiet', contains: 'Small screens' })).browserOnly
+  ).toBeDefined();
+  expect((await check({ blocks, blockId: 'row', contains: 'In a row' })).passed).toBe(true);
+});
+
+test('a vertical Divider draws no title, and DangerousMarkdown sanitises before it parses', async () => {
+  const divider = [
+    { id: 'split', type: 'Divider', properties: { orientation: 'vertical', title: 'Section' } },
+  ];
+  expect((await check({ blocks: divider, contains: 'Section' })).passed).toBe(false);
+  const dangerous = [
+    { id: 'notes', type: 'DangerousMarkdown', properties: { content: 'Is `a < b`?' } },
+  ];
+  expect((await check({ blocks: dangerous, contains: 'a < b' })).passed).toBe(false);
+  expect((await check({ blocks: dangerous, contains: 'a &lt; b' })).passed).toBe(true);
+  const options = [
+    {
+      id: 'raw',
+      type: 'DangerousHtml',
+      properties: { html: 'Kept', DOMPurifyOptions: { ADD_TAGS: ['x-tag'] } },
+    },
+  ];
+  expect((await check({ blocks: options, contains: 'Gone' })).browserOnly.reason).toContain(
+    'it sanitises with its own DOMPurifyOptions'
+  );
+});
+
+test('a Label draws its title, with a colon antd adds taken off, and its extra', async () => {
+  const blocks = [
+    {
+      id: 'owner_label',
+      type: 'Label',
+      properties: { title: 'Owner:', colon: true, extra: 'Who keeps the record' },
+      blocks: [{ id: 'owner_name', type: 'Html', properties: { html: 'Jo Smith' } }],
+    },
+  ];
+  expect((await check({ blocks, contains: 'Owner' })).passed).toBe(true);
+  expect((await check({ blocks, contains: 'Who keeps the record' })).passed).toBe(true);
+  expect((await check({ blocks, contains: 'Jo Smith' })).passed).toBe(true);
+  // antd draws the colon in CSS (::after), which innerText leaves out.
+  expect((await check({ blocks, contains: 'Owner:' })).passed).toBe(false);
+});
+
+test('text a visible child shows inside a visibility: hidden element may show', async () => {
+  const blocks = [
+    {
+      id: 'mixed',
+      type: 'Html',
+      properties: {
+        html: '<div style="visibility: hidden">Gone <span style="visibility: visible">Back</span></div>',
+      },
+    },
+  ];
+  expect((await check({ blocks, contains: 'Back' })).browserOnly).toBeDefined();
+});
+
+test('the models leave open what an ellipsis, a loading Statistic, a shortcut or a transform draws', async () => {
+  const blocks = [
+    {
+      id: 'long',
+      type: 'Paragraph',
+      properties: { content: 'A long paragraph', ellipsis: { rows: 1, expandable: true } },
+    },
+    { id: 'total', type: 'Statistic', properties: { title: 'Total', value: 10, loading: true } },
+    {
+      id: 'state',
+      type: 'Tag',
+      properties: { title: 'New' },
+      events: { onClick: { try: [], shortcut: 'n' } },
+    },
+  ];
+  expect(
+    (await check({ blocks, blockId: 'long', contains: 'A long paragraph' })).browserOnly.reason
+  ).toContain('its ellipsis may cut the text it draws');
+  expect((await check({ blocks, blockId: 'total', contains: '10' })).browserOnly.reason).toContain(
+    'it draws a skeleton while loading'
+  );
+  expect((await check({ blocks, blockId: 'total', contains: 'Total' })).passed).toBe(true);
+  expect(
+    (await check({ blocks, blockId: 'state', contains: 'Ctrl' })).browserOnly.reason
+  ).toContain('it draws its onClick shortcut');
+});

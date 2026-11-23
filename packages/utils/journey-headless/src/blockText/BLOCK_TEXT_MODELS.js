@@ -19,7 +19,8 @@ import { type } from '@lowdefy/helpers';
 import formatStatisticValue from './formatStatisticValue.js';
 
 // What each block type the headless run knows draws as text (LDF-1147), read from its component
-// in the browser: a function of { block, properties, areaNames, i18n } that returns
+// in the browser: a function of { block, properties, areaNames, ancestors (the blocks holding it,
+// nearest first), i18n } that returns
 // { pieces, areas, open }.
 // - pieces: the text it draws from its evaluated properties, in order, each { html } (drawn with
 //   renderHtml, whose HtmlComponent reads the value as a string), { text } (drawn as a React text
@@ -100,21 +101,28 @@ function markdown({ properties }) {
   };
 }
 
-function popupFooter({ properties, areaNames, i18n }) {
-  if (areaNames.has('footer') || properties.footer === false) {
-    return { pieces: [], open: null };
-  }
+// antd's Button puts a space between two Chinese characters it is given as its text.
+const TWO_CHINESE_CHARACTERS = /^[\u4e00-\u9fa5]{2}$/;
+
+// The Cancel and OK buttons antd draws in a Modal's footer: a label left undefined is antd's
+// default, known only in en_US (no app i18n locales and no ConfigProvider locale above the
+// Modal), and a null one draws an empty button.
+function popupFooter({ ancestors, i18n, properties }) {
   const labels = [properties.cancelText, properties.okText];
-  if (labels.some((label) => type.isNone(label)) && !knowsLocale(i18n)) {
+  const localised = ancestors.some(
+    (block) => block.type === 'ConfigProvider' && !type.isNone(block.eval?.properties?.locale)
+  );
+  if (labels.some((label) => type.isUndefined(label)) && (!knowsLocale(i18n) || localised)) {
     return { pieces: [], open: 'its footer buttons are labelled in the app locale' };
   }
-  return {
-    pieces: [
-      ...child(properties.cancelText ?? 'Cancel').pieces,
-      ...child(properties.okText ?? 'OK').pieces,
-    ],
-    open: null,
-  };
+  if (labels.some((label) => type.isString(label) && TWO_CHINESE_CHARACTERS.test(label))) {
+    return { pieces: [], open: 'antd spaces a two-character Chinese button label' };
+  }
+  const [cancel, ok] = [
+    child(type.isUndefined(properties.cancelText) ? 'Cancel' : properties.cancelText),
+    child(type.isUndefined(properties.okText) ? 'OK' : properties.okText),
+  ];
+  return { pieces: [...cancel.pieces, ...ok.pieces], open: cancel.open ?? ok.open };
 }
 
 function descriptionsItems({ properties }) {
@@ -159,13 +167,23 @@ const BLOCK_TEXT_MODELS = {
     open: null,
   }),
   ClickableHtml: htmlBlock,
-  DangerousHtml: htmlBlock,
+  // Its own DOMPurifyOptions may keep or strip what the default sanitiser does not.
+  DangerousHtml: ({ properties }) => ({
+    pieces: html(properties.html),
+    areas: [],
+    open: type.isNone(properties.DOMPurifyOptions)
+      ? null
+      : 'it sanitises with its own DOMPurifyOptions',
+  }),
+  // It sanitises the markdown as a string before react-markdown reads it, with rehype-raw.
   DangerousMarkdown: ({ properties }) => ({
     pieces: type.isNone(properties.content)
       ? []
-      : [{ markdown: String(properties.content), raw: true }],
+      : [{ markdown: String(properties.content), raw: true, sanitize: true }],
     areas: [],
-    open: null,
+    open: type.isNone(properties.DOMPurifyOptions)
+      ? null
+      : 'it sanitises with its own DOMPurifyOptions',
   }),
   Descriptions: ({ properties }) => {
     const transforms = (properties.itemOptions ?? []).some(
@@ -177,7 +195,12 @@ const BLOCK_TEXT_MODELS = {
       open: transforms ? 'its itemOptions transform what it draws' : null,
     };
   },
-  Divider: ({ properties }) => ({ pieces: html(properties.title), areas: [], open: null }),
+  // antd draws no title on a vertical Divider.
+  Divider: ({ properties }) => ({
+    pieces: properties.orientation === 'vertical' ? [] : html(properties.title),
+    areas: [],
+    open: null,
+  }),
   Drawer: ({ properties }) => ({
     pieces: html(properties.title),
     // A loading Drawer draws a skeleton in place of its body.
@@ -189,15 +212,44 @@ const BLOCK_TEXT_MODELS = {
   // An icon draws an svg, whose title a browser's innerText does not read.
   Icon: () => ({ pieces: [], areas: [], open: null }),
   Img: () => ({ pieces: [], areas: [], open: null }),
+  // Its label: a label area, else its title (its id when the title is no string), with a colon it
+  // ends with taken off when antd adds one; none while disabled. Its extra shows while it has no
+  // validation status or a success one; a status may show a message, which leaves the text open.
+  Label: ({ areaNames, block, properties }) => {
+    let pieces = [];
+    if (!properties.disabled && !areaNames.has('label')) {
+      let label = type.isString(properties.title) ? properties.title : block.blockId;
+      if (properties.colon && label.trim() !== '') label = label.replace(/[:|：]\s*$/u, '');
+      pieces = label === '' ? [] : html(label);
+    }
+    const status = block.eval?.validation?.status;
+    const hasStatus = !type.isNone(status);
+    const showsExtra = !hasStatus || status === 'success';
+    return {
+      pieces: [...pieces, ...(showsExtra ? html(properties.extra || null) : [])],
+      areas: properties.disabled ? ['content'] : ['label', 'content'],
+      open: hasStatus ? 'it may show a validation message' : null,
+    };
+  },
   List: container,
   Markdown: markdown,
   MarkdownWithCode: markdown,
-  Modal: ({ areaNames, i18n, properties }) => {
-    const footer = popupFooter({ areaNames, i18n, properties });
+  // A loading Modal draws a skeleton in place of its body and no footer. footer: false draws no
+  // footer, a footer area draws its blocks in place of the buttons.
+  Modal: ({ ancestors, areaNames, i18n, properties }) => {
+    if (properties.loading) {
+      return { pieces: html(properties.title), areas: [], open: null };
+    }
+    if (properties.footer === false) {
+      return { pieces: html(properties.title), areas: ['content'], open: null };
+    }
+    if (areaNames.has('footer')) {
+      return { pieces: html(properties.title), areas: ['content', 'footer'], open: null };
+    }
+    const footer = popupFooter({ ancestors, i18n, properties });
     return {
       pieces: [...html(properties.title), ...footer.pieces],
-      // A loading Modal draws a skeleton in place of its body.
-      areas: ['footer', ...(properties.loading ? [] : ['content'])],
+      areas: ['content'],
       open: footer.open,
     };
   },
