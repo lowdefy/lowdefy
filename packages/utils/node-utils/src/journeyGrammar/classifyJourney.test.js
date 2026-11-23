@@ -172,6 +172,8 @@ test('classifyJourney calls rowKey, control and open targets headless', () => {
     { click: { blockId: 'delete_modal', control: 'ok' } },
     { expect: { hidden: { blockId: 'invoices', rowKey: 'inv-0042' } } },
     { expect: { visible: { blockId: 'invoices', rowKey: 'inv-0043', column: 'number' } } },
+    { click: { blockId: 'issue_cards', control: 'onOpen', rowKey: 'issue-17' } },
+    { expect: { hidden: { blockId: 'issue_cards', control: 'onOpen', rowKey: 'issue-17' } } },
   ];
   expect(classify(steps)).toEqual({ headless: true });
 });

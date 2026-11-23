@@ -51,13 +51,13 @@ const TARGET_PROPERTIES = {
   rowKey: {
     ...nonEmptyString,
     description:
-      "The grid row whose key this is (the field the AgGrid rowId names, else id or _id; Table's rowKey, else _id or id). Clicks the row's first cell, or the cell in column. Stays put when the grid sorts and runs headless. Needs blockId; not with row.",
+      "The grid row whose key this is (the field the AgGrid rowId names, else id or _id; Table's rowKey, else _id or id), or the data-id of a ClickableHtml element (with control). Clicks the row's first cell, or the cell in column. Stays put when the grid sorts and runs headless. Needs blockId; not with row.",
   },
   column: { type: 'string', description: 'Grid column id. Needs blockId.' },
   control: {
     ...nonEmptyString,
     description:
-      "The key of a control the block draws: ok or cancel on a Modal or ConfirmModal, a DropdownButton item's eventName, a DropdownMenu link's id, a Menu link's pageId (else id), the eventName of a grid cell's button, menu item or switch (with rowKey). Opens the block's dropdown first when it is closed. Runs headless. Needs blockId; not with text, containing or nth.",
+      "The key of a control the block draws: ok or cancel on a Modal or ConfirmModal, a DropdownButton item's eventName, a DropdownMenu link's id, a Menu link's pageId (else id), the eventName of a grid cell's button, menu item or switch (with rowKey), a ClickableHtml element's data-event (with rowKey, its data-id), and ok or cancel on the confirm a ClickableHtml event asks. Opens the block's dropdown, or the ClickableHtml popover that holds it, first when it is closed. Runs headless. Needs blockId; not with text, containing or nth.",
   },
   nth: { ...index, description: 'Zero-based pick among several matches.' },
 };
@@ -109,9 +109,9 @@ function target({ refuse = [] } = {}) {
   };
 }
 
-// An expectation reads a row by key, never a control: a control shows only while its popup is
-// open.
-const EXPECT_TARGET = target({ refuse: ['control'] });
+// expect.visible and expect.hidden read a row by key or a control by key: a ClickableHtml
+// element (its data-event and data-id), an open confirm's ok or a modal's footer button.
+const EXPECT_TARGET = target();
 
 // A null value is a placeholder, so it must be marked from: shape.
 const VALUE_PLACEHOLDER_RULE = {
@@ -292,7 +292,7 @@ const CALL_PAYLOAD = {
 const STEPS = {
   click: {
     description:
-      'Click a target. "count": 2 or 3 clicks in quick succession, a double click. { blockId, rowKey } clicks a grid row by its key (with column, that cell; with control, that row\'s control) and { blockId, control } a control the block draws, both headless too.',
+      'Click a target. "count": 2 or 3 clicks in quick succession, a double click. { blockId, rowKey } clicks a grid row by its key (with column, that cell; with control, that row\'s control) and { blockId, control } a control the block draws (a ClickableHtml element by its data-event, with rowKey its data-id), both headless too.',
     oneOf: [
       { type: 'string' },
       targetObject({ properties: { count: { type: 'integer', minimum: 1, maximum: 3 } } }),
@@ -453,7 +453,7 @@ const journeyStepSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   title: 'Journey step',
   description:
-    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, rowKey, column, control, nth }; fill, select and expect.text need a blockId, and so do rowKey and control. rowKey (a grid row by its key) and control (a control the block draws, by its key) run headless and in the browser; text, containing, row and nth read the page and run in the browser only. click takes rowKey and control, expect.visible, expect.hidden and expect.text take rowKey; fill, select and open take neither. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request, release or webhook step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it, with its endpoint or pageId when two holds share the id. A request takes no "as": "system". A journey with no pageId runs only call, request, hold, release, webhook, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
+    'One step of a journey: an object with exactly one key, the step name. A target is a blockId string or an object of { blockId, text, containing, row, rowKey, column, control, nth }; fill, select and expect.text need a blockId, and so do rowKey and control. rowKey (a grid row by its key) and control (a control the block draws, by its key) run headless and in the browser; text, containing, row and nth read the page and run in the browser only. click, expect.visible and expect.hidden take rowKey and control, expect.text takes rowKey; fill, select and open take neither. expect.error and expect.effect must directly follow an interaction step (click, open, fill, select, press, back). expect.error may instead read the answer of a call, request, release or webhook step, and expect.status must; only expect steps may sit between the call and them. A release names the requestId of a hold step before it, with its endpoint or pageId when two holds share the id. A request takes no "as": "system". A journey with no pageId runs only call, request, hold, release, webhook, as, wait: { ms } and expect on error, status, calls (with a pageId for a request), db or sunk.',
   oneOf: Object.values(JOURNEY_STEP_SCHEMAS),
 };
 
