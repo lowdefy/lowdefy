@@ -18,6 +18,7 @@ import { createStepRunner, updateLowdefyPage, waitForSettle } from '@lowdefy/cli
 import getContext from '@lowdefy/engine';
 import { serializer, type } from '@lowdefy/helpers';
 
+import collectBlockParents from './collectBlockParents.js';
 import createActorClient from './createActorClient.js';
 import createLocation from './createLocation.js';
 import fireMountEvents from './fireMountEvents.js';
@@ -48,7 +49,9 @@ function readQuery(query) {
 //   page, by a full load when that page was opened by an earlier load.
 // - Showing a page runs what the web client's components run: the app's and the page's onInit
 //   and onInitAsync, then its subscriptions open (each succeeds and no message arrives), then
-//   onMount on every block it mounts. Popup blocks (Modal, Drawer,
+//   onMount on every block it mounts. Whenever the engine updates a block, and whenever a block's
+//   onMount finishes, the mounts are checked again (checkMounts), as React renders again: content
+//   a loading block's skeleton held back mounts once it stops loading. Popup blocks (Modal, Drawer,
 //   ConfirmModal) start closed; the methods their stand-ins register open them, fire their open
 //   and close events and mount their content through setOpen (registerBlockStandIns).
 // - page.standIns holds what each block's stand-in keeps for the shown page, by block id
@@ -105,17 +108,45 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     return host.readPageConfig({ pageId, path, pathParams, urlQuery, user });
   }
 
+  // Checks the page's mounts against what the web client now renders (fireMountEvents), and
+  // watches every block of the page first, list rows added since included: the engine calls a
+  // block's updaters when it updates the block, as it re-renders a Block component.
+  function checkMounts(page) {
+    const { context, watched } = page;
+    collectBlockParents({ context }).blocks.forEach((block) => {
+      if (!watched.has(block.id)) {
+        watched.set(block.id, context._internal.updaters.register(block.id, page.onUpdate));
+      }
+    });
+    return fireMountEvents({ actor, onMountFinished: page.onUpdate });
+  }
+
+  // React renders after the engine's update has run, so the check waits a microtask, and one
+  // check follows any number of updates in between. A page no longer shown is left alone.
+  function scheduleMountCheck(page) {
+    if (page.mountCheckScheduled) {
+      return;
+    }
+    page.mountCheckScheduled = true;
+    queueMicrotask(() => {
+      page.mountCheckScheduled = false;
+      if (actor.page === page) {
+        track(checkMounts(page));
+      }
+    });
+  }
+
   // Opens or closes a popup block (POPUP_BLOCK_TYPES) as antd's `open` prop does: its content
   // shows, and mounts, only while it is open. Fires none of the block's events, which its stand-in
   // fires in the component's order (BLOCK_STAND_INS). Returns whether the open state changed.
   function setOpen({ block, open }) {
-    const { openBlocks, mounted, context } = actor.page;
+    const { openBlocks, context } = actor.page;
     if (openBlocks.has(block.id) === open) {
       return false;
     }
     if (open) {
       openBlocks.add(block.id);
-      track(fireMountEvents({ context, mounted, openBlocks }));
+      track(checkMounts(actor.page));
     } else {
       openBlocks.delete(block.id);
     }
@@ -148,16 +179,22 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     if (!type.isUndefined(previousContext) && !sameContext) {
       previousContext._internal.WebSockets.unsubscribeAll();
     }
-    actor.page = {
+    actor.page?.watched.forEach((unregister) => unregister());
+    const shown = {
       context,
       matchedPath: page.matchedPath,
+      mountCheckScheduled: false,
       mounted: new Set(),
+      mountFinished: new Set(),
+      onUpdate: () => scheduleMountCheck(shown),
       openBlocks: new Set(),
       pageId: page.pageId,
       reportedParseErrors: new Set(),
       standIns: new Map(),
       urlQuery: urlQuery ?? {},
+      watched: new Map(),
     };
+    actor.page = shown;
     const progress = () => undefined;
     await appContext._internal.runOnInit(progress);
     appContext._internal.runOnInitAsync(progress);
@@ -169,11 +206,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     if (!sameContext) {
       context._internal.WebSockets.subscribeAll();
     }
-    await fireMountEvents({
-      context,
-      mounted: actor.page.mounted,
-      openBlocks: actor.page.openBlocks,
-    });
+    await checkMounts(shown);
     reportParseErrors({ handleError: lowdefy._internal.handleError, page: actor.page });
   }
 

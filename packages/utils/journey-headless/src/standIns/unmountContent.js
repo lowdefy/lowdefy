@@ -30,19 +30,21 @@ function isInConfirmDialog({ block, container, parents }) {
   return false;
 }
 
-// A popup's content unmounts, as React drops it when the component stops drawing it: its blocks
-// mount again, firing onMount, the next time it opens, and what their components keep in React
+// A block's content unmounts, as React drops it when the component stops drawing it (a popup
+// closes with destroyOnHidden, a block hides or shows its skeleton): its blocks mount again,
+// firing onMount, the next time it draws them, and what their components keep in React
 // starts again (a dropdown's open state and selection, a nested Modal's or Drawer's open state).
 // The engine keeps their state and values, as the browser's does. A nested ConfirmModal keeps its
 // dialogs, which antd draws outside the block.
 function unmountContent({ actor, block }) {
-  const { mounted, openBlocks, standIns } = actor.page;
+  const { mounted, mountFinished, openBlocks, standIns } = actor.page;
   const { blocks, parents } = collectBlockParents({ context: actor.page.context });
   blocks
     .filter((content) => isInsideBlock({ block: content, container: block, parents }))
     .filter((content) => !isInConfirmDialog({ block: content, container: block, parents }))
     .forEach((content) => {
       mounted.delete(content.id);
+      mountFinished.delete(content.id);
       if (content.type === 'ConfirmModal') {
         return;
       }

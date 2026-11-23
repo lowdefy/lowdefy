@@ -14,24 +14,40 @@
   limitations under the License.
 */
 
-import collectMountOrder from './collectMountOrder.js';
+import { collectMounts } from './collectMountOrder.js';
+import unmountContent from './standIns/unmountContent.js';
 
-// Fires what the web client's Block component fires when a page's blocks mount
-// (client/src/block/Block.js and MountEvents.js): every block's onMount, all started in mount
-// order as React runs their effects, and each block's onMountAsync once its own onMount has
-// finished, which nothing waits for. A block in `mounted` is already mounted and is left alone;
-// each block fired is added to it, so opening a Modal mounts only its content. Resolves when every
-// onMount has finished.
-async function fireMountEvents({ context, mounted = new Set(), openBlocks }) {
+// Brings a page's mounts up to date with what the web client's Block components render
+// (client/src/block/Block.js, CategorySwitch.js and MountEvents.js), as React does after a render:
+// - A block that is hidden or shows its skeleton has unmounted its content (collectMounts'
+//   dropped): the mounted blocks inside it unmount (unmountContent), so they mount again, firing
+//   onMount, once it renders them again.
+// - Every block it now reaches that is not in page.mounted mounts: its onMount fires, all started
+//   in mount order as React runs their effects, and its onMountAsync once its own onMount has
+//   finished, which nothing waits for. The block is then in page.mountFinished, so it is no
+//   longer loading (MountEvents' waitForMount), and onMountFinished is called: content its
+//   skeleton held back may now mount.
+// Resolves when every onMount it fired has finished.
+async function fireMountEvents({ actor, onMountFinished = () => undefined }) {
+  const { page } = actor;
+  const { context, mounted, mountFinished, openBlocks } = page;
   const progress = () => undefined;
-  const blocks = collectMountOrder({ openBlocks, slots: context._internal.RootSlots }).filter(
-    (block) => !mounted.has(block.id)
-  );
+  const { dropped, mounts } = collectMounts({
+    mountFinished,
+    openBlocks,
+    slots: context._internal.RootSlots,
+  });
+  dropped
+    .filter(({ content }) => content.some((block) => mounted.has(block.id)))
+    .forEach(({ block }) => unmountContent({ actor, block }));
+  const blocks = mounts.map(({ block }) => block).filter((block) => !mounted.has(block.id));
   blocks.forEach((block) => mounted.add(block.id));
   await Promise.all(
     blocks.map(async (block) => {
       await block.triggerEvent({ name: 'onMount', progress });
       block.triggerEvent({ name: 'onMountAsync', progress });
+      mountFinished.add(block.id);
+      onMountFinished();
     })
   );
 }
