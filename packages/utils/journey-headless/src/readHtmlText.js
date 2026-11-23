@@ -15,20 +15,7 @@
 */
 
 import loadHtmlDom from './standIns/loadHtmlDom.js';
-
-// Elements whose text a browser runner's text match never reads (Playwright's
-// shouldSkipForTextMatching).
-const UNREAD_ELEMENTS = new Set(['NOSCRIPT', 'SCRIPT', 'STYLE']);
-
-function readNodeText(node) {
-  if (node.nodeType === node.TEXT_NODE) {
-    return node.nodeValue;
-  }
-  if (node.nodeType !== node.ELEMENT_NODE || UNREAD_ELEMENTS.has(node.tagName)) {
-    return '';
-  }
-  return [...node.childNodes].map(readNodeText).join('');
-}
+import readNodeText from './readNodeText.js';
 
 // The text an html label shows in a browser, which the browser runner's select matches an option
 // by: blocks-antd draws a Selector's or a radio group's option label as html (renderHtml), so

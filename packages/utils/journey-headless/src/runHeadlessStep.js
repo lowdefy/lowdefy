@@ -33,6 +33,7 @@ import readStandInState from './readStandInState.js';
 import runHeadlessCall from './runHeadlessCall.js';
 import runHeadlessExpect from './runHeadlessExpect.js';
 import runHeadlessWebhook from './runHeadlessWebhook.js';
+import { clickText, expectText, isTextTarget } from './runTextTarget.js';
 import standInMissing from './standInMissing.js';
 import waitForNextTask from './waitForNextTask.js';
 import waitForRequestCall from './waitForRequestCall.js';
@@ -153,14 +154,22 @@ async function runBlockClick({ actor, rails, step, stepTimeout }) {
   return true;
 }
 
-// expect.visible or expect.hidden on a grid row by key, or on a control a block draws (a
-// ClickableHtml element), goes to the block's stand-in. A block that is not on the page has no
+// expect.visible or expect.hidden by text or containing reads the ClickableHtml blocks the page
+// shows (expectText). One on a grid row by key, or on a control a block draws (a ClickableHtml
+// element), goes to the block's stand-in. A block that is not on the page has no
 // rows or controls: the check reads it as runHeadlessExpect does. Resolves true when the check is
 // done.
 async function runStandInExpect({ actor, step, stepTimeout }) {
   const kind = getStepKey(step.expect);
   const target = step.expect[kind];
-  if (!['visible', 'hidden'].includes(kind) || !isStandInTarget(target)) {
+  if (!['visible', 'hidden'].includes(kind)) {
+    return false;
+  }
+  if (isTextTarget(target)) {
+    await expectText({ actor, kind, target, timeout: stepTimeout });
+    return true;
+  }
+  if (!isStandInTarget(target)) {
     return false;
   }
   const block = actor.page?.context._internal.RootSlots.map[target.blockId];
@@ -197,6 +206,10 @@ async function runStandInExpect({ actor, step, stepTimeout }) {
 // checks the engine, the answer or the data (runHeadlessExpect). Resolves the answer of a call,
 // request or webhook, and undefined for any other step.
 //
+// A click, expect.visible or expect.hidden by text or containing looks for what it names in the
+// ClickableHtml blocks the page shows, and leaves the step to the browser when none shows it or
+// another block may (runTextTarget, LDF-1146).
+//
 // Before a block step acts, its block must be shown, as the browser waits for a visible target. A
 // click on a rowKey or control target, an open, a plain click a component answers itself (a
 // dropdown's trigger) and expect.visible or hidden on a rowKey or control go to the block's
@@ -224,6 +237,10 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
   noteFocus({ actor, key, step });
   if (key === 'press' && step.press === 'Escape') {
     await pressEscape({ actor, rails });
+    return undefined;
+  }
+  if (key === 'click' && isTextTarget(step.click)) {
+    await clickText({ actor, rails, step, stepTimeout });
     return undefined;
   }
   if (key === 'click' && (await runBlockClick({ actor, rails, step, stepTimeout }))) {

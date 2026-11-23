@@ -64,7 +64,9 @@ function readQuery(query) {
 //   page started.
 // `calls`, `messages` and `navigations` record what the actor's pages did; leftApp is the URL of a
 // link out of the app; browserOnly lists why a step needs the browser after all (an action only a
-// browser can carry out, a click a browser would land inside a block).
+// browser can carry out, a click a browser would land inside a block); landedControl is the
+// control a click by text or containing landed on ({ blockId, control, rowKey }), which the
+// journey's step result carries for lint L8, cleared before each step.
 function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }) {
   const rootConfig = serializer.deserialize(host.rootConfig);
   const pending = new Set();
@@ -72,6 +74,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     browserOnly: [],
     calls: [],
     history: [],
+    landedControl: undefined,
     leftApp: null,
     messages: [],
     name,
