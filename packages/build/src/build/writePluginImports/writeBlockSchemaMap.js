@@ -16,6 +16,13 @@
 
 import loadPluginTypeSchema from './loadPluginTypeSchema.js';
 
+// A block's headlessMethods ({ [method]: the event it fires }) is what a headless journey runs
+// for a CallMethod on a block with no stand-in (@lowdefy/journey-headless registerBlockStandIns):
+// carried only when the block declares it.
+function readHeadlessMethods(headlessMethods) {
+  return headlessMethods == null ? {} : { headlessMethods };
+}
+
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
   const allMetas = {};
@@ -54,6 +61,7 @@ async function writeBlockSchemaMap({ components, context }) {
         ...(typesMapMeta.valueType != null && { valueType: typesMapMeta.valueType }),
         ...(typesMapMeta.initValue !== undefined && { initValue: typesMapMeta.initValue }),
         hazards: typesMapMeta.hazards ?? meta?.hazards ?? [],
+        ...readHeadlessMethods(typesMapMeta.headlessMethods ?? meta?.headlessMethods),
       };
     } else if (meta) {
       blockMetas[block.typeName] = {
@@ -61,6 +69,7 @@ async function writeBlockSchemaMap({ components, context }) {
         ...(meta.valueType != null && { valueType: meta.valueType }),
         ...(meta.initValue !== undefined && { initValue: meta.initValue }),
         hazards: meta.hazards ?? [],
+        ...readHeadlessMethods(meta.headlessMethods),
       };
     }
   }

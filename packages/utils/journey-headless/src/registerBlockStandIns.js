@@ -20,6 +20,7 @@ import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import collectBlockParents from './collectBlockParents.js';
 import readStandInState from './readStandInState.js';
 import leaveMethodsToBrowser from './standIns/leaveMethodsToBrowser.js';
+import registerHeadlessMethods from './standIns/registerHeadlessMethods.js';
 
 const LIST_METHODS = ['moveItemDown', 'moveItemUp', 'pushItem', 'removeItem', 'unshiftItem'];
 
@@ -28,9 +29,10 @@ const LIST_METHODS = ['moveItemDown', 'moveItemUp', 'pushItem', 'removeItem', 'u
 // Drawer's setOpen and toggleOpen, a ConfirmModal's open; BLOCK_STAND_INS), and a list block's
 // item methods are its own engine methods, as the List component registers them. A method a
 // stand-in block's stand-in does not register fails CallMethod, which names the block and the
-// method. A block whose type has no stand-in leaves every other method to the browser
-// (leaveMethodsToBrowser): its component, which registers them, is not loaded. Run again after
-// the page changes, since list rows add blocks.
+// method. A block whose type has no stand-in registers the methods its meta declares for a
+// headless run (meta.headlessMethods: { [method]: the event it fires }; registerHeadlessMethods)
+// and leaves every other method to the browser (leaveMethodsToBrowser): its component, which
+// registers them, is not loaded. Run again after the page changes, since list rows add blocks.
 function registerBlockStandIns({ actor }) {
   const { context } = actor.page;
   const { blockMetas } = context._internal.lowdefy._internal;
@@ -43,6 +45,7 @@ function registerBlockStandIns({ actor }) {
     if (blockMetas[block.type]?.category === 'list') {
       LIST_METHODS.forEach((method) => block.registerMethod(method, block[method]));
     }
+    registerHeadlessMethods({ block, headlessMethods: blockMetas[block.type]?.headlessMethods });
     leaveMethodsToBrowser({ actor, block });
   });
 }

@@ -54,6 +54,8 @@ const BLOCK_METAS = {
   Paragraph: { category: 'display' },
   // A block from an app's own plugin, which no headless stand-in models.
   PluginChain: { category: 'display' },
+  // A plugin block whose meta declares its run method fires onRun headless.
+  PluginRunChain: { category: 'display', headlessMethods: { run: 'onRun' } },
   Selector: { category: 'input', valueType: 'string' },
   Table: { category: 'input-container', valueType: 'object' },
   TextInput: { category: 'input', valueType: 'string' },

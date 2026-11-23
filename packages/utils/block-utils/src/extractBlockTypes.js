@@ -32,6 +32,8 @@ function extractBlockTypes(metas) {
     // itself; the build counts them wherever the block is used.
     if (meta.actions) entry.actions = meta.actions;
     if (meta.operators) entry.operators = meta.operators;
+    // Methods a headless journey runs without the component: { [method]: event it fires }.
+    if (meta.headlessMethods) entry.headlessMethods = meta.headlessMethods;
     // Properties a native block accepts but a phone cannot honour; the build warns on them.
     const nativeIgnored = collectNativeIgnoredPaths(meta.properties);
     if (nativeIgnored.length > 0) entry.nativeIgnored = nativeIgnored;
