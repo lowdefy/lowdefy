@@ -1,0 +1,44 @@
+# Parity journeys for the events a headless fill and select fire (LDF-1138), on the input_events
+# page. A fill fires the input's onChange with { value }, and a select picks the option whose html
+# label shows the step's text. Each runs in the browser and headless
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs) and must end with the
+# same state `log`. In a folder starting with "_" so the suite's own runs, and harden, leave it out.
+- name: a fill fires onChange with the value, which an onChange that reads it enables Save with
+  pageId: input_events
+  steps:
+    - fill: { blockId: contact_name, value: Ada }
+    - click: save_contact
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: contact_name.onChange
+              payload:
+                value: Ada
+            - event: save_contact.onClick
+- name: a select picks a Selector option by the text its html label shows
+  pageId: input_events
+  steps:
+    - select: { blockId: space_picker, value: Sales & Ops }
+    - select: { blockId: space_picker, value: No space }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: space_picker.onChange
+              payload:
+                value: sales
+            - event: space_picker.onChange
+              payload:
+                value: none
+- name: a select picks a radio option by the text its html label shows
+  pageId: input_events
+  steps:
+    - select: { blockId: tier_radio, value: Silver tier }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: tier_radio.onChange
+              payload:
+                value: silver

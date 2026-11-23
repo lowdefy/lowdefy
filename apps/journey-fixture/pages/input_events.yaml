@@ -1,0 +1,87 @@
+id: input_events
+type: Box
+# Inputs whose events read the event a browser gives them, for the parity journeys in
+# tests/journeys/_parity/input_events.yaml
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1138). Each runs in
+# the browser and headless and must end with the same state `log`. contact_name's onChange reads
+# `_event: value` to enable save_contact, as a form that checks a name as it is typed does.
+# space_picker and tier_radio draw their option labels as html (an icon and the name), which a
+# select picks by the text the label shows.
+blocks:
+  - id: input_events_title
+    type: Title
+    properties:
+      content: Input events
+      level: 2
+  - id: contact_name
+    type: TextInput
+    properties:
+      title: Name
+    events:
+      onChange:
+        - id: log_contact_name_change
+          type: SetState
+          params:
+            name_ok:
+              _if_none:
+                - _event: value
+                - false
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: contact_name.onChange
+                    payload: { _event: true }
+  - id: save_contact
+    type: Button
+    properties:
+      title: Save
+      disabled:
+        _not:
+          _state: name_ok
+    events:
+      onClick:
+        - id: log_save_contact
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: save_contact.onClick
+  - id: space_picker
+    type: Selector
+    properties:
+      title: Space
+      options:
+        - label: '<span class="space-dot"></span><span>No space</span>'
+          value: none
+        - label: '<span class="space-dot"></span><span>Sales &amp; Ops</span>'
+          value: sales
+    events:
+      onChange:
+        - id: log_space_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: space_picker.onChange
+                    payload: { _event: true }
+  - id: tier_radio
+    type: RadioSelector
+    properties:
+      title: Tier
+      options:
+        - label: '<b>Gold</b> tier'
+          value: gold
+        - label: '<b>Silver</b> tier'
+          value: silver
+    events:
+      onChange:
+        - id: log_tier_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: tier_radio.onChange
+                    payload: { _event: true }
