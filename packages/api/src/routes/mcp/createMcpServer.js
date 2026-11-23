@@ -195,10 +195,12 @@ async function createMcpServer({ context }) {
   // not show the model, and content stays empty so it is in no transcript.
   async function callViewSessionTool() {
     try {
-      const { expiresAt, token } = await mintViewSession(context);
+      const { expiresAt, token, writable } = await mintViewSession(context);
       return {
         content: [],
-        _meta: { [VIEW_SESSION_META_KEY]: { token, expiresAt: expiresAt.toISOString() } },
+        _meta: {
+          [VIEW_SESSION_META_KEY]: { token, expiresAt: expiresAt.toISOString(), writable },
+        },
       };
     } catch (error) {
       if (isExpectedError(error)) {

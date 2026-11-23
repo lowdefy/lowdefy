@@ -354,6 +354,25 @@ _ref:
                 type: Html
                 properties:
                   html: '<b>McpSendMessage</b>'
+          - id: card_mcpupdatemodelcontext
+            type: Card
+            layout:
+              flex: 0 1 auto
+            style:
+              cursor: pointer
+            properties:
+              size: small
+            events:
+              onClick:
+                - id: link_mcpupdatemodelcontext
+                  type: Link
+                  params:
+                    pageId: McpUpdateModelContext
+            blocks:
+              - id: card_mcpupdatemodelcontext_label
+                type: Html
+                properties:
+                  html: '<b>McpUpdateModelContext</b>'
           - id: card_setdarkmode
             type: Card
             layout:
@@ -630,4 +649,3 @@ _ref:
                 type: Html
                 properties:
                   html: '<b>UpdateSession</b>'
-

@@ -150,6 +150,7 @@ window.__LOWDEFY_VIEW__ = {
     callServerTool({ name, arguments }),
     openLink({ url }),          // ui/open-link
     sendMessage({ text }),      // ui/message
+    updateModelContext({ text }), // ui/update-model-context; absent from a loader cached before it
   },
   showFallback({ message }),
 };
@@ -161,7 +162,7 @@ An old loader meets new bundles, so fields are added and never renamed or remove
 
 The MCP access token works on `/api/mcp` only, so the view asks for a session of its own by calling `lowdefy_view_session` through the host.
 
-**Minting** (`packages/api/src/routes/auth/view/mintViewSession.js`). Needs a valid OAuth caller; a member token and the anonymous caller are refused. It creates a BetterAuth session for the user with the fields `view: true`, `viewClientId` and `viewScopes`, sets `activeOrganizationId` to the grant's organization, prunes, and logs `mcp_view_session_minted`. The tool result is `{ content: [], _meta: { 'lowdefy/viewSession': { token, expiresAt } } }`: `token` is the signed session token the bearer plugin accepts, `expiresAt` an ISO string. `afterToolCall` does not run for it.
+**Minting** (`packages/api/src/routes/auth/view/mintViewSession.js`). Needs a valid OAuth caller; a member token and the anonymous caller are refused. It creates a BetterAuth session for the user with the fields `view: true`, `viewClientId` and `viewScopes`, sets `activeOrganizationId` to the grant's organization, prunes, and logs `mcp_view_session_minted`. The tool result is `{ content: [], _meta: { 'lowdefy/viewSession': { token, expiresAt, writable } } }`: `token` is the signed session token the bearer plugin accepts, `expiresAt` an ISO string, and `writable` whether the grant covers `mcp:write` (`viewGrantCovers`), which the page reads as `_mcp: writable`. It is a display hint, read at minting: `authorizeViewWrite` still refuses every write on a read-only grant, and a grant that changes after minting is capped on the server at once, but `_mcp: writable` is pure, so a page shows the change only when it next mounts after a new mint. `afterToolCall` does not run for it.
 
 Any holder of the MCP bearer can call the tool; `visibility: ['app']` is the host's courtesy. The limits below are what make that safe.
 
@@ -245,7 +246,7 @@ All of this is registered only when `getViewOrigins()` is not empty.
 
 - **Navigation.** A link to a view page pushes on the view router. When `/api/page` refuses the page, `ViewPage.jsx` restores the shown page and opens the app's URL through the host. `captureViewLinks.js` catches `target="_blank"` anchors, modified clicks, `window.open` and any other document navigation. `createViewOpenLink.js` and `getOpenLinkUrl.js` let only absolute `http` and `https` URLs through.
 - **A new build.** The frame is never reloaded: its document is the cached loader. `ViewNewBuild.jsx` shows a button, and `loadViewBuild.js` fetches `/api/view/boot` again, swaps the stylesheets and entry, and restarts at the page it was on.
-- **`_mcp` and the actions.** `createMcp.js` builds `lowdefy._internal.mcp` from the bridge, or `null` outside a view. The `_mcp` operator and the `McpSendMessage` and `McpOpenLink` actions read it. `McpEffect.js` re-evaluates blocks that read `displayMode` when the host context changes.
+- **`_mcp` and the actions.** `createMcp.js` builds `lowdefy._internal.mcp` from the bridge, or `null` outside a view. The `_mcp` operator and the `McpSendMessage`, `McpUpdateModelContext` and `McpOpenLink` actions read it. `McpEffect.js` re-evaluates blocks that read `displayMode` when the host context changes.
 - **Usage.** `createLogUsage` posts `/api/usage` through `host.view.fetchApi`. Its second post, to `https://api.lowdefy.net`, is blocked by the view's content security policy unless the app lists that origin in `viewSources`.
 - Sentry is not started in a view.
 

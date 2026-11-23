@@ -21,6 +21,7 @@ import { type } from '@lowdefy/helpers';
 
 import pruneViewSessions from './pruneViewSessions.js';
 import signSessionToken from './signSessionToken.js';
+import viewGrantCovers from './viewGrantCovers.js';
 import { VIEW_SESSION_EXPIRES_IN, VIEW_SESSION_TOKEN_PREFIX } from './viewSessionLimits.js';
 
 // Mints the bearer session an MCP App view signs in with, for the caller the
@@ -28,7 +29,9 @@ import { VIEW_SESSION_EXPIRES_IN, VIEW_SESSION_TOKEN_PREFIX } from './viewSessio
 // route, so the view asks for a session of its own: the caller's user, in the
 // grant's organization, marked view and recording the grant's client and
 // scopes. Returns the signed session token - the form the bearer plugin
-// accepts - and when it expires.
+// accepts - when it expires, and whether the grant covers writes. writable is
+// for the page to hide controls it cannot use; the server still refuses every
+// write a read-only grant makes (authorizeViewWrite).
 //
 // Only a caller holding an OAuth grant gets one: the session is tied to the
 // grant's consent row and dies with it (resolveViewSession). A member token has
@@ -97,6 +100,7 @@ async function mintViewSession(context) {
   return {
     token: signSessionToken({ secret, token: session.token }),
     expiresAt,
+    writable: viewGrantCovers({ viewSession: { grantedScopes }, scope: 'mcp:write' }),
   };
 }
 

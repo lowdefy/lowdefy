@@ -68,6 +68,9 @@ function createListeners() {
 //   onEnd(listener)           () the view has ended; the view entry unmounts the
 //                             app here, so nothing of the page keeps running
 //   isEnded()                 true once the view has ended
+//   isWritable()              true when the view session's grant covers writes,
+//                             false on a read-only grant, null before the first
+//                             session
 // Each on* returns a function that stops the listener.
 function createViewHost({ bridge, router, window }) {
   const apiBase = `${bridge.appOrigin}${bridge.basePath}`;
@@ -154,6 +157,7 @@ function createViewHost({ bridge, router, window }) {
       end,
       fetchApi: session.fetchApi,
       isEnded: () => ended,
+      isWritable: session.isWritable,
       onBuildChange: buildListeners.add,
       onCallerChange: callerListeners.add,
       onEnd: endListeners.add,

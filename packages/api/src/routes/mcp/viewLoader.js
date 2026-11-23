@@ -58,6 +58,9 @@
 //        callServerTool({ name, arguments }),  // resolves to a CallToolResult
 //        openLink({ url }),                    // opens a URL in the browser
 //        sendMessage({ text }),                // sends the host a user message
+//        updateModelContext({ text }),         // sets the context the host
+//                                              // gives the model, with no
+//                                              // message
 //      },
 //      showFallback({ message }),  // replaces the page with the fallback below
 //    };
@@ -139,6 +142,11 @@ function viewLoader(settings) {
         return request('ui/message', {
           role: 'user',
           content: [{ type: 'text', text: message.text }],
+        });
+      },
+      updateModelContext: function (context) {
+        return request('ui/update-model-context', {
+          content: [{ type: 'text', text: context.text }],
         });
       },
     },

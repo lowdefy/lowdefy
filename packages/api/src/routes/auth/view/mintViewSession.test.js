@@ -85,6 +85,7 @@ test('mintViewSession creates a view session for the caller in the grant organiz
   expect(result).toEqual({
     token: signSessionToken({ secret: 'secret', token }),
     expiresAt,
+    writable: false,
   });
 });
 
@@ -105,8 +106,21 @@ test('mintViewSession records both scopes of a write grant', async () => {
       grantedScopes: ['mcp:read', 'mcp:write'],
     },
   });
-  await mintViewSession(context);
+  const result = await mintViewSession(context);
   expect(internalAdapter.createSession.mock.calls[0][2].viewScopes).toBe('mcp:read mcp:write');
+  expect(result.writable).toBe(true);
+});
+
+test('mintViewSession says a grant of mcp:write alone is writable', async () => {
+  const { context } = createContext({
+    mcpAuth: {
+      clientId: 'client_1',
+      organizationId: 'org_1',
+      tokenStatus: 'valid',
+      grantedScopes: ['mcp:write'],
+    },
+  });
+  expect((await mintViewSession(context)).writable).toBe(true);
 });
 
 test('mintViewSession writes one log line and nothing else', async () => {

@@ -18,8 +18,8 @@ export default {
   type: 'object',
   params: {
     type: 'string',
-    enum: ['displayMode', 'embedded'],
+    enum: ['displayMode', 'embedded', 'writable'],
     description:
-      'The value to return about the MCP host the page is shown in as a view. "embedded" is true inside a host. "displayMode" is how the host shows the view: "inline", "fullscreen" or "pip". Every key returns null when the page is not inside a host.',
+      'The value to return about the MCP host the page is shown in as a view. "embedded" is true inside a host. "displayMode" is how the host shows the view: "inline", "fullscreen" or "pip". "writable" is true when the MCP connection the view signed in with can make changes and false on a read-only connection. Every key returns null when the page is not inside a host.',
   },
 };

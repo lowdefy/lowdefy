@@ -1848,6 +1848,14 @@
       "typeName": "McpSendMessage"
     },
     {
+      "slug": "actions/mcpupdatemodelcontext",
+      "title": "McpUpdateModelContext",
+      "section": "Actions",
+      "path": "content/actions/mcpupdatemodelcontext.md",
+      "kind": "action",
+      "typeName": "McpUpdateModelContext"
+    },
+    {
       "slug": "actions/pdfmake",
       "title": "PdfMake",
       "section": "Actions",
@@ -3337,7 +3345,7 @@
       "files": [
         "users/mcp-oauth.yaml"
       ],
-      "hash": "a2069545cf3443fe4ce170e21c3120b6e8b42e865d72b28cc2e03870e54a2aa5"
+      "hash": "601301ae746c268472d7e30a487ec3356ed462a9a286d428ddd778f0fac98534"
     },
     "user-authentication/user-object": {
       "files": [
@@ -4636,7 +4644,7 @@
         "blocks/container/Label.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "6462dcd1e088f79476551e4da47fdeca856b5fba465af19e5316fb680d371d6e"
+      "hash": "1f94ba97a6d2438e7272688c4740afe30eb16a3fcb4cd0fda2ee23880339ce5e"
     },
     "container-blocks/layout": {
       "files": [
@@ -5100,7 +5108,14 @@
         "actions/McpSendMessage.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "870969765a209cc15e47eba394083a4f90214d643e2edc1f4a18f98e455afaac"
+      "hash": "fed1c41afb6d481c0ef92ec233789565c16ea68764eafcabca377447a6c08a96"
+    },
+    "actions/mcpupdatemodelcontext": {
+      "files": [
+        "actions/McpUpdateModelContext.yaml",
+        "templates/actions.yaml.njk"
+      ],
+      "hash": "90074590ca4af03af13bf45a4c1439ecc5d4b49381f66799acb5c30d0e081530"
     },
     "actions/pdfmake": {
       "files": [
@@ -5590,7 +5605,7 @@
         "operators/_mcp.yaml",
         "templates/operators.yaml.njk"
       ],
-      "hash": "d86b5827270d77194a581ba3af516688035f4482ac9f95f48b0f8b77e4b11266"
+      "hash": "003b1ac926b3d5c220208eae4d9bbbd7e77b26ba0bd129de80b1a28ed1666910"
     },
     "operators/_media": {
       "files": [
@@ -5989,7 +6004,7 @@
       "files": [
         "actions/index.yaml"
       ],
-      "hash": "4aba918db4a3eacc5983c08ced06f946fe3034e2044e413553e216c16d769e74"
+      "hash": "94b3837a66611be31de76bc669f55d9b3b71b349cacebb3ce689e972d2dddba7"
     },
     "reference/connections-reference": {
       "files": [

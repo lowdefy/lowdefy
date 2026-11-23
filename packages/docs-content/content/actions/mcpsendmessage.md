@@ -8,6 +8,8 @@
 
 The `McpSendMessage` action sends a message to the MCP host, such as Claude, that the page is shown in as the view of an MCP tool. The message arrives in the conversation as if the person had typed it.
 
+The host replies to the message. To tell the model what the person did on the page without a reply, such as after every save, use [`McpUpdateModelContext`](/McpUpdateModelContext).
+
 The action fails when the host refuses the message, so its `catch` actions run. It also fails when the page is not inside an MCP host. Use [`_mcp: embedded`](/_mcp) to show the button that runs it, or to `skip` the action, when the page is also used in the browser.
 
 #### Parameters

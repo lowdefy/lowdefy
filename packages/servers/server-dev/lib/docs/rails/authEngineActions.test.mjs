@@ -32,6 +32,7 @@ const NOT_AUTH_ENGINE = [
   'Link',
   'McpOpenLink',
   'McpSendMessage',
+  'McpUpdateModelContext',
   'Publish',
   'RemoveLocalStorage',
   'Request',

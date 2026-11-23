@@ -523,13 +523,17 @@ A view never does more than the person granted. With `mcp:write`, the person's r
 
 A refused write shows the message "This connection is read-only. Reconnect with write access to make changes."
 
+**Hide the controls a read-only view cannot use.** [`_mcp: writable`](/_mcp) is `false` in a view opened from a read-only connection, so a page can hide its edit buttons there rather than let the person find out when the save is refused. It only changes what the page shows: the app refuses the write either way.
+
 **Say this on your `consentPage`.** When the person grants read-only access, tell them that views opened from this connection can show data but cannot change it, and that they need to grant write access to make changes from a view.
 
 ### Pages that know they are in a view
 
 - [`_mcp: embedded`](/_mcp) is `true` inside a view and `null` in the browser. Use it to drop the app's own chrome, such as the menu and header.
 - [`_mcp: displayMode`](/_mcp) is how Claude shows the view: `inline`, `fullscreen` or `pip`.
-- [`McpSendMessage`](/McpSendMessage) sends Claude a message from the page.
+- [`_mcp: writable`](/_mcp) is `true` when the connection can make changes and `false` on a read-only connection.
+- [`McpSendMessage`](/McpSendMessage) sends Claude a message from the page, as if the person had typed it. Claude replies to it.
+- [`McpUpdateModelContext`](/McpUpdateModelContext) tells Claude what the person did on the page, such as a change they saved, without a message. Claude reads it on its next turn and does not reply to it.
 - [`McpOpenLink`](/McpOpenLink) opens a URL or a page of the app in the browser.
 
 The tool's arguments and result reach the page only as its path and URL query.
