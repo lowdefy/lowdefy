@@ -35,7 +35,8 @@ import { fixtureTest, postJourney } from './fixtureClient.mjs';
 // fill on search_targets; input_events.yaml covers the onChange event a fill fires and a select by
 // an html label's text on input_events; skeleton_loading.yaml covers content that mounts once a
 // loading skeleton ends, on skeleton_loading; escape.yaml covers press Escape on the overlay that
-// opened last, on escape_targets.
+// opened last, on escape_targets; plugin_block.yaml covers a plugin block method its meta declares
+// a headless no-op, on plugin_block.
 
 const parityDirectory = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -57,6 +58,7 @@ const journeys = [
   ...readJourneys('input_events.yaml'),
   ...readJourneys('skeleton_loading.yaml'),
   ...readJourneys('escape.yaml'),
+  ...readJourneys('plugin_block.yaml'),
 ];
 
 // The journeys that must fail, in both runners at the same step, with what the browser's message

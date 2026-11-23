@@ -21,11 +21,15 @@
 // meta.dataSet 'walled'. FixtureSignature is the webhook verifier of api/payment_events.yaml.
 // UndeclaredFixture declares no dataSet, so the step rails refuse a click that reaches it.
 // FixtureActionChain is a block no headless stand-in models (pages/plugin_block.yaml): its meta
-// declares that its run method fires onRun, so a headless run calls it; its stop method is left
+// declares that its run method fires onRun, so a headless run calls it, and that its redraw method
+// only redraws the block (null), so a headless run calls it as a no-op; its stop method is left
 // to the browser.
 export default {
   blockMetas: {
-    FixtureActionChain: { category: 'display', headlessMethods: { run: 'onRun' } },
+    FixtureActionChain: {
+      category: 'display',
+      headlessMethods: { run: 'onRun', redraw: null },
+    },
   },
   blocks: ['FixtureActionChain'],
   connections: ['FixtureSignature', 'UndeclaredFixture', 'WalledFixture'],
