@@ -144,3 +144,16 @@ test("a hidden block's content is dropped; a closed Modal's is not, its stand-in
     'modal',
   ]);
 });
+
+test('a loading block whose skeleton is not an object mounts its children, as with none', () => {
+  const slots = slotsOf(
+    [
+      block('text', true, { loading: true, skeleton: 'SkeletonParagraph' }),
+      block('list', true, { loading: true, skeleton: [SKELETON] }),
+      block('flag', true, { loading: true, skeleton: true }),
+    ],
+    { text: [[block('a')]], list: [[block('b')]], flag: [[block('c')]] }
+  );
+  expect(ids(collectMountOrder({ slots }))).toEqual(['a', 'text', 'b', 'list', 'c', 'flag']);
+  expect(collectMounts({ slots }).dropped).toEqual([]);
+});
