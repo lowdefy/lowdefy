@@ -126,6 +126,11 @@ const LEAVING_MOTIONS = [
 ];
 const LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave`).join(', ');
 const INSIDE_LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave *`).join(', ');
+// An element antd is animating in or out, by the same motions: rc-motion gives it
+// `ant-<motion>-appear` or `-enter` while it shows, and `-leave` while it hides.
+const MOVING = LEAVING_MOTIONS.flatMap((motion) =>
+  ['appear', 'enter', 'leave'].map((phase) => `.ant-${motion}-${phase}`)
+).join(', ');
 
 // The cell a row-key target with no column or control clicks: the row's first cell. AG Grid draws
 // cells out of display order (ensureDomOrder is off), so it is the cell AG Grid and Table number
@@ -1115,15 +1120,31 @@ async function runSelect({ journey, page, step, timeout }) {
   return { blockId: rails.blockId() };
 }
 
+// An overlay antd is still animating stays on the page's Escape stack as it was before the
+// motion: one opening has not fired its afterOpenChange yet, and one closing takes the Escape, so
+// the overlay under it stays open. Escape waits, up to a second, for every overlay to come to
+// rest, as a person presses it at a page that has settled and a headless run models one.
+async function waitForOverlayMotion({ page, timeout }) {
+  await page
+    .waitForFunction((selector) => document.querySelector(selector) === null, MOVING, {
+      timeout: Math.min(timeout, 1000),
+    })
+    .catch(() => {});
+}
+
 // `Mod` in a chord resolves to Meta or Control from the platform the page
 // reports, the way the app's own shortcut handling (tinykeys) does. The rails check the press
-// before it is pressed: the focused block and each block whose shortcut it fires.
-async function runPress({ journey, page, step }) {
+// before it is pressed: the focused block and each block whose shortcut it fires. Escape first
+// waits for the overlays to come to rest (waitForOverlayMotion).
+async function runPress({ journey, page, step, timeout }) {
   const modifier = await getShortcutModifier(page);
   const key = step.press
     .split('+')
     .map((part) => (part === 'Mod' ? modifier : part))
     .join('+');
+  if (key === 'Escape') {
+    await waitForOverlayMotion({ page, timeout });
+  }
   const blockId = await checkPressRails({ journey, page, key, modifier });
   try {
     await page.keyboard.press(key);
@@ -1659,7 +1680,7 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
     case 'select':
       return runSelect({ journey, page, step, timeout });
     case 'press':
-      return runPress({ journey, page, step });
+      return runPress({ journey, page, step, timeout });
     case 'back':
       await runBack({ page, timeout });
       return;
