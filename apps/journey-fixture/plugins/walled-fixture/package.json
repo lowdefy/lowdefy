@@ -3,7 +3,7 @@
   "version": "0.0.5",
   "private": true,
   "license": "Apache-2.0",
-  "description": "A walled-client connection type the journey fixture app runs under a data set, the webhook verifier of its payment_events endpoint, and a block no headless stand-in models.",
+  "description": "A walled-client connection type the journey fixture app runs under a data set, the webhook verifier of its payment_events endpoint, a block no headless stand-in models, and two blocks that draw text, one declaring it for headless text checks.",
   "type": "module",
   "exports": {
     "./blocks": "./src/blocks.js",

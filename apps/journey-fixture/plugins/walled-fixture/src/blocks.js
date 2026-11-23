@@ -15,3 +15,5 @@
 */
 
 export { default as FixtureActionChain } from './FixtureActionChain/FixtureActionChain.js';
+export { default as FixtureBadge } from './FixtureBadge/FixtureBadge.js';
+export { default as FixtureNote } from './FixtureNote/FixtureNote.js';

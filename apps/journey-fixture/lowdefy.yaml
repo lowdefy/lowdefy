@@ -143,4 +143,5 @@ pages:
   - _ref: pages/caught_faults.yaml
   - _ref: pages/plugin_block.yaml
   - _ref: pages/text_targets.yaml
+  - _ref: pages/text_checks.yaml
   - _ref: pages/live_feed.yaml

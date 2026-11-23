@@ -23,15 +23,19 @@
 // FixtureActionChain is a block no headless stand-in models (pages/plugin_block.yaml): its meta
 // declares that its run method fires onRun, so a headless run calls it, and that its redraw method
 // only redraws the block (null), so a headless run calls it as a no-op; its stop method is left
-// to the browser.
+// to the browser. FixtureNote and FixtureBadge draw their content as text (pages/text_checks.yaml):
+// FixtureNote's meta declares it in headlessText, so a headless text check reads it, and
+// FixtureBadge's declares none, so a check that may need its text runs in a browser.
 export default {
   blockMetas: {
     FixtureActionChain: {
       category: 'display',
       headlessMethods: { run: 'onRun', redraw: null },
     },
+    FixtureBadge: { category: 'display' },
+    FixtureNote: { category: 'display', headlessText: ['content'] },
   },
-  blocks: ['FixtureActionChain'],
+  blocks: ['FixtureActionChain', 'FixtureBadge', 'FixtureNote'],
   connections: ['FixtureSignature', 'UndeclaredFixture', 'WalledFixture'],
   connectionMetas: {
     FixtureSignature: { tenant: false },

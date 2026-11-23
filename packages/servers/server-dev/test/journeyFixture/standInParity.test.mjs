@@ -37,7 +37,8 @@ import { fixtureTest, postJourney } from './fixtureClient.mjs';
 // loading skeleton ends, on skeleton_loading; escape.yaml covers press Escape on the overlay that
 // opened last, on escape_targets; plugin_block.yaml covers a plugin block method its meta declares
 // a headless no-op, on plugin_block; text_targets.yaml covers text and containing targets inside a
-// ClickableHtml, on text_targets.
+// ClickableHtml, on text_targets; text_checks.yaml covers expect text read from blocks' text
+// models, on text_checks.
 
 const parityDirectory = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -61,6 +62,7 @@ const journeys = [
   ...readJourneys('escape.yaml'),
   ...readJourneys('plugin_block.yaml'),
   ...readJourneys('text_targets.yaml'),
+  ...readJourneys('text_checks.yaml'),
 ];
 
 // The journeys that must fail, in both runners at the same step, with what the browser's message
@@ -92,6 +94,18 @@ const REFUSED_AT = {
       index: 0,
       message: 'Matched 2 elements containing "acme" in the page',
     },
+  'text_checks.yaml: a text in a closed Modal is not found': {
+    index: 0,
+    message: 'Expected block "dialog" text to contain "Inside the dialog" but found ""',
+  },
+  "text_checks.yaml: an open Modal's text is not in the text of the block that holds it": {
+    index: 1,
+    message: 'Expected block "dialog_holder" text to contain "Inside the dialog" but found',
+  },
+  'text_checks.yaml: a text that never appears fails the same way': {
+    index: 0,
+    message: 'Expected block "company_card" text to contain "Beta Corp" but found',
+  },
 };
 
 // The journeys a headless run must leave to the browser when the step runs, with what its reason
@@ -101,6 +115,8 @@ const BROWSER_ONLY_AT_RUN_TIME = {
     'Button "save_button" may show the text "Save"',
   'text_targets.yaml: a click while a ClickableHtml popover is open runs in a browser, which knows what it covers':
     'ClickableHtml "company_rows" has its popover open, which may cover what the step clicks',
+  'text_checks.yaml: a text check on a block with no text model runs in a browser':
+    'Block "plugin_area" holds blocks a headless run has no text model for (FixtureBadge "plugin_badge")',
 };
 
 // Each journey here must have run headless and matched, not been left to the browser, unless

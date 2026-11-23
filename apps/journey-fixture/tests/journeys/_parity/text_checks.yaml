@@ -1,0 +1,46 @@
+# Parity journeys for text checks (LDF-1147), on the text_checks page. Each runs in the browser
+# and headless (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs) and must
+# give the same answer: pass, or fail at the same step. The journey on a block with no text model
+# must go to the browser when its check runs. In a folder starting with "_" so the suite's own
+# runs, and harden, leave it out.
+- name: a text check passes on text a nested container draws
+  pageId: text_checks
+  steps:
+    - expect: { text: { blockId: company_card, contains: Acme Ltd } }
+    - expect: { text: { blockId: company_card, contains: 3 contacts } }
+    - expect: { text: { blockId: company_card, contains: Jo Smith } }
+    - expect: { text: { blockId: company_card, contains: Company } }
+    - expect: { text: { blockId: company_inner, contains: Owner } }
+- name: a text in a Modal is found once it opens
+  pageId: text_checks
+  steps:
+    - click: open_dialog_button
+    - expect: { text: { blockId: dialog, contains: Inside the dialog } }
+    - expect: { text: { blockId: dialog, contains: Edit company } }
+    - expect: { text: { blockId: dialog, contains: Cancel } }
+- name: a text in a closed Modal is not found
+  pageId: text_checks
+  steps:
+    - expect: { text: { blockId: dialog, contains: Inside the dialog } }
+- name: an open Modal's text is not in the text of the block that holds it
+  pageId: text_checks
+  steps:
+    - click: open_dialog_button
+    - expect: { text: { blockId: dialog_holder, contains: Inside the dialog } }
+- name: a text that appears after a request is found
+  pageId: text_checks
+  steps:
+    - click: search_button
+    - expect: { text: { blockId: found_companies, contains: Audit Avis } }
+- name: a text that never appears fails the same way
+  pageId: text_checks
+  steps:
+    - expect: { text: { blockId: company_card, contains: Beta Corp } }
+- name: a plugin block's declared text is found
+  pageId: text_checks
+  steps:
+    - expect: { text: { blockId: plugin_note, contains: Declared note } }
+- name: a text check on a block with no text model runs in a browser
+  pageId: text_checks
+  steps:
+    - expect: { text: { blockId: plugin_area, contains: Plugin badge } }
