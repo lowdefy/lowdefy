@@ -15,9 +15,20 @@
 */
 
 import { checkHeadlessMethods } from '@lowdefy/block-utils';
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import loadPluginTypeSchema from './loadPluginTypeSchema.js';
+
+// A bad headlessMethods declaration is a mistake in the plugin's meta, so it fails the build as a
+// ConfigError, not as a Lowdefy internal error.
+function checkBlockHeadlessMethods({ block, headlessMethods }) {
+  try {
+    checkHeadlessMethods({ blockType: block.typeName, headlessMethods });
+  } catch (error) {
+    throw new ConfigError(error.message, { received: headlessMethods });
+  }
+}
 
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
@@ -55,9 +66,9 @@ async function writeBlockSchemaMap({ components, context }) {
       // headlessMethods ({ [method]: the event it fires, or null for a no-op }) is what a headless
       // journey runs for a CallMethod on a block with no stand-in (@lowdefy/journey-headless
       // registerBlockStandIns). A declaration that is neither fails the build, naming the block
-      // type and the method (checkHeadlessMethods).
+      // type and the method (checkBlockHeadlessMethods).
       const headlessMethods = typesMapMeta.headlessMethods ?? meta?.headlessMethods;
-      checkHeadlessMethods({ blockType: block.typeName, headlessMethods });
+      checkBlockHeadlessMethods({ block, headlessMethods });
       blockMetas[block.typeName] = {
         category: typesMapMeta.category,
         ...(!type.isNone(typesMapMeta.valueType) && { valueType: typesMapMeta.valueType }),
@@ -66,7 +77,7 @@ async function writeBlockSchemaMap({ components, context }) {
         ...(!type.isNone(headlessMethods) && { headlessMethods }),
       };
     } else if (meta) {
-      checkHeadlessMethods({ blockType: block.typeName, headlessMethods: meta.headlessMethods });
+      checkBlockHeadlessMethods({ block, headlessMethods: meta.headlessMethods });
       blockMetas[block.typeName] = {
         category: meta.category,
         ...(!type.isNone(meta.valueType) && { valueType: meta.valueType }),

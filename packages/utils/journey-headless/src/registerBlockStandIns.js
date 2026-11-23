@@ -31,7 +31,8 @@ const LIST_METHODS = ['moveItemDown', 'moveItemUp', 'pushItem', 'removeItem', 'u
 // item methods are its own engine methods, as the List component registers them. A method a
 // stand-in block's stand-in does not register fails CallMethod, which names the block and the
 // method. A block whose type has no stand-in registers the methods its meta declares for a
-// headless run (meta.headlessMethods: { [method]: the event it fires }; registerHeadlessMethods)
+// headless run (meta.headlessMethods: { [method]: the event it fires, or null for a no-op };
+// registerHeadlessMethods)
 // once the browser would render it, as its component registers them as it renders: not while it
 // is hidden or shows its skeleton, or inside a hidden block, a block showing its skeleton or a
 // closed Modal (collectRenderedBlocks). Every other method, and a declared one before then, is

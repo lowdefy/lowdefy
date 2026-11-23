@@ -203,7 +203,7 @@ _ref:
             };
             ```
 
-            Declare `null` only for such a method: one that sets state, fires an event or calls a request would pass headless where the browser fails. A method left out of `headlessMethods`, or one called while the block is hidden, stays browser-only. Any value other than an event name or `null` fails the build, naming the block type and the method.
+            Declare `null` only for such a method: on one that sets state or calls a request, a headless run would do less than the browser, so a check could pass in one and fail in the other. A method left out of `headlessMethods`, or one called while the block is hidden, stays browser-only. Any value other than an event name or `null` fails the build, naming the block type and the method.
 
             See the [default Lowdefy block packages](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks) for full examples.
 

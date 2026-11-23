@@ -100,7 +100,29 @@ const BROKEN_MESSAGE =
   'Block type app_BrokenTimeline declares headlessMethods.merge as false: it should be the name of the block event the method fires, or null for a method that changes only what the block draws.';
 
 test("writeBlockSchemaMap fails on a plugin meta's method that is neither an event name nor null, naming the block type and the method", async () => {
-  await expect(writeMetas({ schemas: { blocks: {} } }, [BROKEN])).rejects.toThrow(BROKEN_MESSAGE);
+  const error = await writeMetas({ schemas: { blocks: {} } }, [BROKEN]).catch((caught) => caught);
+  expect(error.name).toBe('ConfigError');
+  expect(error.message).toBe(BROKEN_MESSAGE);
+  expect(error.received).toEqual({ merge: false });
+});
+
+test("writeBlockSchemaMap carries a method declared null from a types map entry, as a plugin's types.js gives it", async () => {
+  const blockMetas = await writeMetas(
+    {
+      schemas: { blocks: {} },
+      blockMetas: {
+        app_Note: { category: 'display', headlessMethods: { refresh: 'onRefresh', merge: null } },
+      },
+    },
+    [APP_BLOCKS[1]]
+  );
+  expect(blockMetas).toEqual({
+    app_Note: {
+      category: 'display',
+      hazards: [],
+      headlessMethods: { refresh: 'onRefresh', merge: null },
+    },
+  });
 });
 
 test('writeBlockSchemaMap fails on a types map entry whose method is neither an event name nor null', async () => {
