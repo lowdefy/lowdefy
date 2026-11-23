@@ -15,7 +15,9 @@
 */
 
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 
+import requestTimeout from './requestTimeout.js';
 import stampCaller from './stampCaller.js';
 import { expect, test } from 'vitest';
 
@@ -62,4 +64,36 @@ test('stampCaller sends an empty x-lowdefy-caller for an anonymous caller', asyn
   const app = createApp({ user: null });
   const res = await app.request('/api/request/page/ok', { method: 'POST' });
   expect(res.headers.get('x-lowdefy-caller')).toBe('');
+});
+
+// The request timeout answers 504 while the handler runs on, on the same context, so
+// the stamp sets its header on a 504 already sent (LDF-591). A rebuild of that 504
+// from its read body threw "Response body object should not be disturbed or locked",
+// and Sentry recorded the TypeError in place of the timeout.
+test('stampCaller reports no fault when the request times out', async () => {
+  const faults = [];
+  let lateChain;
+  const app = new Hono();
+  app.use('/api/*', requestTimeout({ timeoutMs: 20 }));
+  app.use('/api/*', (c, next) => {
+    c.set('lowdefyContext', { user: null });
+    lateChain = next();
+    return lateChain;
+  });
+  app.use('/api/request/*', stampCaller());
+  app.post('/api/request/page/slow', async (c) => {
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    return c.json({ ok: true });
+  });
+  app.onError((error, c) => {
+    if (error instanceof HTTPException) return error.getResponse();
+    faults.push(error);
+    return c.json({ message: error.message }, 500);
+  });
+  const res = await app.request('/api/request/page/slow', { method: 'POST' });
+  expect(res.status).toBe(504);
+  // Sending the 504 reads its body, as the Node server does.
+  await res.text();
+  await lateChain;
+  expect(faults).toEqual([]);
 });

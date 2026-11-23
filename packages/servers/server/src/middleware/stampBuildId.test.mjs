@@ -15,7 +15,9 @@
 */
 
 import { Hono } from 'hono';
+import { HTTPException } from 'hono/http-exception';
 
+import requestTimeout from './requestTimeout.js';
 import stampBuildId from './stampBuildId.js';
 import { expect, test } from 'vitest';
 
@@ -39,4 +41,35 @@ test.each([
   const res = await createApp().request(path);
   expect(res.status).toBe(status);
   expect(res.headers.get('x-lowdefy-build')).toBe('build-2');
+});
+
+// The request timeout answers 504 while the handler runs on, on the same context, so
+// the stamp sets its header on a 504 already sent (LDF-591): a magic-link send that
+// stalls past the timeout. A rebuild of that 504 from its read body threw "Response
+// body object should not be disturbed or locked".
+test('stampBuildId reports no fault when the request times out', async () => {
+  const faults = [];
+  let lateChain;
+  const app = new Hono();
+  app.use('/api/*', requestTimeout({ timeoutMs: 20 }));
+  app.use('/api/*', (c, next) => {
+    lateChain = next();
+    return lateChain;
+  });
+  app.use('/api/auth/*', stampBuildId({ buildId: 'build-2' }));
+  app.post('/api/auth/sign-in/magic-link', async (c) => {
+    await new Promise((resolve) => setTimeout(resolve, 60));
+    return c.json({ status: true });
+  });
+  app.onError((error, c) => {
+    if (error instanceof HTTPException) return error.getResponse();
+    faults.push(error);
+    return c.json({ message: error.message }, 500);
+  });
+  const res = await app.request('/api/auth/sign-in/magic-link', { method: 'POST' });
+  expect(res.status).toBe(504);
+  // Sending the 504 reads its body, as the Node server does.
+  await res.text();
+  await lateChain;
+  expect(faults).toEqual([]);
 });
