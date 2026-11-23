@@ -31,7 +31,8 @@ import { fixtureTest, postJourney } from './fixtureClient.mjs';
 // event, fires one in the wrong order or sends a different payload fails its journey's parity.
 // popups.yaml covers Modal, Drawer, ConfirmModal, DropdownButton, DropdownMenu and Menu on the
 // popup_targets page; grids.yaml covers AgGrid and Table on grid_targets; clickable_html.yaml
-// covers ClickableHtml on clickable_targets.
+// covers ClickableHtml on clickable_targets; search_selectors.yaml covers the searching selectors'
+// fill on search_targets.
 
 const parityDirectory = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -49,6 +50,7 @@ const journeys = [
   ...readJourneys('popups.yaml'),
   ...readJourneys('grids.yaml'),
   ...readJourneys('clickable_html.yaml'),
+  ...readJourneys('search_selectors.yaml'),
 ];
 
 // The journeys that must fail, in both runners at the same step, with what the browser's message
@@ -57,6 +59,10 @@ const REFUSED_AT = {
   'grids.yaml: a Table button disabled by its when condition refuses the click': {
     index: 0,
     message: 'element is not enabled',
+  },
+  'search_selectors.yaml: a fill on a Selector with search off is refused': {
+    index: 0,
+    message: 'element is not editable',
   },
 };
 

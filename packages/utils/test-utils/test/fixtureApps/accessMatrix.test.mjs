@@ -69,6 +69,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'popup_parity',
     'popup_targets',
     'rails',
+    'search_targets',
     'second',
     'selectors',
     'shared_alpha',
@@ -94,6 +95,7 @@ test('accessMatrix lists every page route and every endpoint of the build, with 
     'price_run',
     'rethrown_operator',
     'save_walled',
+    'search_companies',
     'typed_order',
   ]);
   Object.values({ ...matrix.pages, ...matrix.endpoints }).forEach((outcomes) => {
