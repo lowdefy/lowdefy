@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import addNestedEndpoints from './addNestedEndpoints.js';
 import addWriteFlags from './addWriteFlags.js';
 import matchExercisedPages from './matchExercisedPages.js';
@@ -21,9 +23,12 @@ import mergeNetworkSnapshots from './mergeNetworkSnapshots.js';
 
 // What one journey run touched, across all of its actors: the network path
 // its browsers measured, the endpoints their routines reached through CallApi,
-// which requests and endpoints write, and what its pages observed: the events
-// that completed and the blocks that were ever visible.
-async function collectExercised({ snapshots, observed, readConfigFile, requestSchemas }) {
+// which requests and endpoints write, what its pages observed: the events
+// that completed and the blocks that were ever visible, and the control each
+// page-reading click landed on (`controls`, from the step results the browser
+// runner wrote: [{ stepIndex, blockId, control, rowKey }]), which lint L8
+// suggests as the step's target.
+async function collectExercised({ snapshots, observed, readConfigFile, requestSchemas, steps = [] }) {
   const network = mergeNetworkSnapshots({ snapshots });
   const { endpoints, unfollowed } = await addNestedEndpoints({
     endpoints: network.endpoints,
@@ -46,6 +51,9 @@ async function collectExercised({ snapshots, observed, readConfigFile, requestSc
     unfollowed,
     events: observed.events,
     rendered: observed.rendered,
+    controls: steps
+      .filter((step) => !type.isNone(step.control))
+      .map(({ index, control }) => ({ stepIndex: index, ...control })),
   };
 }
 
