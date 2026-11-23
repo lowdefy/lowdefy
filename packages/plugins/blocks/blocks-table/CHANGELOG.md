@@ -1,5 +1,14 @@
 # @lowdefy/blocks-table
 
+## 7.4.0
+
+### Patch Changes
+
+- @lowdefy/blocks-antd@7.4.0
+- @lowdefy/block-utils@7.4.0
+- @lowdefy/helpers@7.4.0
+- @lowdefy/nunjucks@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes

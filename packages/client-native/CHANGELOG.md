@@ -1,5 +1,16 @@
 # @lowdefy/client-native
 
+## 7.4.0
+
+### Patch Changes
+
+- @lowdefy/engine@7.4.0
+- @lowdefy/client-core@7.4.0
+- @lowdefy/layout-native@7.4.0
+- @lowdefy/errors@7.4.0
+- @lowdefy/helpers@7.4.0
+- @lowdefy/style-native@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes

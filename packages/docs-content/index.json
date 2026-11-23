@@ -1,5 +1,5 @@
 {
-  "version": "7.3.0",
+  "version": "7.4.0",
   "docs": [
     {
       "slug": "learn/introduction",
@@ -3113,7 +3113,7 @@
         "concepts/advanced/dynamic-page-content.yaml",
         "version.yaml"
       ],
-      "hash": "acdeb0d9965fef5e604324667440865b8bd7c58aca4bc09ab7d0b8aa51b67f16"
+      "hash": "80eac384292186530102446d68826d1c0be59dc66241c8dfc44e6e19b27035c3"
     },
     "concepts/ai-agent-docs": {
       "files": [

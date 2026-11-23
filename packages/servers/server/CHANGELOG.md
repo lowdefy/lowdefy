@@ -1,5 +1,42 @@
 # @lowdefy/server-enterprise
 
+## 7.4.0
+
+### Patch Changes
+
+- c4ac73d: fix(server): Websockets on Vercel reconnect at once when the function's time limit ends them
+
+  On Vercel every websocket ends when the function reaches `config.vercel.maxDuration`. Vercel stops the function without closing the connection, so the browser only noticed about 10 to 12 seconds later, and pages heard no live updates in that gap: about 9% of the time with a 120-second limit. Changes made in the gap never reached the page. The server now closes each websocket 5 seconds before the limit (at half the limit when it is under 10 seconds), and the client reconnects and resubscribes straight away. The Node server is unchanged.
+
+- Updated dependencies [bd56850]
+- Updated dependencies [098fcfb]
+- Updated dependencies [dfba080]
+  - @lowdefy/api@7.4.0
+  - @lowdefy/node-utils@7.4.0
+  - @lowdefy/connection-anthropic@7.4.0
+  - @lowdefy/actions-core@7.4.0
+  - @lowdefy/blocks-antd@7.4.0
+  - @lowdefy/operators-js@7.4.0
+  - @lowdefy/operators-nunjucks@7.4.0
+  - @lowdefy/blocks-aggrid@7.4.0
+  - @lowdefy/blocks-antd-x@7.4.0
+  - @lowdefy/blocks-basic@7.4.0
+  - @lowdefy/blocks-echarts@7.4.0
+  - @lowdefy/blocks-files@7.4.0
+  - @lowdefy/blocks-loaders@7.4.0
+  - @lowdefy/blocks-markdown@7.4.0
+  - @lowdefy/blocks-table@7.4.0
+  - @lowdefy/blocks-tiptap@7.4.0
+  - @lowdefy/websockets-core@7.4.0
+  - @lowdefy/client@7.4.0
+  - @lowdefy/layout@7.4.0
+  - @lowdefy/blocks-captcha@7.4.0
+  - @lowdefy/plugin-better-auth@7.4.0
+  - @lowdefy/block-utils@7.4.0
+  - @lowdefy/errors@7.4.0
+  - @lowdefy/helpers@7.4.0
+  - @lowdefy/logger@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes

@@ -1,5 +1,34 @@
 # Change Log
 
+## 7.4.0
+
+### Patch Changes
+
+- bd56850: fix(api): Dynamic blocks policies check object keys and slot names the same way as values
+
+  A block can draw an object key as well as a value: the keys of a `Descriptions` `items` object are its labels, and `Tabs` and `Collapse` draw slot names as titles. A dynamic blocks policy now applies the `html` rule and its URL checks to every object key and every slot or area name in the content, as it does to a string no block schema marks. Keys in data, such as a `SetState` value under the policy's `state` path, are not checked, since data is never drawn.
+
+- dfba080: fix(api): A failing websocket source keeps restarting and tells pages when it is back
+
+  When a websocket source kept failing, for example during a database outage of more than about 30 s, the server restarted it 5 times, then dropped the channel without telling its subscribers. Pages still showed the subscription as connected but heard nothing more until they reloaded or reconnected. Every failed restart was also logged as an error and sent to Sentry.
+
+  The server now restarts a failed source for as long as its channel has subscribers, 1 s after the failure and doubling up to once a minute. The first failure of an outage is logged as an error and sent to Sentry. Each further failed restart is a warning. Subscribers still get an error for each failed start.
+
+  When the source is listening again, each subscriber gets its subscription acknowledged again, so the page's `onSubscribe` fires and `_websocket: <id>.error` returns to `null`. The source missed every change during the outage, so a page that refetches in `onSubscribe` catches up. A websocket source receives a new `ready` function and calls it once it is listening; a source that publishes counts as listening too. `MongoDBChangeStream` calls it when the database first answers the stream.
+
+- Updated dependencies [7e9755b]
+- Updated dependencies [098fcfb]
+  - @lowdefy/build@7.4.0
+  - @lowdefy/node-utils@7.4.0
+  - @lowdefy/operators-js@7.4.0
+  - @lowdefy/operators@7.4.0
+  - @lowdefy/connection-smtp@7.4.0
+  - @lowdefy/ajv@7.4.0
+  - @lowdefy/email-templates@7.4.0
+  - @lowdefy/errors@7.4.0
+  - @lowdefy/helpers@7.4.0
+  - @lowdefy/nunjucks@7.4.0
+
 ## 7.3.0
 
 ### Minor Changes

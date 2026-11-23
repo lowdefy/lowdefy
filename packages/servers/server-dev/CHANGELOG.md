@@ -1,5 +1,61 @@
 # Change Log
 
+## 7.4.0
+
+### Patch Changes
+
+- 5f85a85: fix(server-dev): Only the dev server's own headless browser can choose the user it acts as
+
+  The dev server's headless browser (used by the screenshot, journey and other page tools) tells the dev server which user to act as through a cookie. The dev server now signs that cookie with a secret it creates each time it starts, the same way it already signs the journey cookies, and ignores the cookie when the signature is missing or wrong. Before, any request that reached the dev server could send that cookie and act as any user with any roles. The production server never read this cookie and is not affected.
+
+- 94458a7: fix(server-dev): MCP instructions follow the test level rules
+
+  The dev MCP server's instructions told agents to verify every change with a journey, and `lowdefy_run_tests` told them to widen to the edge tier before calling a change done, after the rules `lowdefy agent-setup` writes had stopped saying both. Called with no arguments, `lowdefy_run_tests` runs the full suite, so agents that followed it ran every journey for one change, and several agents building one change each did so on the same machine. The instructions now send logic to `lowdefy_run_endpoint` and keep `lowdefy_run_journey` for what only a browser shows, once the change is done. `lowdefy_run_tests` asks for the journeys of the pages a change touches and keeps the full suite for when a person asks. When several agents share a change, the agent that merges their work runs the journeys and `lowdefy_check` once, after the last merge.
+
+- Updated dependencies [7e9755b]
+- Updated dependencies [3c88693]
+- Updated dependencies [3069706]
+- Updated dependencies [bd56850]
+- Updated dependencies [098fcfb]
+- Updated dependencies [dfba080]
+  - @lowdefy/build@7.4.0
+  - @lowdefy/docs-content@7.4.0
+  - @lowdefy/connection-axios-http@7.4.0
+  - @lowdefy/api@7.4.0
+  - @lowdefy/node-utils@7.4.0
+  - @lowdefy/connection-mongodb@7.4.0
+  - @lowdefy/engine@7.4.0
+  - @lowdefy/actions-core@7.4.0
+  - @lowdefy/blocks-antd@7.4.0
+  - @lowdefy/operators-change-case@7.4.0
+  - @lowdefy/operators-cron@7.4.0
+  - @lowdefy/operators-dayjs@7.4.0
+  - @lowdefy/operators-diff@7.4.0
+  - @lowdefy/operators-js@7.4.0
+  - @lowdefy/operators-mql@7.4.0
+  - @lowdefy/operators-nunjucks@7.4.0
+  - @lowdefy/operators-uuid@7.4.0
+  - @lowdefy/operators-yaml@7.4.0
+  - @lowdefy/e2e-utils@7.4.0
+  - @lowdefy/blocks-aggrid@7.4.0
+  - @lowdefy/blocks-antd-x@7.4.0
+  - @lowdefy/blocks-basic@7.4.0
+  - @lowdefy/blocks-echarts@7.4.0
+  - @lowdefy/blocks-loaders@7.4.0
+  - @lowdefy/blocks-markdown@7.4.0
+  - @lowdefy/blocks-table@7.4.0
+  - @lowdefy/blocks-tiptap@7.4.0
+  - @lowdefy/websockets-core@7.4.0
+  - @lowdefy/client@7.4.0
+  - @lowdefy/client-core@7.4.0
+  - @lowdefy/layout@7.4.0
+  - @lowdefy/blocks-captcha@7.4.0
+  - @lowdefy/plugin-better-auth@7.4.0
+  - @lowdefy/block-utils@7.4.0
+  - @lowdefy/errors@7.4.0
+  - @lowdefy/helpers@7.4.0
+  - @lowdefy/logger@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes

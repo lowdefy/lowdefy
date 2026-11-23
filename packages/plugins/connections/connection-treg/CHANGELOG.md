@@ -1,5 +1,12 @@
 # @lowdefy/connection-treg
 
+## 7.4.0
+
+### Patch Changes
+
+- @lowdefy/errors@7.4.0
+- @lowdefy/helpers@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes

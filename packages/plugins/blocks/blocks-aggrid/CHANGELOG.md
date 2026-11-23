@@ -1,5 +1,13 @@
 # Change Log
 
+## 7.4.0
+
+### Patch Changes
+
+- @lowdefy/blocks-antd@7.4.0
+- @lowdefy/block-utils@7.4.0
+- @lowdefy/helpers@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes
