@@ -147,8 +147,13 @@ function findHiddenPopup({ block, ancestors, page }) {
 // Modal or Drawer is drawn in that one's portal, so it is not in the text. A block is drawn when
 // isBlockShown says so and every block holding it, up to the checked one, draws the area it sits
 // in. A block whose own style or class (or a holding block's) may change how its text reads
-// (isStyled) adds no runs. A block not shown because a closed Modal or Drawer holds it leaves the
-// text open when antd keeps that popup's content in the page (findHiddenPopup). Returns { onPage, shown, runs, classHidden, styled, units, unmodeled, open, text }:
+// (isStyled: a slot's style and a layout that hides it at 1280px among them) adds no runs. A
+// checked block that may not be rendered, or that one holding it may not (mayHideBlock), leaves
+// the text open, as the browser reads its textContent. A block not shown because a closed Modal
+// or Drawer holds it leaves the text open when antd keeps that popup's content in the page
+// (findHiddenPopup). An app that sets its own Tailwind breakpoints (setsTailwindBreakpoints) has
+// its named breakpoint classes read as ones that may apply. Returns { onPage, shown, runs,
+// classHidden, styled, units, unmodeled, open, text }:
 // - onPage: whether the web client renders the block, so its wrapper is in the page;
 // - shown: whether it is shown, so its text is drawn;
 // - runs, classHidden and units: readHtmlPieces', over every piece;
