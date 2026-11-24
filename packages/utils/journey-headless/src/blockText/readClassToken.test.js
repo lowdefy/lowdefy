@@ -56,3 +56,17 @@ test('readClassToken keeps the colon of an arbitrary property in its utility', (
   });
   expect(readClassToken('min-[900px]:hidden')).toEqual({ utility: 'hidden', applies: true });
 });
+
+test('readClassToken cannot tell a named breakpoint when the app sets its own', () => {
+  const options = { customBreakpoints: true };
+  expect(readClassToken('md:hidden', options)).toEqual({ utility: 'hidden', applies: null });
+  expect(readClassToken('max-md:hidden', options)).toEqual({ utility: 'hidden', applies: null });
+  expect(readClassToken('min-[900px]:hidden', options)).toEqual({
+    utility: 'hidden',
+    applies: true,
+  });
+  expect(mayApplyClass({ tokens: ['max-xl:hidden'], pattern: /^hidden$/ })).toBe(false);
+  expect(
+    mayApplyClass({ tokens: ['max-xl:hidden'], pattern: /^hidden$/, customBreakpoints: true })
+  ).toBe(true);
+});

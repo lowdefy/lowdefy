@@ -23,13 +23,14 @@ const FLEX_CLASS = /^(flex|inline-flex|grid|inline-grid|\[display:.+\])$/;
 
 // Whether the element an Html block draws its html in (HtmlComponent's root, given the block's
 // `.element` class and style) may be a flex or grid box, which lays the html's top-level children
-// out as blocks.
-function isFlexElement({ block }) {
+// out as blocks. customBreakpoints is readClassToken's.
+function isFlexElement({ block, customBreakpoints }) {
   const display = block.eval?.style?.element?.display;
   if (!type.isNone(display) && /flex|grid/.test(String(display))) return true;
   return mayApplyClass({
     tokens: collectClassTokens(block.eval?.class?.element),
     pattern: FLEX_CLASS,
+    customBreakpoints,
   });
 }
 

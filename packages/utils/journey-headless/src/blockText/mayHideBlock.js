@@ -32,13 +32,17 @@ function setsDisplayNone(style) {
 // Whether a block may not be rendered (display: none) at the browser runner's width: its layout
 // hides it (isLayoutHidden), or a style or class of it, or of one of its slots, may. A browser's
 // innerText of an element that is not rendered, or of one inside it, is its textContent: every
-// text node in it, hidden or not.
-function mayHideBlock({ block }) {
+// text node in it, hidden or not. customBreakpoints is readClassToken's.
+function mayHideBlock({ block, customBreakpoints }) {
   return (
     isLayoutHidden({ layout: block.eval?.layout }) ||
     setsDisplayNone(block.eval?.style) ||
     Object.values(block.eval?.slots ?? {}).some((slot) => setsDisplayNone(slot?.style)) ||
-    mayApplyClass({ tokens: collectClassTokens(block.eval?.class), pattern: HIDING_CLASS })
+    mayApplyClass({
+      tokens: collectClassTokens(block.eval?.class),
+      pattern: HIDING_CLASS,
+      customBreakpoints,
+    })
   );
 }
 

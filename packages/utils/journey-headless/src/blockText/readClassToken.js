@@ -22,11 +22,15 @@ const BREAKPOINTS = { sm: 640, md: 768, lg: 1024, xl: 1280, '2xl': 1536 };
 
 // Whether one variant of a class token applies at the runner's width: true or false for a
 // breakpoint (sm: to 2xl:, max-sm: to max-2xl:, min-[Npx]: and max-[Npx]:), null for any other
-// (hover:, dark:, a breakpoint the app names itself), which the run cannot tell.
-function readVariant(variant) {
-  if (Object.hasOwn(BREAKPOINTS, variant)) return RUNNER_WIDTH >= BREAKPOINTS[variant];
+// (hover:, dark:, a breakpoint the app names itself), which the run cannot tell. An app that
+// sets its own Tailwind breakpoints (customBreakpoints) may have moved sm to 2xl, so they are
+// null too.
+function readVariant({ variant, customBreakpoints }) {
+  if (Object.hasOwn(BREAKPOINTS, variant)) {
+    return customBreakpoints ? null : RUNNER_WIDTH >= BREAKPOINTS[variant];
+  }
   const named = variant.match(/^max-(sm|md|lg|xl|2xl)$/);
-  if (named !== null) return RUNNER_WIDTH < BREAKPOINTS[named[1]];
+  if (named !== null) return customBreakpoints ? null : RUNNER_WIDTH < BREAKPOINTS[named[1]];
   const arbitrary = variant.match(/^(min|max)-\[(\d+(?:\.\d+)?)px\]$/);
   if (arbitrary !== null) {
     const width = Number(arbitrary[2]);
@@ -40,13 +44,13 @@ function readVariant(variant) {
 // `hidden!` in Tailwind 4), and whether it applies there (true, false, or null when a variant
 // is no breakpoint), so `max-[899px]:hidden` does not hide at 1280px and `min-[900px]:hidden`
 // may.
-function readClassToken(token) {
+function readClassToken(token, { customBreakpoints = false } = {}) {
   // A colon inside brackets belongs to an arbitrary value or property ([display:none]).
   const parts = token.split(/:(?![^[]*\])/);
   const utility = parts.pop().replace(/^!|!$/g, '');
   let applies = true;
   for (const variant of parts) {
-    const read = readVariant(variant);
+    const read = readVariant({ variant, customBreakpoints });
     if (read === false) return { utility, applies: false };
     if (read === null) applies = null;
   }
@@ -55,9 +59,9 @@ function readClassToken(token) {
 
 // Whether any of an element's (or a block's) class tokens may apply a utility `pattern` names at
 // the runner's width.
-function mayApplyClass({ tokens, pattern }) {
+function mayApplyClass({ tokens, pattern, customBreakpoints = false }) {
   return tokens.some((token) => {
-    const { utility, applies } = readClassToken(token);
+    const { utility, applies } = readClassToken(token, { customBreakpoints });
     return applies !== false && pattern.test(utility);
   });
 }

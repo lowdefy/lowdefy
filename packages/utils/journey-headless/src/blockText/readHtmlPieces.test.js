@@ -139,3 +139,11 @@ test('readHtmlPieces leaves out text a closed dialog, a media fallback or a styl
   const styled = await read('<p>Shown</p><style>p { display: none }</style>');
   expect(styled.open).toContain('a style element');
 });
+
+test('readHtmlPieces reads a named breakpoint class as one that may apply when the app sets its own', async () => {
+  const html = '<span class="max-md:hidden">Wide</span>';
+  expect(texts(await read(html))).toEqual(['Wide']);
+  const custom = await read(html, { customBreakpoints: true });
+  expect(texts(custom)).toEqual([]);
+  expect(texts({ runs: custom.classHidden })).toEqual(['Wide']);
+});

@@ -16,7 +16,7 @@
 
 import { TEXT_WRITING } from '../standIns/matchHtmlText.js';
 import isPlainText from './isPlainText.js';
-import readClassToken, { mayApplyClass } from './readClassToken.js';
+import readClassToken from './readClassToken.js';
 import normalizeShownText from './normalizeShownText.js';
 
 // Elements whose text nodes a browser's innerText reads with no break around them, unless their
@@ -75,14 +75,16 @@ const HIDING_CLASS = /^(hidden|invisible|collapse|\[(display|visibility):.+\])$/
 // White space as CSS collapses it; a no-break space is not.
 const CSS_SPACE = /[ \t\n\r\f]+/g;
 
-function hasClass({ element, pattern }) {
-  return mayApplyClass({ tokens: [...(element.classList ?? [])], pattern });
+// Whether an element's classes, read at the runner's width (readClassToken), may apply a utility
+// `pattern` names.
+function hasClass({ classes, pattern }) {
+  return classes.some(({ utility, applies }) => applies !== false && pattern.test(utility));
 }
 
-function isFlexBox(element) {
+function isFlexBox({ element, classes }) {
   return (
     /flex|grid/.test(element.style?.display ?? '') ||
-    hasClass({ element, pattern: FLEX_CLASS }) ||
+    hasClass({ classes, pattern: FLEX_CLASS }) ||
     FLEX_ATTRIBUTES.some((name) => element.hasAttribute(name))
   );
 }
@@ -95,11 +97,11 @@ function isTruncated(element) {
 // element but an inline one, an inline one laid out otherwise by its style, class or a clamping
 // data-truncate, and any child of a flex or grid box, which lays its children out as blocks
 // (flexParent).
-function breaksLine({ element, flexParent }) {
+function breaksLine({ element, classes, flexParent }) {
   if (!INLINE_TAGS.has(element.tagName)) return true;
   const { style } = element;
   if (style?.display || style?.float || style?.position) return true;
-  if (hasClass({ element, pattern: LAYOUT_CLASS }) || isTruncated(element)) return true;
+  if (hasClass({ classes, pattern: LAYOUT_CLASS }) || isTruncated(element)) return true;
   return flexParent;
 }
 
@@ -114,15 +116,15 @@ function readSpaceValue(value) {
 // not know, a class that may or may not apply, or two that compete), or null when it sets none and
 // inherits it. An inline style and a class that competes with it (an important one wins) is
 // unsure.
-function readWhiteSpace(element) {
+function readWhiteSpace({ element, classes }) {
   const styled = element.style?.whiteSpace ?? '';
-  const classes = [...(element.classList ?? [])]
-    .map((token) => readClassToken(token))
-    .filter(({ utility, applies }) => applies !== false && WHITE_SPACE_CLASS.test(utility));
-  if (classes.length > 1 || (styled !== '' && classes.length > 0)) return 'unsure';
+  const spacing = classes.filter(
+    ({ utility, applies }) => applies !== false && WHITE_SPACE_CLASS.test(utility)
+  );
+  if (spacing.length > 1 || (styled !== '' && spacing.length > 0)) return 'unsure';
   if (styled !== '') return readSpaceValue(styled);
-  if (classes.length === 1) {
-    const [{ utility, applies }] = classes;
+  if (spacing.length === 1) {
+    const [{ utility, applies }] = spacing;
     if (applies === null) return 'unsure';
     return readSpaceValue(utility.match(/^whitespace-(.+)$/)?.[1] ?? '');
   }
@@ -131,10 +133,10 @@ function readWhiteSpace(element) {
   return null;
 }
 
-function transformsCase(element) {
+function transformsCase({ element, classes }) {
   return (
     !['', 'none'].includes(element.style?.textTransform ?? '') ||
-    hasClass({ element, pattern: TRANSFORM_CLASS })
+    hasClass({ classes, pattern: TRANSFORM_CLASS })
   );
 }
 
@@ -155,7 +157,8 @@ function transformsCase(element) {
 //   element's CSS may hide or change it), else null.
 // `pre` says the html is drawn where white space is kept (a Descriptions item), and `flexRoot`
 // that the element it is drawn in may be a flex or grid box, which lays its top-level children
-// out as blocks.
+// out as blocks. `customBreakpoints` says the app sets its own Tailwind breakpoints
+// (readClassToken).
 // Collects runs: text added while it reads as written joins the current run, and a break, a
 // change in white space handling or text that may not read as written ends it.
 function createRuns() {
@@ -175,7 +178,7 @@ function createRuns() {
   };
 }
 
-function readHtmlPieces({ root, pre = false, flexRoot = false }) {
+function readHtmlPieces({ root, pre = false, flexRoot = false, customBreakpoints = false }) {
   const sure = createRuns();
   const classHidden = createRuns();
   let open = null;
@@ -211,6 +214,9 @@ function readHtmlPieces({ root, pre = false, flexRoot = false }) {
       return;
     }
     const element = node;
+    const classes = [...(element.classList ?? [])].map((token) =>
+      readClassToken(token, { customBreakpoints })
+    );
     const writes = element.matches(TEXT_WRITING);
     if (writes && open === null) {
       open =
@@ -235,13 +241,14 @@ function readHtmlPieces({ root, pre = false, flexRoot = false }) {
     const mayHide =
       context.mayHide ||
       invisible ||
-      hasClass({ element, pattern: HIDING_CLASS }) ||
+      hasClass({ classes, pattern: HIDING_CLASS }) ||
       element.hasAttribute('data-popover-content');
-    const whiteSpace = readWhiteSpace(element);
+    const whiteSpace = readWhiteSpace({ element, classes });
     let { keep } = context;
     if (whiteSpace === 'keep') keep = true;
     if (whiteSpace === 'collapse') keep = false;
     const next = {
+      flexParent: isFlexBox({ element, classes }),
       hidden: hidden || writes || FALLBACK_TAGS.has(element.tagName),
       mayHide,
       keep,
@@ -249,20 +256,17 @@ function readHtmlPieces({ root, pre = false, flexRoot = false }) {
         context.sure &&
         !writes &&
         whiteSpace !== 'unsure' &&
-        !transformsCase(element) &&
+        !transformsCase({ element, classes }) &&
         !CONTROL_TAGS.has(element.tagName.toUpperCase()),
     };
-    const breaks = breaksLine({
-      element,
-      flexParent: parent !== null && (isFlexBox(parent) || (flexRoot && parent === root)),
-    });
+    const breaks = breaksLine({ element, classes, flexParent: context.flexParent });
     // The text an enhancer writes stands between the text before it and the text after it.
     if (breaks || writes) flush();
     element.childNodes.forEach((child) => visit(child, next));
     if (breaks) flush();
   }
   root.childNodes.forEach((child) =>
-    visit(child, { hidden: false, mayHide: false, keep: pre, sure: true })
+    visit(child, { flexParent: flexRoot, hidden: false, mayHide: false, keep: pre, sure: true })
   );
   flush();
   return {

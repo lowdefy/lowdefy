@@ -24,7 +24,7 @@ import { mayApplyClass } from './readClassToken.js';
 
 // What each block type the headless run knows draws as text (LDF-1147), read from its component
 // in the browser: a function of { block, properties, areaNames, ancestors (the blocks holding it,
-// nearest first), i18n } that returns
+// nearest first), i18n, customBreakpoints (readClassToken's) } that returns
 // { pieces, areas, open }.
 // - pieces: the text it draws from its evaluated properties, in order, each { html } (drawn with
 //   renderHtml, whose HtmlComponent reads the value as a string), { text } (drawn as a React text
@@ -81,13 +81,13 @@ function container() {
 
 // Html, ClickableHtml and DangerousHtml draw their html in an element their `.element` class and
 // style lay out.
-function elementHtml({ block, properties }) {
-  const flexRoot = isFlexElement({ block });
+function elementHtml({ block, customBreakpoints, properties }) {
+  const flexRoot = isFlexElement({ block, customBreakpoints });
   return html(properties.html).map((piece) => ({ ...piece, flexRoot }));
 }
 
-function htmlBlock({ block, properties }) {
-  return { pieces: elementHtml({ block, properties }), areas: [], open: null };
+function htmlBlock({ block, customBreakpoints, properties }) {
+  return { pieces: elementHtml({ block, customBreakpoints, properties }), areas: [], open: null };
 }
 
 function typography({ properties }) {
@@ -143,14 +143,18 @@ const WHITE_SPACE_CLASS = /^(whitespace-.+|\[white-space:.+\])$/;
 // itemOption's, its labelStyle and contentStyle: an item whose styles may change how its text
 // reads, or a block style or class that sets white space inside the items, leaves its pieces
 // unsure.
-function descriptionsItems({ block, properties }) {
+function descriptionsItems({ block, customBreakpoints, properties }) {
   let items = properties.items ?? [];
   if (type.isObject(items)) {
     items = Object.keys(items).map((key) => ({ value: items[key], key }));
   }
   const blockSpaced =
     isStyledStyle({ style: block.eval?.style, pre: true }) ||
-    mayApplyClass({ tokens: collectClassTokens(block.eval?.class), pattern: WHITE_SPACE_CLASS });
+    mayApplyClass({
+      tokens: collectClassTokens(block.eval?.class),
+      pattern: WHITE_SPACE_CLASS,
+      customBreakpoints,
+    });
   const pieces = [];
   items.forEach((item) => {
     const row = type.isPrimitive(item) ? { value: item, key: String(item) } : (item ?? {});
@@ -201,8 +205,8 @@ const BLOCK_TEXT_MODELS = {
   }),
   ClickableHtml: htmlBlock,
   // Its own DOMPurifyOptions may keep or strip what the default sanitiser does not.
-  DangerousHtml: ({ block, properties }) => ({
-    pieces: elementHtml({ block, properties }),
+  DangerousHtml: ({ block, customBreakpoints, properties }) => ({
+    pieces: elementHtml({ block, customBreakpoints, properties }),
     areas: [],
     open: type.isNone(properties.DOMPurifyOptions)
       ? null
@@ -218,14 +222,14 @@ const BLOCK_TEXT_MODELS = {
       ? null
       : 'it sanitises with its own DOMPurifyOptions',
   }),
-  Descriptions: ({ block, properties }) => {
+  Descriptions: ({ block, customBreakpoints, properties }) => {
     const transforms = (properties.itemOptions ?? []).some(
       (option) => type.isFunction(option?.transformValue) || type.isFunction(option?.transformLabel)
     );
     return {
       pieces: [
         ...html(properties.title),
-        ...(transforms ? [] : descriptionsItems({ block, properties })),
+        ...(transforms ? [] : descriptionsItems({ block, customBreakpoints, properties })),
       ],
       areas: ['extra'],
       open: transforms ? 'its itemOptions transform what it draws' : null,

@@ -29,6 +29,7 @@ import markdownToHtml from './markdownToHtml.js';
 import normalizeShownText from './normalizeShownText.js';
 import { mayApplyClass } from './readClassToken.js';
 import readHtmlPieces from './readHtmlPieces.js';
+import setsTailwindBreakpoints from './setsTailwindBreakpoints.js';
 import readTextModel from './readTextModel.js';
 
 // The block a blockId names and the Slots that hold it, walking the page as the web client
@@ -48,7 +49,7 @@ function findBlock({ blockId, slots }) {
 
 // The runs and units of one piece of a block's text (BLOCK_TEXT_MODELS' pieces), with a cache of
 // parsed html by string, since a check reads the page every 50 ms.
-function readPiece({ cache, parse, piece }) {
+function readPiece({ cache, customBreakpoints, parse, piece }) {
   if (!type.isUndefined(piece.text)) {
     return {
       runs: piece.unsure ? [] : [{ text: piece.text, pre: piece.pre === true }],
@@ -58,7 +59,12 @@ function readPiece({ cache, parse, piece }) {
     };
   }
   if (!type.isUndefined(piece.either)) {
-    const asHtml = readPiece({ cache, parse, piece: { html: piece.either, unsure: true } });
+    const asHtml = readPiece({
+      cache,
+      customBreakpoints,
+      parse,
+      piece: { html: piece.either, unsure: true },
+    });
     return {
       runs: [],
       classHidden: [],
@@ -77,9 +83,9 @@ function readPiece({ cache, parse, piece }) {
   }
   const pre = piece.pre === true;
   const flexRoot = piece.flexRoot === true;
-  const key = `${pre}:${flexRoot}:${html}`;
+  const key = `${pre}:${flexRoot}:${customBreakpoints}:${html}`;
   if (!cache.has(key)) {
-    cache.set(key, readHtmlPieces({ root: parse(html), pre, flexRoot }));
+    cache.set(key, readHtmlPieces({ root: parse(html), pre, flexRoot, customBreakpoints }));
   }
   const read = cache.get(key);
   return {
@@ -98,11 +104,15 @@ const STYLED_CLASS =
 // Whether a block's own `style` or `class`, a style of one of its slots (Container hands it to
 // the slot's Area), or a layout that hides it at the runner's width (a span of 0) may change how
 // the text inside it reads, so its runs may not show as written.
-function isStyled(block) {
+function isStyled({ block, customBreakpoints }) {
   return (
     isStyledStyle({ style: block.eval?.style }) ||
     Object.values(block.eval?.slots ?? {}).some((slot) => isStyledStyle({ style: slot?.style })) ||
-    mayApplyClass({ tokens: collectClassTokens(block.eval?.class), pattern: STYLED_CLASS }) ||
+    mayApplyClass({
+      tokens: collectClassTokens(block.eval?.class),
+      pattern: STYLED_CLASS,
+      customBreakpoints,
+    }) ||
     isLayoutHidden({ layout: block.eval?.layout })
   );
 }
@@ -150,7 +160,9 @@ function findHiddenPopup({ block, ancestors, page }) {
 function readBlockText({ actor, blockId, cache, parse }) {
   const { page } = actor;
   const { context } = page;
-  const { blockMetas } = context._internal.lowdefy._internal;
+  const { lowdefy } = context._internal;
+  const { blockMetas } = lowdefy._internal;
+  const customBreakpoints = setsTailwindBreakpoints({ tailwind: lowdefy.theme?.tailwind });
   const reading = {
     onPage: false,
     shown: false,
@@ -193,13 +205,15 @@ function readBlockText({ actor, blockId, cache, parse }) {
   // The browser reads the textContent of a block that is not rendered, every text node in it,
   // which a headless reading does not follow: a check it does not find is open, not missing.
   [found.block, ...ancestorsOf(found.block)]
-    .filter((block) => mayHideBlock({ block }))
+    .filter((block) => mayHideBlock({ block, customBreakpoints }))
     .forEach((block) => {
       reading.open.push(
         `${describeBlock(block)}: it may not be rendered (display: none), and a browser's check then reads every text node in it`
       );
     });
-  const styledAncestor = ancestorsOf(found.block).find(isStyled);
+  const styledAncestor = ancestorsOf(found.block).find((block) =>
+    isStyled({ block, customBreakpoints })
+  );
   if (!type.isUndefined(styledAncestor)) reading.styled.push(styledAncestor);
   function visit({ block, slots, styled }) {
     const model = readTextModel({ block, blockMetas });
@@ -218,16 +232,18 @@ function readBlockText({ actor, blockId, cache, parse }) {
       ancestors: ancestorsOf(block),
       areaNames,
       block,
+      customBreakpoints,
       i18n: actor.i18n,
       properties: block.eval?.properties ?? {},
     });
-    const ownStyle = !styled && isStyled(block);
+    const ownStyle = !styled && isStyled({ block, customBreakpoints });
     if (ownStyle) reading.styled.push(block);
     const blockStyled = styled || ownStyle;
     if (open !== null) reading.open.push(`${describeBlock(block)}: ${open}`);
     pieces.forEach((piece) => {
       const read = readPiece({
         cache,
+        customBreakpoints,
         parse,
         piece: blockStyled ? { ...piece, unsure: true } : piece,
       });
