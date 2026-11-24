@@ -90,9 +90,19 @@ function findEscapeTarget({ actor, blocks, parents }) {
   return { block: top };
 }
 
+// Block types that draw a Menu of the app's `menus` (its menuId's, else the first) when they have
+// no `links` of their own, as blocks-antd's Menu does (getDefaultMenu).
+const APP_MENU_TYPES = new Set([
+  'Menu',
+  'MobileMenu',
+  'PageHeaderMenu',
+  'PageSiderMenu',
+  'PageSidebarLayout',
+]);
+
 // Block types that bind their items' `shortcut`s (blocks-antd's useItemShortcuts: tabs, menu
 // links, dropdown items) on a document listener that a key pressed in an input skips.
-const ITEM_SHORTCUT_TYPES = new Set(['DropdownButton', 'DropdownMenu', 'Menu', 'Tabs']);
+const ITEM_SHORTCUT_TYPES = new Set(['DropdownButton', 'DropdownMenu', 'Tabs', ...APP_MENU_TYPES]);
 const SHORTCUT_MODIFIERS = ['alt', 'ctrl', 'mod', 'shift'];
 
 // Whether useItemShortcuts' matchesShortcut fires `shortcut` on a press of Escape alone: its last
@@ -115,6 +125,20 @@ function bindsItemEscape(value) {
     key === 'shortcut' && type.isString(inner)
       ? itemShortcutIsEscape(inner)
       : bindsItemEscape(inner)
+  );
+}
+
+// Whether the block binds Escape as an item shortcut: one in its properties, or, for a block that
+// draws the app's menus, one in any of them (over-read on the safe side).
+function bindsBlockItemEscape({ actor, block }) {
+  const properties = block.eval.properties ?? {};
+  if (bindsItemEscape(properties)) {
+    return true;
+  }
+  return (
+    APP_MENU_TYPES.has(block.type) &&
+    !type.isArray(properties.links) &&
+    bindsItemEscape(actor.page.context._internal.lowdefy.menus ?? [])
   );
 }
 
@@ -188,7 +212,7 @@ function findEarlyReason({ actor, blocks, focused }) {
     (block) =>
       ITEM_SHORTCUT_TYPES.has(block.type) &&
       block.visibleEval?.output !== false &&
-      bindsItemEscape(block.eval.properties ?? {})
+      bindsBlockItemEscape({ actor, block })
   );
   if (focused === null && !type.isUndefined(items)) {
     return `${describeBlock(items)} binds Escape as an item shortcut, which a headless press does not fire: ${BROWSER}.`;

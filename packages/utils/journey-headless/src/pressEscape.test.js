@@ -593,3 +593,21 @@ test.each([null, 0, ''])(
     expect(readLog(log).map(([name]) => name)).not.toContain('drawer.onClose');
   }
 );
+
+test('Escape while a Menu draws an app menu link with an Escape shortcut runs in a browser', async () => {
+  const menus = [
+    {
+      menuId: 'default',
+      links: [{ id: 'close', type: 'MenuLink', properties: { shortcut: 'Escape' } }],
+    },
+  ];
+  const menu = { id: 'nav', type: 'Menu', events: { onSelect: [record('nav.onSelect')] } };
+  const { result } = await runTestJourney({
+    menus,
+    pages: [escapePage({ extra: [menu] })],
+    steps: [{ click: 'open_modal' }, { press: 'Escape' }],
+  });
+  expect(result.browserOnly.reason).toBe(
+    'Menu "nav" binds Escape as an item shortcut, which a headless press does not fire: the step runs in a browser.'
+  );
+});
