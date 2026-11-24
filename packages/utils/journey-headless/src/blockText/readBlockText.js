@@ -22,6 +22,7 @@ import isBlockShown from '../isBlockShown.js';
 import POPUP_BLOCK_TYPES from '../POPUP_BLOCK_TYPES.js';
 import describeBlock from '../standIns/describeBlock.js';
 import collectClassTokens from './collectClassTokens.js';
+import isStyledStyle from './isStyledStyle.js';
 import markdownToHtml from './markdownToHtml.js';
 import normalizeShownText from './normalizeShownText.js';
 import { mayApplyClass } from './readClassToken.js';
@@ -92,33 +93,11 @@ function readPiece({ cache, parse, piece }) {
 // A class counts when it may apply at the browser runner's width (readClassToken).
 const STYLED_CLASS =
   /^(uppercase|lowercase|capitalize|hidden|invisible|collapse|whitespace-(pre|pre-line|pre-wrap|break-spaces)|\[(display|visibility|text-transform|white-space):.+\])$/;
-// Style properties on a block that change how its text reads, as React's camelCase or CSS's
-// kebab-case, and whether a value does.
-const STYLED_PROPERTIES = {
-  display: (value) => value === 'none',
-  textTransform: (value) => value !== 'none',
-  'text-transform': (value) => value !== 'none',
-  visibility: (value) => ['hidden', 'collapse'].includes(value),
-  // nowrap and normal collapse white space as readHtmlPieces' runs assume.
-  whiteSpace: (value) => /^(pre|break-spaces)/.test(String(value)),
-  'white-space': (value) => /^(pre|break-spaces)/.test(String(value)),
-};
-
-// Whether a style object (a block's style, or one of its per-element styles) changes how text reads.
-function isStyledStyle(style) {
-  if (!type.isObject(style)) return false;
-  return Object.entries(style).some(([key, value]) =>
-    type.isObject(value)
-      ? isStyledStyle(value)
-      : Object.hasOwn(STYLED_PROPERTIES, key) && STYLED_PROPERTIES[key](value)
-  );
-}
-
 // Whether a block's own `style` or `class` may change how the text inside it reads, so its runs
 // may not show as written.
 function isStyled(block) {
   return (
-    isStyledStyle(block.eval?.style) ||
+    isStyledStyle({ style: block.eval?.style }) ||
     mayApplyClass({ tokens: collectClassTokens(block.eval?.class), pattern: STYLED_CLASS })
   );
 }

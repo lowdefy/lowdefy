@@ -593,3 +593,45 @@ test("an Html block's flex or grid element lays its html's top-level children ou
   const plain = [{ id: 'sum', type: 'ClickableHtml', properties: { html } }];
   expect((await check({ blocks: plain, contains: 'Total: 5' })).passed).toBe(true);
 });
+
+test("a Descriptions item's own styles that may change how its text reads keep it from passing", async () => {
+  const items = (extra) => [{ label: 'Status', value: 'active', ...extra }];
+  const plain = [{ id: 'facts', type: 'Descriptions', properties: { items: items({}) } }];
+  expect((await check({ blocks: plain, contains: 'active' })).passed).toBe(true);
+  const upper = [
+    {
+      id: 'facts',
+      type: 'Descriptions',
+      properties: { items: items({ contentStyle: { textTransform: 'uppercase' } }) },
+    },
+  ];
+  expect((await check({ blocks: upper, contains: 'active' })).browserOnly).toBeDefined();
+  const collapsed = [
+    {
+      id: 'facts',
+      type: 'Descriptions',
+      properties: { items: [{ label: 'Pair', value: 'a  b', style: { whiteSpace: 'normal' } }] },
+    },
+  ];
+  expect((await check({ blocks: collapsed, contains: 'a  b' })).browserOnly).toBeDefined();
+  const option = [
+    {
+      id: 'facts',
+      type: 'Descriptions',
+      properties: {
+        items: [{ key: 'Pair', value: 'a  b' }],
+        itemOptions: [{ key: 'Pair', style: { textTransform: 'capitalize' } }],
+      },
+    },
+  ];
+  expect((await check({ blocks: option, contains: 'a  b' })).browserOnly).toBeDefined();
+  const blockStyled = [
+    {
+      id: 'facts',
+      type: 'Descriptions',
+      style: { content: { whiteSpace: 'normal' } },
+      properties: { items: [{ key: 'Pair', value: 'a  b' }] },
+    },
+  ];
+  expect((await check({ blocks: blockStyled, contains: 'a  b' })).browserOnly).toBeDefined();
+});

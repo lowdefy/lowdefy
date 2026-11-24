@@ -16,8 +16,11 @@
 
 import { type } from '@lowdefy/helpers';
 
+import collectClassTokens from './collectClassTokens.js';
 import formatStatisticValue from './formatStatisticValue.js';
 import isFlexElement from './isFlexElement.js';
+import isStyledStyle from './isStyledStyle.js';
+import { mayApplyClass } from './readClassToken.js';
 
 // What each block type the headless run knows draws as text (LDF-1147), read from its component
 // in the browser: a function of { block, properties, areaNames, ancestors (the blocks holding it,
@@ -134,18 +137,39 @@ function popupFooter({ ancestors, i18n, properties }) {
   return { pieces: [...cancel.pieces, ...ok.pieces], open: cancel.open ?? ok.open };
 }
 
-function descriptionsItems({ properties }) {
+const WHITE_SPACE_CLASS = /^(whitespace-.+|\[white-space:.+\])$/;
+
+// Each item keeps its white space (white-space: pre-wrap), and draws its own style, its
+// itemOption's, its labelStyle and contentStyle: an item whose styles may change how its text
+// reads, or a block style or class that sets white space inside the items, leaves its pieces
+// unsure.
+function descriptionsItems({ block, properties }) {
   let items = properties.items ?? [];
   if (type.isObject(items)) {
     items = Object.keys(items).map((key) => ({ value: items[key], key }));
   }
+  const blockSpaced =
+    isStyledStyle({ style: block.eval?.style, pre: true }) ||
+    mayApplyClass({ tokens: collectClassTokens(block.eval?.class), pattern: WHITE_SPACE_CLASS });
   const pieces = [];
   items.forEach((item) => {
     const row = type.isPrimitive(item) ? { value: item, key: String(item) } : (item ?? {});
-    pieces.push(...html(row.key || row.label), ...html(row.value));
+    const itemOption =
+      (properties.itemOptions ?? []).find((option) => row.key === option?.key) ?? {};
+    const unsure =
+      blockSpaced ||
+      [itemOption.style, row.style, row.labelStyle, row.contentStyle].some((style) =>
+        isStyledStyle({ style, pre: true })
+      );
+    pieces.push(
+      ...[...html(row.key || row.label), ...html(row.value)].map((piece) => ({
+        ...piece,
+        pre: true,
+        unsure,
+      }))
+    );
   });
-  // Each item keeps its white space (white-space: pre-wrap).
-  return pieces.map((piece) => ({ ...piece, pre: true }));
+  return pieces;
 }
 
 const BLOCK_TEXT_MODELS = {
@@ -194,12 +218,15 @@ const BLOCK_TEXT_MODELS = {
       ? null
       : 'it sanitises with its own DOMPurifyOptions',
   }),
-  Descriptions: ({ properties }) => {
+  Descriptions: ({ block, properties }) => {
     const transforms = (properties.itemOptions ?? []).some(
       (option) => type.isFunction(option?.transformValue) || type.isFunction(option?.transformLabel)
     );
     return {
-      pieces: [...html(properties.title), ...(transforms ? [] : descriptionsItems({ properties }))],
+      pieces: [
+        ...html(properties.title),
+        ...(transforms ? [] : descriptionsItems({ block, properties })),
+      ],
       areas: ['extra'],
       open: transforms ? 'its itemOptions transform what it draws' : null,
     };
