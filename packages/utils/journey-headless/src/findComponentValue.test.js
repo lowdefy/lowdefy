@@ -67,3 +67,11 @@ test('expect.state elsewhere reads the state headless', async () => {
   expect(result.passed).toBe(true);
   expect(readLog(log)).toEqual([['go']]);
 });
+
+test("wait.state on a Table's value runs in a browser too", async () => {
+  const { result } = await runTestJourney({
+    pages: [PAGE],
+    steps: [{ wait: { state: 'board.view' } }],
+  });
+  expect(result.browserOnly.reason).toContain('reads the value of Table "board"');
+});

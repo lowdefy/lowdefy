@@ -111,7 +111,7 @@ test('Enter after a number outside min and max runs in a browser, which clamps i
   expect(result.browserOnly).toEqual({
     index: 1,
     reason:
-      'Enter in block "amount" (NumberInput) clamps 11 to its min and max and fires onChange, which a headless run does not model: the step runs in a browser.',
+      'Block "amount" (NumberInput) clamps 11 to its min and max as Enter is pressed and fires onChange, which a headless run does not model: the step runs in a browser.',
     step: { press: 'Enter' },
   });
   expect(log).toEqual([]);
@@ -120,7 +120,7 @@ test('Enter after a number outside min and max runs in a browser, which clamps i
 test('Enter after more decimals than its precision runs in a browser, which rounds them', async () => {
   const { log, result } = await fill({ properties: { precision: 2 }, values: ['1.234'] });
   expect(result.browserOnly.reason).toBe(
-    'Enter in block "amount" (NumberInput) rounds 1.234 to its precision and fires onChange, which a headless run does not model: the step runs in a browser.'
+    'Block "amount" (NumberInput) rounds 1.234 to its precision as Enter is pressed and fires onChange, which a headless run does not model: the step runs in a browser.'
   );
   expect(readLog(log)).toEqual([['onChange', { value: 1.234 }]]);
 });
@@ -135,4 +135,69 @@ test('An app with no i18n, which the build writes as {}, reads a point as the se
   const { log, result } = await fill({ i18n: {}, values: ['1.5'] });
   expect(result.passed).toBe(true);
   expect(readLog(log)).toEqual([['onChange', { value: 1.5 }], ['onPressEnter']]);
+});
+
+function blurPage(properties) {
+  return {
+    id: 'home',
+    blocks: [
+      { id: 'amount', type: 'NumberInput', properties, events: { onChange: [record('onChange')] } },
+      { id: 'note', type: 'TextInput' },
+      { id: 'save', type: 'Button', events: { onClick: [record('save')] } },
+    ],
+  };
+}
+
+test.each([[{ click: 'save' }], [{ fill: { blockId: 'note', value: 'x' } }]])(
+  'Leaving a NumberInput whose text its max clamps runs in a browser: %j',
+  async (step) => {
+    const { log, result } = await runTestJourney({
+      pages: [blurPage({ max: 10 })],
+      steps: [{ fill: { blockId: 'amount', value: '11' } }, step],
+    });
+    expect(result.browserOnly).toEqual({
+      index: 1,
+      reason:
+        'Block "amount" (NumberInput) clamps 11 to its min and max as the focus leaves it and fires onChange, which a headless run does not model: the step runs in a browser.',
+      step,
+    });
+    expect(log).toEqual([]);
+  }
+);
+
+test('Leaving a NumberInput whose text needs no flush, or a fill of it again, runs headless', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [blurPage({ max: 10, precision: 1 })],
+    steps: [
+      { fill: { blockId: 'amount', value: '11' } },
+      { fill: { blockId: 'amount', value: '9.5' } },
+      { click: 'save' },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['onChange', { value: 9.5 }], ['save']]);
+});
+
+test('An onChange that sets the NumberInput again leaves Enter to read the value it set', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          {
+            id: 'amount',
+            type: 'NumberInput',
+            properties: { precision: 0 },
+            events: {
+              onChange: [{ id: 'round', type: 'SetState', params: { amount: 2 } }],
+              onPressEnter: [record('onPressEnter')],
+            },
+          },
+        ],
+      },
+    ],
+    steps: [{ fill: { blockId: 'amount', value: '1.5' } }, { press: 'Enter' }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['onPressEnter']]);
 });

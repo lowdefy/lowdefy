@@ -46,6 +46,19 @@
               payload:
                 value: 1000000
             - event: amount.onPressEnter
+- name: leaving a NumberInput past its max runs in a browser, which clamps it
+  pageId: headless_gaps
+  steps:
+    - fill: { blockId: amount, value: '2000000' }
+    - click: headless_gaps_title
+    - expect: { state: { path: amount, equals: 1000000 } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: amount.onChange
+              payload:
+                value: 1000000
 - name: a select on a MultipleSelector with onOpenChange actions runs in a browser
   pageId: headless_gaps
   steps:

@@ -86,14 +86,15 @@ function readShownText({ actor, block }) {
   return type.isNone(block.value) ? '' : String(block.value);
 }
 
-// Why Enter in a NumberInput needs a browser, or undefined. Before onPressEnter, InputNumber reads
-// its text again as a finished number (flushInputValue): text that is no number falls back to the
-// value, a number outside min and max is clamped into it, and a `precision` rounds it. Only when
-// that changes the number does onChange fire, which a headless run does not model; otherwise Enter
-// fires onPressEnter alone, as the step runner's press does.
-function checkNumberInputEnter({ actor, block }) {
+// Why InputNumber's flush needs a browser, or undefined. On Enter, before onPressEnter, and as the
+// focus leaves it (changeOnBlur), InputNumber reads its text again as a finished number
+// (flushInputValue): text that is no number falls back to the value, a number outside min and max
+// is clamped into it, and a `precision` rounds it. Only when that changes the number does onChange
+// fire, which a headless run does not model; otherwise the flush changes nothing. `when` names the
+// moment for the reason.
+function checkNumberInputFlush({ actor, block, when }) {
   if (!type.isNone(block.eval.properties?.parser)) {
-    return `Block "${block.blockId}" (NumberInput) reads its text with its own parser as Enter is pressed, which a headless run does not model: the step runs in a browser.`;
+    return `Block "${block.blockId}" (NumberInput) reads its text with its own parser ${when}, which a headless run does not model: the step runs in a browser.`;
   }
   let text = readShownText({ actor, block });
   let number = readNumber(text);
@@ -107,13 +108,22 @@ function checkNumberInputEnter({ actor, block }) {
   const precision = block.eval.properties?.precision;
   const rounds = type.isNumber(precision) && precision >= 0 && countDecimals(text) > precision;
   if (!isInRange({ block, number }) || rounds) {
-    return `Enter in block "${block.blockId}" (NumberInput) ${
-      rounds ? 'rounds' : 'clamps'
-    } ${number} to its ${
+    return `Block "${block.blockId}" (NumberInput) ${rounds ? 'rounds' : 'clamps'} ${number} to its ${
       rounds ? 'precision' : 'min and max'
-    } and fires onChange, which a headless run does not model: the step runs in a browser.`;
+    } ${when} and fires onChange, which a headless run does not model: the step runs in a browser.`;
   }
   return undefined;
+}
+
+// Enter in the NumberInput (runHeadlessStep's press).
+function checkNumberInputEnter({ actor, block }) {
+  return checkNumberInputFlush({ actor, block, when: 'as Enter is pressed' });
+}
+
+// The focus leaving the NumberInput (runHeadlessStep, before a click, open, fill or select
+// elsewhere).
+function checkNumberInputBlur({ actor, block }) {
+  return checkNumberInputFlush({ actor, block, when: 'as the focus leaves it' });
 }
 
 // A fill of a NumberInput, as antd's InputNumber (@rc-component/input-number) takes the text
@@ -157,11 +167,12 @@ async function fillNumberInput({ actor, block, step }) {
     state.typed = { parsed, value: block.value };
     return;
   }
+  // The value InputNumber set; an onChange that sets the block again shows that value instead.
+  state.typed = { parsed, value: number };
   await actor.stepRunner.run({ step: { fill: { ...step.fill, value: number } } });
-  state.typed = { parsed, value: block.value };
   await actor.settle();
 }
 
-export { checkNumberInputEnter };
+export { checkNumberInputBlur, checkNumberInputEnter };
 
 export default fillNumberInput;

@@ -23,7 +23,8 @@ import checkHeadlessPressRails from './checkHeadlessPressRails.js';
 import checkHeadlessRails from './checkHeadlessRails.js';
 import checkFillTarget from './checkFillTarget.js';
 import fillColorSelector from './fillColorSelector.js';
-import fillNumberInput, { checkNumberInputEnter } from './fillNumberInput.js';
+import fillNumberInput, { checkNumberInputBlur, checkNumberInputEnter } from './fillNumberInput.js';
+import findComponentValue from './findComponentValue.js';
 import findAutoOpenedDropdown from './findAutoOpenedDropdown.js';
 import findContentTrigger from './findContentTrigger.js';
 import findTextWritingLabel from './findTextWritingLabel.js';
@@ -72,6 +73,27 @@ function opensOnHover({ actor, target }) {
   const trigger =
     block.eval.properties?.trigger ?? (block.type === 'DropdownMenu' ? 'hover' : 'click');
   return trigger === 'hover';
+}
+
+// The NumberInput a step moves the focus off, or null: the one filled last, while it has the focus
+// (page.inputFocused), when the step clicks, opens a dropdown by clicking it, or fills or selects
+// another block. Its blur flushes its text (checkNumberInputBlur). A journey with no page (calls
+// alone) has no focus.
+function readBlurredNumberInput({ actor, key, step }) {
+  if (actor.page?.inputFocused !== true) {
+    return null;
+  }
+  const block = actor.page.context._internal.RootSlots.map[actor.stepRunner.lastInputBlockId()];
+  if (type.isNone(block) || block.type !== 'NumberInput') {
+    return null;
+  }
+  if (INPUT_FOCUS_KEYS.includes(key)) {
+    return step[key].blockId === block.blockId ? null : block;
+  }
+  if (key === 'click' || (key === 'open' && !opensOnHover({ actor, target: step.open }))) {
+    return block;
+  }
+  return null;
 }
 
 // Where the focus and the pointer are, for a press of Escape (pressEscape): a fill or select puts
@@ -249,6 +271,12 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
       return undefined;
     }
   }
+  const blurred = readBlurredNumberInput({ actor, key, step });
+  const flushed = blurred === null ? undefined : checkNumberInputBlur({ actor, block: blurred });
+  if (!type.isUndefined(flushed)) {
+    actor.browserOnly.push(flushed);
+    return undefined;
+  }
   noteFocus({ actor, key, step });
   if (key === 'press' && step.press === 'Escape') {
     await pressEscape({ actor, rails });
@@ -350,6 +378,13 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
         actor.browserOnly.push(standInMissing({ block: focused, what: 'press "Enter"' }));
         return undefined;
       }
+    }
+  }
+  if (key === 'wait' && type.isString(step.wait.state)) {
+    const componentValue = findComponentValue({ actor, path: step.wait.state });
+    if (!type.isUndefined(componentValue)) {
+      actor.browserOnly.push(componentValue);
+      return undefined;
     }
   }
   if (key === 'wait' && type.isString(step.wait.request)) {

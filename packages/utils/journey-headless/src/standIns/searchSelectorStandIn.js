@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import HeadlessStepError from '../HeadlessStepError.js';
+import hasEventActions from '../hasEventActions.js';
 import fireEvent, { afterEvent } from './fireEvent.js';
 import leaveMethodsToBrowser from './leaveMethodsToBrowser.js';
 
@@ -59,7 +60,7 @@ const SEARCH_SELECTORS = {
 // onOpenChange, which a browser fires as the step opens or closes its dropdown, and a headless run
 // does not. Checked before the step acts (runHeadlessStep).
 function needsBrowser({ block }) {
-  if (!Object.hasOwn(block.Events.events, 'onOpenChange')) {
+  if (!hasEventActions({ block, name: 'onOpenChange' })) {
     return undefined;
   }
   return `Block "${block.blockId}" (${block.type}) has onOpenChange actions, which a browser fires as the step opens or closes its dropdown and a headless run does not model: the step runs in a browser.`;

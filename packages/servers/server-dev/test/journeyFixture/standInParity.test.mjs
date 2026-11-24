@@ -121,7 +121,9 @@ const BROWSER_ONLY_AT_RUN_TIME = {
   'text_checks.yaml: a text check on a block with no text model runs in a browser':
     'Block "plugin_area" holds blocks a headless run has no text model for (FixtureBadge "plugin_badge")',
   "headless_gaps.yaml: Enter after a number past a NumberInput's max runs in a browser, which clamps it":
-    'Enter in block "amount" (NumberInput) clamps 2000000 to its min and max',
+    'Block "amount" (NumberInput) clamps 2000000 to its min and max as Enter is pressed',
+  'headless_gaps.yaml: leaving a NumberInput past its max runs in a browser, which clamps it':
+    'Block "amount" (NumberInput) clamps 2000000 to its min and max as the focus leaves it',
   'headless_gaps.yaml: a select on a MultipleSelector with onOpenChange actions runs in a browser':
     'Block "spaces_picker" (MultipleSelector) has onOpenChange actions',
   'headless_gaps.yaml: a click away from a Selector that opened itself runs in a browser':

@@ -14,7 +14,10 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import { collectRenderedBlocks } from './collectMountOrder.js';
+import hasEventActions from './hasEventActions.js';
 
 // The blocks-antd blocks that open their own dropdown as they render when `autoOpen` is true
 // (antd's defaultOpen): their dropdown stays open until a step clicks, types or presses elsewhere.
@@ -26,6 +29,9 @@ const AUTO_OPEN_TYPES = new Set(['DateSelector', 'MultipleSelector', 'Selector']
 // keeps no open state for it and fires no onOpenChange. Not while the block is hidden, shows its
 // skeleton or sits in a closed Modal (collectRenderedBlocks), as then it is not drawn.
 function findAutoOpenedDropdown({ actor }) {
+  if (type.isNone(actor.page)) {
+    return undefined;
+  }
   const { context, mountFinished, openBlocks } = actor.page;
   const block = collectRenderedBlocks({
     mountFinished,
@@ -36,7 +42,7 @@ function findAutoOpenedDropdown({ actor }) {
       AUTO_OPEN_TYPES.has(rendered.type) &&
       rendered.eval.properties?.autoOpen === true &&
       rendered.eval.properties?.disabled !== true &&
-      Object.hasOwn(rendered.Events.events, 'onOpenChange')
+      hasEventActions({ block: rendered, name: 'onOpenChange' })
   );
   if (block === undefined) {
     return undefined;

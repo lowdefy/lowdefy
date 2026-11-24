@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import collectBlockParents from './collectBlockParents.js';
 
 // Block types whose component writes the block's value itself, from its own state, which a
@@ -35,6 +37,9 @@ function overlaps(a, b) {
 // on the page whose component writes it (COMPONENT_VALUE_TYPES), or a state object holding it,
 // which stays unset headless. The block's value sits in state under its blockId.
 function findComponentValue({ actor, path }) {
+  if (type.isNone(actor.page)) {
+    return undefined;
+  }
   const statePath = toDotPath(String(path));
   const block = collectBlockParents({ context: actor.page.context }).blocks.find(
     (candidate) =>

@@ -259,3 +259,40 @@ test.each([
     );
   }
 );
+
+test('A searching selector whose onOpenChange has no actions runs headless', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          {
+            id: 'company',
+            type: 'Selector',
+            properties: { options: ['Acme', 'Globex'] },
+            events: { onChange: [record('onChange')], onOpenChange: [] },
+          },
+        ],
+      },
+    ],
+    steps: [
+      { fill: { blockId: 'company', value: 'Ac' } },
+      { select: { blockId: 'company', value: 'Acme' } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['onChange', { value: 'Acme' }]]);
+});
+
+test('A journey with no page yet reaches its step: no focus, dropdown or table is read', async () => {
+  const run = vi.fn(async () => ({ ok: true }));
+  const actor = { browserOnly: [], page: null, settle: async () => undefined, stepRunner: { run } };
+  await runHeadlessStep({
+    actors: { current: () => actor },
+    since: new Map(),
+    step: { wait: { state: 'board.view' } },
+    stepTimeout: 300,
+  });
+  expect(actor.browserOnly).toEqual([]);
+  expect(run).toHaveBeenCalledWith({ step: { wait: { state: 'board.view' } } });
+});
