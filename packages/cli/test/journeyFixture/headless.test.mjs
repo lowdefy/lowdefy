@@ -54,6 +54,10 @@ function runCli(args) {
   });
 }
 
+function headlessRunPath() {
+  return path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json');
+}
+
 function runHeadless({ server = serverDirectory } = {}) {
   return runCli([
     'test',
@@ -90,6 +94,8 @@ beforeAll(async () => {
 });
 
 test('--headless --build runs the headless journeys and lists the browser journey as browser-only', async () => {
+  // headless-run.json keeps the records of journeys a run did not take: start from none.
+  fs.rmSync(headlessRunPath(), { force: true });
   const { code, output } = await runHeadless();
   expect(output).toMatch(
     /PASS {2}saves an item headless and sees it in state {2}\(5 steps, \d+ms\)/
@@ -100,15 +106,16 @@ test('--headless --build runs the headless journeys and lists the browser journe
   );
   expect(output).toContain('2 passed, 0 failed of 2 journeys, 1 browser-only not run');
   expect(code).toBe(0);
-  const written = JSON.parse(
-    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json'), 'utf8')
-  );
+  const written = JSON.parse(fs.readFileSync(headlessRunPath(), 'utf8'));
+  // The production build's records carry no config hash, so a dev run never reads them.
+  const hashes = { hash: expect.stringMatching(/^[0-9a-f]{40}$/), configHashes: [] };
   expect(written).toEqual({
     version: 1,
     mode: 'build',
     journeys: {
       'tests/journeys/_headless/save.yaml#saves an item headless and sees it in state': {
         passed: true,
+        ...hashes,
       },
       'tests/journeys/_browser/title.yaml#reads the page title': {
         browserOnly: {
@@ -116,8 +123,9 @@ test('--headless --build runs the headless journeys and lists the browser journe
           step: { expect: { title: { contains: 'home' } } },
           reason: 'expect "title" reads the page in a browser',
         },
+        ...hashes,
       },
-      'tests/journeys/save.yaml#saves an item and sees the message': { passed: true },
+      'tests/journeys/save.yaml#saves an item and sees the message': { passed: true, ...hashes },
     },
   });
 });
@@ -149,6 +157,7 @@ test('--headless --build runs a case table journey once per row', async () => {
 // journey passes headless; its `stop` method is undeclared, so the journey that calls it is
 // browser-only at that click, not failed.
 test("--headless --build runs a plugin block's declared method and lists an undeclared one as browser-only", async () => {
+  fs.rmSync(headlessRunPath(), { force: true });
   const { code, output } = await runCli([
     'test',
     '--headless',
@@ -166,12 +175,12 @@ test("--headless --build runs a plugin block's declared method and lists an unde
   expect(output).not.toContain('FAIL');
   expect(output).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
   expect(code).toBe(0);
-  const written = JSON.parse(
-    fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json'), 'utf8')
-  );
+  const written = JSON.parse(fs.readFileSync(headlessRunPath(), 'utf8'));
+  const hashes = { hash: expect.stringMatching(/^[0-9a-f]{40}$/), configHashes: [] };
   expect(written.journeys).toEqual({
     "tests/journeys/_headless/plugin_block.yaml#runs the plugin block's chain on mount": {
       passed: true,
+      ...hashes,
     },
     "tests/journeys/_headless/plugin_block.yaml#stops the plugin block's chain": {
       browserOnly: {
@@ -180,6 +189,7 @@ test("--headless --build runs a plugin block's declared method and lists an unde
         reason:
           'Block "mount_chain" is of type FixtureActionChain, which has no headless stand-in for CallMethod stop: the step runs in a browser.',
       },
+      ...hashes,
     },
   });
 });

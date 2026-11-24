@@ -94,9 +94,11 @@ beforeAll(async () => {
 fixtureTest(
   'every journey file a headless run takes gives the result it gives in the browser',
   async () => {
-    const browser = await runCli(['--url', fixtureUrl, ...JOURNEYS]);
+    const browser = await runCli(['--browser', '--url', fixtureUrl, ...JOURNEYS]);
     const browserResults = readBrowserResults(browser.output);
     expect(browser.code, browser.output).toBe(0);
+    // headless-run.json keeps the records of journeys a run did not take: start from none.
+    fs.rmSync(path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json'), { force: true });
     const headless = await runCli([
       '--headless',
       '--build',
