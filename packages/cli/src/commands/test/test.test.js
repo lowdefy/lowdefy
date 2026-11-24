@@ -2106,7 +2106,9 @@ test.each([[{ thorough: true }], [{ browser: true }]])(
     writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
     context.options = { port: 3000, build: true, ...flags };
     await test({ context });
-    expect(logs.error[0]).toMatch(/pass --headless with it, as in "lowdefy test --headless --build"/);
+    expect(logs.error[0]).toMatch(
+      /pass --headless with it, as in "lowdefy test --headless --build"/
+    );
     expect(process.exitCode).toBe(1);
     expect(mockStartDevServer).not.toHaveBeenCalled();
     expect(mockOpenTestApp).not.toHaveBeenCalled();

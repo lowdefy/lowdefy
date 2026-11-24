@@ -73,7 +73,7 @@ const lifecycleTools = [
   {
     name: 'lowdefy_run_tests',
     description:
-      'Run this app\'s tests (as `lowdefy test` does) against its dev server, starting it if needed. Choose the journeys for the pages your change touches (`lowdefy journeys scope` lists those pages) with `paths`, `tags` or `filter`: no arguments runs the full suite, every journey under tests/journeys/, sub-folders included, except folders starting with "_" (such as _candidates), so run it only when a person asks. `paths`, `tags` and `filter` combine. A journey with a `cases` table runs once per row, named "<name> [<row>]", and one whose `user` is a list of data set users once as each, "<name> [<user>]" (filter "[admin]" picks one). Each journey runs once, headless when it can and in the browser when it can\'t; one found to need a browser partway through is listed under `browserOnly`, and the next run sends it to the browser (`thorough` runs it there now). `hold`, `release` and calls `as: system` don\'t run with `browser`. `tier` then runs only the most-used journeys of that selection, by their production use. When agents share a change, the merging agent runs the touched journeys once, after the last merge. Journeys marked `deprecated: true` are skipped. Returns `summary`, `failed` (each failing or flaky journey with its report: the failing step with expected and actual), `browserOnly` (journeys found to need a browser and not run in one), `passed` and `skipped` (one line per journey, carrying its tier, rank, rate and failures) and `resultFile`. When the answer cannot fit everything, `omitted` counts what was left out, and `resultFile` (.lowdefy/test/results.json) holds every journey of the run. Add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.',
+      'Run this app\'s tests (as `lowdefy test` does) against its dev server, starting it if needed. Choose the journeys for the pages your change touches (`lowdefy journeys scope` lists those pages) with `paths`, `tags` or `filter`: no arguments runs the full suite, every journey under tests/journeys/, sub-folders included, except folders starting with "_" (such as _candidates), so run it only when a person asks. `paths`, `tags` and `filter` combine. A journey with a `cases` table runs once per row, named "<name> [<row>]", and one whose `user` is a list of data set users once as each, "<name> [<user>]" (filter "[admin]" picks one). Each journey runs once, headless if it can, else in the browser; one found partway to need a browser is listed under `browserOnly` and goes to the browser next run (`thorough`: this run). `browser` can\'t run `hold`, `release` or calls `as: system`. `tier` then runs only the most-used journeys of that selection, by their production use. When agents share a change, the merging agent runs the touched journeys once, after the last merge. Journeys marked `deprecated: true` are skipped. Returns `summary`, `failed` (each failing or flaky journey with its report: the failing step with expected and actual), `browserOnly` (journeys left unrun that need a browser), `passed` and `skipped` (one line per journey, carrying its tier, rank, rate and failures) and `resultFile`. When the answer cannot fit everything, `omitted` counts what was left out, and `resultFile` (.lowdefy/test/results.json) holds every journey of the run. Add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -110,8 +110,7 @@ const lifecycleTools = [
         },
         headless: {
           type: 'boolean',
-          description:
-            'Only journeys that need no browser. One that needs a browser is listed as browserOnly with that step, or phase "open".',
+          description: 'Only journeys that need no browser; the rest are listed as browserOnly.',
         },
         browser: {
           type: 'boolean',
@@ -120,7 +119,7 @@ const lifecycleTools = [
         thorough: {
           type: 'boolean',
           description:
-            'Also run each journey found to need a browser partway through in the browser, from step 1. For CI.',
+            'Also run journeys found partway to need a browser in it, from step 1. For CI.',
         },
         concurrency: {
           type: 'integer',

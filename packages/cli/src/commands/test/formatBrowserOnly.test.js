@@ -45,3 +45,17 @@ test('says on open when opening the page needed a browser', () => {
     })
   ).toBe('BROWSER-ONLY  opens the task page  on open: Block "chain" is of type PluginChain, ...');
 });
+
+test('says a thorough run runs the journey in the browser next', () => {
+  expect(
+    formatBrowserOnly({
+      result: {
+        name: 'goes next',
+        browserOnly: { index: 1, step: { click: 'next' }, reason: 'needs a browser here' },
+      },
+      inBrowserNext: true,
+    })
+  ).toBe(
+    'BROWSER-ONLY  goes next  step 1 (click "next"): needs a browser here; running it in the browser'
+  );
+});
