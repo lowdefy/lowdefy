@@ -29,9 +29,13 @@ const SEPARATOR_FREE = /^[\d\s+-]*$/;
 // The decimal separator NumberInput hands antd's InputNumber: its own property, else the active
 // locale's (lowdefy.i18n's active, else its defaultLocale), else '.'. An app with no i18n (the
 // build writes it as {}) has no locale, so '.'; with i18n the active locale is the person's pick
-// or the browser's language, which a headless run does not know: null.
+// or the browser's language, which a headless run does not know: null. InputNumber swaps only a
+// decimalSeparator that is set, and the block hands it '' as it is, so '' leaves the point.
 function readDecimalSeparator({ actor, block }) {
   const property = block.eval.properties?.decimalSeparator;
+  if (property === '') {
+    return '.';
+  }
   if (!type.isNone(property)) {
     return property;
   }
@@ -90,11 +94,16 @@ function readShownText({ actor, block }) {
 // focus leaves it (changeOnBlur), InputNumber reads its text again as a finished number
 // (flushInputValue): text that is no number falls back to the value, a number outside min and max
 // is clamped into it, and a `precision` rounds it. Only when that changes the number does onChange
-// fire, which a headless run does not model; otherwise the flush changes nothing. `when` names the
-// moment for the reason.
+// fire, which a headless run does not model; otherwise the flush changes nothing. A `formatter`
+// re-writes the text each time the value changes, so the flush reads the formatted text, which
+// may hold another number (toFixed(2) shows 1.234 as 1.23). `when` names the moment for the
+// reason.
 function checkNumberInputFlush({ actor, block, when }) {
   if (!type.isNone(block.eval.properties?.parser)) {
     return `Block "${block.blockId}" (NumberInput) reads its text with its own parser ${when}, which a headless run does not model: the step runs in a browser.`;
+  }
+  if (!type.isNone(block.eval.properties?.formatter)) {
+    return `Block "${block.blockId}" (NumberInput) shows its value through its own formatter, and reads that text again ${when}, which a headless run does not model: the step runs in a browser.`;
   }
   let text = readShownText({ actor, block });
   let number = readNumber(text);
@@ -134,13 +143,21 @@ function checkNumberInputBlur({ actor, block }) {
 // of range, changes nothing, as in a browser. The value is a number, as InputNumber's onChange
 // gives it, never the text. The press that follows acts on this input either way, and Enter reads
 // the text kept here (state.typed, checkNumberInputEnter). A block with its
-// own `parser`, or text whose meaning hangs on a locale the run does not know, needs a browser.
-// The fill's own checks have passed (checkFillTarget).
+// own `parser`, text with a full-width stop '。' (which InputNumber reads as typed, then on the next
+// frame again with the stop swapped for '.', firing onChange twice), or text whose meaning hangs on
+// a locale the run does not know, needs a browser. The fill's own checks have passed
+// (checkFillTarget).
 async function fillNumberInput({ actor, block, step }) {
   const text = String(step.fill.value);
   if (!type.isNone(block.eval.properties?.parser)) {
     actor.browserOnly.push(
       `Block "${block.blockId}" (NumberInput) reads typed text with its own parser, which a headless run does not model: ${BROWSER}.`
+    );
+    return;
+  }
+  if (text.includes('。')) {
+    actor.browserOnly.push(
+      `Block "${block.blockId}" (NumberInput) reads "${text}" once as typed and again with its full-width stop swapped for a point, which a headless run does not model: ${BROWSER}.`
     );
     return;
   }

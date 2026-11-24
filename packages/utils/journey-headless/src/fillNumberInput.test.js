@@ -201,3 +201,54 @@ test('An onChange that sets the NumberInput again leaves Enter to read the value
   expect(result.passed).toBe(true);
   expect(readLog(log)).toEqual([['onPressEnter']]);
 });
+
+// A formatter re-writes the text as the value changes (the [value] effect), so Enter's flush
+// reads the formatted text, not the text typed: toFixed(2) shows 1.234 as "1.23", and Enter
+// fires onChange(1.23).
+test('Enter in a NumberInput with its own formatter runs in a browser', async () => {
+  const { log, result } = await fill({ properties: { formatter: 'x' }, values: ['1.234'] });
+  expect(result.browserOnly).toEqual({
+    index: 1,
+    reason:
+      'Block "amount" (NumberInput) shows its value through its own formatter, and reads that text again as Enter is pressed, which a headless run does not model: the step runs in a browser.',
+    step: { press: 'Enter' },
+  });
+  expect(readLog(log)).toEqual([['onChange', { value: 1.234 }]]);
+});
+
+test('Leaving a NumberInput with its own formatter runs in a browser', async () => {
+  const { result } = await runTestJourney({
+    pages: [blurPage({ formatter: 'x' })],
+    steps: [{ fill: { blockId: 'amount', value: '1.234' } }, { click: 'save' }],
+  });
+  expect(result.browserOnly.reason).toBe(
+    'Block "amount" (NumberInput) shows its value through its own formatter, and reads that text again as the focus leaves it, which a headless run does not model: the step runs in a browser.'
+  );
+});
+
+// InputNumber swaps the separator only for a decimalSeparator that is set, so '' swaps nothing.
+test('An empty decimalSeparator reads a point as the separator', async () => {
+  const { log, result } = await fill({
+    properties: { decimalSeparator: '' },
+    values: ['120', '1.5'],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([
+    ['onChange', { value: 120 }],
+    ['onChange', { value: 1.5 }],
+    ['onPressEnter'],
+  ]);
+});
+
+// InputNumber reads '1。5' as 15, then on the next frame swaps the full-width stop for a point
+// and reads 1.5 again: two onChange events.
+test('Text with a full-width stop runs in a browser', async () => {
+  const { log, result } = await fill({ values: ['1。5'] });
+  expect(result.browserOnly).toEqual({
+    index: 0,
+    reason:
+      'Block "amount" (NumberInput) reads "1。5" once as typed and again with its full-width stop swapped for a point, which a headless run does not model: the step runs in a browser.',
+    step: { fill: { blockId: 'amount', value: '1。5' } },
+  });
+  expect(log).toEqual([]);
+});
