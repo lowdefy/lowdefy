@@ -1,5 +1,13 @@
 # @lowdefy/connection-google
 
+## 7.4.0
+
+### Patch Changes
+
+- Updated dependencies [3c88693]
+- Updated dependencies [51fddb9]
+  - @lowdefy/ai-utils@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes

@@ -1,5 +1,29 @@
 # @lowdefy/shell
 
+## 7.4.0
+
+### Patch Changes
+
+- Updated dependencies [098fcfb]
+  - @lowdefy/node-utils@7.4.0
+  - @lowdefy/engine@7.4.0
+  - @lowdefy/actions-core@7.4.0
+  - @lowdefy/operators-change-case@7.4.0
+  - @lowdefy/operators-cron@7.4.0
+  - @lowdefy/operators-dayjs@7.4.0
+  - @lowdefy/operators-diff@7.4.0
+  - @lowdefy/operators-js@7.4.0
+  - @lowdefy/operators-jsonata@7.4.0
+  - @lowdefy/operators-mql@7.4.0
+  - @lowdefy/operators-nunjucks@7.4.0
+  - @lowdefy/operators-uuid@7.4.0
+  - @lowdefy/operators-yaml@7.4.0
+  - @lowdefy/client-core@7.4.0
+  - @lowdefy/client-native@7.4.0
+  - @lowdefy/blocks-native@7.4.0
+  - @lowdefy/errors@7.4.0
+  - @lowdefy/helpers@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes

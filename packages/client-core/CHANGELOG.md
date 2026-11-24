@@ -1,5 +1,14 @@
 # @lowdefy/client-core
 
+## 7.4.0
+
+### Patch Changes
+
+- @lowdefy/engine@7.4.0
+- @lowdefy/errors@7.4.0
+- @lowdefy/helpers@7.4.0
+- @lowdefy/logger@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes

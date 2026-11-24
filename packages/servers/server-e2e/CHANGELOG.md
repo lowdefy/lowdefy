@@ -1,5 +1,39 @@
 # @lowdefy/server-e2e
 
+## 7.4.0
+
+### Patch Changes
+
+- Updated dependencies [3069706]
+- Updated dependencies [bd56850]
+- Updated dependencies [098fcfb]
+- Updated dependencies [dfba080]
+  - @lowdefy/connection-axios-http@7.4.0
+  - @lowdefy/api@7.4.0
+  - @lowdefy/node-utils@7.4.0
+  - @lowdefy/connection-mongodb@7.4.0
+  - @lowdefy/actions-core@7.4.0
+  - @lowdefy/blocks-antd@7.4.0
+  - @lowdefy/operators-js@7.4.0
+  - @lowdefy/operators-nunjucks@7.4.0
+  - @lowdefy/operators-uuid@7.4.0
+  - @lowdefy/blocks-aggrid@7.4.0
+  - @lowdefy/blocks-antd-x@7.4.0
+  - @lowdefy/blocks-basic@7.4.0
+  - @lowdefy/blocks-echarts@7.4.0
+  - @lowdefy/blocks-loaders@7.4.0
+  - @lowdefy/blocks-markdown@7.4.0
+  - @lowdefy/blocks-table@7.4.0
+  - @lowdefy/blocks-tiptap@7.4.0
+  - @lowdefy/websockets-core@7.4.0
+  - @lowdefy/client@7.4.0
+  - @lowdefy/layout@7.4.0
+  - @lowdefy/blocks-captcha@7.4.0
+  - @lowdefy/block-utils@7.4.0
+  - @lowdefy/errors@7.4.0
+  - @lowdefy/helpers@7.4.0
+  - @lowdefy/logger@7.4.0
+
 ## 7.3.0
 
 ### Patch Changes

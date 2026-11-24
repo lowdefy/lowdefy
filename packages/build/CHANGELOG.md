@@ -1,5 +1,30 @@
 # Change Log
 
+## 7.4.0
+
+### Patch Changes
+
+- 7e9755b: feat(build): Warn when an agent on Vercel has no time limit
+
+  On Vercel, an agent chat turn is not covered by `config.requestTimeout` and keeps running after the browser goes away. An agent with no `timeout` of its own, on a connection with none, was stopped only when Vercel ended the function at `config.vercel.maxDuration`. The reply then stopped mid-stream with no error, and the agent's `onFinish` hooks, which save the conversation, never ran. A production app had test turns cut off this way. The build now warns for each such agent, and for an agent whose timeout is not shorter than `maxDuration`, when the app targets Vercel. With its own timeout, a turn that runs too long is cancelled, the user sees an error and the `onFinish` hooks still run. Timeouts set with an operator are not checked.
+
+- Updated dependencies [3c88693]
+- Updated dependencies [51fddb9]
+- Updated dependencies [098fcfb]
+  - @lowdefy/ai-utils@7.4.0
+  - @lowdefy/node-utils@7.4.0
+  - @lowdefy/operators-js@7.4.0
+  - @lowdefy/blocks-basic@7.4.0
+  - @lowdefy/blocks-loaders@7.4.0
+  - @lowdefy/codemods@7.4.0
+  - @lowdefy/operators@7.4.0
+  - @lowdefy/ajv@7.4.0
+  - @lowdefy/block-utils@7.4.0
+  - @lowdefy/errors@7.4.0
+  - @lowdefy/helpers@7.4.0
+  - @lowdefy/nunjucks@7.4.0
+  - @lowdefy/style-native@7.4.0
+
 ## 7.3.0
 
 ### Minor Changes
