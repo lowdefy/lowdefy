@@ -5,14 +5,25 @@ rules for tests (naming, co-location, ES module mocking) live in `CLAUDE.md`.
 
 ## Getting a worktree ready
 
+Create a worktree with the script, then (as a Claude Code agent) move the session into it with
+the `EnterWorktree` tool and the path the script prints:
+
 ```bash
-pnpm worktree fix/my-change --base origin/v7   # checkout + install + build, ~30s
+pnpm worktree fix/my-change                      # checkout + install + build, ~30s
+pnpm worktree fix/my-change --base origin/v7     # another base
 ```
 
-`scripts/worktree.mjs` creates `../lowdefy-wt-<branch-slug>`, installs from the shared pnpm
-store and builds every package. An existing local or remote branch is checked out instead
-of created. Everything expensive is shared between worktrees by default, so nothing needs
-setting up twice:
+`scripts/worktree.mjs` creates `.claude/worktrees/<branch-slug>` in the main checkout (where
+Claude Code keeps its own), installs from the shared pnpm store and builds every package. A
+new branch starts from `origin/<current branch>` unless `--base` is given; an existing local or
+remote branch is checked out instead of created.
+
+Don't call `EnterWorktree` without a `path`, and don't use a bare `git worktree add`: both
+skip the install and build, and `EnterWorktree` on its own branches from `main`, not
+`develop`.
+
+Everything expensive is shared between worktrees by default, so nothing needs setting up
+twice:
 
 | Shared resource       | Location                    |
 | --------------------- | --------------------------- |

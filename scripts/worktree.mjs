@@ -24,9 +24,9 @@
     pnpm worktree feat/existing-branch                   # check out an existing branch
     pnpm worktree fix/my-change --dir ../somewhere --skip-build
 
-  The worktree lands next to the main checkout as ../lowdefy-wt-<branch-slug> unless
-  --dir is given. Everything expensive is already shared between worktrees, so a new one
-  is ready in well under a minute:
+  The worktree lands in <main checkout>/.claude/worktrees/<branch-slug>, where Claude Code
+  keeps its own, unless --dir is given. Everything expensive is already shared between
+  worktrees, so a new one is ready in well under a minute:
     - pnpm packages come from the global content-addressed store (--prefer-offline),
     - MongoDB test binaries are cached in ~/.cache/mongodb-binaries,
     - Playwright browsers are cached in the user's ms-playwright cache.
@@ -89,7 +89,7 @@ const mainCheckout = path.dirname(
   path.resolve(cwd, git(['rev-parse', '--git-common-dir'], { cwd }))
 );
 const dir = path.resolve(
-  values.dir ?? path.join(path.dirname(mainCheckout), `lowdefy-wt-${branch.replace(/\//g, '-')}`)
+  values.dir ?? path.join(mainCheckout, '.claude', 'worktrees', branch.replace(/\//g, '-'))
 );
 
 if (existsSync(dir)) {
