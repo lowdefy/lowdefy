@@ -27,7 +27,7 @@ const INNER_CONTROLS =
   '[data-event], [data-popover], [data-copy], a, button, input, select, textarea';
 
 // The labels antd's en_US locale gives a Popconfirm's buttons, which a ClickableHtml confirm
-// shows. An app with i18n locales may show others.
+// shows. Another locale (the app's i18n, or a ConfigProvider's) may show others.
 const CONFIRM_BUTTON_TEXT = { ok: 'OK', cancel: 'Cancel' };
 
 function readRowKey(element) {
@@ -127,14 +127,13 @@ function toMatches({ block, elements, root, where }) {
 }
 
 // The buttons and message of the open confirm a `text` (its buttons) or `containing` (its
-// message too) target matches. Their text is antd's en_US labels and the event's message; an app
-// with i18n locales, or a confirm whose message is the client's translated default, shows text a
-// headless run does not know.
-function matchConfirm({ block, confirm, i18n, target }) {
+// message too) target matches. Their text is antd's en_US labels and the event's message; a
+// confirm in another locale (knowsLocale false), or whose message is the client's translated
+// default, shows text a headless run does not know.
+function matchConfirm({ block, confirm, knowsLocale, target }) {
   const buttons = Object.entries(CONFIRM_BUTTON_TEXT).map(([control, text]) => ({ control, text }));
-  const knowsButtons = (i18n?.locales ?? []).length === 0;
   if (type.isUndefined(target.containing)) {
-    if (!knowsButtons) {
+    if (!knowsLocale) {
       return { matches: [], uncertain: 'the open confirm labels its buttons in the app locale' };
     }
     const exact = exactTextPattern(String(target.text));
@@ -150,7 +149,7 @@ function matchConfirm({ block, confirm, i18n, target }) {
       uncertain: null,
     };
   }
-  if (!knowsButtons || type.isNone(confirm.message)) {
+  if (!knowsLocale || type.isNone(confirm.message)) {
     return { matches: [], uncertain: 'the open confirm shows text in the app locale' };
   }
   const needle = normalize(String(target.containing));
@@ -181,8 +180,18 @@ function matchConfirm({ block, confirm, i18n, target }) {
 // { kind: 'confirm', control }), description }, and why the html alone cannot tell the matches
 // (null when it can), and layered: whether the html or popover draws a menu or dialog role, a
 // layer a browser looks in first for a `text` target with no blockId. html is the block's html, popover the open popover's content html (null
-// when none is open) and confirm the open confirm ({ message }, or null).
-function listHtmlTextMatches({ block, confirm, html, i18n, overlays, parse, popover, target }) {
+// when none is open), confirm the open confirm ({ message }, or null) and knowsLocale whether antd
+// labels it in en_US (knowsAntdLocale).
+function listHtmlTextMatches({
+  block,
+  confirm,
+  html,
+  knowsLocale,
+  overlays,
+  parse,
+  popover,
+  target,
+}) {
   const parts = [{ where: 'html', html }];
   if (overlays && !type.isNone(popover)) {
     parts.push({ where: 'popover', html: popover });
@@ -195,7 +204,7 @@ function listHtmlTextMatches({ block, confirm, html, i18n, overlays, parse, popo
     return { matches: toMatches({ block, elements, root, where }), uncertain };
   });
   if (overlays && !type.isNone(confirm)) {
-    read.push(matchConfirm({ block, confirm, i18n, target }));
+    read.push(matchConfirm({ block, confirm, knowsLocale, target }));
   }
   return {
     matches: read.flatMap(({ matches }) => matches),

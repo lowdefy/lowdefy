@@ -18,8 +18,12 @@ import { type } from '@lowdefy/helpers';
 
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import checkHeadlessRails from './checkHeadlessRails.js';
+import collectBlockParents from './collectBlockParents.js';
+import findContentTrigger from './findContentTrigger.js';
+import hasEventActions from './hasEventActions.js';
 import HeadlessStepError from './HeadlessStepError.js';
 import leaveDropdowns from './leaveDropdowns.js';
+import listBlockAncestors from './listBlockAncestors.js';
 import pollUntil from './pollUntil.js';
 import readStandInState from './readStandInState.js';
 import readTextTarget from './readTextTarget.js';
@@ -49,6 +53,10 @@ function describeWhere(target) {
   return type.isUndefined(target.blockId) ? 'the page' : `block "${target.blockId}"`;
 }
 
+function capitalise(text) {
+  return `${text[0].toUpperCase()}${text.slice(1)}`;
+}
+
 function plural({ count, word }) {
   return `${count} ${word}${count === 1 ? '' : 's'}`;
 }
@@ -76,7 +84,7 @@ function describeShown(target) {
 }
 
 function describeOther({ read, target }) {
-  return `${describeBlock(read.other)} may show ${describeShown(
+  return `${capitalise(read.other)} may show ${describeShown(
     target
   )}, and a headless run reads text only in ClickableHtml blocks: ${BROWSER}.`;
 }
@@ -153,21 +161,58 @@ function pickMatch({ actor, read, target }) {
   return matches[target.nth];
 }
 
-// Reads the target until a ClickableHtml shows a match, or what it read says where else to look,
-// for at most `timeout` ms, as the browser waits for a first match to show. With no ClickableHtml
-// in the scope there is nothing to wait for, and the step goes to the browser at once.
+// Reads the target until a ClickableHtml shows a match (the nth, with nth), or what it read says
+// where else to look, for at most `timeout` ms, as the browser waits for a first match to show
+// and its click waits for the nth. With no ClickableHtml in the scope there is nothing to wait
+// for, and the step goes to the browser at once.
 async function waitForReading({ actor, parse, target, timeout }) {
+  const cache = new Map();
   const { value } = await pollUntil({
     check: (read) =>
       (read.scopeShown !== false && read.htmlBlocks === 0) ||
-      read.matches.length > 0 ||
+      read.matches.length > (target.nth ?? 0) ||
       read.other !== null ||
       read.layer !== null ||
       read.uncertain !== null,
-    read: () => readTextTarget({ actor, parse, target }),
+    read: () => readTextTarget({ actor, cache, parse, target }),
     timeout,
   });
   return value;
+}
+
+// Why a click on the match reaches a block a headless run does not fire it on, or undefined. A
+// DropdownMenu whose content holds the block hears the click on its trigger. A block around it
+// with onClick actions fires its onClick too (the engine's claimDomEvent) unless the click fires
+// a data-event with actions that does not bubble, in the block's own html: one in a popover or
+// confirm is drawn in a portal, off the DOM path the engine checks, while React still bubbles it.
+function readReachReason({ actor, description, match }) {
+  const { block } = match;
+  const trigger = findContentTrigger({ actor, block });
+  if (trigger !== null) {
+    return `${description} sits in the content of ${describeBlock(
+      trigger
+    )}, whose trigger hears the click: ${BROWSER}.`;
+  }
+  const { action } = match;
+  const claimed =
+    match.where === 'html' &&
+    action.kind === 'event' &&
+    !action.confirm &&
+    hasEventActions({ block, name: action.dataEvent.name }) &&
+    block.Events.events[action.dataEvent.name].bubble !== true;
+  if (claimed) {
+    return undefined;
+  }
+  const { parents } = collectBlockParents({ context: actor.page.context });
+  const around = listBlockAncestors({ block, parents }).find((ancestor) =>
+    hasEventActions({ block: ancestor, name: 'onClick' })
+  );
+  if (type.isUndefined(around)) {
+    return undefined;
+  }
+  return `A click on ${description} reaches ${describeBlock(
+    around
+  )} too, whose onClick a headless run does not fire for it: ${BROWSER}.`;
 }
 
 // A click by `text` or `containing` (LDF-1146): the element it lands on in a ClickableHtml
@@ -206,6 +251,11 @@ async function clickText({ actor, rails, step, stepTimeout }) {
       expected: `an enabled ${describeNamed(target).noun}`,
     });
   }
+  const reachReason = readReachReason({ actor, description, match });
+  if (!type.isUndefined(reachReason)) {
+    actor.browserOnly.push(reachReason);
+    return;
+  }
   const { block } = match;
   checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'click' });
   actor.page.pointerBlockId = block.blockId;
@@ -228,7 +278,8 @@ async function clickText({ actor, rails, step, stepTimeout }) {
 async function expectText({ actor, kind, target, timeout }) {
   const parse = await loadHtmlDom();
   const nth = target.nth ?? 0;
-  const read = () => readTextTarget({ actor, parse, target });
+  const cache = new Map();
+  const read = () => readTextTarget({ actor, cache, parse, target });
   const decided = (reading) => !type.isUndefined(readBrowserReason(reading));
   const { noun, named } = describeNamed(target);
   const description = `the ${noun} ${named}${

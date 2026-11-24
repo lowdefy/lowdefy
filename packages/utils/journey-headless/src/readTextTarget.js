@@ -16,66 +16,78 @@
 
 import { type } from '@lowdefy/helpers';
 
+import mayShowText from './blockText/mayShowText.js';
+import normalizeShownText from './blockText/normalizeShownText.js';
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import collectBlockParents from './collectBlockParents.js';
 import { collectRenderedBlocks } from './collectMountOrder.js';
 import isBlockShown from './isBlockShown.js';
+import listBlockAncestors from './listBlockAncestors.js';
+import mayBlockShowText from './mayBlockShowText.js';
+import POPUP_BLOCK_TYPES from './POPUP_BLOCK_TYPES.js';
 import readNodeText from './readNodeText.js';
 import readShownBlock from './readShownBlock.js';
 import readStandInState from './readStandInState.js';
 import describeBlock from './standIns/describeBlock.js';
 import isInsideBlock from './standIns/isInsideBlock.js';
+import knowsAntdLocale from './standIns/knowsAntdLocale.js';
 import { normalize } from './standIns/matchHtmlText.js';
 
-// The button labels antd's en_US locale gives a Modal's and a ConfirmModal's footer, which no
-// property holds.
-const POPUP_DEFAULT_TEXT = { ConfirmModal: ['OK', 'Cancel'], Modal: ['OK', 'Cancel'] };
 // Blocks antd draws as a menu ([role="menu"]), the first layer a browser looks in for a `text`
 // target with no blockId: a menu or a page layout that draws the app menu (Menu,
 // PageHeaderMenu, PageSidebarLayout) while shown, a dropdown while its stand-in holds it open.
 const DROPDOWN_MENU_TYPES = new Set(['DropdownButton', 'DropdownMenu']);
 const APP_MENU_TYPE = /Menu|Layout/;
 
-function collectStrings(value, strings = []) {
-  if (type.isString(value)) {
-    strings.push(value);
-  } else if (type.isArray(value)) {
-    value.forEach((item) => collectStrings(item, strings));
-  } else if (type.isObject(value)) {
-    Object.values(value).forEach((item) => collectStrings(item, strings));
-  }
-  return strings;
-}
-
-// The text a block other than a ClickableHtml may show, as far as the engine knows it: every
-// string in its evaluated properties (an html string read as the text it shows), the app menu a
-// menu or layout block draws when it has no links of its own, and the labels antd gives a popup's
-// buttons. A headless page draws no component, so this over-reads (a style or a url counts) and
-// stays on the safe side.
-function readBlockStrings({ block, lowdefy, parse }) {
-  const properties = block.eval?.properties ?? {};
-  const strings = collectStrings(properties);
-  if (APP_MENU_TYPE.test(block.type) && !type.isArray(properties.links)) {
-    collectStrings(lowdefy.menus ?? [], strings);
-  }
-  strings.push(...(POPUP_DEFAULT_TEXT[block.type] ?? []));
-  return strings.map((value) => (/[<&]/.test(value) ? readNodeText(parse(value)) : value));
-}
-
-// The first of `blocks` that may show the target's text, or null: one whose strings hold every
-// word of it, in any string and any order. A block may draw its strings side by side, across
-// elements a browser reads with breaks between them, or as markdown, so this over-reads on the
-// safe side, and text a `text` target names exactly counts as a part of the block's text too.
-function findShowingBlock({ blocks, lowdefy, parse, target }) {
-  const words = normalize(String(target.text ?? target.containing))
-    .split(' ')
-    .filter((word) => word !== '');
-  return (
-    blocks.find((block) => {
-      const text = readBlockStrings({ block, lowdefy, parse }).map(normalize).join(' ');
-      return words.every((word) => text.includes(word));
-    }) ?? null
+// The first of `blocks` that may show the target's text (mayBlockShowText), described, or null.
+function findShowingBlock({ actor, blocks, cache, parents, parse, target }) {
+  const { blockMetas } = actor.page.context._internal.lowdefy._internal;
+  const text = String(target.text ?? target.containing);
+  const block = blocks.find((candidate) =>
+    mayBlockShowText({
+      ancestors: listBlockAncestors({ block: candidate, parents }),
+      block: candidate,
+      blockMetas,
+      cache,
+      i18n: actor.i18n,
+      parse,
+      text,
+    })
   );
+  return type.isUndefined(block) ? null : describeBlock(block);
+}
+
+// A message the app displayed (displayMessage) that may show the target's text, described, or
+// null. antd draws it over the page for a time a headless run does not keep, so every message the
+// actor was shown counts.
+function findShowingMessage({ actor, parse, target }) {
+  const text = String(target.text ?? target.containing);
+  const showing = actor.messages.some(({ content }) => {
+    if (!type.isString(content)) {
+      return !type.isNone(content);
+    }
+    const shown = /[<&]/.test(content) ? readNodeText(parse(content)) : content;
+    return mayShowText({ contains: text, units: [normalizeShownText(shown)] });
+  });
+  return showing ? 'a message the app displayed' : null;
+}
+
+// Whether `block` is drawn inside the scope a blockId names, as the browser runner looks
+// (resolveMatchScope): the scope's wrapper and its own portal. A Modal or Drawer inside the scope,
+// and the blocks inside it, draw in that popup's portal, outside both.
+function isDrawnInScope({ block, parents, scope }) {
+  if (block === scope) {
+    return true;
+  }
+  if (!isInsideBlock({ block, container: scope, parents })) {
+    return false;
+  }
+  for (let current = block; current.id !== scope.id; current = parents.get(current.id)) {
+    if (POPUP_BLOCK_TYPES.has(current.type)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // A tooltip the block the pointer rests on may be showing: a browser's click hovers the element it
@@ -118,19 +130,21 @@ function isMenuLayer({ actor, block }) {
 // the front-most open layer first, a menu and then a Modal or Drawer, and on the page when that
 // layer holds none. Returns, synchronously so a check can poll it:
 // - matches: what the browser would choose from, in page order (listHtmlTextMatches');
-// - other: a block that may show the text too, which a headless run cannot read (findShowingBlock),
-//   or null;
+// - other: what else may show the text, which a headless run cannot read, described, or null: a
+//   block other than a ClickableHtml (findShowingBlock), or on the page a message the app
+//   displayed (findShowingMessage);
 // - uncertain: why the html alone cannot tell what matches, or null;
 // - layer: why the layer a browser looks in first cannot be known, or null;
 // - behind(match): whether the match sits behind the newest open popup's mask, which takes a
 //   browser's click;
 // - scopeShown: false when the blockId names no block the page shows;
 // - htmlBlocks: how many ClickableHtml blocks the scope shows.
-// parse is loadHtmlDom's.
-function readTextTarget({ actor, parse, target }) {
+// A blockId scope holds the blocks drawn inside it (isDrawnInScope); a Drawer in it whose
+// getContainer may draw it inside leaves the layer unknown. parse is loadHtmlDom's; cache holds
+// the html other blocks show, by string, across reads.
+function readTextTarget({ actor, cache, parse, target }) {
   const { page } = actor;
   const { context } = page;
-  const lowdefy = context._internal.lowdefy;
   const { blocks, parents } = collectBlockParents({ context });
   const rendered = new Set(
     collectRenderedBlocks({
@@ -153,16 +167,19 @@ function readTextTarget({ actor, parse, target }) {
   if (!pageWide && scope === null) {
     return { ...reading, scopeShown: false };
   }
-  const inScope = (block) =>
-    pageWide || block === scope || isInsideBlock({ block, container: scope, parents });
-  const scoped = shown.filter(inScope);
+  const scoped = pageWide
+    ? shown
+    : shown.filter((block) => isDrawnInScope({ block, parents, scope }));
   const others = scoped.filter((block) => block.type !== 'ClickableHtml');
   const listed = scoped
     .filter((block) => block.type === 'ClickableHtml')
     .map((block) =>
       BLOCK_STAND_INS.ClickableHtml.textMatches({
         block,
-        i18n: actor.i18n,
+        knowsLocale: knowsAntdLocale({
+          ancestors: listBlockAncestors({ block, parents }),
+          i18n: actor.i18n,
+        }),
         overlays: pageWide,
         parse,
         state: readStandInState({ actor, block }),
@@ -180,7 +197,28 @@ function readTextTarget({ actor, parse, target }) {
     !type.isUndefined(top) && (block === top || isInsideBlock({ block, container: top, parents }));
   const behind = (match) => !type.isUndefined(top) && !inTop(match.block);
   const read = { ...reading, scopeShown: true, uncertain, behind, htmlBlocks: listed.length };
-  const find = (candidates) => findShowingBlock({ blocks: candidates, lowdefy, parse, target });
+  const find = (candidates) =>
+    findShowingBlock({ actor, blocks: candidates, cache, parents, parse, target });
+  // What may show the text on the page, or in the scope, beside the ClickableHtml matches.
+  const findOther = () =>
+    find(others) ?? (pageWide ? findShowingMessage({ actor, parse, target }) : null);
+  const relocated = pageWide
+    ? undefined
+    : shown.find(
+        (block) =>
+          block !== scope &&
+          POPUP_BLOCK_TYPES.has(block.type) &&
+          !type.isNone(block.eval?.properties?.getContainer) &&
+          isInsideBlock({ block, container: scope, parents })
+      );
+  if (!type.isUndefined(relocated)) {
+    return {
+      ...read,
+      layer: `${describeBlock(relocated)} draws where its getContainer places it, which may be inside ${describeBlock(
+        scope
+      )}`,
+    };
+  }
   if (pageWide && !type.isUndefined(target.containing)) {
     const tooltip = findPointerTooltip({ actor, parse, target });
     if (tooltip !== null) {
@@ -193,7 +231,7 @@ function readTextTarget({ actor, parse, target }) {
     }
   }
   if (!pageWide || !type.isUndefined(target.containing)) {
-    return { ...read, matches: all, other: find(others) };
+    return { ...read, matches: all, other: findOther() };
   }
   if (listed.some((item) => item.layered)) {
     return {
@@ -212,11 +250,11 @@ function readTextTarget({ actor, parse, target }) {
   if (menu !== null) {
     return {
       ...read,
-      layer: `${describeBlock(menu)} may show the text in its menu, where a browser looks first`,
+      layer: `${menu} may show the text in its menu, where a browser looks first`,
     };
   }
   if (type.isUndefined(top)) {
-    return { ...read, matches: all, other: find(others) };
+    return { ...read, matches: all, other: findOther() };
   }
   const inside = all.filter((match) => inTop(match.block) && match.where === 'html');
   const insideOther = find(others.filter(inTop));
@@ -226,12 +264,12 @@ function readTextTarget({ actor, parse, target }) {
   if (insideOther !== null) {
     return {
       ...read,
-      layer: `${describeBlock(insideOther)} may show the text in ${describeBlock(
+      layer: `${insideOther} may show the text in ${describeBlock(
         top
       )}, where a browser looks first`,
     };
   }
-  return { ...read, matches: all, other: find(others) };
+  return { ...read, matches: all, other: findOther() };
 }
 
 export default readTextTarget;

@@ -427,13 +427,14 @@ async function clickMatch({ actor, block, match, state }) {
 
 // What a `text` or `containing` target matches in the block (listHtmlTextMatches), with its open
 // popover and confirm when `overlays` (a target with no blockId searches the page, where antd
-// draws them). parse is loadHtmlDom's; i18n the app's.
-function textMatches({ block, i18n, overlays, parse, state, target }) {
+// draws them). parse is loadHtmlDom's; knowsLocale whether antd labels the block's confirm in
+// en_US (knowsAntdLocale).
+function textMatches({ block, knowsLocale, overlays, parse, state, target }) {
   return listHtmlTextMatches({
     block,
     confirm: readConfirm({ block, state }) ?? null,
     html: readHtml(block),
-    i18n,
+    knowsLocale,
     overlays,
     parse,
     popover: readPopover({ block, state })?.html ?? null,

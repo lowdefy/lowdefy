@@ -25,13 +25,20 @@ function block(html) {
   return { blockId: 'rows', type: 'ClickableHtml', eval: { properties: { dataEvents, html } } };
 }
 
-async function list({ confirm = null, html, i18n, overlays = true, popover = null, target }) {
+async function list({
+  confirm = null,
+  html,
+  knowsLocale = true,
+  overlays = true,
+  popover = null,
+  target,
+}) {
   const parse = await loadHtmlDom();
   return listHtmlTextMatches({
     block: block(html),
     confirm,
     html,
-    i18n,
+    knowsLocale,
     overlays,
     parse,
     popover,
@@ -128,7 +135,7 @@ test("a text target names the open confirm's OK or Cancel by antd's en_US labels
   const localised = await list({
     confirm: { message: 'Sure?' },
     html: '',
-    i18n: { locales: [{ code: 'af' }] },
+    knowsLocale: false,
     target: { text: 'OK' },
   });
   expect(localised).toEqual({

@@ -115,13 +115,13 @@ test('text no ClickableHtml shows, or another block may show too, goes to the br
   const spread = await runTestJourney({
     pages: [
       rowsPage({
-        blocks: [{ id: 'note', type: 'Paragraph', properties: { content: '**Beta** and Corp' } }],
+        blocks: [{ id: 'note', type: 'Markdown', properties: { content: '**Beta** Corp' } }],
       }),
     ],
     steps: [{ click: { containing: 'Beta Corp' } }],
   });
   expect(spread.result.browserOnly.reason).toContain(
-    'Paragraph "note" may show text containing "Beta Corp"'
+    'Markdown "note" may show text containing "Beta Corp"'
   );
 });
 
@@ -215,4 +215,244 @@ test('a match behind an open Modal, a menu role in the html, or a closed details
     steps: [{ expect: { hidden: { blockId: 'rows', text: 'Edit' } } }],
   });
   expect(details.result.passed).toBe(true);
+});
+
+const ORDER_ROW = '<div data-event="onPick" data-name="order">Order 1042</div>';
+const paragraph1042 = { id: 'total', type: 'Paragraph', properties: { content: 1042 } };
+
+test('expect.hidden by text another block shows as a number goes to the browser', async () => {
+  const { result } = await runTestJourney({
+    pages: [rowsPage({ blocks: [paragraph1042] })],
+    steps: [{ expect: { hidden: { containing: '1042' } } }],
+  });
+  expect(result.browserOnly).toMatchObject({
+    index: 0,
+    reason:
+      'Paragraph "total" may show text containing "1042", and a headless run reads text only in ClickableHtml blocks: the step runs in a browser.',
+  });
+});
+
+test('a text click goes to the browser when a block shows the text as a number or a default label', async () => {
+  const number = await runTestJourney({
+    pages: [rowsPage({ html: ORDER_ROW, blocks: [paragraph1042] })],
+    steps: [{ click: { containing: '1042' } }],
+  });
+  expect(number.log).toEqual([]);
+  expect(number.result.browserOnly.reason).toContain('Paragraph "total" may show');
+  const label = await runTestJourney({
+    pages: [
+      rowsPage({
+        html: '<div data-event="onPick">Notes</div>',
+        blocks: [{ id: 'notes', type: 'TextInput' }],
+      }),
+    ],
+    steps: [{ click: { containing: 'Notes' } }],
+  });
+  expect(label.log).toEqual([]);
+  expect(label.result.browserOnly.reason).toContain('TextInput "notes" may show');
+});
+
+test('a text click goes to the browser when a message the app displayed may show the text', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      rowsPage({
+        html: ORDER_ROW,
+        blocks: [
+          {
+            id: 'save',
+            type: 'Button',
+            properties: { title: 'Save' },
+            events: {
+              onClick: [
+                {
+                  id: 'saved',
+                  type: 'Record',
+                  params: 'saved',
+                  messages: { success: 'Order 1042 saved' },
+                },
+              ],
+            },
+          },
+        ],
+      }),
+    ],
+    steps: [{ click: 'save' }, { click: { containing: '1042' } }],
+  });
+  expect(readLog(log)).toEqual([['saved']]);
+  expect(result.browserOnly.reason).toContain('may show text containing "1042"');
+});
+
+// A Box `panel` holds a ClickableHtml and a Modal holding another, which antd draws in its own
+// portal, outside the panel.
+function panelPage() {
+  return {
+    id: 'home',
+    blocks: [
+      methodButton({ id: 'open', blockId: 'dialog', method: 'setOpen', args: [{ open: true }] }),
+      {
+        id: 'panel',
+        type: 'Box',
+        blocks: [
+          { id: 'list', type: 'ClickableHtml', properties: { html: '<p>Beta Corp</p>' } },
+          {
+            id: 'dialog',
+            type: 'Modal',
+            properties: { footer: false },
+            blocks: [
+              { id: 'inner', type: 'ClickableHtml', properties: { html: '<p>Acme Ltd</p>' } },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+}
+
+test('a blockId scope leaves out a Modal inside it, which draws in its own portal', async () => {
+  const { result } = await runTestJourney({
+    pages: [panelPage()],
+    steps: [
+      { click: 'open' },
+      { expect: { visible: { blockId: 'dialog', containing: 'Acme' } } },
+      { expect: { hidden: { blockId: 'panel', containing: 'Acme' } } },
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.browserOnly).toBeUndefined();
+});
+
+test('a text click that a block around the ClickableHtml may also answer goes to the browser', async () => {
+  function boxPage({ html, events = { onClick: [record('box')] } }) {
+    return {
+      id: 'home',
+      blocks: [
+        {
+          id: 'card',
+          type: 'Box',
+          events,
+          blocks: [
+            {
+              id: 'rows',
+              type: 'ClickableHtml',
+              properties: { dataEvents: ['onEdit', 'onIdle'], html },
+              events: { onEdit: [record('onEdit')], onIdle: [] },
+            },
+          ],
+        },
+      ],
+    };
+  }
+  const html =
+    '<div>Jane Doe</div><button data-event="onEdit">Edit</button><button data-event="onIdle">Idle</button>';
+  const plain = await runTestJourney({
+    pages: [boxPage({ html })],
+    steps: [{ click: { containing: 'Jane Doe' } }],
+  });
+  expect(plain.result.browserOnly.reason).toBe(
+    'A click on a <div> showing "Jane Doe" in ClickableHtml "rows" reaches Box "card" too, whose onClick a headless run does not fire for it: the step runs in a browser.'
+  );
+  const idle = await runTestJourney({
+    pages: [boxPage({ html })],
+    steps: [{ click: { text: 'Idle' } }],
+  });
+  expect(idle.result.browserOnly.reason).toContain('reaches Box "card"');
+  const handled = await runTestJourney({
+    pages: [boxPage({ html })],
+    steps: [{ click: { text: 'Edit' } }],
+  });
+  expect(handled.result.browserOnly).toBeUndefined();
+  expect(readLog(handled.log)).toEqual([['onEdit', {}]]);
+});
+
+test('a text click in a DropdownMenu content, whose trigger hears it, goes to the browser', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          {
+            id: 'menu',
+            type: 'DropdownMenu',
+            slots: {
+              content: {
+                blocks: [
+                  {
+                    id: 'rows',
+                    type: 'ClickableHtml',
+                    properties: {
+                      dataEvents: ['onEdit'],
+                      html: '<button data-event="onEdit">Edit</button>',
+                    },
+                    events: { onEdit: [record('onEdit')] },
+                  },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    ],
+    steps: [{ click: { blockId: 'rows', text: 'Edit' } }],
+  });
+  expect(result.browserOnly.reason).toContain('DropdownMenu "menu"');
+});
+
+test('a click with nth waits for that match to show, as a browser waits', async () => {
+  const one = '<button data-event="onOpen" data-row="1">Open</button>';
+  // The second row shows after the page's settle has given up (at stepTimeout) and before the
+  // step's own wait ends.
+  const { log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        events: {
+          onInit: [{ id: 'init', type: 'SetState', params: { html: one } }],
+          onMountAsync: [
+            { id: 'load', type: 'Wait', params: 750 },
+            {
+              id: 'more',
+              type: 'SetState',
+              params: { html: `${one}<button data-event="onOpen" data-row="2">Open</button>` },
+            },
+          ],
+        },
+        blocks: [
+          {
+            id: 'rows',
+            type: 'ClickableHtml',
+            properties: { dataEvents: ['onOpen'], html: { _state: 'html' } },
+            events: { onOpen: [record('onOpen')] },
+          },
+        ],
+      },
+    ],
+    steps: [{ click: { blockId: 'rows', text: 'Open', nth: 1 } }],
+    stepTimeout: 500,
+  });
+  expect(result.failure).toBeUndefined();
+  expect(readLog(log)).toEqual([['onOpen', { row: '2' }]]);
+});
+
+test("the confirm's OK and Cancel go to the browser under a ConfigProvider with a locale", async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          {
+            id: 'provider',
+            type: 'ConfigProvider',
+            properties: { locale: 'de_DE' },
+            blocks: [rowsPage().blocks[0]],
+          },
+        ],
+      },
+    ],
+    steps: [{ click: { blockId: 'rows', text: 'Remove' } }, { click: { text: 'Cancel' } }],
+  });
+  expect(result.browserOnly).toMatchObject({
+    index: 1,
+    reason:
+      'In a ClickableHtml, the open confirm labels its buttons in the app locale: the step runs in a browser.',
+  });
 });
