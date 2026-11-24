@@ -159,11 +159,11 @@ function closePopover(state) {
 }
 
 // The popover content `trigger` opens in the html `root`: the data-popover-content element with
-// its id, as popoverEnhancer captures it, or null.
+// its id, the last when the html repeats the id, as popoverEnhancer keeps it, or null.
 function findPopoverContent({ root, trigger }) {
   const id = trigger.getAttribute('data-popover');
   return (
-    [...root.querySelectorAll('[data-popover-content]')].find(
+    [...root.querySelectorAll('[data-popover-content]')].findLast(
       (content) => content.getAttribute('data-popover-content') === id
     ) ?? null
   );

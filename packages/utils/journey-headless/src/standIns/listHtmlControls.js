@@ -24,7 +24,8 @@ const { dataEventKeyAttribute } = journeyTargetSelectors;
 
 // Where a person reaches the element: 'shown' in the block, 'popover' when it is shown in popover
 // content a data-popover trigger in the html opens (the browser runner opens it when no shown
-// element matches), else null.
+// element matches), else null. Of popover contents that share an id, popoverEnhancer keeps the
+// last, so only that one is reached.
 function findReach({ element, root }) {
   const content = element.closest('[data-popover-content]');
   if (content === null) {
@@ -34,6 +35,12 @@ function findReach({ element, root }) {
     return null;
   }
   const id = content.getAttribute('data-popover-content');
+  const kept = [...root.querySelectorAll('[data-popover-content]')].findLast(
+    (candidate) => candidate.getAttribute('data-popover-content') === id
+  );
+  if (kept !== content) {
+    return null;
+  }
   const opened = [...root.querySelectorAll('[data-popover]')].some(
     (trigger) =>
       trigger.getAttribute('data-popover') === id &&

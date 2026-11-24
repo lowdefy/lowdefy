@@ -347,3 +347,25 @@ test('ClickableHtml closes an open confirm when its html changes', async () => {
   expect(result.passed).toBe(true);
   expect(log).toEqual([]);
 });
+
+test('ClickableHtml opens the last popover content of an id the html repeats, as popoverEnhancer keeps it', async () => {
+  const html = [
+    '<span data-popover="more">More</span>',
+    '<div data-popover-content="more"><button data-event="onOpen">Alpha</button></div>',
+    '<div data-popover-content="more"><button data-event="onAdd">Beta</button></div>',
+  ].join('');
+  const { log, result } = await runTestJourney({
+    pages: [cardsPage({ html })],
+    steps: [
+      { expect: { hidden: { blockId: 'cards', control: 'onOpen' } } },
+      { click: { text: 'More' } },
+      { expect: { visible: { text: 'Beta' } } },
+      { expect: { hidden: { text: 'Alpha' } } },
+      { expect: { hidden: { blockId: 'cards', control: 'onOpen' } } },
+      { click: { blockId: 'cards', control: 'onAdd' } },
+    ],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.browserOnly).toBeUndefined();
+  expect(readLog(log)).toEqual([['onAdd', {}]]);
+});
