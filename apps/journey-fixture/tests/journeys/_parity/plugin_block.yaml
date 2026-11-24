@@ -1,0 +1,16 @@
+# Parity journey for a plugin block method its meta declares a headless no-op (LDF-1145), on the
+# plugin_block page. FixtureActionChain's meta declares `redraw: null` in headlessMethods: the
+# method changes only what the block draws, so a headless CallMethod redraw resolves with undefined
+# at once. It runs in the browser and headless
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs) and must end with the
+# same state `log`. In a folder starting with "_" so the suite's own runs, and harden, leave it out.
+- name: A CallMethod on a plugin block method declared a no-op resolves with nothing
+  pageId: plugin_block
+  steps:
+    - click: redraw_chain_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: mount_chain.redraw
+              payload: none

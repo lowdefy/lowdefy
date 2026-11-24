@@ -200,3 +200,116 @@ test('a press with no input filled before it is left to the step runner, which r
   ).rejects.toThrow('Press "Enter" needs an input filled before it.');
   expect(refusal).not.toHaveBeenCalled();
 });
+
+const OPEN_CHANGE_PAGE = {
+  id: 'home',
+  blocks: [
+    {
+      id: 'spaces',
+      type: 'MultipleSelector',
+      properties: { options: ['Audit', 'Sales'] },
+      events: { onChange: [record('onChange')], onOpenChange: [record('onOpenChange')] },
+    },
+    {
+      id: 'stage',
+      type: 'Selector',
+      properties: { options: ['Open', 'Won'] },
+      events: { onChange: [record('onChange')] },
+    },
+    { id: 'contacts', type: 'Table', properties: { data: [] } },
+    { id: 'form', type: 'Box', blocks: [{ id: 'form.name', type: 'TextInput' }] },
+  ],
+};
+
+test.each([
+  [{ select: { blockId: 'spaces', value: 'Audit' } }],
+  [{ fill: { blockId: 'spaces', value: 'Au' } }],
+])('A %j on a searching selector with onOpenChange actions runs in a browser', async (step) => {
+  const { log, result } = await runTestJourney({ pages: [OPEN_CHANGE_PAGE], steps: [step] });
+  expect(result.browserOnly).toEqual({
+    index: 0,
+    reason:
+      'Block "spaces" (MultipleSelector) has onOpenChange actions, which a browser fires as the step opens or closes its dropdown and a headless run does not model: the step runs in a browser.',
+    step,
+  });
+  expect(log).toEqual([]);
+});
+
+test('A select on a searching selector with no onOpenChange actions runs headless', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [OPEN_CHANGE_PAGE],
+    steps: [{ select: { blockId: 'stage', value: 'Won' } }],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['onChange', { value: 'Won' }]]);
+});
+
+test.each([
+  ['contacts', 'Table'],
+  ['form', 'Box'],
+])(
+  'A fill on %s, which is no input, runs in a browser, which types into the input it draws',
+  async (blockId, blockType) => {
+    const { result } = await runTestJourney({
+      pages: [OPEN_CHANGE_PAGE],
+      steps: [{ fill: { blockId, value: 'Kim' } }],
+    });
+    expect(result.browserOnly.reason).toBe(
+      `Block "${blockId}" (${blockType}) is no input: a browser's fill types into the first text input it draws, which a headless run does not model: the step runs in a browser.`
+    );
+  }
+);
+
+test('A searching selector whose onOpenChange has no actions runs headless', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          {
+            id: 'company',
+            type: 'Selector',
+            properties: { options: ['Acme', 'Globex'] },
+            events: { onChange: [record('onChange')], onOpenChange: [] },
+          },
+        ],
+      },
+    ],
+    steps: [
+      { fill: { blockId: 'company', value: 'Ac' } },
+      { select: { blockId: 'company', value: 'Acme' } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['onChange', { value: 'Acme' }]]);
+});
+
+test('A journey with no page yet reaches its step: no focus, dropdown or table is read', async () => {
+  const run = vi.fn(async () => ({ ok: true }));
+  const actor = { browserOnly: [], page: null, settle: async () => undefined, stepRunner: { run } };
+  await runHeadlessStep({
+    actors: { current: () => actor },
+    since: new Map(),
+    step: { wait: { state: 'board.view' } },
+    stepTimeout: 300,
+  });
+  expect(actor.browserOnly).toEqual([]);
+  expect(run).toHaveBeenCalledWith({ step: { wait: { state: 'board.view' } } });
+});
+
+test('A click on the NumberInput that has the focus does not blur it', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [{ id: 'qty', type: 'NumberInput', properties: { max: 10 } }],
+      },
+    ],
+    steps: [{ fill: { blockId: 'qty', value: '50' } }, { click: 'qty' }],
+  });
+  expect(result.browserOnly).toEqual({
+    index: 1,
+    reason: 'Block "qty" has no onClick: in a browser a click on it lands on a control inside it.',
+    step: { click: 'qty' },
+  });
+});

@@ -3248,7 +3248,7 @@
       "files": [
         "plugins/plugins-dev.yaml"
       ],
-      "hash": "a22880503fc106b243551daa6e48c4083208d849c34b8c47d9699a9c10f42c4c"
+      "hash": "69c9763c0403878cc9409342f37a17d2e56dcc425afb687cc290bafd77b6d24f"
     },
     "plugins/plugins-actions": {
       "files": [
@@ -3383,7 +3383,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "4c02499aedded2baf38b16e594b2430a581945bf93ea03cc091bb65329d27947"
+      "hash": "5bcb48fd80b51bbf39b5a19c13ff6d74545a9d3403ed284cd0c59c97d2dd91db"
     },
     "testing/journey-data-sets": {
       "files": [

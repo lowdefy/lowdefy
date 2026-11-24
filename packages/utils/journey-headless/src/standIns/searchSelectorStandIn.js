@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import HeadlessStepError from '../HeadlessStepError.js';
+import hasEventActions from '../hasEventActions.js';
 import fireEvent, { afterEvent } from './fireEvent.js';
 import leaveMethodsToBrowser from './leaveMethodsToBrowser.js';
 
@@ -25,8 +26,10 @@ import leaveMethodsToBrowser from './leaveMethodsToBrowser.js';
 // runner's fill types into the block's first input, which is the select's search box: the block
 // fires onSearch { value } and its value stays as it was. Typing opens the dropdown, which the
 // stand-in keeps as state.open with the search text as state.searchValue. Only onSearch is
-// modelled: onFocus, onBlur and onOpenChange fire in a browser and not headless, as on any other
-// select.
+// modelled: onFocus and onBlur fire in a browser and not headless, as on any other input.
+// onOpenChange is not modelled either, so a fill or select on a block that has actions for it
+// needs the browser (needsBrowser): a select clicks the dropdown open and a single select's pick
+// closes it, a fill's typing opens it, and an app can save as it closes.
 // - A select on the block picks the option (client-core's step runner), refused when the search
 //   hides it in the dropdown (refuseHiddenOption), and clears the search
 //   without an onSearch, as rc-select does; a single select closes its dropdown, a multiple one
@@ -52,6 +55,16 @@ const SEARCH_SELECTORS = {
   TreeMultipleSelector: { filtersOptions: false, multiple: true, searchOnLeave: true },
   TreeSelector: { filtersOptions: false, multiple: false, searchOnLeave: true },
 };
+
+// Why a fill or select on the block needs a browser, or undefined: it has actions for
+// onOpenChange, which a browser fires as the step opens or closes its dropdown, and a headless run
+// does not. Checked before the step acts (runHeadlessStep).
+function needsBrowser({ block }) {
+  if (!hasEventActions({ block, name: 'onOpenChange' })) {
+    return undefined;
+  }
+  return `Block "${block.blockId}" (${block.type}) has onOpenChange actions, which a browser fires as the step opens or closes its dropdown and a headless run does not model: the step runs in a browser.`;
+}
 
 // What the browser's fill refuses, checked before the focus moves (runHeadlessStep).
 function checkFill({ block }) {
@@ -181,6 +194,18 @@ function close({ actor, block, state }) {
   return isSearchDelayed(block) ? Promise.resolve() : afterEvent(searching);
 }
 
+// Escape in the search box closes the dropdown. A MultipleSelector keeps its search, with no
+// event, so a select after it still picks from the options the search leaves; the others clear it
+// as the focus leaving them does (close): a single select fires onSearch { value: '' } as its
+// dropdown closes, and a TreeMultipleSelector as it clears.
+function escape({ actor, block, state }) {
+  if (block.type === 'MultipleSelector') {
+    state.open = false;
+    return Promise.resolve();
+  }
+  return close({ actor, block, state });
+}
+
 // The blocks register methods in the browser (setData, from blocks-antd's useSetData), which no
 // stand-in models, so a CallMethod on one marks the journey browser-only, as on a block with no
 // stand-in.
@@ -188,4 +213,13 @@ function registerMethods({ actor, block }) {
   leaveMethodsToBrowser({ actor, block });
 }
 
-export default { blur: close, checkFill, fill, leave: close, registerMethods, select };
+export default {
+  blur: close,
+  checkFill,
+  escape,
+  fill,
+  leave: close,
+  needsBrowser,
+  registerMethods,
+  select,
+};

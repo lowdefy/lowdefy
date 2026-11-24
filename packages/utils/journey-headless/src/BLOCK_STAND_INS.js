@@ -49,6 +49,8 @@ import tableStandIn from './standIns/tableStandIn.js';
 //   search box, so a fill fires onSearch and leaves its value alone). checkFill refuses what the
 //   browser's fill refuses, before the focus moves. A block whose stand-in has a fill but no press
 //   leaves an Enter after that fill to the browser.
+// - needsBrowser(): why a fill or select on the block needs the browser, or undefined, checked
+//   before the step acts (a searching selector with onOpenChange actions, which it does not fire).
 // - leave({ targetBlock }): another click, open or select is about to act (on targetBlock), and
 //   the block's dropdown is open (state.open): close it as a click outside or the mouse leaving
 //   does.
@@ -56,6 +58,13 @@ import tableStandIn from './standIns/tableStandIn.js';
 //   selector closes its dropdown and clears its search; blurInputs).
 // - expect({ kind, target, timeout }): expect.visible or expect.hidden (kind) with a rowKey or a
 //   control.
+// - escape(): a press of Escape, when the block is the overlay that opened last (pressEscape): a
+//   Modal fires onCancel, a Drawer onClose, a dropdown closes, a searching selector closes its
+//   search, a ClickableHtml confirm drops its event. A block whose stand-in has none leaves the
+//   press to the browser.
+// - isOpen(): whether the block's dropdown or confirm is open, for a stand-in whose state.open
+//   something else can end (a ClickableHtml's new html closes its confirm). Without it, state.open
+//   says.
 // The step runner answers a step a block's stand-in has no part for in a browser, naming the block
 // and its type (runHeadlessStep). The match is by exact type: a block installed under a type
 // prefix, or any other block, has no stand-in.

@@ -42,24 +42,46 @@ const BLOCK_METAS = {
   AgGridBalham: { category: 'display' },
   AgGridLowdefy: { category: 'display' },
   AgGridMaterial: { category: 'display' },
+  Alert: { category: 'container' },
   antd_DropdownMenu: { category: 'container' },
   Box: { category: 'container' },
+  Card: { category: 'container' },
+  ConfigProvider: { category: 'container' },
+  DangerousHtml: { category: 'display' },
+  DangerousMarkdown: { category: 'display' },
+  Descriptions: { category: 'container' },
+  Divider: { category: 'display' },
   Button: { category: 'display' },
   ClickableHtml: { category: 'display' },
   ColorSelector: { category: 'input', valueType: 'string' },
   ConfirmModal: { category: 'container' },
+  DateSelector: { category: 'input', valueType: 'date' },
   Drawer: { category: 'container' },
   DropdownButton: { category: 'display' },
   DropdownMenu: { category: 'container' },
+  Html: { category: 'display' },
+  Icon: { category: 'display' },
+  Label: { category: 'container' },
+  Markdown: { category: 'display' },
+  MarkdownWithCode: { category: 'display' },
   Menu: { category: 'display' },
   Modal: { category: 'container' },
   MultipleSelector: { category: 'input', valueType: 'array' },
+  NumberInput: { category: 'input', valueType: 'number' },
   Paragraph: { category: 'display' },
   RadioSelector: { category: 'input', valueType: 'any' },
   // A block from an app's own plugin, which no headless stand-in models.
   PluginChain: { category: 'display' },
-  // A plugin block whose meta declares its run method fires onRun headless.
-  PluginRunChain: { category: 'display', headlessMethods: { run: 'onRun' } },
+  // A block from an app's own plugin whose meta declares the properties it draws as text.
+  PluginBanner: { category: 'display', headlessText: ['title', 'body.text'] },
+  // A container from an app's own plugin whose meta declares its text but not its areas.
+  PluginPanel: { category: 'container', headlessText: ['title'] },
+  Statistic: { category: 'display' },
+  Tag: { category: 'display' },
+  Title: { category: 'display' },
+  // A plugin block whose meta declares its run method fires onRun headless, and its merge method,
+  // which changes only what the block draws, a no-op.
+  PluginRunChain: { category: 'display', headlessMethods: { run: 'onRun', merge: null } },
   Selector: { category: 'input', valueType: 'string' },
   Table: { category: 'input-container', valueType: 'object' },
   TextInput: { category: 'input', valueType: 'string' },
@@ -131,11 +153,12 @@ function buildPage(pageConfig) {
 
 // Runs `steps` on the first of `pages`, with the root config's `menus`. Resolves
 // { result, log }: the journey's result and the Record log.
-async function runTestJourney({ dataSet, menus = [], pages, steps, stepTimeout = 300 }) {
+async function runTestJourney({ dataSet, i18n, menus = [], pages, steps, stepTimeout = 300 }) {
   const log = [];
   const built = Object.fromEntries(pages.map((page) => [page.id, buildPage(page)]));
   const rootConfig = {
     home: { pageId: pages[0].id },
+    ...(i18n === undefined ? {} : { i18n }),
     menus,
     pagePaths: Object.fromEntries(pages.map((page) => [page.id, page.id])),
   };

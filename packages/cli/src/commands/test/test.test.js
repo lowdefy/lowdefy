@@ -1366,7 +1366,7 @@ test('test --headless --build runs headless journeys on the build with no server
     'b.yaml',
     journeyYaml({
       name: 'reads the title',
-      steps: '  - click: submit\n  - expect: { text: { blockId: title, contains: Saved } }\n',
+      steps: '  - click: submit\n  - expect: { title: { contains: Saved } }\n',
     })
   );
   headlessContext();
@@ -1392,7 +1392,7 @@ test('test --headless --build runs headless journeys on the build with no server
   expect(mockHostClose).toHaveBeenCalledTimes(1);
   expect(logs.info).toEqual([
     expect.stringMatching(/^PASS {2}clicks submit {2}\(1 steps, \d+ms\)$/),
-    'BROWSER-ONLY  reads the title  step 1 (expect: { text }): expect "text" reads the page in a browser',
+    'BROWSER-ONLY  reads the title  step 1 (expect: { title }): expect "title" reads the page in a browser',
     '1 passed, 0 failed of 1 journeys, 1 browser-only not run',
   ]);
   expect(process.exitCode).toBeUndefined();

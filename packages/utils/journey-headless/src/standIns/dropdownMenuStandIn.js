@@ -183,12 +183,20 @@ function leave({ actor, block, state, targetBlock }) {
   });
 }
 
+// Escape closes the open dropdown (rc-dropdown's useAccessibility), firing onOpenChange
+// { open: false }, as a click outside does; a hover dropdown stays closed while the mouse stays on
+// its trigger.
+function escape({ actor, block, state }) {
+  closeDropdown({ actor, block, state, onClosed: onClosed({ block, state }) });
+}
+
 export default {
   answersBlockClick,
   click,
   clickBlock,
   clickContent,
   clickLandsOn,
+  escape,
   leave,
   open,
 };

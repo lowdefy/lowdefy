@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import destroysContentOnHidden from './destroysContentOnHidden.js';
 import fireEvent, { afterEvent } from './fireEvent.js';
 import unmountContent from './unmountContent.js';
@@ -63,6 +65,17 @@ function setDrawerOpen({ actor, block, open }) {
   actor.track(closeDrawer({ actor, block }));
 }
 
+// Escape on the open Drawer, when it is the overlay that opened last: rc-drawer calls the block's
+// close unless keyboard is set falsy (it defaults to true only when undefined), which fires
+// onClose and closes it unless onClose failed or bounced.
+async function escape({ actor, block }) {
+  const keyboard = block.eval.properties?.keyboard;
+  if (!type.isUndefined(keyboard) && !keyboard) {
+    return;
+  }
+  await closeDrawer({ actor, block });
+}
+
 function registerMethods({ actor, block }) {
   block.registerMethod('setOpen', ({ open } = {}) =>
     setDrawerOpen({ actor, block, open: Boolean(open) })
@@ -74,4 +87,4 @@ function registerMethods({ actor, block }) {
   });
 }
 
-export default { registerMethods };
+export default { escape, registerMethods };

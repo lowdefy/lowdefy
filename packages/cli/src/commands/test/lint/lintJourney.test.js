@@ -326,14 +326,14 @@ test('L8 reports a target that reads the page on a block it already names, with 
       severity: 'warning',
       stepIndex: 0,
       message:
-        'step 0 (click "assign_button") names block "assign_button" and reads the page for its text: target { blockId: assign_button } alone and the journey runs headless.',
+        'step 0 (click "assign_button") names block "assign_button" and reads the page for its text: target { blockId: assign_button } alone, which runs headless without reading the page.',
     },
     {
       rule: 'L8',
       severity: 'warning',
       stepIndex: 1,
       message:
-        'step 1 (expect: { visible }) names block "assigned_alert" and reads the page for its containing: target { blockId: assigned_alert } alone and the journey runs headless.',
+        'step 1 (expect: { visible }) names block "assigned_alert" and reads the page for its containing: target { blockId: assigned_alert } alone, which runs headless without reading the page.',
     },
   ]);
 });
@@ -342,11 +342,34 @@ test('L8 does not report a journey that a check of what the person sees keeps in
   const problems = lintJourney({
     journey: journey([
       { click: { blockId: 'assign_button', text: 'Assign' } },
-      { expect: { text: { blockId: 'assigned_alert', contains: 'Assigned' } } },
+      { expect: { title: { contains: 'Assigned' } } },
     ]),
     exercisedEntry: entry(),
   });
   expect(rules(problems, 'L8')).toEqual([]);
+});
+
+test('L8 reports a text target in a journey whose text check runs headless', () => {
+  const problems = lintJourney({
+    journey: journey([
+      { click: { blockId: 'assign_button', text: 'Assign' } },
+      { expect: { text: { blockId: 'assigned_alert', contains: 'Assigned' } } },
+    ]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(problems, 'L8').map(({ stepIndex }) => stepIndex)).toEqual([0]);
+});
+
+test('L8 still says a journey a grid row keeps in the browser runs headless with the control its run clicked', () => {
+  const steps = [
+    { click: { blockId: 'issue_cards', control: 'onOpenIssue', rowKey: 'issue-17' } },
+    { click: { blockId: 'grid', row: 0 } },
+  ];
+  const controls = [{ stepIndex: 1, blockId: 'grid', control: 'edit', rowKey: 'row-1' }];
+  const problems = lintJourney({ journey: journey(steps), exercisedEntry: entry({ controls }) });
+  expect(rules(problems, 'L8').map(({ message }) => message)).toEqual([
+    'step 1 (click "grid") names block "grid" and reads the page for its row: target { blockId: grid, control: edit, rowKey: row-1 }, the control its measured run clicked, and the journey runs headless.',
+  ]);
 });
 
 test('L8 does not report a page-wide text target, a grid target or a journey that runs headless', () => {
@@ -371,9 +394,9 @@ test('L8 suggests the control its measured run clicked for a click that reads th
   ];
   const problems = lintJourney({ journey: journey(steps), exercisedEntry: entry({ controls }) });
   expect(rules(problems, 'L8').map(({ message }) => message)).toEqual([
-    'step 0 (click "issue_cards") names block "issue_cards" and reads the page for its containing: target { blockId: issue_cards, control: onOpenIssue, rowKey: issue-17 }, the control its measured run clicked, and the journey runs headless.',
-    'step 2 (click "pairs") names block "pairs" and reads the page for its text and nth: target { blockId: pairs, control: onMerge, rowKey: pair-1 }, the control its measured run clicked, and the journey runs headless.',
-    'step 3 (click "OK") reads the page for its text: target { blockId: pairs, control: ok }, the control its measured run clicked, and the journey runs headless.',
+    'step 0 (click "issue_cards") names block "issue_cards" and reads the page for its containing: target { blockId: issue_cards, control: onOpenIssue, rowKey: issue-17 }, the control its measured run clicked, which runs headless without reading the page.',
+    'step 2 (click "pairs") names block "pairs" and reads the page for its text and nth: target { blockId: pairs, control: onMerge, rowKey: pair-1 }, the control its measured run clicked, which runs headless without reading the page.',
+    'step 3 (click "OK") reads the page for its text: target { blockId: pairs, control: ok }, the control its measured run clicked, which runs headless without reading the page.',
   ]);
 });
 
@@ -388,8 +411,8 @@ test('L8 falls back to the blockId alone where no control was recorded, and repo
   ];
   const problems = lintJourney({ journey: journey(steps), exercisedEntry: entry({ controls }) });
   expect(rules(problems, 'L8').map(({ message }) => message)).toEqual([
-    'step 0 (click "issue_cards") names block "issue_cards" and reads the page for its containing: target { blockId: issue_cards, control: onOpenIssue, rowKey: issue-17 }, the control its measured run clicked, and the journey runs headless.',
-    'step 1 (click "other_list") names block "other_list" and reads the page for its containing: target { blockId: other_list } alone and the journey runs headless.',
+    'step 0 (click "issue_cards") names block "issue_cards" and reads the page for its containing: target { blockId: issue_cards, control: onOpenIssue, rowKey: issue-17 }, the control its measured run clicked, which runs headless without reading the page.',
+    'step 1 (click "other_list") names block "other_list" and reads the page for its containing: target { blockId: other_list } alone, which runs headless without reading the page.',
   ]);
   const withRow = [
     { click: { blockId: 'issue_cards', containing: 'micromatch' } },
@@ -398,4 +421,15 @@ test('L8 falls back to the blockId alone where no control was recorded, and repo
   expect(
     rules(lintJourney({ journey: journey(withRow), exercisedEntry: entry({ controls }) }), 'L8')
   ).toEqual([]);
+});
+
+test('L8 never offers the blockId alone for expect.hidden by text, which would check the opposite', () => {
+  const problems = lintJourney({
+    journey: journey([
+      { click: { blockId: 'assign_button', text: 'Assign' } },
+      { expect: { hidden: { blockId: 'issue_cards', containing: 'micromatch' } } },
+    ]),
+    exercisedEntry: entry(),
+  });
+  expect(rules(problems, 'L8').map(({ stepIndex }) => stepIndex)).toEqual([0]);
 });

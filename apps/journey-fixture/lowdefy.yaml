@@ -138,7 +138,11 @@ pages:
   - _ref: pages/input_events.yaml
   - _ref: pages/skeleton_loading.yaml
   - _ref: pages/popup_targets.yaml
+  - _ref: pages/escape_targets.yaml
   - _ref: pages/grid_targets.yaml
+  - _ref: pages/headless_gaps.yaml
   - _ref: pages/caught_faults.yaml
   - _ref: pages/plugin_block.yaml
+  - _ref: pages/text_targets.yaml
+  - _ref: pages/text_checks.yaml
   - _ref: pages/live_feed.yaml

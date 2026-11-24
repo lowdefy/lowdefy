@@ -55,7 +55,9 @@ function needsInProcess(step) {
   }
   return undefined;
 }
-// Checks a headless run reads from the engine, the calls it recorded or the data session.
+// Checks a headless run reads from the engine, the calls it recorded or the data session. A text
+// check reads the text a block draws from its evaluated properties (LDF-1147); when the block may
+// draw text the run cannot read, the step runs in a browser.
 const HEADLESS_EXPECT_KEYS = [
   'calls',
   'db',
@@ -64,6 +66,7 @@ const HEADLESS_EXPECT_KEYS = [
   'state',
   'status',
   'sunk',
+  'text',
   'url',
   'visible',
 ];
@@ -71,16 +74,38 @@ const HEADLESS_EXPECT_KEYS = [
 // pick among matches. A column in a row named by rowKey is read from the grid's data, as rowKey
 // and control are, so it is a DOM key only without rowKey.
 const DOM_TARGET_KEYS = ['text', 'containing', 'row', 'column', 'nth'];
+// Target keys a headless run reads from a ClickableHtml's html on a click, expect.visible or
+// expect.hidden (LDF-1146): a `text` or `containing` target, with the `nth` that picks among its
+// matches. Whether a ClickableHtml shows it is known only when the step runs, which then leaves
+// the step to the browser when none does.
+const HTML_TEXT_KEYS = ['text', 'containing'];
 // Steps whose target is the step's value (a string or a target object).
 const TARGET_STEP_KEYS = ['click', 'fill', 'open', 'select'];
 const TARGET_EXPECT_KEYS = ['visible', 'hidden'];
+// The target keys beside blockId that narrow an expect.text to part of the block: a grid row or
+// cell, or the elements a text or containing names, which a headless text check does not read.
+const TEXT_PART_KEYS = ['text', 'containing', 'row', 'rowKey', 'column', 'nth'];
 
-function findDomTargetKey(target) {
+// Keys that narrow a target to a grid row or cell or a block's control, which a headless run
+// resolves through the block's stand-in and never by the text beside them.
+const BLOCK_PART_KEYS = ['row', 'rowKey', 'column', 'control'];
+
+// The first DOM key of a target, or undefined. With `readsHtmlText` (a click, expect.visible or
+// expect.hidden) a `text` or `containing` target that names no row, cell or control is no DOM
+// key, nor the `nth` beside it.
+function findDomTargetKey({ readsHtmlText, target }) {
   if (!type.isObject(target)) {
     return undefined;
   }
+  const htmlText =
+    readsHtmlText &&
+    HTML_TEXT_KEYS.some((key) => Object.hasOwn(target, key)) &&
+    !BLOCK_PART_KEYS.some((key) => Object.hasOwn(target, key));
   return DOM_TARGET_KEYS.find(
-    (key) => Object.hasOwn(target, key) && !(key === 'column' && Object.hasOwn(target, 'rowKey'))
+    (key) =>
+      Object.hasOwn(target, key) &&
+      !(key === 'column' && Object.hasOwn(target, 'rowKey')) &&
+      !(htmlText && [...HTML_TEXT_KEYS, 'nth'].includes(key))
   );
 }
 
@@ -119,8 +144,13 @@ function needsBrowser({ steps, index }) {
   if (!HEADLESS_STEP_KEYS.includes(key)) {
     return `step "${key}" needs a browser`;
   }
+  // Escape closes the overlay that opened last, which the headless runner works out when it runs
+  // (a step it cannot model then runs in a browser), wherever the focus is.
+  if (key === 'press' && step.press === 'Escape') {
+    return undefined;
+  }
   if (key === 'press' && step.press !== 'Enter') {
-    return `press "${step.press}" needs a browser; a headless run presses only Enter`;
+    return `press "${step.press}" needs a browser; a headless run presses only Enter and Escape`;
   }
   // A browser presses Enter on whatever has the focus; a headless run presses it on the input
   // filled last, which has the focus only when the fill is the step before it.
@@ -129,7 +159,7 @@ function needsBrowser({ steps, index }) {
   }
   if (TARGET_STEP_KEYS.includes(key)) {
     const target = step[key];
-    const domKey = findDomTargetKey(target);
+    const domKey = findDomTargetKey({ readsHtmlText: key === 'click', target });
     if (!type.isUndefined(domKey)) {
       return domTargetReason(domKey);
     }
@@ -148,8 +178,15 @@ function needsBrowser({ steps, index }) {
   if (!HEADLESS_EXPECT_KEYS.includes(expectKey)) {
     return `expect "${expectKey}" reads the page in a browser`;
   }
+  if (expectKey === 'text') {
+    const partKey = TEXT_PART_KEYS.find((key) => Object.hasOwn(step.expect.text, key));
+    if (!type.isUndefined(partKey)) {
+      return `expect "text" with ${partKey} reads the page in a browser; a headless run reads a block's text by blockId alone`;
+    }
+    return undefined;
+  }
   if (TARGET_EXPECT_KEYS.includes(expectKey)) {
-    const domKey = findDomTargetKey(step.expect[expectKey]);
+    const domKey = findDomTargetKey({ readsHtmlText: true, target: step.expect[expectKey] });
     if (!type.isUndefined(domKey)) {
       return domTargetReason(domKey);
     }

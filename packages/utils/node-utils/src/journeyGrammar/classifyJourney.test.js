@@ -63,12 +63,21 @@ test.each([
   ['screenshot', { screenshot: 'home' }, 'step "screenshot" needs a browser'],
   ['email', { email: { to: 'a@example.com' } }, 'step "email" needs a browser'],
   [
-    'press other than Enter',
-    { press: 'Escape' },
-    'press "Escape" needs a browser; a headless run presses only Enter',
+    'press other than Enter or Escape',
+    { press: 'Tab' },
+    'press "Tab" needs a browser; a headless run presses only Enter and Escape',
   ],
 ])('classifyJourney names a %s step as needing the browser', (_, step, reason) => {
   expect(classify([{ click: 'a' }, step])).toEqual({ headless: false, index: 1, step, reason });
+});
+
+test.each([
+  ['a click', [{ click: 'open_modal_button' }]],
+  ['a fill', [{ fill: { blockId: 'name_input', value: 'Ada' } }]],
+  ['a select', [{ select: { blockId: 'kind', value: 'Item' } }]],
+  ['no step', []],
+])('classifyJourney runs press Escape after %s headless', (_, before) => {
+  expect(classify([...before, { press: 'Escape' }])).toEqual({ headless: true });
 });
 
 test.each([
@@ -94,7 +103,21 @@ const DOM_TARGET_REASONS = {
 };
 
 test.each(Object.keys(DOM_TARGET_REASONS))(
-  'classifyJourney names a target by %s as needing the browser',
+  'classifyJourney names a fill target by %s as needing the browser',
+  (key) => {
+    const value = ['row', 'nth'].includes(key) ? 0 : 'x';
+    const step = { fill: { blockId: 'grid', [key]: value, value: 'a' } };
+    expect(classify([step])).toEqual({
+      headless: false,
+      index: 0,
+      step,
+      reason: DOM_TARGET_REASONS[key],
+    });
+  }
+);
+
+test.each(['row', 'column', 'nth'])(
+  'classifyJourney names a click target by %s as needing the browser',
   (key) => {
     const value = ['row', 'nth'].includes(key) ? 0 : 'x';
     const step = { click: { blockId: 'grid', [key]: value } };
@@ -106,6 +129,31 @@ test.each(Object.keys(DOM_TARGET_REASONS))(
     });
   }
 );
+
+test('classifyJourney leaves a click, visible or hidden by text or containing to the run, which reads ClickableHtml', () => {
+  const steps = [
+    { click: { text: 'Archive' } },
+    { click: { blockId: 'issue_cards', containing: 'lodash' } },
+    { click: { containing: 'Refresh', nth: 1 } },
+    { expect: { visible: { text: 'Archive' } } },
+    { expect: { hidden: { blockId: 'issue_cards', containing: 'lodash', nth: 0 } } },
+  ];
+  expect(classify(steps)).toEqual({ headless: true });
+});
+
+test('classifyJourney still names a text target with a row, a rowKey or a column as needing the browser', () => {
+  expect(classify([{ click: { blockId: 'grid', row: 0, text: 'Edit' } }]).reason).toBe(
+    DOM_TARGET_REASONS.text
+  );
+  expect(classify([{ click: { blockId: 'grid', rowKey: 'r1', text: 'Edit' } }]).reason).toBe(
+    DOM_TARGET_REASONS.text
+  );
+  expect(
+    classify([
+      { expect: { visible: { blockId: 'grid', rowKey: 'r1', column: 'a', containing: 'x' } } },
+    ]).reason
+  ).toBe(DOM_TARGET_REASONS.containing);
+});
 
 test('classifyJourney calls hold and release headless and marks the first as needing the runner in process', () => {
   const steps = [
@@ -147,19 +195,12 @@ test('classifyJourney calls a call as system and a webhook headless, and marks t
 
 test('classifyJourney keeps inProcess on a journey that also needs the browser', () => {
   expect(
-    classify([{ hold: { requestId: 'claim_run' } }, { click: { text: 'Save' } }])
+    classify([{ hold: { requestId: 'claim_run' } }, { fill: { text: 'Name', value: 'Ada' } }])
   ).toMatchObject({
     headless: false,
     index: 1,
     inProcess: { index: 0, step: { hold: { requestId: 'claim_run' } } },
   });
-});
-
-test('classifyJourney names a visible check by text as needing the browser', () => {
-  const step = { expect: { visible: { text: 'Saved' } } };
-  expect(classify([step]).reason).toBe(
-    'a target by text reads the page; name the control with control on its block'
-  );
 });
 
 test('classifyJourney calls rowKey, control and open targets headless', () => {
@@ -192,23 +233,39 @@ test('classifyJourney names a column without rowKey as needing the browser, also
   );
 });
 
-test.each(['text', 'title', 'effect'])(
-  'classifyJourney names expect %s as needing the browser',
+test('classifyJourney leaves expect text on a block to the run, which reads its text models', () => {
+  expect(classify([{ click: 'a' }, { expect: { text: { blockId: 'a', contains: 'x' } } }])).toEqual(
+    { headless: true }
+  );
+});
+
+test.each(['text', 'containing', 'row', 'rowKey', 'column', 'nth'])(
+  'classifyJourney names expect text with %s as needing the browser',
   (key) => {
-    const values = {
-      text: { blockId: 'a', contains: 'x' },
-      title: { equals: 'x' },
-      effect: true,
-    };
-    const step = { expect: { [key]: values[key] } };
-    expect(classify([{ click: 'a' }, step])).toEqual({
+    const values = { text: 'Edit', containing: 'Ed', row: 0, rowKey: 'r1', column: 'name', nth: 1 };
+    const step = { expect: { text: { blockId: 'grid', contains: 'x', [key]: values[key] } } };
+    expect(classify([step])).toEqual({
       headless: false,
-      index: 1,
+      index: 0,
       step,
-      reason: `expect "${key}" reads the page in a browser`,
+      reason: `expect "text" with ${key} reads the page in a browser; a headless run reads a block's text by blockId alone`,
     });
   }
 );
+
+test.each(['title', 'effect'])('classifyJourney names expect %s as needing the browser', (key) => {
+  const values = {
+    title: { equals: 'x' },
+    effect: true,
+  };
+  const step = { expect: { [key]: values[key] } };
+  expect(classify([{ click: 'a' }, step])).toEqual({
+    headless: false,
+    index: 1,
+    step,
+    reason: `expect "${key}" reads the page in a browser`,
+  });
+});
 
 test('classifyJourney names a fill from an email and a double click as needing the browser', () => {
   expect(
@@ -222,10 +279,6 @@ test('classifyJourney names a fill from an email and a double click as needing t
 
 test('classifyJourney names the first step that needs the browser', () => {
   expect(
-    classify([
-      { click: 'a' },
-      { expect: { text: { blockId: 'a', contains: 'x' } } },
-      { screenshot: true },
-    ]).index
+    classify([{ click: 'a' }, { expect: { title: { equals: 'x' } } }, { screenshot: true }]).index
   ).toBe(1);
 });

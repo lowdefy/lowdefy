@@ -17,12 +17,14 @@
 import { getStepKey } from '@lowdefy/node-utils';
 import { get, type } from '@lowdefy/helpers';
 
+import expectBlockText from './blockText/expectBlockText.js';
 import collectBlockParents from './collectBlockParents.js';
 import expectAnswerError from './expectAnswerError.js';
 import expectAnswerStatus from './expectAnswerStatus.js';
 import expectCalls from './expectCalls.js';
 import expectDb from './expectDb.js';
 import expectSunk from './expectSunk.js';
+import findComponentValue from './findComponentValue.js';
 import HeadlessStepError from './HeadlessStepError.js';
 import isBlockShown from './isBlockShown.js';
 import isDeepEqual from './isDeepEqual.js';
@@ -45,8 +47,15 @@ function readShown({ actor, blockId }) {
   return isBlockShown({ block, page: actor.page, parents });
 }
 
+// A path into a value the block's component writes in a browser (a Table's view) needs the
+// browser (findComponentValue).
 async function expectState({ actor, params, timeout }) {
   const { equals, path } = params;
+  const componentValue = findComponentValue({ actor, path });
+  if (!type.isUndefined(componentValue)) {
+    actor.browserOnly.push(componentValue);
+    return;
+  }
   const { held, value } = await pollUntil({
     check: (read) => isDeepEqual(read, equals),
     read: () => toJsonValue(get(actor.page.context.state, path)),
@@ -110,7 +119,8 @@ function checkAnswered(answer) {
   );
 }
 
-// One expect step, with the browser runner's messages: on the current actor's page, on the answer
+// One expect step, with the browser runner's messages: on the current actor's page (text reads the
+// text a block's text models say it draws, expectBlockText), on the answer
 // of the call or request step before it (`answer`, for status and error), on the data's
 // database, or on the requests the data session recorded instead of sending (sunk). After an interaction, expect.error is judged with the app errors
 // (createAppErrorWindows), so the step itself does nothing.
@@ -128,6 +138,8 @@ async function runHeadlessExpect({ actor, answer, host, step, timeout }) {
       return expectCalls({ actor, params });
     case 'url':
       return expectUrl({ actor, params, timeout });
+    case 'text':
+      return expectBlockText({ actor, params, timeout });
     case 'error':
       checkAnswered(answer);
       if (!type.isUndefined(answer)) {

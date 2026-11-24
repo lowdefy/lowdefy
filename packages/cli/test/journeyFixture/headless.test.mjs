@@ -31,7 +31,9 @@ const repositoryRoot = path.resolve(fileURLToPath(new URL('../../../..', import.
 const configDirectory = path.join(repositoryRoot, 'apps', 'journey-fixture');
 const serverDirectory = path.join(repositoryRoot, '_server', 'test-utils-journey-fixture');
 const CLI = fileURLToPath(new URL('../../dist/index.js', import.meta.url));
-const browserJourney = path.join(configDirectory, 'tests', 'journeys', 'save.yaml');
+// A title check needs a browser; save.yaml's text check runs headless (LDF-1147).
+const browserJourney = path.join(configDirectory, 'tests', 'journeys', '_browser', 'title.yaml');
+const textJourney = path.join(configDirectory, 'tests', 'journeys', 'save.yaml');
 const headlessJourney = path.join(configDirectory, 'tests', 'journeys', '_headless', 'save.yaml');
 
 function runCli(args) {
@@ -62,6 +64,7 @@ function runHeadless({ server = serverDirectory } = {}) {
     '--server-directory',
     server,
     browserJourney,
+    textJourney,
     headlessJourney,
   ]);
 }
@@ -86,15 +89,16 @@ beforeAll(async () => {
   );
 });
 
-test('--headless --build runs the headless journey and lists the browser journey as browser-only', async () => {
+test('--headless --build runs the headless journeys and lists the browser journey as browser-only', async () => {
   const { code, output } = await runHeadless();
   expect(output).toMatch(
     /PASS {2}saves an item headless and sees it in state {2}\(5 steps, \d+ms\)/
   );
+  expect(output).toMatch(/PASS {2}saves an item and sees the message {2}\(4 steps, \d+ms\)/);
   expect(output).toContain(
-    'BROWSER-ONLY  saves an item and sees the message  step 3 (expect: { text }): expect "text" reads the page in a browser'
+    'BROWSER-ONLY  reads the page title  step 0 (expect: { title }): expect "title" reads the page in a browser'
   );
-  expect(output).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(output).toContain('2 passed, 0 failed of 2 journeys, 1 browser-only not run');
   expect(code).toBe(0);
   const written = JSON.parse(
     fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json'), 'utf8')
@@ -106,13 +110,14 @@ test('--headless --build runs the headless journey and lists the browser journey
       'tests/journeys/_headless/save.yaml#saves an item headless and sees it in state': {
         passed: true,
       },
-      'tests/journeys/save.yaml#saves an item and sees the message': {
+      'tests/journeys/_browser/title.yaml#reads the page title': {
         browserOnly: {
-          index: 3,
-          step: { expect: { text: { blockId: 'save_success', contains: 'Item saved' } } },
-          reason: 'expect "text" reads the page in a browser',
+          index: 0,
+          step: { expect: { title: { contains: 'home' } } },
+          reason: 'expect "title" reads the page in a browser',
         },
       },
+      'tests/journeys/save.yaml#saves an item and sees the message': { passed: true },
     },
   });
 });
@@ -243,15 +248,17 @@ devServerTest(
       '--url',
       fixtureUrl,
       browserJourney,
+      textJourney,
       headlessJourney,
     ]);
     expect(output).toMatch(
       /PASS {2}saves an item headless and sees it in state {2}\(5 steps, \d+ms\)/
     );
+    expect(output).toMatch(/PASS {2}saves an item and sees the message {2}\(4 steps, \d+ms\)/);
     expect(output).toContain(
-      'BROWSER-ONLY  saves an item and sees the message  step 3 (expect: { text }): expect "text" reads the page in a browser'
+      'BROWSER-ONLY  reads the page title  step 0 (expect: { title }): expect "title" reads the page in a browser'
     );
-    expect(output).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+    expect(output).toContain('2 passed, 0 failed of 2 journeys, 1 browser-only not run');
     expect(code).toBe(0);
     const written = JSON.parse(
       fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json'), 'utf8')

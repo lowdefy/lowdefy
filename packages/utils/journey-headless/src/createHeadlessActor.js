@@ -22,6 +22,7 @@ import collectBlockParents from './collectBlockParents.js';
 import createActorClient from './createActorClient.js';
 import createLocation from './createLocation.js';
 import fireMountEvents from './fireMountEvents.js';
+import movePopupFocus from './movePopupFocus.js';
 import readOptionLabelText from './readOptionLabelText.js';
 import registerBlockStandIns from './registerBlockStandIns.js';
 import reportParseErrors from './reportParseErrors.js';
@@ -54,6 +55,12 @@ function readQuery(query) {
 //   a loading block's skeleton held back mounts once it stops loading. Popup blocks (Modal, Drawer,
 //   ConfirmModal) start closed; the methods their stand-ins register open them, fire their open
 //   and close events and mount their content through setOpen (registerBlockStandIns).
+// - page.inputFocused and page.pointerBlockId say whether an input has the focus and which block
+//   the pointer rests on, for a press of Escape (runHeadlessStep's noteFocus). A popup opening or
+//   closing moves the focus too (movePopupFocus): page.focusReturns keeps, by popup id, the input
+//   the focus left as the popup opened, which it hands the focus back to as it closes.
+// - page.openedBlocks holds the popups opened on the shown page at any time: antd keeps their
+//   content in the page, hidden, once they close (unless destroyOnHidden), which a text check reads.
 // - page.standIns holds what each block's stand-in keeps for the shown page, by block id
 //   (readStandInState): a dropdown's open state and selected keys, a confirm dialog's status.
 //   track(promise) holds an event a stand-in fired until settle, and sends its error to the
@@ -62,7 +69,9 @@ function readQuery(query) {
 //   page started.
 // `calls`, `messages` and `navigations` record what the actor's pages did; leftApp is the URL of a
 // link out of the app; browserOnly lists why a step needs the browser after all (an action only a
-// browser can carry out, a click a browser would land inside a block).
+// browser can carry out, a click a browser would land inside a block); landedControl is the
+// control a click by text or containing landed on ({ blockId, control, rowKey }), which the
+// journey's step result carries for lint L8, cleared before each step.
 function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }) {
   const rootConfig = serializer.deserialize(host.rootConfig);
   const pending = new Set();
@@ -70,6 +79,9 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     browserOnly: [],
     calls: [],
     history: [],
+    // The app's i18n config, which the web client hands lowdefy.i18n and antd's locale reads.
+    i18n: rootConfig.i18n ?? null,
+    landedControl: undefined,
     leftApp: null,
     messages: [],
     name,
@@ -146,7 +158,8 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
 
   // Opens or closes a popup block (POPUP_BLOCK_TYPES) as antd's `open` prop does: its content
   // shows, and mounts, only while it is open. Fires none of the block's events, which its stand-in
-  // fires in the component's order (BLOCK_STAND_INS). Returns whether the open state changed.
+  // fires in the component's order (BLOCK_STAND_INS), and moves the focus as the component does
+  // (movePopupFocus). Returns whether the open state changed.
   function setOpen({ block, open }) {
     const { openBlocks, context } = actor.page;
     if (openBlocks.has(block.id) === open) {
@@ -154,10 +167,12 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     }
     if (open) {
       openBlocks.add(block.id);
+      actor.page.openedBlocks.add(block.id);
       track(checkMounts(actor.page));
     } else {
       openBlocks.delete(block.id);
     }
+    movePopupFocus({ actor, block, open });
     context._internal.update();
     return true;
   }
@@ -195,8 +210,12 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       mounted: new Map(),
       mountFinished: new Set(),
       onUpdate: () => scheduleMountCheck(shown),
+      focusReturns: new Map(),
+      inputFocused: false,
       openBlocks: new Set(),
+      openedBlocks: new Set(),
       pageId: page.pageId,
+      pointerBlockId: null,
       reportedParseErrors: new Set(),
       standIns: new Map(),
       urlQuery: urlQuery ?? {},

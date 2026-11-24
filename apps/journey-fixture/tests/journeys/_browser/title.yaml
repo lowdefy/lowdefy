@@ -1,0 +1,8 @@
+# A journey only a browser can run: the document title is set as the page renders, which a
+# headless run does not do. The cli fixture tests (packages/cli/test/journeyFixture/
+# headless.test.mjs) pass it to `lowdefy test --headless`, which lists it as browser-only and runs
+# none of its steps. In a folder starting with "_" so the suite's own runs leave it out.
+- name: reads the page title
+  pageId: home
+  steps:
+    - expect: { title: { contains: home } }

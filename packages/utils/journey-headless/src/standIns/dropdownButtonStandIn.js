@@ -82,4 +82,10 @@ function leave({ actor, block, state, targetBlock }) {
   leaveDropdown({ actor, block, state, targetBlock, trigger: readTrigger(block) });
 }
 
-export default { answersBlockClick, click, clickBlock, leave, open };
+// Escape closes the open dropdown (rc-dropdown's useAccessibility), firing onOpenChange
+// { open: false }, as a click outside does.
+function escape({ actor, block, state }) {
+  closeDropdown({ actor, block, state });
+}
+
+export default { answersBlockClick, click, clickBlock, escape, leave, open };

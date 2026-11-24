@@ -3,7 +3,9 @@
 # onRun, so the cli fixture tests (packages/cli/test/journeyFixture/headless.test.mjs) see
 # `lowdefy test --headless --build` pass the mount journey (tests/journeys/_headless/
 # plugin_block.yaml). The stop button calls `stop`, which the meta leaves undeclared, so that
-# journey is browser-only at its click.
+# journey is browser-only at its click. The redraw button calls `redraw`, which the meta declares
+# null (it changes only what the block draws), then logs that the call resolved: its parity
+# journey (tests/journeys/_parity/plugin_block.yaml) passes in the browser and headless.
 id: plugin_block
 type: Box
 events:
@@ -43,3 +45,23 @@ blocks:
           params:
             blockId: mount_chain
             method: stop
+  - id: redraw_chain_button
+    type: Button
+    properties:
+      title: Redraw chain
+    events:
+      onClick:
+        - id: redraw_chain
+          type: CallMethod
+          params:
+            blockId: mount_chain
+            method: redraw
+        - id: log_redrawn
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: mount_chain.redraw
+                    payload:
+                      _if_none: [{ _actions: redraw_chain.response }, none]

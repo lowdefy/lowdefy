@@ -113,13 +113,14 @@ fixtureTest(
     const browserOnly = Object.keys(journeys).filter(
       (key) => journeys[key].browserOnly !== undefined
     );
-    // Both journey files ran in the browser; the headless run took one and left the other.
+    // Both journey files ran in the browser, and headless: save.yaml's text check reads the
+    // Alert's text model (LDF-1147).
     expect(Object.keys(browserResults).sort()).toEqual([
       'saves an item and sees the message',
       'saves an item headless and sees it in state',
     ]);
-    expect(compared).toHaveLength(1);
-    expect(browserOnly).toEqual(['tests/journeys/save.yaml#saves an item and sees the message']);
+    expect(compared).toHaveLength(2);
+    expect(browserOnly).toEqual([]);
     compared.forEach(([key, result]) => {
       const name = key.slice(key.indexOf('#') + 1);
       expect({ name, passed: result.passed }).toEqual({ name, passed: browserResults[name] });

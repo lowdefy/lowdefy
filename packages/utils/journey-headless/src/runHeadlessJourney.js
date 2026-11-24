@@ -204,6 +204,9 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       since = new Map(actors.all().map((actor) => [actor, actor.calls.length]));
     }
     let stepFailure;
+    actors.all().forEach((each) => {
+      each.landedControl = undefined;
+    });
     try {
       checkStepReferences({ actor: actors.current(), host, journeyPageId: pageId, step });
       const stepAnswer = await races.run({
@@ -234,7 +237,13 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
         step,
       });
     }
-    results.push({ index, step, status: stepFailure ? 'failed' : 'ok', durationMs });
+    results.push({
+      index,
+      step,
+      status: stepFailure ? 'failed' : 'ok',
+      durationMs,
+      ...(type.isNone(actor.landedControl) ? {} : { control: actor.landedControl }),
+    });
     const findings = await windows.take({ pageId: actor.page?.pageId ?? null });
     if (isExpectErrorStep(step) && type.isUndefined(stepFailure)) {
       failure = claimExpectedErrors({ step, index, held, findings });

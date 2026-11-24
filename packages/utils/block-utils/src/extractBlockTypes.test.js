@@ -47,6 +47,15 @@ test('extractBlockTypes keeps the methods a block declares for headless journeys
   });
 });
 
+test('extractBlockTypes keeps the property paths a block declares as its headless text', () => {
+  const types = extractBlockTypes({
+    Banner: { category: 'display', headlessText: ['title', 'content'], properties: {} },
+  });
+  expect(types.blockMetas).toEqual({
+    Banner: { category: 'display', headlessText: ['title', 'content'] },
+  });
+});
+
 test('extractBlockTypes lists the property paths a native meta marks nativeIgnored', () => {
   const types = extractBlockTypes({
     Card: {

@@ -16,8 +16,8 @@
 
 import checkHeadlessRails from './checkHeadlessRails.js';
 import collectBlockParents from './collectBlockParents.js';
+import findShortcutBlocks from './findShortcutBlocks.js';
 import POPUP_BLOCK_TYPES from './POPUP_BLOCK_TYPES.js';
-import pressFiresShortcut from './pressFiresShortcut.js';
 
 // The blocks a press of `key` in block `focused` can fire events on, as the browser runner's
 // checkPressRails reads them from the page: the focused block and each block around it, innermost
@@ -36,19 +36,7 @@ function findPressedBlocks({ actor, focused, key }) {
     }
     current = parents.get(current.id);
   }
-  const fired = Object.entries(context._internal.RootSlots.map)
-    .filter(([, block]) => block.visibleEval?.output !== false)
-    .filter(([, block]) =>
-      Object.values(block.Events?.events ?? {}).some((event) => {
-        if (!event?.shortcut) return false;
-        const bound = Array.isArray(event.shortcut) ? event.shortcut : [event.shortcut];
-        // A headless press holds no modifier, so `$mod` never matches; any platform's will do.
-        return bound.some((shortcut) =>
-          pressFiresShortcut({ key, shortcut: String(shortcut), modifier: 'Control' })
-        );
-      })
-    )
-    .map(([blockId]) => blockId);
+  const fired = findShortcutBlocks({ actor, key });
   return [...new Set([...around, ...fired])];
 }
 

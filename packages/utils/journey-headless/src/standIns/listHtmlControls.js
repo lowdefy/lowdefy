@@ -18,27 +18,14 @@ import findDataEventRule from '@lowdefy/block-utils/findDataEventRule.js';
 import getDataEvent from '@lowdefy/block-utils/getDataEvent.js';
 import { journeyTargetSelectors, type } from '@lowdefy/helpers';
 
-const { dataEventKeyAttribute } = journeyTargetSelectors;
+import isHiddenBelow from './isHiddenBelow.js';
 
-// Whether the html hides the element between it and `stop` (exclusive): the hidden attribute or
-// an inline display: none or visibility: hidden, as a reader without layout tells it
-// (e2e-utils' resolveTargetInDocument reads the same).
-function isHiddenBelow({ element, stop }) {
-  for (
-    let current = element;
-    current !== null && current !== stop;
-    current = current.parentElement
-  ) {
-    if (current.hidden) return true;
-    const { style } = current;
-    if (style && (style.display === 'none' || style.visibility === 'hidden')) return true;
-  }
-  return false;
-}
+const { dataEventKeyAttribute } = journeyTargetSelectors;
 
 // Where a person reaches the element: 'shown' in the block, 'popover' when it is shown in popover
 // content a data-popover trigger in the html opens (the browser runner opens it when no shown
-// element matches), else null.
+// element matches), else null. Of popover contents that share an id, popoverEnhancer keeps the
+// last, so only that one is reached.
 function findReach({ element, root }) {
   const content = element.closest('[data-popover-content]');
   if (content === null) {
@@ -48,6 +35,12 @@ function findReach({ element, root }) {
     return null;
   }
   const id = content.getAttribute('data-popover-content');
+  const kept = [...root.querySelectorAll('[data-popover-content]')].findLast(
+    (candidate) => candidate.getAttribute('data-popover-content') === id
+  );
+  if (kept !== content) {
+    return null;
+  }
   const opened = [...root.querySelectorAll('[data-popover]')].some(
     (trigger) =>
       trigger.getAttribute('data-popover') === id &&

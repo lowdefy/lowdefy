@@ -1,0 +1,102 @@
+# Parity journeys for the steps a headless run reached once text checks ran headless (LDF-1149),
+# on the headless_gaps page. Each runs in the browser and headless
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs): one that runs headless
+# must end with the same state `log`, and one a headless run leaves to the browser must name why.
+# In a folder starting with "_" so the suite's own runs, and harden, leave it out.
+- name: a fill types a number into a NumberInput, which Enter keeps
+  pageId: headless_gaps
+  steps:
+    - fill: { blockId: amount, value: '120000' }
+    - press: Enter
+    - expect: { state: { path: amount, equals: 120000 } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: amount.onChange
+              payload:
+                value: 120000
+            - event: amount.onPressEnter
+- name: a NumberInput fill drops grouping, and text that is no number leaves the value
+  pageId: headless_gaps
+  steps:
+    - fill: { blockId: amount, value: '$ 1 234.5' }
+    - fill: { blockId: amount, value: abc }
+    - press: Enter
+    - expect: { state: { path: amount, equals: 1234.5 } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: amount.onChange
+              payload:
+                value: 1234.5
+            - event: amount.onPressEnter
+- name: Enter after a number past a NumberInput's max runs in a browser, which clamps it
+  pageId: headless_gaps
+  steps:
+    - fill: { blockId: amount, value: '2000000' }
+    - press: Enter
+    - expect: { state: { path: amount, equals: 1000000 } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: amount.onChange
+              payload:
+                value: 1000000
+            - event: amount.onPressEnter
+- name: leaving a NumberInput past its max runs in a browser, which clamps it
+  pageId: headless_gaps
+  steps:
+    - fill: { blockId: amount, value: '2000000' }
+    - click: headless_gaps_title
+    - expect: { state: { path: amount, equals: 1000000 } }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: amount.onChange
+              payload:
+                value: 1000000
+- name: a select on a MultipleSelector with onOpenChange actions runs in a browser
+  pageId: headless_gaps
+  steps:
+    - select: { blockId: spaces_picker, value: Audit }
+    - press: Escape
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: spaces_picker.onOpenChange
+              payload:
+                open: true
+            - event: spaces_picker.onChange
+              payload:
+                value:
+                  - Audit
+            - event: spaces_picker.onOpenChange
+              payload:
+                open: false
+- name: a click away from a Selector that opened itself runs in a browser
+  pageId: headless_gaps
+  steps:
+    - click: edit_stage
+    - expect: { visible: stage_picker }
+    - click: headless_gaps_title
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: stage_picker.onOpenChange
+              payload:
+                open: false
+- name: a fill on a Table runs in a browser, which types into its search box
+  pageId: headless_gaps
+  steps:
+    - fill: { blockId: contacts_grid, value: Kim }
+    - expect: { visible: contacts_grid }
+- name: a check on a Table's value runs in a browser, which writes it
+  pageId: headless_gaps
+  steps:
+    - expect: { state: { path: board_grid.view.collapsedGroups, equals: ['["queued"]'] } }

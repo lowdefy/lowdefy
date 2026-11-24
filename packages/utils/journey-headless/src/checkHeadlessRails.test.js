@@ -256,6 +256,90 @@ test('a data-set journey pressing Enter in an input in a plain box passes', asyn
   expect(result.passed).toBe(true);
 });
 
+// Escape is checked on the overlay it closes, whose portal holds the focus in a browser, and on
+// the input with the focus and the blocks around it.
+test('a data-set journey pressing Escape on a modal whose onCancel reaches an undeclared connection is refused', async () => {
+  const step = { press: 'Escape' };
+  const { log, result } = await runTestJourney({
+    dataSet: DATA_SET,
+    pages: [PRESS_PAGE],
+    steps: [{ click: 'open_dialog' }, step],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual(
+    refusedFailure({
+      blockId: 'dialog',
+      index: 1,
+      step,
+      act: 'press a key that fires its events',
+      noun: 'a press',
+    })
+  );
+  expect(log).toEqual([]);
+});
+
+test('a data-set journey pressing Escape on a dropdown in a modal whose onCancel reaches an undeclared connection is refused', async () => {
+  const step = { press: 'Escape' };
+  const page = {
+    ...PRESS_PAGE,
+    blocks: PRESS_PAGE.blocks.map((block) =>
+      block.id === 'dialog'
+        ? {
+            ...block,
+            blocks: [
+              ...block.blocks,
+              {
+                id: 'dialog_actions',
+                type: 'DropdownButton',
+                properties: { items: [{ title: 'Archive', eventName: 'onArchive' }] },
+              },
+            ],
+          }
+        : block
+    ),
+  };
+  const { result } = await runTestJourney({
+    dataSet: DATA_SET,
+    pages: [page],
+    steps: [{ click: 'open_dialog' }, { click: 'dialog_actions' }, step],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure).toEqual(
+    refusedFailure({
+      blockId: 'dialog',
+      index: 2,
+      step,
+      act: 'press a key that fires its events',
+      noun: 'a press',
+    })
+  );
+});
+
+test('a data-set journey pressing Escape on an open dropdown that reaches no undeclared connection closes it', async () => {
+  const { log, result } = await runTestJourney({
+    dataSet: DATA_SET,
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          {
+            id: 'export',
+            type: 'DropdownButton',
+            properties: { items: [{ title: 'CSV', eventName: 'onCsv' }] },
+            events: { onOpenChange: [record('exportOpenChange')] },
+          },
+        ],
+      },
+    ],
+    steps: [{ open: 'export' }, { press: 'Escape' }],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(readLog(log)).toEqual([
+    ['exportOpenChange', { open: true }],
+    ['exportOpenChange', { open: false }],
+  ]);
+});
+
 test('a data-set journey pressing Enter is refused when a shown block binds Enter to an event that reaches an undeclared connection', async () => {
   const step = { press: 'Enter' };
   const page = {

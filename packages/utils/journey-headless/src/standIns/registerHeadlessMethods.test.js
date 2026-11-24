@@ -17,6 +17,7 @@
 import { expect, test } from 'vitest';
 
 import runTestJourney, { methodButton, readLog, record } from '../tests/runTestJourney.js';
+import REDRAWN_BLOCKS from './REDRAWN_BLOCKS.js';
 import registerHeadlessMethods from './registerHeadlessMethods.js';
 
 test("an onMount CallMethod on a plugin block runs the event its meta declares, before the mount's next action", async () => {
@@ -162,15 +163,85 @@ test('a declared method inside a closed Modal stays browser-only until the Modal
   expect(closed.log).toEqual([]);
 });
 
-test('a declaration that names no event fails, naming the block type and the method', () => {
+test('a method declared null is a no-op: CallMethod resolves with undefined and the chain goes on', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          { id: 'chain', type: 'PluginRunChain', events: { onRun: [record('onRun')] } },
+          {
+            id: 'go',
+            type: 'Button',
+            events: {
+              onClick: [
+                { id: 'merge', type: 'CallMethod', params: { blockId: 'chain', method: 'merge' } },
+                record('after'),
+              ],
+            },
+          },
+        ],
+      },
+    ],
+    steps: [{ click: 'go' }],
+  });
+  expect(result.browserOnly).toBeUndefined();
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(readLog(log)).toEqual([['after']]);
+});
+
+test('a method declared null registers a method that returns undefined and fires no event', () => {
+  const methods = {};
+  const triggered = [];
+  const block = {
+    type: 'PluginChain',
+    registerMethod: (method, fn) => {
+      methods[method] = fn;
+    },
+    triggerEvent: (event) => triggered.push(event),
+  };
+  registerHeadlessMethods({ block, headlessMethods: { run: 'onRun', merge: null } });
+  expect(Object.keys(methods)).toEqual(['run', 'merge']);
+  expect(REDRAWN_BLOCKS.has(block)).toBe(false);
+  expect(methods.merge({ rows: [1] })).toBeUndefined();
+  expect(REDRAWN_BLOCKS.get(block)).toBe('merge');
+  expect(triggered).toEqual([]);
+  methods.run({ from: 'step' });
+  expect(triggered).toEqual([{ name: 'onRun', event: { from: 'step' } }]);
+});
+
+test('a method declared null on a hidden block stays browser-only, as a declared event does', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [
+          { id: 'chain', type: 'PluginRunChain', visible: false },
+          methodButton({ id: 'go', blockId: 'chain', method: 'merge' }),
+        ],
+      },
+    ],
+    steps: [{ click: 'go' }],
+  });
+  expect(result.passed).toBeUndefined();
+  expect(result.browserOnly).toEqual({
+    index: 0,
+    step: { click: 'go' },
+    reason:
+      'Block "chain" is of type PluginRunChain, which has no headless stand-in for CallMethod merge: the step runs in a browser.',
+  });
+});
+
+test('a declaration that is neither an event name nor null fails, naming the block type and the method', () => {
   const block = { type: 'PluginChain', registerMethod: () => undefined };
   expect(() =>
     registerHeadlessMethods({ block, headlessMethods: { run: { fires: 'onRun' } } })
   ).toThrow(
-    'Block type PluginChain declares headlessMethods.run as {"fires":"onRun"}: it should be the name of the block event the method fires.'
+    'Block type PluginChain declares headlessMethods.run as {"fires":"onRun"}: it should be the name of the block event the method fires, or null for a method that changes only what the block draws.'
   );
   expect(() => registerHeadlessMethods({ block, headlessMethods: ['run'] })).toThrow(
-    'Block type PluginChain declares headlessMethods as ["run"]: it should be an object of { [method]: the name of the event it fires }.'
+    'Block type PluginChain declares headlessMethods as ["run"]: it should be an object of { [method]: the name of the event it fires, or null }.'
   );
 });
 

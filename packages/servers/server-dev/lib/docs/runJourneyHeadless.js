@@ -242,6 +242,7 @@ async function runJourneyHeadless({
         observed: observations.snapshot(),
         readConfigFile,
         requestSchemas: await readConfigFile('plugins/requestSchemas.json'),
+        steps: ran.steps,
       }),
       calls: (ran.calls ?? []).map(toCallRecord),
       headless: true,

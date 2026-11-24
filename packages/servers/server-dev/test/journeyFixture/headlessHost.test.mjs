@@ -93,17 +93,14 @@ fixtureTest(
     const result = await postJourney({
       ...SAVE,
       headless: true,
-      steps: [
-        ...SAVE.steps,
-        { expect: { text: { blockId: 'save_success', contains: 'Item saved' } } },
-      ],
+      steps: [...SAVE.steps, { expect: { title: { contains: 'home' } } }],
     });
     expect(result).toEqual({
       pageId: 'home',
       browserOnly: {
         index: 4,
-        step: { expect: { text: { blockId: 'save_success', contains: 'Item saved' } } },
-        reason: 'expect "text" reads the page in a browser',
+        step: { expect: { title: { contains: 'home' } } },
+        reason: 'expect "title" reads the page in a browser',
       },
       steps: [],
     });
