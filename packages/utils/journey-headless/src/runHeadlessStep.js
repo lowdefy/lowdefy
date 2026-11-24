@@ -76,9 +76,9 @@ function opensOnHover({ actor, target }) {
 }
 
 // The NumberInput a step moves the focus off, or null: the one filled last, while it has the focus
-// (page.inputFocused), when the step clicks, opens a dropdown by clicking it, or fills or selects
-// another block. Its blur flushes its text (checkNumberInputBlur). A journey with no page (calls
-// alone) has no focus.
+// (page.inputFocused), when the step clicks another block, opens a dropdown by clicking it, or
+// fills or selects another block. Its blur flushes its text (checkNumberInputBlur). A journey with
+// no page (calls alone) has no focus.
 function readBlurredNumberInput({ actor, key, step }) {
   if (actor.page?.inputFocused !== true) {
     return null;
@@ -90,7 +90,11 @@ function readBlurredNumberInput({ actor, key, step }) {
   if (INPUT_FOCUS_KEYS.includes(key)) {
     return step[key].blockId === block.blockId ? null : block;
   }
-  if (key === 'click' || (key === 'open' && !opensOnHover({ actor, target: step.open }))) {
+  if (key === 'click') {
+    const clicked = type.isString(step.click) ? step.click : step.click.blockId;
+    return clicked === block.blockId ? null : block;
+  }
+  if (key === 'open' && !opensOnHover({ actor, target: step.open })) {
     return block;
   }
   return null;
@@ -99,7 +103,8 @@ function readBlurredNumberInput({ actor, key, step }) {
 // Where the focus and the pointer are, for a press of Escape (pressEscape): a fill or select puts
 // the focus in the input it acts on; a click or open moves the pointer to its block
 // (page.pointerBlockId), and moves the focus off every input unless it only hovers. A goto, back
-// or `as` shows another page, whose focus starts on no input.
+// or `as` shows another page, whose focus starts on no input. A popup opening or closing moves
+// the focus too (movePopupFocus).
 function noteFocus({ actor, key, step }) {
   if (INPUT_FOCUS_KEYS.includes(key)) {
     actor.page.inputFocused = true;

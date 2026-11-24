@@ -296,3 +296,20 @@ test('A journey with no page yet reaches its step: no focus, dropdown or table i
   expect(actor.browserOnly).toEqual([]);
   expect(run).toHaveBeenCalledWith({ step: { wait: { state: 'board.view' } } });
 });
+
+test('A click on the NumberInput that has the focus does not blur it', async () => {
+  const { result } = await runTestJourney({
+    pages: [
+      {
+        id: 'home',
+        blocks: [{ id: 'qty', type: 'NumberInput', properties: { max: 10 } }],
+      },
+    ],
+    steps: [{ fill: { blockId: 'qty', value: '50' } }, { click: 'qty' }],
+  });
+  expect(result.browserOnly).toEqual({
+    index: 1,
+    reason: 'Block "qty" has no onClick: in a browser a click on it lands on a control inside it.',
+    step: { click: 'qty' },
+  });
+});
