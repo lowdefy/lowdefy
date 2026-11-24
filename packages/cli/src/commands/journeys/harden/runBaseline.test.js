@@ -32,9 +32,10 @@ const headless = item('saves headless', [
   { click: 'save_button' },
   { expect: { state: { path: 'saved', equals: true } } },
 ]);
+// A text check narrowed to a grid row reads the page as displayed, which only a browser does.
 const browser = item('saves in a browser', [
   { click: 'save_button' },
-  { expect: { text: { blockId: 'save_success', contains: 'Saved' } } },
+  { expect: { text: { blockId: 'saved_items', row: 1, contains: 'Saved' } } },
 ]);
 
 beforeEach(() => {
