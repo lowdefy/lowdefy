@@ -38,8 +38,9 @@ function formatBrowserOnlyNote({
     const [next, thoroughRun] = tool
       ? ['lowdefy_run_tests', 'thorough: true']
       : ['lowdefy test', 'lowdefy test --thorough'];
+    const which = inProcess > 0 ? 'the other browser-only journeys' : 'the browser-only journeys';
     lines.push(
-      `The next ${next} runs the browser-only journeys in the browser while they and the app config are unchanged; ${thoroughRun} runs them there in this run.`
+      `The next ${next} runs ${which} in the browser while they and the app config are unchanged; ${thoroughRun} runs them there in this run.`
     );
   }
   if (inProcess === 1) {

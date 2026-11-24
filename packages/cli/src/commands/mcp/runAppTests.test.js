@@ -661,6 +661,33 @@ test('runAppTests reports a journey found partway through by default, and runs i
   expect(progress).toEqual([{ done: 1, total: 1, name: 'orders list', class: 'PASS' }]);
 });
 
+test('runAppTests says a journey with a hold step, found partway through, goes to the browser in no run', async () => {
+  answerPartway();
+  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ click: 'a' }] });
+  writeJourney('held.yaml', {
+    name: 'holds the save',
+    pageId: 'orders',
+    data: 'base',
+    steps: [{ hold: { requestId: 'save' } }, { click: 'a' }],
+  });
+
+  const found = await runAppTests({ configDirectory, url });
+  expect(found.summary).toBe(
+    '0 passed, 0 failed of 0 journeys, 2 browser-only not run\nThe next lowdefy_run_tests runs the other browser-only journeys in the browser while they and the app config are unchanged; thorough: true runs them there in this run. 1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+  );
+
+  bodies = [];
+  const thorough = await runAppTests({ configDirectory, url, thorough: true });
+  expect(bodies.map((posted) => [posted.steps[0], posted.headless === true])).toEqual([
+    [{ hold: { requestId: 'save' } }, true],
+    [{ click: 'a' }, true],
+    [{ click: 'a' }, false],
+  ]);
+  expect(thorough.summary).toBe(
+    '1 passed, 0 failed of 1 journeys, 1 browser-only not run\n1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+  );
+});
+
 test('runAppTests refuses two of browser, thorough and headless without running anything', async () => {
   writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [] });
   const { summary } = await runAppTests({ configDirectory, url, browser: true, headless: true });

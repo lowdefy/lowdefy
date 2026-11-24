@@ -48,7 +48,7 @@ test('a thorough run, which ran the rest in the browser, names only the journeys
 
 test('a default run says the next run takes only the journeys with no in-process step', () => {
   expect(formatBrowserOnlyNote({ runner: 'mixed', browserOnly: 3, inProcess: 1 })).toBe(
-    'The next lowdefy test runs the browser-only journeys in the browser while they and the app config are unchanged; lowdefy test --thorough runs them there in this run. 1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+    'The next lowdefy test runs the other browser-only journeys in the browser while they and the app config are unchanged; lowdefy test --thorough runs them there in this run. 1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
   );
   expect(formatBrowserOnlyNote({ runner: 'mixed', browserOnly: 1, inProcess: 1 })).toBe(
     '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
