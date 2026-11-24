@@ -661,7 +661,7 @@ program
 program
   .command('test')
   .description(
-    'Run the app\'s config tests: every journey under tests/journeys/, sub-folders included, except folders starting with "_".'
+    'Run the app\'s config tests: every journey under tests/journeys/, sub-folders included, except folders starting with "_". Each journey runs once, headless when it can and in the browser when it can\'t.'
   )
   .usage('[options] [paths...]')
   .argument(
@@ -683,7 +683,7 @@ program
   .addOption(
     new Option(
       '--concurrency <n>',
-      'Run up to n browser journeys at once (1 to 3). Journeys with no data set, or marked serial, run alone after the rest. Default 1, or LOWDEFY_JOURNEY_CONCURRENCY. One at a time under --repeat or while memory is short; refused with --headless. At 2 or more, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
+      'Run up to n browser journeys at once (1 to 3). Headless journeys run one at a time. Journeys with no data set, or marked serial, run alone after the rest. Default 1, or LOWDEFY_JOURNEY_CONCURRENCY. One at a time under --repeat or while memory is short; refused with --headless. At 2 or more, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
     )
   )
   .addOption(options.configDirectory)
@@ -721,6 +721,18 @@ program
   )
   .addOption(
     new Option(
+      '--thorough',
+      "Run each journey headless when it can and in the browser when it can't, as the default does, and also run in the browser, from step 1, each journey the headless run finds needs a browser partway through. For CI, where no earlier run has found those journeys."
+    )
+  )
+  .addOption(
+    new Option(
+      '--browser',
+      "Run every journey in the browser. By default each journey runs once, headless when it can and in the browser when it can't."
+    )
+  )
+  .addOption(
+    new Option(
       '--headless',
       'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. On the dev server, or on the production build with --build.'
     )
@@ -728,7 +740,7 @@ program
   .addOption(
     new Option(
       '--build',
-      'With --headless: run on the production build (lowdefy build) in this process, with no dev server and no browser, for CI. Pass --server-directory when the build is elsewhere.'
+      'With --headless: run on the production build (lowdefy build) in this process, with no dev server and no browser. Pass --server-directory when the build is elsewhere.'
     )
   )
   .addOption(options.serverDirectory)
