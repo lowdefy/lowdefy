@@ -22,6 +22,7 @@ import collectBlockParents from './collectBlockParents.js';
 import createActorClient from './createActorClient.js';
 import createLocation from './createLocation.js';
 import fireMountEvents from './fireMountEvents.js';
+import movePopupFocus from './movePopupFocus.js';
 import readOptionLabelText from './readOptionLabelText.js';
 import registerBlockStandIns from './registerBlockStandIns.js';
 import reportParseErrors from './reportParseErrors.js';
@@ -55,7 +56,9 @@ function readQuery(query) {
 //   ConfirmModal) start closed; the methods their stand-ins register open them, fire their open
 //   and close events and mount their content through setOpen (registerBlockStandIns).
 // - page.inputFocused and page.pointerBlockId say whether an input has the focus and which block
-//   the pointer rests on, for a press of Escape (runHeadlessStep's noteFocus).
+//   the pointer rests on, for a press of Escape (runHeadlessStep's noteFocus). A popup opening or
+//   closing moves the focus too (movePopupFocus): page.focusReturns keeps, by popup id, the input
+//   the focus left as the popup opened, which it hands the focus back to as it closes.
 // - page.openedBlocks holds the popups opened on the shown page at any time: antd keeps their
 //   content in the page, hidden, once they close (unless destroyOnHidden), which a text check reads.
 // - page.standIns holds what each block's stand-in keeps for the shown page, by block id
@@ -155,7 +158,8 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
 
   // Opens or closes a popup block (POPUP_BLOCK_TYPES) as antd's `open` prop does: its content
   // shows, and mounts, only while it is open. Fires none of the block's events, which its stand-in
-  // fires in the component's order (BLOCK_STAND_INS). Returns whether the open state changed.
+  // fires in the component's order (BLOCK_STAND_INS), and moves the focus as the component does
+  // (movePopupFocus). Returns whether the open state changed.
   function setOpen({ block, open }) {
     const { openBlocks, context } = actor.page;
     if (openBlocks.has(block.id) === open) {
@@ -168,6 +172,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     } else {
       openBlocks.delete(block.id);
     }
+    movePopupFocus({ actor, block, open });
     context._internal.update();
     return true;
   }
@@ -205,6 +210,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
       mounted: new Map(),
       mountFinished: new Set(),
       onUpdate: () => scheduleMountCheck(shown),
+      focusReturns: new Map(),
       inputFocused: false,
       openBlocks: new Set(),
       openedBlocks: new Set(),

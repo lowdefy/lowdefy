@@ -23,6 +23,7 @@ import collectBlockParents from './collectBlockParents.js';
 import ESCAPE_PASSING_INPUT_TYPES from './ESCAPE_PASSING_INPUT_TYPES.js';
 import findShortcutBlocks from './findShortcutBlocks.js';
 import POPUP_BLOCK_TYPES from './POPUP_BLOCK_TYPES.js';
+import readFocusedInput from './readFocusedInput.js';
 import readShownBlock from './readShownBlock.js';
 import readStandInState from './readStandInState.js';
 import describeBlock from './standIns/describeBlock.js';
@@ -30,15 +31,6 @@ import isInsideBlock from './standIns/isInsideBlock.js';
 import standInMissing from './standInMissing.js';
 
 const BROWSER = 'the step runs in a browser';
-
-// The input that has the focus, or null: the one filled or selected in last, while no click, open
-// or closing popup has moved the focus since (page.inputFocused, kept by runHeadlessStep).
-function readFocusedInput({ actor }) {
-  if (!actor.page.inputFocused) {
-    return null;
-  }
-  return actor.page.context._internal.RootSlots.map[actor.stepRunner.lastInputBlockId()] ?? null;
-}
 
 // Whether the stand-in holds the block's dropdown, search or confirm open (state.open, or its own
 // isOpen where something else can close it).
@@ -243,8 +235,8 @@ function readPointerFocus({ actor, block, parents }) {
 // data-set journey the press is checked against the rails first, as the browser runner checks it:
 // the block with the focus (the focused input, else the block a click left it on in the overlay,
 // readPointerFocus) and the blocks around it, and the overlay it closes, whose portal or wrapper
-// holds the focus in a browser. Closing a popup hands the focus back to where it was before the
-// popup opened, so no input has it after.
+// holds the focus in a browser. A popup the press closes moves the focus as it closes
+// (movePopupFocus, through setOpen).
 async function pressEscape({ actor, rails }) {
   const { blocks, parents } = collectBlockParents({ context: actor.page.context });
   const focused = readFocusedInput({ actor });
@@ -271,9 +263,6 @@ async function pressEscape({ actor, rails }) {
   checkHeadlessRails({ actor, blockId: block.blockId, rails, step: 'press' });
   await standIn.escape({ actor, block, state: readStandInState({ actor, block }) });
   await actor.settle();
-  if (POPUP_BLOCK_TYPES.has(block.type) && !actor.page.openBlocks.has(block.id)) {
-    actor.page.inputFocused = false;
-  }
 }
 
 export default pressEscape;

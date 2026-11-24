@@ -428,3 +428,146 @@ test('Escape while a Menu binds it as an item shortcut runs in a browser', async
     'Menu "side_menu" binds Escape as an item shortcut, which a headless press does not fire: the step runs in a browser.'
   );
 });
+
+test('Escape that closes a Modal off a NumberInput whose max clamps its text runs in a browser', async () => {
+  const page = escapePage();
+  page.blocks[1].blocks.push({
+    id: 'qty',
+    type: 'NumberInput',
+    properties: { max: 10 },
+    events: { onChange: [record('qty.onChange')] },
+  });
+  const { log, result } = await runTestJourney({
+    pages: [page],
+    steps: [
+      { click: 'open_modal' },
+      { fill: { blockId: 'qty', value: '50' } },
+      { press: 'Escape' },
+    ],
+  });
+  expect(result.browserOnly).toEqual({
+    index: 2,
+    reason:
+      'Block "qty" (NumberInput) clamps 50 to its min and max as the focus leaves it and fires onChange, which a headless run does not model: the step runs in a browser.',
+    step: { press: 'Escape' },
+  });
+  expect(readLog(log).map(([name]) => name)).not.toContain('qty.onChange');
+});
+
+// A second Modal that the note's Enter opens over the first, as rc-dialog keeps the note as the
+// element to hand the focus back to.
+const MODAL_B = {
+  id: 'modal_b',
+  type: 'Modal',
+  events: logged('modal_b', ['onOk', 'onCancel']),
+  blocks: [{ id: 'confirm_text', type: 'Paragraph' }],
+};
+const OPEN_B = [
+  {
+    id: 'open_b',
+    type: 'CallMethod',
+    params: { blockId: 'modal_b', method: 'setOpen', args: OPEN },
+  },
+];
+
+test('Escape after a Modal closes hands the focus back to the input that opened it', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      escapePage({
+        modal: { noteEvents: { onPressEnter: OPEN_B, onEscape: [record('note.onEscape')] } },
+        extra: [MODAL_B],
+      }),
+    ],
+    steps: [
+      { click: 'open_modal' },
+      { fill: { blockId: 'note', value: 'x' } },
+      { press: 'Enter' },
+      { click: { blockId: 'modal_b', control: 'ok' } },
+      { press: 'Escape' },
+    ],
+  });
+  expect(result.browserOnly).toEqual({
+    index: 4,
+    reason:
+      'The focus is in TextInput "note", which fires its own onEscape: the step runs in a browser.',
+    step: { press: 'Escape' },
+  });
+  expect(readLog(log).map(([name]) => name)).not.toContain('modal.onCancel');
+});
+
+test('Escape in a Modal that a fill opened reads the focus in the Modal, not the input', async () => {
+  const menu = {
+    id: 'side_menu',
+    type: 'Menu',
+    properties: { links: [{ id: 'close', properties: { title: 'Close', shortcut: 'Escape' } }] },
+  };
+  const search = {
+    id: 'search',
+    type: 'TextInput',
+    events: {
+      onChange: [
+        {
+          id: 'open',
+          type: 'CallMethod',
+          params: { blockId: 'modal', method: 'setOpen', args: OPEN },
+        },
+      ],
+    },
+  };
+  const { log, result } = await runTestJourney({
+    pages: [escapePage({ extra: [menu, search] })],
+    steps: [{ fill: { blockId: 'search', value: 'x' } }, { press: 'Escape' }],
+  });
+  expect(result.browserOnly.reason).toBe(
+    'Menu "side_menu" binds Escape as an item shortcut, which a headless press does not fire: the step runs in a browser.'
+  );
+  expect(readLog(log).map(([name]) => name)).not.toContain('modal.onCancel');
+});
+
+test('A Modal that a NumberInput opens off text its precision rounds runs in a browser', async () => {
+  const amount = {
+    id: 'amount',
+    type: 'NumberInput',
+    properties: { precision: 1 },
+    events: {
+      onChange: [
+        {
+          id: 'open',
+          type: 'CallMethod',
+          params: { blockId: 'modal', method: 'setOpen', args: OPEN },
+        },
+      ],
+    },
+  };
+  const { result } = await runTestJourney({
+    pages: [escapePage({ extra: [amount] })],
+    steps: [{ fill: { blockId: 'amount', value: '1.25' } }, { press: 'Escape' }],
+  });
+  expect(result.browserOnly).toEqual({
+    index: 0,
+    reason:
+      'Block "amount" (NumberInput) rounds 1.25 to its precision as the focus leaves it and fires onChange, which a headless run does not model: the step runs in a browser.',
+    step: { fill: { blockId: 'amount', value: '1.25' } },
+  });
+});
+
+test('A Modal with focusTriggerAfterClose false leaves no input with the focus as it closes', async () => {
+  const { log, result } = await runTestJourney({
+    pages: [
+      escapePage({
+        modal: { noteEvents: { onPressEnter: OPEN_B, onEscape: [record('note.onEscape')] } },
+        extra: [{ ...MODAL_B, properties: { focusable: { focusTriggerAfterClose: false } } }],
+      }),
+    ],
+    steps: [
+      { click: 'open_modal' },
+      { fill: { blockId: 'note', value: 'x' } },
+      { press: 'Enter' },
+      { click: { blockId: 'modal_b', control: 'ok' } },
+      { press: 'Escape' },
+      { expect: { hidden: 'note' } },
+    ],
+  });
+  expect(result.passed).toBe(true);
+  expect(readLog(log).map(([name]) => name)).toContain('modal.onCancel');
+});
