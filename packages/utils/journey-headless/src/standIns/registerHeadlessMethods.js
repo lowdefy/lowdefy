@@ -17,13 +17,16 @@
 import checkHeadlessMethods from '@lowdefy/block-utils/checkHeadlessMethods.js';
 import { type } from '@lowdefy/helpers';
 
+import REDRAWN_BLOCKS from './REDRAWN_BLOCKS.js';
+
 // Registers the methods a block's meta declares for a headless run, for a block whose type has
 // no stand-in (BLOCK_STAND_INS), such as a block from the app's own plugin. headlessMethods is
 // { [method]: event or null }. A method with an event fires that one of the block's own events,
 // with the method's first argument as the event, and returns the event's result for CallMethod to
 // wait on, as a component's `methods.registerMethod(method, (event) => methods.triggerEvent({
 // name, event }))` does in the browser. A method declared null changes only what the block draws,
-// so it is a no-op: CallMethod resolves with undefined at once. A declaration that is neither
+// so it is a no-op: CallMethod resolves with undefined at once, and the block is recorded in
+// REDRAWN_BLOCKS, since what it draws now is not what its properties say (readTextModel). A declaration that is neither
 // fails, naming the block type and the method (checkHeadlessMethods), rather than leaving the
 // method to the browser unseen.
 function registerHeadlessMethods({ block, headlessMethods }) {
@@ -33,7 +36,10 @@ function registerHeadlessMethods({ block, headlessMethods }) {
   }
   Object.entries(headlessMethods).forEach(([method, name]) => {
     if (name === null) {
-      block.registerMethod(method, () => undefined);
+      block.registerMethod(method, () => {
+        REDRAWN_BLOCKS.set(block, method);
+        return undefined;
+      });
       return;
     }
     block.registerMethod(method, (event) => block.triggerEvent({ name, event }));

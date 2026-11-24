@@ -17,6 +17,7 @@
 import { expect, test } from 'vitest';
 
 import runTestJourney, { methodButton, readLog, record } from '../tests/runTestJourney.js';
+import REDRAWN_BLOCKS from './REDRAWN_BLOCKS.js';
 import registerHeadlessMethods from './registerHeadlessMethods.js';
 
 test("an onMount CallMethod on a plugin block runs the event its meta declares, before the mount's next action", async () => {
@@ -202,7 +203,9 @@ test('a method declared null registers a method that returns undefined and fires
   };
   registerHeadlessMethods({ block, headlessMethods: { run: 'onRun', merge: null } });
   expect(Object.keys(methods)).toEqual(['run', 'merge']);
+  expect(REDRAWN_BLOCKS.has(block)).toBe(false);
   expect(methods.merge({ rows: [1] })).toBeUndefined();
+  expect(REDRAWN_BLOCKS.get(block)).toBe('merge');
   expect(triggered).toEqual([]);
   methods.run({ from: 'step' });
   expect(triggered).toEqual([{ name: 'onRun', event: { from: 'step' } }]);

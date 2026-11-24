@@ -17,6 +17,7 @@
 import checkHeadlessText from '@lowdefy/block-utils/checkHeadlessText.js';
 import { get, type } from '@lowdefy/helpers';
 
+import REDRAWN_BLOCKS from '../standIns/REDRAWN_BLOCKS.js';
 import BLOCK_TEXT_MODELS from './BLOCK_TEXT_MODELS.js';
 
 // A value a plugin block draws from a property its meta names in headlessText: a string as text
@@ -35,11 +36,29 @@ function readDeclared(value) {
   return { pieces: [], open: 'a property its headlessText names holds a value that is not text' };
 }
 
+// The text model of a block (findTextModel), except that a block a CallMethod has called a method
+// on that its meta declares null in headlessMethods (REDRAWN_BLOCKS) draws text its properties do
+// not say: its own text is open, with the method named.
+function readTextModel({ block, blockMetas }) {
+  const model = findTextModel({ block, blockMetas });
+  if (model === null || !REDRAWN_BLOCKS.has(block)) {
+    return model;
+  }
+  const method = REDRAWN_BLOCKS.get(block);
+  return function redrawnTextModel(args) {
+    return {
+      ...model(args),
+      pieces: [],
+      open: `its method "${method}" changed what it draws, which a headless run does not follow`,
+    };
+  };
+}
+
 // The text model of a block (BLOCK_TEXT_MODELS), or for a block type the headless run does not
 // know, the one its meta declares (headlessText: the paths of the properties it draws as text, in
 // order), else null. A declared model draws no area the headless run knows of (areas: null), so a
 // block inside it leaves its text open.
-function readTextModel({ block, blockMetas }) {
+function findTextModel({ block, blockMetas }) {
   if (Object.hasOwn(BLOCK_TEXT_MODELS, block.type)) {
     return BLOCK_TEXT_MODELS[block.type];
   }
