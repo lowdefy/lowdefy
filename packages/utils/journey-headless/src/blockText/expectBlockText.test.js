@@ -539,3 +539,37 @@ test('the models leave open what an ellipsis, a loading Statistic, a shortcut or
     (await check({ blocks, blockId: 'state', contains: 'Ctrl' })).browserOnly.reason
   ).toContain('it draws its onClick shortcut');
 });
+
+test('a block class Tailwind marks important, or an arbitrary property, keeps its text from passing', async () => {
+  const blocks = [
+    { id: 'shout', type: 'Title', class: 'uppercase!', properties: { content: 'Draft' } },
+    { id: 'gone', type: 'Title', class: '[display:none]', properties: { content: 'Gone' } },
+    { id: 'folded', type: 'Title', class: 'collapse', properties: { content: 'Folded' } },
+  ];
+  expect((await check({ blocks, blockId: 'shout', contains: 'Draft' })).browserOnly).toBeDefined();
+  expect((await check({ blocks, blockId: 'gone', contains: 'Gone' })).browserOnly).toBeDefined();
+  expect(
+    (await check({ blocks, blockId: 'folded', contains: 'Folded' })).browserOnly
+  ).toBeDefined();
+});
+
+test('text after an element an html enhancer writes does not join the text before it', async () => {
+  const blocks = [
+    {
+      id: 'stamp',
+      type: 'Html',
+      properties: { html: 'Updated <span data-time="2026-11-01">1 Nov</span> ago' },
+    },
+  ];
+  expect((await check({ blocks, contains: 'Updated ago' })).browserOnly.reason).toContain(
+    'an html enhancer writes some of its text'
+  );
+});
+
+test('a data-truncate element breaks a line, as its clamp lays it out as a block', async () => {
+  const blocks = [
+    { id: 'who', type: 'Html', properties: { html: 'Status: <span data-truncate>Jane</span>' } },
+  ];
+  expect((await check({ blocks, contains: 'Status: Jane' })).browserOnly).toBeDefined();
+  expect((await check({ blocks, contains: 'Jane' })).passed).toBe(true);
+});

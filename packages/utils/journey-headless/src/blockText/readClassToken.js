@@ -36,12 +36,14 @@ function readVariant(variant) {
 }
 
 // A class token as Tailwind reads it at the browser runner's width: { utility, applies }, the
-// utility after its variants and whether it applies there (true, false, or null when a variant
+// utility after its variants, without the `!` that marks it important (`!hidden` in Tailwind 3,
+// `hidden!` in Tailwind 4), and whether it applies there (true, false, or null when a variant
 // is no breakpoint), so `max-[899px]:hidden` does not hide at 1280px and `min-[900px]:hidden`
 // may.
 function readClassToken(token) {
-  const parts = token.split(':');
-  const utility = parts.pop();
+  // A colon inside brackets belongs to an arbitrary value or property ([display:none]).
+  const parts = token.split(/:(?![^[]*\])/);
+  const utility = parts.pop().replace(/^!|!$/g, '');
   let applies = true;
   for (const variant of parts) {
     const read = readVariant(variant);

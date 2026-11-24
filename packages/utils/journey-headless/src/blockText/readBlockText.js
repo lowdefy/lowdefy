@@ -88,14 +88,14 @@ function readPiece({ cache, parse, piece }) {
 // or a class that may hide it (Tailwind's, as readHtmlPieces reads them in html).
 // A class counts when it may apply at the browser runner's width (readClassToken).
 const STYLED_CLASS =
-  /^(uppercase|lowercase|capitalize|hidden|invisible|whitespace-(pre|pre-line|pre-wrap|break-spaces))$/;
+  /^(uppercase|lowercase|capitalize|hidden|invisible|collapse|whitespace-(pre|pre-line|pre-wrap|break-spaces)|\[(display|visibility|text-transform|white-space):.+\])$/;
 // Style properties on a block that change how its text reads, as React's camelCase or CSS's
 // kebab-case, and whether a value does.
 const STYLED_PROPERTIES = {
   display: (value) => value === 'none',
   textTransform: (value) => value !== 'none',
   'text-transform': (value) => value !== 'none',
-  visibility: (value) => value === 'hidden',
+  visibility: (value) => ['hidden', 'collapse'].includes(value),
   // nowrap and normal collapse white space as readHtmlPieces' runs assume.
   whiteSpace: (value) => /^(pre|break-spaces)/.test(String(value)),
   'white-space': (value) => /^(pre|break-spaces)/.test(String(value)),

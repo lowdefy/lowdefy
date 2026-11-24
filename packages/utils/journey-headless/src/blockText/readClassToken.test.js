@@ -41,3 +41,18 @@ test('mayApplyClass counts a utility that applies or may', () => {
   expect(mayApplyClass({ tokens: ['p-2', 'max-[899px]:hidden'], pattern: /^hidden$/ })).toBe(false);
   expect(mayApplyClass({ tokens: ['group-hover:hidden'], pattern: /^hidden$/ })).toBe(true);
 });
+
+test('readClassToken reads an important utility as the utility', () => {
+  expect(readClassToken('hidden!')).toEqual({ utility: 'hidden', applies: true });
+  expect(readClassToken('md:!uppercase')).toEqual({ utility: 'uppercase', applies: true });
+  expect(readClassToken('2xl:hidden!')).toEqual({ utility: 'hidden', applies: false });
+});
+
+test('readClassToken keeps the colon of an arbitrary property in its utility', () => {
+  expect(readClassToken('[display:none]')).toEqual({ utility: '[display:none]', applies: true });
+  expect(readClassToken('2xl:[display:none]')).toEqual({
+    utility: '[display:none]',
+    applies: false,
+  });
+  expect(readClassToken('min-[900px]:hidden')).toEqual({ utility: 'hidden', applies: true });
+});
