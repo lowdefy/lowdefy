@@ -535,3 +535,47 @@ test('formatJourneyResult names the step a contended PASS first failed at', () =
     '      passed alone after failing beside other journeys: step 2 (click "save"): save is disabled'
   );
 });
+
+test('formatJourneyResult says where a journey of a mixed run ran at the end of its first line', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'submits the form',
+        passed: true,
+        stepCount: 3,
+        durationMs: 1234,
+        ranIn: 'headless',
+      },
+    })
+  ).toEqual(['PASS  submits the form  (3 steps, 1234ms)  [headless]']);
+  const [first, second] = formatJourneyResult({
+    result: {
+      name: 'reads the title',
+      filePath: '/app/tests/journeys/title.yaml',
+      passed: false,
+      stepCount: 1,
+      durationMs: 10,
+      message: 'title is "Away"',
+      ranIn: 'browser',
+    },
+  });
+  expect(first).toBe('FAIL  reads the title  [browser]');
+  expect(second).toBe('      file: /app/tests/journeys/title.yaml');
+});
+
+test('formatJourneyResult names no runner for a journey no runner took', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'bad file',
+        filePath: '/app/tests/journeys/bad.yaml',
+        passed: false,
+        refused: true,
+        stepCount: 0,
+        durationMs: 0,
+        message: 'Could not parse',
+        ranIn: 'headless',
+      },
+    })[0]
+  ).toBe('FAIL  bad file');
+});

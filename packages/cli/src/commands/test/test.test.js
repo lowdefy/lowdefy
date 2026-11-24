@@ -156,6 +156,7 @@ test('test boots a dev server, runs every journey and exits 0 when all pass', as
 
 test('test exits 1 and prints the failing step, expected and actual when a journey fails', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'passing journey' }));
   writeJourneyFile(
     'b.yaml',
@@ -239,6 +240,7 @@ test('test --url targets a running server and does not boot or stop one', async 
 
 test('test reports a malformed journey file as a failure and still runs the others', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', 'name: no steps here\npageId: form\n');
   writeJourneyFile('b.yaml', journeyYaml({ name: 'valid journey' }));
   await test({ context });
@@ -289,6 +291,7 @@ const stepFailure = {
 
 test('test --repeat 3 classifies a journey that passes every run as PASS', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'steady journey' }));
   context.options.repeat = '3';
   await test({ context });
@@ -303,6 +306,7 @@ test('test --repeat 3 classifies a journey that passes every run as PASS', async
 
 test('test --repeat 3 classifies a journey that passes some runs as FLAKY and exits 1', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'shaky journey' }));
   context.options.repeat = '3';
   mockPost
@@ -319,6 +323,7 @@ test('test --repeat 3 classifies a journey that passes some runs as FLAKY and ex
 
 test('test --repeat 3 classifies a journey that fails every run as FAIL with the finding line', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'broken journey' }));
   context.options.repeat = '3';
   mockPost.mockResolvedValue({ data: { passed: false, failure: stepFailure } });
@@ -458,6 +463,7 @@ test('test --lint reads data set users without a server', async () => {
 
 test('a full-suite run records every journey into one run on its first repetition only', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
   writeJourneyFile('b.yaml', journeyYaml({ name: 'second journey' }));
   context.options.repeat = '2';
@@ -519,6 +525,7 @@ function taggedJourneyYaml({ name, tags }) {
 
 test('test with no paths runs journeys in sub-folders and none under a "_" folder', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'top journey' }));
   writeJourneyFile(path.join('review', 'b.yaml'), journeyYaml({ name: 'review journey' }));
   writeJourneyFile(path.join('review', 'deep', 'c.yaml'), journeyYaml({ name: 'deep journey' }));
@@ -651,6 +658,7 @@ function personaJourneyYaml({
 
 test('test runs a journey with a list of users once per user, each named for its user', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', personaJourneyYaml({}));
   const exercised = { pages: ['form'], appEvents: true, requests: [], endpoints: [] };
   mockPost.mockResolvedValue({ data: { passed: true, exercised } });
@@ -685,6 +693,7 @@ test('test runs a journey with a list of users once per user, each named for its
 
 test('test reports each persona run of a journey on its own', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', personaJourneyYaml({}));
   mockPost.mockImplementation((url, body) =>
     Promise.resolve({
@@ -880,6 +889,7 @@ function rankedJourneyYaml({ name, sessions, months, failures = 0, ...rest }) {
 
 test('test --tier common runs the common journeys and the unranked ones, and records nothing', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 300, failures: 4 }));
   writeJourneyFile('b.yaml', rankedJourneyYaml({ name: 'middle', sessions: 60 }));
   writeJourneyFile('c.yaml', rankedJourneyYaml({ name: 'low', sessions: 30 }));
@@ -901,6 +911,7 @@ test('test --tier common runs the common journeys and the unranked ones, and rec
 
 test("test without --tier runs every journey and shows each one's tier on its PASS line", async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 300 }));
   writeJourneyFile('b.yaml', rankedJourneyYaml({ name: 'low', sessions: 30 }));
   await test({ context });
@@ -981,6 +992,7 @@ function dataValueJourneyYaml({ name, sessions }) {
 
 test('test without --tier never reads config text, and shows a journey clicking a data value as unranked', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 300 }));
   writeJourneyFile('b.yaml', dataValueJourneyYaml({ name: 'opens a customer', sessions: 60 }));
   await test({ context });
@@ -1007,6 +1019,7 @@ test('test --tier edge reads config text to rank a journey clicking a data value
 
 test('test without --tier below 100 matches shows the rate and failures with no tier', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', rankedJourneyYaml({ name: 'top', sessions: 30, failures: 3 }));
   await test({ context });
   expect(process.exitCode).toBeUndefined();
@@ -1036,6 +1049,7 @@ test('test --tier refuses below 100 matches, and says to refresh with no evidenc
 
 test('test --usage-window 6m changes the rates and the cut, and 6 or 6d is refused', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile(
     'a.yaml',
     rankedJourneyYaml({
@@ -1066,6 +1080,7 @@ test('test --usage-window 6m changes the rates and the cut, and 6 or 6d is refus
 
 test('test skips a deprecated journey in every run, named or not, and a plain run still records', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile(
     'a.yaml',
     rankedJourneyYaml({ name: 'retired', sessions: 30, deprecated: true })
@@ -1096,6 +1111,7 @@ test('test skips a deprecated journey in every run, named or not, and a plain ru
 
 test('test exits 75 without starting a server when no journey run slot frees', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
   mockAcquireJourneyRunSlots.mockRejectedValue(
     Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' })
@@ -1113,6 +1129,7 @@ test('test exits 75 without starting a server when no journey run slot frees', a
 
 test('test takes the journey run slots before the server and frees them after it stops', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
   const order = [];
   mockAcquireJourneyRunSlots.mockImplementation(async () => {
@@ -1129,6 +1146,7 @@ test('test takes the journey run slots before the server and frees them after it
 
 test('test frees the journey run slots when a journey fails', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'failing journey' }));
   mockPost.mockResolvedValueOnce({
     data: { passed: false, steps: [], failure: { index: 0, message: 'Block "submit" not found.' } },
@@ -1140,6 +1158,7 @@ test('test frees the journey run slots when a journey fails', async () => {
 
 test('test frees the journey run slots when the server fails to start', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
   mockStartDevServer.mockRejectedValue(new Error('boot failed'));
   await expect(test({ context })).rejects.toThrow('boot failed');
@@ -1148,6 +1167,7 @@ test('test frees the journey run slots when the server fails to start', async ()
 
 test('test frees the journey run slots when a signal stops the run', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
   const exit = vi.spyOn(process, 'exit').mockImplementation(() => {});
   // The handler is called directly: a real signal would reach the test runner too.
@@ -1173,7 +1193,9 @@ test('test --build without --headless is refused before anything runs', async ()
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
   context.options = { port: 3000, build: true };
   await test({ context });
-  expect(logs.error[0]).toMatch(/^--build runs the headless journeys on the production build/);
+  expect(logs.error[0]).toMatch(
+    /^--build runs the journeys that need no browser on the production build: pass --headless with it/
+  );
   expect(process.exitCode).toBe(1);
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockOpenTestApp).not.toHaveBeenCalled();
@@ -1202,6 +1224,7 @@ function delayedPosts({ delays }) {
 
 test('test --concurrency 2 keeps two data set journeys in flight and prints them in run order', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   // The journey with no data set is first in the selection, and runs alone after the others.
   writeJourneyFile('a.yaml', journeyYaml({ name: 'no data' }));
   writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'slow' }));
@@ -1232,6 +1255,7 @@ test('test --concurrency 2 keeps two data set journeys in flight and prints them
 
 test('test runs one journey at a time by default and a serial journey alone', async () => {
   const { default: test } = await import('./test.js');
+  context.options.browser = true;
   writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'first' }));
   writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'second' }));
   const flight = delayedPosts({ delays: {} });
@@ -1399,7 +1423,11 @@ test('test --headless --build runs headless journeys on the build with no server
   const written = JSON.parse(
     fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8')
   );
-  expect(written.journeys['tests/journeys/a.yaml#clicks submit']).toEqual({ passed: true });
+  expect(written.journeys['tests/journeys/a.yaml#clicks submit']).toEqual({
+    passed: true,
+    hash: expect.stringMatching(/^[0-9a-f]{40}$/),
+    configHashes: [],
+  });
   expect(written.journeys['tests/journeys/b.yaml#reads the title'].browserOnly.index).toBe(1);
   expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
 });
@@ -1836,4 +1864,358 @@ test('test --lint prints nothing about access', async () => {
   await test({ context });
   expect(logs.info.some((line) => line.includes('access'))).toBe(false);
   expect(mockOpenTestApp).not.toHaveBeenCalled();
+});
+
+// The default run: each journey once, headless when it can and in the browser when it can't.
+
+function titleJourneyYaml({ name }) {
+  return `name: ${name}\npageId: form\nsteps:\n  - expect:\n      title:\n        contains: home\n`;
+}
+
+function partwayJourneyYaml({ name, label = 'submit' }) {
+  return `name: ${name}\npageId: form\nsteps:\n  - click: ${label}\n  - click: next\n`;
+}
+
+const PARTWAY = {
+  index: 1,
+  step: { click: 'next' },
+  reason: 'the click lands on a block the headless run cannot model',
+};
+
+// The dev server's build, which hashBuild reads: `app` changes its hash.
+function writeDevBuild({ app = 'first' } = {}) {
+  const buildDirectory = path.join(context.directories.dev, 'build');
+  fs.mkdirSync(path.join(buildDirectory, 'plugins'), { recursive: true });
+  fs.writeFileSync(path.join(buildDirectory, 'plugins', 'blockMetas.json'), '{}');
+  fs.writeFileSync(path.join(buildDirectory, 'keyMap.json'), '{}');
+  fs.writeFileSync(path.join(buildDirectory, 'refMap.json'), '{}');
+  fs.writeFileSync(path.join(buildDirectory, 'routes.json'), '[]');
+  fs.writeFileSync(path.join(buildDirectory, 'config.json'), '{}');
+  fs.writeFileSync(path.join(buildDirectory, 'app.json'), JSON.stringify({ app }));
+}
+
+// A dev server whose headless runs find the journey named `partway` needs a browser at its
+// second step, and that passes every other run.
+function answerMixedRuns() {
+  mockPost.mockImplementation(async (url, body) => {
+    if (body.headless === true && body.steps.some((step) => step.click === 'next')) {
+      return { data: { browserOnly: PARTWAY } };
+    }
+    return { data: { passed: true, steps: [] } };
+  });
+}
+
+function postedRuns() {
+  return mockPost.mock.calls.map(([, body]) => ({
+    headless: body.headless === true,
+    first: body.steps[0],
+  }));
+}
+
+function readHeadlessRunFile() {
+  return JSON.parse(
+    fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8')
+  );
+}
+
+test('test runs each journey once by default: headless when it can, in the browser when the classifier says it needs one', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', titleJourneyYaml({ name: 'reads the title' }));
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  expect(postedRuns()).toEqual([
+    { headless: true, first: { click: 'submit' } },
+    { headless: true, first: { click: 'submit' } },
+    { headless: false, first: { expect: { title: { contains: 'home' } } } },
+  ]);
+  expect(logs.info).toContainEqual(
+    expect.stringMatching(/^PASS {2}clicks submit {2}\(1 steps, \d+ms\) {2}\[headless\]$/)
+  );
+  expect(logs.info).toContainEqual(
+    expect.stringMatching(/^PASS {2}reads the title {2}\(1 steps, \d+ms\) {2}\[browser\]$/)
+  );
+  expect(logs.info).toContain(
+    'BROWSER-ONLY  goes next  step 1 (click "next"): the click lands on a block the headless run cannot model'
+  );
+  expect(logs.info).toContain('2 passed, 0 failed of 2 journeys, 1 browser-only not run');
+  expect(logs.info[logs.info.length - 1]).toMatch(/^The next lowdefy test runs the browser-only/);
+  expect(process.exitCode).toBeUndefined();
+  // The classifier's browser-only journey takes the journey run slots.
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledTimes(1);
+  expect(mockReleaseSlots).toHaveBeenCalledTimes(1);
+  const written = readHeadlessRunFile();
+  expect(written.mode).toEqual('dev');
+  expect(Object.keys(written.journeys).sort()).toEqual([
+    'tests/journeys/a.yaml#clicks submit',
+    'tests/journeys/c.yaml#goes next',
+  ]);
+  expect(written.journeys['tests/journeys/c.yaml#goes next']).toEqual({
+    browserOnly: PARTWAY,
+    hash: expect.stringMatching(/^[0-9a-f]{40}$/),
+    configHashes: [expect.stringMatching(/^[0-9a-f]{40}$/)],
+  });
+});
+
+test('test takes no journey run slot when every journey of a default run goes headless', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  await test({ context });
+  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'submit' } }]);
+  expect(logs.info[logs.info.length - 1]).toEqual('1 passed, 0 failed of 1 journeys');
+});
+
+test('a later default run sends a journey found partway through straight to the browser, and keeps its record', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  const recorded = readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next'];
+  mockPost.mockClear();
+  mockAcquireJourneyRunSlots.mockClear();
+  logs.info = [];
+
+  await test({ context });
+  expect(postedRuns()).toEqual([
+    { headless: true, first: { click: 'submit' } },
+    { headless: false, first: { click: 'submit' } },
+  ]);
+  expect(logs.info).toContainEqual(
+    expect.stringMatching(/^PASS {2}goes next {2}\(2 steps, \d+ms\) {2}\[browser\]$/)
+  );
+  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 journeys');
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledTimes(1);
+  expect(readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next']).toEqual(recorded);
+
+  // A run of a subset keeps the records of the journeys it did not select.
+  mockPost.mockClear();
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'a.yaml')];
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'submit' } }]);
+  expect(readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next']).toEqual(recorded);
+});
+
+test('a record of a journey found partway through stops counting when the journey or the config changes', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+
+  // The journey changed: it runs headless again, and is found again.
+  mockPost.mockClear();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next', label: 'save' }));
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'save' } }]);
+
+  // The config changed: the same.
+  mockPost.mockClear();
+  writeDevBuild({ app: 'second' });
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'save' } }]);
+
+  // Neither changed since: straight to the browser.
+  mockPost.mockClear();
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: false, first: { click: 'save' } }]);
+});
+
+test('test --thorough runs a journey found partway through in the browser from step 1, in the same run', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  context.options.thorough = true;
+  await test({ context });
+  expect(postedRuns()).toEqual([
+    { headless: true, first: { click: 'submit' } },
+    { headless: true, first: { click: 'submit' } },
+    { headless: false, first: { click: 'submit' } },
+  ]);
+  expect(logs.info).toContain(
+    'BROWSER-ONLY  goes next  step 1 (click "next"): the click lands on a block the headless run cannot model; running it in the browser'
+  );
+  expect(logs.info).toContainEqual(
+    expect.stringMatching(/^PASS {2}goes next {2}\(2 steps, \d+ms\) {2}\[browser\]$/)
+  );
+  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 journeys');
+  // A thorough run may need the browser for any journey, so it takes the slots up front.
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledTimes(1);
+  expect(readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next'].browserOnly).toEqual(
+    PARTWAY
+  );
+});
+
+test('a journey that fails in the browser part of a thorough run fails the run', async () => {
+  const { default: test } = await import('./test.js');
+  mockPost.mockImplementation(async (url, body) => {
+    if (body.headless === true) {
+      return { data: { browserOnly: PARTWAY } };
+    }
+    return {
+      data: {
+        passed: false,
+        failure: { step: 1, action: { click: 'next' }, message: 'next is hidden' },
+      },
+    };
+  });
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  context.options.thorough = true;
+  await test({ context });
+  expect(logs.error[0]).toEqual('FAIL  goes next  [browser]');
+  expect(logs.error[logs.error.length - 1]).toEqual('0 passed, 1 failed of 1 journeys');
+  expect(process.exitCode).toBe(1);
+});
+
+test('a default run takes --concurrency for its browser part and runs its headless part one at a time', async () => {
+  const { default: test } = await import('./test.js');
+  context.options.concurrency = '2';
+  context.options.typedOptions = ['concurrency'];
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  await test({ context });
+  expect(process.exitCode).toBeUndefined();
+  expect(logs.info[logs.info.length - 1]).toEqual('1 passed, 0 failed of 1 journeys');
+});
+
+test.each([
+  [{ browser: true, headless: true }],
+  [{ browser: true, thorough: true }],
+  [{ thorough: true, headless: true }],
+])('test refuses two of --browser, --thorough and --headless (%j)', async (flags) => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  context.options = { port: 3000, ...flags };
+  await test({ context });
+  expect(logs.error[0]).toMatch(
+    /^--browser, --thorough and --headless each pick where the journeys run: pass one of them\./
+  );
+  expect(process.exitCode).toBe(1);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+});
+
+test.each([[{ thorough: true }], [{ browser: true }]])(
+  'test --build refuses %j until the browser part runs on the production build',
+  async (flags) => {
+    const { default: test } = await import('./test.js');
+    writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+    context.options = { port: 3000, build: true, ...flags };
+    await test({ context });
+    expect(logs.error[0]).toMatch(
+      /pass --headless with it, as in "lowdefy test --headless --build"/
+    );
+    expect(process.exitCode).toBe(1);
+    expect(mockStartDevServer).not.toHaveBeenCalled();
+    expect(mockOpenTestApp).not.toHaveBeenCalled();
+  }
+);
+
+test('a record counts on a dev server kept running, whose build gained the pages the run opened', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  // The dev server builds a page as a journey first opens it.
+  mockPost.mockImplementation(async (url, body) => {
+    const pages = path.join(context.directories.dev, 'build', 'pages');
+    fs.mkdirSync(pages, { recursive: true });
+    fs.writeFileSync(path.join(pages, `${body.pageId}.json`), JSON.stringify({ id: body.pageId }));
+    if (body.headless === true) {
+      return { data: { browserOnly: PARTWAY } };
+    }
+    return { data: { passed: true, steps: [] } };
+  });
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  expect(
+    readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next'].configHashes
+  ).toHaveLength(2);
+
+  mockPost.mockClear();
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: false, first: { click: 'submit' } }]);
+});
+
+test('a thorough run leaves a journey with a step only the headless runner takes browser-only', async () => {
+  const { default: test } = await import('./test.js');
+  mockPost.mockResolvedValue({ data: { browserOnly: PARTWAY } });
+  writeJourneyFile(
+    'h.yaml',
+    'name: holds and goes next\npageId: form\ndata: base\nsteps:\n  - hold: { requestId: save }\n  - click: next\n'
+  );
+  context.options.thorough = true;
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: true, first: { hold: { requestId: 'save' } } }]);
+  expect(logs.info).toContain(
+    'BROWSER-ONLY  holds and goes next  step 1 (click "next"): the click lands on a block the headless run cannot model'
+  );
+  expect(process.exitCode).toBeUndefined();
+  // This run was thorough, and no run takes the journey to the browser: the note says why.
+  expect(logs.info.some((line) => line.includes('--thorough'))).toBe(false);
+  expect(logs.info[logs.info.length - 1]).toBe(
+    '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+  );
+});
+
+test('a default run never says a journey with a step only the headless runner takes goes to the browser next', async () => {
+  const { default: test } = await import('./test.js');
+  mockPost.mockResolvedValue({ data: { browserOnly: PARTWAY } });
+  writeJourneyFile(
+    'h.yaml',
+    'name: holds and goes next\npageId: form\ndata: base\nsteps:\n  - hold: { requestId: save }\n  - click: next\n'
+  );
+  await test({ context });
+  expect(logs.info.some((line) => line.startsWith('The next lowdefy test'))).toBe(false);
+  expect(logs.info[logs.info.length - 1]).toBe(
+    '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+  );
+});
+
+test('a default run routes by the records it read before taking the slots, not by a record written after', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  const filePath = path.join(context.directories.test, 'headless-run.json');
+  const recorded = fs.readFileSync(filePath, 'utf8');
+
+  // The record lands while the server starts, after the run decided it needs no browser slot:
+  // another run of the app wrote it.
+  fs.rmSync(filePath);
+  mockPost.mockClear();
+  mockAcquireJourneyRunSlots.mockClear();
+  mockStartDevServer.mockImplementation(async () => {
+    fs.writeFileSync(filePath, recorded);
+    return { url: 'http://localhost:3228', stop: mockStop };
+  });
+  await test({ context });
+  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'submit' } }]);
+});
+
+test('--access refuses --browser and --thorough, naming the command meant', async () => {
+  const { default: test } = await import('./test.js');
+  context.options = {
+    port: 3000,
+    access: true,
+    browser: true,
+    typedOptions: ['access', 'browser'],
+  };
+  await test({ context });
+  expect(logs.error[0]).toBe(
+    '--access checks the access table alone: drop --browser, or run "lowdefy test --browser" to run every journey in the browser.'
+  );
+  logs.error = [];
+  context.options = {
+    port: 3000,
+    access: true,
+    thorough: true,
+    typedOptions: ['access', 'thorough'],
+  };
+  await test({ context });
+  expect(logs.error[0]).toMatch(/^--access checks the access table alone: drop --thorough/);
 });

@@ -23,25 +23,26 @@ import fetchBuildId from './fetchBuildId.js';
 import formatBrowserOnly from './formatBrowserOnly.js';
 import formatNoTestsMatched from './formatNoTestsMatched.js';
 import formatSkippedJourney from './formatSkippedJourney.js';
+import formatBrowserOnlyNote from './formatBrowserOnlyNote.js';
 import hashBuild from './hashBuild.js';
-import headlessDevSuite from './headlessDevSuite.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
+import mayRunInBrowser from './mayRunInBrowser.js';
 import openBuildApp from './openBuildApp.js';
 import parseRepeat from './parseRepeat.js';
 import parseTestSelection from './parseTestSelection.js';
 import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
 import readAccessMode from './readAccessMode.js';
-import readHeadlessMode from './readHeadlessMode.js';
+import readHeadlessRun from './readHeadlessRun.js';
 import readJourneyConcurrency from './readJourneyConcurrency.js';
+import readTestMode from './readTestMode.js';
 import readTestSecrets from './readTestSecrets.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
 import runAccessStep from './access/runAccessStep.js';
+import runDevJourneys from './runDevJourneys.js';
 import runHeadlessTests from './runHeadlessTests.js';
-import runJourneyPool from './runJourneyPool.js';
-import runRepeated from './runRepeated.js';
 import selectTests from './selectTests.js';
 import selectTier from './selectTier.js';
 import summariseResults from './summariseResults.js';
@@ -52,7 +53,7 @@ import writeTestRun from './writeTestRun.js';
 
 const SIGNAL_EXIT_CODES = { SIGINT: 130, SIGTERM: 143, SIGHUP: 129 };
 
-// A headless run starts no browser, so it takes no journey run slot (LDF-768's slots bound browsers).
+// A run that starts no browser takes no journey run slot (LDF-768's slots bound browsers).
 const NO_SLOTS = { release: () => {} };
 
 function refuse({ context, message }) {
@@ -99,11 +100,12 @@ async function test({ context }) {
     refuse({ context, message: repeatError });
     return;
   }
-  const { headless, build, error: headlessError } = readHeadlessMode({ options: context.options });
-  if (headlessError) {
-    refuse({ context, message: headlessError });
+  const { runner, thorough, build, error: modeError } = readTestMode({ options: context.options });
+  if (modeError) {
+    refuse({ context, message: modeError });
     return;
   }
+  const headless = runner === 'headless';
   // Only browser runs go side by side; headless runs go one at a time.
   const { readLimit, error: concurrencyError } = headless
     ? { readLimit: () => 1 }
@@ -147,16 +149,18 @@ async function test({ context }) {
     build,
     filters,
     givenPaths,
-    headless,
     lint,
     paths,
     readLimit,
     repeat,
+    runner,
     tags,
+    thorough,
     tier,
     usageWindow,
   };
-  if (!headless || !build || lint) {
+  // --build is taken only with --headless (readTestMode).
+  if (!build || lint) {
     await testJourneys({ context, ...options });
     return;
   }
@@ -176,19 +180,20 @@ async function test({ context }) {
 }
 
 // Selects the run's journeys and runs them: headless on the production build's app (`app`, given
-// for --headless --build), or on a dev server.
+// for --headless --build), or on a dev server, each where `runner` sends it (runDevJourneys).
 async function testJourneys({
   app,
   build,
   context,
   filters,
   givenPaths,
-  headless,
   lint,
   paths,
   readLimit,
   repeat,
+  runner,
   tags,
+  thorough,
   tier,
   usageWindow,
 }) {
@@ -259,7 +264,7 @@ async function testJourneys({
     return;
   }
 
-  if (headless && build) {
+  if (build) {
     const ran = await runHeadlessTests({
       app,
       context,
@@ -276,9 +281,17 @@ async function testJourneys({
 
   // The slots are held until the server stops, so a waiting run has nothing
   // in memory yet.
-  const slots = headless
-    ? NO_SLOTS
-    : await takeJourneyRunSlots({ context, command: 'lowdefy test' });
+  // Read once: the run routes its journeys by the records that decided whether it takes the slots.
+  const records = runner === 'mixed' ? readHeadlessRun({ directories: context.directories }) : {};
+  const slots = mayRunInBrowser({
+    entries: tiered.selected,
+    runner,
+    thorough,
+    records,
+    configDirectory: context.directories.config,
+  })
+    ? await takeJourneyRunSlots({ context, command: 'lowdefy test' })
+    : NO_SLOTS;
   if (slots === null) {
     return;
   }
@@ -311,43 +324,35 @@ async function testJourneys({
   });
 
   // One run id per invocation names this run's trace file; only a full-suite
-  // run records (see runRepeated). A headless run records no traces, so it
-  // leaves the browser run's trace and run.json alone.
-  const recording = headless
-    ? undefined
-    : { run: createTraceId(), paths: givenPaths, filter: filters, tags, tier };
-  const recorded =
-    !headless &&
-    isFullSuiteRun({
-      paths: givenPaths,
-      filter: filters,
-      tags,
-      tier,
-      repetition: 1,
-    });
+  // run records (see runRepeated). Only the browser part of a run records traces: the headless
+  // part leaves the browser run's trace and run.json alone.
+  const recording =
+    runner === 'headless'
+      ? undefined
+      : { run: createTraceId(), paths: givenPaths, filter: filters, tags, tier };
   // In selection order, whatever order the journeys finished in.
   const results = [];
   const browserOnly = [];
+  let inProcess = 0;
   const seen = new Set();
   try {
-    const pooled = await runJourneyPool({
+    // The build as the server serves it before any journey opens a page, which the records of
+    // headless-run.json are taken against (routeJourney).
+    const configHash = hashBuild({ context });
+    const ran = await runDevJourneys({
+      context,
       entries: tiered.selected,
+      url: server.url,
+      runner,
+      thorough,
       readLimit,
-      // A contended failure's rerun records nothing (runJourneyPool).
-      run: async ({ suite, item, usage }, { rerun }) => ({
-        ...(await runRepeated({
-          suite: headless ? headlessDevSuite({ suite }) : suite,
-          context,
-          item,
-          url: server.url,
-          repeat,
-          recording: rerun ? undefined : recording,
-        })),
-        usage,
-      }),
-      onReported: ({ entry, result }) => {
+      records,
+      repeat,
+      recording,
+      configHash,
+      onReported: ({ entry, result, inBrowserNext }) => {
         if (!type.isUndefined(result.browserOnly)) {
-          context.logger.info(formatBrowserOnly({ result }));
+          context.logger.info(formatBrowserOnly({ result, inBrowserNext }));
           return;
         }
         const lines = entry.suite.format({ result, seen });
@@ -358,17 +363,27 @@ async function testJourneys({
         }
       },
     });
-    results.push(...pooled.filter((result) => type.isUndefined(result.browserOnly)));
-    browserOnly.push(...pooled.filter((result) => !type.isUndefined(result.browserOnly)));
+    results.push(...ran.results);
+    browserOnly.push(...ran.browserOnly);
+    inProcess = ran.inProcess;
+    // The build once the run's pages were built.
+    const endConfigHash = hashBuild({ context });
     writeExercised({
       directories: context.directories,
       results,
       buildId: await fetchBuildId({ url: server.url }),
-      configHash: hashBuild({ context }),
+      configHash: endConfigHash,
     });
     writeTestRun({ directories: context.directories, results });
-    if (headless) {
-      writeHeadlessRun({ directories: context.directories, results, browserOnly, mode: 'dev' });
+    if (ran.headless.results.length + ran.headless.browserOnly.length + ran.remembered.length > 0) {
+      writeHeadlessRun({
+        directories: context.directories,
+        results: ran.headless.results,
+        browserOnly: ran.headless.browserOnly,
+        remembered: ran.remembered,
+        mode: 'dev',
+        configHashes: [configHash, endConfigHash],
+      });
     }
   } finally {
     signalHandlers.forEach(([signal, onSignal]) => process.removeListener(signal, onSignal));
@@ -381,6 +396,15 @@ async function testJourneys({
     }
   }
 
+  const recorded =
+    results.some((result) => !type.isUndefined(result.recorded)) &&
+    isFullSuiteRun({
+      paths: givenPaths,
+      filter: filters,
+      tags,
+      tier,
+      repetition: 1,
+    });
   if (recorded) {
     context.logger.info(
       `Recorded this run to ${path.join(
@@ -401,6 +425,15 @@ async function testJourneys({
     process.exitCode = 1;
   } else {
     context.logger.info(summary.text);
+  }
+  const note = formatBrowserOnlyNote({
+    runner,
+    thorough,
+    browserOnly: browserOnly.length,
+    inProcess,
+  });
+  if (!type.isUndefined(note)) {
+    context.logger.info(note);
   }
   context.sendTelemetry();
 }

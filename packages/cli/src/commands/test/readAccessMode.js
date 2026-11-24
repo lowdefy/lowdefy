@@ -41,6 +41,18 @@ const REFUSED_OPTIONS = [
     meant: 'lowdefy test --headless --build',
     purpose: 'to check the table and run the headless journeys',
   },
+  {
+    key: 'browser',
+    flag: '--browser',
+    meant: 'lowdefy test --browser',
+    purpose: 'to run every journey in the browser',
+  },
+  {
+    key: 'thorough',
+    flag: '--thorough',
+    meant: 'lowdefy test --thorough',
+    purpose: 'to run the journeys, and those found to need a browser in it',
+  },
   { key: 'lint', flag: '--lint', meant: 'lowdefy test --lint', purpose: 'to lint the journeys' },
   {
     key: 'repeat',

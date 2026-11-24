@@ -184,6 +184,13 @@ function formatRepeated({ result, seen }) {
   ];
 }
 
+function formatVerdict({ result, seen }) {
+  if ((result.repeat ?? 1) === 1 || result.refused === true) {
+    return formatSingle({ result, seen });
+  }
+  return formatRepeated({ result, seen });
+}
+
 // Returns the lines to print for one journey result. Run once, a single PASS
 // line (with the journey's tier and evidence when it has them, and the first
 // failure of a journey that passed only when rerun alone), or a FAIL
@@ -191,12 +198,15 @@ function formatRepeated({ result, seen }) {
 // (--repeat above 1), the class - PASS, FLAKY or FAIL - with the runs that
 // passed, and each failing run's step. A data set and its warnings, and the
 // stack of a run function that threw, are printed once per run: `seen` is
-// shared across the run's results.
+// shared across the run's results. A journey that ran says where, headless or
+// in the browser (`ranIn`, runDevJourneys), at the end of its first line; one
+// no runner took (refused) does not.
 function formatJourneyResult({ result, seen = new Set() }) {
-  if ((result.repeat ?? 1) === 1 || result.refused === true) {
-    return formatSingle({ result, seen });
+  const [first, ...rest] = formatVerdict({ result, seen });
+  if (type.isUndefined(result.ranIn) || result.refused === true) {
+    return [first, ...rest];
   }
-  return formatRepeated({ result, seen });
+  return [`${first}  [${result.ranIn}]`, ...rest];
 }
 
 export default formatJourneyResult;

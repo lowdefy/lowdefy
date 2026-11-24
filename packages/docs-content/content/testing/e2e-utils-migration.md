@@ -58,7 +58,7 @@ It targets blocks by `blockId` and reads state and the database, so `lowdefy tes
 
 1. Write a [data set](/journey-data-sets) in `tests/data/` from what the specs seeded with `mdb.seed` and what their mocks answered for the app's own requests.
 2. Rewrite each spec as a journey in `tests/journeys/`. Check a page's logic, state and writes headless; keep `expect.text` for what only a browser shows. Rewrite each endpoint spec as a page-less journey, with a [case table](/config-tests#case-tables) where specs repeated one check over many inputs.
-3. Run the journeys with `lowdefy test --headless`, then `lowdefy test` for the browser ones.
+3. Run the journeys with `lowdefy test`: each runs headless when it can and in the browser when it can't.
 4. Delete the specs, the `e2e/` folder with its `playwright.config.js`, `fixtures.js` and `mocks.yaml`, the `e2e` scripts in `package.json`, and the `@lowdefy/e2e-utils`, `@lowdefy/community-plugin-e2e-mdb` and `@playwright/test` dev dependencies.
 5. In CI, run `lowdefy build` and then `lowdefy test --headless --build`.
 

@@ -28,8 +28,8 @@ import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
 import readJourneyConcurrency from '../test/readJourneyConcurrency.js';
 import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
-import runJourneyPool from '../test/runJourneyPool.js';
-import runRepeated from '../test/runRepeated.js';
+import readTestMode from '../test/readTestMode.js';
+import runDevJourneys from '../test/runDevJourneys.js';
 import selectTests from '../test/selectTests.js';
 import selectTier from '../test/selectTier.js';
 import summariseResults from '../test/summariseResults.js';
@@ -37,7 +37,9 @@ import writeExercised from '../test/writeExercised.js';
 import writeTestResults from '../test/writeTestResults.js';
 import writeTestRun from '../test/writeTestRun.js';
 import fetchBuildId from '../test/fetchBuildId.js';
-import headlessDevSuite from '../test/headlessDevSuite.js';
+import formatBrowserOnlyNote from '../test/formatBrowserOnlyNote.js';
+import hashBuild from '../test/hashBuild.js';
+import readHeadlessRun from '../test/readHeadlessRun.js';
 import writeHeadlessRun from '../test/writeHeadlessRun.js';
 
 // Runs the app's tests (every journey under tests/journeys outside "_"
@@ -49,10 +51,12 @@ import writeHeadlessRun from '../test/writeHeadlessRun.js';
 // skipped `deprecated: true` journey is a line under skipped. Always the
 // default directory: journeys an app keeps elsewhere (--journeys-directory)
 // may need a server set up for them, which the running dev server is not.
-// `headless` runs the journeys with no browser on the dev server: one that
-// needs a browser is a line under browserOnly, neither passed nor failed.
-// `concurrency` keeps up to that many browser journeys in flight (readJourneyConcurrency); a
-// headless run goes one at a time and refuses it.
+// Each journey runs once, headless when it can and in the browser when it can't (runDevJourneys).
+// One the headless run finds needs a browser partway through is a line under browserOnly, neither
+// passed nor failed; `thorough` runs it in the browser too. `browser` runs every journey in the
+// browser, and `headless` only those that need none, listing the rest under browserOnly
+// (readTestMode). `concurrency` keeps up to that many browser journeys in flight
+// (readJourneyConcurrency); a headless run goes one at a time and refuses it.
 //
 // The answer is cut to what an agent can read (compactTestResults); every
 // journey's result is in the file `resultFile` names. A journey's measured
@@ -69,6 +73,8 @@ async function runAppTests({
   tier: tierValue,
   usageWindow: usageWindowValue,
   headless = false,
+  browser = false,
+  thorough = false,
   concurrency,
   onProgress,
 }) {
@@ -77,16 +83,24 @@ async function runAppTests({
   if (repeatError) {
     return { summary: repeatError };
   }
-  if (headless && !type.isNone(concurrency)) {
-    return {
-      summary:
-        'concurrency runs browser journeys side by side, and a headless run goes one at a time: drop concurrency, or drop headless to run the browser journeys side by side.',
-    };
+  const mode = readTestMode({
+    options: {
+      headless,
+      browser,
+      thorough,
+      typedOptions: type.isNone(concurrency) ? [] : ['concurrency'],
+    },
+    flagPrefix: '',
+  });
+  if (!type.isUndefined(mode.error)) {
+    return { summary: mode.error };
   }
+  const { runner } = mode;
   // Only browser runs go side by side; headless runs go one at a time.
-  const { readLimit, error: concurrencyError } = headless
-    ? { readLimit: () => 1 }
-    : readJourneyConcurrency({ concurrency, name: 'concurrency', repeat });
+  const { readLimit, error: concurrencyError } =
+    runner === 'headless'
+      ? { readLimit: () => 1 }
+      : readJourneyConcurrency({ concurrency, name: 'concurrency', repeat });
   if (concurrencyError) {
     return { summary: concurrencyError };
   }
@@ -130,32 +144,30 @@ async function runAppTests({
     return { summary: tiered.refused };
   }
   // One run id per tool call; only a full-suite run records (see runRepeated).
-  // A headless run records no traces.
-  const recording = headless
-    ? undefined
-    : {
-        run: createTraceId(),
-        paths: files,
-        filter: selection.filters,
-        tags: selection.tags,
-        tier,
-      };
-  const runSuite = ({ suite }) => (headless ? headlessDevSuite({ suite }) : suite);
-  const pooled = await runJourneyPool({
+  // Only the browser part of a run records traces.
+  const recording =
+    runner === 'headless'
+      ? undefined
+      : {
+          run: createTraceId(),
+          paths: files,
+          filter: selection.filters,
+          tags: selection.tags,
+          tier,
+        };
+  // The build as the server serves it before any journey opens a page (routeJourney).
+  const configHash = hashBuild({ context });
+  const ran = await runDevJourneys({
+    context,
     entries: tiered.selected,
+    url,
+    runner,
+    thorough,
     readLimit,
-    // A contended failure's rerun records nothing (runJourneyPool).
-    run: async ({ suite, item, usage }, { rerun }) => ({
-      ...(await runRepeated({
-        suite: runSuite({ suite }),
-        context,
-        item,
-        url,
-        repeat,
-        recording: rerun ? undefined : recording,
-      })),
-      usage,
-    }),
+    records: runner === 'mixed' ? readHeadlessRun({ directories: context.directories }) : {},
+    repeat,
+    recording,
+    configHash,
     onFinished: async ({ result, done, total }) => {
       if (!type.isNone(onProgress)) {
         await onProgress({
@@ -167,28 +179,25 @@ async function runAppTests({
       }
     },
   });
-  // In selection order, whatever order the journeys finished in.
-  const runs = [];
-  const browserOnly = [];
-  pooled.forEach((result, index) => {
-    if (type.isUndefined(result.browserOnly)) {
-      runs.push({ suite: runSuite(tiered.selected[index]), result });
-    } else {
-      browserOnly.push(result);
-    }
-  });
-  const results = runs.map(({ result }) => result);
+  const { results, browserOnly } = ran;
   writeExercised({
     directories: context.directories,
     results,
     buildId: await fetchBuildId({ url }),
   });
   writeTestRun({ directories: context.directories, results });
-  if (headless) {
-    writeHeadlessRun({ directories: context.directories, results, browserOnly, mode: 'dev' });
+  if (ran.headless.results.length + ran.headless.browserOnly.length + ran.remembered.length > 0) {
+    writeHeadlessRun({
+      directories: context.directories,
+      results: ran.headless.results,
+      browserOnly: ran.headless.browserOnly,
+      remembered: ran.remembered,
+      mode: 'dev',
+      configHashes: [configHash, hashBuild({ context })],
+    });
   }
   const seen = new Set();
-  const journeyResults = runs.map(({ suite, result }) => {
+  const journeyResults = ran.verdicts.map(({ suite, result }) => {
     const { journey, newestPassed, recorded, exercised, ...rest } = result;
     return {
       ...rest,
@@ -208,11 +217,22 @@ async function runAppTests({
     browserOnly: result.browserOnly,
     report: formatBrowserOnly({ result }),
   }));
-  const summary = summariseResults({
-    results,
-    skipped: tiered.skipped.length,
-    browserOnly: browserOnly.length,
-  }).text;
+  const summary = [
+    summariseResults({
+      results,
+      skipped: tiered.skipped.length,
+      browserOnly: browserOnly.length,
+    }).text,
+    formatBrowserOnlyNote({
+      runner,
+      thorough,
+      browserOnly: browserOnly.length,
+      inProcess: ran.inProcess,
+      tool: true,
+    }),
+  ]
+    .filter((line) => !type.isUndefined(line))
+    .join('\n');
   const resultFile = writeTestResults({
     directories: context.directories,
     summary,
