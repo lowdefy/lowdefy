@@ -22,7 +22,9 @@ import isBlockShown from '../isBlockShown.js';
 import POPUP_BLOCK_TYPES from '../POPUP_BLOCK_TYPES.js';
 import describeBlock from '../standIns/describeBlock.js';
 import collectClassTokens from './collectClassTokens.js';
+import isLayoutHidden from './isLayoutHidden.js';
 import isStyledStyle from './isStyledStyle.js';
+import mayHideBlock from './mayHideBlock.js';
 import markdownToHtml from './markdownToHtml.js';
 import normalizeShownText from './normalizeShownText.js';
 import { mayApplyClass } from './readClassToken.js';
@@ -93,12 +95,15 @@ function readPiece({ cache, parse, piece }) {
 // A class counts when it may apply at the browser runner's width (readClassToken).
 const STYLED_CLASS =
   /^(uppercase|lowercase|capitalize|hidden|invisible|collapse|whitespace-(pre|pre-line|pre-wrap|break-spaces)|\[(display|visibility|text-transform|white-space):.+\])$/;
-// Whether a block's own `style` or `class` may change how the text inside it reads, so its runs
-// may not show as written.
+// Whether a block's own `style` or `class`, a style of one of its slots (Container hands it to
+// the slot's Area), or a layout that hides it at the runner's width (a span of 0) may change how
+// the text inside it reads, so its runs may not show as written.
 function isStyled(block) {
   return (
     isStyledStyle({ style: block.eval?.style }) ||
-    mayApplyClass({ tokens: collectClassTokens(block.eval?.class), pattern: STYLED_CLASS })
+    Object.values(block.eval?.slots ?? {}).some((slot) => isStyledStyle({ style: slot?.style })) ||
+    mayApplyClass({ tokens: collectClassTokens(block.eval?.class), pattern: STYLED_CLASS }) ||
+    isLayoutHidden({ layout: block.eval?.layout })
   );
 }
 
@@ -185,6 +190,15 @@ function readBlockText({ actor, blockId, cache, parse }) {
     return reading;
   }
   reading.shown = true;
+  // The browser reads the textContent of a block that is not rendered, every text node in it,
+  // which a headless reading does not follow: a check it does not find is open, not missing.
+  [found.block, ...ancestorsOf(found.block)]
+    .filter((block) => mayHideBlock({ block }))
+    .forEach((block) => {
+      reading.open.push(
+        `${describeBlock(block)}: it may not be rendered (display: none), and a browser's check then reads every text node in it`
+      );
+    });
   const styledAncestor = ancestorsOf(found.block).find(isStyled);
   if (!type.isUndefined(styledAncestor)) reading.styled.push(styledAncestor);
   function visit({ block, slots, styled }) {

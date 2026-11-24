@@ -646,3 +646,80 @@ test('an empty slot does not replace the property its block draws in its place',
   ];
   expect((await check({ blocks: label, contains: 'Name' })).passed).toBe(true);
 });
+
+test('a block a span of 0 hides at 1280px adds no text a check passes on', async () => {
+  const blocks = [
+    {
+      id: 'panel',
+      type: 'Box',
+      blocks: [
+        { id: 'secret', type: 'Html', layout: { span: 0 }, properties: { html: 'Secret' } },
+        {
+          id: 'wide',
+          type: 'Html',
+          layout: { span: 0, xl: { span: 12 } },
+          properties: { html: 'Wide' },
+        },
+        // deriveLayout sets no md display for a span that is not 0, so sm's reaches 1280px.
+        { id: 'small', type: 'Html', layout: { sm: { span: 0 } }, properties: { html: 'Small' } },
+        {
+          id: 'medium',
+          type: 'Html',
+          layout: { sm: { span: 0 }, md: { span: 12 } },
+          properties: { html: 'Medium' },
+        },
+        {
+          id: 'flexed',
+          type: 'Html',
+          layout: { span: 0, grow: 1 },
+          properties: { html: 'Flexed' },
+        },
+      ],
+    },
+  ];
+  expect((await check({ blocks, blockId: 'panel', contains: 'Secret' })).browserOnly).toBeDefined();
+  expect((await check({ blocks, blockId: 'panel', contains: 'Wide' })).passed).toBe(true);
+  expect((await check({ blocks, blockId: 'panel', contains: 'Small' })).browserOnly).toBeDefined();
+  expect((await check({ blocks, blockId: 'panel', contains: 'Medium' })).passed).toBe(true);
+  expect((await check({ blocks, blockId: 'panel', contains: 'Flexed' })).passed).toBe(true);
+});
+
+test('a check on a block that may not be rendered is open, as the browser reads its textContent', async () => {
+  const blocks = [
+    {
+      id: 'outer',
+      type: 'Box',
+      style: { block: { display: 'none' } },
+      blocks: [
+        {
+          id: 'inner',
+          type: 'Html',
+          properties: { html: '<span style="display: none">Tucked</span>' },
+        },
+      ],
+    },
+    { id: 'gone', type: 'Html', layout: { span: 0 }, properties: { html: '<p hidden>Kept</p>' } },
+    { id: 'shown', type: 'Html', properties: { html: '<p hidden>Kept</p>' } },
+  ];
+  expect(
+    (await check({ blocks, blockId: 'inner', contains: 'Tucked' })).browserOnly.reason
+  ).toContain('Box "outer": it may not be rendered (display: none)');
+  expect((await check({ blocks, blockId: 'gone', contains: 'Kept' })).browserOnly).toBeDefined();
+  expect((await check({ blocks, blockId: 'shown', contains: 'Kept' })).passed).toBe(false);
+});
+
+test("a slot's style that changes how text reads keeps its blocks' text from passing", async () => {
+  const blocks = [
+    {
+      id: 'card',
+      type: 'Card',
+      slots: {
+        content: {
+          style: { textTransform: 'uppercase' },
+          blocks: [{ id: 'body', type: 'Html', properties: { html: 'quiet' } }],
+        },
+      },
+    },
+  ];
+  expect((await check({ blocks, blockId: 'card', contains: 'quiet' })).browserOnly).toBeDefined();
+});
