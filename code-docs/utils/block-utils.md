@@ -180,7 +180,7 @@ export default extractBlockTypes(metas);
 
 ### checkHeadlessMethods({ blockType, headlessMethods })
 
-Checks a block meta's `headlessMethods`: each value must be a block event name or `null`. Anything else throws, naming the block type and the method. `writeBlockSchemaMap` runs it at build time and `@lowdefy/journey-headless` `registerHeadlessMethods` as it registers the methods, so both refuse the same declarations with the same message.
+Checks a block meta's `headlessMethods`: each value must be a block event name or `null`. Anything else throws a `ConfigError` (with the declaration as `received`), naming the block type and the method. `writeBlockSchemaMap` runs it at build time and `@lowdefy/journey-headless` `registerHeadlessMethods` as it registers the methods, so both refuse the same declarations with the same message.
 
 ```javascript
 import { checkHeadlessMethods } from '@lowdefy/block-utils';
@@ -191,7 +191,7 @@ checkHeadlessMethods({ blockType: 'app_Timeline', headlessMethods: { merge: fals
 
 ### checkHeadlessText({ blockType, headlessText })
 
-Checks a block meta's `headlessText`: a list of non-empty property paths, or none. Anything else throws, naming the block type (and the index of a bad path). `writeBlockSchemaMap` runs it at build time and `@lowdefy/journey-headless` `readTextModel` as it reads a block's text, so both refuse the same declarations with the same message.
+Checks a block meta's `headlessText`: a list of non-empty property paths, or none. Anything else throws a `ConfigError` (with the declaration as `received`), naming the block type (and the index of a bad path). `writeBlockSchemaMap` runs it at build time and `@lowdefy/journey-headless` `readTextModel` as it reads a block's text, so both refuse the same declarations with the same message.
 
 ```js
 import { checkHeadlessText } from '@lowdefy/block-utils';
