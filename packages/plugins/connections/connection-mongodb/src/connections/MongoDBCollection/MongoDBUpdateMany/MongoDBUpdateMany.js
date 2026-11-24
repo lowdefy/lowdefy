@@ -18,7 +18,7 @@ import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import applyTenantToUpdate from '../tenant/applyTenantToUpdate.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import omitLogFields from '../omitLogFields.js';
+import excludeLogFields from '../excludeLogFields.js';
 import { assertUnscopedUpdate } from '../tenant/guardUnscopedWrite.js';
 import getCollection from '../getCollection.js';
 import verifyStoredTenant from '../tenant/verifyStoredTenant.js';
@@ -62,7 +62,7 @@ async function MongodbUpdateMany({
     if (logCollection) {
       await logCollection.insertOne(
         stampTenantOnLogRecord({
-          record: omitLogFields({
+          record: excludeLogFields({
             connection,
             record: {
               args: { filter, update, options },

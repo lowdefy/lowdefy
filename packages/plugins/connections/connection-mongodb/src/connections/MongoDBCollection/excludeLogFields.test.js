@@ -14,10 +14,12 @@
   limitations under the License.
 */
 
+import { beforeEach, expect, test } from 'vitest';
+
 import { validate } from '@lowdefy/ajv';
 
 import connectionSchema from './schema.js';
-import omitLogFields from './omitLogFields.js';
+import excludeLogFields from './excludeLogFields.js';
 import writeEnrichmentLog from './enrichment/writeEnrichmentLog.js';
 import MongoDBDeleteMany from './MongoDBDeleteMany/MongoDBDeleteMany.js';
 import MongoDBDeleteOne from './MongoDBDeleteOne/MongoDBDeleteOne.js';
@@ -34,18 +36,18 @@ import populateTestMongoDb from '../../../test/populateTestMongoDb.js';
 
 const databaseUri = process.env.MONGO_URL;
 const databaseName = 'test';
-const collection = 'changeLogOmit';
-const logCollection = 'changeLogOmitLog';
-const OMITTED = '[omitted]';
+const collection = 'changeLogExclude';
+const logCollection = 'changeLogExcludeLog';
+const EXCLUDED = '[excluded]';
 const BODY = 'The quote is attached, phase one.';
 const SUBJECT = 'Quote for phase one';
 
-const omitting = {
+const excluding = {
   databaseUri,
   databaseName,
   collection,
   write: true,
-  changeLog: { collection: logCollection, meta: { user: 'u1' }, omit: ['body', 'summary'] },
+  changeLog: { collection: logCollection, meta: { user: 'u1' }, exclude: ['body', 'summary'] },
 };
 const plain = {
   databaseUri,
@@ -59,7 +61,7 @@ function row(_id) {
   return { _id, kind: 'email', summary: SUBJECT, body: BODY, data: { thread: 't1' } };
 }
 
-async function logOf({ request, requestType, connection = omitting, requestId }) {
+async function logOf({ request, requestType, connection = excluding, requestId }) {
   await requestType({ request, connection, connectionId: 'rows', requestId, payload: {} });
   return findLogCollectionRecordTestMongoDb({ logCollection, requestId });
 }
@@ -72,29 +74,29 @@ function expectNoText(record) {
 
 beforeEach(() => populateTestMongoDb({ collection, documents: [row('a1'), row('a2')] }));
 
-test('the connection schema takes changeLog.omit', () => {
-  expect(validate({ schema: connectionSchema, data: omitting })).toEqual({ valid: true });
+test('the connection schema takes changeLog.exclude', () => {
+  expect(validate({ schema: connectionSchema, data: excluding })).toEqual({ valid: true });
   expect(() =>
     validate({
       schema: connectionSchema,
-      data: { ...omitting, changeLog: { collection: logCollection, omit: 'body' } },
+      data: { ...excluding, changeLog: { collection: logCollection, exclude: 'body' } },
     })
   ).toThrow(
-    'MongoDBCollection connection property "changeLog.omit" should be an array of field names.'
+    'MongoDBCollection connection property "changeLog.exclude" should be an array of field paths.'
   );
 });
 
-test('MongoDBInsertOne logs the doc with named fields omitted', async () => {
+test('MongoDBInsertOne logs the doc with named fields excluded', async () => {
   const record = await logOf({
     request: { doc: row('i1') },
     requestType: MongoDBInsertOne,
-    requestId: 'omitInsertOne',
+    requestId: 'excludeInsertOne',
   });
   expect(record.args.doc).toEqual({
     _id: 'i1',
     kind: 'email',
-    summary: OMITTED,
-    body: OMITTED,
+    summary: EXCLUDED,
+    body: EXCLUDED,
     data: { thread: 't1' },
   });
   expect(record.meta).toEqual({ user: 'u1' });
@@ -104,37 +106,37 @@ test('a field the document does not hold stays absent', async () => {
   const record = await logOf({
     request: { doc: { _id: 'i2', kind: 'call' } },
     requestType: MongoDBInsertOne,
-    requestId: 'omitAbsent',
+    requestId: 'excludeAbsent',
   });
   expect(record.args.doc).toEqual({ _id: 'i2', kind: 'call' });
 });
 
-test('MongoDBInsertMany and the consecutive-id inserts omit the fields in every doc', async () => {
+test('MongoDBInsertMany and the consecutive-id inserts exclude the fields in every doc', async () => {
   let record = await logOf({
     request: { docs: [row('m1'), row('m2')] },
     requestType: MongoDBInsertMany,
-    requestId: 'omitInsertMany',
+    requestId: 'excludeInsertMany',
   });
   expect(record.args.docs.map((doc) => [doc.body, doc.summary])).toEqual([
-    [OMITTED, OMITTED],
-    [OMITTED, OMITTED],
+    [EXCLUDED, EXCLUDED],
+    [EXCLUDED, EXCLUDED],
   ]);
   const { _id, ...doc } = row();
   record = await logOf({
     request: { doc, prefix: 'C', length: 3 },
     requestType: MongoDBInsertConsecutiveId,
-    requestId: 'omitInsertConsecutiveId',
+    requestId: 'excludeInsertConsecutiveId',
   });
-  expect(record.args.doc.body).toBe(OMITTED);
+  expect(record.args.doc.body).toBe(EXCLUDED);
   record = await logOf({
     request: { docs: [{ ...doc }, { ...doc }], prefix: 'D', length: 3 },
     requestType: MongoDBInsertManyConsecutiveIds,
-    requestId: 'omitInsertManyConsecutiveIds',
+    requestId: 'excludeInsertManyConsecutiveIds',
   });
-  record.args.docs.forEach((logged) => expect(logged.summary).toBe(OMITTED));
+  record.args.docs.forEach((logged) => expect(logged.summary).toBe(EXCLUDED));
 });
 
-test('MongoDBUpdateOne omits the fields in before, after and every operator', async () => {
+test('MongoDBUpdateOne excludes the fields in before, after and every operator', async () => {
   const record = await logOf({
     request: {
       filter: { _id: 'a1' },
@@ -145,20 +147,20 @@ test('MongoDBUpdateOne omits the fields in before, after and every operator', as
       options: { upsert: true },
     },
     requestType: MongoDBUpdateOne,
-    requestId: 'omitUpdateOne',
+    requestId: 'excludeUpdateOne',
   });
   expect(record.args.update).toEqual({
-    $set: { body: OMITTED, summary: OMITTED, private: false },
+    $set: { body: EXCLUDED, summary: EXCLUDED, private: false },
     $setOnInsert: { created: 1 },
   });
-  expect(record.before).toEqual({ ...row('a1'), body: OMITTED, summary: OMITTED });
-  expect(record.after.body).toBe(OMITTED);
-  expect(record.after.summary).toBe(OMITTED);
+  expect(record.before).toEqual({ ...row('a1'), body: EXCLUDED, summary: EXCLUDED });
+  expect(record.after.body).toBe(EXCLUDED);
+  expect(record.after.summary).toBe(EXCLUDED);
   expect(record.after.private).toBe(false);
   expectNoText(record);
 });
 
-test('MongoDBUpdateOne omits the fields in each pipeline stage', async () => {
+test('MongoDBUpdateOne excludes the fields in each pipeline stage', async () => {
   const record = await logOf({
     request: {
       filter: { _id: 'a1' },
@@ -169,50 +171,50 @@ test('MongoDBUpdateOne omits the fields in each pipeline stage', async () => {
       ],
     },
     requestType: MongoDBUpdateOne,
-    requestId: 'omitUpdatePipeline',
+    requestId: 'excludeUpdatePipeline',
   });
   expect(record.args.update).toEqual([
-    { $set: { body: OMITTED, private: false } },
-    { $replaceWith: { $mergeObjects: ['$$ROOT', { summary: OMITTED }] } },
+    { $set: { body: EXCLUDED, private: false } },
+    { $replaceWith: { $mergeObjects: ['$$ROOT', { summary: EXCLUDED }] } },
     { $unset: ['data'] },
   ]);
   expectNoText(record);
 });
 
-test('MongoDBUpdateMany and MongoDBVersionedUpdateOne omit the fields', async () => {
+test('MongoDBUpdateMany and MongoDBVersionedUpdateOne exclude the fields', async () => {
   let record = await logOf({
     request: { filter: {}, update: { $set: { summary: SUBJECT } } },
     requestType: MongoDBUpdateMany,
-    requestId: 'omitUpdateMany',
+    requestId: 'excludeUpdateMany',
   });
-  expect(record.args.update).toEqual({ $set: { summary: OMITTED } });
+  expect(record.args.update).toEqual({ $set: { summary: EXCLUDED } });
   record = await logOf({
     request: { filter: { _id: 'a1' }, update: { $set: { body: BODY } } },
     requestType: MongoDBVersionedUpdateOne,
-    requestId: 'omitVersionedUpdateOne',
+    requestId: 'excludeVersionedUpdateOne',
   });
-  expect(record.args.update).toEqual({ $set: { body: OMITTED } });
-  expect(record.before.body).toBe(OMITTED);
-  expect(record.after.body).toBe(OMITTED);
+  expect(record.args.update).toEqual({ $set: { body: EXCLUDED } });
+  expect(record.before.body).toBe(EXCLUDED);
+  expect(record.after.body).toBe(EXCLUDED);
   expectNoText(record);
 });
 
-test("MongoDBDeleteOne omits the deleted document's fields", async () => {
+test("MongoDBDeleteOne excludes the deleted document's fields", async () => {
   const record = await logOf({
     request: { filter: { _id: 'a1' } },
     requestType: MongoDBDeleteOne,
-    requestId: 'omitDeleteOne',
+    requestId: 'excludeDeleteOne',
   });
-  expect(record.before).toEqual({ ...row('a1'), body: OMITTED, summary: OMITTED });
+  expect(record.before).toEqual({ ...row('a1'), body: EXCLUDED, summary: EXCLUDED });
   const many = await logOf({
     request: { filter: { _id: 'a2' } },
     requestType: MongoDBDeleteMany,
-    requestId: 'omitDeleteMany',
+    requestId: 'excludeDeleteMany',
   });
   expect(many.args.filter).toEqual({ _id: 'a2' });
 });
 
-test('MongoDBTableChanges omits the fields in the changeset and the operations', async () => {
+test('MongoDBTableChanges excludes the fields in the changeset and the operations', async () => {
   const record = await logOf({
     request: {
       filter: {},
@@ -224,46 +226,46 @@ test('MongoDBTableChanges omits the fields in the changeset and the operations',
       },
     },
     requestType: MongoDBTableChanges,
-    requestId: 'omitTableChanges',
+    requestId: 'excludeTableChanges',
   });
-  expect(record.args.changes.updated).toEqual({ a1: { body: OMITTED, kind: 'email' } });
-  expect(record.args.changes.added[0]).toEqual({ rowKey: 'new', summary: OMITTED, kind: 'call' });
+  expect(record.args.changes.updated).toEqual({ a1: { body: EXCLUDED, kind: 'email' } });
+  expect(record.args.changes.added[0]).toEqual({ rowKey: 'new', summary: EXCLUDED, kind: 'call' });
   const text = JSON.stringify(record.args.operations);
   expect(text).not.toContain('Edited text');
   expect(text).not.toContain('Added subject');
 });
 
-test('a connection without omit logs every value', async () => {
+test('a connection without exclude logs every value', async () => {
   const record = await logOf({
     request: { filter: { _id: 'a1' }, update: { $set: { body: 'Plain text' } } },
     requestType: MongoDBUpdateOne,
     connection: plain,
-    requestId: 'omitNone',
+    requestId: 'excludeNone',
   });
   expect(record.args.update).toEqual({ $set: { body: 'Plain text' } });
   expect(record.before.body).toBe(BODY);
   expect(record.after.body).toBe('Plain text');
 });
 
-test('the enrichment log omits cell values when _enrich is named', async () => {
+test('the enrichment log excludes cell values when _enrich is named', async () => {
   const records = [];
   const results = [{ rowKey: 'c1', columnKey: 'profile', status: 'ok', value: { size: 40 } }];
-  for (const omit of [['_enrich'], ['body']]) {
+  for (const exclude of [['_enrich'], ['body']]) {
     await writeEnrichmentLog({
       args: { results },
-      context: { connection: { changeLog: { collection: logCollection, omit } } },
+      context: { connection: { changeLog: { collection: logCollection, exclude } } },
       logCollection: { insertOne: async (record) => records.push(record) },
       response: {},
       type: 'MongoDBEnrichmentComplete',
     });
   }
-  expect(records[0].args.results[0]).toEqual({ ...results[0], value: OMITTED });
+  expect(records[0].args.results[0]).toEqual({ ...results[0], value: EXCLUDED });
   expect(records[1].args.results[0].value).toEqual({ size: 40 });
 });
 
-test('bulk operations and replacement updates omit the fields', () => {
-  const record = omitLogFields({
-    connection: { changeLog: { collection: logCollection, omit: ['body'] } },
+test('bulk operations and replacement updates exclude the fields', () => {
+  const record = excludeLogFields({
+    connection: { changeLog: { collection: logCollection, exclude: ['body'] } },
     record: {
       args: {
         operations: [
@@ -280,13 +282,90 @@ test('bulk operations and replacement updates omit the fields', () => {
   expect(record).toEqual({
     args: {
       operations: [
-        { insertOne: { document: { body: OMITTED, kind: 'email' } } },
-        { updateOne: { filter: { _id: 1 }, update: { $set: { 'body.html': OMITTED } } } },
-        { replaceOne: { filter: { _id: 1 }, replacement: { body: OMITTED } } },
+        { insertOne: { document: { body: EXCLUDED, kind: 'email' } } },
+        { updateOne: { filter: { _id: 1 }, update: { $set: { 'body.html': EXCLUDED } } } },
+        { replaceOne: { filter: { _id: 1 }, replacement: { body: EXCLUDED } } },
         { deleteOne: { filter: { _id: 1 } } },
       ],
-      update: { body: OMITTED, kind: 'email' },
+      update: { body: EXCLUDED, kind: 'email' },
     },
     after: null,
   });
+});
+
+test('a nested path and a path through an array exclude only the field they name', () => {
+  const record = excludeLogFields({
+    connection: {
+      changeLog: { collection: logCollection, exclude: ['tokens.refresh', 'sessions.token'] },
+    },
+    record: {
+      args: {
+        doc: {
+          tokens: { refresh: 'r1', expires: 5 },
+          sessions: [{ token: 's1', device: 'phone' }, { device: 'laptop' }],
+        },
+        update: {
+          $set: {
+            'tokens.refresh.value': 'r2',
+            tokens: { refresh: 'r3', expires: 6 },
+            'sessions.$.token': 's2',
+            'sessions.0.token': 's3',
+            'sessions.$[].token': 's4',
+            'sessions.$[s].device': 'tablet',
+            'tokens.expires': 7,
+          },
+          $push: { sessions: { $each: [{ token: 's5', device: 'watch' }] } },
+        },
+      },
+      before: { tokens: { expires: 5 }, sessions: [] },
+      after: { tokens: { refresh: 'r3', expires: 7 }, sessions: [{ token: 's2' }] },
+    },
+  });
+  expect(record).toEqual({
+    args: {
+      doc: {
+        tokens: { refresh: EXCLUDED, expires: 5 },
+        sessions: [{ token: EXCLUDED, device: 'phone' }, { device: 'laptop' }],
+      },
+      update: {
+        $set: {
+          'tokens.refresh.value': EXCLUDED,
+          tokens: { refresh: EXCLUDED, expires: 6 },
+          'sessions.$.token': EXCLUDED,
+          'sessions.0.token': EXCLUDED,
+          'sessions.$[].token': EXCLUDED,
+          'sessions.$[s].device': 'tablet',
+          'tokens.expires': 7,
+        },
+        $push: { sessions: { $each: [{ token: EXCLUDED, device: 'watch' }] } },
+      },
+    },
+    before: { tokens: { expires: 5 }, sessions: [] },
+    after: { tokens: { refresh: EXCLUDED, expires: 7 }, sessions: [{ token: EXCLUDED }] },
+  });
+});
+
+test('MongoDBUpdateOne excludes a nested field in before, after and the update', async () => {
+  const SECRET = 'sealed-refresh-token';
+  await populateTestMongoDb({
+    collection,
+    documents: [{ _id: 'c1', tokens: { refresh: SECRET, access: 'a1' }, status: 'active' }],
+  });
+  const record = await logOf({
+    request: {
+      filter: { _id: 'c1' },
+      update: { $set: { 'tokens.access': 'a2', 'tokens.refresh': SECRET, status: 'active' } },
+    },
+    requestType: MongoDBUpdateOne,
+    connection: {
+      ...excluding,
+      changeLog: { collection: logCollection, exclude: ['tokens.refresh', 'tokens.access'] },
+    },
+    requestId: 'excludeNested',
+  });
+  expect(JSON.stringify(record)).not.toContain(SECRET);
+  expect(JSON.stringify(record)).not.toContain('a2');
+  expect(record.before.tokens).toEqual({ refresh: EXCLUDED, access: EXCLUDED });
+  expect(record.after.tokens).toEqual({ refresh: EXCLUDED, access: EXCLUDED });
+  expect(record.after.status).toEqual('active');
 });

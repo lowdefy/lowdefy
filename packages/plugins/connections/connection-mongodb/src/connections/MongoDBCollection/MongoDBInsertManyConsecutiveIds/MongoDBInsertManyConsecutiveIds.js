@@ -21,7 +21,7 @@ import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import verifyStoredTenant, { idsOfMap } from '../tenant/verifyStoredTenant.js';
 import stampTenantOnDoc from '../tenant/stampTenantOnDoc.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import omitLogFields from '../omitLogFields.js';
+import excludeLogFields from '../excludeLogFields.js';
 import { assertUnscopedDoc } from '../tenant/guardUnscopedWrite.js';
 import { serialize, deserialize } from '../serialize.js';
 import requestMetas from '../requestMetas.js';
@@ -70,7 +70,7 @@ async function MongoDBInsertManyConsecutiveIds({
       if (logCollection) {
         await logCollection.insertOne(
           stampTenantOnLogRecord({
-            record: omitLogFields({
+            record: excludeLogFields({
               connection,
               record: {
                 args: { docs, options },

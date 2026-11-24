@@ -60,18 +60,18 @@ export default {
             type: 'MongoDBCollection connection property "changeLog.meta" should be an object.',
           },
         },
-        omit: {
+        exclude: {
           type: 'array',
           description:
-            'Top-level fields whose values change log records never hold. Each copy a record makes of a document or a write (before, after, the inserted documents, each update operator or pipeline stage) has "[omitted]" in place of the field\'s value; a key "body.html" counts as "body". The record still shows which fields a write set.',
+            'Fields, as dot paths, whose values change log records never hold, such as a credential hash the collection must store. Each copy a record makes of a document or a write (before, after, the inserted documents, each update operator or pipeline stage) has "[excluded]" in place of the field\'s value, so the record still shows that a write set it. A path through an array names the field in each element, and an update key under the path ("token.hash" for "token", "items.$.pin" for "items.pin") is excluded too.',
           items: {
             type: 'string',
             errorMessage: {
-              type: 'MongoDBCollection connection property "changeLog.omit" should be an array of field names.',
+              type: 'MongoDBCollection connection property "changeLog.exclude" should be an array of field paths.',
             },
           },
           errorMessage: {
-            type: 'MongoDBCollection connection property "changeLog.omit" should be an array of field names.',
+            type: 'MongoDBCollection connection property "changeLog.exclude" should be an array of field paths.',
           },
         },
       },

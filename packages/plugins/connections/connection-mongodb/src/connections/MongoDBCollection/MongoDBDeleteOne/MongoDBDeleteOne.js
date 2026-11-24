@@ -17,7 +17,7 @@
 import assertTenantWritable from '../tenant/assertTenantWritable.js';
 import applyTenantToFilter from '../tenant/applyTenantToFilter.js';
 import stampTenantOnLogRecord from '../tenant/stampTenantOnLogRecord.js';
-import omitLogFields from '../omitLogFields.js';
+import excludeLogFields from '../excludeLogFields.js';
 import getCollection from '../getCollection.js';
 import mapMongoError from '../mapMongoError.js';
 import { serialize, deserialize } from '../serialize.js';
@@ -59,7 +59,7 @@ async function MongodbDeleteOne({
       };
       await logCollection.insertOne(
         stampTenantOnLogRecord({
-          record: omitLogFields({
+          record: excludeLogFields({
             connection,
             record: {
               args: { filter, options },
