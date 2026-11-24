@@ -38,7 +38,9 @@ import { fixtureTest, postJourney } from './fixtureClient.mjs';
 // opened last, on escape_targets; plugin_block.yaml covers a plugin block method its meta declares
 // a headless no-op, on plugin_block; text_targets.yaml covers text and containing targets inside a
 // ClickableHtml, on text_targets; text_checks.yaml covers expect text read from blocks' text
-// models, on text_checks.
+// models, on text_checks; headless_gaps.yaml covers a NumberInput fill and Enter, and the steps a
+// headless run leaves to the browser on a selector with onOpenChange actions, on a Table's search
+// box and on a Table's value, on headless_gaps (LDF-1149).
 
 const parityDirectory = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -63,6 +65,7 @@ const journeys = [
   ...readJourneys('plugin_block.yaml'),
   ...readJourneys('text_targets.yaml'),
   ...readJourneys('text_checks.yaml'),
+  ...readJourneys('headless_gaps.yaml'),
 ];
 
 // The journeys that must fail, in both runners at the same step, with what the browser's message
@@ -117,6 +120,16 @@ const BROWSER_ONLY_AT_RUN_TIME = {
     'ClickableHtml "company_rows" has its popover open, which may cover what the step clicks',
   'text_checks.yaml: a text check on a block with no text model runs in a browser':
     'Block "plugin_area" holds blocks a headless run has no text model for (FixtureBadge "plugin_badge")',
+  "headless_gaps.yaml: Enter after a number past a NumberInput's max runs in a browser, which clamps it":
+    'Enter in block "amount" (NumberInput) clamps 2000000 to its min and max',
+  'headless_gaps.yaml: a select on a MultipleSelector with onOpenChange actions runs in a browser':
+    'Block "spaces_picker" (MultipleSelector) has onOpenChange actions',
+  'headless_gaps.yaml: a click away from a Selector that opened itself runs in a browser':
+    'Block "stage_picker" (Selector) opened its dropdown as it rendered (autoOpen)',
+  'headless_gaps.yaml: a fill on a Table runs in a browser, which types into its search box':
+    'Block "contacts_grid" (Table) is no input',
+  "headless_gaps.yaml: a check on a Table's value runs in a browser, which writes it":
+    'reads the value of Table "board_grid"',
 };
 
 // Each journey here must have run headless and matched, not been left to the browser, unless

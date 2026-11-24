@@ -1,0 +1,145 @@
+id: headless_gaps
+type: Box
+# Steps a headless run reached once text checks ran headless (LDF-1149), for the parity journeys in
+# tests/journeys/_parity/headless_gaps.yaml
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs). Each runs in the
+# browser and headless; every event appends { event, payload } to state `log`.
+# - amount is a NumberInput: a fill types text, which antd's InputNumber reads as a number, and
+#   Enter fires onPressEnter.
+# - spaces_picker is a MultipleSelector with onOpenChange actions, as a picker that saves when its
+#   options close.
+# - stage_picker shows once edit_stage is clicked and opens its options itself (autoOpen), with
+#   onOpenChange actions.
+# - contacts_grid is a Table with a search box in its toolbar.
+# - board_grid is a Table whose defaultView folds the Queued group, which the Table writes into its
+#   value as it mounts.
+blocks:
+  - id: headless_gaps_title
+    type: Title
+    properties:
+      content: Headless gaps
+      level: 2
+  - id: amount
+    type: NumberInput
+    properties:
+      title: Amount
+      max: 1000000
+    events:
+      onChange:
+        - id: log_amount_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: amount.onChange
+                    payload: { _event: true }
+      onPressEnter:
+        - id: log_amount_enter
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: amount.onPressEnter
+  - id: spaces_picker
+    type: MultipleSelector
+    properties:
+      title: Spaces
+      options:
+        - Audit
+        - Sales
+    events:
+      onChange:
+        - id: log_spaces_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: spaces_picker.onChange
+                    payload: { _event: true }
+      onOpenChange:
+        - id: log_spaces_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: spaces_picker.onOpenChange
+                    payload: { _event: true }
+  - id: edit_stage
+    type: Button
+    properties:
+      title: Edit stage
+    events:
+      onClick:
+        - id: open_stage_editor
+          type: SetState
+          params:
+            editing_stage: true
+  - id: stage_picker
+    type: Selector
+    visible:
+      _eq:
+        - _state: editing_stage
+        - true
+    properties:
+      title: Stage
+      autoOpen: true
+      options:
+        - Open
+        - Won
+    events:
+      onOpenChange:
+        - id: log_stage_open_change
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: stage_picker.onOpenChange
+                    payload: { _event: true }
+  - id: contacts_grid
+    type: Table
+    properties:
+      rowKey: id
+      toolbar:
+        search: true
+      columns:
+        - key: name
+          title: Name
+      data:
+        - id: c-1
+          name: Kim Mover
+        - id: c-2
+          name: Pat Journey
+  - id: board_grid
+    type: Table
+    properties:
+      rowKey: id
+      defaultView:
+        group:
+          - key: where
+        collapsedGroups:
+          - '["queued"]'
+      columns:
+        - key: name
+          title: Name
+        - key: where
+          type: status
+          title: Where
+          hidden: true
+          groupable: true
+          options:
+            - value: queued
+              label: Queued
+            - value: active
+              label: Active
+      data:
+        - id: b-1
+          name: Quinn Board
+          where: queued
+        - id: b-2
+          name: Rita Seq
+          where: active
