@@ -1426,7 +1426,7 @@ test('test --headless --build runs headless journeys on the build with no server
   expect(written.journeys['tests/journeys/a.yaml#clicks submit']).toEqual({
     passed: true,
     hash: expect.stringMatching(/^[0-9a-f]{40}$/),
-    configHash: null,
+    configHashes: [],
   });
   expect(written.journeys['tests/journeys/b.yaml#reads the title'].browserOnly.index).toBe(1);
   expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
@@ -1955,7 +1955,7 @@ test('test runs each journey once by default: headless when it can, in the brows
   expect(written.journeys['tests/journeys/c.yaml#goes next']).toEqual({
     browserOnly: PARTWAY,
     hash: expect.stringMatching(/^[0-9a-f]{40}$/),
-    configHash: expect.stringMatching(/^[0-9a-f]{40}$/),
+    configHashes: [expect.stringMatching(/^[0-9a-f]{40}$/)],
   });
 });
 
@@ -2114,3 +2114,27 @@ test.each([[{ thorough: true }], [{ browser: true }]])(
     expect(mockOpenTestApp).not.toHaveBeenCalled();
   }
 );
+
+test('a record counts on a dev server kept running, whose build gained the pages the run opened', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  // The dev server builds a page as a journey first opens it.
+  mockPost.mockImplementation(async (url, body) => {
+    const pages = path.join(context.directories.dev, 'build', 'pages');
+    fs.mkdirSync(pages, { recursive: true });
+    fs.writeFileSync(path.join(pages, `${body.pageId}.json`), JSON.stringify({ id: body.pageId }));
+    if (body.headless === true) {
+      return { data: { browserOnly: PARTWAY } };
+    }
+    return { data: { passed: true, steps: [] } };
+  });
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  expect(
+    readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next'].configHashes
+  ).toHaveLength(2);
+
+  mockPost.mockClear();
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: false, first: { click: 'submit' } }]);
+});

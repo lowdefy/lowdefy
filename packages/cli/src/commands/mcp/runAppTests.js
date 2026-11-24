@@ -190,7 +190,7 @@ async function runAppTests({
       results: ran.headless.results,
       browserOnly: ran.headless.browserOnly,
       mode: 'dev',
-      configHash,
+      configHashes: [configHash, hashBuild({ context })],
     });
   }
   const seen = new Set();

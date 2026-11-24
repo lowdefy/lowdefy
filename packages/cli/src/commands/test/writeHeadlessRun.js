@@ -22,14 +22,14 @@ import { relativePosixPath } from '@lowdefy/node-utils';
 import hashJourney from './hashJourney.js';
 import readHeadlessRun from './readHeadlessRun.js';
 
-// The record of one journey's headless run, with the hashes that say which journey and config it
-// was taken on: `hash` (hashJourney; null for a file that did not parse) and `configHash`
-// (hashBuild of the dev server's build as the run started; null on the production build, whose
-// records a dev run never reads).
-function describeJourney({ result, configHash }) {
+// The hashes that say which journey and config a journey's headless run was taken on: `hash`
+// (hashJourney; null for a file that did not parse) and `configHashes` (hashBuild of the dev
+// server's build as the run started and as it ended, once the run's pages were built; [] on the
+// production build, whose records a dev run never reads).
+function describeJourney({ result, configHashes }) {
   return {
     hash: type.isObject(result.journey) ? hashJourney(result.journey) : null,
-    configHash: configHash ?? null,
+    configHashes: [...new Set(configHashes.filter((configHash) => !type.isNone(configHash)))],
   };
 }
 
@@ -41,20 +41,20 @@ function describeJourney({ result, configHash }) {
 // browser (routeJourney). Records of journeys this run did not run headless are kept. A headless
 // run records no traces, so it leaves the browser run's run.json alone. `mode` is "build" or
 // "dev", where the newest run ran.
-function writeHeadlessRun({ directories, results, browserOnly, mode, configHash }) {
+function writeHeadlessRun({ directories, results, browserOnly, mode, configHashes = [] }) {
   const journeys = readHeadlessRun({ directories });
   results.forEach((result) => {
     const file = relativePosixPath({ from: directories.config, to: result.filePath });
     journeys[`${file}#${result.name}`] = {
       passed: result.passed,
-      ...describeJourney({ result, configHash }),
+      ...describeJourney({ result, configHashes }),
     };
   });
   browserOnly.forEach((result) => {
     const file = relativePosixPath({ from: directories.config, to: result.filePath });
     journeys[`${file}#${result.name}`] = {
       browserOnly: result.browserOnly,
-      ...describeJourney({ result, configHash }),
+      ...describeJourney({ result, configHashes }),
     };
   });
   fs.mkdirSync(directories.test, { recursive: true });

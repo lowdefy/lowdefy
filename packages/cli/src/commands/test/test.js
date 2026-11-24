@@ -361,11 +361,13 @@ async function testJourneys({
     });
     results.push(...ran.results);
     browserOnly.push(...ran.browserOnly);
+    // The build once the run's pages were built.
+    const endConfigHash = hashBuild({ context });
     writeExercised({
       directories: context.directories,
       results,
       buildId: await fetchBuildId({ url: server.url }),
-      configHash: hashBuild({ context }),
+      configHash: endConfigHash,
     });
     writeTestRun({ directories: context.directories, results });
     if (ran.headless.results.length + ran.headless.browserOnly.length > 0) {
@@ -374,7 +376,7 @@ async function testJourneys({
         results: ran.headless.results,
         browserOnly: ran.headless.browserOnly,
         mode: 'dev',
-        configHash,
+        configHashes: [configHash, endConfigHash],
       });
     }
   } finally {

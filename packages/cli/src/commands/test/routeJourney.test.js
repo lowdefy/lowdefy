@@ -35,12 +35,16 @@ function itemOf(journey) {
   return { filePath, journey };
 }
 
-function recordsOf({ journey = headlessJourney, configHash = 'config-1', record = {} } = {}) {
+function recordsOf({
+  journey = headlessJourney,
+  configHashes = ['config-1', 'config-2'],
+  record = {},
+} = {}) {
   return {
     [`tests/journeys/a.yaml#${journey.name}`]: {
       browserOnly: { index: 0, step: { click: 'next' }, reason: 'needs a browser here' },
       hash: hashJourney(journey),
-      configHash,
+      configHashes,
       ...record,
     },
   };
@@ -66,16 +70,18 @@ test('a browser or headless run sends every journey there', () => {
 });
 
 test('a mixed run sends a journey recorded as found partway through to the browser', () => {
+  // The build as that run started, on a fresh server, or as it ended, on one kept running.
   expect(route({ records: recordsOf() })).toBe('browser');
+  expect(route({ records: recordsOf(), configHash: 'config-2' })).toBe('browser');
 });
 
 test('a record stops counting once the journey or the config changes', () => {
   const changed = { ...headlessJourney, steps: [{ click: 'save' }] };
   expect(route({ item: itemOf(changed), records: recordsOf() })).toBe('headless');
-  expect(route({ records: recordsOf({ configHash: 'config-0' }) })).toBe('headless');
+  expect(route({ records: recordsOf(), configHash: 'config-0' })).toBe('headless');
   // A record taken on the production build, or on a build hashBuild could not read, never counts.
-  expect(route({ records: recordsOf({ configHash: null }) })).toBe('headless');
-  expect(route({ records: recordsOf({ configHash: null }), configHash: null })).toBe('headless');
+  expect(route({ records: recordsOf({ configHashes: [] }) })).toBe('headless');
+  expect(route({ records: recordsOf(), configHash: null })).toBe('headless');
 });
 
 test('a record of a pass, or from before records carried hashes, never counts', () => {
@@ -83,6 +89,9 @@ test('a record of a pass, or from before records carried hashes, never counts', 
     'headless'
   );
   expect(route({ records: recordsOf({ record: { hash: undefined } }) })).toBe('headless');
+  expect(
+    route({ records: recordsOf({ record: { configHashes: undefined, configHash: 'config-1' } }) })
+  ).toBe('headless');
 });
 
 test('a journey no runner can take goes headless', () => {
@@ -106,6 +115,6 @@ test('mayRunInBrowser says whether a run takes the journey run slots before its 
   expect(read({ thorough: true })).toBe(true);
   expect(read({ entries: entries([headlessJourney, titleJourney]) })).toBe(true);
   // Whatever config it was found on: the build hash is read once the server is up.
-  expect(read({ records: recordsOf({ configHash: 'config-0' }) })).toBe(true);
+  expect(read({ records: recordsOf({ configHashes: ['config-0'] }) })).toBe(true);
   expect(read({ entries: [{ item: { filePath, error: 'Could not parse' } }] })).toBe(false);
 });

@@ -23,9 +23,12 @@ import findBrowserOnlyRecord from './findBrowserOnlyRecord.js';
 // Where a journey of the run goes before any journey runs: "headless" or "browser". A browser or
 // headless run sends every journey there. A mixed run sends a journey the classifier marks
 // browser-only (classifyJourney) to the browser, and so one an earlier headless run found needs a
-// browser partway through (findBrowserOnlyRecord), while the dev server's build hash, `configHash`
-// (hashBuild), is the one that run recorded, so it doesn't repeat headless steps; the rest go
-// headless. A journey no runner can take (checkJourneyItem) is refused the same either way, and
+// browser partway through (findBrowserOnlyRecord), while the dev server's build hash as this run
+// starts, `configHash` (hashBuild), is one that run recorded, so it doesn't repeat headless steps;
+// the rest go headless. A dev server builds each page as it is first opened, so its build hash
+// moves as journeys open pages: a run records the hash as it started and as it ended, which match
+// the next run's start on a fresh server and on one kept running, while nothing changed between
+// them. A journey no runner can take (checkJourneyItem) is refused the same either way, and
 // goes headless, which needs no browser slot.
 function routeJourney({ item, runner, records, configDirectory, configHash }) {
   if (runner !== 'mixed') {
@@ -38,7 +41,11 @@ function routeJourney({ item, runner, records, configDirectory, configHash }) {
     return 'browser';
   }
   const record = findBrowserOnlyRecord({ records, configDirectory, item });
-  if (!type.isUndefined(record) && !type.isNone(configHash) && record.configHash === configHash) {
+  if (
+    !type.isUndefined(record) &&
+    !type.isNone(configHash) &&
+    (record.configHashes ?? []).includes(configHash)
+  ) {
     return 'browser';
   }
   return 'headless';

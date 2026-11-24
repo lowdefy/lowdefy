@@ -57,7 +57,7 @@ test('records each journey with the hashes of the journey and the config it ran 
     results: [passed],
     browserOnly: [found],
     mode: 'dev',
-    configHash: 'config-1',
+    configHashes: ['config-1', 'config-2'],
   });
   expect(read()).toEqual({
     version: 1,
@@ -66,12 +66,12 @@ test('records each journey with the hashes of the journey and the config it ran 
       'tests/journeys/a.yaml#saves': {
         passed: true,
         hash: hashJourney(passed.journey),
-        configHash: 'config-1',
+        configHashes: ['config-1', 'config-2'],
       },
       'tests/journeys/b.yaml#goes next': {
         browserOnly: PARTWAY,
         hash: hashJourney(found.journey),
-        configHash: 'config-1',
+        configHashes: ['config-1', 'config-2'],
       },
     },
   });
@@ -83,7 +83,7 @@ test('keeps the records of journeys a later run did not run headless', () => {
     results: [],
     browserOnly: [resultOf({ name: 'goes next', file: 'b.yaml', browserOnly: PARTWAY })],
     mode: 'dev',
-    configHash: 'config-1',
+    configHashes: ['config-1', 'config-1'],
   });
   const kept = read().journeys['tests/journeys/b.yaml#goes next'];
   writeHeadlessRun({
@@ -98,8 +98,10 @@ test('keeps the records of journeys a later run did not run headless', () => {
   // The production build's records carry no config hash, so a dev run never reads them.
   expect(written.journeys['tests/journeys/a.yaml#saves']).toMatchObject({
     passed: false,
-    configHash: null,
+    configHashes: [],
   });
+  // One hash when the run built no page, and none it could not read.
+  expect(kept.configHashes).toEqual(['config-1']);
 });
 
 test('records a journey file that did not parse with no journey hash', () => {
@@ -115,9 +117,9 @@ test('records a journey file that did not parse with no journey hash', () => {
     ],
     browserOnly: [],
     mode: 'dev',
-    configHash: 'config-1',
+    configHashes: ['config-1', null],
   });
   expect(Object.values(read().journeys)).toEqual([
-    { passed: false, hash: null, configHash: 'config-1' },
+    { passed: false, hash: null, configHashes: ['config-1'] },
   ]);
 });
