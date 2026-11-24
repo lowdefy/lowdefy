@@ -21,6 +21,7 @@ import checkHeadlessPressRails from './checkHeadlessPressRails.js';
 import checkHeadlessRails from './checkHeadlessRails.js';
 import collectBlockParents from './collectBlockParents.js';
 import ESCAPE_PASSING_INPUT_TYPES from './ESCAPE_PASSING_INPUT_TYPES.js';
+import findOpenTour from './findOpenTour.js';
 import findShortcutBlocks from './findShortcutBlocks.js';
 import POPUP_BLOCK_TYPES from './POPUP_BLOCK_TYPES.js';
 import readFocusedInput from './readFocusedInput.js';
@@ -200,9 +201,9 @@ function findPointerPopup({ actor, parents, top }) {
 }
 
 // Why Escape needs a browser before it looks at what is open, or undefined: an event shortcut
-// binds it, an item shortcut does while no input has the focus, a Modal or Drawer renders while
-// closed (forceRender keeps it on the browser's Escape stack), or the focus is in an input that
-// handles Escape itself.
+// binds it, an item shortcut does while no input has the focus, a Tour is open (findOpenTour), a
+// Modal or Drawer renders while closed (forceRender keeps it on the browser's Escape stack), or
+// the focus is in an input that handles Escape itself.
 function findEarlyReason({ actor, blocks, focused }) {
   const [shortcut] = findShortcutBlocks({ actor, key: 'Escape' });
   if (!type.isUndefined(shortcut)) {
@@ -216,6 +217,10 @@ function findEarlyReason({ actor, blocks, focused }) {
   );
   if (focused === null && !type.isUndefined(items)) {
     return `${describeBlock(items)} binds Escape as an item shortcut, which a headless press does not fire: ${BROWSER}.`;
+  }
+  const tour = findOpenTour({ blocks });
+  if (!type.isUndefined(tour)) {
+    return `${describeBlock(tour)} is open, and a browser's Escape closes it whichever overlay is on top, or keeps it on top of what Escape would close: ${BROWSER}.`;
   }
   const forced = blocks.find(
     (block) => POPUP_BLOCK_TYPES.has(block.type) && block.eval.properties?.forceRender === true
