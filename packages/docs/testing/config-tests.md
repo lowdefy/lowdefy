@@ -651,7 +651,9 @@ BROWSER-ONLY  copies the invite link  step 2 (click "copy_link"): CopyToClipboar
 The next lowdefy test runs the browser-only journeys in the browser while they and the app config are unchanged; lowdefy test --thorough runs them there in this run.
 ```
 
-`.lowdefy/test/headless-run.json` remembers each journey a headless run found needs a browser partway through. The next `lowdefy test` sends it straight to the browser, without its headless steps, while the journey is unchanged and the development server's build is the one that run saw. Editing the journey, or the app's routes, auth, connections, endpoints or app-wide config, runs it headless again. A change inside a page alone may leave it in the browser, where it is still checked in full; delete `headless-run.json` to try it headless again. A run of some journeys keeps the records of the others.
+`.lowdefy/test/headless-run.json` remembers each journey a headless run found needs a browser partway through. The next `lowdefy test` sends it straight to the browser, without its headless steps, while the journey is unchanged and the development server's build is the one that run saw. Editing the journey, or the app's routes, auth, connections, endpoints or app-wide config, runs it headless again. A change inside a page alone, or a Lowdefy upgrade that lets the headless runner take the step, may leave it in the browser, where it is still checked in full. To try it headless again, run `lowdefy test --headless` once, which records each journey that now passes headless, or delete `headless-run.json`. A run of some journeys keeps the records of the others.
+
+A journey with a `hold`, `release` or `call` as `system` step never goes to the browser, which cannot take those steps. If it also needs a browser, it stays browser-only in every run, `--thorough` included, and the note after the summary says so.
 
 A fresh CI checkout has no `headless-run.json`, so a plain `lowdefy test` there only reports a journey found to need a browser partway through, and never runs it in a browser. Run `lowdefy test --thorough` in CI.
 
