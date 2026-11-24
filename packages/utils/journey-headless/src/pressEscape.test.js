@@ -571,3 +571,25 @@ test('A Modal with focusTriggerAfterClose false leaves no input with the focus a
   expect(result.passed).toBe(true);
   expect(readLog(log).map(([name]) => name)).toContain('modal.onCancel');
 });
+
+test.each([null, 0, ''])(
+  'Escape leaves a Modal and a Drawer with keyboard %j open',
+  async (keyboard) => {
+    const { log, result } = await runTestJourney({
+      pages: [
+        escapePage({ modal: { properties: { keyboard } }, drawer: { properties: { keyboard } } }),
+      ],
+      steps: [
+        { click: 'open_modal' },
+        { press: 'Escape' },
+        { expect: { visible: 'note' } },
+        { click: 'open_inner' },
+        { press: 'Escape' },
+        { expect: { visible: 'details' } },
+      ],
+    });
+    expect(result.passed).toBe(true);
+    expect(readLog(log).map(([name]) => name)).not.toContain('modal.onCancel');
+    expect(readLog(log).map(([name]) => name)).not.toContain('drawer.onClose');
+  }
+);

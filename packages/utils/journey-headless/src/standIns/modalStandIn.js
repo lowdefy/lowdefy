@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import HeadlessStepError from '../HeadlessStepError.js';
 import describeBlock from './describeBlock.js';
 import destroysContentOnHidden from './destroysContentOnHidden.js';
@@ -92,12 +94,13 @@ async function click({ actor, block, target }) {
 }
 
 // Escape on the open Modal, when it is the overlay that opened last: rc-dialog calls antd's
-// handleCancel unless keyboard is false, which fires onCancel; the block then closes, as its
-// Cancel button does, unless onCancel failed or bounced. antd's closable and maskClosable leave
+// handleCancel unless keyboard is set falsy (it defaults to true only when undefined), which fires
+// onCancel; the block then closes, as its Cancel button does, unless onCancel failed or bounced. antd's closable and maskClosable leave
 // Escape alone. handleCancel does nothing while onOk runs (confirmLoading), which a headless step
 // never meets: the step that clicked OK settles once onOk has finished.
 async function escape({ actor, block }) {
-  if (block.eval.properties?.keyboard === false) {
+  const keyboard = block.eval.properties?.keyboard;
+  if (!type.isUndefined(keyboard) && !keyboard) {
     return;
   }
   const response = await fireEvent({ actor, block, name: 'onCancel' });
