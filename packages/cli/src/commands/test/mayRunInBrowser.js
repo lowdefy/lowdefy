@@ -19,6 +19,7 @@ import { classifyJourney } from '@lowdefy/node-utils';
 
 import checkJourneyItem from './checkJourneyItem.js';
 import findBrowserOnlyRecord from './findBrowserOnlyRecord.js';
+import runsOnlyInProcess from './runsOnlyInProcess.js';
 
 // Whether a run may take a journey to the browser, read before its server starts, when the dev
 // server's build hash is not known yet: a browser run, a thorough mixed run (any journey may be
@@ -34,7 +35,7 @@ function mayRunInBrowser({ entries, runner, thorough, records, configDirectory }
     return true;
   }
   return entries.some(({ item }) => {
-    if (!type.isUndefined(checkJourneyItem({ item }))) {
+    if (!type.isUndefined(checkJourneyItem({ item })) || runsOnlyInProcess({ item })) {
       return false;
     }
     if (!classifyJourney({ journey: item.journey }).headless) {

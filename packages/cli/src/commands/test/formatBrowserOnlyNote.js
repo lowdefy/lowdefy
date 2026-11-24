@@ -18,12 +18,16 @@
 // part found needs a browser partway through is not run in the browser in the same run (only
 // --thorough does that), and the next run sends it straight there while it and the app's config
 // are unchanged (routeJourney). Undefined otherwise: a headless run lists its browser-only
-// journeys by design, and a thorough run runs them.
-function formatBrowserOnlyNote({ runner, browserOnly }) {
+// journeys by design, and a thorough run runs them. `tool` names the lowdefy_run_tests tool and its
+// argument instead of the command and its flag.
+function formatBrowserOnlyNote({ runner, browserOnly, tool = false }) {
   if (runner !== 'mixed' || browserOnly === 0) {
     return undefined;
   }
-  return 'The next lowdefy test runs the browser-only journeys in the browser while they and the app config are unchanged; lowdefy test --thorough runs them there in this run.';
+  const [next, thorough] = tool
+    ? ['lowdefy_run_tests', 'thorough: true']
+    : ['lowdefy test', 'lowdefy test --thorough'];
+  return `The next ${next} runs the browser-only journeys in the browser while they and the app config are unchanged; ${thorough} runs them there in this run.`;
 }
 
 export default formatBrowserOnlyNote;

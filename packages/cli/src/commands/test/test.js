@@ -370,11 +370,12 @@ async function testJourneys({
       configHash: endConfigHash,
     });
     writeTestRun({ directories: context.directories, results });
-    if (ran.headless.results.length + ran.headless.browserOnly.length > 0) {
+    if (ran.headless.results.length + ran.headless.browserOnly.length + ran.remembered.length > 0) {
       writeHeadlessRun({
         directories: context.directories,
         results: ran.headless.results,
         browserOnly: ran.headless.browserOnly,
+        remembered: ran.remembered,
         mode: 'dev',
         configHashes: [configHash, endConfigHash],
       });

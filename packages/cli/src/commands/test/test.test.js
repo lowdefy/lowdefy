@@ -2138,3 +2138,42 @@ test('a record counts on a dev server kept running, whose build gained the pages
   await test({ context });
   expect(postedRuns()).toEqual([{ headless: false, first: { click: 'submit' } }]);
 });
+
+test('a thorough run leaves a journey with a step only the headless runner takes browser-only', async () => {
+  const { default: test } = await import('./test.js');
+  mockPost.mockResolvedValue({ data: { browserOnly: PARTWAY } });
+  writeJourneyFile(
+    'h.yaml',
+    'name: holds and goes next\npageId: form\ndata: base\nsteps:\n  - hold: { requestId: save }\n  - click: next\n'
+  );
+  context.options.thorough = true;
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: true, first: { hold: { requestId: 'save' } } }]);
+  expect(logs.info).toContain(
+    'BROWSER-ONLY  holds and goes next  step 1 (click "next"): the click lands on a block the headless run cannot model'
+  );
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('--access refuses --browser and --thorough, naming the command meant', async () => {
+  const { default: test } = await import('./test.js');
+  context.options = {
+    port: 3000,
+    access: true,
+    browser: true,
+    typedOptions: ['access', 'browser'],
+  };
+  await test({ context });
+  expect(logs.error[0]).toBe(
+    '--access checks the access table alone: drop --browser, or run "lowdefy test --browser" to run every journey in the browser.'
+  );
+  logs.error = [];
+  context.options = {
+    port: 3000,
+    access: true,
+    thorough: true,
+    typedOptions: ['access', 'thorough'],
+  };
+  await test({ context });
+  expect(logs.error[0]).toMatch(/^--access checks the access table alone: drop --thorough/);
+});

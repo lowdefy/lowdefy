@@ -15,12 +15,14 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { classifyJourney } from '@lowdefy/node-utils';
 
 import headlessDevSuite from './headlessDevSuite.js';
 import readHeadlessRun from './readHeadlessRun.js';
 import routeJourney from './routeJourney.js';
 import runJourneyPool from './runJourneyPool.js';
 import runRepeated from './runRepeated.js';
+import runsOnlyInProcess from './runsOnlyInProcess.js';
 
 function indexesOf({ routes, route }) {
   return routes.flatMap((each, index) => (each === route ? [index] : []));
@@ -32,7 +34,7 @@ function indexesOf({ routes, route }) {
 // (runJourneyPool), the browser run recording into `recording` as runRepeated does. A journey the
 // headless run finds needs a browser partway through is browser-only: neither passed nor failed.
 // On a `thorough` mixed run it then runs in the browser from step 1, beside the rest of the
-// browser part. `configHash` is hashBuild of the dev server's build as the run starts, which
+// browser part, unless it has a step only the headless runner takes (runsOnlyInProcess). `configHash` is hashBuild of the dev server's build as the run starts, which
 // routeJourney compares with headless-run.json's records. On a mixed run every result carries
 // `ranIn` ("headless" or "browser"), where its reported run ran, which its line names.
 // `onReported({ entry, result, inBrowserNext })` is called as runJourneyPool reports each run,
@@ -40,8 +42,8 @@ function indexesOf({ routes, route }) {
 // `onFinished({ result, done, total })` once per journey, as its last run finishes.
 // Returns, in selection order, `results` and `browserOnly`, the journeys that ran to a verdict and
 // those left browser-only, and `verdicts`, each of `results` with its suite ({ suite, result }), to
-// format it; and `headless`, the same split of the runs the headless part made, for
-// headless-run.json.
+// format it; `headless`, the same split of the runs the headless part made, and `remembered`, the
+// items a headless-run.json record sent to the browser, for headless-run.json.
 async function runDevJourneys({
   context,
   entries,
@@ -73,8 +75,10 @@ async function runDevJourneys({
       await onFinished({ result, done, total: entries.length });
     }
   }
-  function inBrowserNext(result) {
-    return thorough && !type.isUndefined(result.browserOnly);
+  function inBrowserNext({ entry, result }) {
+    return (
+      thorough && !type.isUndefined(result.browserOnly) && !runsOnlyInProcess({ item: entry.item })
+    );
   }
 
   // Headless runs go one at a time: concurrent headless sessions on one dev server are untested.
@@ -87,21 +91,21 @@ async function runDevJourneys({
       usage,
       ...(runner === 'mixed' ? { ranIn: 'headless' } : {}),
     }),
-    onFinished: async ({ result }) => {
-      if (!inBrowserNext(result)) {
+    onFinished: async ({ entry, result }) => {
+      if (!inBrowserNext({ entry, result })) {
         await finish({ result });
       }
     },
     onReported: async ({ entry, result }) => {
       if (!type.isNone(onReported)) {
-        await onReported({ entry, result, inBrowserNext: inBrowserNext(result) });
+        await onReported({ entry, result, inBrowserNext: inBrowserNext({ entry, result }) });
       }
     },
   });
   const browserIndexes = indexesOf({ routes, route: 'browser' });
   headlessIndexes.forEach((index, at) => {
     const result = headlessRuns[at];
-    if (inBrowserNext(result)) {
+    if (inBrowserNext({ entry: entries[index], result })) {
       browserIndexes.push(index);
       return;
     }
@@ -149,6 +153,12 @@ async function runDevJourneys({
       results: headlessRuns.filter((result) => !isBrowserOnly(result)),
       browserOnly: headlessRuns.filter(isBrowserOnly),
     },
+    remembered:
+      runner === 'mixed'
+        ? indexesOf({ routes, route: 'browser' })
+            .map((index) => entries[index].item)
+            .filter((item) => classifyJourney({ journey: item.journey }).headless)
+        : [],
   };
 }
 

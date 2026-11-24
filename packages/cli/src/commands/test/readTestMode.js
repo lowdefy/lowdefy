@@ -37,9 +37,9 @@ function readTestMode({ options, flagPrefix = '--' }) {
         'headless'
       )} each pick where the journeys run: pass one of them. ${flag(
         'browser'
-      )} runs every journey in the browser, ${flag(
+      )} runs every journey in the browser; ${flag(
         'thorough'
-      )} runs each journey headless when it can and in the browser when it can't, and ${flag(
+      )} runs each journey headless when it can and in the browser when it can't, and also runs in the browser each journey found to need one partway through; ${flag(
         'headless'
       )} runs only the journeys that need no browser.`,
     };

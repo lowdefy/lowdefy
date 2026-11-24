@@ -184,11 +184,12 @@ async function runAppTests({
     buildId: await fetchBuildId({ url }),
   });
   writeTestRun({ directories: context.directories, results });
-  if (ran.headless.results.length + ran.headless.browserOnly.length > 0) {
+  if (ran.headless.results.length + ran.headless.browserOnly.length + ran.remembered.length > 0) {
     writeHeadlessRun({
       directories: context.directories,
       results: ran.headless.results,
       browserOnly: ran.headless.browserOnly,
+      remembered: ran.remembered,
       mode: 'dev',
       configHashes: [configHash, hashBuild({ context })],
     });
@@ -220,7 +221,7 @@ async function runAppTests({
       skipped: tiered.skipped.length,
       browserOnly: browserOnly.length,
     }).text,
-    formatBrowserOnlyNote({ runner, browserOnly: browserOnly.length }),
+    formatBrowserOnlyNote({ runner, browserOnly: browserOnly.length, tool: true }),
   ]
     .filter((line) => !type.isUndefined(line))
     .join('\n');

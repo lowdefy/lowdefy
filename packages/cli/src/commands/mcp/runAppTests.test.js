@@ -641,7 +641,7 @@ test('runAppTests reports a journey found partway through by default, and runs i
   const found = await runAppTests({ configDirectory, url, paths: ['tests/journeys/orders.yaml'] });
   expect(bodies.map((posted) => posted.headless === true)).toEqual([true]);
   expect(found.summary).toBe(
-    '0 passed, 0 failed of 0 journeys, 1 browser-only not run\nThe next lowdefy test runs the browser-only journeys in the browser while they and the app config are unchanged; lowdefy test --thorough runs them there in this run.'
+    '0 passed, 0 failed of 0 journeys, 1 browser-only not run\nThe next lowdefy_run_tests runs the browser-only journeys in the browser while they and the app config are unchanged; thorough: true runs them there in this run.'
   );
   expect(found.browserOnly).toEqual([
     'BROWSER-ONLY  orders list  step 0 (click "a"): needs a browser here',

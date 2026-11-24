@@ -19,6 +19,7 @@ import { classifyJourney } from '@lowdefy/node-utils';
 
 import checkJourneyItem from './checkJourneyItem.js';
 import findBrowserOnlyRecord from './findBrowserOnlyRecord.js';
+import runsOnlyInProcess from './runsOnlyInProcess.js';
 
 // Where a journey of the run goes before any journey runs: "headless" or "browser". A browser or
 // headless run sends every journey there. A mixed run sends a journey the classifier marks
@@ -29,12 +30,14 @@ import findBrowserOnlyRecord from './findBrowserOnlyRecord.js';
 // moves as journeys open pages: a run records the hash as it started and as it ended, which match
 // the next run's start on a fresh server and on one kept running, while nothing changed between
 // them. A journey no runner can take (checkJourneyItem) is refused the same either way, and
-// goes headless, which needs no browser slot.
+// goes headless, which needs no browser slot. So does one with a step only the headless runner
+// takes (runsOnlyInProcess), which a browser run would refuse: headless, it passes, fails or is
+// reported browser-only.
 function routeJourney({ item, runner, records, configDirectory, configHash }) {
   if (runner !== 'mixed') {
     return runner;
   }
-  if (!type.isUndefined(checkJourneyItem({ item }))) {
+  if (!type.isUndefined(checkJourneyItem({ item })) || runsOnlyInProcess({ item })) {
     return 'headless';
   }
   if (!classifyJourney({ journey: item.journey }).headless) {

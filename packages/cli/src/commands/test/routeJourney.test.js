@@ -118,3 +118,35 @@ test('mayRunInBrowser says whether a run takes the journey run slots before its 
   expect(read({ records: recordsOf({ configHashes: ['config-0'] }) })).toBe(true);
   expect(read({ entries: [{ item: { filePath, error: 'Could not parse' } }] })).toBe(false);
 });
+
+test('a mixed run never sends a journey with a step only the headless runner takes to the browser', () => {
+  const held = {
+    name: 'holds a call',
+    pageId: 'form',
+    steps: [{ hold: { requestId: 'save' } }, { expect: { title: { contains: 'home' } } }],
+  };
+  expect(route({ item: itemOf(held) })).toBe('headless');
+  expect(route({ item: itemOf(held), records: recordsOf({ journey: held }) })).toBe('headless');
+  expect(
+    mayRunInBrowser({
+      entries: [{ item: itemOf(held) }],
+      runner: 'mixed',
+      thorough: false,
+      records: recordsOf({ journey: held }),
+      configDirectory,
+    })
+  ).toBe(false);
+});
+
+test('a record from the production build sends nothing to the browser, nor takes the slots', () => {
+  expect(route({ records: recordsOf({ configHashes: [] }) })).toBe('headless');
+  expect(
+    mayRunInBrowser({
+      entries: [{ item: itemOf(headlessJourney) }],
+      runner: 'mixed',
+      thorough: false,
+      records: recordsOf({ configHashes: [] }),
+      configDirectory,
+    })
+  ).toBe(false);
+});

@@ -28,3 +28,9 @@ test('says nothing when none was left, or on a headless run, which lists them by
   expect(formatBrowserOnlyNote({ runner: 'mixed', browserOnly: 0 })).toBeUndefined();
   expect(formatBrowserOnlyNote({ runner: 'headless', browserOnly: 2 })).toBeUndefined();
 });
+
+test('names the lowdefy_run_tests tool and its argument for the MCP answer', () => {
+  expect(formatBrowserOnlyNote({ runner: 'mixed', browserOnly: 1, tool: true })).toBe(
+    'The next lowdefy_run_tests runs the browser-only journeys in the browser while they and the app config are unchanged; thorough: true runs them there in this run.'
+  );
+});

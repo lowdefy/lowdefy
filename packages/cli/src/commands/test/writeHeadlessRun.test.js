@@ -123,3 +123,28 @@ test('records a journey file that did not parse with no journey hash', () => {
     { passed: false, hash: null, configHashes: ['config-1'] },
   ]);
 });
+
+test('a record that sent a journey to the browser takes this run hashes, and the file is whole', () => {
+  const found = resultOf({ name: 'goes next', file: 'b.yaml', browserOnly: PARTWAY });
+  writeHeadlessRun({
+    directories,
+    results: [],
+    browserOnly: [found],
+    mode: 'dev',
+    configHashes: ['config-1', 'config-2'],
+  });
+  writeHeadlessRun({
+    directories,
+    results: [],
+    browserOnly: [],
+    remembered: [{ filePath: found.filePath, journey: found.journey }],
+    mode: 'dev',
+    configHashes: ['config-2', 'config-3'],
+  });
+  expect(read().journeys['tests/journeys/b.yaml#goes next']).toEqual({
+    browserOnly: PARTWAY,
+    hash: hashJourney(found.journey),
+    configHashes: ['config-2', 'config-3'],
+  });
+  expect(fs.readdirSync(directories.test)).toEqual(['headless-run.json']);
+});

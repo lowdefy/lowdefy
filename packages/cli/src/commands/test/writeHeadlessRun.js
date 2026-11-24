@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { type } from '@lowdefy/helpers';
@@ -29,8 +30,12 @@ import readHeadlessRun from './readHeadlessRun.js';
 function describeJourney({ result, configHashes }) {
   return {
     hash: type.isObject(result.journey) ? hashJourney(result.journey) : null,
-    configHashes: [...new Set(configHashes.filter((configHash) => !type.isNone(configHash)))],
+    configHashes: knownHashes(configHashes),
   };
+}
+
+function knownHashes(configHashes) {
+  return [...new Set(configHashes.filter((configHash) => !type.isNone(configHash)))];
 }
 
 // Writes .lowdefy/test/headless-run.json after a headless run: every journey it ran headless,
@@ -38,11 +43,26 @@ function describeJourney({ result, configHashes }) {
 // 'open', reason } when opening the page needed a browser), each with its hashes
 // (describeJourney), so CI and agents read which journeys this run could not take as well as
 // which passed, and a later mixed run sends a journey found to need a browser straight to the
-// browser (routeJourney). Records of journeys this run did not run headless are kept. A headless
-// run records no traces, so it leaves the browser run's run.json alone. `mode` is "build" or
-// "dev", where the newest run ran.
-function writeHeadlessRun({ directories, results, browserOnly, mode, configHashes = [] }) {
+// browser (routeJourney). Records of journeys this run did not run headless are kept. A record
+// that sent a journey of this run to the browser (`remembered`, the items) still holds, and takes
+// this run's hashes, so a dev server kept running, whose build moves as pages are first opened,
+// keeps reading it. A headless run records no traces, so it leaves the browser run's run.json
+// alone. `mode` is "build" or "dev", where the newest run ran. The file is written to a temporary
+// name and renamed over the old one, so a run reading it never reads it half written.
+function writeHeadlessRun({
+  directories,
+  results,
+  browserOnly,
+  remembered = [],
+  mode,
+  configHashes = [],
+}) {
   const journeys = readHeadlessRun({ directories });
+  remembered.forEach((item) => {
+    const file = relativePosixPath({ from: directories.config, to: item.filePath });
+    const key = `${file}#${item.journey.name}`;
+    journeys[key] = { ...journeys[key], configHashes: knownHashes(configHashes) };
+  });
   results.forEach((result) => {
     const file = relativePosixPath({ from: directories.config, to: result.filePath });
     journeys[`${file}#${result.name}`] = {
@@ -58,10 +78,10 @@ function writeHeadlessRun({ directories, results, browserOnly, mode, configHashe
     };
   });
   fs.mkdirSync(directories.test, { recursive: true });
-  fs.writeFileSync(
-    path.join(directories.test, 'headless-run.json'),
-    `${JSON.stringify({ version: 1, mode, journeys }, null, 2)}\n`
-  );
+  const filePath = path.join(directories.test, 'headless-run.json');
+  const temporary = `${filePath}.${crypto.randomBytes(6).toString('hex')}.tmp`;
+  fs.writeFileSync(temporary, `${JSON.stringify({ version: 1, mode, journeys }, null, 2)}\n`);
+  fs.renameSync(temporary, filePath);
 }
 
 export default writeHeadlessRun;
