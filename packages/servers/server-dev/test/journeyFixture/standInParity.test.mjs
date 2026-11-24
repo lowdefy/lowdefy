@@ -33,7 +33,8 @@ import { fixtureTest, postJourney } from './fixtureClient.mjs';
 // popup_targets page; grids.yaml covers AgGrid and Table on grid_targets; clickable_html.yaml
 // covers ClickableHtml on clickable_targets; search_selectors.yaml covers the searching selectors'
 // fill on search_targets; input_events.yaml covers the onChange event a fill fires and a select by
-// an html label's text on input_events.
+// an html label's text on input_events; skeleton_loading.yaml covers content that mounts once a
+// loading skeleton ends, on skeleton_loading.
 
 const parityDirectory = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
@@ -53,6 +54,7 @@ const journeys = [
   ...readJourneys('clickable_html.yaml'),
   ...readJourneys('search_selectors.yaml'),
   ...readJourneys('input_events.yaml'),
+  ...readJourneys('skeleton_loading.yaml'),
 ];
 
 // The journeys that must fail, in both runners at the same step, with what the browser's message

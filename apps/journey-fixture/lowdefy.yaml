@@ -136,6 +136,7 @@ pages:
   - _ref: pages/clickable_targets.yaml
   - _ref: pages/search_targets.yaml
   - _ref: pages/input_events.yaml
+  - _ref: pages/skeleton_loading.yaml
   - _ref: pages/popup_targets.yaml
   - _ref: pages/grid_targets.yaml
   - _ref: pages/caught_faults.yaml

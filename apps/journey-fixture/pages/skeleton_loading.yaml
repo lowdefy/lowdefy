@@ -1,0 +1,74 @@
+id: skeleton_loading
+type: Box
+# A record page whose content waits behind a skeleton, for the parity journey in
+# tests/journeys/_parity/skeleton_loading.yaml
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1140). As a company
+# page does, the page loads its record in onMountAsync, and record_frame shows its skeleton while
+# `record_first_load` is true. The browser mounts the panels inside, firing their onMount, only once
+# loading ends, so each reads the loaded record's id; headless must wait the same way.
+events:
+  onInit:
+    - id: start_loading
+      type: SetState
+      params:
+        record_first_load: true
+  onMountAsync:
+    - id: load_record
+      type: Wait
+      params:
+        ms: 300
+    - id: set_record
+      type: SetState
+      params:
+        record:
+          id: c1
+        record_first_load: false
+blocks:
+  - id: skeleton_loading_title
+    type: Title
+    properties:
+      content: Skeleton loading
+      level: 2
+  - id: record_frame
+    type: Box
+    loading:
+      _state: record_first_load
+    skeleton:
+      type: SkeletonParagraph
+      properties:
+        lines: 3
+    blocks:
+      - id: record_panel
+        type: Box
+        events:
+          onMount:
+            - id: log_record_panel_mount
+              type: SetState
+              params:
+                log:
+                  _array.concat:
+                    - _if_none: [{ _state: log }, []]
+                    - - event: record_panel.onMount
+                        payload:
+                          record_id:
+                            _state: record.id
+        blocks:
+          - id: record_deals
+            type: Box
+            events:
+              onMount:
+                - id: log_record_deals_mount
+                  type: SetState
+                  params:
+                    log:
+                      _array.concat:
+                        - _if_none: [{ _state: log }, []]
+                        - - event: record_deals.onMount
+                            payload:
+                              record_id:
+                                _state: record.id
+            blocks:
+              - id: record_deals_title
+                type: Paragraph
+                properties:
+                  content: Deals

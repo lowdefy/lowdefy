@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import collectBlockParents from './collectBlockParents.js';
-import collectMountOrder from './collectMountOrder.js';
+import { collectRenderedBlocks } from './collectMountOrder.js';
 import readStandInState from './readStandInState.js';
 import leaveMethodsToBrowser from './standIns/leaveMethodsToBrowser.js';
 import registerHeadlessMethods from './standIns/registerHeadlessMethods.js';
@@ -33,17 +33,15 @@ const LIST_METHODS = ['moveItemDown', 'moveItemUp', 'pushItem', 'removeItem', 'u
 // method. A block whose type has no stand-in registers the methods its meta declares for a
 // headless run (meta.headlessMethods: { [method]: the event it fires }; registerHeadlessMethods)
 // once the browser would render it, as its component registers them as it renders: not while it
-// is hidden, or inside a hidden block or a closed Modal (collectMountOrder). Every other method,
-// and a declared one before then, is left to the browser (leaveMethodsToBrowser): its component,
-// which registers them, is not loaded. Run again after the page changes, since list rows add
-// blocks and a block may show.
+// is hidden or shows its skeleton, or inside a hidden block, a block showing its skeleton or a
+// closed Modal (collectRenderedBlocks). Every other method, and a declared one before then, is
+// left to the browser (leaveMethodsToBrowser): its component, which registers them, is not loaded.
+// Run again after the page changes, since list rows add blocks and a block may show.
 function registerBlockStandIns({ actor }) {
-  const { context, openBlocks } = actor.page;
+  const { context, mountFinished, openBlocks } = actor.page;
   const { blockMetas } = context._internal.lowdefy._internal;
   const rendered = new Set(
-    collectMountOrder({ openBlocks, slots: context._internal.RootSlots }).filter(
-      (block) => block.eval?.visible !== false
-    )
+    collectRenderedBlocks({ mountFinished, openBlocks, slots: context._internal.RootSlots })
   );
   collectBlockParents({ context }).blocks.forEach((block) => {
     const standIn = BLOCK_STAND_INS[block.type];

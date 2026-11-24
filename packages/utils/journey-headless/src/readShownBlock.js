@@ -19,8 +19,9 @@ import { type } from '@lowdefy/helpers';
 import collectBlockParents from './collectBlockParents.js';
 import isBlockShown from './isBlockShown.js';
 
-// The block `blockId` names on the actor's page when the page shows it (isBlockShown: it and
-// every block holding it visible, and every Modal or Drawer among them open), else null.
+// The block `blockId` names on the actor's page when the page shows it (isBlockShown: its
+// component renders, it and every block holding it are visible, and every Modal or Drawer among
+// them is open), else null.
 function readShownBlock({ actor, blockId }) {
   const context = actor.page?.context;
   const block = context?._internal.RootSlots.map[blockId];
@@ -28,7 +29,7 @@ function readShownBlock({ actor, blockId }) {
     return null;
   }
   const { parents } = collectBlockParents({ context });
-  return isBlockShown({ block, openBlocks: actor.page.openBlocks, parents }) ? block : null;
+  return isBlockShown({ block, page: actor.page, parents }) ? block : null;
 }
 
 export default readShownBlock;

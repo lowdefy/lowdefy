@@ -708,7 +708,7 @@ A headless `fill` fires the block's `onChange` with `{ value }`, as a text, numb
 
 A `ClickableHtml` target (`{ blockId, control, rowKey }`) runs headless from the block's rendered `html`: the runner fires the event of the one listed element with that `data-event` and `data-id`, with its other `data-*` attributes as the event object, and asks first where the browser would, so the journey answers the confirm with `control: ok` or `cancel`. An element in popover content counts when no shown element matches, as the browser opens its popover; a disabled one refuses the click.
 
-`visible` and `hidden` read the block's `visible` and that of every block holding it, and whether each `Modal` or `Drawer` around it is open, not what is drawn. A journey whose meaning is "the person sees this" keeps a `text` target or an `expect: { text }`, which keeps it in the browser. The [lint](#lint) rule L8 names journeys that are browser-only only because of a target a `blockId` or a control key would replace.
+`visible` and `hidden` read the block's `visible` and that of every block holding it, whether each `Modal` or `Drawer` around it is open, and whether a loading block around it shows its `skeleton` in its place, not what is drawn. Content behind a skeleton mounts, and fires `onMount`, only once its block stops loading, as in a browser. A journey whose meaning is "the person sees this" keeps a `text` target or an `expect: { text }`, which keeps it in the browser. The [lint](#lint) rule L8 names journeys that are browser-only only because of a target a `blockId` or a control key would replace.
 
 ### On a production build, for CI
 

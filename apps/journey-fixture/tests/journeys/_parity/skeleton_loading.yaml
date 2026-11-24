@@ -1,0 +1,19 @@
+# Parity journey for content behind a loading skeleton (LDF-1140), on the skeleton_loading page.
+# The panels inside record_frame mount, and fire onMount, once the page's onMountAsync has loaded
+# the record, children first. It runs in the browser and headless
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs) and must end with the
+# same state `log`. In a folder starting with "_" so the suite's own runs, and harden, leave it out.
+- name: content behind a loading skeleton mounts once the record has loaded
+  pageId: skeleton_loading
+  steps:
+    - expect: { visible: record_deals_title }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: record_deals.onMount
+              payload:
+                record_id: c1
+            - event: record_panel.onMount
+              payload:
+                record_id: c1
