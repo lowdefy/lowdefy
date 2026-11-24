@@ -20,6 +20,7 @@ import BLOCK_STAND_INS from './BLOCK_STAND_INS.js';
 import checkHeadlessPressRails from './checkHeadlessPressRails.js';
 import checkHeadlessRails from './checkHeadlessRails.js';
 import collectBlockParents from './collectBlockParents.js';
+import drawsPointerPopup from './drawsPointerPopup.js';
 import ESCAPE_PASSING_INPUT_TYPES from './ESCAPE_PASSING_INPUT_TYPES.js';
 import findOpenTour from './findOpenTour.js';
 import findShortcutBlocks from './findShortcutBlocks.js';
@@ -143,40 +144,6 @@ function bindsBlockItemEscape({ actor, block }) {
   );
 }
 
-// Block types whose component can show a tooltip or popover under the pointer on its own: a grid's
-// buttons cells give an icon-only button its title as a tooltip.
-const POINTER_POPUP_TYPES = new Set([
-  'AgGridAlpine',
-  'AgGridBalham',
-  'AgGridLowdefy',
-  'AgGridMaterial',
-  'Popover',
-  'Table',
-  'TableLight',
-  'Tooltip',
-]);
-
-// Whether the block can show a tooltip or popover where the pointer rests: a Button with a
-// tooltip (its own, or its title when the title is hidden, as Button.js works it out), html with
-// a data-tooltip or data-popover element, or a type in POINTER_POPUP_TYPES.
-function drawsPointerPopup(block) {
-  const properties = block.eval.properties ?? {};
-  if (POINTER_POPUP_TYPES.has(block.type)) {
-    return true;
-  }
-  if (block.type === 'Button') {
-    const titleHidden =
-      properties.hideTitle === true ||
-      (properties.shape === 'circle' && type.isNone(properties.title));
-    return type.isString(properties.tooltip) || (titleHidden && !type.isNone(properties.title));
-  }
-  if (block.type === 'Html' || block.type === 'ClickableHtml') {
-    const html = String(properties.html ?? '');
-    return html.includes('data-tooltip') || html.includes('data-popover');
-  }
-  return false;
-}
-
 // The block the pointer rests on, or one holding it, that can show a popup there, or undefined. A
 // tooltip or popover is a trigger popup on antd's Escape stack, opened after what Escape would
 // close, so it takes the Escape (its show delay makes the browser's answer a race). A block behind
@@ -192,7 +159,7 @@ function findPointerPopup({ actor, parents, top }) {
     return undefined;
   }
   while (current) {
-    if (drawsPointerPopup(current)) {
+    if (drawsPointerPopup({ block: current })) {
       return current;
     }
     current = parents.get(current.id);
