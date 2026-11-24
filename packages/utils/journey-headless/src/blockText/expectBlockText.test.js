@@ -635,3 +635,14 @@ test("a Descriptions item's own styles that may change how its text reads keep i
   ];
   expect((await check({ blocks: blockStyled, contains: 'a  b' })).browserOnly).toBeDefined();
 });
+
+test('an empty slot does not replace the property its block draws in its place', async () => {
+  const card = [
+    { id: 'card', type: 'Card', properties: { title: 'Hello' }, slots: { title: { blocks: [] } } },
+  ];
+  expect((await check({ blocks: card, contains: 'Hello' })).passed).toBe(true);
+  const label = [
+    { id: 'name', type: 'Label', properties: { title: 'Name' }, slots: { label: { blocks: [] } } },
+  ];
+  expect((await check({ blocks: label, contains: 'Name' })).passed).toBe(true);
+});

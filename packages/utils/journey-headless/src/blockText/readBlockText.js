@@ -194,7 +194,12 @@ function readBlockText({ actor, blockId, cache, parse }) {
       return;
     }
     const subSlotsList = slots.subSlots[block.id] ?? [];
-    const areaNames = new Set(subSlotsList.flatMap((subSlots) => Object.keys(subSlots.slots)));
+    // The web client hands a component an area only when its slot holds blocks (Container).
+    const areaNames = new Set(
+      subSlotsList.flatMap((subSlots) =>
+        Object.keys(subSlots.slots).filter((area) => subSlots.slots[area].blocks.length > 0)
+      )
+    );
     const { pieces, areas, open } = model({
       ancestors: ancestorsOf(block),
       areaNames,
