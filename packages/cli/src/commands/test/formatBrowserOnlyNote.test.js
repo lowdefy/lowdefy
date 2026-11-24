@@ -34,3 +34,23 @@ test('names the lowdefy_run_tests tool and its argument for the MCP answer', () 
     'The next lowdefy_run_tests runs the browser-only journeys in the browser while they and the app config are unchanged; thorough: true runs them there in this run.'
   );
 });
+
+test('a thorough run, which ran the rest in the browser, names only the journeys no run takes there', () => {
+  expect(
+    formatBrowserOnlyNote({ runner: 'mixed', thorough: true, browserOnly: 2, inProcess: 2 })
+  ).toBe(
+    '2 browser-only journeys also have a hold, release or call as system step, which only the headless runner takes, so no run takes them to the browser.'
+  );
+  expect(
+    formatBrowserOnlyNote({ runner: 'mixed', thorough: true, browserOnly: 0, inProcess: 0 })
+  ).toBeUndefined();
+});
+
+test('a default run says the next run takes only the journeys with no in-process step', () => {
+  expect(formatBrowserOnlyNote({ runner: 'mixed', browserOnly: 3, inProcess: 1 })).toBe(
+    'The next lowdefy test runs the browser-only journeys in the browser while they and the app config are unchanged; lowdefy test --thorough runs them there in this run. 1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+  );
+  expect(formatBrowserOnlyNote({ runner: 'mixed', browserOnly: 1, inProcess: 1 })).toBe(
+    '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+  );
+});

@@ -281,11 +281,13 @@ async function testJourneys({
 
   // The slots are held until the server stops, so a waiting run has nothing
   // in memory yet.
+  // Read once: the run routes its journeys by the records that decided whether it takes the slots.
+  const records = runner === 'mixed' ? readHeadlessRun({ directories: context.directories }) : {};
   const slots = mayRunInBrowser({
     entries: tiered.selected,
     runner,
     thorough,
-    records: readHeadlessRun({ directories: context.directories }),
+    records,
     configDirectory: context.directories.config,
   })
     ? await takeJourneyRunSlots({ context, command: 'lowdefy test' })
@@ -331,6 +333,7 @@ async function testJourneys({
   // In selection order, whatever order the journeys finished in.
   const results = [];
   const browserOnly = [];
+  let inProcess = 0;
   const seen = new Set();
   try {
     // The build as the server serves it before any journey opens a page, which the records of
@@ -343,6 +346,7 @@ async function testJourneys({
       runner,
       thorough,
       readLimit,
+      records,
       repeat,
       recording,
       configHash,
@@ -361,6 +365,7 @@ async function testJourneys({
     });
     results.push(...ran.results);
     browserOnly.push(...ran.browserOnly);
+    inProcess = ran.inProcess;
     // The build once the run's pages were built.
     const endConfigHash = hashBuild({ context });
     writeExercised({
@@ -421,7 +426,12 @@ async function testJourneys({
   } else {
     context.logger.info(summary.text);
   }
-  const note = formatBrowserOnlyNote({ runner, browserOnly: browserOnly.length });
+  const note = formatBrowserOnlyNote({
+    runner,
+    thorough,
+    browserOnly: browserOnly.length,
+    inProcess,
+  });
   if (!type.isUndefined(note)) {
     context.logger.info(note);
   }

@@ -39,6 +39,7 @@ import writeTestRun from '../test/writeTestRun.js';
 import fetchBuildId from '../test/fetchBuildId.js';
 import formatBrowserOnlyNote from '../test/formatBrowserOnlyNote.js';
 import hashBuild from '../test/hashBuild.js';
+import readHeadlessRun from '../test/readHeadlessRun.js';
 import writeHeadlessRun from '../test/writeHeadlessRun.js';
 
 // Runs the app's tests (every journey under tests/journeys outside "_"
@@ -163,6 +164,7 @@ async function runAppTests({
     runner,
     thorough,
     readLimit,
+    records: runner === 'mixed' ? readHeadlessRun({ directories: context.directories }) : {},
     repeat,
     recording,
     configHash,
@@ -221,7 +223,13 @@ async function runAppTests({
       skipped: tiered.skipped.length,
       browserOnly: browserOnly.length,
     }).text,
-    formatBrowserOnlyNote({ runner, browserOnly: browserOnly.length, tool: true }),
+    formatBrowserOnlyNote({
+      runner,
+      thorough,
+      browserOnly: browserOnly.length,
+      inProcess: ran.inProcess,
+      tool: true,
+    }),
   ]
     .filter((line) => !type.isUndefined(line))
     .join('\n');

@@ -2153,6 +2153,48 @@ test('a thorough run leaves a journey with a step only the headless runner takes
     'BROWSER-ONLY  holds and goes next  step 1 (click "next"): the click lands on a block the headless run cannot model'
   );
   expect(process.exitCode).toBeUndefined();
+  // This run was thorough, and no run takes the journey to the browser: the note says why.
+  expect(logs.info.some((line) => line.includes('--thorough'))).toBe(false);
+  expect(logs.info[logs.info.length - 1]).toBe(
+    '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+  );
+});
+
+test('a default run never says a journey with a step only the headless runner takes goes to the browser next', async () => {
+  const { default: test } = await import('./test.js');
+  mockPost.mockResolvedValue({ data: { browserOnly: PARTWAY } });
+  writeJourneyFile(
+    'h.yaml',
+    'name: holds and goes next\npageId: form\ndata: base\nsteps:\n  - hold: { requestId: save }\n  - click: next\n'
+  );
+  await test({ context });
+  expect(logs.info.some((line) => line.startsWith('The next lowdefy test'))).toBe(false);
+  expect(logs.info[logs.info.length - 1]).toBe(
+    '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+  );
+});
+
+test('a default run routes by the records it read before taking the slots, not by a record written after', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  const filePath = path.join(context.directories.test, 'headless-run.json');
+  const recorded = fs.readFileSync(filePath, 'utf8');
+
+  // The record lands while the server starts, after the run decided it needs no browser slot:
+  // another run of the app wrote it.
+  fs.rmSync(filePath);
+  mockPost.mockClear();
+  mockAcquireJourneyRunSlots.mockClear();
+  mockStartDevServer.mockImplementation(async () => {
+    fs.writeFileSync(filePath, recorded);
+    return { url: 'http://localhost:3228', stop: mockStop };
+  });
+  await test({ context });
+  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'submit' } }]);
 });
 
 test('--access refuses --browser and --thorough, naming the command meant', async () => {

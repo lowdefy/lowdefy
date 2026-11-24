@@ -14,20 +14,48 @@
   limitations under the License.
 */
 
-// The note after a mixed run's summary when it left journeys browser-only: a journey the headless
+// The note after a mixed run's summary when it left journeys browser-only. A journey the headless
 // part found needs a browser partway through is not run in the browser in the same run (only
 // --thorough does that), and the next run sends it straight there while it and the app's config
-// are unchanged (routeJourney). Undefined otherwise: a headless run lists its browser-only
-// journeys by design, and a thorough run runs them. `tool` names the lowdefy_run_tests tool and its
-// argument instead of the command and its flag.
-function formatBrowserOnlyNote({ runner, browserOnly, tool = false }) {
-  if (runner !== 'mixed' || browserOnly === 0) {
+// are unchanged (routeJourney). `inProcess` counts the browser-only journeys with a step only the
+// headless runner takes (runsOnlyInProcess), which no run sends to the browser, so the note names
+// them apart rather than promise them a browser run. A thorough run ran the others in the browser,
+// so it names only those. Undefined otherwise: a headless run lists its browser-only journeys by
+// design. `tool` names the lowdefy_run_tests tool and its argument instead of the command and its
+// flag.
+function formatBrowserOnlyNote({
+  runner,
+  thorough = false,
+  browserOnly,
+  inProcess = 0,
+  tool = false,
+}) {
+  if (runner !== 'mixed') {
     return undefined;
   }
-  const [next, thorough] = tool
-    ? ['lowdefy_run_tests', 'thorough: true']
-    : ['lowdefy test', 'lowdefy test --thorough'];
-  return `The next ${next} runs the browser-only journeys in the browser while they and the app config are unchanged; ${thorough} runs them there in this run.`;
+  const lines = [];
+  if (!thorough && browserOnly > inProcess) {
+    const [next, thoroughRun] = tool
+      ? ['lowdefy_run_tests', 'thorough: true']
+      : ['lowdefy test', 'lowdefy test --thorough'];
+    lines.push(
+      `The next ${next} runs the browser-only journeys in the browser while they and the app config are unchanged; ${thoroughRun} runs them there in this run.`
+    );
+  }
+  if (inProcess === 1) {
+    lines.push(
+      '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+    );
+  }
+  if (inProcess > 1) {
+    lines.push(
+      `${inProcess} browser-only journeys also have a hold, release or call as system step, which only the headless runner takes, so no run takes them to the browser.`
+    );
+  }
+  if (lines.length === 0) {
+    return undefined;
+  }
+  return lines.join(' ');
 }
 
 export default formatBrowserOnlyNote;
