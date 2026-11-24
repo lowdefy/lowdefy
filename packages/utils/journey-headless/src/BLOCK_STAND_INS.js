@@ -49,6 +49,8 @@ import tableStandIn from './standIns/tableStandIn.js';
 //   search box, so a fill fires onSearch and leaves its value alone). checkFill refuses what the
 //   browser's fill refuses, before the focus moves. A block whose stand-in has a fill but no press
 //   leaves an Enter after that fill to the browser.
+// - needsBrowser(): why a fill or select on the block needs the browser, or undefined, checked
+//   before the step acts (a searching selector with onOpenChange actions, which it does not fire).
 // - leave({ targetBlock }): another click, open or select is about to act (on targetBlock), and
 //   the block's dropdown is open (state.open): close it as a click outside or the mouse leaving
 //   does.

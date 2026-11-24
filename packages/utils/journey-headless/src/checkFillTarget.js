@@ -21,10 +21,16 @@ const UNTYPED_VALUE_TYPES = new Set(['array', 'boolean', 'object']);
 const HEX_COLOUR = /^#([0-9a-f]{6}|[0-9a-f]{8})$/i;
 
 // What the browser's fill refuses, checked on the engine's block before its value is set: a
-// disabled block, a block with no text input to type into (its value is a list, a switch or an
-// object), and a colour picker given something other than a 6 or 8 digit hex colour.
+// disabled block, an input with no text input to type into (its value is a list, a switch or an
+// object), and a colour picker given something other than a 6 or 8 digit hex colour. A block that
+// is no input (a Table, a container, a display block) is not refused: the browser types into the
+// first text input it draws, such as a Table's search box or an input block it holds, which a
+// headless run does not model. Returns why such a fill needs a browser, else undefined.
 function checkFillTarget({ block, value }) {
   const description = `block "${block.blockId}" (${block.type})`;
+  if (block.meta?.category !== 'input') {
+    return `Block "${block.blockId}" (${block.type}) is no input: a browser's fill types into the first text input it draws, which a headless run does not model: the step runs in a browser.`;
+  }
   if (block.eval?.properties?.disabled === true) {
     throw new HeadlessStepError(`The input in ${description} is disabled.`, {
       actual: 'disabled',
@@ -32,7 +38,7 @@ function checkFillTarget({ block, value }) {
     });
   }
   const valueType = block.context._internal.lowdefy._internal.blockMetas[block.type]?.valueType;
-  if (UNTYPED_VALUE_TYPES.has(valueType) || block.meta?.category !== 'input') {
+  if (UNTYPED_VALUE_TYPES.has(valueType)) {
     throw new HeadlessStepError(
       `Fill found no input in ${description} to type into: fill types into a text input, textarea or colour picker.`,
       { actual: block.type, expected: `a text input or colour picker in ${description}` }
@@ -46,6 +52,7 @@ function checkFillTarget({ block, value }) {
       { actual: value, expected: 'a 6 or 8 digit hex colour' }
     );
   }
+  return undefined;
 }
 
 export default checkFillTarget;

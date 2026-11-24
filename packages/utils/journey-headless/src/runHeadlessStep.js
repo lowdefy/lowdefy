@@ -23,6 +23,8 @@ import checkHeadlessPressRails from './checkHeadlessPressRails.js';
 import checkHeadlessRails from './checkHeadlessRails.js';
 import checkFillTarget from './checkFillTarget.js';
 import fillColorSelector from './fillColorSelector.js';
+import fillNumberInput, { checkNumberInputEnter } from './fillNumberInput.js';
+import findAutoOpenedDropdown from './findAutoOpenedDropdown.js';
 import findContentTrigger from './findContentTrigger.js';
 import findTextWritingLabel from './findTextWritingLabel.js';
 import INLINE_OPTION_TYPES from './INLINE_OPTION_TYPES.js';
@@ -40,6 +42,7 @@ import waitForRequestCall from './waitForRequestCall.js';
 import waitForShownBlock from './waitForShownBlock.js';
 
 const STEP_RUNNER_KEYS = ['click', 'fill', 'select', 'press', 'wait'];
+const INTERACTION_KEYS = ['click', 'open', 'fill', 'select', 'press'];
 
 function readGoto(goto) {
   return type.isString(goto) ? { pageId: goto } : goto;
@@ -219,9 +222,14 @@ async function runStandInExpect({ actor, step, stepTimeout }) {
 // any other open dropdown (leaveDropdowns), and a fill the browser would not refuse blurs the input
 // that had the focus (blurInputs). A fill or select on a block whose stand-in has a part for it
 // goes to the stand-in (a searching selector's fill types into its search box); an Enter after such
-// a fill, which the stand-in has no press for, needs the browser. Any other fill is refused where
-// the browser's would be (checkFillTarget); a ColorSelector's fill clicks its picker first, as the
-// browser's does (fillColorSelector). wait.request waits for a call made since the last
+// a fill, which the stand-in has no press for, needs the browser, and so does a fill or select the
+// stand-in says it cannot model (needsBrowser: a selector with onOpenChange actions). Any other
+// fill is refused where the browser's would be (checkFillTarget), and one on a block that is no
+// input, which a browser types into the first text input it draws, needs the browser; a
+// ColorSelector's fill clicks its picker first, as the browser's does (fillColorSelector), and a
+// NumberInput's reads the typed text as a number, as antd's InputNumber does (fillNumberInput).
+// While the page renders a block that opened its own dropdown and has onOpenChange actions, every
+// click, open, fill, select or press needs the browser (findAutoOpenedDropdown). wait.request waits for a call made since the last
 // interaction: `since` is the actor's call count when that window opened. A press of Escape
 // closes the overlay that opened last, or the open dropdown of the searching selector that has the
 // focus (pressEscape), which needs to know where the focus is (noteFocus).
@@ -234,6 +242,13 @@ async function runStandInExpect({ actor, step, stepTimeout }) {
 async function runHeadlessStep({ actors, answer, host, rails, since, step, stepTimeout }) {
   const key = getStepKey(step);
   const actor = actors.current();
+  if (INTERACTION_KEYS.includes(key)) {
+    const autoOpened = findAutoOpenedDropdown({ actor });
+    if (!type.isUndefined(autoOpened)) {
+      actor.browserOnly.push(autoOpened);
+      return undefined;
+    }
+  }
   noteFocus({ actor, key, step });
   if (key === 'press' && step.press === 'Escape') {
     await pressEscape({ actor, rails });
@@ -258,6 +273,11 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
     const standIn = BLOCK_STAND_INS[block.type];
     if (type.isFunction(standIn?.fill)) {
       standIn.checkFill({ block });
+      const needsBrowser = standIn.needsBrowser?.({ block });
+      if (!type.isUndefined(needsBrowser)) {
+        actor.browserOnly.push(needsBrowser);
+        return undefined;
+      }
       await blurInputs({ actor, except: block });
       await standIn.fill({
         actor,
@@ -268,10 +288,18 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
       await actor.settle();
       return undefined;
     }
-    checkFillTarget({ block, value: step.fill.value });
+    const notInput = checkFillTarget({ block, value: step.fill.value });
+    if (!type.isUndefined(notInput)) {
+      actor.browserOnly.push(notInput);
+      return undefined;
+    }
     await blurInputs({ actor, except: block });
     if (block.type === 'ColorSelector') {
       await fillColorSelector({ actor, block, step });
+      return undefined;
+    }
+    if (block.type === 'NumberInput') {
+      await fillNumberInput({ actor, block, step });
       return undefined;
     }
   }
@@ -281,6 +309,11 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
     const textWritten = await findTextWritingLabel({ actor, block });
     if (textWritten !== null) {
       actor.browserOnly.push(textWritten);
+      return undefined;
+    }
+    const needsBrowser = BLOCK_STAND_INS[block.type]?.needsBrowser?.({ block });
+    if (!type.isUndefined(needsBrowser)) {
+      actor.browserOnly.push(needsBrowser);
       return undefined;
     }
     await leaveDropdowns({ actor, except: block, targetBlock: block });
@@ -305,6 +338,13 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
     const focused = actor.page.context._internal.RootSlots.map[actor.stepRunner.lastInputBlockId()];
     if (!type.isNone(focused)) {
       checkHeadlessPressRails({ actor, focused, key: step.press, rails });
+      if (focused.type === 'NumberInput') {
+        const flushed = checkNumberInputEnter({ actor, block: focused });
+        if (!type.isUndefined(flushed)) {
+          actor.browserOnly.push(flushed);
+          return undefined;
+        }
+      }
       const standIn = BLOCK_STAND_INS[focused.type];
       if (type.isFunction(standIn?.fill) && !type.isFunction(standIn.press)) {
         actor.browserOnly.push(standInMissing({ block: focused, what: 'press "Enter"' }));

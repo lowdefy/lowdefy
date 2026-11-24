@@ -55,6 +55,7 @@ const BLOCK_METAS = {
   ClickableHtml: { category: 'display' },
   ColorSelector: { category: 'input', valueType: 'string' },
   ConfirmModal: { category: 'container' },
+  DateSelector: { category: 'input', valueType: 'date' },
   Drawer: { category: 'container' },
   DropdownButton: { category: 'display' },
   DropdownMenu: { category: 'container' },
@@ -66,6 +67,7 @@ const BLOCK_METAS = {
   Menu: { category: 'display' },
   Modal: { category: 'container' },
   MultipleSelector: { category: 'input', valueType: 'array' },
+  NumberInput: { category: 'input', valueType: 'number' },
   Paragraph: { category: 'display' },
   RadioSelector: { category: 'input', valueType: 'any' },
   // A block from an app's own plugin, which no headless stand-in models.

@@ -24,6 +24,7 @@ import expectAnswerStatus from './expectAnswerStatus.js';
 import expectCalls from './expectCalls.js';
 import expectDb from './expectDb.js';
 import expectSunk from './expectSunk.js';
+import findComponentValue from './findComponentValue.js';
 import HeadlessStepError from './HeadlessStepError.js';
 import isBlockShown from './isBlockShown.js';
 import isDeepEqual from './isDeepEqual.js';
@@ -46,8 +47,15 @@ function readShown({ actor, blockId }) {
   return isBlockShown({ block, page: actor.page, parents });
 }
 
+// A path into a value the block's component writes in a browser (a Table's view) needs the
+// browser (findComponentValue).
 async function expectState({ actor, params, timeout }) {
   const { equals, path } = params;
+  const componentValue = findComponentValue({ actor, path });
+  if (!type.isUndefined(componentValue)) {
+    actor.browserOnly.push(componentValue);
+    return;
+  }
   const { held, value } = await pollUntil({
     check: (read) => isDeepEqual(read, equals),
     read: () => toJsonValue(get(actor.page.context.state, path)),

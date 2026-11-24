@@ -25,8 +25,10 @@ import leaveMethodsToBrowser from './leaveMethodsToBrowser.js';
 // runner's fill types into the block's first input, which is the select's search box: the block
 // fires onSearch { value } and its value stays as it was. Typing opens the dropdown, which the
 // stand-in keeps as state.open with the search text as state.searchValue. Only onSearch is
-// modelled: onFocus, onBlur and onOpenChange fire in a browser and not headless, as on any other
-// select.
+// modelled: onFocus and onBlur fire in a browser and not headless, as on any other input.
+// onOpenChange is not modelled either, so a fill or select on a block that has actions for it
+// needs the browser (needsBrowser): a select clicks the dropdown open and a single select's pick
+// closes it, a fill's typing opens it, and an app can save as it closes.
 // - A select on the block picks the option (client-core's step runner), refused when the search
 //   hides it in the dropdown (refuseHiddenOption), and clears the search
 //   without an onSearch, as rc-select does; a single select closes its dropdown, a multiple one
@@ -52,6 +54,16 @@ const SEARCH_SELECTORS = {
   TreeMultipleSelector: { filtersOptions: false, multiple: true, searchOnLeave: true },
   TreeSelector: { filtersOptions: false, multiple: false, searchOnLeave: true },
 };
+
+// Why a fill or select on the block needs a browser, or undefined: it has actions for
+// onOpenChange, which a browser fires as the step opens or closes its dropdown, and a headless run
+// does not. Checked before the step acts (runHeadlessStep).
+function needsBrowser({ block }) {
+  if (!Object.hasOwn(block.Events.events, 'onOpenChange')) {
+    return undefined;
+  }
+  return `Block "${block.blockId}" (${block.type}) has onOpenChange actions, which a browser fires as the step opens or closes its dropdown and a headless run does not model: the step runs in a browser.`;
+}
 
 // What the browser's fill refuses, checked before the focus moves (runHeadlessStep).
 function checkFill({ block }) {
@@ -200,4 +212,13 @@ function registerMethods({ actor, block }) {
   leaveMethodsToBrowser({ actor, block });
 }
 
-export default { blur: close, checkFill, escape, fill, leave: close, registerMethods, select };
+export default {
+  blur: close,
+  checkFill,
+  escape,
+  fill,
+  leave: close,
+  needsBrowser,
+  registerMethods,
+  select,
+};
