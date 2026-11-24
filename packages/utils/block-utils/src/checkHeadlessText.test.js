@@ -43,3 +43,16 @@ test('checkHeadlessText refuses a path that is not a non-empty string, naming it
     checkHeadlessText({ blockType: 'app_Banner', headlessText: [{ path: 'title' }] })
   ).toThrow('Block type app_Banner declares headlessText[0] as {"path":"title"}');
 });
+
+// A bad declaration is a mistake in the plugin's meta, so it fails as a ConfigError, not as a
+// Lowdefy internal error, with the declaration as the value received.
+test('checkHeadlessText throws a ConfigError with the declaration received', () => {
+  let error;
+  try {
+    checkHeadlessText({ blockType: 'app_Banner', headlessText: ['title', ''] });
+  } catch (caught) {
+    error = caught;
+  }
+  expect(error.name).toBe('ConfigError');
+  expect(error.received).toEqual(['title', '']);
+});

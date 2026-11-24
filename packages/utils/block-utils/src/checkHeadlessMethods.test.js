@@ -69,3 +69,16 @@ test('checkHeadlessMethods refuses headlessMethods that is not an object', () =>
     'Block type app_Timeline declares headlessMethods as "merge": it should be an object of { [method]: the name of the event it fires, or null }.'
   );
 });
+
+// A bad declaration is a mistake in the plugin's meta, so it fails as a ConfigError, not as a
+// Lowdefy internal error, with the declaration as the value received.
+test('checkHeadlessMethods throws a ConfigError with the declaration received', () => {
+  let error;
+  try {
+    checkHeadlessMethods({ blockType: 'app_Timeline', headlessMethods: { merge: false } });
+  } catch (caught) {
+    error = caught;
+  }
+  expect(error.name).toBe('ConfigError');
+  expect(error.received).toEqual({ merge: false });
+});

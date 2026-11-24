@@ -15,28 +15,9 @@
 */
 
 import { checkHeadlessMethods, checkHeadlessText } from '@lowdefy/block-utils';
-import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import loadPluginTypeSchema from './loadPluginTypeSchema.js';
-
-// A bad headlessMethods or headlessText declaration is a mistake in the plugin's meta, so it fails
-// the build as a ConfigError, not as a Lowdefy internal error.
-function checkBlockHeadlessMethods({ block, headlessMethods }) {
-  try {
-    checkHeadlessMethods({ blockType: block.typeName, headlessMethods });
-  } catch (error) {
-    throw new ConfigError(error.message, { received: headlessMethods });
-  }
-}
-
-function checkBlockHeadlessText({ block, headlessText }) {
-  try {
-    checkHeadlessText({ blockType: block.typeName, headlessText });
-  } catch (error) {
-    throw new ConfigError(error.message, { received: headlessText });
-  }
-}
 
 async function writeBlockSchemaMap({ components, context }) {
   const schemas = {};
@@ -73,14 +54,14 @@ async function writeBlockSchemaMap({ components, context }) {
       // own meta module, the same source as the schema.
       // headlessMethods ({ [method]: the event it fires, or null for a no-op }) is what a headless
       // journey runs for a CallMethod on a block with no stand-in (@lowdefy/journey-headless
-      // registerBlockStandIns). A declaration that is neither fails the build, naming the block
-      // type and the method (checkBlockHeadlessMethods).
+      // registerBlockStandIns). A declaration that is neither fails the build with a ConfigError,
+      // naming the block type and the method (checkHeadlessMethods).
       // headlessText (the property paths the block draws as text) is what a headless journey reads
       // as the text of a block it has no text model for (@lowdefy/journey-headless readTextModel).
       const headlessMethods = typesMapMeta.headlessMethods ?? meta?.headlessMethods;
       const headlessText = typesMapMeta.headlessText ?? meta?.headlessText;
-      checkBlockHeadlessMethods({ block, headlessMethods });
-      checkBlockHeadlessText({ block, headlessText });
+      checkHeadlessMethods({ blockType: block.typeName, headlessMethods });
+      checkHeadlessText({ blockType: block.typeName, headlessText });
       blockMetas[block.typeName] = {
         category: typesMapMeta.category,
         ...(!type.isNone(typesMapMeta.valueType) && { valueType: typesMapMeta.valueType }),
@@ -90,8 +71,8 @@ async function writeBlockSchemaMap({ components, context }) {
         ...(!type.isNone(headlessText) && { headlessText }),
       };
     } else if (meta) {
-      checkBlockHeadlessMethods({ block, headlessMethods: meta.headlessMethods });
-      checkBlockHeadlessText({ block, headlessText: meta.headlessText });
+      checkHeadlessMethods({ blockType: block.typeName, headlessMethods: meta.headlessMethods });
+      checkHeadlessText({ blockType: block.typeName, headlessText: meta.headlessText });
       blockMetas[block.typeName] = {
         category: meta.category,
         ...(!type.isNone(meta.valueType) && { valueType: meta.valueType }),

@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 // Checks a block meta's headlessText, what a headless journey reads as the text a block draws when
@@ -21,22 +22,25 @@ import { type } from '@lowdefy/helpers';
 // visible text, in order, such as ['title', 'content']. The build checks it as it writes
 // blockMetas.json (@lowdefy/build writeBlockSchemaMap), and the headless runner as it reads a
 // block's text (@lowdefy/journey-headless readTextModel). Anything else throws, naming the block
-// type, rather than reading the block's text wrong.
+// type, rather than reading the block's text wrong. A bad declaration is a mistake in the plugin's
+// meta, so it throws a ConfigError with the declaration received.
 function checkHeadlessText({ blockType, headlessText }) {
   if (type.isNone(headlessText)) {
     return;
   }
   if (!type.isArray(headlessText)) {
-    throw new Error(
-      `Block type ${blockType} declares headlessText as ${JSON.stringify(headlessText)}: it should be a list of the property paths the block draws as text, such as ['title', 'content'].`
+    throw new ConfigError(
+      `Block type ${blockType} declares headlessText as ${JSON.stringify(headlessText)}: it should be a list of the property paths the block draws as text, such as ['title', 'content'].`,
+      { received: headlessText }
     );
   }
   headlessText.forEach((path, index) => {
     if (type.isString(path) && path !== '') {
       return;
     }
-    throw new Error(
-      `Block type ${blockType} declares headlessText[${index}] as ${JSON.stringify(path)}: it should be the path of a property the block draws as text.`
+    throw new ConfigError(
+      `Block type ${blockType} declares headlessText[${index}] as ${JSON.stringify(path)}: it should be the path of a property the block draws as text.`,
+      { received: headlessText }
     );
   });
 }
