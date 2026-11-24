@@ -573,3 +573,23 @@ test('a data-truncate element breaks a line, as its clamp lays it out as a block
   expect((await check({ blocks, contains: 'Status: Jane' })).browserOnly).toBeDefined();
   expect((await check({ blocks, contains: 'Jane' })).passed).toBe(true);
 });
+
+test("an Html block's flex or grid element lays its html's top-level children out as blocks", async () => {
+  const html = '<span>Total:</span> <span>5</span>';
+  const byClass = [
+    { id: 'sum', type: 'Html', class: { element: 'flex gap-2' }, properties: { html } },
+  ];
+  expect((await check({ blocks: byClass, contains: 'Total: 5' })).browserOnly).toBeDefined();
+  expect((await check({ blocks: byClass, contains: '5' })).passed).toBe(true);
+  const byStyle = [
+    {
+      id: 'sum',
+      type: 'DangerousHtml',
+      style: { element: { display: 'grid' } },
+      properties: { html },
+    },
+  ];
+  expect((await check({ blocks: byStyle, contains: 'Total: 5' })).browserOnly).toBeDefined();
+  const plain = [{ id: 'sum', type: 'ClickableHtml', properties: { html } }];
+  expect((await check({ blocks: plain, contains: 'Total: 5' })).passed).toBe(true);
+});

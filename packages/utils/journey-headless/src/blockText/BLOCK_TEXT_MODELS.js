@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import formatStatisticValue from './formatStatisticValue.js';
+import isFlexElement from './isFlexElement.js';
 
 // What each block type the headless run knows draws as text (LDF-1147), read from its component
 // in the browser: a function of { block, properties, areaNames, ancestors (the blocks holding it,
@@ -24,7 +25,8 @@ import formatStatisticValue from './formatStatisticValue.js';
 // { pieces, areas, open }.
 // - pieces: the text it draws from its evaluated properties, in order, each { html } (drawn with
 //   renderHtml, whose HtmlComponent reads the value as a string), { text } (drawn as a React text
-//   child) or { markdown, raw, skipHtml } (react-markdown); `pre` keeps white space as written.
+//   child) or { markdown, raw, skipHtml } (react-markdown); `pre` keeps white space as written,
+//   and `flexRoot` says the html is drawn in an element that may be a flex or grid box.
 // - areas: the areas whose blocks it draws; blocks in any other area are not on the page.
 // - open: why some of its text is not known, else null: text the browser draws that a headless
 //   run cannot read (a locale's labels, a measured ellipsis, a skeleton), so a check that does not
@@ -74,8 +76,15 @@ function container() {
   return { pieces: [], areas: ['content'], open: null };
 }
 
-function htmlBlock({ properties }) {
-  return { pieces: html(properties.html), areas: [], open: null };
+// Html, ClickableHtml and DangerousHtml draw their html in an element their `.element` class and
+// style lay out.
+function elementHtml({ block, properties }) {
+  const flexRoot = isFlexElement({ block });
+  return html(properties.html).map((piece) => ({ ...piece, flexRoot }));
+}
+
+function htmlBlock({ block, properties }) {
+  return { pieces: elementHtml({ block, properties }), areas: [], open: null };
 }
 
 function typography({ properties }) {
@@ -168,8 +177,8 @@ const BLOCK_TEXT_MODELS = {
   }),
   ClickableHtml: htmlBlock,
   // Its own DOMPurifyOptions may keep or strip what the default sanitiser does not.
-  DangerousHtml: ({ properties }) => ({
-    pieces: html(properties.html),
+  DangerousHtml: ({ block, properties }) => ({
+    pieces: elementHtml({ block, properties }),
     areas: [],
     open: type.isNone(properties.DOMPurifyOptions)
       ? null

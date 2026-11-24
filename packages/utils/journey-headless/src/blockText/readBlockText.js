@@ -21,6 +21,7 @@ import { collectRenderedBlocks } from '../collectMountOrder.js';
 import isBlockShown from '../isBlockShown.js';
 import POPUP_BLOCK_TYPES from '../POPUP_BLOCK_TYPES.js';
 import describeBlock from '../standIns/describeBlock.js';
+import collectClassTokens from './collectClassTokens.js';
 import markdownToHtml from './markdownToHtml.js';
 import normalizeShownText from './normalizeShownText.js';
 import { mayApplyClass } from './readClassToken.js';
@@ -71,9 +72,11 @@ function readPiece({ cache, parse, piece }) {
       skipHtml: piece.skipHtml === true,
     }));
   }
-  const key = `${piece.pre === true}:${html}`;
+  const pre = piece.pre === true;
+  const flexRoot = piece.flexRoot === true;
+  const key = `${pre}:${flexRoot}:${html}`;
   if (!cache.has(key)) {
-    cache.set(key, readHtmlPieces({ root: parse(html), pre: piece.pre === true }));
+    cache.set(key, readHtmlPieces({ root: parse(html), pre, flexRoot }));
   }
   const read = cache.get(key);
   return {
@@ -109,13 +112,6 @@ function isStyledStyle(style) {
       ? isStyledStyle(value)
       : Object.hasOwn(STYLED_PROPERTIES, key) && STYLED_PROPERTIES[key](value)
   );
-}
-
-function collectClassTokens(value) {
-  if (type.isString(value)) return value.split(/\s+/);
-  if (type.isArray(value)) return value.flatMap(collectClassTokens);
-  if (type.isObject(value)) return Object.values(value).flatMap(collectClassTokens);
-  return [];
 }
 
 // Whether a block's own `style` or `class` may change how the text inside it reads, so its runs
