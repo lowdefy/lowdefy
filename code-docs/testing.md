@@ -496,7 +496,7 @@ pnpm bench:build packages/docs --self-check       # build the baseline twice; mu
 pnpm bench:build ../my-app --baseline v7.1.0      # any commit as baseline, any app folder
 pnpm bench:build packages/docs --skip-build       # this checkout is already built
 pnpm bench:build packages/docs --server e2e       # @lowdefy/server-e2e instead of the server
-pnpm bench:build packages/docs --expect-added keyMap.json.gz   # allowed only in current
+pnpm bench:build packages/docs --expect-added newArtifact.json # allowed only in current
 pnpm bench:build packages/docs --keymap           # key and ref ids by what they point at
 ```
 
@@ -518,7 +518,9 @@ pnpm bench:build packages/docs --keymap           # key and ref ids by what they
 - **Each side** prepares its server at `_server/bench/<app-slug>/<side>/workspace/server`
   with this checkout's `scripts/lib`, linked through `<side>/lowdefy` (a symlink to that
   side's checkout), then runs its own CLI: `lowdefy build --no-client-build`. The same layout
-  for both sides keeps every relative path in the output equal. Logs land in
+  for both sides keeps every relative path in the output equal. A config-only build writes no
+  gzipped error maps, so neither side has `keyMap.json.gz` or `refMap.json.gz`; a baseline from
+  before config-only builds skipped them lists both as baseline-only. Logs land in
   `_server/bench/<app-slug>/logs/`.
 - **Compared**: every file in the server's `build/`, its `package.json`, and the warnings and
   errors in the CLI log, sorted. Each side's server path is replaced with `<server>`; nothing
