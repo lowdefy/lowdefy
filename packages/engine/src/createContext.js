@@ -29,7 +29,7 @@ import updateMcp from './tracking/updateMcp.js';
 import updateMedia from './tracking/updateMedia.js';
 import WebSockets from './WebSockets.js';
 
-const blockData = (config) => {
+function blockData(config) {
   const {
     slots,
     blockId,
@@ -82,7 +82,7 @@ const blockData = (config) => {
     });
   }
   return result;
-};
+}
 
 // Builds an engine context around one root block: the page's root block for a
 // page context, and a block-less root carrying the app events for the app context.
@@ -141,8 +141,10 @@ function createContext({
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
   _internal.WebSockets = new WebSockets(ctx);
+  // The page's one config copy. Page instances of one page share its fetched config, so each context
+  // copies it once here, and every container and list row below reads this copy (see Slots).
   _internal.RootSlots = new Slots({
-    slots: { root: { blocks: [_internal.rootBlock] } },
+    slots: serializer.copy({ root: { blocks: [_internal.rootBlock] } }),
     context: ctx,
   });
   _internal.RootSlots.init(serializer.copy(ctx.state));
