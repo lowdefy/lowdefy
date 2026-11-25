@@ -324,3 +324,36 @@ test('a jitMaps write that fails is not recorded', async () => {
   expect(pageBuildRecords.get('unwritten').mapsFiles).toEqual([]);
   expect(pageBuildRecords.mapsFiles({ generation })).toEqual([]);
 });
+
+test('record marks a page build that read a key map entry of the config build, and only that one', async () => {
+  await pageBuildRecords.record({
+    pageId: 'keyed',
+    build: async () => {
+      pageBuildRecords.markConfigBuildKeyRead();
+      return { built: true };
+    },
+  });
+  await pageBuildRecords.record({ pageId: 'unkeyed', build: async () => ({ built: true }) });
+
+  expect(pageBuildRecords.get('keyed').readConfigBuildKeys).toBe(true);
+  expect(pageBuildRecords.get('unkeyed').readConfigBuildKeys).toBe(false);
+});
+
+test('record marks a page build that read a field of appMeta, not one that only passed it on', async () => {
+  const context = { appMeta: { name: 'app', buildId: 'build-1' } };
+  pageBuildRecords.trackAppMetaReads({ context });
+  await pageBuildRecords.record({
+    pageId: 'reads-meta',
+    build: async () => ({ built: context.appMeta.name === 'app' }),
+  });
+  await pageBuildRecords.record({
+    pageId: 'passes-meta',
+    build: async () => {
+      const lowdefyApp = context.appMeta;
+      return { built: Object.prototype.toString.call(lowdefyApp) === '[object Object]' };
+    },
+  });
+
+  expect(pageBuildRecords.get('reads-meta').readAppMeta).toBe(true);
+  expect(pageBuildRecords.get('passes-meta').readAppMeta).toBe(false);
+});

@@ -19,6 +19,9 @@ import { resolveKeyEntry } from '@lowdefy/errors';
 
 import createLazyKeyMap from './createLazyKeyMap.js';
 
+// Page build keys carry the dev server process's id: <prefix><childId>_<counter>.
+const isPageBuildKey = (id) => id.includes('_ab_');
+
 const skeleton = {
   cfg1_1: { s: 'root', p: 'cfg1_0', r: 'ref-root' },
   cfg1_2: { s: '.pages', p: 'cfg1_1' },
@@ -26,7 +29,11 @@ const skeleton = {
 
 test('a lazy key map reads the config build key map only when a lookup misses an added entry', () => {
   const readSkeletonKeyMap = vi.fn(() => skeleton);
-  const keyMap = createLazyKeyMap({ readSkeletonKeyMap });
+  const keyMap = createLazyKeyMap({
+    readSkeletonKeyMap,
+    isPageBuildKey,
+    onConfigBuildEntryRead: () => {},
+  });
   keyMap['cfg1_ab_1'] = { s: 'root', p: 'cfg1_ab_0', r: 'ref-page' };
 
   expect(keyMap.get('cfg1_ab_1')).toEqual({ s: 'root', p: 'cfg1_ab_0', r: 'ref-page' });
@@ -38,7 +45,11 @@ test('a lazy key map reads the config build key map only when a lookup misses an
 });
 
 test('a lazy key map lists only the entries added to it', () => {
-  const keyMap = createLazyKeyMap({ readSkeletonKeyMap: () => skeleton });
+  const keyMap = createLazyKeyMap({
+    readSkeletonKeyMap: () => skeleton,
+    isPageBuildKey,
+    onConfigBuildEntryRead: () => {},
+  });
   keyMap['cfg1_ab_1'] = { s: 'root', p: 'cfg1_ab_0' };
   keyMap.get('cfg1_1');
 
@@ -46,7 +57,11 @@ test('a lazy key map lists only the entries added to it', () => {
 });
 
 test('the key map readers resolve a chain from an added entry into the config build entries', () => {
-  const keyMap = createLazyKeyMap({ readSkeletonKeyMap: () => skeleton });
+  const keyMap = createLazyKeyMap({
+    readSkeletonKeyMap: () => skeleton,
+    isPageBuildKey,
+    onConfigBuildEntryRead: () => {},
+  });
   keyMap['cfg1_ab_1'] = { s: '[0:home:Box]', p: 'cfg1_2' };
 
   expect(resolveKeyEntry({ keyMap, configKey: 'cfg1_ab_1' })).toMatchObject({
@@ -56,9 +71,41 @@ test('the key map readers resolve a chain from an added entry into the config bu
 });
 
 test('a lazy key map with no keyMap.json resolves only the added entries', () => {
-  const keyMap = createLazyKeyMap({ readSkeletonKeyMap: () => null });
+  const keyMap = createLazyKeyMap({
+    readSkeletonKeyMap: () => null,
+    isPageBuildKey,
+    onConfigBuildEntryRead: () => {},
+  });
   keyMap['cfg1_ab_1'] = { s: 'root', p: 'cfg1_ab_0' };
 
   expect(keyMap.get('cfg1_1')).toBeUndefined();
   expect(keyMap.get('cfg1_ab_1')).toEqual({ s: 'root', p: 'cfg1_ab_0' });
+});
+
+test('a lookup of a page build key never reads the config build key map', () => {
+  const readSkeletonKeyMap = vi.fn(() => skeleton);
+  const keyMap = createLazyKeyMap({
+    readSkeletonKeyMap,
+    isPageBuildKey,
+    onConfigBuildEntryRead: () => {},
+  });
+  keyMap['cfg1_ab_2'] = { s: '.title', p: 'cfg1_ab_1' };
+
+  // A warning's walk up to the root's parent, an id addKeys never writes.
+  expect(resolveKeyEntry({ keyMap, configKey: 'cfg1_ab_2' })).toMatchObject({ path: '.title' });
+  expect(readSkeletonKeyMap).not.toHaveBeenCalled();
+});
+
+test('a lookup that returns a config build entry is reported, a miss is not', () => {
+  const onConfigBuildEntryRead = vi.fn();
+  const keyMap = createLazyKeyMap({
+    readSkeletonKeyMap: () => skeleton,
+    isPageBuildKey,
+    onConfigBuildEntryRead,
+  });
+
+  keyMap.get('missing');
+  expect(onConfigBuildEntryRead).not.toHaveBeenCalled();
+  keyMap.get('cfg1_2');
+  expect(onConfigBuildEntryRead).toHaveBeenCalledTimes(1);
 });

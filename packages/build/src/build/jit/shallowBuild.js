@@ -16,7 +16,6 @@
 
 import { randomBytes } from 'crypto';
 
-import { serializer } from '@lowdefy/helpers';
 import { BuildError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
@@ -111,6 +110,7 @@ import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
 import createEndpointRegistry from './createEndpointRegistry.js';
 import releaseMergedModuleEntities from './releaseMergedModuleEntities.js';
 import writeEndpointList from './writeEndpointList.js';
+import writeModules from './writeModules.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
@@ -382,10 +382,7 @@ async function shallowBuild(options) {
       'installedPluginPackages.json',
       JSON.stringify([...(context.installedPackages ?? [])])
     );
-    await context.writeBuildArtifact(
-      'modules.json',
-      serializer.serializeToString(context.modules ?? {})
-    );
+    await writeModules({ context });
     // Persist the auth config projection so JIT page builds (separate process)
     // resolve _build.authConfig identically to the skeleton build.
     await context.writeBuildArtifact(

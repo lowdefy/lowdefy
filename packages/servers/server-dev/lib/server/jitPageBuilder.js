@@ -40,6 +40,7 @@ import createLogger from './log/createLogger.js';
 import pageBuildRecords from './pageBuildRecords.js';
 import PageCache from './pageCache.mjs';
 import pruneJitMaps from './pruneJitMaps.js';
+import removeDroppedRequests from './removeDroppedRequests.js';
 import skipStaleMapWrites from './skipStaleMapWrites.js';
 
 const jitLogger = createLogger({ name: 'jit-build' });
@@ -178,6 +179,10 @@ function createBuildContext(buildDirectory, configDirectory) {
   Object.assign(context.refMap, refMap);
   context.keyMap = createLazyKeyMap({
     readSkeletonKeyMap: () => readJsonFile(path.join(buildDirectory, 'keyMap.json')),
+    // <config build prefix><childId>_<counter> (continueJitKeys); the config
+    // build's own keys are <prefix><counter>.
+    isPageBuildKey: (id) => id.includes(`_${childId}_`),
+    onConfigBuildEntryRead: pageBuildRecords.markConfigBuildKeyRead,
   });
   context.jsMap.client = jsMap.client ?? {};
   context.jsMap.server = jsMap.server ?? {};
@@ -359,13 +364,13 @@ function keepGenerationOverConfigBuild({ buildDirectory }) {
 // A config publish. The pages built so far keep their generation only when
 // every page build input is as it was and no page was added or removed: a page
 // build checks its links against every page id.
-function adoptConfigBuild({ buildDirectory, previousRegistry }) {
-  configBuildSerial += 1;
+function adoptConfigBuild({ buildDirectory, previousRegistry, nextRegistry }) {
   const fingerprint = fingerprintConfigBuild({ buildDirectory, previous: latestFingerprint });
+  configBuildSerial += 1;
   const keep =
     latestFingerprint !== null &&
     sameFingerprint(fingerprint, latestFingerprint) &&
-    samePageIds(previousRegistry, registry);
+    samePageIds(previousRegistry, nextRegistry);
   latestFingerprint = fingerprint;
   if (keep) {
     keepGenerationOverConfigBuild({ buildDirectory });
@@ -446,10 +451,11 @@ export function syncBuildSignals({ buildDirectory, configDirectory }) {
     return readSignals();
   }
   if (identity !== registryIdentity) {
+    const nextRegistry = readJsonFile(path.join(buildDirectory, 'pageRegistry.json'));
+    adoptConfigBuild({ buildDirectory, previousRegistry: registry, nextRegistry });
+    // Set once adopted: a read that throws part way is tried again on the next call.
+    registry = nextRegistry;
     registryIdentity = identity;
-    const previousRegistry = registry;
-    registry = readJsonFile(path.join(buildDirectory, 'pageRegistry.json'));
-    adoptConfigBuild({ buildDirectory, previousRegistry });
     startChangeEvent({ configDirectory });
   } else if (budgetExceeded) {
     releaseBuildContext();
@@ -463,12 +469,14 @@ function countAddedMapEntries(context) {
 
 // Whether a page built before the latest config publish still describes it
 // after it (the publish kept the generation, see adoptConfigBuild): its build
-// started from the config build before, and did not read appMeta, whose
-// buildId every config build changes. Its registry entry is unchanged, and it
+// ran to its end on the config build it started from, and did not read appMeta,
+// whose buildId every config build changes, or a key map entry of that config
+// build, which the next one's keyMap.json no longer holds (its errors would
+// lose their location). Its registry entry is unchanged, and it
 // is built from a source file: a page with none (the default 404) is served
 // from the config build's own artifact.
 function outlivesConfigBuilds({ pageId, record, registry: currentRegistry, prefix }) {
-  if (record.outdated || record.readAppMeta) return false;
+  if (record.outdated || record.readAppMeta || record.readConfigBuildKeys) return false;
   const entry = currentRegistry?.[pageId];
   if (type.isNone(entry?.refId)) return false;
   return describeRegistryEntry({ entry, prefix }) === record.registryEntry;
@@ -572,6 +580,7 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
     );
     return { result, buildContext: context };
   }
+  removeDroppedRequests({ buildDirectory, pageId, requests: result?.requests ?? [] });
   pageCache.markCompiled(pageId, { generation, checkedAt });
   // Touch the candidates file so Vite's CSS pipeline re-runs Tailwind for
   // classes the JIT build discovered — globals.css imports it. This import

@@ -29,6 +29,7 @@ import buildPageIfNeeded, {
   reviewBuiltPage,
   syncBuildSignals,
 } from './jitPageBuilder.js';
+import pageBuildRecords from './pageBuildRecords.js';
 
 // A JIT page build loads the build package's plugins on first use.
 vi.setConfig({ testTimeout: 30000, hookTimeout: 30000 });
@@ -320,5 +321,55 @@ test('a page build that locates no error reads no keyMap.json', async () => {
 
   expect(await app.request('a')).toBe('built');
   expect(JSON.stringify(app.readPage('a'))).toContain('"blockId":"shared"');
+  app.remove();
+});
+
+test('a page build with a warning reads no keyMap.json', async () => {
+  const app = createApp({
+    files: { 'pages/warns.yaml': 'id: warns\ntype: Box\nproperties:\n  notAProperty: 1\n' },
+    pages: { warns: { refPath: 'pages/warns.yaml' } },
+  });
+  writeFile(path.join(app.buildDirectory, 'keyMap.json'), 'not json');
+
+  const result = await buildPageIfNeeded({
+    pageId: 'warns',
+    buildDirectory: app.buildDirectory,
+    configDirectory: app.configDirectory,
+  });
+  expect(result.warnings.length).toBeGreaterThan(0);
+  expect(pageBuildRecords.get('warns').errors).toBeNull();
+  app.remove();
+});
+
+test('a page whose build read a key map entry of the config build is rebuilt after a config publish', async () => {
+  const app = createApp(sharedRefPages);
+  await requestAll(app, ['a', 'c']);
+  // As when a page build reaches a node the config build keyed: its errors
+  // locate through that build's keyMap.json, which the publish replaces.
+  pageBuildRecords.get('a').readConfigBuildKeys = true;
+
+  app.publish();
+
+  expect(await requestAll(app, ['a', 'c'])).toEqual({ a: 'built', c: 'served' });
+  app.remove();
+});
+
+test('a page build during which a config publish landed is rebuilt, though the publish changed no page build input', async () => {
+  const app = createApp(sharedRefPages);
+  await app.request('c');
+  const context = app.context();
+  const writeBuildArtifact = context.writeBuildArtifact;
+  let published = false;
+  context.writeBuildArtifact = async (fileName, content, options) => {
+    if (!published && fileName === 'pages/a.json') {
+      published = true;
+      app.publish();
+    }
+    return writeBuildArtifact(fileName, content, options);
+  };
+
+  expect(await app.request('a')).toBe('built');
+  expect(await requestAll(app, ['a', 'c'])).toEqual({ a: 'built', c: 'served' });
+  expect(await app.request('a')).toBe('served');
   app.remove();
 });

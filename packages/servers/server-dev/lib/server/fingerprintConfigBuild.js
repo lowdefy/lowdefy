@@ -22,13 +22,12 @@ import path from 'path';
 // before it stay current. Every other file counts as a page build input, so a
 // file added to the build later is one until it is listed here.
 //
-// Written by the dev server's page builds, or by the manager to signal it.
+// Written by the dev server's page builds (and plugins/operators/, below), or
+// by the manager to signal it.
 const notConfigBuildOutputs = new Set([
   '.restart',
   'buildStatus.json',
   'invalidatePages',
-  'plugins/operators/clientJsMap.js',
-  'plugins/operators/serverJsMap.js',
   'reload',
   'tailwind-candidates.css',
 ]);
@@ -38,9 +37,14 @@ const notConfigBuildDirectories = ['jitMaps/', 'pages/'];
 // (api/: a page build reads endpoints.json). The key and ref maps locate
 // errors, idCounter.json names the key prefix, and the JS maps hold content
 // hashes, so the dev server merges the new skeleton entries into them.
+// iconImports.json is read once per server process: icons it adds later are
+// in no client bundle until a restart (bundledIcons). plugins/ holds the
+// client bundle's and the server's plugin imports, which page builds do not
+// read: they take types from customTypesMap.json and the installed packages.
 const notPageBuildInputs = new Set([
   'app.json',
   'events.json',
+  'iconImports.json',
   'idCounter.json',
   'jsMap.json',
   'keyMap.json',
@@ -55,7 +59,7 @@ const notPageBuildInputs = new Set([
   'skeletonSourceFiles.json',
   'types.json',
 ]);
-const notPageBuildInputDirectories = ['api/', 'connections/'];
+const notPageBuildInputDirectories = ['api/', 'connections/', 'plugins/'];
 
 // Fields a config build sets anew each run whatever the config: appMeta's
 // buildId is a random id. A page build that reads appMeta is rebuilt after
@@ -92,25 +96,21 @@ function readIdentity(filePath) {
   return `${stat.ino}:${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}`;
 }
 
-function sortKeys(key, value) {
-  if (value === null || typeof value !== 'object' || Array.isArray(value)) return value;
-  return Object.fromEntries(Object.entries(value).sort(([a], [b]) => (a < b ? -1 : 1)));
-}
-
 // The config build keys every node it writes, and names the root ref, with
 // ids that start with its own prefix (makeId), so two builds of the same
-// config differ in their prefixes. Refs resolve in parallel, so an object's
-// keys can also come in another order (modules.json): a JSON file is read
-// with its keys sorted. Without the prefix and the per-build fields, that is
-// the content.
+// config differ only in their prefixes (and modules.json writes its var
+// caches in key order, see writeModules). Without the prefixes and the
+// per-build fields, the text is the content: a change of key order is a
+// change, since it can change what a page shows (_object.keys, style).
 function fingerprint({ name, filePath, prefix }) {
   let text = fs.readFileSync(filePath, 'utf8');
-  if (name.endsWith('.json')) {
+  const fields = perBuildFields[name];
+  if (fields) {
     const value = JSON.parse(text);
-    for (const field of perBuildFields[name] ?? []) {
+    for (const field of fields) {
       delete value[field];
     }
-    text = JSON.stringify(value, sortKeys);
+    text = JSON.stringify(value);
   }
   return crypto.createHash('sha1').update(text.replaceAll(prefix, '')).digest('hex');
 }
@@ -134,11 +134,15 @@ function fingerprintConfigBuild({ buildDirectory, previous }) {
       throw error;
     }
     const kept = previous?.files.get(name);
-    files.set(name, {
-      identity,
-      fingerprint:
-        kept?.identity === identity ? kept.fingerprint : fingerprint({ name, filePath, prefix }),
-    });
+    let value;
+    try {
+      value =
+        kept?.identity === identity ? kept.fingerprint : fingerprint({ name, filePath, prefix });
+    } catch (error) {
+      if (error.code === 'ENOENT') continue;
+      throw error;
+    }
+    files.set(name, { identity, fingerprint: value });
   }
   return { buildDirectory, prefix, files };
 }

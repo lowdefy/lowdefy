@@ -61,18 +61,15 @@ test('two config builds of the same config have the same fingerprint, whatever t
   expect(sameFingerprint(first, second)).toBe(true);
 });
 
-test('a config build that writes an object with its keys in another order has the same fingerprint', () => {
+test('a config build that writes an object with its keys in another order has another fingerprint', () => {
   writeConfigBuild({ prefix: 'a1b2_' });
-  write('deferredRecords.json', JSON.stringify({ a: { x: 1, y: [1, 2] }, b: 2 }));
+  write('deferredRecords.json', JSON.stringify({ style: { marginTop: 8, margin: 0 } }));
   const first = fingerprintConfigBuild({ buildDirectory, previous: null });
-  write('deferredRecords.json', JSON.stringify({ b: 2, a: { y: [1, 2], x: 1 } }));
-  const reordered = fingerprintConfigBuild({ buildDirectory, previous: first });
-  write('deferredRecords.json', JSON.stringify({ b: 2, a: { y: [2, 1], x: 1 } }));
+  write('deferredRecords.json', JSON.stringify({ style: { margin: 0, marginTop: 8 } }));
 
-  expect(sameFingerprint(first, reordered)).toBe(true);
-  expect(
-    sameFingerprint(first, fingerprintConfigBuild({ buildDirectory, previous: reordered }))
-  ).toBe(false);
+  expect(sameFingerprint(first, fingerprintConfigBuild({ buildDirectory, previous: first }))).toBe(
+    false
+  );
 });
 
 test('a config build that changes a page build input has another fingerprint', () => {

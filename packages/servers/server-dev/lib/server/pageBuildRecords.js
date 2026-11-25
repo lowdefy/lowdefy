@@ -123,6 +123,13 @@ function trackAppMetaReads({ context }) {
   });
 }
 
+// A page build reached a node the config build keyed (its key map entry was
+// read): the page's errors locate through the config build's keyMap.json.
+function markConfigBuildKeyRead() {
+  const reads = buildReads.getStore();
+  if (reads) reads.readConfigBuildKeys = true;
+}
+
 function trackFileReads({ context, configDirectory }) {
   context.readConfigFile = trackReadConfigFile({
     readConfigFile: context.readConfigFile,
@@ -172,7 +179,13 @@ async function record({
   isOutdated = () => false,
   build,
 }) {
-  const reads = { files: new Map(), mapsFiles: [], ranAppCode: false, readAppMeta: false };
+  const reads = {
+    files: new Map(),
+    mapsFiles: [],
+    ranAppCode: false,
+    readAppMeta: false,
+    readConfigBuildKeys: false,
+  };
   const builtAt = Date.now();
   const describe = (errors) => ({
     builtAt,
@@ -185,6 +198,7 @@ async function record({
     outdated: isOutdated(),
     ranAppCode: reads.ranAppCode,
     readAppMeta: reads.readAppMeta,
+    readConfigBuildKeys: reads.readConfigBuildKeys,
     registryEntry,
   });
   const buildInFlight = { generation, reads };
@@ -233,6 +247,7 @@ function mapsFiles({ generation }) {
 export default {
   get,
   mapsFiles,
+  markConfigBuildKeyRead,
   record,
   trackAppMetaReads,
   trackFileReads,

@@ -327,7 +327,8 @@ missing (`API Endpoint "x" does not exist.`), and Vite's SSR graph can fail to r
 relative paths written into artifacts are the same), and `publishBuildDirectory` renames each
 staged file over its live counterpart, then removes live files the new build did not write,
 then moves `pageRegistry.json` last. It keeps what page builds wrote: the `pages/` artifacts
-of the pages in the staged registry (a page's and its requests') and the page builds'
+of the pages in the staged registry (a page's and its requests'; a page build removes the
+artifacts of requests its page no longer has, `removeDroppedRequests`) and the page builds'
 `jitMaps/` files, since a publish that changes no page build input keeps the pages built
 before it (below). A rename replaces a file in one step, so every artifact is always present,
 old or new. The JIT page builder adopts a config build when the registry's identity (inode
@@ -399,7 +400,9 @@ rebuilds a page only when its next request needs it. When a page API request arr
    - built before the latest config publish: rebuilt unless its build ran to the end on the
      config build it started on (the live `idCounter.json` prefix is still its context's), it
      did not read `appMeta` (whose `buildId` every config build changes; the context's
-     `appMeta` is a proxy that marks the build reading it), it has a source file (a page with
+     `appMeta` is a proxy that marks the build reading it) or a key map entry of the config
+     build (a node that build keyed: the next build's `keyMap.json` no longer resolves its
+     key, so the page's errors would lose their location), it has a source file (a page with
      none, the default 404, is the config build's own artifact), and its registry entry is
      unchanged without the key prefix. A page that passes goes on to the checks below;
    - `checkedAt` (the event counter when its build started) equals the counter: current;
@@ -425,11 +428,13 @@ old context and carries the old generation, so its next request rebuilds it.
 build (`fingerprintConfigBuild`): a sha1 of each build directory file that is a page build
 input, with the config build's key prefix taken out of the text (every node it writes, and
 its root ref, carries an id that starts with the prefix, so two builds of the same config
-differ only there) and `appMeta.buildId` left out. A file whose inode, size and times are
+differ only there; `modules.json` writes its var caches in key order, `writeModules`) and
+`appMeta.buildId` left out. Key order otherwise counts: it can change what a page shows. A file whose inode, size and times are
 unchanged keeps its fingerprint without a read. Every file counts as an input except those
 listed in `fingerprintConfigBuild.js`: what the dev server and the manager write (`pages/`,
 `jitMaps/`, the JS map files, the control files), what no page build reads (`menus.json`,
-`connections/`, `types.json`, `mcp.json` and others), the key and ref maps and `idCounter.json`
+`connections/`, `types.json`, `mcp.json`, `plugins/`, and `iconImports.json`, read once per
+server process, and others), the key and ref maps and `idCounter.json`
 (locations, not content), `jsMap.json` (merged, below), `pageRegistry.json` (checked page by
 page) and `api/` (page builds read `endpoints.json`). A file added to the build later is an
 input until it is listed. When the fingerprint is the one before and no page was added or
@@ -446,7 +451,7 @@ either way; what it saves is the rebuild of every page built so far, `keyMap.jso
 lazily, below) and the endpoint artifacts (`endpoints.json` instead).
 
 `pageBuildRecords` (`lib/server/pageBuildRecords.js`) holds each page's last build record:
-`{ builtAt, checkedAt, configBuild, generation, files: Map<absolutePath, sha256>, mapsFiles, outdated, ranAppCode, readAppMeta, registryEntry, errors }`,
+`{ builtAt, checkedAt, configBuild, generation, files: Map<absolutePath, sha256>, mapsFiles, outdated, ranAppCode, readAppMeta, readConfigBuildKeys, registryEntry, errors }`,
 `mapsFiles` naming the `jitMaps/` file the build wrote, `configBuild` the config publish its
 build started on and `registryEntry` its registry entry then.
 Reads are attributed to the build running them through `AsyncLocalStorage`. A file that does
@@ -470,7 +475,7 @@ serves its `_js` entries and icons (`getPageJitEnrichment` reads the shared stat
 context is kept), and a warning logs once per change event. A new context costs a full read
 and parse of the build artifacts, 4-16 s on a large app, which is why the budget is high.
 
-`getBuildContext` restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), the endpoint list from `endpoints.json` (for JIT `CallAPI` and Dynamic block validation; an endpoint the manager rebuilds alone keeps its id, type and link, so only a config build rewrites it), and continues the skeleton build's `~k` keys from `idCounter.json` with a prefix unique to the process (`continueJitKeys`: the counter only moves forward). It then calls `prepareJitContext`, which fills the fields build code otherwise fills on first use (auth projection, the icon set load, `jitMaps`, deferred records, unresolved ref vars, `websocketIds`), so no page build reloads them on its copy. The context's `keyMap` is lazy (`createLazyKeyMap`): it holds the entries page builds add as its own properties and reads `keyMap.json` the first time a lookup misses one (the `@lowdefy/errors` readers and `addKeys` read entries through its `get`). A page build's keys chain to a root of their own, so a build that locates no error and reuses no config build key never reads it, and `jitMaps` lists only the added entries. Page builds do not rewrite `keyMap.json`/`refMap.json`: each writes the entries it added to a new `jitMaps/` file. A new context removes every `jitMaps/` file but those the latest build of each of the current generation's pages wrote (`pruneJitMaps`). The context's `writeBuildArtifact` is wrapped with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild writes no maps over the new build (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
+`getBuildContext` restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), the endpoint list from `endpoints.json` (for JIT `CallAPI` and Dynamic block validation; an endpoint the manager rebuilds alone keeps its id, type and link, so only a config build rewrites it), and continues the skeleton build's `~k` keys from `idCounter.json` with a prefix unique to the process (`continueJitKeys`: the counter only moves forward). It then calls `prepareJitContext`, which fills the fields build code otherwise fills on first use (auth projection, the icon set load, `jitMaps`, deferred records, unresolved ref vars, `websocketIds`), so no page build reloads them on its copy. The context's `keyMap` is lazy (`createLazyKeyMap`): it holds the entries page builds add as its own properties and reads `keyMap.json` the first time a lookup misses one that is not a page build key (the `@lowdefy/errors` readers and `addKeys` read entries through its `get`). A page build's keys (`<prefix><childId>_<n>`) chain to a root of their own, so a build that reaches no node the config build keyed never reads it, warnings and errors included, and `jitMaps` lists only the added entries. A lookup that returns a config build entry marks the build (`readConfigBuildKeys`). Page builds do not rewrite `keyMap.json`/`refMap.json`: each writes the entries it added to a new `jitMaps/` file. A new context removes every `jitMaps/` file but those the latest build of each of the current generation's pages wrote (`pruneJitMaps`). The context's `writeBuildArtifact` is wrapped with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild writes no maps over the new build (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
 
 ### PageCache
 
