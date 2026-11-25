@@ -26,6 +26,7 @@ import checkPendingPlugins from './processes/checkPendingPlugins.mjs';
 import initialBuild from './processes/initialBuild.mjs';
 import installPlugins from './processes/installPlugins.mjs';
 import lowdefyBuild from './processes/lowdefyBuild.mjs';
+import lowdefyEndpointBuild from './processes/lowdefyEndpointBuild.mjs';
 import optimizeDependencies from './processes/optimizeDependencies.mjs';
 import readDotEnv from './processes/readDotEnv.mjs';
 import reloadClients from './processes/reloadClients.mjs';
@@ -34,6 +35,7 @@ import shutdownServer from './processes/shutdownServer.mjs';
 import startWatchers from './processes/startWatchers.mjs';
 import syncServer from './processes/syncServer.mjs';
 
+import createBuildQueue from './utils/createBuildQueue.mjs';
 import createServerArtifactTracker from './utils/createServerArtifactTracker.mjs';
 import getViteBin from './utils/getViteBin.mjs';
 import readManagerVersion from './utils/readManagerVersion.mjs';
@@ -88,6 +90,7 @@ async function getContext() {
 
     // JIT build state
     pageRegistry: null,
+    endpointRegistry: null,
     buildContext: null,
     lastBuildFailed: false,
   };
@@ -98,6 +101,7 @@ async function getContext() {
   context.initialBuild = initialBuild(context);
   context.installPlugins = installPlugins(context);
 
+  context.buildQueue = createBuildQueue();
   // Wrap lowdefyBuild to capture and store the shallow build result
   const buildFn = lowdefyBuild(context);
   context.lowdefyBuild = async (buildOptions) => {
@@ -111,9 +115,11 @@ async function getContext() {
     context.lastBuildFailed = false;
     if (result) {
       context.pageRegistry = result.pageRegistry;
+      context.endpointRegistry = result.endpointRegistry;
       context.buildContext = result.context;
     }
   };
+  context.lowdefyEndpointBuild = lowdefyEndpointBuild(context);
 
   context.optimizeDependencies = optimizeDependencies(context);
   context.readDotEnv = readDotEnv(context);

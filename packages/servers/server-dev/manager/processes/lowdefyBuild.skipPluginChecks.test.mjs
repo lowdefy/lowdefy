@@ -19,6 +19,7 @@ import { vi, beforeEach, expect, test } from 'vitest';
 const mockShallowBuild = vi.fn();
 
 vi.doMock('@lowdefy/build/dev', () => ({
+  attributeEndpointWarnings: vi.fn(),
   shallowBuild: mockShallowBuild,
   serializeBuildException: vi.fn((exception) => ({ message: exception.message })),
 }));
@@ -36,9 +37,11 @@ vi.doMock('../utils/publishBuildDirectory.mjs', () => ({
 }));
 
 const { default: lowdefyBuild } = await import('./lowdefyBuild.mjs');
+const { default: createBuildQueue } = await import('../utils/createBuildQueue.mjs');
 
 function createContext(options) {
   return {
+    buildQueue: createBuildQueue(),
     directories: { build: '/app/build', buildStaging: '/app/build-staging' },
     logger: { info: vi.fn() },
     options,

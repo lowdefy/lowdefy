@@ -14,7 +14,11 @@
   limitations under the License.
 */
 
-import { serializeBuildException, shallowBuild } from '@lowdefy/build/dev';
+import {
+  attributeEndpointWarnings,
+  serializeBuildException,
+  shallowBuild,
+} from '@lowdefy/build/dev';
 import createCustomPluginMessagesMap from '../utils/createCustomPluginMessagesMap.mjs';
 import createCustomPluginTypesMap from '../utils/createCustomPluginTypesMap.mjs';
 import publishBuildDirectory from '../utils/publishBuildDirectory.mjs';
@@ -25,7 +29,7 @@ function formatDuration(ms) {
   return `${(ms / 1000).toFixed(2)}s`;
 }
 
-function lowdefyBuild({ directories, logger, options }) {
+function lowdefyBuild({ buildQueue, directories, logger, options }) {
   async function build({ pluginInstallFollows = false } = {}) {
     logger.info({ spin: 'start' }, 'Building config...');
     const startTime = Date.now();
@@ -72,11 +76,13 @@ function lowdefyBuild({ directories, logger, options }) {
       throw error;
     }
 
-    await writeBuildStatus({
-      directories,
-      status: 'ok',
-      errors: [],
-      warnings: (result.context.warnings ?? []).map(serializeBuildException),
+    const warnings = (result.context.warnings ?? []).map(serializeBuildException);
+    await writeBuildStatus({ directories, status: 'ok', errors: [], warnings });
+    // An endpoint rebuilt alone replaces only its own warnings (lowdefyEndpointBuild).
+    attributeEndpointWarnings({
+      endpointRegistry: result.endpointRegistry,
+      keyMap: result.context.keyMap,
+      warnings,
     });
 
     // Return result so getContext can store registries
@@ -85,20 +91,9 @@ function lowdefyBuild({ directories, logger, options }) {
     return result;
   }
 
-  // Watchers, restarts and plugin installs each start builds, and every build
-  // writes the same staging directory, so a build waits for the one before it.
-  let previousBuild = Promise.resolve();
-  return (buildOptions) => {
-    const nextBuild = previousBuild.then(() => build(buildOptions));
-    // Settles when the build does, without its result. The queue lives as long
-    // as the manager, so a promise that resolved to the result kept the whole
-    // config the last build resolved in memory.
-    previousBuild = nextBuild.then(
-      () => {},
-      () => {}
-    );
-    return nextBuild;
-  };
+  // Every build writes the same staging directory, so a build waits for the
+  // one before it.
+  return (buildOptions) => buildQueue(() => build(buildOptions));
 }
 
 export default lowdefyBuild;

@@ -29,6 +29,7 @@ const mockCreateCustomPluginMessagesMap = vi.fn().mockResolvedValue({});
 const mockPublishBuildDirectory = vi.fn(async () => {});
 
 vi.doMock('@lowdefy/build/dev', () => ({
+  attributeEndpointWarnings: vi.fn(),
   shallowBuild: mockShallowBuild,
   serializeBuildException: mockSerializeBuildException,
 }));
@@ -46,9 +47,11 @@ vi.doMock('../utils/publishBuildDirectory.mjs', () => ({
 }));
 
 const { default: lowdefyBuild } = await import('./lowdefyBuild.mjs');
+const { default: createBuildQueue } = await import('../utils/createBuildQueue.mjs');
 
 function createContext() {
   return {
+    buildQueue: createBuildQueue(),
     directories: { build: '/app/build', buildStaging: '/app/build-staging' },
     logger: { info: vi.fn() },
     options: { refResolver: undefined },
@@ -219,6 +222,7 @@ test('lowdefyBuild starts a build only after the previous one has finished', asy
 async function importLowdefyBuildWithoutMocks({ shallowBuild }) {
   vi.resetModules();
   vi.doMock('@lowdefy/build/dev', () => ({
+    attributeEndpointWarnings: () => {},
     shallowBuild,
     serializeBuildException: (exception) => ({ message: exception.message }),
   }));
@@ -229,7 +233,8 @@ async function importLowdefyBuildWithoutMocks({ shallowBuild }) {
   vi.doMock('../utils/createCustomPluginMessagesMap.mjs', () => ({ default: async () => ({}) }));
   vi.doMock('../utils/publishBuildDirectory.mjs', () => ({ default: async () => {} }));
   const { default: lowdefyBuildWithoutMocks } = await import('./lowdefyBuild.mjs');
-  return lowdefyBuildWithoutMocks;
+  const { default: createBuildQueueWithoutMocks } = await import('../utils/createBuildQueue.mjs');
+  return { lowdefyBuildWithoutMocks, createBuildQueueWithoutMocks };
 }
 
 // The build runs in a function of its own so that, once it returns, the only
@@ -245,15 +250,17 @@ test('lowdefyBuild does not hold the result of a finished build in its queue', a
   v8.setFlagsFromString('--expose-gc');
   const gc = vm.runInNewContext('gc');
   let nextResult;
-  const lowdefyBuildWithoutMocks = await importLowdefyBuildWithoutMocks({
-    // Hands the result over and keeps nothing of it.
-    shallowBuild: async () => {
-      const result = nextResult;
-      nextResult = undefined;
-      return result;
-    },
-  });
+  const { lowdefyBuildWithoutMocks, createBuildQueueWithoutMocks } =
+    await importLowdefyBuildWithoutMocks({
+      // Hands the result over and keeps nothing of it.
+      shallowBuild: async () => {
+        const result = nextResult;
+        nextResult = undefined;
+        return result;
+      },
+    });
   const build = lowdefyBuildWithoutMocks({
+    buildQueue: createBuildQueueWithoutMocks(),
     directories: { build: '/app/build', buildStaging: '/app/build-staging' },
     logger: { info: () => {} },
     options: { refResolver: undefined },
