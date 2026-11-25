@@ -166,7 +166,9 @@ test('journeys-autopilot hardens with one worker, screenshots with the data set 
 test('journeys-autopilot skips signed-out visitors and never runs journeys as a public role', () => {
   const skill = journeysAutopilot();
   expect(skill).toContain('the reason "signed-out runs stay on the auth harness"');
-  expect(skill).toContain('`user: none` on a data set is refused');
+  expect(skill).toContain(
+    '`user: none` on a data set journey that opens a\n   page is refused while auth is configured'
+  );
   expect(skill).not.toContain('or public');
   expect(skill).toContain('role: admin               # a data set user name\n');
 });
