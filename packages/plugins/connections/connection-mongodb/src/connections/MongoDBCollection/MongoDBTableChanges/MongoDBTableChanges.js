@@ -88,6 +88,7 @@ async function MongoDBTableChanges({
       await logCollection.insertOne(
         stampTenantOnLogRecord({
           record: excludeLogFields({
+            arrayPath: properties.array?.path,
             connection,
             record: {
               args: { changes: properties.changes, operations, options: compiled.options },

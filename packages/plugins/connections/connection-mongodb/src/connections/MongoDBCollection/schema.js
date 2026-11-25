@@ -63,7 +63,7 @@ export default {
         exclude: {
           type: 'array',
           description:
-            'Fields, as dot paths, whose values change log records never hold, such as a credential hash the collection must store. Each copy a record makes of a document or a write (before, after, the inserted documents, each update operator or pipeline stage) has "[excluded]" in place of the field\'s value, so the record still shows that a write set it. A path through an array names the field in each element, and an update key under the path ("token.hash" for "token", "items.$.pin" for "items.pin") is excluded too.',
+            'Fields, as dot paths, whose values change log records never hold, such as a credential hash the collection must store. Each copy a record makes of a document or a write (before, after, the inserted documents, each update operator or pipeline stage) has "[excluded]" in place of the field\'s value, so the record still shows that a write set it. A path through an array names the field in each element, and an update key under the path ("token.hash" for "token", "items.$.pin" for "items.pin") is excluded too. A pipeline expression other than $mergeObjects or $literal that sets a field above a path is excluded whole.',
           items: {
             type: 'string',
             errorMessage: {

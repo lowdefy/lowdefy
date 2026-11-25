@@ -179,6 +179,24 @@ test('the change log records are stamped with the caller org', async () => {
   log.forEach((r) => expect(r.organization_id).toBe('org_a'));
 });
 
+test('findOneAndUpdate change log records leave out changeLog.exclude fields', async () => {
+  const c = 'walledLogExclude';
+  await populateTestMongoDb({
+    collection: c,
+    documents: [{ ...seed[0], tokens: { refresh: 'stored-secret', expires: 1 } }],
+  });
+  await emptyCollection(`${c}Log`);
+  const walled = clientFor(c, {
+    extra: { changeLog: { collection: `${c}Log`, exclude: ['tokens.refresh'] } },
+  });
+  await walled.findOneAndUpdate({ _id: 'a1' }, { $set: { 'tokens.refresh': 'new-secret' } });
+  const [record] = await readAll(`${c}Log`);
+  expect(JSON.stringify(record)).not.toContain('secret');
+  expect(record.args.update).toEqual({ $set: { 'tokens.refresh': '[excluded]' } });
+  expect(record.before.tokens).toEqual({ refresh: '[excluded]', expires: 1 });
+  expect(record.after.tokens).toEqual({ refresh: '[excluded]', expires: 1 });
+});
+
 test('the write guard of a shared connection refuses a write that would leave a row without an organization', async () => {
   const c = 'walledGuard';
   await populateTestMongoDb({ collection: c, documents: seed });

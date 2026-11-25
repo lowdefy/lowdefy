@@ -369,3 +369,140 @@ test('MongoDBUpdateOne excludes a nested field in before, after and the update',
   expect(record.after.tokens).toEqual({ refresh: EXCLUDED, access: EXCLUDED });
   expect(record.after.status).toEqual('active');
 });
+
+test('MongoDBTableChanges in array mode excludes item fields in the changeset and the operations', async () => {
+  await populateTestMongoDb({
+    collection,
+    documents: [{ _id: 'd1', items: [{ _id: 'i1', pin: 'PIN-STORED', label: 'A' }] }],
+  });
+  const record = await logOf({
+    request: {
+      filter: {},
+      rowKeyType: 'string',
+      array: { documentId: 'd1', path: 'items' },
+      fields: { pin: { type: 'text' }, label: { type: 'text' } },
+      changes: {
+        updated: { i1: { pin: 'PIN-UPDATED', label: 'B' } },
+        added: [{ rowKey: 'new', pin: 'PIN-ADDED', label: 'C' }],
+      },
+    },
+    requestType: MongoDBTableChanges,
+    connection: { ...excluding, changeLog: { collection: logCollection, exclude: ['items.pin'] } },
+    requestId: 'excludeTableChangesArray',
+  });
+  expect(record.args.changes.updated).toEqual({ i1: { pin: EXCLUDED, label: 'B' } });
+  expect(record.args.changes.added[0]).toEqual({ rowKey: 'new', pin: EXCLUDED, label: 'C' });
+  expect(JSON.stringify(record)).not.toContain('PIN-');
+});
+
+test('in array mode a path at or above the array excludes every item field but the row key', () => {
+  function changesExcluding(exclude) {
+    return excludeLogFields({
+      arrayPath: 'data.items',
+      connection: { changeLog: { collection: logCollection, exclude } },
+      record: {
+        args: {
+          changes: {
+            updated: { i1: { pin: 'p1', label: 'B' } },
+            added: [{ rowKey: 'new', pin: 'p2' }],
+          },
+        },
+      },
+    }).args.changes;
+  }
+  const everyField = {
+    updated: { i1: { pin: EXCLUDED, label: EXCLUDED } },
+    added: [{ rowKey: 'new', pin: EXCLUDED }],
+  };
+  expect(changesExcluding(['data'])).toEqual(everyField);
+  expect(changesExcluding(['data.items'])).toEqual(everyField);
+  expect(changesExcluding(['items']).updated.i1).toEqual({ pin: 'p1', label: 'B' });
+});
+
+test('pipeline expressions above an excluded field are walked or excluded whole', () => {
+  const record = excludeLogFields({
+    connection: { changeLog: { collection: logCollection, exclude: ['tokens.refresh'] } },
+    record: {
+      args: {
+        update: [
+          { $set: { tokens: { $mergeObjects: ['$tokens', { refresh: 'r1', expires: 5 }] } } },
+          { $set: { tokens: { $literal: { refresh: 'r2', expires: 6 } } } },
+          { $set: { tokens: { $cond: [true, { refresh: 'r3' }, '$tokens'] } } },
+          { $set: { tokens: '$other', status: { $concat: ['a', 'b'] } } },
+          { $replaceWith: { $literal: { tokens: { refresh: 'r4' }, kind: 'k' } } },
+          { $replaceRoot: { newRoot: { $cond: [true, { tokens: { refresh: 'r5' } }, '$$ROOT'] } } },
+          { $replaceWith: '$archived' },
+        ],
+      },
+    },
+  });
+  expect(record.args.update).toEqual([
+    { $set: { tokens: { $mergeObjects: ['$tokens', { refresh: EXCLUDED, expires: 5 }] } } },
+    { $set: { tokens: { $literal: { refresh: EXCLUDED, expires: 6 } } } },
+    { $set: { tokens: EXCLUDED } },
+    { $set: { tokens: '$other', status: { $concat: ['a', 'b'] } } },
+    { $replaceWith: { $literal: { tokens: { refresh: EXCLUDED }, kind: 'k' } } },
+    { $replaceRoot: { newRoot: EXCLUDED } },
+    { $replaceWith: '$archived' },
+  ]);
+});
+
+test('a number part of a path names a field as well as an array index', () => {
+  const record = excludeLogFields({
+    connection: {
+      changeLog: { collection: logCollection, exclude: ['scores.2024.secret', 'items.pin'] },
+    },
+    record: {
+      args: {
+        update: {
+          $set: {
+            'scores.2024.secret': 's1',
+            'scores.2024': { secret: 's2', open: 1 },
+            'scores.2025.secret': 'kept',
+            'items.0.pin': 'p1',
+          },
+        },
+      },
+      before: { scores: { 2024: { secret: 's0', open: 0 } } },
+    },
+  });
+  expect(record.args.update.$set).toEqual({
+    'scores.2024.secret': EXCLUDED,
+    'scores.2024': { secret: EXCLUDED, open: 1 },
+    'scores.2025.secret': 'kept',
+    'items.0.pin': EXCLUDED,
+  });
+  expect(record.before).toEqual({ scores: { 2024: { secret: EXCLUDED, open: 0 } } });
+});
+
+test('a top-level number field is never read as an array index', () => {
+  const record = excludeLogFields({
+    connection: { changeLog: { collection: logCollection, exclude: ['pin'] } },
+    record: { args: { doc: { 0: { pin: 'kept' }, pin: 'p1' } } },
+  });
+  expect(record.args.doc).toEqual({ 0: { pin: 'kept' }, pin: EXCLUDED });
+});
+
+test('the enrichment log excludes a column value by its _enrich path', async () => {
+  const records = [];
+  const results = [
+    { rowKey: 'c1', columnKey: 'summary', status: 'ok', value: 'Secret summary' },
+    { rowKey: 'c1', columnKey: 'size', status: 'ok', value: 40 },
+    { rowKey: 'c2', columnKey: 'summary', status: 'error', value: undefined },
+  ];
+  for (const exclude of [['_enrich.summary'], ['_enrich.summary.value'], ['_enrich']]) {
+    await writeEnrichmentLog({
+      args: { results },
+      context: { connection: { changeLog: { collection: logCollection, exclude } } },
+      logCollection: { insertOne: async (record) => records.push(record) },
+      response: {},
+      type: 'MongoDBEnrichmentComplete',
+    });
+  }
+  const values = records.map((record) => record.args.results.map((result) => result.value));
+  expect(values).toEqual([
+    [EXCLUDED, 40, undefined],
+    [EXCLUDED, 40, undefined],
+    [EXCLUDED, EXCLUDED, undefined],
+  ]);
+});
