@@ -35,8 +35,9 @@ import writeHeadlessRun from './writeHeadlessRun.js';
 // (createHeadlessWorkers). Each journey, and each repeat of one, runs on a fresh session of its
 // data set, with databases of its own on the run's one data store, and its own page state, so no
 // journey sees another's writes. Journeys with no data set, or marked serial, run alone after the
-// rest (runJourneyPool). The results are reported and recorded in selection order, whatever order
-// they finish in, and headless-run.json is written once, here. Journeys that need a browser are
+// rest (runJourneyPool). Whatever order they finish in, they are reported in run order (those that
+// ran side by side, then those that ran alone, each in selection order) and recorded in selection
+// order, and headless-run.json is written once, here. Journeys that need a browser are
 // listed as browser-only, with the first step that does, and are neither passed nor failed. One an
 // earlier run found needs a browser on this build (its buildId) is listed without running it up to
 // that step again (rememberedBrowserOnly); `records` is headless-run.json's journeys
@@ -61,18 +62,48 @@ async function runHeadlessTests({
     },
   });
   // This thread runs a journey whenever it has none in flight, so a run of one journey at a time
-  // starts no worker thread.
-  let ownInFlight = false;
-  async function runItem({ item }) {
-    if (!ownInFlight) {
-      ownInFlight = true;
+  // starts no worker thread. Journeys sent here wait their turn, one at a time.
+  const ownQueue = [];
+  let ownBusy = false;
+  async function drainOwn() {
+    ownBusy = true;
+    while (ownQueue.length > 0) {
+      const { item, resolve, reject } = ownQueue.shift();
       try {
-        return await runHeadlessRepeated({ app, context, item, repeat });
-      } finally {
-        ownInFlight = false;
+        resolve(await runHeadlessRepeated({ app, context, item, repeat }));
+      } catch (error) {
+        reject(error);
       }
     }
-    return workers.run({ item, repeat });
+    ownBusy = false;
+  }
+  function runOwn(item) {
+    return new Promise((resolve, reject) => {
+      ownQueue.push({ item, resolve, reject });
+      if (!ownBusy) drainOwn();
+    });
+  }
+  // A worker thread that cannot open the build (it was rewritten since this run opened it) sends the
+  // rest of the run to this thread, which opened it first.
+  let workersRefused = false;
+  async function runItem({ item }) {
+    if (!ownBusy || workersRefused) {
+      return runOwn(item);
+    }
+    try {
+      return await workers.run({ item, repeat });
+    } catch (error) {
+      if (error.refused !== true) {
+        throw error;
+      }
+      if (!workersRefused) {
+        workersRefused = true;
+        context.logger.warn(
+          `A worker thread could not open the build, so the rest of the run goes one journey at a time: ${error.message}`
+        );
+      }
+      return runOwn(item);
+    }
   }
   const seen = new Set();
   let pooled;

@@ -1,9 +1,10 @@
 # Four journeys that write the same collection, run side by side by `lowdefy test --concurrency 4`
 # on the production build and on the dev server (packages/cli/test/journeyFixture/headless.test.mjs).
 # Each saves its own item on a data set of its own, so it sees the data set's one item and its own,
-# never another journey's. The first saves three items, so it finishes last when they run side by
-# side; the run still reports them in this order. In a folder starting with "_" so the suite's own
-# runs, and harden, leave it out.
+# never another journey's. The first saves three items and then waits 4 s, so it finishes last when
+# they run side by side, on the production build too, where it runs on the app the run opened first
+# while the others wait for their worker threads to open it; the run still reports them in this
+# order. In a folder starting with "_" so the suite's own runs, and harden, leave it out.
 - name: parallel journey A sees only its own items
   pageId: home
   data: explore
@@ -19,6 +20,7 @@
     - click: save_button
     - expect: { db: { collection: items, match: { name: Parallel A3 }, count: 1 } }
     - expect: { db: { collection: items, match: { kind: item }, count: 4 } }
+    - wait: { ms: 4000 }
 - name: parallel journey B sees only its own items
   pageId: home
   data: explore

@@ -15,6 +15,7 @@
 */
 
 import { Worker } from 'node:worker_threads';
+import { type } from '@lowdefy/helpers';
 
 const CLOSE_TIMEOUT_MS = 10000;
 
@@ -22,10 +23,13 @@ function startWorker(workerData) {
   return new Worker(new URL('./headlessWorker.js', import.meta.url), { workerData });
 }
 
-function toError({ message, stack }) {
+function toError({ message, stack, refused }) {
   const error = new Error(message);
   if (stack !== undefined) {
     error.stack = stack;
+  }
+  if (refused === true) {
+    error.refused = true;
   }
   return error;
 }
@@ -35,7 +39,10 @@ function toError({ message, stack }) {
 // { directories, secrets }). A thread is started when a journey finds every thread busy and fewer
 // than `size` are running, so a run of a few journeys starts only as many as it keeps busy; once
 // started, it serves the rest of the run. run({ item, repeat }) runs one item on an idle thread
-// and answers its result, or throws what the run threw there. A thread that stops (it crashed, or
+// and answers its result, or throws what the run threw there: with `refused: true` when the thread
+// could not open the build (openBuildApp refused it, as a build rewritten since the run opened it
+// is). A job that cannot be sent to its thread, or whose answer cannot be read, fails that job and
+// frees the thread. A thread that stops (it crashed, or
 // ran out of memory) fails the journey it was running, and the next journey starts a new one. A
 // journey that finds `size` threads busy waits for the first to be free; the caller's pool keeps
 // no more in flight than that. close() asks each thread to close its app and stops it, after
@@ -50,7 +57,12 @@ function createHeadlessWorkers({ size, workerData, start = startWorker }) {
 
   function send(thread, job) {
     thread.job = job;
-    thread.worker.postMessage({ id: job.id, item: job.item, repeat: job.repeat });
+    try {
+      thread.worker.postMessage({ id: job.id, item: job.item, repeat: job.repeat });
+    } catch (error) {
+      job.reject(error);
+      free(thread);
+    }
   }
 
   // A thread that is free takes the first waiting job, if any.
@@ -81,7 +93,8 @@ function createHeadlessWorkers({ size, workerData, start = startWorker }) {
       }
       free(thread);
     });
-    function stop(reason) {
+    // `cause` is the thread's error, or its exit code.
+    function stop(cause) {
       if (thread.stopped) return;
       thread.stopped = true;
       threads.delete(thread);
@@ -89,15 +102,31 @@ function createHeadlessWorkers({ size, workerData, start = startWorker }) {
       const job = thread.job;
       thread.job = null;
       if (job !== null) {
-        job.reject(new Error(`The worker thread running this journey stopped: ${reason}`));
+        const reason = type.isNumber(cause)
+          ? `it exited with code ${cause}`
+          : (cause?.message ?? String(cause));
+        const error = new Error(`The worker thread running this journey stopped: ${reason}`);
+        if (type.isString(cause?.stack)) {
+          error.stack = `${error.message}\n${cause.stack.split('\n').slice(1).join('\n')}`;
+        }
+        job.reject(error);
       }
       // A waiting job takes the place this thread left.
       if (!closed && waiting.length > 0) {
         send(spawn(), waiting.shift());
       }
     }
-    thread.worker.on('error', (error) => stop(error?.message ?? String(error)));
-    thread.worker.on('exit', (code) => stop(`it exited with code ${code}`));
+    // An answer that could not be read leaves its job unanswered: it fails, and the thread is free.
+    thread.worker.on('messageerror', (error) => {
+      const job = thread.job;
+      if (job === null) return;
+      job.reject(
+        new Error(`The answer from the worker thread could not be read: ${error?.message}`)
+      );
+      free(thread);
+    });
+    thread.worker.on('error', (error) => stop(error));
+    thread.worker.on('exit', (code) => stop(code));
     return thread;
   }
 

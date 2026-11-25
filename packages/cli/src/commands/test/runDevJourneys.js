@@ -30,8 +30,10 @@ function indexesOf({ routes, route }) {
 
 // Runs the selected journeys (`entries`, as selectTier gives them) on the dev server at `url`, each
 // once, where routeJourney sends it (`runner`: "headless", "mixed" or "browser"): first the
-// headless ones, up to readHeadlessLimit() at once, then the browser ones, up to readLimit() at once
-// (runJourneyPool), each reported in selection order whatever order they finish in, the browser run recording into `recording` as runRepeated does. A journey the
+// headless ones, up to readHeadlessLimit() at once, then the browser ones, up to readLimit() at
+// once (runJourneyPool), the browser run recording into `recording` as runRepeated does. Each
+// part reports its journeys in run order whatever order they finish in: those that ran side by
+// side, then those that ran alone, each in selection order. A journey the
 // headless run finds needs a browser partway through is browser-only: neither passed nor failed.
 // On a headless run, one an earlier headless run found needs a browser, on the same journey and
 // build, is listed browser-only without running it up to its browser step again

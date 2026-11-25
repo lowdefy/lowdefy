@@ -59,9 +59,9 @@ import writeHeadlessRun from '../test/writeHeadlessRun.js';
 // headless when it can and in the browser when it can't, and also runs in the browser, from step
 // 1, each one found to need a browser partway through; `browser` runs every journey in the
 // browser; `headless` is the default (readTestMode). `concurrency` keeps up to that many journeys
-// in flight (readRunConcurrency): on a headless run the headless journeys, which the dev server
-// runs side by side, by default as many as the machine's cores less one; on a thorough or browser
-// run the browser journeys, 1 to 3.
+// in flight (readRunConcurrency): headless journeys, which the dev server runs side by side in its
+// one process, and on a thorough or browser run browser journeys, 1 to 3. Without it, the headless
+// journeys run one at a time.
 //
 // The answer is cut to what an agent can read (compactTestResults); every
 // journey's result is in the file `resultFile` names. A journey's measured

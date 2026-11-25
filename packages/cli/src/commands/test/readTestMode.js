@@ -23,8 +23,8 @@
 // default, kept so scripts that pass it keep working. The three options each pick the runner, so
 // two of them refuse the run. build runs on the production build, headless only: running browser
 // journeys on the production build is not built yet. How many journeys run at once is read apart
-// (readHeadlessConcurrency, readJourneyConcurrency). Messages name the options with `flagPrefix`: "--" on the command line, "" for the MCP tool's
-// arguments.
+// (readRunConcurrency). Messages name the options with `flagPrefix`: "--" on the command line, ""
+// for the MCP tool's arguments.
 function readTestMode({ options, flagPrefix = '--' }) {
   const flag = (name) => `${flagPrefix}${name}`;
   const browser = options.browser === true;

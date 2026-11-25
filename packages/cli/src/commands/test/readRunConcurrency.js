@@ -20,30 +20,33 @@ import readJourneyConcurrency from './readJourneyConcurrency.js';
 const ONE_AT_A_TIME = { size: 1, readLimit: () => 1 };
 
 // How many journeys a `lowdefy test` or lowdefy_run_tests run keeps in flight, for its `runner`
-// (readTestMode): { headless: { size, readLimit }, browser: { readLimit } } or { error }. A headless
-// run's concurrency sizes its headless journeys (readHeadlessConcurrency): the run was given
-// `concurrency` when `typed`, named `name` in a refusal. A mixed or browser run's concurrency sizes
-// its browser journeys, 1 to 3 (readJourneyConcurrency, which also reads lowdefy.yaml's cli config
-// and LOWDEFY_JOURNEY_CONCURRENCY), and a mixed run's headless part runs at the headless default.
+// (readTestMode): { headless: { size, readLimit }, browser: { readLimit } } or { error }. A
+// concurrency the run was given (`concurrency` when `typed`, named `name` in a refusal) sets how
+// many journeys run at once in each part of the run: its headless journeys (readHeadlessConcurrency)
+// and its browser journeys, 1 to 3 (readJourneyConcurrency). Untyped, the browser part runs at
+// lowdefy.yaml's cli config or LOWDEFY_JOURNEY_CONCURRENCY, else 1, and the headless part at the
+// headless default on the production build (`build`), where worker threads run the journeys, and
+// one at a time on a dev server. The dev server runs headless journeys in its one process, and
+// side by side there they took longer than one at a time on a large production app (73 s against
+// 68 s for 30 journeys), since they compete for one core.
 function readRunConcurrency({
   runner,
+  build = false,
   concurrency,
   typed,
   name,
   repeat,
   cores,
+  memory,
   env,
   readPressure,
 }) {
+  const readHeadless = () =>
+    build || typed === true
+      ? readHeadlessConcurrency({ concurrency, typed, name, repeat, cores, memory, readPressure })
+      : ONE_AT_A_TIME;
   if (runner === 'headless') {
-    const headless = readHeadlessConcurrency({
-      concurrency,
-      typed,
-      name,
-      repeat,
-      cores,
-      readPressure,
-    });
+    const headless = readHeadless();
     if (headless.error) {
       return { error: headless.error };
     }
@@ -53,13 +56,7 @@ function readRunConcurrency({
   if (browser.error) {
     return { error: browser.error };
   }
-  return {
-    headless:
-      runner === 'mixed'
-        ? readHeadlessConcurrency({ typed: false, name, repeat, cores, readPressure })
-        : ONE_AT_A_TIME,
-    browser,
-  };
+  return { headless: runner === 'mixed' ? readHeadless() : ONE_AT_A_TIME, browser };
 }
 
 export default readRunConcurrency;

@@ -23,7 +23,8 @@ import runHeadlessRepeated from './runHeadlessRepeated.js';
 // the run's own thread did (openBuildApp, with the run's test `secrets`), at its first journey, and
 // runs each journey the run posts it on that app, one at a time (runHeadlessRepeated), each on a
 // fresh session of its data set on the run's one data store. It answers each { id, item, repeat }
-// with { id, result }, or { id, error: { message, stack } } when the run threw, and { type: 'close' }
+// with { id, result }, or { id, error: { message, stack } } when the run threw ({ id, error:
+// { message, refused: true } } for every journey once the build would not open), and { type: 'close' }
 // with { type: 'closed' } once its app is closed. Its globals and module state are its own, so
 // journeys in other threads never share them.
 const { directories, secrets } = workerData;
@@ -49,7 +50,8 @@ async function runJob({ id, item, repeat }) {
   try {
     const opened = await openApp();
     if (opened.refused !== undefined) {
-      throw new Error(opened.refused);
+      parentPort.postMessage({ id, error: { message: opened.refused, refused: true } });
+      return;
     }
     postResult({
       id,

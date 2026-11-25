@@ -72,7 +72,7 @@ function after(ms, value) {
 
 beforeEach(() => {
   directory = fs.mkdtempSync(path.join(os.tmpdir(), 'run-headless-tests-'));
-  logs = { info: [], error: [] };
+  logs = { info: [], error: [], warn: [] };
   context = {
     directories: {
       config: directory,
@@ -82,6 +82,7 @@ beforeEach(() => {
     logger: {
       info: (line) => logs.info.push(line),
       error: (line) => logs.error.push(line),
+      warn: (line) => logs.warn.push(line),
     },
   };
   mockRunHeadlessRepeated.mockReset();
@@ -223,4 +224,35 @@ test('closes the worker threads when reporting throws', async () => {
     })
   ).rejects.toThrow('stdout closed');
   expect(mockWorkers.close).toHaveBeenCalledTimes(1);
+});
+
+test('when a worker thread cannot open the build, the rest of the run goes one at a time here', async () => {
+  const inFlight = { now: 0, max: 0 };
+  mockRunHeadlessRepeated.mockImplementation(async ({ item }) => {
+    inFlight.now += 1;
+    inFlight.max = Math.max(inFlight.max, inFlight.now);
+    const result = await after(5, passed({ item }));
+    inFlight.now -= 1;
+    return result;
+  });
+  const refused = new Error('The build is older than the config.');
+  refused.refused = true;
+  mockWorkers.run.mockRejectedValue(refused);
+  const ran = await runHeadlessTests({
+    app,
+    concurrency: { size: 3, readLimit: () => 3 },
+    context,
+    selected: [entry('first'), entry('second'), entry('third'), entry('fourth')],
+    skipped: 0,
+    records: {},
+    repeat: 1,
+  });
+  expect(ran).toEqual({ failed: 0 });
+  expect(logs.warn).toEqual([
+    'A worker thread could not open the build, so the rest of the run goes one journey at a time: The build is older than the config.',
+  ]);
+  expect(mockRunHeadlessRepeated).toHaveBeenCalledTimes(4);
+  expect(inFlight.max).toBe(1);
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toHaveLength(4);
+  expect(logs.info.some((line) => line.includes('alone rerun'))).toBe(false);
 });

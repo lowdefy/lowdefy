@@ -46,8 +46,8 @@ function parseConcurrency({ value, name }) {
 // unset), else 1, each 1 to 3. A --repeat run measures flakiness, so it
 // runs one at a time: a journey that fails only beside another is the flakiness it was asked to
 // find. readLimit() reads memory pressure on each call (the pool calls it before starting a
-// second journey) and gives 1 while it is warn or critical. Headless runs do not call this: they
-// run one at a time.
+// second journey) and gives 1 while it is warn or critical. It sizes browser journeys only; a
+// run's headless journeys are sized by readHeadlessConcurrency (readRunConcurrency).
 function readJourneyConcurrency({
   concurrency: value,
   name,

@@ -278,7 +278,7 @@ test('--headless --build on a build older than the config exits non-zero with th
 
 // Four journeys on one data set that write the same collection, side by side
 // (_parallel/isolated.yaml): each sees only its own writes, and the run reports them in file order
-// although the first, which saves three items, finishes last.
+// although the first, which saves three items and waits 4 s, finishes last.
 const parallelJourneys = path.join(
   configDirectory,
   'tests',
@@ -310,6 +310,8 @@ test('--build --concurrency 4 runs journeys in worker threads, each on its own d
   expect(passLines(output)).toEqual(PARALLEL_NAMES);
   expect(output).toContain('4 passed, 0 failed of 4 journeys');
   expect(output).not.toContain('after an alone rerun');
+  // The worker threads opened the build and ran B to D.
+  expect(output).not.toContain('could not open the build');
   expect(code).toBe(0);
   const written = JSON.parse(fs.readFileSync(headlessRunPath(), 'utf8'));
   expect(written.mode).toBe('build');

@@ -103,10 +103,12 @@ async function test({ context }) {
     refuse({ context, message: modeError });
     return;
   }
-  // A headless run's --concurrency sizes its headless journeys, a mixed or browser run's its browser
-  // journeys (readRunConcurrency).
+  // --concurrency sizes the headless and the browser journeys; untyped, a --build run's headless
+  // journeys run side by side in worker threads and a dev server's one at a time
+  // (readRunConcurrency).
   const concurrency = readRunConcurrency({
     runner,
+    build,
     concurrency: context.options.concurrency,
     typed: (context.options.typedOptions ?? []).includes('concurrency'),
     name: '--concurrency',
@@ -162,8 +164,9 @@ async function test({ context }) {
     await testJourneys({ context, ...options });
     return;
   }
-  // A run on the production build opens it once: the access step and every headless journey use
-  // the one app, which is closed once, after the last journey, also when one throws.
+  // A run on the production build opens it once in this thread: the access step and the journeys
+  // this thread runs use the one app, which is closed once, after the last journey, also when one
+  // throws. Each worker thread opens it once too (runHeadlessTests).
   const secrets = readTestSecrets({ env: process.env });
   const opened = await openBuildApp({ context, secrets });
   if (!type.isUndefined(opened.refused)) {

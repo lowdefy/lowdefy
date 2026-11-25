@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-import { vi, afterEach, beforeEach, expect, test } from 'vitest';
+import { vi, afterEach, beforeEach, expect, onTestFinished, test } from 'vitest';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -1337,21 +1337,25 @@ test('test --headless runs a typed --concurrency of data set journeys side by si
   expect(process.exitCode).toBeUndefined();
 });
 
-test('test --headless leaves a concurrency from lowdefy.yaml to browser runs and runs at the default', async () => {
+test('test --headless on the dev server runs one at a time by default, also with a concurrency from lowdefy.yaml', async () => {
   const { default: test } = await import('./test.js');
+  const spies = [
+    vi.spyOn(os, 'availableParallelism').mockReturnValue(8),
+    vi.spyOn(os, 'totalmem').mockReturnValue(64 * 1024 ** 3),
+  ];
+  onTestFinished(() => spies.forEach((spy) => spy.mockRestore()));
   writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'first' }));
   writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'second' }));
   context.options = {
     ...context.options,
     headless: true,
-    concurrency: 1,
+    concurrency: 2,
     typedOptions: ['headless'],
   };
   // A headless post names no journey: each answers after 30 ms, keyed on its one step.
   const flight = delayedPosts({ delays: { 1: 30 } });
   await test({ context });
-  // The machine's cores less one, and no more than the two journeys.
-  expect(flight.max).toBe(Math.min(2, Math.max(1, os.availableParallelism() - 1)));
+  expect(flight.max).toBe(1);
   expect(process.exitCode).toBeUndefined();
 });
 

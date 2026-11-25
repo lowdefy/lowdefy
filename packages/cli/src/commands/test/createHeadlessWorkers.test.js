@@ -152,3 +152,67 @@ test('close() closes each thread before it stops it, and refuses later journeys'
   );
   await tick();
 });
+
+test('a thread that could not open the build throws with refused: true', async () => {
+  const fake = createFakeStart();
+  const pool = createHeadlessWorkers({ size: 1, workerData: {}, start: fake.start });
+  const run = pool.run({ item: {}, repeat: 1 });
+  fake.workers[0].answer(() => ({
+    error: { message: 'The build is older than the config.', refused: true },
+  }));
+  const error = await run.catch((caught) => caught);
+  expect(error.message).toBe('The build is older than the config.');
+  expect(error.refused).toBe(true);
+  await pool.close();
+});
+
+test('a job that cannot be sent fails, and its thread takes the next', async () => {
+  const fake = createFakeStart();
+  const pool = createHeadlessWorkers({ size: 1, workerData: {}, start: fake.start });
+  const first = pool.run({ item: { name: 'a' }, repeat: 1 });
+  const second = pool.run({ item: { name: 'b' }, repeat: 1 });
+  const third = pool.run({ item: { name: 'c' }, repeat: 1 });
+  // The next post, b's, cannot be cloned.
+  const post = fake.workers[0].postMessage;
+  fake.workers[0].postMessage = () => {
+    fake.workers[0].postMessage = post;
+    throw new Error('could not be cloned');
+  };
+  fake.workers[0].answer(() => ({ result: 'a' }));
+  await expect(first).resolves.toBe('a');
+  await expect(second).rejects.toThrow('could not be cloned');
+  // c took the thread after b.
+  fake.workers[0].answer((job) => ({ result: job.item.name }));
+  await expect(third).resolves.toBe('c');
+  await pool.close();
+});
+
+test('an answer that cannot be read fails its job and frees the thread', async () => {
+  const fake = createFakeStart();
+  const pool = createHeadlessWorkers({ size: 1, workerData: {}, start: fake.start });
+  const first = pool.run({ item: {}, repeat: 1 });
+  fake.workers[0].jobs.shift();
+  fake.workers[0].emit('messageerror', new Error('bad clone'));
+  await expect(first).rejects.toThrow(
+    'The answer from the worker thread could not be read: bad clone'
+  );
+  const second = pool.run({ item: {}, repeat: 1 });
+  expect(pool.started).toBe(1);
+  fake.workers[0].answer(() => ({ result: 'ok' }));
+  await expect(second).resolves.toBe('ok');
+  await pool.close();
+});
+
+test('a thread that crashes keeps the crash stack on the journey error', async () => {
+  const fake = createFakeStart();
+  const pool = createHeadlessWorkers({ size: 1, workerData: {}, start: fake.start });
+  const run = pool.run({ item: {}, repeat: 1 });
+  const crash = new Error('heap out of memory');
+  crash.stack = 'Error: heap out of memory\n    at grow (engine.js:1:1)';
+  fake.workers[0].emit('error', crash);
+  const error = await run.catch((caught) => caught);
+  expect(error.stack).toBe(
+    'The worker thread running this journey stopped: heap out of memory\n    at grow (engine.js:1:1)'
+  );
+  await pool.close();
+});

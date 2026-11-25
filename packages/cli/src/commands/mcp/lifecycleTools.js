@@ -124,7 +124,7 @@ const lifecycleTools = [
           type: 'integer',
           minimum: 1,
           description:
-            'Journeys on data sets at once. Headless: default cores less one. thorough or browser: browser journeys, 1 to 3, default 1.',
+            'Journeys on data sets at once, default 1. Headless: any number. thorough or browser: also browser journeys, 1 to 3.',
         },
         usageWindow: {
           type: 'string',

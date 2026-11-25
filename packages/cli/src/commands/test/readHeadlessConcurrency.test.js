@@ -20,16 +20,45 @@ import readHeadlessConcurrency from './readHeadlessConcurrency.js';
 import readRunConcurrency from './readRunConcurrency.js';
 
 const normal = () => 'normal';
+const GIB = 1024 ** 3;
+const memory = 64 * GIB;
 
 test('readHeadlessConcurrency defaults to the cores less one', () => {
   const read = readHeadlessConcurrency({
     name: '--concurrency',
     repeat: 1,
     cores: 8,
+    memory,
     readPressure: normal,
   });
   expect(read.size).toBe(7);
   expect(read.readLimit()).toBe(7);
+});
+
+test('readHeadlessConcurrency keeps the default to one journey per 4 GiB of memory', () => {
+  const read = (bytes) =>
+    readHeadlessConcurrency({
+      name: '--concurrency',
+      repeat: 1,
+      cores: 10,
+      memory: bytes,
+      readPressure: normal,
+    }).size;
+  expect(read(16 * GIB)).toBe(4);
+  expect(read(8 * GIB)).toBe(2);
+  expect(read(3 * GIB)).toBe(1);
+  // A typed concurrency is the run's own choice.
+  expect(
+    readHeadlessConcurrency({
+      concurrency: 8,
+      typed: true,
+      name: '--concurrency',
+      repeat: 1,
+      cores: 10,
+      memory: 8 * GIB,
+      readPressure: normal,
+    }).size
+  ).toBe(8);
 });
 
 test('readHeadlessConcurrency runs one at a time on one or two cores, and reads no pressure', () => {
@@ -73,6 +102,7 @@ test('readHeadlessConcurrency leaves an untyped concurrency (lowdefy.yaml) alone
       name: '--concurrency',
       repeat: 1,
       cores: 6,
+      memory,
       readPressure: normal,
     }).size
   ).toBe(5);
@@ -110,23 +140,55 @@ test('readHeadlessConcurrency runs one at a time under --repeat', () => {
   expect(read.readLimit()).toBe(1);
 });
 
-test('readHeadlessConcurrency gives 1 while memory pressure is warn or critical, read on each call', () => {
+test('readHeadlessConcurrency gives 1 while memory pressure is warn or critical, read at most once a second', () => {
   const readPressure = vi
     .fn()
     .mockReturnValueOnce('normal')
     .mockReturnValueOnce('warn')
     .mockReturnValueOnce('critical')
     .mockReturnValueOnce('normal');
+  let clock = 0;
   const read = readHeadlessConcurrency({
     name: '--concurrency',
     repeat: 1,
     cores: 4,
+    memory,
     readPressure,
+    now: () => clock,
   });
   expect(read.size).toBe(3);
-  expect([read.readLimit(), read.readLimit(), read.readLimit(), read.readLimit()]).toEqual([
-    3, 1, 1, 3,
-  ]);
+  const limits = [];
+  [0, 500, 1000, 2000, 3000].forEach((at) => {
+    clock = at;
+    limits.push(read.readLimit());
+  });
+  // The reading at 0 holds at 500; 1000, 2000 and 3000 each read again.
+  expect(limits).toEqual([3, 3, 1, 1, 3]);
+  expect(readPressure).toHaveBeenCalledTimes(4);
+});
+
+test('readRunConcurrency runs a dev server headless run one at a time unless it was given a concurrency', () => {
+  const untyped = readRunConcurrency({
+    runner: 'headless',
+    concurrency: 3,
+    typed: false,
+    name: '--concurrency',
+    repeat: 1,
+    cores: 8,
+    memory,
+    readPressure: normal,
+  });
+  expect(untyped.headless.size).toBe(1);
+  const built = readRunConcurrency({
+    runner: 'headless',
+    build: true,
+    name: '--concurrency',
+    repeat: 1,
+    cores: 8,
+    memory,
+    readPressure: normal,
+  });
+  expect(built.headless.size).toBe(7);
 });
 
 test('readRunConcurrency sizes a headless run by its concurrency and runs no browser journeys', () => {
@@ -143,19 +205,36 @@ test('readRunConcurrency sizes a headless run by its concurrency and runs no bro
   expect(read.browser.readLimit()).toBe(1);
 });
 
-test('readRunConcurrency gives a mixed run its browser concurrency and the headless default', () => {
+test('readRunConcurrency gives both parts of a mixed run a typed concurrency', () => {
   const read = readRunConcurrency({
     runner: 'mixed',
-    concurrency: '2',
+    concurrency: '1',
     typed: true,
     name: '--concurrency',
     repeat: 1,
     cores: 6,
+    memory,
+    env: {},
+    readPressure: normal,
+  });
+  expect(read.browser.readLimit()).toBe(1);
+  expect(read.headless.size).toBe(1);
+});
+
+test('readRunConcurrency runs an untyped mixed run headless one at a time, browser at the config', () => {
+  const read = readRunConcurrency({
+    runner: 'mixed',
+    concurrency: 2,
+    typed: false,
+    name: '--concurrency',
+    repeat: 1,
+    cores: 6,
+    memory,
     env: {},
     readPressure: normal,
   });
   expect(read.browser.readLimit()).toBe(2);
-  expect(read.headless.size).toBe(5);
+  expect(read.headless.size).toBe(1);
 });
 
 test('readRunConcurrency runs a browser run no headless journeys side by side', () => {
