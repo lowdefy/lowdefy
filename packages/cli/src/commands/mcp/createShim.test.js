@@ -32,6 +32,7 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 
 import createShim from './createShim.js';
+import { DESCRIPTION_NOTE } from './createShownWarnings.js';
 import createLineReader from '../hub/createLineReader.js';
 import getHubPaths from '../hub/getHubPaths.js';
 import { HUB_PROTOCOL } from '../hub/hubProtocol.js';
@@ -868,7 +869,7 @@ test('lowdefy mcp takes a shared tool definition from a dev server newer than th
     await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
 
     const tool = await listedTool('lowdefy_build_status');
-    expect(tool.description).toEqual('Build status, newer.');
+    expect(tool.description).toEqual(`Build status, newer.${DESCRIPTION_NOTE}`);
     expect(tool.inputSchema.properties.wait.type).toEqual('boolean');
     expect(tool.inputSchema.properties.directory.type).toEqual('string');
     expect(listChanged.count).toEqual(1);
@@ -897,7 +898,7 @@ test.each([['5.2.0'], ['1.0.0'], ['6.0.0'], ['not-a-version']])(
       await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
 
       const tool = await listedTool('lowdefy_build_status');
-      expect(tool.description).toEqual('Build status.');
+      expect(tool.description).toEqual(`Build status.${DESCRIPTION_NOTE}`);
       expect(tool.inputSchema.properties.wait).toBeUndefined();
       expect(listChanged.count).toEqual(0);
     } finally {
@@ -929,7 +930,7 @@ test.each([['1.0.0'], ['6.1.0']])(
       await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
 
       const tool = await listedTool('lowdefy_build_status');
-      expect(tool.description).toEqual('Build status.');
+      expect(tool.description).toEqual(`Build status.${DESCRIPTION_NOTE}`);
       expect(tool.inputSchema.properties.wait).toBeUndefined();
       expect(await listedTool('lowdefy_newer_tool')).toBeDefined();
       expect(listChanged.count).toEqual(1);
@@ -953,7 +954,9 @@ test.each([['1.0.0'], ['6.1.0']])(
 
       await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
 
-      expect((await listedTool('lowdefy_build_status')).description).toEqual('Build status.');
+      expect((await listedTool('lowdefy_build_status')).description).toEqual(
+        `Build status.${DESCRIPTION_NOTE}`
+      );
       expect(listChanged.count).toEqual(0);
     } finally {
       await stopFakeDevServer(devServer);
@@ -979,7 +982,7 @@ test('lowdefy mcp on an experimental build takes a shared tool definition from a
     await client.callTool({ name: 'lowdefy_dev_start', arguments: {} });
 
     const tool = await listedTool('lowdefy_build_status');
-    expect(tool.description).toEqual('Build status, newer.');
+    expect(tool.description).toEqual(`Build status, newer.${DESCRIPTION_NOTE}`);
     expect(tool.inputSchema.properties.wait.type).toEqual('boolean');
     expect(listChanged.count).toEqual(1);
   } finally {

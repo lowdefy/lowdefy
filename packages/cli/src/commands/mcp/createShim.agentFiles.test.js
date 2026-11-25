@@ -156,7 +156,7 @@ afterEach(async () => {
 test('passes a notice on once, then leaves agentFiles out and the rest of the result as it was', async () => {
   const status = {
     buildId: 'b1',
-    build: { status: 'ok', warnings: ['w'] },
+    build: { status: 'ok', warnings: [] },
     agentFiles: [MISMATCH],
   };
   await makeApp('.', { lowdefy_build_status: status });
@@ -236,4 +236,89 @@ test('never alters another tool result', async () => {
   } finally {
     devTools.tools.pop();
   }
+});
+
+const WARNING_A = { message: 'Block type "Buton" is deprecated.', source: 'pages/a.yaml:3' };
+const WARNING_B = { message: '_state references undefined blockId.', source: 'pages/b.yaml:9' };
+
+test('shows each build warning in full once, then counts it while it stays unchanged', async () => {
+  const answers = {
+    lowdefy_build_status: {
+      build: { status: 'ok', errors: [], warnings: [WARNING_A, WARNING_B] },
+    },
+  };
+  await makeApp('.', answers);
+  await connect();
+
+  expect((await buildStatus()).build.warnings).toEqual([WARNING_A, WARNING_B]);
+
+  const second = await buildStatus();
+  expect(second.build.warnings).toEqual([]);
+  expect(second.build.warningsUnchanged).toEqual({
+    count: 2,
+    note: '2 warning(s) unchanged since your last lowdefy_build_status answer are left out. Call with all: true to list every warning.',
+  });
+});
+
+test('shows new, changed and returning warnings in full, and every error', async () => {
+  const errors = [{ message: 'Broken.', source: 'pages/c.yaml:1' }];
+  const answers = {
+    lowdefy_build_status: { build: { status: 'error', errors, warnings: [WARNING_A, WARNING_B] } },
+  };
+  await makeApp('.', answers);
+  await connect();
+  await buildStatus();
+
+  const changed = { ...WARNING_B, source: 'pages/b.yaml:10' };
+  answers.lowdefy_build_status = {
+    build: { status: 'error', errors, warnings: [WARNING_A, changed] },
+  };
+  const second = await buildStatus();
+  expect(second.build.errors).toEqual(errors);
+  expect(second.build.warnings).toEqual([changed]);
+  expect(second.build.warningsUnchanged.count).toBe(1);
+
+  answers.lowdefy_build_status = { build: { status: 'error', errors, warnings: [changed] } };
+  expect((await buildStatus()).build.warningsUnchanged.count).toBe(1);
+  answers.lowdefy_build_status = {
+    build: { status: 'error', errors, warnings: [WARNING_A, changed] },
+  };
+  // WARNING_A went away for one answer, so it comes back in full.
+  expect((await buildStatus()).build.warnings).toEqual([WARNING_A]);
+});
+
+test('lists every warning with all: true, without passing all to the dev server', async () => {
+  const status = { build: { status: 'ok', warnings: [WARNING_A] } };
+  await makeApp('.', { lowdefy_build_status: status });
+  await connect();
+  await buildStatus();
+
+  // The fake dev server answers the same either way; the shim adds nothing.
+  expect(await call('lowdefy_build_status', { all: true })).toEqual([
+    JSON.stringify(status, null, 2),
+  ]);
+  expect((await buildStatus()).build.warningsUnchanged.count).toBe(1);
+});
+
+test('remembers shown warnings for each app apart', async () => {
+  const status = { build: { status: 'ok', warnings: [WARNING_A] } };
+  await makeApp('apps/one', { lowdefy_build_status: status });
+  await makeApp('apps/two', { lowdefy_build_status: status });
+  await connect();
+
+  await buildStatus({ directory: 'apps/one' });
+  expect((await buildStatus({ directory: 'apps/two' })).build.warnings).toEqual([WARNING_A]);
+  expect((await buildStatus({ directory: 'apps/one' })).build.warnings).toEqual([]);
+});
+
+test('lists all on build status and describes the warnings it leaves out', async () => {
+  await makeApp('.', { lowdefy_build_status: { build: { status: 'ok' } } });
+  await connect();
+
+  const { tools } = await client.listTools();
+  const tool = tools.find((entry) => entry.name === 'lowdefy_build_status');
+  expect(tool.inputSchema.properties.all.type).toBe('boolean');
+  expect(tool.description).toMatch(
+    /Warnings unchanged since your last call are counted, not listed\.$/
+  );
 });
