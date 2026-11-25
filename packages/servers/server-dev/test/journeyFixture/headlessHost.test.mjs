@@ -260,20 +260,26 @@ fixtureTest(
 // (the fixture also gives the dev server that value, for the browser run in calls.test.mjs).
 // stubs.yaml: an answer stub stands in for the rate service and fail gates fail writes once, twice
 // and every time; expect.error reads each forced message the dev server recorded.
-fixtureTest.each([['system.yaml'], ['webhook.yaml'], ['stubs.yaml']])(
-  'the %s journey passes headless on the dev server',
-  async (name) => {
-    const journey = readHeadlessJourney(name);
-    const { status, body } = await postJson({
-      path: '/lowdefy-docs/journey',
-      body: { ...journey, headless: true },
-    });
-    expect(status).toBe(200);
-    expect(body.failure).toBeUndefined();
-    expect(body.passed).toBe(true);
-    expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
-  }
-);
+// system.yaml's second journey calls record_caller bound to an organization and stand-in caller,
+// as a CallApi binds it; credential.yaml's endpoint marks a credential with _credential, which runs
+// in the call's own credential scope.
+fixtureTest.each([
+  ['system.yaml', 0],
+  ['system.yaml', 1],
+  ['webhook.yaml', 0],
+  ['stubs.yaml', 0],
+  ['credential.yaml', 0],
+])('the %s journey %i passes headless on the dev server', async (name, index) => {
+  const journey = readHeadlessJourney(name, index);
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: { ...journey, headless: true },
+  });
+  expect(status).toBe(200);
+  expect(body.failure).toBeUndefined();
+  expect(body.passed).toBe(true);
+  expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
+});
 
 // The fixture configures auth. A journey on a data set with user none is refused only when it opens
 // a page, where a signed-out actor could sign in through the app: webhook.yaml's first journey,

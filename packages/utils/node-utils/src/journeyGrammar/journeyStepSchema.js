@@ -272,15 +272,46 @@ const EXPECT_KINDS = {
 
 const CALL_AS = {
   description:
-    'Who calls: a data set user\'s name, "none" for signed out, an inline user object, or "system" to run the endpoint as a cron or internal run does (no user, InternalApi endpoints callable; headless only). Defaults to the journey\'s user.',
-  anyOf: [nonEmptyString, { type: 'object' }],
+    'Who calls: a data set user\'s name, "none" for signed out, an inline user object, "system" to run the endpoint as a cron or internal run does (no user, InternalApi endpoints callable; headless only), or { system: { organization, caller? } } to run it as the system bound to that organization, with the stand-in caller { id, name }, as a CallApi with "organization" and "caller" runs its target (the tenant wall filters and stamps with the organization; _user is { id, name, organization_id, system: true }, or null with no caller; headless only). Defaults to the journey\'s user.',
+  anyOf: [
+    nonEmptyString,
+    {
+      type: 'object',
+      required: ['system'],
+      properties: {
+        system: {
+          type: 'object',
+          required: ['organization'],
+          properties: {
+            organization: {
+              ...nonEmptyString,
+              description: 'The organization id the call is bound to.',
+            },
+            caller: {
+              type: 'object',
+              description: 'The stand-in caller, as a CallApi "caller" names it.',
+              required: ['id', 'name'],
+              properties: { id: nonEmptyString, name: nonEmptyString },
+              additionalProperties: false,
+            },
+          },
+          additionalProperties: false,
+        },
+      },
+      additionalProperties: false,
+    },
+    { type: 'object', not: { required: ['system'] } },
+  ],
 };
 
 // A page request is always sent by a person on the page, so it takes no "system" caller.
 const REQUEST_AS = {
   description:
     'Who calls: a data set user\'s name, "none" for signed out, or an inline user object. Defaults to the journey\'s user.',
-  anyOf: [{ ...nonEmptyString, not: { const: 'system' } }, { type: 'object' }],
+  anyOf: [
+    { ...nonEmptyString, not: { const: 'system' } },
+    { type: 'object', not: { required: ['system'] } },
+  ],
 };
 
 const STRING_MAP = { type: 'object', additionalProperties: { type: 'string' } };
@@ -384,7 +415,7 @@ const STEPS = {
   call: {
     type: 'object',
     description:
-      'Call an endpoint directly, outside any page, as the journey\'s user or the user named in "as". For what a page would never send; reach a call the page sends through its own event instead. "as": "system" runs a cron or InternalApi endpoint as the system does. Read the answer with expect: { status } and expect: { error }.',
+      'Call an endpoint directly, outside any page, as the journey\'s user or the user named in "as". For what a page would never send; reach a call the page sends through its own event instead. "as": "system" runs a cron or InternalApi endpoint as the system does, and "as": { "system": { "organization", "caller" } } as a CallApi bound to that organization runs it. Read the answer with expect: { status } and expect: { error }.',
     properties: { endpoint: nonEmptyString, payload: CALL_PAYLOAD, as: CALL_AS },
     required: ['endpoint'],
     additionalProperties: false,

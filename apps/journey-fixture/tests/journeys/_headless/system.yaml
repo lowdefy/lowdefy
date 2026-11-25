@@ -22,3 +22,28 @@
           collection: items
           match: { kind: run, closed: true }
           count: 2
+
+# A cron reaches an endpoint that runs per organization through a CallApi with "organization" and
+# "caller": the call names the same binding, so the endpoint runs as the stand-in caller in that
+# organization.
+- name: a call bound to an organization runs as its stand-in caller
+  data: outside
+  user: operator
+  steps:
+    - call:
+        endpoint: record_caller
+        payload: { id: nightly }
+        as:
+          system:
+            organization: org_a
+            caller: { id: nightly_close, name: Nightly close }
+    - expect: { status: 200 }
+    - expect:
+        db:
+          collection: items
+          match: { _id: nightly }
+          equals:
+            - _id: nightly
+              kind: caller
+              caller:
+                { id: nightly_close, name: Nightly close, organization_id: org_a, system: true }

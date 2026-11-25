@@ -94,6 +94,7 @@ import pageBlocks from './journeyRails/pageBlocks.js';
 import RAILED_STEPS from './journeyRails/railedSteps.js';
 import readRoutineSteps from './journeyRails/readRoutineSteps.js';
 import normaliseJourneySteps from './journeyGrammar/normaliseJourneySteps.js';
+import readSystemCaller from './journeyGrammar/readSystemCaller.js';
 import journeyStepSchema, { JOURNEY_STEP_SCHEMAS } from './journeyGrammar/journeyStepSchema.js';
 import journeyStubSchema from './journeyGrammar/journeyStubSchema.js';
 import hashSequence from './journeyCompiler/hashSequence.js';
@@ -225,6 +226,7 @@ export {
   readDevInstanceRecord,
   readProcessStartTime,
   readServerRegistry,
+  readSystemCaller,
   registerServer,
   relativePosixPath,
   readRecordings,

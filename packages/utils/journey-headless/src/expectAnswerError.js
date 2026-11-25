@@ -15,19 +15,26 @@
 */
 
 import HeadlessStepError from './HeadlessStepError.js';
+import withHint from './withHint.js';
 
 // expect.error after a call or request step: the answer's error contains the text, with the
 // browser runner's messages. App errors the call caused are claimed with the step's window.
 function expectAnswerError({ answer, text }) {
   if (answer.error === null) {
     throw new HeadlessStepError(
-      `Expected ${answer.description} to answer with an error containing "${text}" but it answered ${answer.status} with no error.`,
+      withHint(
+        `Expected ${answer.description} to answer with an error containing "${text}" but it answered ${answer.status} with no error.`,
+        answer
+      ),
       { actual: answer.status, expected: `an error containing "${text}"` }
     );
   }
   if (!answer.error.includes(text)) {
     throw new HeadlessStepError(
-      `Expected ${answer.description} to answer with an error containing "${text}" but its error was "${answer.error}".`,
+      withHint(
+        `Expected ${answer.description} to answer with an error containing "${text}" but its error was "${answer.error}".`,
+        answer
+      ),
       { actual: answer.error, expected: `an error containing "${text}"` }
     );
   }

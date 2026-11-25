@@ -22,6 +22,7 @@ const host = {
   call: () => undefined,
   close: () => undefined,
   connections: {},
+  credentialScope: { bindScrub: () => (value) => value, run: (fn) => fn() },
   dataSession: {},
   dataSetName: null,
   errorSink: { errors: [], add: () => undefined },
@@ -37,7 +38,7 @@ const host = {
 };
 
 test('createHeadlessHost returns a host with every part', () => {
-  expect(createHeadlessHost(host)).toBe(host);
+  expect(Object.keys(createHeadlessHost(host)).sort()).toEqual(Object.keys(host).sort());
 });
 
 test('createHeadlessHost names the parts a host is missing', () => {

@@ -42,6 +42,8 @@ function readJourney(name, index = 0) {
 }
 
 const systemJourney = readJourney('system.yaml');
+const boundSystemJourney = readJourney('system.yaml', 1);
+const credentialJourney = readJourney('credential.yaml');
 const webhookJourney = readJourney('webhook.yaml');
 const failedWebhookJourney = readJourney('webhook.yaml', 1);
 const caughtWebhookJourney = readJourney('webhook.yaml', 2);
@@ -84,6 +86,23 @@ test('the system journey is refused without as: system and closes the runs with 
     { actor: 'user "none"', endpointId: 'close_runs', response: null, status: 401 },
     { actor: 'system', endpointId: 'close_runs', response: { closed: 2 }, status: 200 },
   ]);
+});
+
+test('a call bound to an organization runs as the stand-in caller a CallApi binds', async () => {
+  const result = await run({ steps: boundSystemJourney.steps, user: boundSystemJourney.user });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(boundSystemJourney.steps.map(() => 'ok'));
+  expect(result.calls.map(({ actor, endpointId }) => ({ actor, endpointId }))).toEqual([
+    { actor: 'system', endpointId: 'record_caller' },
+  ]);
+});
+
+test('a routine that marks a credential answers, in a credential scope of its own', async () => {
+  const result = await run({ steps: credentialJourney.steps, user: credentialJourney.user });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(credentialJourney.steps.map(() => 'ok'));
 });
 
 test('a signed-in caller cannot reach an InternalApi endpoint either: it answers as a missing one', async () => {

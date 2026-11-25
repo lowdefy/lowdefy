@@ -91,8 +91,11 @@ async function openSession({ data, testApp }) {
       stubRequest({ connectionType, fn, requestType, testSession }),
     // The session's own array: requests sunk or stubbed while its calls run show in it.
     sunk: dataSession.sunk,
-    system: () => ({
-      call: (endpointId, payload) => callSystemEndpoint({ endpointId, payload, testSession }),
+    // { organization, caller } binds the run to an organization and stand-in caller, as a CallApi
+    // with "organization" and "caller" binds its target.
+    system: ({ caller, organization } = {}) => ({
+      call: (endpointId, payload) =>
+        callSystemEndpoint({ caller, endpointId, organization, payload, testSession }),
     }),
     // The fail gates fail() set that no request has reached yet; reset() throws on any left.
     unfiredFailGates: () => unfiredFailGates({ testSession }),
