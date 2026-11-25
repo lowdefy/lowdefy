@@ -14,22 +14,11 @@
   limitations under the License.
 */
 
-function scanIdLog({ map, log }) {
-  for (const id of Object.keys(map)) {
-    if (!log.seen.has(id)) {
-      log.seen.add(id);
-      log.added.push(id);
-    }
-  }
-}
-
-// Logs the ids added to the context's key and ref maps since the last scan, and
-// returns how many each log holds: a mark that later writes slice from.
-function scanJitMaps({ context }) {
+// How many ids the context's key and ref logs hold: a mark that later writes
+// slice from.
+function markJitMaps({ context }) {
   const { jitMaps } = context;
-  scanIdLog({ map: context.keyMap, log: jitMaps.keys });
-  scanIdLog({ map: context.refMap, log: jitMaps.refs });
   return { keys: jitMaps.keys.added.length, refs: jitMaps.refs.added.length };
 }
 
-export default scanJitMaps;
+export default markJitMaps;

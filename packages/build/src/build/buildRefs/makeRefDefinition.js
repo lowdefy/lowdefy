@@ -17,6 +17,7 @@
 import { get, type } from '@lowdefy/helpers';
 
 import getRefPath from './getRefPath.js';
+import logMapId from '../../utils/logMapId.js';
 import makeId from '../../utils/makeId.js';
 
 // Refs that share a walker path (a file whose root content is itself a _ref, a
@@ -54,6 +55,7 @@ function makeRefDefinition(refDefinition, parent, refMap, lineNumber, walkerPath
     lineNumber,
   };
   refMap[id] = refDef;
+  logMapId({ map: refMap, id });
   const ignoreBuildChecks = get(refDefinition, '~ignoreBuildChecks');
   return {
     ...refDef,

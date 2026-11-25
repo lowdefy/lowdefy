@@ -834,6 +834,61 @@ test("buildPageJit writes only the entries its build added, not the config build
   expect(Object.values(writes[0].refMap).map((entry) => entry.path)).toContain('home.yaml');
 });
 
+test("a page build's jitMaps file holds exactly the entries it added, vars and nested refs included", async () => {
+  const context = createTestContext();
+  context.keyMap.skeleton_key = { s: 'root', p: null };
+  context.refMap.skeleton_ref = { parent: null, path: 'lowdefy.yaml' };
+  mockFiles([
+    {
+      path: 'page.yaml',
+      content: `id: home
+type: PageHeaderMenu
+properties:
+  title:
+    _var: title
+blocks:
+  - _ref:
+      path: block.yaml
+      vars:
+        label:
+          _ref: label.yaml`,
+    },
+    {
+      path: 'block.yaml',
+      content: 'id: block_a\ntype: Button\nproperties:\n  title:\n    _var: label',
+    },
+    { path: 'label.yaml', content: 'Save' },
+  ]);
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'r-home',
+        refPath: 'page.yaml',
+        unresolvedVars: { title: 'Home' },
+      },
+    ],
+  ]);
+  const keysBefore = new Set(Object.keys(context.keyMap));
+  const refsBefore = new Set(Object.keys(context.refMap));
+
+  await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  const [write] = jitMapsWrites();
+  const addedKeys = Object.keys(context.keyMap).filter((id) => !keysBefore.has(id));
+  const addedRefs = Object.keys(context.refMap).filter((id) => !refsBefore.has(id));
+  expect(Object.keys(write.keyMap).sort()).toEqual(addedKeys.sort());
+  expect(Object.keys(write.refMap).sort()).toEqual(addedRefs.sort());
+  expect(
+    Object.values(write.refMap)
+      .map((entry) => entry.path)
+      .filter((refPath) => refPath)
+      .sort()
+  ).toEqual(['block.yaml', 'label.yaml', 'page.yaml']);
+});
+
 test('concurrent page builds on one context write every entry, each ref with its path', async () => {
   const context = createTestContext();
   mockFiles([

@@ -14,12 +14,16 @@
   limitations under the License.
 */
 
+import mapIdLogs from '../../utils/mapIdLogs.js';
+
 // The ids a JIT build context holds when it is created are the config build's,
-// already written to keyMap.json and refMap.json. Ids added later are logged in
-// the order they are first seen, so a page build can write exactly the entries
-// added while it ran (see scanJitMaps and writeJitMaps).
+// already written to keyMap.json and refMap.json. Ids added later are logged as
+// they are inserted, in insertion order (logMapId), so a page build writes
+// exactly the entries added while it ran (see markJitMaps and writeJitMaps).
 function createIdLog(map) {
-  return { seen: new Set(Object.keys(map)), added: [] };
+  const added = [];
+  mapIdLogs.set(map, added);
+  return { added };
 }
 
 function createJitMaps({ keyMap, refMap, name }) {
