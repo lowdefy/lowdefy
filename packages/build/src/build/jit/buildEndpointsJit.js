@@ -228,17 +228,13 @@ function previousFiles({ endpointIds, endpointRegistry }) {
 }
 
 // The warnings the build status lists after the rebuild: the config build's,
-// with the rebuilt endpoints' replaced by what their builds found.
+// with the rebuilt endpoints' replaced by what their builds found. A warning is
+// listed as often as the config build lists it: a node a build checks twice
+// warns twice.
 function mergeWarnings({ endpointRegistry }) {
   const warnings = [...endpointRegistry.warnings.other];
-  const seen = new Set(warnings.map((warning) => `${warning.source}\n${warning.message}`));
   for (const endpointWarnings of endpointRegistry.warnings.byEndpoint.values()) {
-    for (const warning of endpointWarnings) {
-      const key = `${warning.source}\n${warning.message}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-      warnings.push(warning);
-    }
+    warnings.push(...endpointWarnings);
   }
   return warnings;
 }
@@ -415,10 +411,17 @@ async function buildEndpointsJit({
       endpointRegistry,
       keyMap: buildContext.keyMap,
     });
+    const otherWarnings = new Set(
+      endpointRegistry.warnings.other.map((warning) => `${warning.source}\n${warning.message}`)
+    );
     for (const warning of warnings) {
-      // A warning outside the endpoints' keys (a plugin checks warning) was
-      // still found by this build.
-      const endpointId = findEndpointOfKey(warning.configKey) ?? rebuiltIds[0];
+      let endpointId = findEndpointOfKey(warning.configKey);
+      if (endpointId === null) {
+        // A warning about no endpoint node, such as two plugins sharing a
+        // check id, which the config build lists with the rest of the config's.
+        if (otherWarnings.has(`${warning.source}\n${warning.message}`)) continue;
+        endpointId = rebuiltIds[0];
+      }
       endpointRegistry.warnings.byEndpoint.get(endpointId).push(warning);
     }
     return {
