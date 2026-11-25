@@ -1117,7 +1117,11 @@ test('test exits 75 without starting a server when no journey run slot frees', a
     Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' })
   );
   await test({ context });
-  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({ context, command: 'lowdefy test' });
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: true,
+  });
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockPost).not.toHaveBeenCalled();
   expect(logs.error).toEqual([
@@ -1316,7 +1320,7 @@ test('test --headless leaves a concurrency from lowdefy.yaml alone and runs one 
   expect(process.exitCode).toBeUndefined();
 });
 
-test('test --headless posts each journey headless to the dev server, takes no slots and lists browser-only ones', async () => {
+test('test --headless posts each journey headless to the dev server, takes only the worktree slot and lists browser-only ones', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
   writeJourneyFile('b.yaml', journeyYaml({ name: 'reads the title' }));
@@ -1338,7 +1342,11 @@ test('test --headless posts each journey headless to the dev server, takes no sl
       },
     });
   await test({ context });
-  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
   expect(mockStartDevServer).toHaveBeenCalledWith({ context });
   expect(mockPost).toHaveBeenCalledTimes(2);
   expect(mockPost.mock.calls.every(([, body]) => body.headless === true)).toBe(true);
@@ -2031,7 +2039,11 @@ test('test runs only the journeys that need no browser by default, and names the
   expect(logs.info[logs.info.length - 2]).toBe(
     '0 passed, 0 failed of 0 journeys, 1 browser-only not run'
   );
-  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
   delete context.options.paths;
   fs.rmSync(path.join(configDirectory, 'tests', 'journeys', 'b.yaml'));
   fs.rmSync(path.join(context.directories.test, 'headless-run.json'));
@@ -2056,8 +2068,12 @@ test('test runs only the journeys that need no browser by default, and names the
     ].join('\n'),
   ]);
   expect(process.exitCode).toBeUndefined();
-  // A headless run starts no browser, so it takes no journey run slot.
-  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  // A headless run starts no browser, so it takes only its worktree's journey run slot.
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
   const written = readHeadlessRunFile();
   expect(written.mode).toEqual('dev');
   expect(Object.keys(written.journeys).sort()).toEqual([
@@ -2084,7 +2100,11 @@ test('--headless runs as the default does', async () => {
   expect(logs.info[logs.info.length - 1]).toMatch(
     /\nRun them in the browser: lowdefy test --thorough /
   );
-  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
 });
 
 test('a later default run lists a journey found partway through without running it again, and keeps its record', async () => {
@@ -2110,7 +2130,11 @@ test('a later default run lists a journey found partway through without running 
     ].join('\n'),
   ]);
   expect(process.exitCode).toBeUndefined();
-  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
   expect(readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next']).toEqual(recorded);
 
   // A run of a subset keeps the records of the journeys it did not select.

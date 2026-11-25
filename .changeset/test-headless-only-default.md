@@ -16,6 +16,7 @@ feat(cli): `lowdefy test` runs journeys headless by default; browser journeys on
 - A typed `--concurrency` (or `concurrency` on `lowdefy_run_tests`) is refused on a headless run: pass `--thorough` or `--browser` with it.
 - A plain `lowdefy test` runs nothing in a browser, so it records no `journey` traces; `--thorough` records the journeys it ran there and `--browser` the whole suite.
 - On a `--thorough` run each result line ends with where the journey ran, `[headless]` or `[browser]`, and the run prints one summary. The browser part takes the journey run slots and `--concurrency`; headless journeys go one at a time.
+- A headless run on the dev server takes its worktree's journey run slot, so two runs in one app folder no longer share a server the first one stops. It takes no machine-wide slot, so it never waits behind browser runs in other worktrees.
 - `lowdefy_run_tests` follows the same default and takes `browser` and `thorough` beside `headless`.
 - `headless-run.json` entries carry `hash` and `configHashes`, the journey and build they were taken on. A run of some journeys keeps the records of the others.
 - `openTestApp` returns the build's `buildId`.

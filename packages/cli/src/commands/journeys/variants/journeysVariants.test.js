@@ -443,6 +443,7 @@ test('journeysVariants exits 75 without measuring or writing when no journey run
   expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
     context,
     command: 'lowdefy journeys variants',
+    browser: true,
   });
   expect(mockPost).not.toHaveBeenCalled();
   expect(listVariants()).toEqual([]);

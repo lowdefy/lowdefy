@@ -20,16 +20,22 @@ const BUSY_EXIT_CODE = 75;
 const MACHINE_SLOT = 'journey-run';
 
 /*
-Takes the journey run slots for a command, or, when the wait for them runs
-out, says the machine is busy and sets exit code 75 (EX_TEMPFAIL) so an agent
-backs off instead of starting its own server. Any slot but the machine's is
+Takes the journey run slots for a command (acquireJourneyRunSlots: the
+machine's only when `browser`, a run that starts one), or, when the wait for
+them runs out, says the machine is busy and sets exit code 75 (EX_TEMPFAIL) so
+an agent backs off instead of starting its own server. Any slot but the machine's is
 this worktree's, held by another run here. The timeout is caught here,
 before runCommand's catch would exit 1. Nothing has been started or written
 at that point. Returns { release }, or null when the machine is busy.
 */
-async function takeJourneyRunSlots({ context, command, acquire = acquireJourneyRunSlots }) {
+async function takeJourneyRunSlots({
+  context,
+  command,
+  browser = true,
+  acquire = acquireJourneyRunSlots,
+}) {
   try {
-    return await acquire({ context, command });
+    return await acquire({ context, command, browser });
   } catch (error) {
     if (error.code !== 'MACHINE_SLOT_TIMEOUT') {
       throw error;
