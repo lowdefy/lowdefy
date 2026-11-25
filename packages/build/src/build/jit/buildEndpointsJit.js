@@ -456,7 +456,8 @@ async function buildEndpointsJit({
     for (const endpoint of builtEndpoints) {
       const entry = endpointRegistry.endpoints.get(endpoint.endpointId);
       entry.rootKey = endpoint['~k'];
-      entry.files = filesById.get(endpoint.id) ?? new Set();
+      // buildApi renamed id to endpoint:<endpointId>; files are keyed by the id it had.
+      entry.files = filesById.get(endpoint.endpointId) ?? new Set();
       endpointRegistry.warnings.byEndpoint.set(endpoint.endpointId, []);
     }
     const findEndpointOfKey = createFindEndpointOfKey({

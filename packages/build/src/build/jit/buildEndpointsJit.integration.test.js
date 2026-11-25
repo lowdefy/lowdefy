@@ -267,6 +267,9 @@ describe('an endpoint rebuilt alone', () => {
     const rebuilt = await endpointBuild({ build, endpointIds: ['one', 'two'] });
     expect(rebuilt.fallback).toBeUndefined();
     expect(rebuilt.endpointIds.sort()).toEqual(['one', 'two']);
+    expect(rebuilt.skeletonSourceFiles).toEqual(
+      expect.arrayContaining(['api/one.yaml', 'api/two.yaml', 'api/shared/answer.yaml'])
+    );
 
     const full = await configBuild('full');
     for (const endpointId of ['one', 'two']) {
@@ -527,6 +530,9 @@ describe('review cases', () => {
       'endpoints-1-1.json',
       'endpoints-2-1.json',
     ]);
+    // The rebuilt endpoint still reads its files, so the next edit rebuilds it again.
+    expect(readersOf(build, 'api/two.yaml')).toEqual(['two']);
+    expect(readersOf(build, 'api/shared/answer.yaml').sort()).toEqual(['one', 'two']);
     const first = readArtifact(build.buildDir, 'jitMaps/endpoints-1-1.json');
     const second = readArtifact(build.buildDir, 'jitMaps/endpoints-2-1.json');
     expect(Object.keys(first.keyMap).filter((key) => Object.hasOwn(second.keyMap, key))).toEqual(
