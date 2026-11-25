@@ -59,3 +59,12 @@ test('validateJourneyUser refuses a value of another type', () => {
   expect(validateJourneyUser({ user: 3 }).error).toContain('Received 3.');
   expect(validateJourneyUser({ user: '' }).error).toContain('Journey "user" should be');
 });
+
+test('validateJourneyUser refuses an inline user object that carries "system"', () => {
+  const message =
+    'Journey "user" can not carry "system": _user.system marks only the stand-in caller a CallApi "caller" names. To run an endpoint as the system, call it with a "call" step "as: system", or "as: { system: { organization, caller } }" for a run bound to an organization.';
+  expect(validateJourneyUser({ user: { id: 'u_1', system: true } })).toEqual({ error: message });
+  expect(validateJourneyUser({ user: { system: { organization: 'org_a' } } })).toEqual({
+    error: message,
+  });
+});

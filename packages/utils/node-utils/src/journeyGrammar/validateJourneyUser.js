@@ -19,12 +19,24 @@ import { type } from '@lowdefy/helpers';
 const SHAPE =
   'Journey "user" should be an inline user object, e.g. {roles: [admin]}, "none" to sign in through the app, the name of a user in the journey\'s data set, or a list of such names to run the journey once as each.';
 
+const SYSTEM_USER =
+  'Journey "user" can not carry "system": _user.system marks only the stand-in caller a CallApi "caller" names. To run an endpoint as the system, call it with a "call" step "as: system", or "as: { system: { organization, caller } }" for a run bound to an organization.';
+
 // Who a journey runs as: an inline user object, "none" (signed out), the name
 // of a data set user, or a list of data set user names. A list runs the
 // journey once per user (a persona run each), so it holds names only and
-// needs the data set the names are read from. Returns { error } or {}.
+// needs the data set the names are read from. An inline user object never carries "system".
+// Returns { error } or {}.
 function validateJourneyUser({ user, data }) {
-  if (type.isUndefined(user) || type.isObject(user)) {
+  if (type.isUndefined(user)) {
+    return {};
+  }
+  if (type.isObject(user)) {
+    // The server refuses an injected caller that carries "system" (normalizeInjectedCaller):
+    // refused here too, so a journey is refused before any page opens or call runs.
+    if (Object.hasOwn(user, 'system')) {
+      return { error: SYSTEM_USER };
+    }
     return {};
   }
   if (type.isString(user)) {

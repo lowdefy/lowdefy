@@ -281,6 +281,25 @@ fixtureTest.each([
   expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
 });
 
+// Only a call step's `as: system` or `as: { system: { organization, caller } }` reaches the system
+// principal: a journey user that carries "system" is a bad param, refused before its call reaches
+// record_caller (parseUserParam), as the server refuses such an injected caller.
+fixtureTest('a journey user that carries "system" is refused on the dev server', async () => {
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: {
+      headless: true,
+      user: { id: 'u_1', name: 'Nightly close', organization_id: 'org_a', system: true },
+      steps: [
+        { call: { endpoint: 'record_caller', payload: { id: 'journey_user' } } },
+        { expect: { status: 200 } },
+      ],
+    },
+  });
+  expect(status).toBe(400);
+  expect(body.error).toContain('The "user" param can not carry "system"');
+});
+
 // The fixture configures auth. A journey on a data set with user none is refused only when it opens
 // a page, where a signed-out actor could sign in through the app: webhook.yaml's first journey,
 // which opens none, runs signed out.
