@@ -484,8 +484,8 @@ chromiumTest(
       .collection(insert.coll)
       .findOne({ _id: 'later-1' });
     expect(kept).not.toBeNull();
-    // The next journey on the data set takes them: its reset empties the collection after the
-    // detached write landed, and the journey reads none of it.
+    // The next journey on the data set takes them, and its reset removes the detached write: had
+    // it landed after the reset, it would still be there.
     const { result: next } = await runJourney({
       data: 'shop',
       user: 'owner',
@@ -495,15 +495,6 @@ chromiumTest(
       ],
     });
     expect(next.passed).toBe(true);
-    const insertIndex = storeEvents.indexOf(insert);
-    const resetIndex = storeEvents.findIndex(
-      (event, index) =>
-        index > insertIndex &&
-        event.operationType === 'delete' &&
-        event.db === insert.db &&
-        event.coll === insert.coll
-    );
-    expect(resetIndex).toBeGreaterThan(insertIndex);
     expect(
       await store.client.db(insert.db).collection(insert.coll).findOne({ _id: 'later-1' })
     ).toBeNull();

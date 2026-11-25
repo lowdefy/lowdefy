@@ -56,10 +56,12 @@ async function getRunDataStore({ logger }) {
     stopping =
       stopping ??
       (async () => {
-        // The store stays up for the run's other test processes, so the databases this client
-        // kept idle are dropped, not left for the run's end.
-        await dropIdleDatabases({ store });
+        // Stopped first, so a session closing meanwhile drops its own databases rather than keep
+        // them, and the next session joins the run's store again. The store stays up for the
+        // run's other test processes, so the databases this client kept idle are dropped, not
+        // left for the run's end.
         store.stopped = true;
+        await dropIdleDatabases({ store });
         await client.close().catch(() => {});
       })();
     return stopping;

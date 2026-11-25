@@ -29,6 +29,12 @@ function createGatedResolver({ resolver, session }) {
   async function gate(args) {
     await holdAtPauseGate({ args, session });
     throwAtFailGate({ args, session });
+    // A call that read its connection while the session was open but reaches its resolver after
+    // close() fails here, as a connection read after close() does (applyDataSetRedirect): close()
+    // counted only the calls already running.
+    if (session.state === 'closed') {
+      throw new Error(`Data session ${session.id} has ended.`);
+    }
     return resolver(args);
   }
   function gatedResolver(args) {

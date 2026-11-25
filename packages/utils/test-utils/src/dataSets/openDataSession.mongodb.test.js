@@ -712,6 +712,16 @@ describe('a closed session keeps its databases for the next session on its data 
     await second.close();
   });
 
+  test('a call that reaches its resolver after close() is refused, so it never writes into the kept databases', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    const resolver = createGatedResolver({ session: first.session, resolver: () => 'ran' });
+    await first.close();
+    await expect(resolver({ requestId: 'late', connectionId: 'tickets' })).rejects.toThrow(
+      `Data session ${first.id} has ended.`
+    );
+    expect(first.session.running.size).toBe(0);
+  });
+
   test('a stopped store forgets them, and a session after it loads on the new store', async () => {
     const first = await openDataSession({ dataSet, logger: mockLogger });
     await first.close();
