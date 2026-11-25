@@ -407,7 +407,7 @@ test.each([
   ],
   [
     'an ascAppId that is not digits',
-    { ios: { bundleId: 'com.example.field', ascAppId: 'pelican' } },
+    { ios: { bundleId: 'com.example.field', ascAppId: 'field-app' } },
     'App "mobile.shells[0].ios.ascAppId" should be the App Store Connect app id, digits only, like "6825509768".',
   ],
   [
