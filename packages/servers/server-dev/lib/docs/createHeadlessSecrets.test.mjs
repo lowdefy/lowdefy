@@ -76,3 +76,13 @@ test('createHeadlessSecrets names a secret of a page built since it last read th
     'test-secret-MAIL_KEY'
   );
 });
+
+test('createHeadlessSecrets scrubs the CRON_SECRET the dev server process holds', () => {
+  process.env.CRON_SECRET = 'real-cron-secret';
+  try {
+    const { scrubSecrets } = createHeadlessSecrets({ buildDirectory });
+    expect(scrubSecrets('Bearer real-cron-secret')).toEqual('Bearer [REDACTED]');
+  } finally {
+    delete process.env.CRON_SECRET;
+  }
+});

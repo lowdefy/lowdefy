@@ -25,9 +25,11 @@ const namesCache = new Map();
 // runs one: test-secret-<NAME> for every secret the dev build names, with the run's test values
 // (`secrets`, by name, from the LOWDEFY_TEST_SECRET_* of the command that posted the journey)
 // over them. The app's real LOWDEFY_SECRET_* are never read: they stay with the dev server's own
-// routes and its browser journeys. The scrub redacts the test values only, as the build host's
-// does. Pages the dev server has not built yet name nothing here; the host reads the names again
-// once it builds or first reads a page.
+// routes and its browser journeys. The scrub redacts the test values, as the build host's does,
+// and the CRON_SECRET and BETTER_AUTH_SECRET the dev server process still holds (a detached call's
+// header, the auth engine of a signed-out call with no data set). Pages the dev server has not
+// built yet name nothing here; the host reads the names again once it builds or first reads a
+// page.
 function createHeadlessSecrets({ buildDirectory, secrets = {} }) {
   const testSecrets = createTestSecrets({
     names: readBuildSecretNames({ directories: { build: buildDirectory }, cache: namesCache }),
@@ -35,7 +37,7 @@ function createHeadlessSecrets({ buildDirectory, secrets = {} }) {
   });
   return {
     secrets: testSecrets,
-    scrubSecrets: createSecretScrubber({ secrets: testSecrets, env: {} }),
+    scrubSecrets: createSecretScrubber({ secrets: testSecrets }),
   };
 }
 

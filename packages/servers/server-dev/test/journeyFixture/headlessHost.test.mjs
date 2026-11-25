@@ -256,7 +256,8 @@ fixtureTest(
 
 // tests/journeys/_headless/system.yaml and webhook.yaml: the InternalApi close_runs answers only a
 // call as system, and payment_events' verify gate passes the signed bodies and refuses the wrong
-// signature (the dev server is given the test secret the signatures are computed with).
+// signature, computed with the stand-in test-secret-FIXTURE_WEBHOOK_SECRET a headless journey reads
+// (the fixture also gives the dev server that value, for the browser run in calls.test.mjs).
 // stubs.yaml: an answer stub stands in for the rate service and fail gates fail writes once, twice
 // and every time; expect.error reads each forced message the dev server recorded.
 fixtureTest.each([['system.yaml'], ['webhook.yaml'], ['stubs.yaml']])(

@@ -38,7 +38,9 @@ function readFileSecretNames({ filePath }) {
 //
 // `cache`, a Map kept between calls, is for a build that changes while it is read, as the dev
 // server's does when it builds pages on demand: each file's names are kept with its size and
-// modified time, and a file is read again only once either changes.
+// modified time, and a file is read again only once either changes. A file such a build removes
+// or is still writing (it fails to stat or parse) is skipped and not kept, so the next read
+// takes it whole.
 function readBuildSecretNames({ directories, cache }) {
   const names = new Set();
   const seen = new Set();
@@ -50,13 +52,24 @@ function readBuildSecretNames({ directories, cache }) {
       if (type.isUndefined(cache)) {
         fileNames = readFileSecretNames({ filePath: fullPath });
       } else {
+        let stat;
+        try {
+          stat = fs.statSync(fullPath);
+        } catch {
+          return;
+        }
         seen.add(fullPath);
-        const { mtimeMs, size } = fs.statSync(fullPath);
+        const { mtimeMs, size } = stat;
         const kept = cache.get(fullPath);
         if (!type.isUndefined(kept) && kept.mtimeMs === mtimeMs && kept.size === size) {
           fileNames = kept.names;
         } else {
-          fileNames = readFileSecretNames({ filePath: fullPath });
+          try {
+            fileNames = readFileSecretNames({ filePath: fullPath });
+          } catch {
+            cache.delete(fullPath);
+            return;
+          }
           cache.set(fullPath, { mtimeMs, names: fileNames, size });
         }
       }

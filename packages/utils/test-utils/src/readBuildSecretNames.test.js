@@ -92,3 +92,19 @@ test('readBuildSecretNames with a cache reads a file again only once it changes,
   expect(readBuildSecretNames({ directories, cache })).toEqual([]);
   expect(cache.has(requestPath)).toBe(false);
 });
+
+test('readBuildSecretNames with a cache skips a file still being written, and reads it once whole', () => {
+  const build = writeTestBuild();
+  builds.push(build);
+  const directories = getDirectories(build);
+  const requestsDirectory = path.join(directories.build, 'pages', 'later', 'requests');
+  fs.mkdirSync(requestsDirectory, { recursive: true });
+  const requestPath = path.join(requestsDirectory, 'send.json');
+  // Half written: it holds the operator but does not parse yet.
+  fs.writeFileSync(requestPath, '{"properties":{"key":{"_secret":"MAIL_KEY"');
+  const cache = new Map();
+  expect(readBuildSecretNames({ directories, cache })).toEqual([]);
+  expect(cache.has(requestPath)).toBe(false);
+  fs.writeFileSync(requestPath, JSON.stringify({ properties: { key: { _secret: 'MAIL_KEY' } } }));
+  expect(readBuildSecretNames({ directories, cache })).toEqual(['MAIL_KEY']);
+});
