@@ -16,6 +16,7 @@
 
 import createBuildHost from './createBuildHost.js';
 import createHeadlessHost from './createHeadlessHost.js';
+import evaluateJsModule from './evaluateJsModule.js';
 import expectAnswerError from './expectAnswerError.js';
 import expectAnswerStatus from './expectAnswerStatus.js';
 import expectDb from './expectDb.js';
@@ -32,6 +33,7 @@ import runHeadlessJourney from './runHeadlessJourney.js';
 export {
   createBuildHost,
   createHeadlessHost,
+  evaluateJsModule,
   expectAnswerError,
   expectAnswerStatus,
   expectDb,

@@ -16,20 +16,19 @@
 
 import { type } from '@lowdefy/helpers';
 
+import evaluateJsModule from './evaluateJsModule.js';
+
 // The _js functions a page runs with, as the web client's Page merges them: the build's client map
 // (plugins.jsMap), with the page's own _jsEntries over it. _jsEntries is module text
-// (`export default { [hash]: fn }`), evaluated as the dev client's fetchPageConfig evaluates it. The
-// dev server's page route folds a page's _js into its config this way, since a page it builds on
-// demand can add _js after the client map was loaded; a page with none runs on the map alone.
+// (`export default { [hash]: fn }`, evaluateJsModule). The dev server's page route folds a page's
+// _js into its config this way, since a page it builds on demand can add _js after the client map
+// was loaded; a page with none runs on the map alone.
 function readPageJsMap({ jsMap, pageConfig }) {
   const jsEntries = pageConfig._jsEntries;
   if (type.isNone(jsEntries)) {
     return jsMap;
   }
-  const define = new Function('exports', jsEntries.replace('export default', 'exports.default ='));
-  const module = {};
-  define(module);
-  return { ...jsMap, ...module.default };
+  return { ...jsMap, ...evaluateJsModule(jsEntries) };
 }
 
 export default readPageJsMap;

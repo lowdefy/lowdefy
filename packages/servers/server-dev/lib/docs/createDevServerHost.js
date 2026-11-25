@@ -36,6 +36,7 @@ import { buildPageWithContext, getPageJitEnrichment } from '../server/jitPageBui
 import createHeadlessSecrets from './createHeadlessSecrets.js';
 import createInProcessRequest from './createInProcessRequest.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import readClientJsMap from './readClientJsMap.js';
 import readConnectionPlugins from './readConnectionPlugins.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
@@ -430,9 +431,16 @@ async function createDevServerHost({
     dataSession: session?.session ?? null,
     errorSink: createErrorSink(),
     findDocuments,
-    loadClientPlugins: () => {
+    // The plugins are imported once; the _js map is read as the file is now, so app events' _js a
+    // config rebuild changed resolves without a restart (readClientJsMap). A page's own _js comes
+    // with its config (readPageConfig).
+    loadClientPlugins: async () => {
       clientPlugins = clientPlugins ?? loadClientPlugins({ buildDirectory });
-      return clientPlugins;
+      const plugins = await clientPlugins;
+      return {
+        ...plugins,
+        jsMap: readClientJsMap({ buildDirectory, fallback: plugins.jsMap }),
+      };
     },
     readArtifact,
     readPageConfig,
