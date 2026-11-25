@@ -39,6 +39,7 @@ import writeTestRun from '../test/writeTestRun.js';
 import fetchBuildId from '../test/fetchBuildId.js';
 import formatBrowserOnlyNote from '../test/formatBrowserOnlyNote.js';
 import devBuildHash from '../test/devBuildHash.js';
+import hashBuild from '../test/hashBuild.js';
 import hashConfigSources from '../test/hashConfigSources.js';
 import readHeadlessRun from '../test/readHeadlessRun.js';
 import writeHeadlessRun from '../test/writeHeadlessRun.js';
@@ -161,7 +162,7 @@ async function runAppTests({
   // The build as the server serves it before any journey opens a page, and the config source as
   // the run starts, which headless-run.json's records are taken against (devBuildHash).
   const sourceHash = hashConfigSources({ configDirectory });
-  const configHash = devBuildHash({ context, sourceHash });
+  const configHash = devBuildHash({ buildHash: hashBuild({ context }), sourceHash });
   const ran = await runDevJourneys({
     context,
     entries: tiered.selected,
@@ -197,7 +198,7 @@ async function runAppTests({
       browserOnly: ran.headless.browserOnly,
       remembered: ran.remembered,
       mode: 'dev',
-      configHashes: [configHash, devBuildHash({ context, sourceHash })],
+      configHashes: [configHash, devBuildHash({ buildHash: hashBuild({ context }), sourceHash })],
     });
   }
   const seen = new Set();
