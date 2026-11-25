@@ -15,53 +15,84 @@
 */
 
 import groupDataSetByCollection from './groupDataSetByCollection.js';
-import insertFixture from './insertFixture.js';
-import insertGeneratedDocuments from './insertGeneratedDocuments.js';
 import listSessionDatabases from './listSessionDatabases.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
+import recordIndexNames from './recordIndexNames.js';
+import seedDataSetCollection from './seedDataSetCollection.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
 
-async function emptyDatabase({ db }) {
-  const collections = await db.listCollections({}, { nameOnly: true }).toArray();
-  const names = collections
-    .filter((collection) => collection.type !== 'view' && !collection.name.startsWith('system.'))
-    .map((collection) => collection.name);
-  await Promise.all(names.map((name) => db.collection(name).deleteMany({})));
-  return new Set(names);
+// What a collection the data set does not load holds when it is first written: the _id index.
+const ID_INDEX_ONLY = new Set(['_id_']);
+
+function hasIndexNames({ indexes, names }) {
+  return indexes.length === names.size && indexes.every((index) => names.has(index.name));
 }
 
-// Puts a data session back to its data set, as it was when it opened: every collection in every
-// database of the session is emptied, a collection a test made included, and the data set's
-// documents are inserted again. Collections and their indexes are kept, since emptying and
-// refilling one is several times cheaper than dropping the database and loading it anew; a
-// collection of the data set that was dropped since is loaded as on open, indexes first.
+// Empties every collection of one session database whose indexes are the ones it was loaded with
+// (session.indexNames; only _id_ for a collection the data set does not load), and drops the rest:
+// a collection that gained or lost an index (an app can create one at run time, as the auth
+// adapter does), and a view or other collection that is not a plain one. Returns the names of the
+// collections it kept.
+async function emptyDatabase({ db, indexNames }) {
+  const collections = await db.listCollections({}, { nameOnly: true }).toArray();
+  const kept = new Set();
+  await Promise.all(
+    collections
+      .filter((collection) => !collection.name.startsWith('system.'))
+      .map(async ({ name, type }) => {
+        if (type === 'collection') {
+          const indexes = await db.collection(name).indexes();
+          if (hasIndexNames({ indexes, names: indexNames?.get(name) ?? ID_INDEX_ONLY })) {
+            await db.collection(name).deleteMany({});
+            kept.add(name);
+            return;
+          }
+        }
+        await db.dropCollection(name);
+      })
+  );
+  return kept;
+}
+
+// Puts a data session back to its data set, as it was when it opened, so nothing a test or
+// journey wrote reaches the next one: no document, no collection it made with an index of its
+// own, and no index it added. Each database of the session is emptied (emptyDatabase), and the
+// data set's documents are written again, one bulk write per collection. Collections that keep
+// their indexes are kept, since emptying and refilling one is several times cheaper than dropping
+// the database and loading it anew; a collection of the data set that was dropped, here or by the
+// test, is loaded as on open, indexes first.
 async function reloadDataSession({ client, dataSet, session }) {
-  const existing = new Map();
+  const kept = new Map();
   await Promise.all(
     listSessionDatabases({ session }).map(async (databaseName) => {
-      existing.set(databaseName, await emptyDatabase({ db: client.db(databaseName) }));
+      kept.set(
+        databaseName,
+        await emptyDatabase({
+          db: client.db(databaseName),
+          indexNames: session.indexNames.get(databaseName),
+        })
+      );
     })
   );
   await Promise.all(
     groupDataSetByCollection({ dataSet }).map(async (group) => {
       const databaseName = sessionDatabaseName({ session, target: group.target });
       const db = client.db(databaseName);
-      if (existing.get(databaseName)?.has(group.collection) !== true) {
-        await loadDataSetCollection({
-          db,
+      if (kept.get(databaseName)?.has(group.collection) === true) {
+        await seedDataSetCollection({
+          collection: db.collection(group.collection),
           dataSetName: dataSet.name,
-          collectionName: group.collection,
           group,
         });
         return;
       }
-      const collection = db.collection(group.collection);
-      for (const batch of group.generated) {
-        await insertGeneratedDocuments({ collection, dataSetName: dataSet.name, batch });
-      }
-      for (const fixture of group.fixtures) {
-        await insertFixture({ collection, dataSetName: dataSet.name, fixture });
-      }
+      const indexNames = await loadDataSetCollection({
+        db,
+        dataSetName: dataSet.name,
+        collectionName: group.collection,
+        group,
+      });
+      recordIndexNames({ session, databaseName, collectionName: group.collection, indexNames });
     })
   );
 }

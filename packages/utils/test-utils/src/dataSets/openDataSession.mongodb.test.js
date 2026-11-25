@@ -565,3 +565,27 @@ test('openDataSession sweeps an ld_ database no open session owns', async () => 
   await close();
   await client.db('not_a_session').dropDatabase();
 });
+
+test('openDataSession writes generated documents before fixtures, so a fixture replaces a generated document with its _id', async () => {
+  const dataSet = makeDataSet({
+    collections: { tickets: 'tickets', 'tickets-archive': 'tickets' },
+    generated: {
+      tickets: [
+        { _id: 'g1', title: 'generated' },
+        { _id: 'g2', title: 'generated' },
+      ],
+    },
+    fixtures: {
+      tickets: [{ _id: 'g2', title: 'fixture' }],
+      'tickets-archive': [{ title: 'no id' }],
+    },
+  });
+  const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
+  try {
+    const found = await sessionDb(session).collection('tickets').find({}).toArray();
+    expect(found.map(({ title }) => title).sort()).toEqual(['fixture', 'generated', 'no id']);
+    expect(found.find((document) => document._id === 'g2').title).toEqual('fixture');
+  } finally {
+    await close();
+  }
+});

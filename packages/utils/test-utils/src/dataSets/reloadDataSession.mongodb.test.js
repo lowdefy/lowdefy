@@ -120,3 +120,44 @@ test('reloadDataSession empties every database of a session whose data set holds
   expect(await database(targetA).collection('tickets').countDocuments()).toEqual(0);
   expect(await database(targetB).collection('audit').countDocuments()).toEqual(0);
 });
+
+test('reloadDataSession drops an index a test added to a data set collection, and loads the collection again with its own', async () => {
+  opened = await openDataSession({ dataSet, logger, store });
+  const tickets = database(targetA).collection('tickets');
+  await tickets.deleteMany({});
+  await tickets.createIndex({ stage: 1 }, { unique: true, name: 'stage_unique' });
+
+  await reloadDataSession({ client: store.client, dataSet, session: opened.session });
+
+  const names = (await tickets.indexes()).map((index) => index.name).sort();
+  expect(names).toEqual(['_id_', 'number_1']);
+  expect((await readAll(tickets)).map((ticket) => ticket._id)).toEqual(['g1', 't1', 't2']);
+  // The data set's documents share a stage, so the test's unique index would have refused them.
+  await tickets.insertOne({ _id: 't4', number: 4, stage: 'open' });
+});
+
+test('reloadDataSession drops a collection a test made with an index of its own, and a view', async () => {
+  opened = await openDataSession({ dataSet, logger, store });
+  const db = database(targetA);
+  await db.collection('members').createIndex({ userId: 1 }, { unique: true });
+  await db.collection('members').insertOne({ _id: 'm1', userId: 'u1' });
+  await db.createCollection('open_tickets', {
+    viewOn: 'tickets',
+    pipeline: [{ $match: { stage: 'open' } }],
+  });
+
+  await reloadDataSession({ client: store.client, dataSet, session: opened.session });
+
+  const collections = await db.listCollections({}, { nameOnly: true }).toArray();
+  expect(
+    collections
+      .map((collection) => collection.name)
+      .filter((name) => !name.startsWith('system.'))
+      .sort()
+  ).toEqual(['tickets']);
+  // Twice in a row: the index that would refuse it went with the collection.
+  await db.collection('members').insertMany([
+    { _id: 'm1', userId: 'u1' },
+    { _id: 'm2', userId: 'u1' },
+  ]);
+});

@@ -25,6 +25,7 @@ import groupDataSetByCollection from './groupDataSetByCollection.js';
 import isDataStoreGone from './isDataStoreGone.js';
 import listSessionDatabases from './listSessionDatabases.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
+import recordIndexNames from './recordIndexNames.js';
 import releasePauseGates from './releasePauseGates.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
@@ -96,6 +97,8 @@ async function openDataSession({ dataSet, logger, store: runStore }) {
     databaseName: `${prefix}_0`,
     databases: new Map(databaseTargets.map((target, index) => [target, `${prefix}_${index}`])),
     databaseCount: Math.max(databaseTargets.length, 1),
+    // The indexes each loaded collection holds, by database and collection (recordIndexNames).
+    indexNames: new Map(),
     name: dataSet.name,
     // Registered while it loads, so a concurrent open's orphan sweep leaves its databases alone.
     // readDataSession serves only open and closing sessions.
@@ -121,14 +124,16 @@ async function openDataSession({ dataSet, logger, store: runStore }) {
     const groups = groupDataSetByCollection({ dataSet });
     // allSettled, so no collection is still loading when a failed load drops the databases.
     const results = await Promise.allSettled(
-      groups.map((group) =>
-        loadDataSetCollection({
-          db: client.db(sessionDatabaseName({ session, target: group.target })),
+      groups.map(async (group) => {
+        const databaseName = sessionDatabaseName({ session, target: group.target });
+        const indexNames = await loadDataSetCollection({
+          db: client.db(databaseName),
           dataSetName: dataSet.name,
           collectionName: group.collection,
           group,
-        })
-      )
+        });
+        recordIndexNames({ session, databaseName, collectionName: group.collection, indexNames });
+      })
     );
     const failed = results.find((result) => result.status === 'rejected');
     if (!type.isUndefined(failed)) {
