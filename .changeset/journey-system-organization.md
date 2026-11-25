@@ -13,4 +13,4 @@ A journey `call` made `as: system` ran the endpoint bound to no organization, so
 - The call goes through the same system principal a detached call from such a `CallApi` carries, so a journey and production give the endpoint one binding.
 - When a call `as: system` bound to no organization is refused or its routine fails, the failing step (`expect.status`, `expect.error`, or the server error its routine raised) says how to name the organization.
 - Endpoint tests take the same binding: `session.system({ organization, caller }).call(endpointId, payload)`.
-- An inline user object still can not carry `system`.
+- An inline user object still can not carry `system`. A journey whose `user` carries it is now refused before it runs, by `lowdefy test` and by the dev server's journey routes, where it used to fail inside the run.
