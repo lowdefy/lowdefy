@@ -118,6 +118,42 @@ test('a page-less journey is refused a gated write, and the same call as an allo
   ]);
 });
 
+test('the next journey on a data set reuses its databases and reads none of what the last one wrote', async () => {
+  const activity = { collection: 'items', match: { kind: 'activity' } };
+  const writer = await createBuildHost({ app: gatedApp, data: 'roles', user: 'member' });
+  let written;
+  try {
+    written = await runHeadlessJourney({
+      host: writer,
+      journey: {
+        steps: [
+          { call: { endpoint: 'log_activity', payload: { source: 'first' }, as: 'auditor' } },
+          { expect: { db: { ...activity, count: 1 } } },
+        ],
+      },
+      stepTimeout: 2000,
+    });
+  } finally {
+    await writer.close();
+  }
+  expect(written.passed).toBe(true);
+  const reader = await createBuildHost({ app: gatedApp, data: 'roles', user: 'member' });
+  let read;
+  try {
+    expect(reader.dataSession.prefix).toEqual(writer.dataSession.prefix);
+    expect(reader.dataSession.id).not.toEqual(writer.dataSession.id);
+    read = await runHeadlessJourney({
+      host: reader,
+      journey: { steps: [{ expect: { db: { ...activity, count: 0 } } }] },
+      stepTimeout: 2000,
+    });
+  } finally {
+    await reader.close();
+  }
+  expect(read.failure).toBeUndefined();
+  expect(read.passed).toBe(true);
+});
+
 test('expect.status names the answer it read when it differs', async () => {
   const result = await runHeadlessJourney({
     host,

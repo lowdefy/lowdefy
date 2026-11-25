@@ -16,6 +16,7 @@
 
 import announceDataStoreDownload from './announceDataStoreDownload.js';
 import connectToRunStore from './connectToRunStore.js';
+import { forgetIdleDatabases } from './idleDatabases.js';
 import getRunOwnerPid from './getRunOwnerPid.js';
 import getRunStoreRecordPath from './getRunStoreRecordPath.js';
 
@@ -56,6 +57,7 @@ async function getRunDataStore({ logger }) {
       stopping ??
       (async () => {
         store.stopped = true;
+        forgetIdleDatabases({ store });
         await client.close().catch(() => {});
       })();
     return stopping;

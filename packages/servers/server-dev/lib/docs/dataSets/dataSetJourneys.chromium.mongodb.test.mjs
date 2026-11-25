@@ -313,7 +313,7 @@ beforeAll(async () => {
 
   store = await getDataStore({ logger: createLogger() });
   // Every write on the data store, in order, so a test can tell which session database a detached
-  // write reached and that it landed before the session dropped it.
+  // write reached.
   storeEvents = [];
   storeWatch = store.client.watch([], { fullDocument: 'default' });
   storeWatch.on('change', (change) => {
@@ -459,7 +459,7 @@ chromiumTest('as: outsider acts as that data set user and sees only its own org'
 });
 
 chromiumTest(
-  'a detached CallApi on the last step writes to the session database before the session drops it',
+  'a detached CallApi on the last step writes to the session database before the session closes',
   async () => {
     storeEvents.length = 0;
     const { result } = await runJourney({
@@ -477,11 +477,13 @@ chromiumTest(
     );
     expect(insert).toBeDefined();
     expect(insert.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
-    const insertIndex = storeEvents.indexOf(insert);
-    const dropIndex = storeEvents.findIndex(
-      (event) => event.operationType === 'dropDatabase' && event.db === insert.db
-    );
-    expect(dropIndex).toBeGreaterThan(insertIndex);
+    // The session waited for it, so it kept its databases for the next journey on the data set
+    // rather than dropping them under work still running, and they still hold the write.
+    const kept = await store.client
+      .db(insert.db)
+      .collection(insert.coll)
+      .findOne({ _id: 'later-1' });
+    expect(kept).not.toBeNull();
     expect(await standInIds()).toEqual(['real-1']);
   }
 );
@@ -702,18 +704,13 @@ chromiumTest(
       ],
     });
     expect(result.passed).toBe(true);
-    // Each target's fixtures loaded into a database of its own, and both dropped with the session.
+    // Each target's fixtures loaded into a database of its own.
     const fixtureDatabases = new Set(
       storeEvents
         .filter((event) => event.operationType === 'insert' && event.id === 't-a1')
         .map((event) => event.db)
     );
     expect(fixtureDatabases.size).toBe(2);
-    fixtureDatabases.forEach((name) => {
-      expect(
-        storeEvents.some((event) => event.operationType === 'dropDatabase' && event.db === name)
-      ).toBe(true);
-    });
   }
 );
 

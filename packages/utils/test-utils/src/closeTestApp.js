@@ -17,9 +17,10 @@
 import { type } from '@lowdefy/helpers';
 
 import closeSession from './closeSession.js';
+import { dropIdleDatabases } from './dataSets/idleDatabases.js';
 
 // Releases what the test app holds, so the test file's process can exit: its sessions (each
-// waits for its background work, then drops its databases), the driver clients the app's
+// waits for its background work) and the databases they held, the driver clients the app's
 // MongoDB connections opened, its own client on the run's data store, and the build files and
 // config it read. The data store itself stays up for the run's other test files and stops with
 // the run. Calls on a closed app are refused, so a test never reads a build its file already
@@ -45,6 +46,8 @@ async function closeTestApp({ testApp }) {
   }
   if (!type.isNone(testApp.store)) {
     const store = await testApp.store;
+    // Its sessions kept their databases for a next session (idleDatabases); none comes now.
+    await dropIdleDatabases({ store });
     await store.stop();
   }
   testApp.fileCache.clear();

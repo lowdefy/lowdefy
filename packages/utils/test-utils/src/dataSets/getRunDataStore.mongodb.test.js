@@ -29,6 +29,7 @@ import { afterAll, expect, test, vi } from 'vitest';
 
 import dataSessionRegistry from './dataSessionRegistry.js';
 import getRunDataStore from './getRunDataStore.js';
+import { dropIdleDatabases } from './idleDatabases.js';
 import isProcessAlive from './isProcessAlive.js';
 import openDataSession from './openDataSession.js';
 import { IDLE_STOP_MS } from './runDataStoreKeeper.js';
@@ -270,8 +271,11 @@ test('a session on the run store names its databases after its process, and its 
   expect(names).toContain(opened.session.databaseName);
 
   await opened.close();
-  expect(await listDatabaseNames(store)).not.toContain(opened.session.databaseName);
   expect(dataSessionRegistry.has(opened.id)).toBe(false);
+  // Kept for the next session on the data set until the idle databases are dropped.
+  expect(await listDatabaseNames(store)).toContain(opened.session.databaseName);
+  await dropIdleDatabases({ store });
+  expect(await listDatabaseNames(store)).not.toContain(opened.session.databaseName);
   await store.client.db(running).dropDatabase();
 });
 

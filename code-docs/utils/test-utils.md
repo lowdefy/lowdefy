@@ -97,7 +97,35 @@ it carries `two_factor_enrolled: false`.
 `app.openSession({ data })` (`src/openSession.js`) reads the data set (`readDataSet`, or
 `readEmptyDataSet` without `data`), joins the run's data store (`getSessionStore`) and opens a
 data session on it (`openDataSession`): one database per database target, indexes first, then
-generated documents and fixtures.
+generated documents and fixtures, in one ordered `bulkWrite` per collection
+(`seedDataSetCollection`).
+
+### Reusing a closed session's databases
+
+Creating and dropping databases is most of what a journey waits on (about 0.6 s a journey on
+macOS), so a closed session keeps its databases for the next session on its data set
+(`idleDatabases.js`), and that session resets them with `reloadDataSession` instead of loading a
+new set. The pool is per process and thread (on `globalThis`, beside `dataSessionRegistry`), keyed
+by store and by the data set's layout: its name, database targets, collections and indexes. The
+documents are not in the key, since a reset writes them anew. An entry is taken out while a
+session uses it, so sessions open at once on one data set have databases of their own, and the
+pool holds one set per data set for the most sessions ever open on it at once.
+
+- **What stays apart.** Each session gets a new id and cookie, so a request still carrying the
+  last journey's cookie is refused, never served on the next one's data. A session whose
+  background work outlived the 30 s wait drops its databases instead, since that work may still
+  write to them.
+- **What a reset checks.** `loadDataSetCollection` returns the index names it created, recorded
+  on the session (`recordIndexNames`). A reset lists each database's collections and their
+  indexes: a collection whose index names still match (only `_id_` for one the data set does not
+  load) is emptied with `deleteMany`; any other collection, and any view, is dropped. Then each
+  data set collection is written again, or loaded as on open when it was dropped. A collection the
+  last journey wrote with only an `_id` index stays, empty.
+- **Edits on the dev server.** A data set whose layout changed takes out and drops the idle entries
+  of its old layout. An edit to its documents keeps the layout, and the reset writes the new ones.
+- **When they go.** `closeTestApp` drops the idle databases of its store before it lets go of its
+  client. A store's `stop()` forgets its entries (`forgetIdleDatabases`). The orphan sweep leaves
+  idle databases (`listIdlePrefixes`).
 
 ### A call
 
@@ -200,9 +228,10 @@ write that state.
 
 ### Reset and close
 
-`session.reset()` releases held routines, waits for background work, empties every collection and
-loads the data set again (`reloadDataSession`), and empties `sunk` and the fail gates. Collections and indexes are
-kept, which is what makes it several times cheaper than a new session. Stubs stay. A fail gate that
+`session.reset()` releases held routines, waits for background work, puts the databases back to
+the data set (`reloadDataSession`, as described under "Reusing a closed session's databases"), and
+empties `sunk` and the fail gates. Collections whose indexes are unchanged are kept, which is what
+makes it several times cheaper than a new session. Stubs stay. A fail gate that
 never fired fails the test that set it, as it fails a journey: `reset()` resets the session first,
 then throws naming each one.
 
