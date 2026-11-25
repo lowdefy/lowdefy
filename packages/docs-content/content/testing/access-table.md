@@ -33,13 +33,13 @@ The table asks the app's authorization gate, the one the page and endpoint route
 
 The table is read from the production build, in `.lowdefy/server` or the folder `--server-directory` names. Only the runs that read that build check it:
 
-| Run                               | The access table                                                                             |
-| --------------------------------- | -------------------------------------------------------------------------------------------- |
-| `lowdefy test --headless --build` | Checked first, before any journey. A difference fails the run, and the journeys still run.   |
-| `lowdefy test --access`           | Checked alone. No journeys run.                                                              |
-| `lowdefy test --update-access`    | Rewritten from the build. Nothing else runs.                                                 |
-| `lowdefy test`, `--headless`      | Not checked: these run on the development server. When the file exists, they print one line. |
-| `lowdefy test --lint`             | Not checked: a lint reads no build.                                                          |
+| Run                            | The access table                                                                             |
+| ------------------------------ | -------------------------------------------------------------------------------------------- |
+| `lowdefy test --build`         | Checked first, before any journey. A difference fails the run, and the journeys still run.   |
+| `lowdefy test --access`        | Checked alone. No journeys run.                                                              |
+| `lowdefy test --update-access` | Rewritten from the build. Nothing else runs.                                                 |
+| `lowdefy test`, `--thorough`   | Not checked: these run on the development server. When the file exists, they print one line. |
+| `lowdefy test --lint`          | Not checked: a lint reads no build.                                                          |
 
 A run that checks the table checks all of it. Journey paths, `--filter`, `--tag` and `--tier` choose journeys only. An app with no journeys is checked too.
 
@@ -90,14 +90,14 @@ No tests/access.yaml to check. Write it with "lowdefy build --no-client-build &&
 Each takes only `--config-directory`, `--server-directory`, `--log-level` and `--disable-telemetry`. Journey paths and every other `lowdefy test` option refuse the run before the build opens, with the command you more likely meant:
 
 ```
---access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.
+--access checks the access table alone: drop --tag, or run "lowdefy test --build --tag <tag>" to check the table and run those journeys.
 ```
 
 The options refused are `--headless`, `--build`, `--browser`, `--thorough`, `--concurrency`, `--lint`, `--repeat`, `--filter`, `--tag`, `--tier`, `--usage-window`, `--journeys-directory`, `--url`, `--port`, `--dev-directory` and `--ref-resolver`, when typed on the command line. A `PORT` in the environment, or a value in `lowdefy.yaml`'s `cli` config, is not refused. The two flags together are refused too.
 
 ## The first file
 
-A `lowdefy test --headless --build` run of an app with auth configured and no `tests/access.yaml` warns:
+A `lowdefy test --build` run of an app with auth configured and no `tests/access.yaml` warns:
 
 ```
 This app has auth and no tests/access.yaml, so who reaches which page and endpoint is not checked. Write it with "lowdefy build --no-client-build && lowdefy test --update-access", then commit the files it writes.
@@ -130,7 +130,7 @@ After a change to auth, roles, or the set of pages or endpoints, check the table
 lowdefy build --no-client-build && lowdefy test --access
 ```
 
-When the changed cells are the ones you meant, run `lowdefy test --update-access`, commit `tests/access.yaml`, and say in the pull request which cells changed and why. When the app is not the working directory, add `--config-directory <app>` to each command. In CI, `lowdefy test --headless --build` checks the table with the journeys.
+When the changed cells are the ones you meant, run `lowdefy test --update-access`, commit `tests/access.yaml`, and say in the pull request which cells changed and why. When the app is not the working directory, add `--config-directory <app>` to each command. In CI, `lowdefy test --build` checks the table with the journeys.
 
 ## One check, in one place
 
