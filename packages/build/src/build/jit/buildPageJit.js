@@ -15,6 +15,7 @@
 */
 
 import fs from 'fs';
+import { ldfTime, ldfTimeSync } from '../../utils/ldfProf.js';
 import path from 'path';
 import { serializer, type } from '@lowdefy/helpers';
 import { ConfigError, LowdefyInternalError } from '@lowdefy/errors';
@@ -68,7 +69,7 @@ async function updateDynamicIcons({ page, context, validate }) {
   if (!context.bundledIcons) return;
   const icons = await getJitIconContext({ context });
   if (validate) {
-    validateIconNames({ config: page, icons, context });
+    ldfTimeSync('jit:validateIconNames', () => validateIconNames({ config: page, icons, context }));
   }
   const names = detectMissingIcons({
     page,
@@ -77,11 +78,17 @@ async function updateDynamicIcons({ page, context, validate }) {
     icons,
   });
   if (names.length > 0) {
-    await updateIconImportsJit({ names, icons, context });
+    await ldfTime('jit:updateIconImportsJit', () =>
+      updateIconImportsJit({ names, icons, context })
+    );
   }
 }
 
-async function buildPageJit({ pageId, pageRegistry, context, directories, logger }) {
+async function buildPageJit(args) {
+  return ldfTime('jit:TOTAL', () => buildPageJitInner(args));
+}
+
+async function buildPageJitInner({ pageId, pageRegistry, context, directories, logger }) {
   // The dev server passes the context it keeps across page builds; without one,
   // a minimal context is made for this build.
   const keptContext =
@@ -107,7 +114,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   const buildContext = createPageBuildContext(keptContext);
   const buildErrors = buildContext.errors;
   const buildWarnings = buildContext.warnings;
-  const mapsMark = scanJitMaps({ context: buildContext });
+  const mapsMark = ldfTimeSync('jit:scanJitMaps', () => scanJitMaps({ context: buildContext }));
 
   try {
     // Pages without a source file (e.g., default 404) can only be served from
@@ -127,23 +134,27 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       }
     }
 
-    const { page: processed, refDef } = await resolvePageSource({
-      pageId,
-      pageEntry,
-      buildContext,
-    });
-    warnUnsetEnvReads({ context: buildContext });
+    const { page: processed, refDef } = await ldfTime('jit:resolvePageSource', () =>
+      resolvePageSource({
+        pageId,
+        pageEntry,
+        buildContext,
+      })
+    );
+    ldfTimeSync('jit:warnUnsetEnvReads', () => warnUnsetEnvReads({ context: buildContext }));
 
     // Tag all objects with ~r for ref provenance (normally done inside _ref
     // resolution by the walker; JIT resolves the page file directly).
-    tagRefDeep(processed, refDef.id);
+    ldfTimeSync('jit:tagRefDeep', () => tagRefDeep(processed, refDef.id));
 
     // Add keys to the resolved page
-    addKeys({ components: processed, context: buildContext });
+    ldfTimeSync('jit:addKeys', () => addKeys({ components: processed, context: buildContext }));
 
     // Warn on unknown block keys and mistyped block fields, as the full
     // build's testSchema does. Before auth is attached: it is not page config.
-    testSchema({ components: processed, context: buildContext, schema: pageSchema });
+    ldfTimeSync('jit:testSchema', () =>
+      testSchema({ components: processed, context: buildContext, schema: pageSchema })
+    );
 
     // Apply skeleton-computed auth, path and target (buildAuth ran during skeleton
     // build, and buildModules scoped a module page's path to its entry).
@@ -160,17 +171,21 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       message: 'Duplicate pageId "{{ id }}".',
     });
     // buildPage collects the page's action references on this build's context.
-    buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId });
+    ldfTimeSync('jit:buildPage', () =>
+      buildPage({ page: processed, index: 0, context: buildContext, checkDuplicatePageId })
+    );
     // After buildPage: styles are keyed by slot (normalizeClassAndStyles), as
     // in the full build.
-    validateMobileStyles({ components: { pages: [processed] }, context: buildContext });
+    ldfTimeSync('jit:validateMobileStyles', () =>
+      validateMobileStyles({ components: { pages: [processed] }, context: buildContext })
+    );
     validateNativeIgnoredProperties({
       components: { pages: [processed] },
       context: buildContext,
     });
 
     // Validate that all page-level types (blocks, actions, operators) exist
-    validatePageTypes({ context: buildContext });
+    ldfTimeSync('jit:validatePageTypes', () => validatePageTypes({ context: buildContext }));
 
     // Detect plugin packages that are in typesMap but not installed in server
     const missingPackages = detectMissingPluginPackages({
@@ -189,32 +204,40 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
 
     // After the missing-package return: a page waiting on an install runs its
     // rules once the server restarts with the package.
-    await runPluginChecks({
-      components: processed,
-      context: buildContext,
-      allSlugPackages: true,
-    });
+    await ldfTime('jit:runPluginChecks', () =>
+      runPluginChecks({
+        components: processed,
+        context: buildContext,
+        allSlugPackages: true,
+      })
+    );
 
     // Detect icons in the JIT-resolved page that weren't discovered during skeleton build.
     // Placed after detectMissingPluginPackages so we skip this when packages are being
     // installed (the server restarts and icons will be discovered on the next build).
-    await updateDynamicIcons({ page: processed, context: buildContext, validate: true });
+    await ldfTime('jit:updateDynamicIcons', () =>
+      updateDynamicIcons({ page: processed, context: buildContext, validate: true })
+    );
 
     // Validate link, state, payload, and server-state references
     const pageIds = Object.keys(pageRegistry);
-    validateLinkReferences({
-      linkActionRefs: buildContext.linkActionRefs,
-      pageIds,
-      context: buildContext,
-    });
+    ldfTimeSync('jit:validateLinkReferences', () =>
+      validateLinkReferences({
+        linkActionRefs: buildContext.linkActionRefs,
+        pageIds,
+        context: buildContext,
+      })
+    );
     const endpointConfigs = type.isArray(buildContext.components?.api)
       ? buildContext.components.api
       : [];
-    validateCallApiRefs({
-      callApiActionRefs: buildContext.callApiActionRefs,
-      endpointConfigs,
-      context: buildContext,
-    });
+    ldfTimeSync('jit:validateCallApiRefs', () =>
+      validateCallApiRefs({
+        callApiActionRefs: buildContext.callApiActionRefs,
+        endpointConfigs,
+        context: buildContext,
+      })
+    );
     // Fail the build when a per-org client action is wired under the
     // "pinned" organizations policy. The dev JIT context is rebuilt from disk
     // and carries no components.auth, so the policy is read from the auth.json
@@ -246,23 +269,35 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
       websocketIds: buildContext.websocketIds,
       context: buildContext,
     });
-    validateStateReferences({ page: processed, context: buildContext });
-    validatePayloadReferences({ page: processed, context: buildContext });
-    validateServerStateReferences({ page: processed, context: buildContext });
+    ldfTimeSync('jit:validateStateReferences', () =>
+      validateStateReferences({ page: processed, context: buildContext })
+    );
+    ldfTimeSync('jit:validatePayloadReferences', () =>
+      validatePayloadReferences({ page: processed, context: buildContext })
+    );
+    ldfTimeSync('jit:validateServerStateReferences', () =>
+      validateServerStateReferences({ page: processed, context: buildContext })
+    );
 
     // A mobile page's own class map entries, which the skeleton build's class
     // map does not hold. Before _js extraction, like the web's Tailwind scan.
-    const pageClassMap = await buildPageClassMapJit({ page: processed, context: buildContext });
+    const pageClassMap = await ldfTime('jit:buildPageClassMapJit', () =>
+      buildPageClassMapJit({ page: processed, context: buildContext })
+    );
 
     // Collect Tailwind class candidates before _js extraction — jsMapParser
     // replaces _js source with hashes, so classes used only inside _js source
     // would otherwise never reach the Tailwind scanner.
-    const tailwindContent = collectPageContent([processed]);
+    const tailwindContent = ldfTimeSync('jit:collectPageContent', () =>
+      collectPageContent([processed])
+    );
 
     // Extract JS functions from the page
     const pageRequests = [...(processed.requests ?? [])];
     delete processed.requests;
-    const cleanPage = jsMapParser({ input: processed, jsMap: buildContext.jsMap, env: 'client' });
+    const cleanPage = ldfTimeSync('jit:jsMapParser', () =>
+      jsMapParser({ input: processed, jsMap: buildContext.jsMap, env: 'client' })
+    );
     const cleanRequests = jsMapParser({
       input: pageRequests,
       jsMap: buildContext.jsMap,
@@ -276,7 +311,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     }
     // After _js extraction: a page reaches its functions' icon names through
     // their hashes, as in the full build.
-    const pageIcons = await buildPageIconsJit({ page: cleanPage, context: buildContext });
+    const pageIcons = await ldfTime('jit:buildPageIconsJit', () =>
+      buildPageIconsJit({ page: cleanPage, context: buildContext })
+    );
     if (!type.isUndefined(pageIcons)) {
       finalPage._icons = pageIcons;
     }
@@ -291,11 +328,13 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
     }
 
     // Write page artifacts
-    const { tailwindChanged } = await writePageJit({
-      page: finalPage,
-      context: buildContext,
-      tailwindContent,
-    });
+    const { tailwindChanged } = await ldfTime('jit:writePageJit', () =>
+      writePageJit({
+        page: finalPage,
+        context: buildContext,
+        tailwindContent,
+      })
+    );
 
     // Attached after the disk write (like _warnings) so it never persists in
     // artifacts — the JIT server uses it to decide whether to trigger a CSS
@@ -328,7 +367,9 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   } finally {
     // Also when the build failed: an error thrown after addKeys carries a JIT
     // key, and the error handler resolves it from disk.
-    await writeJitMaps({ context: buildContext, since: mapsMark });
+    await ldfTime('jit:writeJitMaps', () =>
+      writeJitMaps({ context: buildContext, since: mapsMark })
+    );
   }
 }
 

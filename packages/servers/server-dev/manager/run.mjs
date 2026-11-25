@@ -16,6 +16,7 @@
 */
 
 import opener from 'opener';
+import { ldfTime, ldfRecord } from './utils/ldfProf.mjs';
 import { registerServer, watchOwner } from '@lowdefy/node-utils';
 import checkAgentFiles from '../lib/docs/checkAgentFiles.js';
 import getContext from './getContext.mjs';
@@ -79,7 +80,8 @@ The run script does the following:
   pinging the /api/ping route, until it detects a new server has started, and then reloads the window.
  */
 
-const context = await getContext();
+ldfRecord('mgr:processStartToRun', 0);
+const context = await ldfTime('mgr:getContext', () => getContext());
 
 const instance = acquireDevInstance({
   configDirectory: context.directories.config,
@@ -155,7 +157,7 @@ watchOwner({
 });
 
 try {
-  await context.initialBuild();
+  await ldfTime('mgr:initialBuild', () => context.initialBuild());
 
   // Not awaited: the rest of the start-up does not need the watchers' initial
   // scan, and chokidar before 6 could fail to fire ready (a symlink whose
@@ -197,11 +199,11 @@ try {
   // Stops the Vite child after a few minutes unused and starts it on the next
   // request that is use; the proxy asks it whether the child is stopped.
   context.idleChild = createIdleChild(context, { idleMs: context.options.childIdleMs });
-  await startProxy(context);
-  context.mailSink = await startMailSink(context);
+  await ldfTime('mgr:startProxy', () => startProxy(context));
+  context.mailSink = await ldfTime('mgr:startMailSink', () => startMailSink(context));
 
   // Optimises dependencies, starts the child and waits for it to answer.
-  if (!(await startFirstServer(context))) {
+  if (!(await ldfTime('mgr:startFirstServer', () => startFirstServer(context)))) {
     context.logger.warn('The dev server did not answer within 2 minutes - check the output above.');
   }
   // The initial build runs outside buildActivity, so no idle GC followed it:

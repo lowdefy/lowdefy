@@ -15,6 +15,7 @@
 */
 
 import { randomBytes } from 'crypto';
+import { ldfTime, ldfTimeSync } from '../../utils/ldfProf.js';
 
 import { serializer } from '@lowdefy/helpers';
 import { BuildError } from '@lowdefy/errors';
@@ -112,6 +113,10 @@ import releaseMergedModuleEntities from './releaseMergedModuleEntities.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
+  return ldfTime('shallow:TOTAL', () => shallowBuildInner(options));
+}
+
+async function shallowBuildInner(options) {
   makeId.reset({ prefix: `${randomBytes(2).toString('hex')}_` });
 
   let context;
@@ -119,29 +124,33 @@ async function shallowBuild(options) {
     context = createContext(options);
 
     // Phase 0: Resolve root app metadata before any operator evaluation.
-    await buildAppMeta({ context });
+    await ldfTime('shallow:buildAppMeta', () => buildAppMeta({ context }));
     // Surface bad root metadata before module operators evaluate against it.
     logCollectedErrors(context);
 
     // Phase 1: Build module definitions
-    await buildModuleDefs({ context });
+    await ldfTime('shallow:buildModuleDefs', () => buildModuleDefs({ context }));
 
     // Scoped pre-pass: resolve the auth: subtree and compute the
     // _build.authConfig projection so the operator can resolve during buildRefs
     // and the dev server's JIT page walks (matches the full build in index.js).
-    await resolveAuthConfigProjection({ context });
+    await ldfTime('shallow:resolveAuthConfigProjection', () =>
+      resolveAuthConfigProjection({ context })
+    );
 
     // Step 3 (moved out of buildModuleDefs): full-resolve module manifests now
     // that the projection exists (matches the full build in index.js).
-    await resolveModuleManifests({ context });
+    await ldfTime('shallow:resolveModuleManifests', () => resolveModuleManifests({ context }));
 
     let components;
     try {
       // Phase 2: Ref resolution (with shallow options)
-      components = await buildRefs({
-        context,
-        shallowOptions: true,
-      });
+      components = await ldfTime('shallow:buildRefs', () =>
+        buildRefs({
+          context,
+          shallowOptions: true,
+        })
+      );
     } catch (err) {
       // Root lowdefy.yaml failure still throws from buildRefs — collect it
       if (!err.isLowdefyError) {
@@ -156,11 +165,15 @@ async function shallowBuild(options) {
     logCollectedErrors(context);
 
     // Phase 3: Process modules — scopes IDs, merges into components
-    buildModules({ components, context });
+    ldfTimeSync('shallow:buildModules', () => buildModules({ components, context }));
     // Collect skeleton source files while ~r markers still exist on objects.
-    const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
+    const skeletonSourceFiles = ldfTimeSync('shallow:collectSkeletonSourceFiles', () =>
+      collectSkeletonSourceFiles({ components, context })
+    );
     // After collectSkeletonSourceFiles, the last reader of a manifest's pages.
-    releaseMergedModuleEntities({ context });
+    ldfTimeSync('shallow:releaseMergedModuleEntities', () =>
+      releaseMergedModuleEntities({ context })
+    );
 
     // Phase 3.5: Constant-fold static runtime operators, mirroring the full
     // build (index.js). Without this, content preserved at skeleton — inline
@@ -169,11 +182,13 @@ async function shallowBuild(options) {
     // block ids: the client never operator-evaluates id positions) with raw
     // runtime operators. Ref-backed page content is already stripped here and
     // folds per page in buildPageJit.
-    components = precomputeRuntimeOperators({
-      context,
-      input: components,
-      refDef: context.rootRefDef,
-    });
+    components = ldfTimeSync('shallow:precomputeRuntimeOperators', () =>
+      precomputeRuntimeOperators({
+        context,
+        input: components,
+        refDef: context.rootRefDef,
+      })
+    );
 
     // addKeys + testSchema first for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
@@ -227,11 +242,13 @@ async function shallowBuild(options) {
     // Icon sets load asynchronously; a bad theme.icons stops the build here.
     // buildShallowPages validates the icon names of sourceless pages, and
     // buildImports resolves every icon name, against context.icons.
-    await buildIconContext({ components, context });
+    await ldfTime('shallow:buildIconContext', () => buildIconContext({ components, context }));
     logCollectedErrors(context);
     tryBuildStep(validateMobileMenuIcons, 'validateMobileMenuIcons', { components, context });
 
-    const { pageRegistry, sourcelessPageArtifacts } = buildShallowPages({ components, context });
+    const { pageRegistry, sourcelessPageArtifacts } = ldfTimeSync('shallow:buildShallowPages', () =>
+      buildShallowPages({ components, context })
+    );
     // Inline mobile pages carry their icons' data, as page builds' do.
     await buildMobilePageIcons({
       components: {
@@ -251,14 +268,18 @@ async function shallowBuild(options) {
       context,
     });
     // App-level config and inline pages; page builds check their own pages.
-    const { pending: pluginChecksPending } = await runPluginChecks({
-      components,
-      context,
-      allSlugPackages: true,
-    });
-    clearRuleTargetNodes({ context });
+    const { pending: pluginChecksPending } = await ldfTime('shallow:runPluginChecks', () =>
+      runPluginChecks({
+        components,
+        context,
+        allSlugPackages: true,
+      })
+    );
+    ldfTimeSync('shallow:clearRuleTargetNodes', () => clearRuleTargetNodes({ context }));
     // Now, so a build that fails later leaves no stale list behind.
-    await writePluginChecksPending({ context, packages: pluginChecksPending });
+    await ldfTime('shallow:writePluginChecksPending', () =>
+      writePluginChecksPending({ context, packages: pluginChecksPending })
+    );
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
 
     tryBuildStep(buildMobileAppJs, 'buildMobileAppJs', { components, context });
@@ -273,16 +294,20 @@ async function shallowBuild(options) {
     // writeMobile writes mobile/theme.json and mobile/classMap.json from these.
     // The class map covers the class candidates buildShallowPages collected
     // from sourceless pages.
-    buildMobileTheme({ components, context });
+    ldfTimeSync('shallow:buildMobileTheme', () => buildMobileTheme({ components, context }));
     // Async (Tailwind's compiler), so it runs outside tryBuildStep; config
     // faults are collected, not thrown.
-    await buildMobileClassMap({ components, context });
+    await ldfTime('shallow:buildMobileClassMap', () =>
+      buildMobileClassMap({ components, context })
+    );
 
     // Update server package.json before addInstalledTypes so that addInstalledTypes
     // sees the full set of dependencies on every run (not just after the first build).
     // This prevents plugin import files from differing between the initial and
     // subsequent builds, which would trigger unnecessary server restarts.
-    await updateServerPackageJson({ components, context });
+    await ldfTime('shallow:updateServerPackageJson', () =>
+      updateServerPackageJson({ components, context })
+    );
 
     tryBuildStep(addInstalledTypes, 'addInstalledTypes', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
@@ -291,34 +316,38 @@ async function shallowBuild(options) {
     logCollectedErrors(context);
 
     // Write all build artifacts
-    await cleanBuildDirectory({ context });
+    await ldfTime('shallow:cleanBuildDirectory', () => cleanBuildDirectory({ context }));
     // Again: cleanBuildDirectory removed it.
-    await writePluginChecksPending({ context, packages: pluginChecksPending });
-    await writeSourcelessPages({ sourcelessPageArtifacts, context });
-    await writeApp({ components, context });
-    await writeAppEvents({ components, context });
-    await writeAppMeta({ components, context });
-    await writeAuth({ components, context });
-    await writeConnections({ components, context });
-    await writeDynamicPolicies({ context });
-    await writeApi({ components, context });
-    await writeMcp({ components, context });
-    await writeAgents({ components, context });
-    await writeWebsockets({ components, context });
-    await writeNotifications({ components, context });
-    await writeConfig({ components, context });
-    await writeSecurity({ context });
-    await writeGlobal({ components, context });
-    await writeTheme({ components, context });
+    await ldfTime('shallow:writePluginChecksPending', () =>
+      writePluginChecksPending({ context, packages: pluginChecksPending })
+    );
+    await ldfTime('shallow:writeSourcelessPages', () =>
+      writeSourcelessPages({ sourcelessPageArtifacts, context })
+    );
+    await ldfTime('shallow:writeApp', () => writeApp({ components, context }));
+    await ldfTime('shallow:writeAppEvents', () => writeAppEvents({ components, context }));
+    await ldfTime('shallow:writeAppMeta', () => writeAppMeta({ components, context }));
+    await ldfTime('shallow:writeAuth', () => writeAuth({ components, context }));
+    await ldfTime('shallow:writeConnections', () => writeConnections({ components, context }));
+    await ldfTime('shallow:writeDynamicPolicies', () => writeDynamicPolicies({ context }));
+    await ldfTime('shallow:writeApi', () => writeApi({ components, context }));
+    await ldfTime('shallow:writeMcp', () => writeMcp({ components, context }));
+    await ldfTime('shallow:writeAgents', () => writeAgents({ components, context }));
+    await ldfTime('shallow:writeWebsockets', () => writeWebsockets({ components, context }));
+    await ldfTime('shallow:writeNotifications', () => writeNotifications({ components, context }));
+    await ldfTime('shallow:writeConfig', () => writeConfig({ components, context }));
+    await ldfTime('shallow:writeSecurity', () => writeSecurity({ context }));
+    await ldfTime('shallow:writeGlobal', () => writeGlobal({ components, context }));
+    await ldfTime('shallow:writeTheme', () => writeTheme({ components, context }));
     await writeI18n({ components, context });
     await codegenI18nLocales({ components, context });
-    await writeLogger({ components, context });
-    await writeMaps({ context });
+    await ldfTime('shallow:writeLogger', () => writeLogger({ components, context }));
+    await ldfTime('shallow:writeMaps', () => writeMaps({ context }));
     await context.writeBuildArtifact(
       'connectionIds.json',
       JSON.stringify([...context.connectionIds].sort())
     );
-    await writeTenantTargets({ context });
+    await ldfTime('shallow:writeTenantTargets', () => writeTenantTargets({ context }));
     await context.writeBuildArtifact(
       'websocketIds.json',
       JSON.stringify([...context.websocketIds].sort())
@@ -327,17 +356,17 @@ async function shallowBuild(options) {
       'skeletonSourceFiles.json',
       JSON.stringify([...skeletonSourceFiles].sort())
     );
-    await writeMenus({ components, context });
-    await writeRoutes({ components, context });
-    await writeMobile({ components, context });
+    await ldfTime('shallow:writeMenus', () => writeMenus({ components, context }));
+    await ldfTime('shallow:writeRoutes', () => writeRoutes({ components, context }));
+    await ldfTime('shallow:writeMobile', () => writeMobile({ components, context }));
     // The dev client bundle imports every installed type (addInstalledTypes),
     // so types.json here describes that full bundle — dynamic page content
     // resolution validates fragment types against it at page get.
-    await writeTypes({ components, context });
+    await ldfTime('shallow:writeTypes', () => writeTypes({ components, context }));
     // null: the dev client is not split per page, so dynamic content can never
     // reach outside a page's client types (see flagTypesOutsidePage).
     await context.writeBuildArtifact('pageTypeSets.json', 'null');
-    await writeJs({ context });
+    await ldfTime('shallow:writeJs', () => writeJs({ context }));
     await context.writeBuildArtifact('jsMap.json', JSON.stringify(context.jsMap));
     await context.writeBuildArtifact(
       'idCounter.json',
@@ -385,10 +414,12 @@ async function shallowBuild(options) {
     await context.writeBuildArtifact('deferredRecords.json', serializeRegistry(context));
     // Also writes iconImports.json, the icon names snapshot JIT page builds
     // compare discovered icons against.
-    await writePluginImports({ components, context });
-    await writePageRegistry({ pageRegistry, context });
-    await copyPublicFolder({ components, context });
-    await copyAgentFileSystems({ components, context });
+    await ldfTime('shallow:writePluginImports', () => writePluginImports({ components, context }));
+    await ldfTime('shallow:writePageRegistry', () => writePageRegistry({ pageRegistry, context }));
+    await ldfTime('shallow:copyPublicFolder', () => copyPublicFolder({ components, context }));
+    await ldfTime('shallow:copyAgentFileSystems', () =>
+      copyAgentFileSystems({ components, context })
+    );
 
     return { components, pageRegistry, context };
   } catch (err) {

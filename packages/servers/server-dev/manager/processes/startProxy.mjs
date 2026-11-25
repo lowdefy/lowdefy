@@ -302,7 +302,12 @@ async function handleRequest({ context, proxyState }, req, res) {
   delete req.headers[buildWaitHeader];
   const { wait, body } = await readBuildStatusWait({ basePath: context.basePath, req });
   if (wait) {
+    const __w = Date.now();
     const waited = await context.buildActivity.waitForIdle();
+    (await import('../utils/ldfProf.mjs')).ldfRecord(
+      'proxy:waitForIdle',
+      performance.now() - (Date.now() - __w)
+    );
     req.headers[buildWaitHeader] = new URLSearchParams({
       settled: String(waited.settled),
       sawBuild: String(waited.sawBuild),

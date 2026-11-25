@@ -25,6 +25,8 @@ import loadSkeletonSourceFiles from '../utils/loadSkeletonSourceFiles.mjs';
 import pagePathChanged from '../utils/pagePathChanged.mjs';
 import { clearPluginTypeCache } from '../utils/pluginTypeCache.mjs';
 import setupWatcher from '../utils/setupWatcher.mjs';
+import { ldfTime, ldfRecord } from '../utils/ldfProf.mjs';
+import { performance } from 'node:perf_hooks';
 import updatePageTailwindCss from '../utils/updatePageTailwindCss.mjs';
 
 function findLocalModuleRoots(context) {
@@ -48,6 +50,7 @@ async function lowdefyBuildWatcher(context) {
     path.isAbsolute(item) ? item : path.resolve(configDirectory, item);
 
   const callback = async (filePaths) => {
+    const __cb = performance.now();
     const changedFiles = filePaths.flat();
     // Skeleton source files and the page registry hold app refs as their
     // forward-slash _ref paths relative to the config directory, and module
@@ -103,12 +106,14 @@ async function lowdefyBuildWatcher(context) {
           context,
         }))
       ) {
-        await context.lowdefyBuild();
+        await ldfTime('watch:lowdefyBuild', () => context.lowdefyBuild());
         // In this batch, so a build-status wait also waits for the restart
         // the build needs (a new connection type, a new plugin package).
-        await context.syncServer();
+        await ldfTime('watch:syncServer', () => context.syncServer());
       } else {
-        await updatePageTailwindCss({ changedFiles: relativeChangedFiles, context });
+        await ldfTime('watch:updatePageTailwindCss', () =>
+          updatePageTailwindCss({ changedFiles: relativeChangedFiles, context })
+        );
         context.logger.info('Page files changed.');
       }
     } catch (error) {
@@ -117,7 +122,8 @@ async function lowdefyBuildWatcher(context) {
       // Also after a config build, failed or not: a failed build publishes
       // nothing, and the edit must still reach the pages it touched.
       writeChangeSignal();
-      await context.reloadClients();
+      await ldfTime('watch:reloadClients', () => context.reloadClients());
+      ldfRecord('watch:CALLBACK_TOTAL', __cb);
     }
   };
 

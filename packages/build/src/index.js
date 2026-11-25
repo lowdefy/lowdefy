@@ -15,6 +15,8 @@
 */
 
 import { BuildError, ConfigError } from '@lowdefy/errors';
+import { ldfTime, ldfTimeSync, ldfRecord } from './utils/ldfProf.js';
+import { performance } from 'node:perf_hooks';
 
 import createContext from './createContext.js';
 import createInternalBuildError from './utils/createInternalBuildError.js';
@@ -117,6 +119,12 @@ import writeRequests from './build/full/writeRequests.js';
 import writeTypes from './build/full/writeTypes.js';
 
 async function build(options) {
+  return ldfTime(options.validateOnly ? 'full:TOTAL(check)' : 'full:TOTAL', () =>
+    buildInner(options)
+  );
+}
+
+async function buildInner(options) {
   // Reset makeId counter for each build (dev server may run multiple builds)
   makeId.reset();
 
@@ -127,28 +135,30 @@ async function build(options) {
     // Phase 0: Resolve root app metadata into context.appMeta before any
     // operator evaluation. _app / _build.app read this, and buildModuleDefs
     // (next) evaluates operators on root config, consumer vars, and connections.
-    await buildAppMeta({ context });
+    await ldfTime('full:buildAppMeta', () => buildAppMeta({ context }));
     // Surface bad root metadata (unsupported operators, failed _build.*) now,
     // before module operators evaluate against it — avoids cascade errors.
     logCollectedErrors(context);
 
     // Phase 1: Build module definitions
     // Parses lowdefy.yaml, resolves module refs, populates context.modules
-    await buildModuleDefs({ context });
+    await ldfTime('full:buildModuleDefs', () => buildModuleDefs({ context }));
 
     // Scoped pre-pass: resolve the auth: subtree and compute the
     // _build.authConfig projection so the operator can resolve during buildRefs.
-    await resolveAuthConfigProjection({ context });
+    await ldfTime('full:resolveAuthConfigProjection', () =>
+      resolveAuthConfigProjection({ context })
+    );
 
     // Step 3 (moved out of buildModuleDefs): full-resolve module manifests now
     // that the projection exists, so module page/api/connection operators like
     // _build.authConfig resolve against it.
-    await resolveModuleManifests({ context });
+    await ldfTime('full:resolveModuleManifests', () => resolveModuleManifests({ context }));
 
     let components;
     try {
       // Phase 2: Ref resolution (handles _ref: { module, component/menu })
-      components = await buildRefs({ context });
+      components = await ldfTime('full:buildRefs', () => buildRefs({ context }));
     } catch (err) {
       // Root lowdefy.yaml failure still throws from buildRefs — collect it
       if (err instanceof ConfigError) {
@@ -161,7 +171,7 @@ async function build(options) {
     logCollectedErrors(context);
 
     // Phase 3: Process modules — scopes IDs, merges into components
-    buildModules({ components, context });
+    ldfTimeSync('full:buildModules', () => buildModules({ components, context }));
 
     // Phase 3.5: Pre-compute static runtime operators (_sum, _if, _string, etc.)
     // whose arguments are fully static. This single fold covers components after
@@ -170,11 +180,13 @@ async function build(options) {
     // markers are added to the already-folded tree.
     // context.rootRefDef is the lowdefy.yaml refDef stashed by buildRefs (Phase 2)
     // so we can resolve error source file paths without allocating a new makeId entry.
-    components = precomputeRuntimeOperators({
-      context,
-      input: components,
-      refDef: context.rootRefDef,
-    });
+    components = ldfTimeSync('full:precomputeRuntimeOperators', () =>
+      precomputeRuntimeOperators({
+        context,
+        input: components,
+        refDef: context.rootRefDef,
+      })
+    );
 
     // Build steps - collect all errors before stopping
     // addKeys runs first so testSchema has ~k markers for error location info
@@ -243,10 +255,14 @@ async function build(options) {
     tryBuildStep(buildMcpViews, 'buildMcpViews', { components, context });
     // Every type is counted by now, and buildJs has not yet replaced the
     // counted objects with copies.
-    const { pending: pluginChecksPending } = await runPluginChecks({ components, context });
-    clearRuleTargetNodes({ context });
+    const { pending: pluginChecksPending } = await ldfTime('full:runPluginChecks', () =>
+      runPluginChecks({ components, context })
+    );
+    ldfTimeSync('full:clearRuleTargetNodes', () => clearRuleTargetNodes({ context }));
     // Now, so a build that fails later leaves no stale list behind.
-    await writePluginChecksPending({ context, packages: pluginChecksPending });
+    await ldfTime('full:writePluginChecksPending', () =>
+      writePluginChecksPending({ context, packages: pluginChecksPending })
+    );
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
     // Collect page content strings for Tailwind to scan. Must run before
@@ -254,12 +270,14 @@ async function build(options) {
     // candidates used only inside _js source would otherwise never be scanned.
     context.tailwindContentMap = new Map();
     // A mobile page never renders in the web client, so its classes are not scanned.
+    const __tw = performance.now();
     for (const page of (components.pages ?? []).filter((item) => item.target !== 'mobile')) {
       const content = collectPageContent([page]);
       if (content) {
         context.tailwindContentMap.set(page.pageId, content);
       }
     }
+    ldfRecord('full:collectPageContent(loop)', __tw);
     // Mobile class candidates are collected here for the same reason.
     tryBuildStep(collectMobileClassCandidates, 'collectMobileClassCandidates', {
       components,
@@ -271,11 +289,11 @@ async function build(options) {
     tryBuildStep(buildTypesMobile, 'buildTypesMobile', { components, context });
     // Icon sets load asynchronously; a bad theme.icons stops the build here,
     // since buildImports resolves every icon name against context.icons.
-    await buildIconContext({ components, context });
-    buildMobileTheme({ components, context });
+    await ldfTime('full:buildIconContext', () => buildIconContext({ components, context }));
+    ldfTimeSync('full:buildMobileTheme', () => buildMobileTheme({ components, context }));
     // Async (Tailwind's compiler), so it runs outside tryBuildStep; config
     // faults are collected, not thrown.
-    await buildMobileClassMap({ components, context });
+    await ldfTime('full:buildMobileClassMap', () => buildMobileClassMap({ components, context }));
     logCollectedErrors(context);
     tryBuildStep(validateMobileMenuIcons, 'validateMobileMenuIcons', { components, context });
     tryBuildStep(buildImports, 'buildImports', { components, context });
@@ -292,46 +310,50 @@ async function build(options) {
 
     // Per-page type sets are build output, not config: computed once every page
     // built cleanly, after the final addKeys pass.
-    buildPageTypes({ components, context });
+    ldfTimeSync('full:buildPageTypes', () => buildPageTypes({ components, context }));
     // Before the page index: a mobile page's hash covers its _icons.
-    await buildMobilePageIcons({ components, context });
-    buildMobilePageIndex({ components, context });
+    await ldfTime('full:buildMobilePageIcons', () => buildMobilePageIcons({ components, context }));
+    ldfTimeSync('full:buildMobilePageIndex', () => buildMobilePageIndex({ components, context }));
 
     // Write steps - only if no errors
-    await cleanBuildDirectory({ context });
+    await ldfTime('full:cleanBuildDirectory', () => cleanBuildDirectory({ context }));
     // Again: cleanBuildDirectory removed it.
-    await writePluginChecksPending({ context, packages: pluginChecksPending });
-    await writeApp({ components, context });
-    await writeAppEvents({ components, context });
-    await writeAppMeta({ components, context });
-    await writeAuth({ components, context });
-    await writeConnections({ components, context });
-    await writeDynamicPolicies({ context });
-    await writeAgents({ components, context });
-    await writeApi({ components, context });
-    await writeMcp({ components, context });
-    await writeWebsockets({ components, context });
-    await writeNotifications({ components, context });
-    await writeRequests({ components, context });
-    await writePages({ components, context });
-    await writeConfig({ components, context });
-    await writeSecurity({ context });
-    await writeGlobal({ components, context });
-    await writeTheme({ components, context });
+    await ldfTime('full:writePluginChecksPending', () =>
+      writePluginChecksPending({ context, packages: pluginChecksPending })
+    );
+    await ldfTime('full:writeApp', () => writeApp({ components, context }));
+    await ldfTime('full:writeAppEvents', () => writeAppEvents({ components, context }));
+    await ldfTime('full:writeAppMeta', () => writeAppMeta({ components, context }));
+    await ldfTime('full:writeAuth', () => writeAuth({ components, context }));
+    await ldfTime('full:writeConnections', () => writeConnections({ components, context }));
+    await ldfTime('full:writeDynamicPolicies', () => writeDynamicPolicies({ context }));
+    await ldfTime('full:writeAgents', () => writeAgents({ components, context }));
+    await ldfTime('full:writeApi', () => writeApi({ components, context }));
+    await ldfTime('full:writeMcp', () => writeMcp({ components, context }));
+    await ldfTime('full:writeWebsockets', () => writeWebsockets({ components, context }));
+    await ldfTime('full:writeNotifications', () => writeNotifications({ components, context }));
+    await ldfTime('full:writeRequests', () => writeRequests({ components, context }));
+    await ldfTime('full:writePages', () => writePages({ components, context }));
+    await ldfTime('full:writeConfig', () => writeConfig({ components, context }));
+    await ldfTime('full:writeSecurity', () => writeSecurity({ context }));
+    await ldfTime('full:writeGlobal', () => writeGlobal({ components, context }));
+    await ldfTime('full:writeTheme', () => writeTheme({ components, context }));
     await writeI18n({ components, context });
     await codegenI18nLocales({ components, context });
-    await writeLogger({ components, context });
-    await writeMaps({ components, context });
-    await writeMenus({ components, context });
-    await writeRoutes({ components, context });
-    await writeTypes({ components, context });
-    await writePluginImports({ components, context });
-    await writePageTypes({ components, context });
-    await writeMobile({ components, context });
-    await writeJs({ components, context });
-    await updateServerPackageJson({ components, context });
-    await copyPublicFolder({ components, context });
-    await copyAgentFileSystems({ components, context });
+    await ldfTime('full:writeLogger', () => writeLogger({ components, context }));
+    await ldfTime('full:writeMaps', () => writeMaps({ components, context }));
+    await ldfTime('full:writeMenus', () => writeMenus({ components, context }));
+    await ldfTime('full:writeRoutes', () => writeRoutes({ components, context }));
+    await ldfTime('full:writeTypes', () => writeTypes({ components, context }));
+    await ldfTime('full:writePluginImports', () => writePluginImports({ components, context }));
+    await ldfTime('full:writePageTypes', () => writePageTypes({ components, context }));
+    await ldfTime('full:writeMobile', () => writeMobile({ components, context }));
+    await ldfTime('full:writeJs', () => writeJs({ components, context }));
+    await ldfTime('full:updateServerPackageJson', () =>
+      updateServerPackageJson({ components, context })
+    );
+    await ldfTime('full:copyPublicFolder', () => copyPublicFolder({ components, context }));
+    await ldfTime('full:copyAgentFileSystems', () => copyAgentFileSystems({ components, context }));
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;

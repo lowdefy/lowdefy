@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { performance } from 'node:perf_hooks';
+import { ldfRecord } from './ldfProf.js';
 import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
 
 /**
@@ -32,6 +34,7 @@ import { ConfigError, shouldSuppressBuildCheck } from '@lowdefy/errors';
  * @returns {*} Result of the build step function
  */
 function tryBuildStep(stepFn, stepName, { components, context }) {
+  const __t = performance.now();
   try {
     return stepFn({ components, context });
   } catch (error) {
@@ -42,6 +45,8 @@ function tryBuildStep(stepFn, stepName, { components, context }) {
     // Collect error object - logging happens at checkpoints in index.js
     // ConfigError instances have source and message properties
     context.errors.push(error);
+  } finally {
+    ldfRecord(`step:${stepName}`, __t);
   }
 }
 

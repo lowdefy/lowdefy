@@ -15,15 +15,19 @@
   limitations under the License.
 */
 
+import { ldfTime, ldfTimeSync } from '../utils/ldfProf.mjs';
+
 function initialBuild(context) {
   return async () => {
-    context.readDotEnv();
+    ldfTimeSync('mgr:readDotEnv', () => context.readDotEnv());
     // This build holds its warnings for plugins it could not check: the install
     // below adds them, and checkPendingPlugins builds again once the server
     // answers, warning for any still missing.
-    await context.lowdefyBuild({ pluginInstallFollows: true });
-    await context.checkMockUserWarning();
-    await context.installPlugins();
+    await ldfTime('mgr:initialLowdefyBuild', () =>
+      context.lowdefyBuild({ pluginInstallFollows: true })
+    );
+    await ldfTime('mgr:checkMockUserWarning', () => context.checkMockUserWarning());
+    await ldfTime('mgr:installPlugins', () => context.installPlugins());
   };
 }
 
