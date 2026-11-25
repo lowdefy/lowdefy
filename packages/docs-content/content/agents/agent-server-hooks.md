@@ -54,8 +54,9 @@ The hook endpoint receives the full turn in `_payload`:
 | `messages` | array | The full conversation as `UIMessage[]`, **including the agent's latest assistant reply** (with any tool parts). Upsert this by `conversationId` to persist the whole thread. |
 | `steps` | array | One entry per agent step. Each step has `stepNumber`, `text`, `toolCalls`, `toolResults`, and `finishReason`. |
 | `toolResults` | array | Flattened tool results across all steps — convenience for hooks that only care about what tools returned. |
-| `finishReason` | string | Why the agent stopped (e.g. `'stop'`, `'tool-calls'`, `'length'`). |
-| `isAborted` | boolean | `true` if the client cancelled the request. |
+| `finishReason` | string | Why the agent stopped (e.g. `'stop'`, `'tool-calls'`, `'length'`). A turn its `timeout` stopped reports `'error'`, and one the client stopped `'other'`, never `'stop'`. |
+| `isAborted` | boolean | `true` when the turn was stopped before it finished. The last assistant message in `messages` is then the reply cut off where it stopped. |
+| `abortReason` | string | Only when `isAborted` is `true`: `'timeout'` when the agent's `timeout` stopped the turn, `'client'` when the caller's request did. A chat turn runs on when its client disconnects, so it reports only `'timeout'`. |
 | `usage` | object | Token usage for the turn: `inputTokens`, `outputTokens`, `totalTokens`, `reasoningTokens`, `cacheReadTokens`, `cacheWriteTokens`. |
 | `pageId`, `agentId`, `conversationId`, `userId`, `urlQuery`, `pathParams`, `sharedState` | | Context values mirrored from the request, **at the top level** of the payload. |
 
