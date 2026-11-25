@@ -16,7 +16,7 @@
 
 const TEST_SECRET_PREFIX = 'LOWDEFY_TEST_SECRET_';
 
-// The test values a `lowdefy test --headless --build` run was given for the app's secrets, by
+// The test values a `lowdefy test --build` run was given for the app's secrets, by
 // name: every LOWDEFY_TEST_SECRET_<NAME> in the command's environment. The app's real secrets,
 // LOWDEFY_SECRET_*, are never read, so a shell, CI job or .env file that holds them cannot leak
 // them into a test run. A secret with no value here reads its stand-in.

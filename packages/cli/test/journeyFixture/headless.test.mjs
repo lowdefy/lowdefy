@@ -54,6 +54,12 @@ function runCli(args) {
   });
 }
 
+// The production build's id, which a --build run takes its headless-run.json records on.
+function buildId() {
+  return JSON.parse(fs.readFileSync(path.join(serverDirectory, 'build', 'appMeta.json'), 'utf8'))
+    .buildId;
+}
+
 function headlessRunPath() {
   return path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json');
 }
@@ -108,7 +114,11 @@ test('--headless --build runs the headless journeys and lists the browser journe
   expect(code).toBe(0);
   const written = JSON.parse(fs.readFileSync(headlessRunPath(), 'utf8'));
   // The production build's records carry no config hash, so a dev run never reads them.
-  const hashes = { hash: expect.stringMatching(/^[0-9a-f]{40}$/), configHashes: [] };
+  // Taken on the production build, by its build id.
+  const hashes = {
+    hash: expect.stringMatching(/^[0-9a-f]{40}$/),
+    configHashes: [buildId()],
+  };
   expect(written).toEqual({
     version: 1,
     mode: 'build',
@@ -176,7 +186,11 @@ test("--headless --build runs a plugin block's declared method and lists an unde
   expect(output).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
   expect(code).toBe(0);
   const written = JSON.parse(fs.readFileSync(headlessRunPath(), 'utf8'));
-  const hashes = { hash: expect.stringMatching(/^[0-9a-f]{40}$/), configHashes: [] };
+  // Taken on the production build, by its build id.
+  const hashes = {
+    hash: expect.stringMatching(/^[0-9a-f]{40}$/),
+    configHashes: [buildId()],
+  };
   expect(written.journeys).toEqual({
     "tests/journeys/_headless/plugin_block.yaml#runs the plugin block's chain on mount": {
       passed: true,
@@ -192,6 +206,24 @@ test("--headless --build runs a plugin block's declared method and lists an unde
       ...hashes,
     },
   });
+
+  // The same build: the browser-only journey is listed, not run up to its step again.
+  const again = await runCli([
+    'test',
+    '--build',
+    '--config-directory',
+    configDirectory,
+    '--server-directory',
+    serverDirectory,
+    path.join(configDirectory, 'tests', 'journeys', '_headless', 'plugin_block.yaml'),
+  ]);
+  expect(again.output).toContain(
+    `BROWSER-ONLY  stops the plugin block's chain  step 0 (click "stop_chain_button"): Block "mount_chain" is of type FixtureActionChain, which has no headless stand-in for CallMethod stop: the step runs in a browser.; found by an earlier run, not run again`
+  );
+  expect(again.output).toContain(
+    'Run them in the browser: lowdefy test --thorough tests/journeys/_headless/plugin_block.yaml'
+  );
+  expect(again.code).toBe(0);
 });
 
 // pages/live_feed.yaml subscribes to a websocket on mount: headless, the subscribe succeeds at once

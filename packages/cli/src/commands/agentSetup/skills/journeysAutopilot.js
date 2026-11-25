@@ -211,7 +211,8 @@ as Blocked.
    the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set journey that opens a
    page is refused while auth is configured, because signing in would write to the real auth database).
 5. **Journeys already in the suite** (the app has journeys but no ledger): they are the developer's.
-   Run them once with \`lowdefy test --config-directory <app>\` (the whole suite). Read each one's
+   Run them once with \`lowdefy test --config-directory <app> --thorough\` (the whole suite, the
+   journeys that need a browser included, since each item needs its verdict). Read each one's
    \`pageId\`, \`user\` and steps, and set every item it proves (each user in a \`user\` list, the
    page it opens, the write it asserts) \`covered\` with its file and \`note: developer's journey\`.
    Never rewrite, move, rename or duplicate one, and never write a second journey for an item one
@@ -303,7 +304,7 @@ For each finding, decide:
 ### 7. Harden (when no \`todo\` items remain)
 
 Follow the [journeys-harden skill](.claude/skills/journeys-harden/SKILL.md), unattended: replay
-(\`lowdefy test --config-directory <app> --repeat 3\`) the whole suite; run \`lowdefy journeys harden --config-directory <app> --list\` and, in
+(\`lowdefy test --config-directory <app> --thorough --repeat 3\`) the whole suite; run \`lowdefy journeys harden --config-directory <app> --list\` and, in
 budget, \`lowdefy journeys harden --config-directory <app> --workers 1\` on a few pages at a time (\`--page <pageId>\`),
 one worker so only one journey runs at a time; for each
 survivor add the assertion that would catch it, then confirm with \`harden --mutant <id>\` and

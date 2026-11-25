@@ -47,7 +47,7 @@ function describeErrorResponse({ status, data }) {
 // reason } when opening the page needed it), neither passed nor failed. A
 // headless journey carries this command's LOWDEFY_TEST_SECRET_* values
 // (readTestSecrets), which the dev server reads over the stand-ins, as
-// --headless --build does, whichever server runs it.
+// --build does, whichever server runs it.
 async function runJourney({ context, item, url, recordRun, mutant, headless = false }) {
   const { filePath, journey } = item;
   const refused = checkJourneyItem({ item });

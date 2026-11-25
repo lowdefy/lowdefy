@@ -56,7 +56,7 @@ vi.doMock('./acquireJourneyRunSlots.js', () => ({
   default: mockAcquireJourneyRunSlots,
 }));
 
-// The headless run's harness and runner, loaded only by --headless --build.
+// The headless run's harness and runner, loaded only by --build.
 const mockOpenTestApp = vi.fn();
 vi.doMock('@lowdefy/test-utils', () => ({ openTestApp: mockOpenTestApp }));
 const mockCreateBuildHost = vi.fn();
@@ -1834,7 +1834,7 @@ test('test --access with a journey option is refused before the build opens', as
   accessContext({ access: true, tag: ['smoke'], typedOptions: ['tag'] });
   await test({ context });
   expect(logs.error).toEqual([
-    '--access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.',
+    '--access checks the access table alone: drop --tag, or run "lowdefy test --build --tag <tag>" to check the table and run those journeys.',
   ]);
   expect(mockOpenTestApp).not.toHaveBeenCalled();
   expect(process.exitCode).toBe(1);

@@ -19,7 +19,7 @@ Lowdefy app's own tests use, and this repository has suites that prove each of t
 
 - **Each check has one way.** A page's logic, state and writes are a journey that targets blocks by
   `blockId` and asserts with `expect.state`, `expect.calls` or `expect: { db }`, so it runs headless
-  (`lowdefy test --headless --build`); a write journey ends with `expect: { db }`. Endpoint and
+  (`lowdefy test`, or `lowdefy test --build` on a build); a write journey ends with `expect: { db }`. Endpoint and
   server logic is a page-less journey: `call`, `request` and `webhook` steps; a `cases` table for
   many cases of one check, with computed values written into its rows; `stubs` for outside answers
   (`answer`) and forced failures (`fail`); `hold` and `release` for races; `as: system` for cron and
@@ -36,7 +36,7 @@ Lowdefy app's own tests use, and this repository has suites that prove each of t
   before calling the change done.
 - **The access table proves nothing until `tests/access.yaml` is committed.** After a change to auth,
   roles or the set of pages or endpoints, run `lowdefy build --no-client-build && lowdefy test --access`
-  once, before calling the change done; `lowdefy test --headless --build` checks it too. Accept a
+  once, before calling the change done; `lowdefy test --build` checks it too. Accept a
   change with `lowdefy test --update-access` and name each changed cell in the pull request. No test
   calls `accessMatrix` to snapshot the table.
 - Block behaviour is covered by e2e specs, not by any of these ([Block tests](#block-tests)).
@@ -248,9 +248,10 @@ the complete path, before every release (see [CI](#ci)). Run it when
 changing the journey runner, journey cookies or mutants. Which page, data set and test covers
 which journey feature is listed under "Fixture app" in `code-docs/architecture/journeys.md`.
 
-`lowdefy test` runs each journey once, headless when it can and in the browser when it can't
-(`--browser` runs every journey in the browser, `--thorough` also takes the journeys found to need
-a browser partway through there; see "Where each journey runs" in
+`lowdefy test` runs the journeys that need no browser, headless, and lists the rest with the
+command that runs them (`--thorough` runs each journey headless when it can and in the browser when
+it can't, and takes the journeys found to need a browser partway through there too; `--browser`
+runs every journey in the browser; see "Where each journey runs" in
 `code-docs/architecture/journeys.md`). It runs one browser journey at a time by default. `--concurrency <n>` (1 to 3, or
 `LOWDEFY_JOURNEY_CONCURRENCY`; `concurrency` on `lowdefy_run_tests`) keeps up to n data-set
 journeys in flight through `runJourneyPool`, and runs journeys with no data set, or marked
@@ -258,7 +259,7 @@ journeys in flight through `runJourneyPool`, and runs journeys with no data set,
 the machine shares three browser slots, so at 2 or more another session's screenshot or state
 inspection can wait several journeys for a slot: in the large-app measurement with two runs at 2
 each, 7 of 13 screenshots waited over 60 s. When changing the pool, run the fixture's suite with
-`lowdefy test --url <fixture url> --concurrency 2`, then `--concurrency 1`, and compare. See
+`lowdefy test --url <fixture url> --browser --concurrency 2`, then `--concurrency 1`, and compare. See
 "Running journeys side by side" in `code-docs/architecture/journeys.md`.
 
 ### Headless parity

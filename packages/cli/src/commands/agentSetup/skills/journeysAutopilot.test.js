@@ -234,7 +234,7 @@ test('journeys-autopilot extends an existing data set and takes existing journey
   expect(skill).toContain('Never rewrite, move, rename or duplicate one');
   expect(skill).toContain('A failing one stays where it is');
   expect(skill).toContain(
-    'Run them once with `lowdefy test --config-directory <app>` (the whole suite)'
+    'Run them once with `lowdefy test --config-directory <app> --thorough` (the whole suite'
   );
 });
 
