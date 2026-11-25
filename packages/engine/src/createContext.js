@@ -141,8 +141,9 @@ function createContext({
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
   _internal.WebSockets = new WebSockets(ctx);
-  // The page's one config copy. Page instances of one page share its fetched config, so each context
-  // copies it once here, and every container and list row below reads this copy (see Slots).
+  // The context's one config copy, for a page or the app context. Page instances of one page share
+  // its fetched config, so each context copies it once here, and every container and list row below
+  // reads this copy (see Slots).
   _internal.RootSlots = new Slots({
     slots: serializer.copy({ root: { blocks: [_internal.rootBlock] } }),
     context: ctx,

@@ -128,8 +128,9 @@ test('list rows share their config and evaluate apart', async () => {
   expect(list.slots.content.blocks[0]).not.toBeInstanceOf(Block);
   expect(list.slots.content.blocks[0].blockId).toEqual('list.$.box');
 
-  // A row changing its evaluated output reaches neither the config nor the other row, through the
-  // walker's first parses or through the compiled tree the shared config gets after them.
+  // Rows keep evaluating apart once their shared config's operator tree is compiled (the second
+  // parse). Evaluated output is a fresh tree on each pass, so a block that changes its own output
+  // leaves the config and the other row alone.
   row0.propertiesEval.output.mirror = 'changed by row 0';
   row0.eval.properties.index = 99;
   row1.setValue('c');
