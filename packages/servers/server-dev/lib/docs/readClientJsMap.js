@@ -16,6 +16,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { type } from '@lowdefy/helpers';
 import { evaluateJsModule } from '@lowdefy/journey-headless';
 
 import createLogger from '../server/log/createLogger.js';
@@ -29,8 +30,9 @@ let last = null;
 // host's client plugins are imported once per process (Node caches the import), while a rebuild of
 // the config (a lowdefy.yaml edit, which needs no restart) rewrites the file with the app events'
 // _js, as Vite brings the browser the new file. Read again only once the file changes, as the server
-// reads serverJsMap.js (loadDynamicJsMap). A file that fails to read or evaluate, as one still
-// being written can, is logged and the last good map (`fallback` before any) keeps serving.
+// reads serverJsMap.js (loadDynamicJsMap). A file that fails to read or evaluate, or holds no map,
+// as one still being written can (the build truncates it before it writes), is logged and the last
+// good map (`fallback` before any) keeps serving; it is not kept, so the next read takes it whole.
 function readClientJsMap({ buildDirectory, fallback }) {
   const filePath = path.join(buildDirectory, 'plugins', 'operators', 'clientJsMap.js');
   try {
@@ -44,6 +46,9 @@ function readClientJsMap({ buildDirectory, fallback }) {
       return last.jsMap;
     }
     const jsMap = evaluateJsModule(fs.readFileSync(filePath, 'utf8'));
+    if (!type.isObject(jsMap)) {
+      throw new Error(`The client _js map ${filePath} exports no map. Received ${typeof jsMap}.`);
+    }
     last = { filePath, jsMap, mtimeMs, size };
     return jsMap;
   } catch (error) {

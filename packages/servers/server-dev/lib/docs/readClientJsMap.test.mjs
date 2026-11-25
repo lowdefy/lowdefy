@@ -60,6 +60,17 @@ test('readClientJsMap keeps the last good map while the file does not evaluate',
   expect(readClientJsMap({ buildDirectory, fallback: {} })).toBe(first);
 });
 
+// The build writes the file without a rename, so a read can find it truncated and still empty: it
+// evaluates to no map, which must neither serve nor be kept while the write finishes.
+test('readClientJsMap keeps the last good map while the file is empty, and reads it once written', () => {
+  writeMap("export default { 'h_app': () => { return 'first'; } };");
+  const first = readClientJsMap({ buildDirectory, fallback: {} });
+  writeMap('');
+  expect(readClientJsMap({ buildDirectory, fallback: {} })).toBe(first);
+  writeMap("export default { 'h_app': () => { return 'second'; } };");
+  expect(readClientJsMap({ buildDirectory, fallback: {} }).h_app()).toBe('second');
+});
+
 test('readClientJsMap answers the imported map when the file was never read', () => {
   const fallback = { h_imported: () => 1 };
   expect(readClientJsMap({ buildDirectory, fallback })).toBe(fallback);

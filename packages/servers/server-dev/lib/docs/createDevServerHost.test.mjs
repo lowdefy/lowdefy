@@ -37,7 +37,6 @@ const mockCreateHeadlessSecrets = vi.fn(({ secrets }) => {
 vi.doMock('./createHeadlessSecrets.js', () => ({ default: mockCreateHeadlessSecrets }));
 const mockCallEndpoint = vi.fn();
 const mockRunWebhookEndpoint = vi.fn();
-const mockSendDetachedRequest = vi.fn();
 const mockGetPageConfig = vi.fn();
 vi.doMock('@lowdefy/api', () => ({
   callEndpoint: mockCallEndpoint,
@@ -48,7 +47,6 @@ vi.doMock('@lowdefy/api', () => ({
   redactErrorResponse: (context, error) => ({ name: error.name, message: error.message }),
   runDetachedEndpoint: vi.fn(),
   runWebhookEndpoint: mockRunWebhookEndpoint,
-  sendDetachedRequest: mockSendDetachedRequest,
 }));
 vi.doMock('@lowdefy/journey-headless', () => ({
   createHeadlessHost: (host) => host,
@@ -97,7 +95,6 @@ beforeEach(() => {
   mockBuildPageWithContext.mockClear();
   mockCallEndpoint.mockReset();
   mockRunWebhookEndpoint.mockReset();
-  mockSendDetachedRequest.mockReset();
 });
 
 test('the dev server host marks a fault a :catch handled caught on a webhook answer', async () => {
@@ -154,7 +151,6 @@ test('the dev server host records a detached call and never sends it', async () 
   const host = await createHost();
   const answer = await host.call({ endpointId: 'notify', kind: 'endpoint', payload: {} });
   expect(answer.response).toEqual({ notified: true });
-  expect(mockSendDetachedRequest).not.toHaveBeenCalled();
   expect(answer.detached).toEqual([{ endpointId: 'detached_log', payload: { source: 'notify' } }]);
   expect(answer.faults).toEqual([]);
 });
