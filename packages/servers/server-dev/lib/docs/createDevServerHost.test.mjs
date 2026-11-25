@@ -139,10 +139,10 @@ test('the dev server host marks a fault a :catch handled caught on a call answer
   ]);
 });
 
-// A detached CallApi on the dev server is sent over its own /api/detached route, as always
-// (sendDetachedRequest), and listed on the answer once sent, as the build host lists the ones it
-// takes, so expect.calls reads them the same on either host.
-test('the dev server host sends a detached call for real and lists it on the answer', async () => {
+// A detached CallApi is recorded on the answer and never sent, as the build host takes it: sent over
+// the dev server's /api/detached route, its target would run on the server's real secrets and add
+// writes and outside calls to the journey's data session that a build run never makes.
+test('the dev server host records a detached call and never sends it', async () => {
   mockCallEndpoint.mockImplementation(async (context) => {
     context.sendDetached(context, {
       endpointId: 'detached_log',
@@ -154,32 +154,9 @@ test('the dev server host sends a detached call for real and lists it on the ans
   const host = await createHost();
   const answer = await host.call({ endpointId: 'notify', kind: 'endpoint', payload: {} });
   expect(answer.response).toEqual({ notified: true });
-  expect(mockSendDetachedRequest).toHaveBeenCalledTimes(1);
-  expect(mockSendDetachedRequest.mock.calls[0][1]).toMatchObject({
-    endpointId: 'detached_log',
-    payload: { source: 'notify' },
-  });
+  expect(mockSendDetachedRequest).not.toHaveBeenCalled();
   expect(answer.detached).toEqual([{ endpointId: 'detached_log', payload: { source: 'notify' } }]);
-});
-
-test('the dev server host lists no detached call whose send failed', async () => {
-  mockSendDetachedRequest.mockImplementation(() => {
-    throw new Error('CallApi with "detached: true" requires the CRON_SECRET environment variable.');
-  });
-  mockCallEndpoint.mockImplementation(async (context) => {
-    try {
-      context.sendDetached(context, { endpointId: 'detached_log', payload: {}, step: {} });
-    } catch (error) {
-      await context.handleError(error);
-    }
-    return { success: true, response: { notified: false } };
-  });
-  const host = await createHost();
-  const answer = await host.call({ endpointId: 'notify', kind: 'endpoint', payload: {} });
-  expect(answer.detached).toEqual([]);
-  expect(answer.faults.map(({ message }) => message)).toEqual([
-    'CallApi with "detached: true" requires the CRON_SECRET environment variable.',
-  ]);
+  expect(answer.faults).toEqual([]);
 });
 
 // A page the dev server builds on demand carries its _js as _jsEntries, as the page route folds it

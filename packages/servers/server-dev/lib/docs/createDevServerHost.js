@@ -24,7 +24,6 @@ import {
   redactErrorResponse,
   runDetachedEndpoint,
   runWebhookEndpoint,
-  sendDetachedRequest,
 } from '@lowdefy/api';
 import { expectedAnswers, isExpectedError, isForcedFailure } from '@lowdefy/errors';
 import { buildPagePath, serializer, type } from '@lowdefy/helpers';
@@ -216,13 +215,13 @@ async function createDevServerHost({
       }
       return handleError(error, options);
     };
-    // The detached CallApi calls the call makes, as answerCall's detached: the build host takes
-    // them and never runs their targets, while the dev server sends each over its own
-    // /api/detached route as it always does (sendDetachedRequest), and records it once sent, so
-    // expect.calls reads a journey's detached calls the same on either host.
+    // The detached CallApi calls the call makes, as answerCall's detached: taken and recorded, and
+    // their targets never run, as on the build host. Sent over the dev server's /api/detached
+    // route, a target would run on the server's own secrets and add its writes and outside calls
+    // to the journey's data session, which a build run of the journey never sees. expect.calls
+    // reads them the same on either host. A browser journey's detached calls are still sent.
     const detached = [];
     context.sendDetached = (callerContext, args) => {
-      sendDetachedRequest(callerContext, args);
       detached.push({ endpointId: args.endpointId, payload: serializer.copy(args.payload) });
     };
     return { context, detached, faults };
