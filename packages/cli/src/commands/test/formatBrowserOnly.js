@@ -32,7 +32,11 @@ function describeBrowserOnly({ result }) {
 function formatBrowserOnly({ result, inBrowserNext = false }) {
   const remembered = result.remembered === true ? '; found by an earlier run, not run again' : '';
   const next = inBrowserNext ? '; running it in the browser' : '';
-  return `BROWSER-ONLY  ${result.name}  ${describeBrowserOnly({ result })}${remembered}${next}`;
+  const suffix = `${remembered}${next}`;
+  // A reason that ends a sentence loses its full stop before a suffix: "...browser; running it".
+  const described = describeBrowserOnly({ result });
+  const where = suffix === '' ? described : described.replace(/\.$/, '');
+  return `BROWSER-ONLY  ${result.name}  ${where}${suffix}`;
 }
 
 export { describeBrowserOnly };

@@ -24,7 +24,9 @@ import formatBrowserOnly from './formatBrowserOnly.js';
 import formatNoTestsMatched from './formatNoTestsMatched.js';
 import formatSkippedJourney from './formatSkippedJourney.js';
 import formatBrowserOnlyNote from './formatBrowserOnlyNote.js';
+import devBuildHash from './devBuildHash.js';
 import hashBuild from './hashBuild.js';
+import hashConfigSources from './hashConfigSources.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
 import openBuildApp from './openBuildApp.js';
@@ -261,8 +263,8 @@ async function testJourneys({
     return;
   }
 
-  // Read once: the run routes, and skips, its journeys by the records that decided whether it takes
-  // the slots. A browser run reads none.
+  // Read once, before the server starts: the run routes, and skips, its journeys by these records,
+  // not by one another run writes meanwhile. A browser run reads none.
   const records = runner === 'browser' ? {} : readHeadlessRun({ directories: context.directories });
 
   if (build) {
@@ -331,9 +333,10 @@ async function testJourneys({
   const inProcess = [];
   const seen = new Set();
   try {
-    // The build as the server serves it before any journey opens a page, which the records of
-    // headless-run.json are taken against (findBrowserOnlyRecord).
-    const configHash = hashBuild({ context });
+    // The build as the server serves it before any journey opens a page, and the config source as
+    // the run starts, which the records of headless-run.json are taken against (devBuildHash).
+    const sourceHash = hashConfigSources({ configDirectory: context.directories.config });
+    const configHash = devBuildHash({ context, sourceHash });
     const ran = await runDevJourneys({
       context,
       entries: tiered.selected,
@@ -361,12 +364,11 @@ async function testJourneys({
     browserOnly.push(...ran.browserOnly);
     inProcess.push(...ran.inProcess);
     // The build once the run's pages were built.
-    const endConfigHash = hashBuild({ context });
     writeExercised({
       directories: context.directories,
       results,
       buildId: await fetchBuildId({ url: server.url }),
-      configHash: endConfigHash,
+      configHash: hashBuild({ context }),
     });
     writeTestRun({ directories: context.directories, results });
     if (ran.headless.results.length + ran.headless.browserOnly.length + ran.remembered.length > 0) {
@@ -376,7 +378,7 @@ async function testJourneys({
         browserOnly: ran.headless.browserOnly,
         remembered: ran.remembered,
         mode: 'dev',
-        configHashes: [configHash, endConfigHash],
+        configHashes: [configHash, devBuildHash({ context, sourceHash })],
       });
     }
   } finally {
@@ -420,7 +422,12 @@ async function testJourneys({
   } else {
     context.logger.info(summary.text);
   }
-  const note = formatBrowserOnlyNote({ browserOnly, inProcess, base: process.cwd() });
+  const note = formatBrowserOnlyNote({
+    browserOnly,
+    inProcess,
+    base: process.cwd(),
+    configDirectory: context.directories.config,
+  });
   if (!type.isUndefined(note)) {
     context.logger.info(note);
   }

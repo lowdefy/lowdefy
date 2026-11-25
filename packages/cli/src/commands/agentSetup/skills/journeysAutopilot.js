@@ -293,7 +293,7 @@ For each finding, decide:
   origin/<default branch>\`, make the fix, and \`git mv tests/journeys/_findings/<file>
   tests/journeys/<area>/\`, so the pull request shows the journey turning green and leaves one copy.
   Before pushing, run \`lowdefy test --config-directory <app> --repeat 3 <file>\`, then the whole suite once
-  (\`lowdefy test --config-directory <app>\`: a fix can break a journey that asserted the old behaviour). Where the
+  (\`lowdefy test --config-directory <app> --thorough\`: a fix can break a journey, in a browser too, that asserted the old behaviour). Where the
   app has endpoint tests, run them once too, and name each changed cell of \`tests/access.yaml\` in the pull request. Open a pull
   request titled \`fix: ...\` that says what broke, where, and which journey proves it (with no \`gh\`, push the branch and put
   that title and body in the cycle report), then \`git switch journeys-autopilot/main\`. The item stays \`finding\`, with the fix pull request url (with no \`gh\`, the
@@ -329,7 +329,7 @@ Blocked, never forced, apart from step 1's merged case) and open one pull reques
 branch, or update the open one: \`gh pr create\` / \`gh pr edit\`, and record its url in \`pr:\`.
 The body is plain language for someone who has never heard of journeys: what is now covered (pages
 and roles), the findings and fix pull requests, the quarantines with reasons, what the next cycle
-will do, and how to run the suite (\`lowdefy test --config-directory <app>\`). Add a changeset or release note only if
+will do, and how to run the suite (\`lowdefy test --config-directory <app>\`, and \`--thorough\` for the journeys that need a browser). Add a changeset or release note only if
 the repository's convention asks for one for test-only changes.
 
 There is never a second journeys branch. When the open pull request holds about 20 journeys

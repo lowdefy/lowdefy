@@ -1422,7 +1422,7 @@ test('test --headless --build runs headless journeys on the build with no server
     [
       'Not run, needs a browser:',
       `  reads the title (${fromCwd('b.yaml')})  step 1 (expect: { title }): expect "title" reads the page in a browser`,
-      `Run them in the browser: lowdefy test --thorough ${fromCwd('b.yaml')}`,
+      `Run them in the browser: lowdefy test --thorough --config-directory ${configFromCwd()} ${fromCwd('b.yaml')}`,
     ].join('\n'),
   ]);
   expect(process.exitCode).toBeUndefined();
@@ -1548,7 +1548,7 @@ test('test --build lists a journey an earlier run found browser-only on the same
     'clicks submit',
   ]);
   expect(logs.info).toContain(
-    'BROWSER-ONLY  downloads a file  step 0 (click "submit"): DownloadFile needs the browser.; found by an earlier run, not run again'
+    'BROWSER-ONLY  downloads a file  step 0 (click "submit"): DownloadFile needs the browser; found by an earlier run, not run again'
   );
   expect(logs.info[logs.info.length - 2]).toBe(
     '1 passed, 0 failed of 1 journeys, 1 browser-only not run'
@@ -1557,6 +1557,15 @@ test('test --build lists a journey an earlier run found browser-only on the same
     /\(found by an earlier run\)\nRun them in the browser: lowdefy test --thorough /
   );
   expect(process.exitCode).toBeUndefined();
+
+  expect(
+    JSON.parse(fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8'))
+      .journeys['tests/journeys/b.yaml#downloads a file']
+  ).toEqual({
+    browserOnly: { index: 0, step: { click: 'submit' }, reason: 'DownloadFile needs the browser.' },
+    hash: expect.stringMatching(/^[0-9a-f]{40}$/),
+    configHashes: ['build-id-1'],
+  });
 
   // A new build: it runs again.
   mockRunHeadlessJourney.mockClear();
@@ -1931,6 +1940,12 @@ function partwayJourneyYaml({ name, label = 'submit' }) {
   return `name: ${name}\npageId: form\nsteps:\n  - click: ${label}\n  - click: next\n`;
 }
 
+const TITLE = {
+  index: 0,
+  step: { expect: { title: { contains: 'home' } } },
+  reason: 'expect "title" reads the page in a browser',
+};
+
 const PARTWAY = {
   index: 1,
   step: { click: 'next' },
@@ -1956,6 +1971,10 @@ function answerMixedRuns() {
     if (body.headless === true && body.steps.some((step) => step.click === 'next')) {
       return { data: { browserOnly: PARTWAY } };
     }
+    // The dev server's headless runner classifies a title check before it opens the page.
+    if (body.headless === true && body.steps.some((step) => step.expect?.title)) {
+      return { data: { browserOnly: TITLE } };
+    }
     return { data: { passed: true, steps: [] } };
   });
 }
@@ -1971,6 +1990,11 @@ function readHeadlessRunFile() {
   return JSON.parse(
     fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8')
   );
+}
+
+// The config directory as the browser-only note's command names it: from the working directory.
+function configFromCwd() {
+  return path.relative(process.cwd(), configDirectory).split(path.sep).join('/');
 }
 
 // A journey file's path as the browser-only note names it: from the working directory.
@@ -1995,6 +2019,29 @@ test('test runs only the journeys that need no browser by default, and names the
     { headless: true, first: { click: 'submit' } },
     { headless: true, first: { click: 'submit' } },
   ]);
+  // A journey the classifier marks browser-only is posted headless too, and never to the browser.
+  mockPost.mockClear();
+  logs.info = [];
+  writeJourneyFile('b.yaml', titleJourneyYaml({ name: 'reads the title' }));
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'b.yaml')];
+  await test({ context });
+  expect(postedRuns()).toEqual([
+    { headless: true, first: { expect: { title: { contains: 'home' } } } },
+  ]);
+  expect(logs.info[logs.info.length - 2]).toBe(
+    '0 passed, 0 failed of 0 journeys, 1 browser-only not run'
+  );
+  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  delete context.options.paths;
+  fs.rmSync(path.join(configDirectory, 'tests', 'journeys', 'b.yaml'));
+  fs.rmSync(path.join(context.directories.test, 'headless-run.json'));
+  mockPost.mockClear();
+  logs.info = [];
+  await test({ context });
+  expect(postedRuns()).toEqual([
+    { headless: true, first: { click: 'submit' } },
+    { headless: true, first: { click: 'submit' } },
+  ]);
   expect(mockPost.mock.calls.every(([, body]) => body.recording === undefined)).toBe(true);
   expect(logs.info).toContainEqual(
     expect.stringMatching(/^PASS {2}clicks submit {2}\(1 steps, \d+ms\)$/)
@@ -2005,7 +2052,7 @@ test('test runs only the journeys that need no browser by default, and names the
     [
       'Not run, needs a browser:',
       `  goes next (${fromCwd('c.yaml')})  step 1 (click "next"): the click lands on a block the headless run cannot model`,
-      `Run them in the browser: lowdefy test --thorough ${fromCwd('c.yaml')}`,
+      `Run them in the browser: lowdefy test --thorough --config-directory ${configFromCwd()} ${fromCwd('c.yaml')}`,
     ].join('\n'),
   ]);
   expect(process.exitCode).toBeUndefined();
@@ -2020,7 +2067,8 @@ test('test runs only the journeys that need no browser by default, and names the
   expect(written.journeys['tests/journeys/c.yaml#goes next']).toEqual({
     browserOnly: PARTWAY,
     hash: expect.stringMatching(/^[0-9a-f]{40}$/),
-    configHashes: [expect.stringMatching(/^[0-9a-f]{40}$/)],
+    // The dev server's build and the config source as the run started (devBuildHash).
+    configHashes: [expect.stringMatching(/^[0-9a-f]{40}\+[0-9a-f]{40}$/)],
   });
 });
 
@@ -2058,7 +2106,7 @@ test('a later default run lists a journey found partway through without running 
     [
       'Not run, needs a browser:',
       `  goes next (${fromCwd('c.yaml')})  step 1 (click "next"): the click lands on a block the headless run cannot model  (found by an earlier run)`,
-      `Run them in the browser: lowdefy test --thorough ${fromCwd('c.yaml')}`,
+      `Run them in the browser: lowdefy test --thorough --config-directory ${configFromCwd()} ${fromCwd('c.yaml')}`,
     ].join('\n'),
   ]);
   expect(process.exitCode).toBeUndefined();
@@ -2099,6 +2147,31 @@ test('a journey found partway through runs again once the journey or the config 
   expect(logs.info[logs.info.length - 2]).toBe(
     '0 passed, 0 failed of 0 journeys, 1 browser-only not run'
   );
+});
+
+test('a journey found partway through runs again after an edit to any config file, built or not', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  fs.mkdirSync(path.join(configDirectory, 'pages'), { recursive: true });
+  fs.writeFileSync(path.join(configDirectory, 'pages', 'form.yaml'), 'id: form\ntype: Box\n');
+  await test({ context });
+  mockPost.mockClear();
+  await test({ context });
+  expect(postedRuns()).toEqual([]);
+
+  // The page's source changed, though the server has not rebuilt it: the build hash is the same.
+  fs.writeFileSync(path.join(configDirectory, 'pages', 'form.yaml'), 'id: form\ntype: Card\n');
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'submit' } }]);
+
+  // An edit to another journey file is not a config edit.
+  mockPost.mockClear();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'c.yaml')];
+  await test({ context });
+  expect(postedRuns()).toEqual([]);
 });
 
 test('test --thorough runs each journey once, headless when it can, in the browser when the classifier says it needs one', async () => {

@@ -47,8 +47,8 @@ function knownHashes(configHashes) {
 // sends it straight to the browser (routeJourney); either way it takes this run's hashes again.
 // Records of journeys this run did not run headless are kept. A record that sent a journey of this
 // run to the browser (`remembered`, the items) still holds, and takes this run's hashes, so a dev
-// server kept running, whose build moves as pages are first opened, keeps reading it. A headless run records no traces, so it leaves the browser run's run.json
-// alone. `mode` is "build" or "dev", where the newest run ran. The file is written to a temporary
+// server kept running, whose build moves as pages are first opened, keeps reading it. A headless
+// run records no traces, so it leaves the browser run's run.json alone. `mode` is "build" or "dev", where the newest run ran. The file is written to a temporary
 // name and renamed over the old one, so a run reading it never reads it half written.
 function writeHeadlessRun({
   directories,

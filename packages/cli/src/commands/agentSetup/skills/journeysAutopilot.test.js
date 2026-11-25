@@ -249,7 +249,7 @@ test('journeys-autopilot never edits a developer journey when a variant grants a
 test('journeys-autopilot runs the whole suite on a fix branch before pushing it', () => {
   const skill = journeysAutopilot();
   expect(skill).toContain(
-    'then the whole suite once\n  (`lowdefy test --config-directory <app>`: a fix can break a journey'
+    'then the whole suite once\n  (`lowdefy test --config-directory <app> --thorough`: a fix can break a journey'
   );
 });
 

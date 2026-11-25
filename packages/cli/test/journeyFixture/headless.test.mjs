@@ -218,7 +218,7 @@ test("--headless --build runs a plugin block's declared method and lists an unde
     path.join(configDirectory, 'tests', 'journeys', '_headless', 'plugin_block.yaml'),
   ]);
   expect(again.output).toContain(
-    `BROWSER-ONLY  stops the plugin block's chain  step 0 (click "stop_chain_button"): Block "mount_chain" is of type FixtureActionChain, which has no headless stand-in for CallMethod stop: the step runs in a browser.; found by an earlier run, not run again`
+    `BROWSER-ONLY  stops the plugin block's chain  step 0 (click "stop_chain_button"): Block "mount_chain" is of type FixtureActionChain, which has no headless stand-in for CallMethod stop: the step runs in a browser; found by an earlier run, not run again`
   );
   expect(again.output).toContain(
     'Run them in the browser: lowdefy test --thorough tests/journeys/_headless/plugin_block.yaml'

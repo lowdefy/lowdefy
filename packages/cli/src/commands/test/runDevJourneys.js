@@ -38,9 +38,8 @@ function indexesOf({ routes, route }) {
 // (rememberedBrowserOnly). On a mixed run it then runs in the browser from step 1, beside the rest
 // of the browser part, unless it has a step only the headless runner takes (runsOnlyInProcess).
 // `records` is headless-run.json's journeys (readHeadlessRun) as the caller read them, before the
-// run took or skipped the journey run slots, so a record another run writes meanwhile never sends
-// a journey to a browser the run holds no slot for. `configHash` is hashBuild of the dev server's
-// build as the run starts, which routeJourney and rememberedBrowserOnly compare with the records.
+// server started. `configHash` is devBuildHash as the run starts (the dev server's build and the
+// config source), which routeJourney and rememberedBrowserOnly compare with the records.
 // On a mixed run every result carries `ranIn` ("headless" or "browser"), where its reported run
 // ran, which its line names. `onReported({ entry, result, inBrowserNext })` is called as
 // runJourneyPool reports each run, `inBrowserNext` true for a browser-only result the browser part

@@ -92,3 +92,19 @@ test('leaves the journeys no run takes to the browser out of the command, and sa
     'They have a hold, release or call as system step, which only the headless runner takes, so no run takes them to the browser.',
   ]);
 });
+
+test('names the config directory when the app is not the working directory', () => {
+  const result = browserOnlyResult({ name: 'goes next' });
+  expect(
+    formatBrowserOnlyNote({
+      browserOnly: [result],
+      base: path.join('/', 'work'),
+      configDirectory: base,
+    }).split('\n')[2]
+  ).toBe(
+    'Run them in the browser: lowdefy test --thorough --config-directory ../app ../app/tests/journeys/a.yaml'
+  );
+  expect(
+    formatBrowserOnlyNote({ browserOnly: [result], base, configDirectory: base }).split('\n')[2]
+  ).toBe('Run them in the browser: lowdefy test --thorough tests/journeys/a.yaml');
+});

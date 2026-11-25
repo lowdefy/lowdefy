@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'path';
+import { type } from '@lowdefy/helpers';
 import { relativePosixPath } from '@lowdefy/node-utils';
 
 import { describeBrowserOnly } from './formatBrowserOnly.js';
@@ -23,15 +25,31 @@ function shellPath(filePath) {
   return /^[A-Za-z0-9._/-]+$/.test(filePath) ? filePath : `'${filePath.replace(/'/g, "'\\''")}'`;
 }
 
+// `--config-directory <dir> ` for a command run from `base`, when the app is elsewhere.
+function configDirectoryOption({ base, configDirectory }) {
+  if (type.isNone(configDirectory) || path.resolve(configDirectory) === path.resolve(base)) {
+    return '';
+  }
+  const relative = relativePosixPath({ from: base, to: configDirectory });
+  return `--config-directory ${shellPath(relative)} `;
+}
+
 // The lines after a run's summary when it left journeys browser-only (`browserOnly`, their
 // results), so a journey no run took is never missed: each by name, file and the step that needs
 // a browser, then the exact command that runs them there, `lowdefy test --thorough <files>`, its
-// files relative to `base` (the working directory the command resolves paths from). `inProcess`
+// files relative to `base` (the working directory the command resolves paths from), with
+// `--config-directory` when the app's `configDirectory` is not that directory. `inProcess`
 // (runDevJourneys) are those with a step only the headless runner takes, which no run takes to
 // the browser: the command leaves their files out and a line says why. `tool` names the
 // lowdefy_run_tests tool and its arguments instead, `base` then being the app directory its paths
 // are read from. Undefined when the run left none.
-function formatBrowserOnlyNote({ browserOnly, inProcess = [], base, tool = false }) {
+function formatBrowserOnlyNote({
+  browserOnly,
+  inProcess = [],
+  base,
+  configDirectory,
+  tool = false,
+}) {
   if (browserOnly.length === 0) {
     return undefined;
   }
@@ -56,7 +74,10 @@ function formatBrowserOnlyNote({ browserOnly, inProcess = [], base, tool = false
         ? `Run them in the browser: lowdefy_run_tests with thorough: true and paths: ${JSON.stringify(
             files
           )}`
-        : `Run them in the browser: lowdefy test --thorough ${files.map(shellPath).join(' ')}`
+        : `Run them in the browser: lowdefy test --thorough ${configDirectoryOption({
+            base,
+            configDirectory,
+          })}${files.map(shellPath).join(' ')}`
     );
   }
   if (inProcess.length === 1) {

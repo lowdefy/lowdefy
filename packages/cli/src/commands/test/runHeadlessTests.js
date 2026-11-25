@@ -95,7 +95,12 @@ async function runHeadlessTests({ app, context, selected, skipped, records, repe
   } else {
     context.logger.info(summary.text);
   }
-  const note = formatBrowserOnlyNote({ browserOnly, inProcess, base: process.cwd() });
+  const note = formatBrowserOnlyNote({
+    browserOnly,
+    inProcess,
+    base: process.cwd(),
+    configDirectory: context.directories.config,
+  });
   if (!type.isUndefined(note)) {
     context.logger.info(note);
   }
