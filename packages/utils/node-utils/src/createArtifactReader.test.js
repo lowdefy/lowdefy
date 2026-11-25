@@ -195,3 +195,17 @@ test('createArtifactReader keeps readers of different build directories apart', 
     fs.rmSync(other, { recursive: true, force: true });
   }
 });
+
+test('createArtifactReader stops comparing a racy file once a read lands outside the window', () => {
+  const filePath = write('pages/home.json', { title: 'one' });
+  const readArtifact = createArtifactReader({ buildDirectory });
+  const modified = fs.statSync(filePath).mtimeMs;
+  const now = vi.spyOn(Date, 'now').mockReturnValue(modified + 10);
+  const first = readArtifact('pages/home.json');
+  now.mockReturnValue(modified + 5000);
+  // Racy: its text is read and compared once more, from a time outside the window.
+  expect(readArtifact('pages/home.json')).toBe(first);
+  const readFileSync = vi.spyOn(fs, 'readFileSync');
+  expect(readArtifact('pages/home.json')).toBe(first);
+  expect(readFileSync).not.toHaveBeenCalled();
+});

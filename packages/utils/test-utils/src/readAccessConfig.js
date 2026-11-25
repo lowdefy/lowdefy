@@ -20,16 +20,13 @@ import path from 'node:path';
 import listEndpointFiles from './listEndpointFiles.js';
 import readBuildJson from './readBuildJson.js';
 
-// The gate reads an endpoint's id, type and auth (and its config key for an error), so only those
-// are deserialized: the routine, most of an endpoint's file, is parsed as plain JSON and dropped.
+// The routine is most of an endpoint's file and the gate never reads it, so it is parsed as plain
+// JSON and dropped; the rest (id, type, auth and its config key among them) is deserialized.
 function readEndpointAccess({ directories, filePath, serializer }) {
-  const endpoint = JSON.parse(fs.readFileSync(path.join(directories.build, filePath), 'utf8'));
-  return serializer.deserialize({
-    '~k': endpoint['~k'],
-    auth: endpoint.auth,
-    endpointId: endpoint.endpointId,
-    type: endpoint.type,
-  });
+  const { routine, ...access } = JSON.parse(
+    fs.readFileSync(path.join(directories.build, filePath), 'utf8')
+  );
+  return serializer.deserialize(access);
 }
 
 // What the gate is asked about: every page route and every endpoint in the build. A page's auth

@@ -31,3 +31,10 @@ test('deepFreeze returns null and primitives as they are', () => {
   expect(deepFreeze(1)).toBe(1);
   expect(deepFreeze('a')).toBe('a');
 });
+
+test('deepFreeze leaves a Buffer as it is and freezes the object holding it', () => {
+  const value = { body: Buffer.from('hi') };
+  deepFreeze(value);
+  expect(Object.isFrozen(value)).toBe(true);
+  expect(value.body.toString()).toEqual('hi');
+});

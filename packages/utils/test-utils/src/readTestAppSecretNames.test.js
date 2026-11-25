@@ -82,3 +82,9 @@ test('readTestAppSecretNames scans a build with no build id and keeps nothing', 
   expect(await readTestAppSecretNames({ testApp })).toEqual(['MONGODB_URI']);
   expect(fs.existsSync(keptPath())).toBe(false);
 });
+
+test('readTestAppSecretNames still answers when the folder for the kept names cannot be written', async () => {
+  // A file where the .lowdefy folder would go makes the write fail.
+  fs.writeFileSync(path.join(server, '.lowdefy'), '');
+  expect(await readTestAppSecretNames({ testApp })).toEqual(['MONGODB_URI']);
+});

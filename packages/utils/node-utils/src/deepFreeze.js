@@ -16,9 +16,15 @@
 
 // Freezes a parsed JSON value and everything in it, so a value shared between readers fails
 // loudly when one of them writes to it instead of changing what the others read. An object
-// already frozen is taken to be frozen all the way down, as this function leaves it.
+// already frozen is taken to be frozen all the way down, as this function leaves it. A Buffer or
+// other typed array (a data set's YAML !!binary value) cannot be frozen and is left as it is.
 function deepFreeze(value) {
-  if (value === null || typeof value !== 'object' || Object.isFrozen(value)) {
+  if (
+    value === null ||
+    typeof value !== 'object' ||
+    ArrayBuffer.isView(value) ||
+    Object.isFrozen(value)
+  ) {
     return value;
   }
   Object.freeze(value);
