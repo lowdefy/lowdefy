@@ -59,7 +59,8 @@ import scrubMarkedValues from './scrubMarkedValues.js';
  *   meta.dataSet declaration from.
  * @property {(name: string) => (Object|null)} readArtifact A build artifact by its path in the
  *   build ("routes.json", "pages/home.json", "api/notify.json"), deserialized, or null when the
- *   build has none: what the runner checks a step's ids against.
+ *   build has none: what the runner checks a step's ids against. Both hosts read through
+ *   createArtifactReader in @lowdefy/node-utils, so a value is shared by every caller and frozen.
  * @property {(args: { collection: string, connectionId?: string, match: Object }) =>
  *   Promise<Object[]>} findDocuments The documents `match` finds in a collection of the data's
  *   database (the connection's, or the only one), in _id order, as JSON values, for expect.db.

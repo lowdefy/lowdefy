@@ -21,7 +21,7 @@ import createTestSecrets from './createTestSecrets.js';
 import importBuildModule from './importBuildModule.js';
 import importServerModule from './importServerModule.js';
 import readBuildJson from './readBuildJson.js';
-import readBuildSecretNames from './readBuildSecretNames.js';
+import readTestAppSecretNames from './readTestAppSecretNames.js';
 
 async function load({ testApp }) {
   const { directories } = testApp;
@@ -37,7 +37,7 @@ async function load({ testApp }) {
       importServerModule({ directories, name: '@lowdefy/node-utils' }),
     ]);
   const secrets = createTestSecrets({
-    names: readBuildSecretNames({ directories }),
+    names: await readTestAppSecretNames({ testApp }),
     secrets: testApp.secrets,
   });
   return {

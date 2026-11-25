@@ -14,10 +14,8 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
-import path from 'node:path';
-
-import { buildPagePath, serializer, type } from '@lowdefy/helpers';
+import { buildPagePath, type } from '@lowdefy/helpers';
+import { createArtifactReader } from '@lowdefy/node-utils';
 import { addJourneyStubs, checkJourneyStubTargets } from '@lowdefy/test-utils/dataSets';
 import { headlessCalls } from '@lowdefy/test-utils/headless';
 
@@ -26,6 +24,17 @@ import createHeadlessHost from './createHeadlessHost.js';
 import loadClientPlugins from './loadClientPlugins.js';
 
 const NOT_FOUND_PATH = '404';
+
+// One artifact reader per test app, so every journey of a run shares what the earlier ones read:
+// the production build does not change during a run.
+const artifactReaders = new WeakMap();
+
+function readerFor({ app, buildDirectory }) {
+  if (!artifactReaders.has(app)) {
+    artifactReaders.set(app, createArtifactReader({ buildDirectory }));
+  }
+  return artifactReaders.get(app);
+}
 
 // A headless host for one journey on a production build that @lowdefy/test-utils' openTestApp
 // opened: a session is opened on data set `data` (or none), so requests and endpoint calls run in
@@ -76,13 +85,7 @@ async function createBuildHost({ app, data, stubs, user }) {
     };
   }
 
-  function readArtifact(name) {
-    const filePath = path.join(calls.buildDirectory, name);
-    if (!fs.existsSync(filePath)) {
-      return null;
-    }
-    return serializer.deserialize(JSON.parse(fs.readFileSync(filePath, 'utf8')));
-  }
+  const readArtifact = readerFor({ app, buildDirectory: calls.buildDirectory });
 
   return createHeadlessHost({
     call: ({ actionId, blockId, endpointId, kind, pageId, payload, requestId, user: caller }) =>

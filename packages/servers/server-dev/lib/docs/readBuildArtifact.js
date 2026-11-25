@@ -14,22 +14,25 @@
   limitations under the License.
 */
 
-import fs from 'node:fs';
 import path from 'node:path';
-import { serializer } from '@lowdefy/helpers';
+import { createArtifactReader } from '@lowdefy/node-utils';
 
-// Read fresh on every call — the dev build rewrites artifacts on config
-// change and the docs routes must serve the current state.
+// One reader per build directory and form (raw or deserialized), kept for the life of the process.
+const readers = new Map();
+
+// A build artifact by its path in the dev build ("pages/home.json"): the parsed JSON, deserialized
+// with the serializer when deserialize is true, or null when the build has none. The dev build
+// rewrites artifacts on config change and builds pages on demand, and the docs routes and headless
+// journeys must read the current state: the reader parses a file again once its stat changes
+// (createArtifactReader in @lowdefy/node-utils), so no build step has to invalidate it. Values are
+// shared by every caller and frozen: a caller must not change one.
 function readBuildArtifact({ name, deserialize = false }) {
-  const filePath = path.join(process.cwd(), 'build', name);
-  if (!fs.existsSync(filePath)) {
-    return null;
+  const buildDirectory = path.join(process.cwd(), 'build');
+  const key = `${deserialize ? 'deserialized' : 'raw'}:${buildDirectory}`;
+  if (!readers.has(key)) {
+    readers.set(key, createArtifactReader({ buildDirectory, deserialize }));
   }
-  const raw = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  if (deserialize) {
-    return serializer.deserialize(raw);
-  }
-  return raw;
+  return readers.get(key)(name);
 }
 
 export default readBuildArtifact;

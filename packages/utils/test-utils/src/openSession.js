@@ -32,9 +32,10 @@ import storeLogger from './storeLogger.js';
 import stubRequest from './stubRequest.js';
 import testSessions from './testSessions.js';
 import unfiredFailGates from './unfiredFailGates.js';
-import { openDataSession, readDataSet } from './dataSets/index.js';
+import { openDataSession } from './dataSets/index.js';
 import readConnectionArtifacts from './dataSets/readConnectionArtifacts.js';
 import readEmptyDataSet from './dataSets/readEmptyDataSet.js';
+import readTestAppDataSet from './readTestAppDataSet.js';
 
 // What a connection refusal calls a session that was opened without a data set.
 const NO_DATA_SET = '(no data set)';
@@ -55,12 +56,12 @@ async function openSession({ data, testApp }) {
       )}.`
     );
   }
-  const { build, config } = testApp.directories;
+  const { build } = testApp.directories;
   const named = type.isString(data);
   const [runtime, dataSet, connectionArtifacts] = await Promise.all([
     loadSessionRuntime({ testApp }),
     named
-      ? readDataSet({ configDirectory: config, buildDirectory: build, name: data })
+      ? readTestAppDataSet({ name: data, testApp })
       : readEmptyDataSet({ buildDirectory: build, name: NO_DATA_SET }),
     readConnectionArtifacts({ buildDirectory: build }),
   ]);

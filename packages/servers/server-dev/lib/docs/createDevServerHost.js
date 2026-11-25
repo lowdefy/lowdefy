@@ -417,8 +417,9 @@ async function createDevServerHost({
   }
 
   let clientPlugins = null;
-  // A build artifact by its path in the dev build, read fresh as the docs routes read it. Pages are
-  // built on demand: runJourneyHeadless builds the ones a journey's steps name before it runs.
+  // A build artifact by its path in the dev build, as the docs routes read it: kept while its file
+  // is unchanged and parsed again once a build rewrites it (readBuildArtifact). Pages are built on
+  // demand: runJourneyHeadless builds the ones a journey's steps name before it runs.
   function readArtifact(name) {
     return readBuildArtifact({ name, deserialize: true });
   }
