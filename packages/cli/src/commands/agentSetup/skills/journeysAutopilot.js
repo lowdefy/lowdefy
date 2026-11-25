@@ -208,8 +208,8 @@ as Blocked.
    write no item for a role that cannot open a page. A control hidden from a role is a page item for
    that role. Another tenant's rows stay items, proved by the tenant variants (step 7). A signed-out visitor is not a data set
    user: its items (a protected page's bounce, a public page opened signed out) are \`skipped\` with
-   the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set is refused
-   while auth is configured, because signing in would write to the real auth database).
+   the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set journey that opens a
+   page is refused while auth is configured, because signing in would write to the real auth database).
 5. **Journeys already in the suite** (the app has journeys but no ledger): they are the developer's.
    Run them once with \`lowdefy test --config-directory <app>\` (the whole suite). Read each one's
    \`pageId\`, \`user\` and steps, and set every item it proves (each user in a \`user\` list, the

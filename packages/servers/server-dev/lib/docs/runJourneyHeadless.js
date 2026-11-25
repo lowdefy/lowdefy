@@ -158,6 +158,7 @@ async function runJourneyHeadless({
     configDirectory,
     buildDirectory: path.join(process.cwd(), 'build'),
     ...readDevAuthMode(),
+    opensPage: !type.isUndefined(pageId),
   });
   if (!type.isUndefined(resolved.error)) {
     return { error: resolved.error, refused: true };

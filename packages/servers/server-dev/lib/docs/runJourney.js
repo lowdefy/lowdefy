@@ -219,6 +219,7 @@ async function runJourney({
     configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd(),
     buildDirectory: path.join(process.cwd(), 'build'),
     ...readDevAuthMode(),
+    opensPage: !type.isUndefined(pageId),
   });
   if (!type.isUndefined(resolved.error)) {
     return { error: resolved.error, refused: true };

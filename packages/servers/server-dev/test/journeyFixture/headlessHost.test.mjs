@@ -274,6 +274,33 @@ fixtureTest.each([['system.yaml'], ['webhook.yaml'], ['stubs.yaml']])(
   }
 );
 
+// The fixture configures auth. A journey on a data set with user none is refused only when it opens
+// a page, where a signed-out actor could sign in through the app: webhook.yaml's first journey,
+// which opens none, runs signed out.
+fixtureTest('a page-less webhook journey with user none runs on a data set', async () => {
+  const journey = { ...readHeadlessJourney('webhook.yaml'), user: 'none' };
+  expect(journey.data).toBe('outside');
+  expect(journey.pageId).toBeUndefined();
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: { ...journey, headless: true },
+  });
+  expect(status).toBe(200);
+  expect(body.failure).toBeUndefined();
+  expect(body.passed).toBe(true);
+});
+
+fixtureTest('a journey that opens a page with user none on a data set is refused', async () => {
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: { ...SAVE, user: 'none', headless: true },
+  });
+  expect(status).toBe(400);
+  expect(body.error).toBe(
+    'The journey on data set "explore" has user "none", which is refused while auth is configured: signing in through the app would write to the app\'s real auth database. Name a data set user instead; runs that sign in stay off data sets.'
+  );
+});
+
 // The second journey of tests/journeys/_headless/webhook.yaml: a fail gate fails the event write
 // inside payment_events, whose 500 names no request id; expect.error reads the forced message by
 // the request id the dev server host answers the webhook with.
