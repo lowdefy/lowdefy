@@ -18,7 +18,6 @@ import path from 'path';
 import { expect, test } from 'vitest';
 
 import hashJourney from './hashJourney.js';
-import mayRunInBrowser from './mayRunInBrowser.js';
 import routeJourney from './routeJourney.js';
 
 const configDirectory = path.join('/', 'app');
@@ -98,27 +97,6 @@ test('a journey no runner can take goes headless', () => {
   expect(route({ item: { filePath, error: 'Could not parse' } })).toBe('headless');
 });
 
-test('mayRunInBrowser says whether a run takes the journey run slots before its server starts', () => {
-  const entries = (journeys) => journeys.map((journey) => ({ item: itemOf(journey) }));
-  const read = (options) =>
-    mayRunInBrowser({
-      entries: entries([headlessJourney]),
-      runner: 'mixed',
-      thorough: false,
-      records: {},
-      configDirectory,
-      ...options,
-    });
-  expect(read({})).toBe(false);
-  expect(read({ runner: 'browser' })).toBe(true);
-  expect(read({ runner: 'headless', entries: entries([titleJourney]) })).toBe(false);
-  expect(read({ thorough: true })).toBe(true);
-  expect(read({ entries: entries([headlessJourney, titleJourney]) })).toBe(true);
-  // Whatever config it was found on: the build hash is read once the server is up.
-  expect(read({ records: recordsOf({ configHashes: ['config-0'] }) })).toBe(true);
-  expect(read({ entries: [{ item: { filePath, error: 'Could not parse' } }] })).toBe(false);
-});
-
 test('a mixed run never sends a journey with a step only the headless runner takes to the browser', () => {
   const held = {
     name: 'holds a call',
@@ -127,26 +105,10 @@ test('a mixed run never sends a journey with a step only the headless runner tak
   };
   expect(route({ item: itemOf(held) })).toBe('headless');
   expect(route({ item: itemOf(held), records: recordsOf({ journey: held }) })).toBe('headless');
-  expect(
-    mayRunInBrowser({
-      entries: [{ item: itemOf(held) }],
-      runner: 'mixed',
-      thorough: false,
-      records: recordsOf({ journey: held }),
-      configDirectory,
-    })
-  ).toBe(false);
 });
 
-test('a record from the production build sends nothing to the browser, nor takes the slots', () => {
+test('a record from the production build, or from before records carried builds, sends nothing to the browser', () => {
+  // The production build's id never matches a dev server's build hash.
+  expect(route({ records: recordsOf({ configHashes: ['build-id-1'] }) })).toBe('headless');
   expect(route({ records: recordsOf({ configHashes: [] }) })).toBe('headless');
-  expect(
-    mayRunInBrowser({
-      entries: [{ item: itemOf(headlessJourney) }],
-      runner: 'mixed',
-      thorough: false,
-      records: recordsOf({ configHashes: [] }),
-      configDirectory,
-    })
-  ).toBe(false);
 });

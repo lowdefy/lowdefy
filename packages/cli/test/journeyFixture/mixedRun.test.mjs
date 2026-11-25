@@ -20,8 +20,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, beforeAll, beforeEach, expect, test } from 'vitest';
 
-// `lowdefy test`'s default and --thorough runs from the built CLI on the fixture's dev server: each
-// journey once, headless when it can and in the browser when it can't. The journey written here
+// `lowdefy test`'s default and --thorough runs from the built CLI on the fixture's dev server: the
+// default runs only the journeys that need no browser and lists the rest with the command that runs
+// them; --thorough runs each journey once, headless when it can and in the browser when it can't,
+// and takes the ones found partway through to the browser too. The journey written here
 // takes a screenshot, which the classifier marks browser-only before the run; the second journey of
 // _headless/plugin_block.yaml clicks a button that calls a plugin block method no headless stand-in
 // declares, which the headless run finds partway through; _headless/save.yaml runs headless.
@@ -106,24 +108,27 @@ beforeEach(() => {
 });
 
 fixtureTest(
-  'a default run reports a journey found partway through, and the next run takes it to the browser',
+  'a default run lists the browser-only journeys with the command that runs them, and the next run skips them',
   async () => {
     const first = await runTest([]);
     expect(lineOf({ output: first.output, name: 'screenshots the home page' })).toMatch(
-      /PASS {2}screenshots the home page {2}\(2 steps, \d+ms\) {2}\[browser\]/
+      /BROWSER-ONLY {2}screenshots the home page {2}step 1 \(screenshot/
     );
     expect(
       lineOf({ output: first.output, name: "runs the plugin block's chain on mount" })
-    ).toMatch(
-      /PASS {2}runs the plugin block's chain on mount {2}\(1 steps, \d+ms\) {2}\[headless\]/
-    );
+    ).toMatch(/PASS {2}runs the plugin block's chain on mount {2}\(1 steps, \d+ms\)$/);
     expect(
       lineOf({ output: first.output, name: 'saves an item headless and sees it in state' })
-    ).toMatch(/\[headless\]/);
+    ).toMatch(/PASS {2}/);
     expect(lineOf({ output: first.output, name: FOUND })).toMatch(
       new RegExp(`BROWSER-ONLY {2}${FOUND} {2}step 0 \\(click "stop_chain_button"\\): `)
     );
-    expect(first.output).toContain('3 passed, 0 failed of 3 journeys, 1 browser-only not run');
+    expect(first.output).toContain('2 passed, 0 failed of 2 journeys, 2 browser-only not run');
+    expect(first.output).toContain('Not run, needs a browser:');
+    expect(first.output).toContain(
+      'Run them in the browser: lowdefy test --thorough tests/journeys/_mixed/screenshot.yaml tests/journeys/_headless/plugin_block.yaml'
+    );
+    expect(first.output).not.toContain('[browser]');
     expect(first.code).toBe(0);
     const recorded = JSON.parse(fs.readFileSync(headlessRunPath(), 'utf8')).journeys[
       `tests/journeys/_headless/plugin_block.yaml#${FOUND}`
@@ -133,11 +138,81 @@ fixtureTest(
 
     const second = await runTest([]);
     expect(lineOf({ output: second.output, name: FOUND })).toMatch(
+      new RegExp(`BROWSER-ONLY {2}${FOUND} .*; found by an earlier run, not run again$`)
+    );
+    expect(second.output).toContain('2 passed, 0 failed of 2 journeys, 2 browser-only not run');
+    expect(second.code).toBe(0);
+
+    // --thorough sends the remembered journey straight to the browser.
+    const thorough = await runTest(['--thorough']);
+    expect(lineOf({ output: thorough.output, name: FOUND })).toMatch(
       new RegExp(`PASS {2}${FOUND} {2}\\(2 steps, \\d+ms\\) {2}\\[browser\\]`)
     );
-    expect(second.output).not.toContain('BROWSER-ONLY');
-    expect(second.output).toContain('4 passed, 0 failed of 4 journeys');
-    expect(second.code).toBe(0);
+    expect(thorough.output).not.toContain('BROWSER-ONLY');
+    expect(thorough.output).toContain('4 passed, 0 failed of 4 journeys');
+    expect(thorough.code).toBe(0);
+  }
+);
+
+// pages/plugin_block.yaml with the stop button setting the state itself, so the journey found
+// partway through needs no browser any more.
+const STOP_CALL = `        - id: stop_chain
+          type: CallMethod
+          params:
+            blockId: mount_chain
+            method: stop`;
+const STOP_SET = `        - id: stop_chain_directly
+          type: SetState
+          params:
+            chain_stopped: true`;
+
+// Waits until the fixture's dev server serves a plugin_block page that `serves` accepts.
+async function waitForPage({ serves }) {
+  const deadline = Date.now() + 60000;
+  for (;;) {
+    const response = await fetch(`${fixtureUrl}/lowdefy-docs/page-config/plugin_block`);
+    const text = await response.text();
+    if (serves(text)) {
+      return;
+    }
+    if (Date.now() > deadline) {
+      throw new Error('The dev server did not rebuild the plugin_block page.');
+    }
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+}
+
+fixtureTest(
+  'a page edit that lets a remembered journey run headless makes the next default run run it',
+  async () => {
+    const pagePath = path.join(configDirectory, 'pages', 'plugin_block.yaml');
+    const original = fs.readFileSync(pagePath, 'utf8');
+    expect(original).toContain(STOP_CALL);
+
+    await runTest([]);
+    const remembered = await runTest([]);
+    expect(lineOf({ output: remembered.output, name: FOUND })).toMatch(
+      /; found by an earlier run, not run again$/
+    );
+
+    try {
+      fs.writeFileSync(pagePath, original.replace(STOP_CALL, STOP_SET));
+      await waitForPage({ serves: (text) => text.includes('stop_chain_directly') });
+      const edited = await runTest([]);
+      expect(lineOf({ output: edited.output, name: FOUND })).toMatch(
+        new RegExp(`PASS {2}${FOUND} {2}\\(2 steps, \\d+ms\\)$`)
+      );
+      expect(edited.output).toContain('3 passed, 0 failed of 3 journeys, 1 browser-only not run');
+      expect(edited.code).toBe(0);
+      expect(
+        JSON.parse(fs.readFileSync(headlessRunPath(), 'utf8')).journeys[
+          `tests/journeys/_headless/plugin_block.yaml#${FOUND}`
+        ].passed
+      ).toBe(true);
+    } finally {
+      fs.writeFileSync(pagePath, original);
+      await waitForPage({ serves: (text) => !text.includes('stop_chain_directly') });
+    }
   }
 );
 

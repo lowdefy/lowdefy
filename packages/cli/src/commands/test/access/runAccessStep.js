@@ -18,7 +18,7 @@ import checkAccessTable from './checkAccessTable.js';
 import updateAccessTable from './updateAccessTable.js';
 
 // The access step of a `lowdefy test` run that reads the production build, on the run's one app
-// (openBuildApp, which checks the build). mode is "check" (--headless --build), "access"
+// (openBuildApp, which checks the build). mode is "check" (--build), "access"
 // (--access, where a missing file fails) or "update" (--update-access). Returns { failed }.
 async function runAccessStep({ app, context, mode }) {
   if (mode === 'update') {

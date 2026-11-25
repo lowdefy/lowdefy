@@ -72,6 +72,17 @@ test('acquireJourneyRunSlots takes the worktree slot first, then a machine slot'
   });
 });
 
+test('acquireJourneyRunSlots takes only the worktree slot for a run that starts no browser', async () => {
+  const { acquire, released } = fakeAcquire();
+  const slots = await take({ acquire, browser: false });
+  const hash = crypto.createHash('sha1').update(fs.realpathSync(configDirectory)).digest('hex');
+  expect(acquire.mock.calls.map(([options]) => options.name)).toEqual([
+    `journey-run-${hash.slice(0, 12)}`,
+  ]);
+  slots.release();
+  expect(released).toEqual([`journey-run-${hash.slice(0, 12)}`]);
+});
+
 test('acquireJourneyRunSlots allows one run at critical pressure, two otherwise, or the env count', async () => {
   const limits = async (options) => {
     const { acquire } = fakeAcquire();

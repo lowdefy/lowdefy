@@ -24,10 +24,11 @@ import formatBrowserOnly from './formatBrowserOnly.js';
 import formatNoTestsMatched from './formatNoTestsMatched.js';
 import formatSkippedJourney from './formatSkippedJourney.js';
 import formatBrowserOnlyNote from './formatBrowserOnlyNote.js';
+import devBuildHash from './devBuildHash.js';
 import hashBuild from './hashBuild.js';
+import hashConfigSources from './hashConfigSources.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
-import mayRunInBrowser from './mayRunInBrowser.js';
 import openBuildApp from './openBuildApp.js';
 import parseRepeat from './parseRepeat.js';
 import parseTestSelection from './parseTestSelection.js';
@@ -52,9 +53,6 @@ import writeHeadlessRun from './writeHeadlessRun.js';
 import writeTestRun from './writeTestRun.js';
 
 const SIGNAL_EXIT_CODES = { SIGINT: 130, SIGTERM: 143, SIGHUP: 129 };
-
-// A run that starts no browser takes no journey run slot (LDF-768's slots bound browsers).
-const NO_SLOTS = { release: () => {} };
 
 function refuse({ context, message }) {
   context.logger.error(message);
@@ -100,7 +98,7 @@ async function test({ context }) {
     refuse({ context, message: repeatError });
     return;
   }
-  const { runner, thorough, build, error: modeError } = readTestMode({ options: context.options });
+  const { runner, build, error: modeError } = readTestMode({ options: context.options });
   if (modeError) {
     refuse({ context, message: modeError });
     return;
@@ -155,11 +153,10 @@ async function test({ context }) {
     repeat,
     runner,
     tags,
-    thorough,
     tier,
     usageWindow,
   };
-  // --build is taken only with --headless (readTestMode).
+  // --build runs headless only (readTestMode).
   if (!build || lint) {
     await testJourneys({ context, ...options });
     return;
@@ -180,7 +177,7 @@ async function test({ context }) {
 }
 
 // Selects the run's journeys and runs them: headless on the production build's app (`app`, given
-// for --headless --build), or on a dev server, each where `runner` sends it (runDevJourneys).
+// for --build), or on a dev server, each where `runner` sends it (runDevJourneys).
 async function testJourneys({
   app,
   build,
@@ -193,7 +190,6 @@ async function testJourneys({
   repeat,
   runner,
   tags,
-  thorough,
   tier,
   usageWindow,
 }) {
@@ -264,12 +260,17 @@ async function testJourneys({
     return;
   }
 
+  // Read once, before the server starts: the run routes, and skips, its journeys by these records,
+  // not by one another run writes meanwhile. A browser run reads none.
+  const records = runner === 'browser' ? {} : readHeadlessRun({ directories: context.directories });
+
   if (build) {
     const ran = await runHeadlessTests({
       app,
       context,
       selected: tiered.selected,
       skipped: tiered.skipped.length,
+      records,
       repeat,
     });
     if (ran.failed > 0) {
@@ -280,18 +281,13 @@ async function testJourneys({
   }
 
   // The slots are held until the server stops, so a waiting run has nothing
-  // in memory yet.
-  // Read once: the run routes its journeys by the records that decided whether it takes the slots.
-  const records = runner === 'mixed' ? readHeadlessRun({ directories: context.directories }) : {};
-  const slots = mayRunInBrowser({
-    entries: tiered.selected,
-    runner,
-    thorough,
-    records,
-    configDirectory: context.directories.config,
-  })
-    ? await takeJourneyRunSlots({ context, command: 'lowdefy test' })
-    : NO_SLOTS;
+  // in memory yet. A headless run starts no browser, so it takes only this
+  // worktree's slot: a second run here would use a server this one stops.
+  const slots = await takeJourneyRunSlots({
+    context,
+    command: 'lowdefy test',
+    browser: runner !== 'headless',
+  });
   if (slots === null) {
     return;
   }
@@ -333,18 +329,18 @@ async function testJourneys({
   // In selection order, whatever order the journeys finished in.
   const results = [];
   const browserOnly = [];
-  let inProcess = 0;
+  const inProcess = [];
   const seen = new Set();
   try {
-    // The build as the server serves it before any journey opens a page, which the records of
-    // headless-run.json are taken against (routeJourney).
-    const configHash = hashBuild({ context });
+    // The build as the server serves it before any journey opens a page, and the config source as
+    // the run starts, which the records of headless-run.json are taken against (devBuildHash).
+    const sourceHash = hashConfigSources({ configDirectory: context.directories.config });
+    const configHash = devBuildHash({ context, sourceHash });
     const ran = await runDevJourneys({
       context,
       entries: tiered.selected,
       url: server.url,
       runner,
-      thorough,
       readLimit,
       records,
       repeat,
@@ -365,14 +361,13 @@ async function testJourneys({
     });
     results.push(...ran.results);
     browserOnly.push(...ran.browserOnly);
-    inProcess = ran.inProcess;
+    inProcess.push(...ran.inProcess);
     // The build once the run's pages were built.
-    const endConfigHash = hashBuild({ context });
     writeExercised({
       directories: context.directories,
       results,
       buildId: await fetchBuildId({ url: server.url }),
-      configHash: endConfigHash,
+      configHash: hashBuild({ context }),
     });
     writeTestRun({ directories: context.directories, results });
     if (ran.headless.results.length + ran.headless.browserOnly.length + ran.remembered.length > 0) {
@@ -382,7 +377,7 @@ async function testJourneys({
         browserOnly: ran.headless.browserOnly,
         remembered: ran.remembered,
         mode: 'dev',
-        configHashes: [configHash, endConfigHash],
+        configHashes: [configHash, devBuildHash({ context, sourceHash })],
       });
     }
   } finally {
@@ -427,10 +422,10 @@ async function testJourneys({
     context.logger.info(summary.text);
   }
   const note = formatBrowserOnlyNote({
-    runner,
-    thorough,
-    browserOnly: browserOnly.length,
+    browserOnly,
     inProcess,
+    base: process.cwd(),
+    configDirectory: context.directories.config,
   });
   if (!type.isUndefined(note)) {
     context.logger.info(note);

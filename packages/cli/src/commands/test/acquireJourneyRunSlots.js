@@ -60,18 +60,22 @@ function describeHolder({ holder, now }) {
 }
 
 /*
-Takes the two slots a command that runs journeys holds from before it
-resolves a server until its last journey ends: first one run per worktree
+Takes the slots a command that runs journeys holds from before it resolves a
+server until its last journey ends: first one run per worktree
 (journey-run-<hash of the config directory>, limit 1), so a second run never
-uses a server the first will stop; then one of the machine's journey runs
-(journey-run, limit 2, or 1 while memory pressure is critical, or
-LOWDEFY_JOURNEY_RUN_SLOTS). A run waiting on its worktree holds no machine
-slot. Both waits share one 20 minute budget, and a wait that runs out throws
-the slot's MACHINE_SLOT_TIMEOUT error. Returns { release } for both.
+uses a server the first will stop; then, for a run that starts a browser
+(`browser`), one of the machine's journey runs (journey-run, limit 2, or 1
+while memory pressure is critical, or LOWDEFY_JOURNEY_RUN_SLOTS), which bound
+the browsers. A headless run takes only its worktree's slot, so it never waits
+behind browser runs in other worktrees. A run waiting on its worktree holds no
+machine slot. Both waits share one 20 minute budget, and a wait that runs out
+throws the slot's MACHINE_SLOT_TIMEOUT error. Returns { release } for the
+slots taken.
 */
 async function acquireJourneyRunSlots({
   context,
   command,
+  browser = true,
   acquire = acquireMachineSlot,
   readPressure = readMemoryPressure,
   env = process.env,
@@ -98,6 +102,9 @@ async function acquireJourneyRunSlots({
     limit: 1,
     waitMs: WAIT_MS,
   });
+  if (!browser) {
+    return worktree;
+  }
   let machine;
   try {
     machine = await acquire({

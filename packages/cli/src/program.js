@@ -661,7 +661,7 @@ program
 program
   .command('test')
   .description(
-    'Run the app\'s config tests: every journey under tests/journeys/, sub-folders included, except folders starting with "_". Each journey runs once, headless when it can and in the browser when it can\'t.'
+    'Run the app\'s config tests: every journey under tests/journeys/, sub-folders included, except folders starting with "_". Journeys run headless; those that need a browser are listed with the command that runs them there (--thorough).'
   )
   .usage('[options] [paths...]')
   .argument(
@@ -671,7 +671,7 @@ program
   .addOption(
     new Option(
       '--access',
-      'Only compare the access table of the production build (lowdefy build) with tests/access.yaml, and run no journeys. Every --headless --build run checks it too.'
+      'Only compare the access table of the production build (lowdefy build) with tests/access.yaml, and run no journeys. Every --build run checks it too.'
     )
   )
   .addOption(
@@ -683,7 +683,7 @@ program
   .addOption(
     new Option(
       '--concurrency <n>',
-      'Run up to n browser journeys at once (1 to 3). Headless journeys run one at a time. Journeys with no data set, or marked serial, run alone after the rest. Default 1, or LOWDEFY_JOURNEY_CONCURRENCY. One at a time under --repeat or while memory is short; refused with --headless. At 2 or more, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
+      'Run up to n browser journeys at once (1 to 3). Headless journeys run one at a time. Journeys with no data set, or marked serial, run alone after the rest. Default 1, or LOWDEFY_JOURNEY_CONCURRENCY. One at a time under --repeat or while memory is short; refused unless --thorough or --browser. At 2 or more, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
     )
   )
   .addOption(options.configDirectory)
@@ -722,25 +722,25 @@ program
   .addOption(
     new Option(
       '--thorough',
-      "Run each journey headless when it can and in the browser when it can't, as the default does, and also run in the browser, from step 1, each journey the headless run finds needs a browser partway through. For CI, where no earlier run has found those journeys."
+      "Run each journey headless when it can and in the browser when it can't, and also run in the browser, from step 1, each journey the headless run finds needs a browser partway through. Use it in CI to run the browser journeys."
     )
   )
   .addOption(
     new Option(
       '--browser',
-      "Run every journey in the browser. By default each journey runs once, headless when it can and in the browser when it can't."
+      'Run every journey in the browser. By default journeys run headless and those that need a browser are not run.'
     )
   )
   .addOption(
     new Option(
       '--headless',
-      'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. On the dev server, or on the production build with --build.'
+      'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. The default; kept so scripts that pass it keep working.'
     )
   )
   .addOption(
     new Option(
       '--build',
-      'With --headless: run on the production build (lowdefy build) in this process, with no dev server and no browser. Pass --server-directory when the build is elsewhere.'
+      'Run headless on the production build (lowdefy build) in this process, with no dev server and no browser. Pass --server-directory when the build is elsewhere.'
     )
   )
   .addOption(options.serverDirectory)

@@ -38,7 +38,8 @@ import writeTestResults from '../test/writeTestResults.js';
 import writeTestRun from '../test/writeTestRun.js';
 import fetchBuildId from '../test/fetchBuildId.js';
 import formatBrowserOnlyNote from '../test/formatBrowserOnlyNote.js';
-import hashBuild from '../test/hashBuild.js';
+import devBuildHash from '../test/devBuildHash.js';
+import hashConfigSources from '../test/hashConfigSources.js';
 import readHeadlessRun from '../test/readHeadlessRun.js';
 import writeHeadlessRun from '../test/writeHeadlessRun.js';
 
@@ -51,12 +52,14 @@ import writeHeadlessRun from '../test/writeHeadlessRun.js';
 // skipped `deprecated: true` journey is a line under skipped. Always the
 // default directory: journeys an app keeps elsewhere (--journeys-directory)
 // may need a server set up for them, which the running dev server is not.
-// Each journey runs once, headless when it can and in the browser when it can't (runDevJourneys).
-// One the headless run finds needs a browser partway through is a line under browserOnly, neither
-// passed nor failed; `thorough` runs it in the browser too. `browser` runs every journey in the
-// browser, and `headless` only those that need none, listing the rest under browserOnly
-// (readTestMode). `concurrency` keeps up to that many browser journeys in flight
-// (readJourneyConcurrency); a headless run goes one at a time and refuses it.
+// By default only the journeys that need no browser run, headless (runDevJourneys); the rest are
+// lines under browserOnly, neither passed nor failed, with the step that needs a browser, and the
+// summary names the call that runs them there. One an earlier run found needs a browser, on the
+// same journey and build, is listed without running it again. `thorough` runs each journey
+// headless when it can and in the browser when it can't, and also runs in the browser, from step
+// 1, each one found to need a browser partway through; `browser` runs every journey in the
+// browser; `headless` is the default (readTestMode). `concurrency` keeps up to that many browser
+// journeys in flight (readJourneyConcurrency); a headless run goes one at a time and refuses it.
 //
 // The answer is cut to what an agent can read (compactTestResults); every
 // journey's result is in the file `resultFile` names. A journey's measured
@@ -155,16 +158,17 @@ async function runAppTests({
           tags: selection.tags,
           tier,
         };
-  // The build as the server serves it before any journey opens a page (routeJourney).
-  const configHash = hashBuild({ context });
+  // The build as the server serves it before any journey opens a page, and the config source as
+  // the run starts, which headless-run.json's records are taken against (devBuildHash).
+  const sourceHash = hashConfigSources({ configDirectory });
+  const configHash = devBuildHash({ context, sourceHash });
   const ran = await runDevJourneys({
     context,
     entries: tiered.selected,
     url,
     runner,
-    thorough,
     readLimit,
-    records: runner === 'mixed' ? readHeadlessRun({ directories: context.directories }) : {},
+    records: runner === 'browser' ? {} : readHeadlessRun({ directories: context.directories }),
     repeat,
     recording,
     configHash,
@@ -193,7 +197,7 @@ async function runAppTests({
       browserOnly: ran.headless.browserOnly,
       remembered: ran.remembered,
       mode: 'dev',
-      configHashes: [configHash, hashBuild({ context })],
+      configHashes: [configHash, devBuildHash({ context, sourceHash })],
     });
   }
   const seen = new Set();
@@ -215,6 +219,7 @@ async function runAppTests({
     name: result.name,
     filePath: relativePosixPath({ from: configDirectory, to: result.filePath }),
     browserOnly: result.browserOnly,
+    ...(result.remembered === true ? { remembered: true } : {}),
     report: formatBrowserOnly({ result }),
   }));
   const summary = [
@@ -224,10 +229,9 @@ async function runAppTests({
       browserOnly: browserOnly.length,
     }).text,
     formatBrowserOnlyNote({
-      runner,
-      thorough,
-      browserOnly: browserOnly.length,
+      browserOnly,
       inProcess: ran.inProcess,
+      base: configDirectory,
       tool: true,
     }),
   ]
