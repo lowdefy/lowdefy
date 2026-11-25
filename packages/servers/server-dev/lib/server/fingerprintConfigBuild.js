@@ -92,19 +92,25 @@ function readIdentity(filePath) {
   return `${stat.ino}:${stat.size}:${stat.mtimeNs}:${stat.ctimeNs}`;
 }
 
+function sortKeys(key, value) {
+  if (value === null || typeof value !== 'object' || Array.isArray(value)) return value;
+  return Object.fromEntries(Object.entries(value).sort(([a], [b]) => (a < b ? -1 : 1)));
+}
+
 // The config build keys every node it writes, and names the root ref, with
 // ids that start with its own prefix (makeId), so two builds of the same
-// config differ only in their prefixes. Without them, and without the
-// per-build fields, the text is the content.
+// config differ in their prefixes. Refs resolve in parallel, so an object's
+// keys can also come in another order (modules.json): a JSON file is read
+// with its keys sorted. Without the prefix and the per-build fields, that is
+// the content.
 function fingerprint({ name, filePath, prefix }) {
   let text = fs.readFileSync(filePath, 'utf8');
-  const fields = perBuildFields[name];
-  if (fields) {
+  if (name.endsWith('.json')) {
     const value = JSON.parse(text);
-    for (const field of fields) {
+    for (const field of perBuildFields[name] ?? []) {
       delete value[field];
     }
-    text = JSON.stringify(value);
+    text = JSON.stringify(value, sortKeys);
   }
   return crypto.createHash('sha1').update(text.replaceAll(prefix, '')).digest('hex');
 }
