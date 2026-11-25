@@ -270,3 +270,24 @@ test('runJourney does not apply the name limit to a persona run name', async () 
   });
   expect(refused.message).toContain('at most 100 characters');
 });
+
+// A headless journey on the dev server reads the secrets --headless --build reads: the stand-ins,
+// with this command's LOWDEFY_TEST_SECRET_* over them. The real LOWDEFY_SECRET_* never leave it.
+test('runJourney sends the test secrets, and never the real ones, with a headless journey', async () => {
+  const { default: runJourney } = await import('./runJourney.js');
+  process.env.LOWDEFY_SECRET_WEBHOOK_SECRET = 'real-webhook-secret';
+  process.env.LOWDEFY_TEST_SECRET_ORG_ID = 'org_test';
+  try {
+    mockPost.mockResolvedValue({ data: { pageId: 'form', passed: true, steps: [] } });
+    await runJourney({ item, url, headless: true });
+    const body = mockPost.mock.calls.at(-1)[1];
+    expect(body.headless).toBe(true);
+    expect(body.secrets).toEqual({ ORG_ID: 'org_test' });
+    expect(JSON.stringify(body)).not.toContain('real-webhook-secret');
+    await runJourney({ item, url });
+    expect(mockPost.mock.calls.at(-1)[1].secrets).toBeUndefined();
+  } finally {
+    delete process.env.LOWDEFY_SECRET_WEBHOOK_SECRET;
+    delete process.env.LOWDEFY_TEST_SECRET_ORG_ID;
+  }
+});

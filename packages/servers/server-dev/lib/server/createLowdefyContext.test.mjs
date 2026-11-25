@@ -176,6 +176,21 @@ test('createLowdefyContext scrubSecrets redacts a planted secret', async () => {
   expect(context.scrubSecrets(`token ${secret} end`)).toEqual('token [REDACTED] end');
 });
 
+// The headless journey host passes the stand-ins a production build's test run reads: the app's
+// real secrets are neither read nor scrubbed on such a call.
+test('createLowdefyContext runs on the testSecrets it is given in place of the real secrets', async () => {
+  const testSecrets = {
+    secrets: { TEST: 'test-secret-TEST' },
+    scrubSecrets: (value) => value.replaceAll('test-secret-TEST', '[TEST]'),
+  };
+  const context = await createLowdefyContext({ c: createHonoContext(), testSecrets });
+  expect(context.secrets).toEqual({ TEST: 'test-secret-TEST' });
+  expect(context.scrubSecrets(`${secret} test-secret-TEST`)).toEqual(`${secret} [TEST]`);
+  expect(createInjectedApiContext.mock.calls.at(-1)[0].secrets).toEqual({
+    TEST: 'test-secret-TEST',
+  });
+});
+
 // controlTry builds the value `_error` reads from context.scrubSecrets, so a dev context has to
 // scrub a caught message the same way the production server does.
 test('_error on a dev context reads a caught message with a planted secret scrubbed', async () => {

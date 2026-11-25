@@ -148,6 +148,30 @@ async function docsJourneyHandler(c) {
       400
     );
   }
+  // Test values for the app's secrets, by name, which a headless journey reads over the stand-ins
+  // (`lowdefy test` sends its LOWDEFY_TEST_SECRET_*). A browser journey reads the app's own secrets,
+  // so they would not apply there.
+  if (!type.isNone(body.secrets)) {
+    if (!type.isObject(body.secrets) || !Object.values(body.secrets).every(type.isString)) {
+      return c.json(
+        {
+          error: `The "secrets" param must be an object of strings, a test value per secret name. Received ${JSON.stringify(
+            body.secrets
+          )}.`,
+        },
+        400
+      );
+    }
+    if (body.headless !== true) {
+      return c.json(
+        {
+          error:
+            'The "secrets" param sets test values for a headless journey ("headless": true). A browser journey reads the app\'s own secrets.',
+        },
+        400
+      );
+    }
+  }
   const recordingError = validateRecordingParam(body.recording);
   if (recordingError) {
     return c.json({ error: recordingError }, 400);
@@ -206,6 +230,7 @@ async function docsJourneyHandler(c) {
       mutantCookie: mutantRun?.cookiePayload,
       data: body.data,
       stubs: body.stubs,
+      secrets: body.secrets ?? undefined,
       by: 'test',
       // Journeys posted here come from `lowdefy test` and lowdefy_run_tests.
       recording: type.isNone(body.recording)

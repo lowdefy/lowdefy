@@ -22,20 +22,26 @@ import { beforeEach, expect, test, vi } from 'vitest';
 // through context.handleError as runRoutine does.
 
 const mockHandleError = vi.fn(async () => {});
-vi.doMock('../server/createLowdefyContext.js', () => ({
-  default: vi.fn(async () => ({
-    handleError: mockHandleError,
-    readConfigFile: async () => [{ pageId: 'later', path: 'later' }],
-    rid: 'rid_1',
-  })),
+const mockCreateLowdefyContext = vi.fn(async () => ({
+  handleError: mockHandleError,
+  readConfigFile: async () => [{ pageId: 'later', path: 'later' }],
+  rid: 'rid_1',
 }));
+vi.doMock('../server/createLowdefyContext.js', () => ({ default: mockCreateLowdefyContext }));
+// Each read of the build's secret names answers a new object, so a test sees which one a call ran on.
+let secretsRead = 0;
+const mockCreateHeadlessSecrets = vi.fn(({ secrets }) => {
+  secretsRead += 1;
+  return { secrets: { ...secrets, read: secretsRead }, scrubSecrets: (value) => value };
+});
+vi.doMock('./createHeadlessSecrets.js', () => ({ default: mockCreateHeadlessSecrets }));
 const mockCallEndpoint = vi.fn();
 const mockRunWebhookEndpoint = vi.fn();
 const mockSendDetachedRequest = vi.fn();
 const mockGetPageConfig = vi.fn();
 vi.doMock('@lowdefy/api', () => ({
   callEndpoint: mockCallEndpoint,
-  callRequest: vi.fn(),
+  callRequest: vi.fn(async () => ({ success: true, response: null })),
   getPageConfig: mockGetPageConfig,
   getRootConfig: vi.fn(async () => ({})),
   parseRequestBody: ({ text }) => JSON.parse(text),
@@ -66,10 +72,11 @@ vi.doMock('../server/auth/resolveHeadlessUser.js', () => ({ default: vi.fn() }))
 
 const { default: createDevServerHost } = await import('./createDevServerHost.js');
 
-function createHost() {
+function createHost({ secrets } = {}) {
   return createDevServerHost({
     counter: { recordCall: vi.fn() },
     origin: 'http://localhost:3227',
+    secrets,
   });
 }
 
@@ -84,6 +91,10 @@ async function logFaults(context) {
 
 beforeEach(() => {
   mockHandleError.mockClear();
+  mockCreateLowdefyContext.mockClear();
+  mockCreateHeadlessSecrets.mockClear();
+  secretsRead = 0;
+  mockBuildPageWithContext.mockClear();
   mockCallEndpoint.mockReset();
   mockRunWebhookEndpoint.mockReset();
   mockSendDetachedRequest.mockReset();
@@ -204,4 +215,37 @@ test('the dev server host adds no _jsEntries to a page with no _js', async () =>
   const host = await createHost();
   const page = await host.readPageConfig({ pageId: 'later' });
   expect(page.pageConfig).toEqual({ id: 'page:later', blocks: [] });
+});
+
+// Every call runs on the stand-ins with the run's test values over them, never the app's real
+// secrets; a page the journey reaches is built before its names are read again, so a secret only
+// its requests name gets a stand-in too.
+test('the dev server host runs each call on test secrets, read again once it builds a page', async () => {
+  mockGetPageConfig.mockResolvedValue({
+    status: 'ok',
+    pageConfig: { id: 'page:later', blocks: [] },
+    pageId: 'later',
+    pathParams: {},
+  });
+  mockGetPageJitEnrichment.mockReturnValue({});
+  const host = await createHost({ secrets: { ORG_ID: 'org_test' } });
+  expect(mockCreateHeadlessSecrets).toHaveBeenCalledTimes(1);
+  expect(mockCreateHeadlessSecrets.mock.calls[0][0]).toEqual(
+    expect.objectContaining({ secrets: { ORG_ID: 'org_test' } })
+  );
+  expect(mockCreateLowdefyContext.mock.calls[0][0].testSecrets.secrets).toEqual({
+    ORG_ID: 'org_test',
+    read: 1,
+  });
+  await host.readPageConfig({ pageId: 'later' });
+  expect(mockCreateHeadlessSecrets).toHaveBeenCalledTimes(2);
+  // A request on the page: built (already current, and already read), then run on the latest read.
+  mockBuildPageWithContext.mockResolvedValueOnce({ result: true, buildContext: null });
+  await host.call({ kind: 'request', pageId: 'later', requestId: 'load', payload: {} });
+  expect(mockCreateHeadlessSecrets).toHaveBeenCalledTimes(2);
+  expect(mockCreateLowdefyContext.mock.calls.at(-1)[0].testSecrets.secrets.read).toBe(secretsRead);
+  // Rebuilt (an edit): read again before the call's context.
+  await host.call({ kind: 'request', pageId: 'later', requestId: 'load', payload: {} });
+  expect(mockCreateHeadlessSecrets).toHaveBeenCalledTimes(3);
+  expect(mockCreateLowdefyContext.mock.calls.at(-1)[0].testSecrets.secrets.read).toBe(secretsRead);
 });

@@ -96,6 +96,8 @@ function toObservedEvent(payload) {
 // answers browserOnly for that step, or { phase: 'open', reason } when the page's open reached
 // it. Refusals ({ error, refused }) are runJourney's. `stubs`, the
 // journey's answer stubs and fail gates (validated by the caller), are set on its data session.
+// `secrets` are the run's test values for the app's secrets, by name (validated by the caller):
+// the journey reads them over the stand-ins, never the app's real secrets (createHeadlessSecrets).
 async function runJourneyHeadless({
   origin,
   pageId,
@@ -110,6 +112,7 @@ async function runJourneyHeadless({
   stubs,
   recording,
   by,
+  secrets,
   readConfigFile = defaultReadConfigFile,
 }) {
   const { error: stepsError } = validateJourneySteps({ steps: inputSteps });
@@ -213,6 +216,7 @@ async function runJourneyHeadless({
       mutantCookie,
       origin,
       recording: journeyRunRecording({ recording, by }),
+      secrets,
       session,
       store,
       user: resolved.user,

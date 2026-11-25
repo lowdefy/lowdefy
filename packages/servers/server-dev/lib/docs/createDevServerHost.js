@@ -32,10 +32,8 @@ import { createHeadlessHost, loadClientPlugins } from '@lowdefy/journey-headless
 import { matchPagePath } from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
-import buildPageIfNeeded, {
-  buildPageWithContext,
-  getPageJitEnrichment,
-} from '../server/jitPageBuilder.js';
+import { buildPageWithContext, getPageJitEnrichment } from '../server/jitPageBuilder.js';
+import createHeadlessSecrets from './createHeadlessSecrets.js';
 import createInProcessRequest from './createInProcessRequest.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readConnectionPlugins from './readConnectionPlugins.js';
@@ -122,6 +120,9 @@ async function answer({ context, detached, faults, run }) {
  * - cookies: the journey cookies its browser contexts would carry (recording, mutant).
  * - counter: a network counter (createNetworkCounter) every page read and call is recorded on,
  *   for the run's exercised paths.
+ * - secrets: the run's test values for the app's secrets, by name. Every call runs on the
+ *   stand-ins a production build's test run reads, with these over them, never on the app's real
+ *   LOWDEFY_SECRET_* (createHeadlessSecrets).
  */
 async function createDevServerHost({
   counter,
@@ -129,6 +130,7 @@ async function createDevServerHost({
   mutantCookie,
   origin,
   recording,
+  secrets,
   session,
   store,
   user,
@@ -151,6 +153,20 @@ async function createDevServerHost({
     );
   }
   const users = dataSet?.users ?? {};
+
+  // The stand-ins cover the secrets the dev build names, and the dev server builds pages on demand:
+  // the names are read again the first time this journey reads or requests a page (another journey
+  // or a tab may have built it since), and after each build of one.
+  let testSecrets = createHeadlessSecrets({ buildDirectory, secrets });
+  const scannedPageIds = new Set();
+  async function buildPage(pageId) {
+    const built = await buildPageWithContext({ pageId, buildDirectory, configDirectory });
+    if (built.result !== false && (built.result?.built === true || !scannedPageIds.has(pageId))) {
+      scannedPageIds.add(pageId);
+      testSecrets = createHeadlessSecrets({ buildDirectory, secrets });
+    }
+    return built;
+  }
 
   // A user as calls name one (a data set user's name, "none", an object, or none for the
   // journey's), as createLowdefyContext injects it: an object, merged there over the roleless
@@ -181,6 +197,7 @@ async function createDevServerHost({
     const context = await createLowdefyContext({
       c: createInProcessRequest({ cookies, method, origin, path: requestPath }),
       dataSession: session?.session,
+      testSecrets,
       user: toCaller(callUser),
     });
     // The faults the call logs at error level, as answerCall's faults: what a browser journey's
@@ -228,11 +245,7 @@ async function createDevServerHost({
     });
     let buildContext = null;
     if (match !== null) {
-      ({ buildContext } = await buildPageWithContext({
-        pageId: match.pageId,
-        buildDirectory,
-        configDirectory,
-      }));
+      ({ buildContext } = await buildPage(match.pageId));
     }
     counter.recordCall({ url: `${origin}/api/page/${matchedPath}`, method: 'GET' });
     const page = await getPageConfig(context, { path: matchedPath, urlQuery: urlQuery ?? {} });
@@ -277,14 +290,17 @@ async function createDevServerHost({
     counter.recordCall({ url: `${origin}${requestPath}`, method: 'POST' });
     const body = kind === 'request' ? { actionId, blockId, payload } : { blockId, pageId, payload };
     const parsed = parseRequestBody({ text: JSON.stringify(body) });
+    if (kind === 'request') {
+      // As the request route does: the page's request artifact is built before it is read. Built
+      // before the call's context, so its stand-ins cover the secrets the request names.
+      await buildPage(pageId);
+    }
     const { context, detached, faults } = await createContext({
       callUser,
       method: 'POST',
       requestPath,
     });
     if (kind === 'request') {
-      // As the request route does: the page's request artifact is built before it is read.
-      await buildPageIfNeeded({ pageId, buildDirectory, configDirectory });
       return answer({
         context,
         detached,
