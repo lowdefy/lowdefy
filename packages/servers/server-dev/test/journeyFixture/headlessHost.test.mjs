@@ -167,6 +167,42 @@ fixtureTest('an edited page is run by the next headless journey, with no build',
   expect(restored.passed).toBe(true);
 });
 
+// The headless host loads the client plugins, clientJsMap.js among them, once per dev server
+// process (Node caches the import). A _js the page gains after that is in the page's _jsEntries,
+// which the host reads as the browser does, never in the cached map.
+fixtureTest('a _js a page build adds after the first headless journey resolves', async () => {
+  const first = await postJourney({ ...SAVE, headless: true });
+  expect(first.passed).toBe(true);
+  const original = fs.readFileSync(homePage, 'utf8');
+  const { atime, mtime } = fs.statSync(homePage);
+  // A value of this run's own, so its _js hash is new to the dev server.
+  const value = `js-${Date.now()}`;
+  const edited = original.replace(
+    /params:\n {12}saved: true/,
+    `params:\n            saved:\n              _js: "return '${value}';"`
+  );
+  expect(edited).not.toBe(original);
+  const expectJs = {
+    ...SAVE,
+    steps: [...SAVE.steps.slice(0, 3), { expect: { state: { path: 'saved', equals: value } } }],
+  };
+  try {
+    fs.writeFileSync(homePage, edited);
+    const result = await postHeadlessUntil({
+      body: expectJs,
+      until: ({ passed, failure }) =>
+        passed || /_js function not found/.test(JSON.stringify(failure ?? '')),
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+  } finally {
+    fs.writeFileSync(homePage, original);
+    fs.utimesSync(homePage, atime, mtime);
+  }
+  const restored = await postHeadlessUntil({ body: SAVE, until: ({ passed }) => passed });
+  expect(restored.passed).toBe(true);
+});
+
 fixtureTest('headless must be true or false', async () => {
   const { status, body } = await postJson({
     path: '/lowdefy-docs/journey',

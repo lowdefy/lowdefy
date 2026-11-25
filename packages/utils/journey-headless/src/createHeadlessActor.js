@@ -24,6 +24,7 @@ import createLocation from './createLocation.js';
 import fireMountEvents from './fireMountEvents.js';
 import movePopupFocus from './movePopupFocus.js';
 import readOptionLabelText from './readOptionLabelText.js';
+import readPageJsMap from './readPageJsMap.js';
 import registerBlockStandIns from './registerBlockStandIns.js';
 import reportParseErrors from './reportParseErrors.js';
 
@@ -190,7 +191,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     });
     const context = getContext({
       config: config.pageConfig,
-      jsMap: plugins.jsMap,
+      jsMap: readPageJsMap({ jsMap: plugins.jsMap, pageConfig: config.pageConfig }),
       lowdefy,
       pathParams: page.pathParams,
     });

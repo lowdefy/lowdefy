@@ -32,7 +32,10 @@ import { createHeadlessHost, loadClientPlugins } from '@lowdefy/journey-headless
 import { matchPagePath } from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
-import buildPageIfNeeded from '../server/jitPageBuilder.js';
+import buildPageIfNeeded, {
+  buildPageWithContext,
+  getPageJitEnrichment,
+} from '../server/jitPageBuilder.js';
 import createInProcessRequest from './createInProcessRequest.js';
 import readBuildArtifact from './readBuildArtifact.js';
 import readConnectionPlugins from './readConnectionPlugins.js';
@@ -223,8 +226,13 @@ async function createDevServerHost({
       routes: await context.readConfigFile('routes.json'),
       path: matchedPath,
     });
+    let buildContext = null;
     if (match !== null) {
-      await buildPageIfNeeded({ pageId: match.pageId, buildDirectory, configDirectory });
+      ({ buildContext } = await buildPageWithContext({
+        pageId: match.pageId,
+        buildDirectory,
+        configDirectory,
+      }));
     }
     counter.recordCall({ url: `${origin}/api/page/${matchedPath}`, method: 'GET' });
     const page = await getPageConfig(context, { path: matchedPath, urlQuery: urlQuery ?? {} });
@@ -238,9 +246,17 @@ async function createDevServerHost({
         `Page "${pageId ?? matchedPath}" did not open: the page route answered "${page.status}".`
       );
     }
+    const pageConfig = JSON.parse(JSON.stringify(page.pageConfig));
+    // As the page route folds them in: the page's _js, as module text the headless actor evaluates
+    // over the client map it loaded at its first journey, which holds no _js a later page build
+    // added (journey-headless's readPageJsMap).
+    const { jsEntries } = getPageJitEnrichment({ pageConfig, buildContext });
+    if (!type.isUndefined(jsEntries)) {
+      pageConfig._jsEntries = jsEntries;
+    }
     return {
       matchedPath,
-      pageConfig: JSON.parse(JSON.stringify(page.pageConfig)),
+      pageConfig,
       pageId: page.pageId,
       pathParams: page.pathParams,
     };

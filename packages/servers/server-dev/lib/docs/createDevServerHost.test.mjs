@@ -23,15 +23,20 @@ import { beforeEach, expect, test, vi } from 'vitest';
 
 const mockHandleError = vi.fn(async () => {});
 vi.doMock('../server/createLowdefyContext.js', () => ({
-  default: vi.fn(async () => ({ handleError: mockHandleError, rid: 'rid_1' })),
+  default: vi.fn(async () => ({
+    handleError: mockHandleError,
+    readConfigFile: async () => [{ pageId: 'later', path: 'later' }],
+    rid: 'rid_1',
+  })),
 }));
 const mockCallEndpoint = vi.fn();
 const mockRunWebhookEndpoint = vi.fn();
 const mockSendDetachedRequest = vi.fn();
+const mockGetPageConfig = vi.fn();
 vi.doMock('@lowdefy/api', () => ({
   callEndpoint: mockCallEndpoint,
   callRequest: vi.fn(),
-  getPageConfig: vi.fn(),
+  getPageConfig: mockGetPageConfig,
   getRootConfig: vi.fn(async () => ({})),
   parseRequestBody: ({ text }) => JSON.parse(text),
   redactErrorResponse: (context, error) => ({ name: error.name, message: error.message }),
@@ -44,7 +49,17 @@ vi.doMock('@lowdefy/journey-headless', () => ({
   loadClientPlugins: vi.fn(),
 }));
 vi.doMock('@lowdefy/test-utils/dataSets', () => ({ findSessionDocuments: vi.fn() }));
-vi.doMock('../server/jitPageBuilder.js', () => ({ default: vi.fn() }));
+const mockBuildContext = { jsMap: { client: {} } };
+const mockBuildPageWithContext = vi.fn(async () => ({
+  result: { built: true },
+  buildContext: mockBuildContext,
+}));
+const mockGetPageJitEnrichment = vi.fn();
+vi.doMock('../server/jitPageBuilder.js', () => ({
+  buildPageWithContext: mockBuildPageWithContext,
+  default: vi.fn(),
+  getPageJitEnrichment: mockGetPageJitEnrichment,
+}));
 vi.doMock('./readBuildArtifact.js', () => ({ default: vi.fn() }));
 vi.doMock('./readConnectionPlugins.js', () => ({ default: vi.fn(async () => ({})) }));
 vi.doMock('../server/auth/resolveHeadlessUser.js', () => ({ default: vi.fn() }));
@@ -154,4 +169,39 @@ test('the dev server host lists no detached call whose send failed', async () =>
   expect(answer.faults.map(({ message }) => message)).toEqual([
     'CallApi with "detached: true" requires the CRON_SECRET environment variable.',
   ]);
+});
+
+// A page the dev server builds on demand carries its _js as _jsEntries, as the page route folds it
+// in (getPageJitEnrichment, from the context the page was built on), so a headless journey reads
+// _js the client map it loaded at its first journey lacks.
+test("the dev server host folds the built page's _js entries into its page config", async () => {
+  mockGetPageConfig.mockResolvedValue({
+    status: 'ok',
+    pageConfig: { id: 'page:later', blocks: [{ properties: { title: { _js: 'h_later' } } }] },
+    pageId: 'later',
+    pathParams: {},
+  });
+  mockGetPageJitEnrichment.mockReturnValue({
+    jsEntries: "export default { 'h_later': () => { return 1; } };",
+  });
+  const host = await createHost();
+  const page = await host.readPageConfig({ pageId: 'later' });
+  expect(mockBuildPageWithContext).toHaveBeenCalledWith(
+    expect.objectContaining({ pageId: 'later' })
+  );
+  expect(mockGetPageJitEnrichment.mock.calls[0][0].buildContext).toBe(mockBuildContext);
+  expect(page.pageConfig._jsEntries).toBe("export default { 'h_later': () => { return 1; } };");
+});
+
+test('the dev server host adds no _jsEntries to a page with no _js', async () => {
+  mockGetPageConfig.mockResolvedValue({
+    status: 'ok',
+    pageConfig: { id: 'page:later', blocks: [] },
+    pageId: 'later',
+    pathParams: {},
+  });
+  mockGetPageJitEnrichment.mockReturnValue({});
+  const host = await createHost();
+  const page = await host.readPageConfig({ pageId: 'later' });
+  expect(page.pageConfig).toEqual({ id: 'page:later', blocks: [] });
 });

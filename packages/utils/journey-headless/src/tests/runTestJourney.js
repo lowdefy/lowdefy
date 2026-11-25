@@ -35,7 +35,10 @@ import runHeadlessJourney from '../runHeadlessJourney.js';
 // - Request: appends { blockId, name: 'request:<requestId>' } to the log, and sends nothing.
 // - CallMethod, Link (to a pageId), SetState, Subscribe, Unsubscribe and Publish, as actions-core's.
 // A page's subscriptions are written as on a page, each with its events as action lists.
-// Its one operator is _state, as operators-js reads state with a path.
+// Its operators are _state, as operators-js reads state with a path, and _js, which calls the
+// function the page's jsMap holds for its hash and fails as operators-js does when it holds none.
+// A page's _jsEntries (module text, as the dev server's page route sends it) rides on its config;
+// `jsMap` is the client map the app loaded, {} by default.
 
 const BLOCK_METAS = {
   AgGridAlpine: { category: 'display' },
@@ -153,7 +156,15 @@ function buildPage(pageConfig) {
 
 // Runs `steps` on the first of `pages`, with the root config's `menus`. Resolves
 // { result, log }: the journey's result and the Record log.
-async function runTestJourney({ dataSet, i18n, menus = [], pages, steps, stepTimeout = 300 }) {
+async function runTestJourney({
+  dataSet,
+  i18n,
+  jsMap = {},
+  menus = [],
+  pages,
+  steps,
+  stepTimeout = 300,
+}) {
   const log = [];
   const built = Object.fromEntries(pages.map((page) => [page.id, buildPage(page)]));
   const rootConfig = {
@@ -196,8 +207,16 @@ async function runTestJourney({ dataSet, i18n, menus = [], pages, steps, stepTim
         Wait: ({ params }) => new Promise((resolve) => setTimeout(resolve, params)),
       },
       blockMetas: BLOCK_METAS,
-      jsMap: {},
-      operators: { _state: ({ params, state }) => get(state, params) },
+      jsMap,
+      operators: {
+        _js: ({ jsMap: pageJsMap, params }) => {
+          if (!pageJsMap[params]) {
+            throw new Error(`_js function not found. Received hash: ${params}`);
+          }
+          return pageJsMap[params]({});
+        },
+        _state: ({ params, state }) => get(state, params),
+      },
     }),
     readArtifact: (name) => {
       const pageId = name.match(/^pages\/([^/]+)\.json$/)?.[1];
