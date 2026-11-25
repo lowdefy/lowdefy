@@ -490,7 +490,9 @@ describe('review cases', () => {
     const rebuilt = await endpointBuild({ build, endpointIds: ['two'] });
     expect(rebuilt.fallback).toBeUndefined();
     const full = await configBuild('full');
-    expect(full.warnings.filter((warning) => warning.source?.includes('answer.yaml'))).toHaveLength(1);
+    expect(full.warnings.filter((warning) => warning.source?.includes('answer.yaml'))).toHaveLength(
+      1
+    );
     expect(locations(rebuilt.warnings)).toEqual(locations(full.warnings));
   });
 
