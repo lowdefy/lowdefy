@@ -21,6 +21,7 @@ import { cleanDirectory, copyFileOrDirectory, readFile, writeFile } from '@lowde
 import apiHandler from './apiHandler.js';
 import copyTracedFiles from '../../utils/copyTracedFiles.js';
 import createSkipPlainMapsFilter from '../../utils/createSkipPlainMapsFilter.js';
+import ensureCompressedMaps from '../../utils/ensureCompressedMaps.js';
 import findTraceBase from '../../utils/findTraceBase.js';
 
 // lowdefy.yaml `config`, as @lowdefy/build writes it to build/config.json.
@@ -168,6 +169,13 @@ async function vercelOutput({ context }) {
   );
   await copyFileOrDirectory(buildDirectory, path.join(functionServerDirectory, 'build'), {
     filter: skipPlainMaps,
+  });
+  // A config-only build (vercel.install.sh runs lowdefy build --no-client-build) wrote no
+  // gzipped maps, so they are written into the function from the plain maps.
+  await ensureCompressedMaps({
+    buildDirectory,
+    outputBuildDirectory: path.join(functionServerDirectory, 'build'),
+    logger,
   });
   await copyFileOrDirectory(
     path.join(clientDirectory, '.vite', 'manifest.json'),

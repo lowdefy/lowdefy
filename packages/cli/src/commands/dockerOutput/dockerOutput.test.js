@@ -17,6 +17,7 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+import zlib from 'zlib';
 
 import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
@@ -111,6 +112,26 @@ test('dockerOutput ships the gzipped error maps and leaves the plain maps out', 
   expect(filter(path.join(buildDirectory, 'keyMap.json'))).toBe(false);
   expect(filter(path.join(buildDirectory, 'refMap.json'))).toBe(false);
   expect(filter(path.join(buildDirectory, 'refMap.json.gz'))).toBe(true);
+});
+
+test('dockerOutput writes the gzipped error maps for a config-only build that has none', async () => {
+  const refMapText = '{"1":{"path":"lowdefy.yaml"}}';
+  const outputDirectory = await runDockerOutput({
+    buildFiles: {
+      'config.json': '{}',
+      'keyMap.json': '{"1":{"s":"root","p":"0","r":"1"}}',
+      'refMap.json': refMapText,
+    },
+  });
+  expect(listFiles(path.join(outputDirectory, 'build'))).toEqual([
+    'config.json',
+    'keyMap.json.gz',
+    'refMap.json.gz',
+  ]);
+  const read = (file) =>
+    zlib.gunzipSync(fs.readFileSync(path.join(outputDirectory, 'build', file)));
+  expect(read('refMap.json.gz').toString('utf8')).toBe(refMapText);
+  expect(JSON.parse(read('keyMap.json.gz').toString('utf8')).segments).toEqual(['root']);
 });
 
 test('dockerOutput copies a build directory that has no plain maps', async () => {

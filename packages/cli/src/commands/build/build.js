@@ -35,6 +35,11 @@ async function build({ context }) {
 
   const directory = context.directories.server;
   const packageName = serverPackages[context.options.server] ?? '@lowdefy/server';
+  const clientBuild = context.options.clientBuild !== false && context.options.nextBuild !== false;
+  // A server reads the gzipped error maps, so a build it can serve writes them.
+  // A config-only build (tests, checks, the first half of a Vercel build) skips
+  // them: vercel-output and docker-output write them from the plain maps.
+  const skipCompressedMaps = !clientBuild;
 
   await getServer({ context, packageName, directory });
   await resetServerPackageJson({ context, directory });
@@ -46,7 +51,7 @@ async function build({ context }) {
   await installServer({ context, directory, skipIfInstalled: true });
   // This build holds its warnings for plugins it could not check: the install
   // below adds them, and the build after it warns for any still missing.
-  await runLowdefyBuild({ context, directory, pluginInstallFollows: true });
+  await runLowdefyBuild({ context, directory, pluginInstallFollows: true, skipCompressedMaps });
   await installServer({ context, directory, skipIfInstalled: true });
   // The build lists the plugins it used but could not check, since they were
   // not installed. The install above added them, so build once more when that
@@ -59,9 +64,9 @@ async function build({ context }) {
     })
   ) {
     context.logger.info('Building again to run the checks of newly installed plugins.');
-    await runLowdefyBuild({ context, directory });
+    await runLowdefyBuild({ context, directory, skipCompressedMaps });
   }
-  if (context.options.clientBuild !== false && context.options.nextBuild !== false) {
+  if (clientBuild) {
     await runClientBuild({ context, directory });
   }
   await context.sendTelemetry({ sendTypes: true });

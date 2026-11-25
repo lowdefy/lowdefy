@@ -27,6 +27,7 @@ vi.doMock('./createCustomPluginTypesMap.mjs', () => ({
 }));
 
 const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
+const savedSkipCompressedMaps = process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS;
 const savedInstallFollows = process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS;
 // build.mjs runs the build when imported, so each case loads a fresh module
 // instance and waits for the build call.
@@ -38,12 +39,18 @@ async function runScript() {
 
 beforeEach(() => {
   delete process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
+  delete process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS;
   delete process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS;
   mockBuild.mockReset();
   mockBuild.mockResolvedValue();
 });
 
 afterAll(() => {
+  if (savedSkipCompressedMaps === undefined) {
+    delete process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS;
+  } else {
+    process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS = savedSkipCompressedMaps;
+  }
   if (savedSkip === undefined) {
     delete process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
   } else {
@@ -80,4 +87,13 @@ test('build passes pluginInstallFollows false when LOWDEFY_BUILD_PLUGIN_INSTALL_
   await runScript();
   expect(mockBuild).toHaveBeenCalledTimes(1);
   expect(mockBuild.mock.calls[0][0].pluginInstallFollows).toBe(false);
+});
+
+test('build writes the gzipped maps unless LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS is true', async () => {
+  await runScript();
+  expect(mockBuild.mock.calls[0][0].writeCompressedMaps).toBe(true);
+  mockBuild.mockClear();
+  process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS = 'true';
+  await runScript();
+  expect(mockBuild.mock.calls[0][0].writeCompressedMaps).toBe(false);
 });

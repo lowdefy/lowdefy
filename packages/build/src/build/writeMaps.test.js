@@ -160,36 +160,6 @@ test('writeMaps writes a columnar gzipped key map and a gzipped plain ref map wh
   );
 });
 
-test('writeMaps writes empty columns and an empty gzipped ref map for empty maps', async () => {
-  context.writeCompressedMaps = true;
-  context.keyMap = {};
-  context.refMap = {};
-  await writeMaps({ context });
-  const artifacts = writtenArtifacts();
-  expect(JSON.parse(zlib.gunzipSync(artifacts['keyMap.json.gz']).toString('utf8'))).toEqual(
-    encodeColumnarKeyMap({ keyMap: {} })
-  );
-  expect(zlib.gunzipSync(artifacts['refMap.json.gz']).toString('utf8')).toBe('{}');
-});
-
-test('writeMaps writes byte-identical gzipped maps for the same maps', async () => {
-  context.writeCompressedMaps = true;
-  const written = [];
-  for (let run = 0; run < 2; run += 1) {
-    mockWriteBuildArtifact.mockReset();
-    context.keyMap = { 1: { s: 'pages.0', p: '0', l: 3 } };
-    context.refMap = { 1: { path: 'pages/a.yaml' } };
-    await writeMaps({ context });
-    written.push(writtenArtifacts());
-  }
-  expect(written[0]['keyMap.json.gz'].equals(written[1]['keyMap.json.gz'])).toBe(true);
-  expect(written[0]['refMap.json.gz'].equals(written[1]['refMap.json.gz'])).toBe(true);
-  // The gzip header's MTIME field (bytes 4 to 7) is zero, so a later build
-  // does not stamp a different time into it.
-  expect([...written[0]['keyMap.json.gz'].subarray(4, 8)]).toEqual([0, 0, 0, 0]);
-  expect([...written[0]['refMap.json.gz'].subarray(4, 8)]).toEqual([0, 0, 0, 0]);
-});
-
 test('keyMap is not an object', async () => {
   const writeBuildArtifact = vi.fn();
   const context = {

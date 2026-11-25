@@ -17,7 +17,12 @@
 import { spawnProcess } from '@lowdefy/node-utils';
 import { createStdOutLineHandler } from '@lowdefy/logger/cli';
 
-async function runLowdefyBuild({ context, directory, pluginInstallFollows = false }) {
+async function runLowdefyBuild({
+  context,
+  directory,
+  pluginInstallFollows = false,
+  skipCompressedMaps = false,
+}) {
   context.logger.info({ spin: 'start' }, 'Running Lowdefy build.');
   const env = {
     ...process.env,
@@ -27,6 +32,7 @@ async function runLowdefyBuild({ context, directory, pluginInstallFollows = fals
   };
   if (context.options.skipPluginChecks) env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS = 'true';
   if (pluginInstallFollows) env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS = 'true';
+  if (skipCompressedMaps) env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS = 'true';
   try {
     await spawnProcess({
       args: ['run', 'build:lowdefy'],

@@ -69,6 +69,14 @@ await copyFileOrDirectory('src/config.yaml', 'dest/config.yaml');
 await copyFileOrDirectory('src/templates', 'dest/templates');
 ```
 
+### compressBuildMaps({ keyMap, refMapText })
+
+Gzips a build's error maps as a production server reads them: `keyMapGz` is the key map in columns (`encodeColumnarKeyMap`), `refMapGz` is `refMap.json`'s text. Zlib's default level and no header timestamp, so the same maps give the same bytes. The build's `writeMaps` and the CLI's `ensureCompressedMaps` (vercel-output, docker-output) both call it, so both write the same files.
+
+```javascript
+const { keyMapGz, refMapGz } = await compressBuildMaps({ keyMap, refMapText });
+```
+
 ### getFileExtension(filePath)
 
 Extract file extension:
@@ -210,6 +218,7 @@ const dispatcher = new Agent({
 | `src/writeFile.js`           | File writing                                 |
 | `src/cleanDirectory.js`      | Directory cleaning                           |
 | `src/copyFileOrDirectory.js` | Copy operations                              |
+| `src/compressBuildMaps.js`   | Gzipped error maps for production servers    |
 | `src/getFileExtension.js`    | Extension parsing                            |
 | `src/spawnProcess.js`        | Process spawning                             |
 | `src/getSecretsFromEnv.js`   | Environment secrets                          |

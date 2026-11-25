@@ -13,13 +13,8 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 */
-import { promisify } from 'util';
-import zlib from 'zlib';
-
-import { encodeColumnarKeyMap } from '@lowdefy/errors';
 import { serializer, type } from '@lowdefy/helpers';
-
-const gzip = promisify(zlib.gzip);
+import { compressBuildMaps } from '@lowdefy/node-utils';
 
 // Refs are added to refMap as they resolve, in parallel, so its insertion order
 // follows I/O timing. Sorting the ids writes the same file for the same config.
@@ -68,19 +63,19 @@ async function writeMaps({ context }) {
     context.writeBuildArtifact('keyMap.json', keyMapString),
     context.writeBuildArtifact('refMap.json', refMapString),
   ];
-  // Production servers ship the gzipped maps (vercel-output, docker-output) and
-  // read them on their first error log. The plain files stay for build-folder
-  // readers like lowdefy journeys. The gzipped key map holds the key map in
-  // columns: a server keeps it for its lifetime, and a large app's key map
-  // parsed as plain JSON is a million objects. The gzips run on the threadpool,
-  // alongside the plain writes.
+  // A production server reads the gzipped maps on its first error log, and
+  // deploy output ships only them. The plain files stay for build-folder
+  // readers like lowdefy journeys. A build that skips them (a config-only
+  // build, which nothing serves as it is) leaves them to vercel-output and
+  // docker-output, which write them from the plain files.
   if (context.writeCompressedMaps === true) {
     writes.push(
-      gzip(JSON.stringify(encodeColumnarKeyMap({ keyMap: context.keyMap }))).then((compressed) =>
-        context.writeBuildArtifact('keyMap.json.gz', compressed)
-      ),
-      gzip(refMapString).then((compressed) =>
-        context.writeBuildArtifact('refMap.json.gz', compressed)
+      compressBuildMaps({ keyMap: context.keyMap, refMapText: refMapString }).then(
+        ({ keyMapGz, refMapGz }) =>
+          Promise.all([
+            context.writeBuildArtifact('keyMap.json.gz', keyMapGz),
+            context.writeBuildArtifact('refMap.json.gz', refMapGz),
+          ])
       )
     );
   }

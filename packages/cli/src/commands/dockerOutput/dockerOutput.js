@@ -20,6 +20,7 @@ import { cleanDirectory, copyFileOrDirectory, writeFile } from '@lowdefy/node-ut
 
 import copyTracedFiles from '../../utils/copyTracedFiles.js';
 import createSkipPlainMapsFilter from '../../utils/createSkipPlainMapsFilter.js';
+import ensureCompressedMaps from '../../utils/ensureCompressedMaps.js';
 import findTraceBase from '../../utils/findTraceBase.js';
 
 // The boot script chdirs into the server directory inside the output (it is nested when the app
@@ -107,6 +108,12 @@ async function dockerOutput({ context }) {
   );
   await copyFileOrDirectory(buildDirectory, path.join(outputServerDirectory, 'build'), {
     filter: skipPlainMaps,
+  });
+  // A config-only build wrote no gzipped maps, so they are written from the plain maps.
+  await ensureCompressedMaps({
+    buildDirectory,
+    outputBuildDirectory: path.join(outputServerDirectory, 'build'),
+    logger,
   });
   await copyFileOrDirectory(clientDirectory, path.join(outputServerDirectory, 'dist', 'client'));
   await copyFileOrDirectory(

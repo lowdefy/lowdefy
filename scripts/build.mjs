@@ -129,6 +129,10 @@ const buildEnv = {
 if (refResolver) {
   buildEnv.LOWDEFY_BUILD_REF_RESOLVER = refResolver;
 }
+// As lowdefy build: a config-only build writes no gzipped error maps.
+if (!clientBuild) {
+  buildEnv.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS = 'true';
+}
 execSync('pnpm run build:lowdefy', { cwd: prodDir, stdio: 'inherit', env: buildEnv });
 logger.info({ spin: 'succeed' }, 'Lowdefy build complete.');
 

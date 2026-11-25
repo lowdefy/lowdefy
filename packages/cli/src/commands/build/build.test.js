@@ -95,6 +95,7 @@ test('build runs the Lowdefy build once when no plugin checks are pending', asyn
     context,
     directory: serverDirectory,
     pluginInstallFollows: true,
+    skipCompressedMaps: false,
   });
   expect(calls).toEqual([
     'getServer',
@@ -209,4 +210,43 @@ test('build runs the Lowdefy build once when the pending plugins give nothing ne
   const context = createContext();
   await build({ context });
   expect(mockRunLowdefyBuild).toHaveBeenCalledTimes(1);
+});
+
+test.each([['clientBuild'], ['nextBuild']])(
+  'build with %s false skips the client build and the gzipped maps on every build pass',
+  async (option) => {
+    mockRunLowdefyBuild.mockImplementationOnce(async () => {
+      calls.push('runLowdefyBuild');
+      writePending();
+    });
+    mockRunLowdefyBuild.mockImplementation(async () => {
+      calls.push('runLowdefyBuild');
+      fs.rmSync(pendingPath());
+    });
+    const context = createContext();
+    context.options[option] = false;
+    await build({ context });
+    expect(mockRunLowdefyBuild.mock.calls.map(([options]) => options.skipCompressedMaps)).toEqual([
+      true,
+      true,
+    ]);
+    expect(calls).not.toContain('runClientBuild');
+  }
+);
+
+test('build with the client build writes the gzipped maps on every build pass', async () => {
+  mockRunLowdefyBuild.mockImplementationOnce(async () => {
+    calls.push('runLowdefyBuild');
+    writePending();
+  });
+  mockRunLowdefyBuild.mockImplementation(async () => {
+    calls.push('runLowdefyBuild');
+    fs.rmSync(pendingPath());
+  });
+  const context = createContext();
+  await build({ context });
+  expect(mockRunLowdefyBuild.mock.calls.map(([options]) => options.skipCompressedMaps)).toEqual([
+    false,
+    false,
+  ]);
 });
