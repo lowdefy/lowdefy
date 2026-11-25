@@ -53,7 +53,11 @@ function createErrorHandler({ basePath = '', logger }) {
       // A name expectedErrorNames gains before this table does is still a refusal: a 400.
       const { status, warning, text } = expectedAnswers[error.name] ?? expectedAnswers.UserError;
       const detail = error.name === 'UserError' ? ` - ${error.message}` : '';
-      logger.warn(`${warning}: ${c.req.method} ${c.req.path}${detail}`);
+      // Logged where it happened already (handled), such as a request the client or the
+      // request timeout cancelled: not logged again here.
+      if (error.handled !== true) {
+        logger.warn(`${warning}: ${c.req.method} ${c.req.path}${detail}`);
+      }
       if (path.startsWith('/api/')) {
         return c.json({ name: error.name, message: error.message }, status);
       }

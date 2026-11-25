@@ -21,10 +21,12 @@ import createAxiosConfig from './createAxiosConfig.js';
 import { REFUSED_CODE } from './createRefusedError.js';
 import schema from '../requestSchema.js';
 
-async function AxiosHttp({ request, connection }) {
+async function AxiosHttp({ request, connection, signal }) {
   const config = createAxiosConfig({ connection, request });
   try {
-    const res = await axios(config);
+    // The request's signal aborts the call when nobody waits for it any more. A timeout the
+    // request sets still applies: axios stops at whichever comes first.
+    const res = await axios({ ...config, signal });
     const { status, statusText, headers, method, path, data } = res;
     return { status, statusText, headers, method, path, data };
   } catch (error) {

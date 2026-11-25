@@ -36,7 +36,7 @@ function checkOutAndMerge({ pipeline, connection }) {
   }
 }
 
-async function MongodbAggregation({ request, connection, tenant, tenantGuard }) {
+async function MongodbAggregation({ request, connection, signal, tenant, tenantGuard }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { pipeline } = deserializedRequest;
@@ -57,10 +57,11 @@ async function MongodbAggregation({ request, connection, tenant, tenantGuard }) 
   const { collection } = await getCollection({ connection });
   let res;
   try {
-    const cursor = await collection.aggregate(pipeline, options);
+    // The request's signal stops the aggregation when nobody waits for it any more.
+    const cursor = await collection.aggregate(pipeline, { ...options, signal });
     res = await cursor.toArray();
   } catch (error) {
-    throw mapMongoError(error, { connection, requestType: 'MongoDBAggregation' });
+    throw mapMongoError(error, { connection, requestType: 'MongoDBAggregation', signal });
   }
   return serialize(res);
 }

@@ -502,7 +502,7 @@ test('a resolver stopped because the client left fails with a UserError, not a R
   expect(error.cause.name).toBe('AbortError');
 });
 
-test('a resolver stopped by the request timeout fails with a ServiceError', async () => {
+test('a resolver stopped by the request timeout fails with a cancellation, not a fault', async () => {
   const context = createTestContext();
   const controller = new AbortController();
   context.signal = controller.signal;
@@ -517,12 +517,58 @@ test('a resolver stopped by the request timeout fails with a ServiceError', asyn
     new DOMException('The request timeout of 30000ms was exceeded.', 'TimeoutError')
   );
   const error = await pending.catch((e) => e);
-  expect(error).toBeInstanceOf(ServiceError);
-  expect(error.message).toBe(
-    'conn1: Request timed out. The service may be slow, or the timeout too short. The request timeout of 30000ms was exceeded.'
+  expect(error).toBeInstanceOf(UserError);
+  expect(error.message).toBe('The request timeout of 30000ms was exceeded.');
+  expect(error.cause.name).toBe('TimeoutError');
+  expect(error.handled).toBe(true);
+  expect(error.stepId).toBe('req1');
+  expect(context.logger.debug).toHaveBeenCalledWith(
+    expect.objectContaining({ event: 'debug_request_cancelled', err: error }),
+    'The request timeout of 30000ms was exceeded.'
   );
-  expect(error.statusCode).toBeUndefined();
-  expect(error.configKey).toBe('request_key');
+});
+
+test('an axios call cancelled by the request timeout fails with a cancellation', async () => {
+  const context = createTestContext();
+  const controller = new AbortController();
+  context.signal = controller.signal;
+  controller.abort(
+    new DOMException('The request timeout of 30000ms was exceeded.', 'TimeoutError')
+  );
+  const error = await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: async () => {
+      const canceled = new Error('canceled');
+      canceled.name = 'CanceledError';
+      canceled.code = 'ERR_CANCELED';
+      throw canceled;
+    },
+  }).catch((e) => e);
+  expect(error).toBeInstanceOf(UserError);
+  expect(error.message).toBe('The request timeout of 30000ms was exceeded.');
+});
+
+test('a fault raised after the request timed out is still a fault', async () => {
+  const context = createTestContext();
+  const controller = new AbortController();
+  context.signal = controller.signal;
+  controller.abort(
+    new DOMException('The request timeout of 30000ms was exceeded.', 'TimeoutError')
+  );
+  const error = await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 0,
+    requestConfig,
+    requestProperties: {},
+    requestResolver: async () => {
+      throw new Error('Document failed validation');
+    },
+  }).catch((e) => e);
+  expect(error).toBeInstanceOf(RequestError);
+  expect(error.message).toBe('Document failed validation at conn1/req1.');
 });
 
 async function catchError(requestResolver, { context = createTestContext(), config } = {}) {

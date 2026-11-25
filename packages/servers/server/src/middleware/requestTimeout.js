@@ -19,9 +19,11 @@ import { timeout } from 'hono/timeout';
 
 // Caps how long a request may run, and cancels the work it leaves behind. The 504 is
 // answered while the handler is still running; the TimeoutError on the request's
-// timeout signal (which apiContext folds into context.signal) cancels the upstream
-// calls the handler is waiting on, such as an AI provider call, instead of letting
-// them run, and bill, after the response has gone.
+// timeout signal (which apiContext folds into context.signal) cancels what the handler
+// is waiting on instead of letting it run, and bill, after the response has gone: AI
+// provider calls, MongoDB finds and aggregations, and AxiosHttp calls. A routine runs
+// no step after the signal aborts, though a step already running (a MongoDB write, a
+// call to a connection that does not read the signal) runs to its end.
 //
 // The 504 has no body. The handler runs on after the 504 is sent, on the same context:
 // a header set on it then, by the middleware around the handler or by the handler

@@ -21,7 +21,7 @@ import { serialize, deserialize } from '../serialize.js';
 import requestMetas from '../requestMetas.js';
 import schema from './schema.js';
 
-async function MongodbFindOne({ request, connection, tenant }) {
+async function MongodbFindOne({ request, connection, signal, tenant }) {
   const deserializedRequest = deserialize(request);
   const { options } = deserializedRequest;
   let { query } = deserializedRequest;
@@ -31,9 +31,10 @@ async function MongodbFindOne({ request, connection, tenant }) {
   const { collection } = await getCollection({ connection });
   let res;
   try {
-    res = await collection.findOne(query, options);
+    // The request's signal stops the find when nobody waits for it any more.
+    res = await collection.findOne(query, { ...options, signal });
   } catch (error) {
-    throw mapMongoError(error, { connection, requestType: 'MongoDBFindOne' });
+    throw mapMongoError(error, { connection, requestType: 'MongoDBFindOne', signal });
   }
   return serialize(res);
 }

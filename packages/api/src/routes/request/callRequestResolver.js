@@ -14,11 +14,11 @@
   limitations under the License.
 */
 
-import { UserError } from '@lowdefy/errors';
-
+import createCancellationError from '../../context/createCancellationError.js';
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import createWalledResolver from './createWalledResolver.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
+import isCancelledBySignal from '../../context/isCancelledBySignal.js';
 import stampTypedError from './stampTypedError.js';
 import wrapResolverError from './wrapResolverError.js';
 
@@ -132,15 +132,11 @@ async function callRequestResolver(
       throw error;
     }
 
-    // The client left before the resolver finished and the resolver stopped on the
-    // signal: the cancellation is the caller's doing, not a fault in the request.
-    if (signal?.reason?.name === 'AbortError' && error?.name === 'AbortError') {
-      const cancelled = new UserError(signal.reason.message, { cause: error });
-      logger.debug(
-        { params: { id: stepOrRequestId, type: requestConfig.type }, err: cancelled },
-        cancelled.message
-      );
-      throw cancelled;
+    // The client left or the request timed out before the resolver finished, and the
+    // resolver stopped on the signal: the cancellation is the caller's doing, not a fault
+    // in the request.
+    if (isCancelledBySignal({ error, signal })) {
+      throw createCancellationError({ cause: error, fields, logger, signal });
     }
 
     // A ServiceError for a network failure, timeout, 5xx or 429; a RequestError otherwise.

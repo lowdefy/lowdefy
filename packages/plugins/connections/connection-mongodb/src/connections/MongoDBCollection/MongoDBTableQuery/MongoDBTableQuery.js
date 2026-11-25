@@ -27,7 +27,7 @@ import schema from './schema.js';
 // Server mode for the Table block: the view the browser sends is validated against the
 // `fields` allowlist and compiled to one aggregation on the server. The browser never
 // sends MongoDB syntax.
-async function MongoDBTableQuery({ request, connection, tenant, tenantGuard }) {
+async function MongoDBTableQuery({ request, connection, signal, tenant, tenantGuard }) {
   const properties = deserialize(request);
   const compiled = compileTableQuery({ properties, now: new Date() });
   let { pipeline } = compiled;
@@ -40,10 +40,11 @@ async function MongoDBTableQuery({ request, connection, tenant, tenantGuard }) {
   const { collection } = await getCollection({ connection });
   let result;
   try {
-    const cursor = await collection.aggregate(pipeline, compiled.options);
+    // The request's signal stops the aggregation when nobody waits for it any more.
+    const cursor = await collection.aggregate(pipeline, { ...compiled.options, signal });
     result = await cursor.toArray();
   } catch (error) {
-    throw mapMongoError(error, { connection, requestType: 'MongoDBTableQuery' });
+    throw mapMongoError(error, { connection, requestType: 'MongoDBTableQuery', signal });
   }
   return serialize(
     readTableResult({
