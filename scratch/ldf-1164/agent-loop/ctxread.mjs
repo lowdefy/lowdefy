@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+const B = '/Users/puffin/.puffin/work/31792/pelican/apps/pelican/.lowdefy/dev/build';
+const L = '/Users/puffin/.puffin/work/31792/lowdefy';
+const t = (label, fn) => { const s = performance.now(); const r = fn(); console.log(label, Math.round(performance.now() - s), 'ms'); return r; };
+const km = t('parse keyMap.json', () => JSON.parse(fs.readFileSync(`${B}/keyMap.json`, 'utf8')));
+console.log('keyMap entries', Object.keys(km).length);
+const target = {};
+t('Object.assign keyMap', () => Object.assign(target, km));
+const rm = t('parse refMap.json', () => JSON.parse(fs.readFileSync(`${B}/refMap.json`, 'utf8')));
+t('Object.assign refMap', () => Object.assign({}, rm));
+const { default: readBuildApiArtifacts } = await import(`${L}/packages/servers/server-dev/lib/server/readBuildApiArtifacts.mjs`);
+t('readBuildApiArtifacts', () => readBuildApiArtifacts(B));

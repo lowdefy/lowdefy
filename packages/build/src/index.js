@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 /*
   Copyright 2020-2026 Lowdefy, Inc
 
@@ -119,33 +120,56 @@ import writeTypes from './build/full/writeTypes.js';
 async function build(options) {
   // Reset makeId counter for each build (dev server may run multiple builds)
   makeId.reset();
+  if (process.env.LDF_BUILD_PROF) {
+    let last = performance.now();
+    const t0 = last;
+    const marks = [];
+    globalThis.__ldfMark = (name) => {
+      const now = performance.now();
+      marks.push([name, Math.round(now - last)]);
+      last = now;
+    };
+    globalThis.__ldfMarksFlush = () => {
+      fs.appendFileSync(
+        process.env.LDF_BUILD_PROF,
+        JSON.stringify({ total: Math.round(performance.now() - t0), marks }) + '\n'
+      );
+    };
+  }
 
   let context;
   try {
     context = createContext(options);
+    globalThis.__ldfMark?.('context');
 
     // Phase 0: Resolve root app metadata into context.appMeta before any
     // operator evaluation. _app / _build.app read this, and buildModuleDefs
     // (next) evaluates operators on root config, consumer vars, and connections.
     await buildAppMeta({ context });
+    globalThis.__ldfMark?.('buildAppMeta');
     // Surface bad root metadata (unsupported operators, failed _build.*) now,
     // before module operators evaluate against it — avoids cascade errors.
     logCollectedErrors(context);
+    globalThis.__ldfMark?.('logCollectedErrors');
 
     // Phase 1: Build module definitions
     // Parses lowdefy.yaml, resolves module refs, populates context.modules
     await buildModuleDefs({ context });
+    globalThis.__ldfMark?.('buildModuleDefs');
 
     // Scoped pre-pass: resolve the auth: subtree and compute the
     // _build.authConfig projection so the operator can resolve during buildRefs.
     await resolveAuthConfigProjection({ context });
+    globalThis.__ldfMark?.('resolveAuthConfigProjection');
 
     // Step 3 (moved out of buildModuleDefs): full-resolve module manifests now
     // that the projection exists, so module page/api/connection operators like
     // _build.authConfig resolve against it.
     await resolveModuleManifests({ context });
+    globalThis.__ldfMark?.('resolveModuleManifests');
 
     let components;
+    globalThis.__ldfMark?.('let');
     try {
       // Phase 2: Ref resolution (handles _ref: { module, component/menu })
       components = await buildRefs({ context });
@@ -157,11 +181,14 @@ async function build(options) {
         throw err;
       }
     }
+    globalThis.__ldfMark?.('try');
     // Stop if buildRefs collected any errors (YAML parse, missing files, etc.)
     logCollectedErrors(context);
+    globalThis.__ldfMark?.('logCollectedErrors');
 
     // Phase 3: Process modules — scopes IDs, merges into components
     buildModules({ components, context });
+    globalThis.__ldfMark?.('buildModules');
 
     // Phase 3.5: Pre-compute static runtime operators (_sum, _if, _string, etc.)
     // whose arguments are fully static. This single fold covers components after
@@ -175,84 +202,126 @@ async function build(options) {
       input: components,
       refDef: context.rootRefDef,
     });
+    globalThis.__ldfMark?.('precomputeRuntimeOperators');
 
     // Build steps - collect all errors before stopping
     // addKeys runs first so testSchema has ~k markers for error location info
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    globalThis.__ldfMark?.('addKeys');
     // testSchema emits warnings (not errors) — focused validations in each
     // build step provide better error messages with full context
     tryBuildStep(testSchema, 'testSchema', { components, context });
+    globalThis.__ldfMark?.('testSchema');
 
     // Stop if addKeys collected any errors (e.g. invalid ~ignoreBuildChecks)
     logCollectedErrors(context);
+    globalThis.__ldfMark?.('logCollectedErrors');
 
     tryBuildStep(buildApp, 'buildApp', { components, context });
+    globalThis.__ldfMark?.('buildApp');
     // appMeta is computed in Phase 0; attach it here (where buildApp used to
     // create it) so the following addKeys pass keys it identically.
     components.appMeta = context.appMeta;
+    globalThis.__ldfMark?.('components.appMeta');
     // validateConfig resolves the current environment, which buildLogger reads for Sentry.
     tryBuildStep(validateConfig, 'validateConfig', { components, context });
+    globalThis.__ldfMark?.('validateConfig');
     tryBuildStep(buildLogger, 'buildLogger', { components, context });
+    globalThis.__ldfMark?.('buildLogger');
     tryBuildStep(validateRequestTimeout, 'validateRequestTimeout', { components, context });
+    globalThis.__ldfMark?.('validateRequestTimeout');
     tryBuildStep(validateDeprecatedStyles, 'validateDeprecatedStyles', { components, context });
+    globalThis.__ldfMark?.('validateDeprecatedStyles');
     tryBuildStep(addDefaultPages, 'addDefaultPages', { components, context });
+    globalThis.__ldfMark?.('addDefaultPages');
     // addKeys runs again to add keys to any new objects created by earlier build steps
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    globalThis.__ldfMark?.('addKeys');
     // Mobile pages join components.pages here, so routes, auth and requests cover them.
     tryBuildStep(buildMobile, 'buildMobile', { components, context });
+    globalThis.__ldfMark?.('buildMobile');
     tryBuildStep(buildRoutes, 'buildRoutes', { components, context });
+    globalThis.__ldfMark?.('buildRoutes');
     tryBuildStep(buildAuth, 'buildAuth', { components, context });
+    globalThis.__ldfMark?.('buildAuth');
     tryBuildStep(validateAuthPagePaths, 'validateAuthPagePaths', { components, context });
+    globalThis.__ldfMark?.('validateAuthPagePaths');
     tryBuildStep(buildConnections, 'buildConnections', { components, context });
+    globalThis.__ldfMark?.('buildConnections');
     tryBuildStep(buildDynamicPolicies, 'buildDynamicPolicies', { components, context });
+    globalThis.__ldfMark?.('buildDynamicPolicies');
     tryBuildStep(buildApi, 'buildApi', { components, context });
+    globalThis.__ldfMark?.('buildApi');
     tryBuildStep(validateMobileEndpointRefs, 'validateMobileEndpointRefs', {
       components,
       context,
     });
+    globalThis.__ldfMark?.('validateMobileEndpointRefs');
     tryBuildStep(buildAgents, 'buildAgents', { components, context });
+    globalThis.__ldfMark?.('buildAgents');
     tryBuildStep(validateAgentTimeout, 'validateAgentTimeout', { components, context });
+    globalThis.__ldfMark?.('validateAgentTimeout');
     tryBuildStep(buildMcp, 'buildMcp', { components, context });
+    globalThis.__ldfMark?.('buildMcp');
     tryBuildStep(buildWebsockets, 'buildWebsockets', { components, context });
+    globalThis.__ldfMark?.('buildWebsockets');
     // After buildWebsockets: the policy allows the page's websocket when the app has websockets.
     tryBuildStep(buildSecurity, 'buildSecurity', { components, context });
+    globalThis.__ldfMark?.('buildSecurity');
     tryBuildStep(buildNotifications, 'buildNotifications', { components, context });
+    globalThis.__ldfMark?.('buildNotifications');
     // Cross-config step validations — need buildApi (stepIds) and the
     // buildAgents/buildNotifications id sets
     tryBuildStep(validateCallAgentSteps, 'validateCallAgentSteps', { components, context });
+    globalThis.__ldfMark?.('validateCallAgentSteps');
     tryBuildStep(validateRenderNotificationSteps, 'validateRenderNotificationSteps', {
       components,
       context,
     });
+    globalThis.__ldfMark?.('validateRenderNotificationSteps');
     tryBuildStep(buildPages, 'buildPages', { components, context });
+    globalThis.__ldfMark?.('buildPages');
     // After buildPages: styles are keyed by slot (normalizeClassAndStyles).
     tryBuildStep(validateMobileStyles, 'validateMobileStyles', { components, context });
+    globalThis.__ldfMark?.('validateMobileStyles');
     tryBuildStep(validateNativeIgnoredProperties, 'validateNativeIgnoredProperties', {
       components,
       context,
     });
+    globalThis.__ldfMark?.('validateNativeIgnoredProperties');
     // After buildPages: Link actions in app events are checked against the page ids.
     tryBuildStep(buildAppEvents, 'buildAppEvents', { components, context });
+    globalThis.__ldfMark?.('buildAppEvents');
     tryBuildStep(buildMobileAppEvents, 'buildMobileAppEvents', { components, context });
+    globalThis.__ldfMark?.('buildMobileAppEvents');
     // After the pages: a view names a page, and _response is refused outside a view.
     tryBuildStep(validateMcpViews, 'validateMcpViews', { components, context });
+    globalThis.__ldfMark?.('validateMcpViews');
     tryBuildStep(validateMcpResponseOperator, 'validateMcpResponseOperator', {
       components,
       context,
     });
+    globalThis.__ldfMark?.('validateMcpResponseOperator');
     tryBuildStep(buildMcpViews, 'buildMcpViews', { components, context });
+    globalThis.__ldfMark?.('buildMcpViews');
     // Every type is counted by now, and buildJs has not yet replaced the
     // counted objects with copies.
     const { pending: pluginChecksPending } = await runPluginChecks({ components, context });
+    globalThis.__ldfMark?.('runPluginChecks');
     clearRuleTargetNodes({ context });
+    globalThis.__ldfMark?.('clearRuleTargetNodes');
     // Now, so a build that fails later leaves no stale list behind.
     await writePluginChecksPending({ context, packages: pluginChecksPending });
+    globalThis.__ldfMark?.('writePluginChecksPending');
     tryBuildStep(validateApiHtmlLinks, 'validateApiHtmlLinks', { components, context });
+    globalThis.__ldfMark?.('validateApiHtmlLinks');
     tryBuildStep(buildMenu, 'buildMenu', { components, context });
+    globalThis.__ldfMark?.('buildMenu');
     // Collect page content strings for Tailwind to scan. Must run before
     // buildJs — jsMapParser replaces _js source with hashes, and class
     // candidates used only inside _js source would otherwise never be scanned.
     context.tailwindContentMap = new Map();
+    globalThis.__ldfMark?.('context.tailwindContentMap');
     // A mobile page never renders in the web client, so its classes are not scanned.
     for (const page of (components.pages ?? []).filter((item) => item.target !== 'mobile')) {
       const content = collectPageContent([page]);
@@ -260,78 +329,131 @@ async function build(options) {
         context.tailwindContentMap.set(page.pageId, content);
       }
     }
+    globalThis.__ldfMark?.('for');
     // Mobile class candidates are collected here for the same reason.
     tryBuildStep(collectMobileClassCandidates, 'collectMobileClassCandidates', {
       components,
       context,
     });
+    globalThis.__ldfMark?.('collectMobileClassCandidates');
     tryBuildStep(buildMobileAppJs, 'buildMobileAppJs', { components, context });
+    globalThis.__ldfMark?.('buildMobileAppJs');
     tryBuildStep(buildJs, 'buildJs', { components, context });
+    globalThis.__ldfMark?.('buildJs');
     tryBuildStep(buildTypes, 'buildTypes', { components, context });
+    globalThis.__ldfMark?.('buildTypes');
     tryBuildStep(buildTypesMobile, 'buildTypesMobile', { components, context });
+    globalThis.__ldfMark?.('buildTypesMobile');
     // Icon sets load asynchronously; a bad theme.icons stops the build here,
     // since buildImports resolves every icon name against context.icons.
     await buildIconContext({ components, context });
+    globalThis.__ldfMark?.('buildIconContext');
     buildMobileTheme({ components, context });
+    globalThis.__ldfMark?.('buildMobileTheme');
     // Async (Tailwind's compiler), so it runs outside tryBuildStep; config
     // faults are collected, not thrown.
     await buildMobileClassMap({ components, context });
+    globalThis.__ldfMark?.('buildMobileClassMap');
     logCollectedErrors(context);
+    globalThis.__ldfMark?.('logCollectedErrors');
     tryBuildStep(validateMobileMenuIcons, 'validateMobileMenuIcons', { components, context });
+    globalThis.__ldfMark?.('validateMobileMenuIcons');
     tryBuildStep(buildImports, 'buildImports', { components, context });
+    globalThis.__ldfMark?.('buildImports');
     // Final addKeys pass to ensure all objects (including those created by build steps) have ~k
     tryBuildStep(addKeys, 'addKeys', { components, context });
+    globalThis.__ldfMark?.('addKeys');
 
     // Check if there are any collected errors before writing
     logCollectedErrors(context);
+    globalThis.__ldfMark?.('logCollectedErrors');
 
     // A check (validateOnly) stops here: every validation has run and nothing is written.
     if (context.validateOnly) {
+      globalThis.__ldfMarksFlush?.();
       return { errors: [], warnings: (context.warnings ?? []).map(serializeBuildException) };
     }
+    globalThis.__ldfMark?.('if');
 
     // Per-page type sets are build output, not config: computed once every page
     // built cleanly, after the final addKeys pass.
     buildPageTypes({ components, context });
+    globalThis.__ldfMark?.('buildPageTypes');
     // Before the page index: a mobile page's hash covers its _icons.
     await buildMobilePageIcons({ components, context });
+    globalThis.__ldfMark?.('buildMobilePageIcons');
     buildMobilePageIndex({ components, context });
+    globalThis.__ldfMark?.('buildMobilePageIndex');
 
     // Write steps - only if no errors
     await cleanBuildDirectory({ context });
+    globalThis.__ldfMark?.('cleanBuildDirectory');
     // Again: cleanBuildDirectory removed it.
     await writePluginChecksPending({ context, packages: pluginChecksPending });
+    globalThis.__ldfMark?.('writePluginChecksPending');
     await writeApp({ components, context });
+    globalThis.__ldfMark?.('writeApp');
     await writeAppEvents({ components, context });
+    globalThis.__ldfMark?.('writeAppEvents');
     await writeAppMeta({ components, context });
+    globalThis.__ldfMark?.('writeAppMeta');
     await writeAuth({ components, context });
+    globalThis.__ldfMark?.('writeAuth');
     await writeConnections({ components, context });
+    globalThis.__ldfMark?.('writeConnections');
     await writeDynamicPolicies({ context });
+    globalThis.__ldfMark?.('writeDynamicPolicies');
     await writeAgents({ components, context });
+    globalThis.__ldfMark?.('writeAgents');
     await writeApi({ components, context });
+    globalThis.__ldfMark?.('writeApi');
     await writeMcp({ components, context });
+    globalThis.__ldfMark?.('writeMcp');
     await writeWebsockets({ components, context });
+    globalThis.__ldfMark?.('writeWebsockets');
     await writeNotifications({ components, context });
+    globalThis.__ldfMark?.('writeNotifications');
     await writeRequests({ components, context });
+    globalThis.__ldfMark?.('writeRequests');
     await writePages({ components, context });
+    globalThis.__ldfMark?.('writePages');
     await writeConfig({ components, context });
+    globalThis.__ldfMark?.('writeConfig');
     await writeSecurity({ context });
+    globalThis.__ldfMark?.('writeSecurity');
     await writeGlobal({ components, context });
+    globalThis.__ldfMark?.('writeGlobal');
     await writeTheme({ components, context });
+    globalThis.__ldfMark?.('writeTheme');
     await writeI18n({ components, context });
+    globalThis.__ldfMark?.('writeI18n');
     await codegenI18nLocales({ components, context });
+    globalThis.__ldfMark?.('codegenI18nLocales');
     await writeLogger({ components, context });
+    globalThis.__ldfMark?.('writeLogger');
     await writeMaps({ components, context });
+    globalThis.__ldfMark?.('writeMaps');
     await writeMenus({ components, context });
+    globalThis.__ldfMark?.('writeMenus');
     await writeRoutes({ components, context });
+    globalThis.__ldfMark?.('writeRoutes');
     await writeTypes({ components, context });
+    globalThis.__ldfMark?.('writeTypes');
     await writePluginImports({ components, context });
+    globalThis.__ldfMark?.('writePluginImports');
     await writePageTypes({ components, context });
+    globalThis.__ldfMark?.('writePageTypes');
     await writeMobile({ components, context });
+    globalThis.__ldfMark?.('writeMobile');
     await writeJs({ components, context });
+    globalThis.__ldfMark?.('writeJs');
     await updateServerPackageJson({ components, context });
+    globalThis.__ldfMark?.('updateServerPackageJson');
     await copyPublicFolder({ components, context });
+    globalThis.__ldfMark?.('copyPublicFolder');
     await copyAgentFileSystems({ components, context });
+    globalThis.__ldfMark?.('copyAgentFileSystems');
+    globalThis.__ldfMarksFlush?.();
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;
