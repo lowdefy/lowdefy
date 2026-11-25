@@ -14,49 +14,66 @@
   limitations under the License.
 */
 
-// The note after a mixed run's summary when it left journeys browser-only. A journey the headless
-// part found needs a browser partway through is not run in the browser in the same run (only
-// --thorough does that), and the next run sends it straight there while it and the app's config
-// are unchanged (routeJourney). `inProcess` counts the browser-only journeys with a step only the
-// headless runner takes (runsOnlyInProcess), which no run sends to the browser, so the note names
-// them apart rather than promise them a browser run. A thorough run ran the others in the browser,
-// so it names only those. Undefined otherwise: a headless run lists its browser-only journeys by
-// design. `tool` names the lowdefy_run_tests tool and its argument instead of the command and its
-// flag.
-function formatBrowserOnlyNote({
-  runner,
-  thorough = false,
-  browserOnly,
-  inProcess = 0,
-  tool = false,
-}) {
-  if (runner !== 'mixed') {
+import { relativePosixPath } from '@lowdefy/node-utils';
+
+import { describeBrowserOnly } from './formatBrowserOnly.js';
+
+// A path as a shell reads it: quoted when it holds anything but letters, digits and . _ / -.
+function shellPath(filePath) {
+  return /^[A-Za-z0-9._/-]+$/.test(filePath) ? filePath : `'${filePath.replace(/'/g, "'\\''")}'`;
+}
+
+// The lines after a run's summary when it left journeys browser-only (`browserOnly`, their
+// results), so a journey no run took is never missed: each by name, file and the step that needs
+// a browser, then the exact command that runs them there, `lowdefy test --thorough <files>`, its
+// files relative to `base` (the working directory the command resolves paths from). `inProcess`
+// (runDevJourneys) are those with a step only the headless runner takes, which no run takes to
+// the browser: the command leaves their files out and a line says why. `tool` names the
+// lowdefy_run_tests tool and its arguments instead, `base` then being the app directory its paths
+// are read from. Undefined when the run left none.
+function formatBrowserOnlyNote({ browserOnly, inProcess = [], base, tool = false }) {
+  if (browserOnly.length === 0) {
     return undefined;
   }
-  const lines = [];
-  if (!thorough && browserOnly > inProcess) {
-    const [next, thoroughRun] = tool
-      ? ['lowdefy_run_tests', 'thorough: true']
-      : ['lowdefy test', 'lowdefy test --thorough'];
-    const which = inProcess > 0 ? 'the other browser-only journeys' : 'the browser-only journeys';
+  const lines = ['Not run, needs a browser:'];
+  browserOnly.forEach((result) => {
+    const file = relativePosixPath({ from: base, to: result.filePath });
+    const remembered = result.remembered === true ? '  (found by an earlier run)' : '';
+    lines.push(`  ${result.name} (${file})  ${describeBrowserOnly({ result })}${remembered}`);
+  });
+  const files = [];
+  browserOnly
+    .filter((result) => !inProcess.includes(result))
+    .forEach((result) => {
+      const file = relativePosixPath({ from: base, to: result.filePath });
+      if (!files.includes(file)) {
+        files.push(file);
+      }
+    });
+  if (files.length > 0) {
     lines.push(
-      `The next ${next} runs ${which} in the browser while they and the app config are unchanged; ${thoroughRun} runs them there in this run.`
+      tool
+        ? `Run them in the browser: lowdefy_run_tests with thorough: true and paths: ${JSON.stringify(
+            files
+          )}`
+        : `Run them in the browser: lowdefy test --thorough ${files.map(shellPath).join(' ')}`
     );
   }
-  if (inProcess === 1) {
+  if (inProcess.length === 1) {
     lines.push(
-      '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+      `${
+        files.length > 0 ? '1 of them' : 'It'
+      } has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.`
     );
   }
-  if (inProcess > 1) {
+  if (inProcess.length > 1) {
     lines.push(
-      `${inProcess} browser-only journeys also have a hold, release or call as system step, which only the headless runner takes, so no run takes them to the browser.`
+      `${
+        inProcess.length === browserOnly.length ? 'They' : `${inProcess.length} of them`
+      } have a hold, release or call as system step, which only the headless runner takes, so no run takes them to the browser.`
     );
   }
-  if (lines.length === 0) {
-    return undefined;
-  }
-  return lines.join(' ');
+  return lines.join('\n');
 }
 
 export default formatBrowserOnlyNote;

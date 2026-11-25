@@ -130,7 +130,8 @@ test('runAppTests runs every journey against the dev server and reports each as 
 
   expect(answer.summary).toEqual('1 passed, 1 failed of 2 journeys');
   expect(answer.passed).toHaveLength(1);
-  expect(answer.passed[0]).toMatch(/^PASS {2}orders list {2}\(1 steps, \d+ms\) {2}\[headless\]$/);
+  expect(answer.passed[0]).toMatch(/^PASS {2}orders list {2}\(1 steps, \d+ms\)$/);
+  expect(bodies.every((posted) => posted.headless === true)).toBe(true);
   expect(answer.failed).toHaveLength(1);
   expect(answer.failed[0]).toMatchObject({
     name: 'refund button',
@@ -266,11 +267,15 @@ test('runAppTests with concurrency 2 reports progress as journeys finish and res
 
 test('runAppTests refuses concurrency with headless, and one out of range, without running anything', async () => {
   writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [] });
-  expect(await runAppTests({ configDirectory, url, headless: true, concurrency: 2 })).toEqual({
+  const refused = {
     summary:
-      'concurrency runs browser journeys side by side, and a headless run goes one at a time: drop concurrency, or drop headless to run the browser journeys side by side.',
-  });
-  expect(await runAppTests({ configDirectory, url, concurrency: 5 })).toEqual({
+      'concurrency runs browser journeys side by side, and a headless run goes one at a time: drop concurrency, or pass thorough or browser to run the browser journeys side by side.',
+  };
+  expect(await runAppTests({ configDirectory, url, concurrency: 2 })).toEqual(refused);
+  expect(await runAppTests({ configDirectory, url, headless: true, concurrency: 2 })).toEqual(
+    refused
+  );
+  expect(await runAppTests({ configDirectory, url, browser: true, concurrency: 5 })).toEqual({
     summary: 'concurrency must be an integer from 1 to 3. Received 5.',
   });
   expect(bodies).toEqual([]);
@@ -586,7 +591,14 @@ test('runAppTests with headless posts every journey headless and reports a brows
   const result = await runAppTests({ configDirectory, url, headless: true });
   expect(bodies.map((posted) => posted.headless)).toEqual([true, true]);
   expect(bodies.every((posted) => posted.recording === undefined)).toBe(true);
-  expect(result.summary).toBe('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(result.summary).toBe(
+    [
+      '1 passed, 0 failed of 1 journeys, 1 browser-only not run',
+      'Not run, needs a browser:',
+      '  orders screenshot (tests/journeys/shots.yaml)  step 0 (screenshot): step "screenshot" needs a browser',
+      'Run them in the browser: lowdefy_run_tests with thorough: true and paths: ["tests/journeys/shots.yaml"]',
+    ].join('\n')
+  );
   expect(result.browserOnly).toEqual([
     'BROWSER-ONLY  orders screenshot  step 0 (screenshot): step "screenshot" needs a browser',
   ]);
@@ -641,7 +653,12 @@ test('runAppTests reports a journey found partway through by default, and runs i
   const found = await runAppTests({ configDirectory, url, paths: ['tests/journeys/orders.yaml'] });
   expect(bodies.map((posted) => posted.headless === true)).toEqual([true]);
   expect(found.summary).toBe(
-    '0 passed, 0 failed of 0 journeys, 1 browser-only not run\nThe next lowdefy_run_tests runs the browser-only journeys in the browser while they and the app config are unchanged; thorough: true runs them there in this run.'
+    [
+      '0 passed, 0 failed of 0 journeys, 1 browser-only not run',
+      'Not run, needs a browser:',
+      '  orders list (tests/journeys/orders.yaml)  step 0 (click "a"): needs a browser here',
+      'Run them in the browser: lowdefy_run_tests with thorough: true and paths: ["tests/journeys/orders.yaml"]',
+    ].join('\n')
   );
   expect(found.browserOnly).toEqual([
     'BROWSER-ONLY  orders list  step 0 (click "a"): needs a browser here',
@@ -672,9 +689,10 @@ test('runAppTests says a journey with a hold step, found partway through, goes t
   });
 
   const found = await runAppTests({ configDirectory, url });
-  expect(found.summary).toBe(
-    '0 passed, 0 failed of 0 journeys, 2 browser-only not run\nThe next lowdefy_run_tests runs the other browser-only journeys in the browser while they and the app config are unchanged; thorough: true runs them there in this run. 1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
-  );
+  expect(found.summary.split('\n').slice(-2)).toEqual([
+    'Run them in the browser: lowdefy_run_tests with thorough: true and paths: ["tests/journeys/orders.yaml"]',
+    '1 of them has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.',
+  ]);
 
   bodies = [];
   const thorough = await runAppTests({ configDirectory, url, thorough: true });
@@ -684,8 +702,46 @@ test('runAppTests says a journey with a hold step, found partway through, goes t
     [{ click: 'a' }, false],
   ]);
   expect(thorough.summary).toBe(
-    '1 passed, 0 failed of 1 journeys, 1 browser-only not run\n1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+    [
+      '1 passed, 0 failed of 1 journeys, 1 browser-only not run',
+      'Not run, needs a browser:',
+      '  holds the save (tests/journeys/held.yaml)  step 0 (click "a"): needs a browser here',
+      'It has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.',
+    ].join('\n')
   );
+});
+
+test('runAppTests lists a journey an earlier run found on the same build without posting it, and records it as browserOnly', async () => {
+  answerPartway();
+  // The dev server's build, which hashBuild reads.
+  const buildDirectory = path.join(configDirectory, '.lowdefy', 'dev', 'build');
+  fs.mkdirSync(path.join(buildDirectory, 'plugins'), { recursive: true });
+  fs.writeFileSync(path.join(buildDirectory, 'plugins', 'blockMetas.json'), '{}');
+  ['keyMap', 'refMap', 'config', 'app'].forEach((name) =>
+    fs.writeFileSync(path.join(buildDirectory, `${name}.json`), '{}')
+  );
+  fs.writeFileSync(path.join(buildDirectory, 'routes.json'), '[]');
+  writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [{ click: 'a' }] });
+  await runAppTests({ configDirectory, url });
+  expect(bodies).toHaveLength(1);
+
+  bodies = [];
+  const again = await runAppTests({ configDirectory, url });
+  expect(bodies).toEqual([]);
+  expect(again.browserOnly).toEqual([
+    'BROWSER-ONLY  orders list  step 0 (click "a"): needs a browser here; found by an earlier run, not run again',
+  ]);
+  expect(again.summary.split('\n')[2]).toBe(
+    '  orders list (tests/journeys/orders.yaml)  step 0 (click "a"): needs a browser here  (found by an earlier run)'
+  );
+  expect(readResults(again)).toEqual([
+    expect.objectContaining({
+      name: 'orders list',
+      browserOnly: { index: 0, step: { click: 'a' }, reason: 'needs a browser here' },
+      remembered: true,
+    }),
+  ]);
+  expect(readResults(again)[0]).not.toHaveProperty('passed');
 });
 
 test('runAppTests refuses two of browser, thorough and headless without running anything', async () => {

@@ -27,7 +27,6 @@ import formatBrowserOnlyNote from './formatBrowserOnlyNote.js';
 import hashBuild from './hashBuild.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
-import mayRunInBrowser from './mayRunInBrowser.js';
 import openBuildApp from './openBuildApp.js';
 import parseRepeat from './parseRepeat.js';
 import parseTestSelection from './parseTestSelection.js';
@@ -100,7 +99,7 @@ async function test({ context }) {
     refuse({ context, message: repeatError });
     return;
   }
-  const { runner, thorough, build, error: modeError } = readTestMode({ options: context.options });
+  const { runner, build, error: modeError } = readTestMode({ options: context.options });
   if (modeError) {
     refuse({ context, message: modeError });
     return;
@@ -155,11 +154,10 @@ async function test({ context }) {
     repeat,
     runner,
     tags,
-    thorough,
     tier,
     usageWindow,
   };
-  // --build is taken only with --headless (readTestMode).
+  // --build runs headless only (readTestMode).
   if (!build || lint) {
     await testJourneys({ context, ...options });
     return;
@@ -180,7 +178,7 @@ async function test({ context }) {
 }
 
 // Selects the run's journeys and runs them: headless on the production build's app (`app`, given
-// for --headless --build), or on a dev server, each where `runner` sends it (runDevJourneys).
+// for --build), or on a dev server, each where `runner` sends it (runDevJourneys).
 async function testJourneys({
   app,
   build,
@@ -193,7 +191,6 @@ async function testJourneys({
   repeat,
   runner,
   tags,
-  thorough,
   tier,
   usageWindow,
 }) {
@@ -264,12 +261,17 @@ async function testJourneys({
     return;
   }
 
+  // Read once: the run routes, and skips, its journeys by the records that decided whether it takes
+  // the slots. A browser run reads none.
+  const records = runner === 'browser' ? {} : readHeadlessRun({ directories: context.directories });
+
   if (build) {
     const ran = await runHeadlessTests({
       app,
       context,
       selected: tiered.selected,
       skipped: tiered.skipped.length,
+      records,
       repeat,
     });
     if (ran.failed > 0) {
@@ -280,18 +282,11 @@ async function testJourneys({
   }
 
   // The slots are held until the server stops, so a waiting run has nothing
-  // in memory yet.
-  // Read once: the run routes its journeys by the records that decided whether it takes the slots.
-  const records = runner === 'mixed' ? readHeadlessRun({ directories: context.directories }) : {};
-  const slots = mayRunInBrowser({
-    entries: tiered.selected,
-    runner,
-    thorough,
-    records,
-    configDirectory: context.directories.config,
-  })
-    ? await takeJourneyRunSlots({ context, command: 'lowdefy test' })
-    : NO_SLOTS;
+  // in memory yet. A headless run starts no browser.
+  const slots =
+    runner === 'headless'
+      ? NO_SLOTS
+      : await takeJourneyRunSlots({ context, command: 'lowdefy test' });
   if (slots === null) {
     return;
   }
@@ -333,18 +328,17 @@ async function testJourneys({
   // In selection order, whatever order the journeys finished in.
   const results = [];
   const browserOnly = [];
-  let inProcess = 0;
+  const inProcess = [];
   const seen = new Set();
   try {
     // The build as the server serves it before any journey opens a page, which the records of
-    // headless-run.json are taken against (routeJourney).
+    // headless-run.json are taken against (findBrowserOnlyRecord).
     const configHash = hashBuild({ context });
     const ran = await runDevJourneys({
       context,
       entries: tiered.selected,
       url: server.url,
       runner,
-      thorough,
       readLimit,
       records,
       repeat,
@@ -365,7 +359,7 @@ async function testJourneys({
     });
     results.push(...ran.results);
     browserOnly.push(...ran.browserOnly);
-    inProcess = ran.inProcess;
+    inProcess.push(...ran.inProcess);
     // The build once the run's pages were built.
     const endConfigHash = hashBuild({ context });
     writeExercised({
@@ -426,12 +420,7 @@ async function testJourneys({
   } else {
     context.logger.info(summary.text);
   }
-  const note = formatBrowserOnlyNote({
-    runner,
-    thorough,
-    browserOnly: browserOnly.length,
-    inProcess,
-  });
+  const note = formatBrowserOnlyNote({ browserOnly, inProcess, base: process.cwd() });
   if (!type.isUndefined(note)) {
     context.logger.info(note);
   }
