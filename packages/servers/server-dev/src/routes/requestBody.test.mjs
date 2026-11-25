@@ -41,6 +41,8 @@ vi.doMock('@lowdefy/api', () => ({
   runWebhookEndpoint: mockRunWebhookEndpoint,
 }));
 vi.doMock('../../lib/server/jitPageBuilder.js', () => ({ default: vi.fn() }));
+// The real one imports the build's serverJsMap.js, which only a server has.
+vi.doMock('../../lib/server/loadDynamicJsMap.js', () => ({ default: vi.fn(() => ({})) }));
 
 const { default: createErrorHandler } = await import('../middleware/errorHandler.js');
 const routes = {

@@ -14,21 +14,12 @@
   limitations under the License.
 */
 
-import generateClientJsModule from './generateClientJsModule.js';
-import generateJsFile from './generateJsFile.js';
+import generateJsMapFiles from './generateJsMapFiles.js';
 
 async function writeJs({ context }) {
-  await context.writeBuildArtifact(
-    'plugins/operators/clientJsMap.js',
-    generateClientJsModule(context.jsMap.client)
-  );
-  await context.writeBuildArtifact(
-    'plugins/operators/serverJsMap.js',
-    generateJsFile({
-      map: context.jsMap.server,
-      functionPrototype: `{ args, item, lowdefyApp, payload, secret, state, step, user }`,
-    })
-  );
+  for (const [filePath, content] of Object.entries(generateJsMapFiles({ jsMap: context.jsMap }))) {
+    await context.writeBuildArtifact(filePath, content);
+  }
 }
 
 export default writeJs;

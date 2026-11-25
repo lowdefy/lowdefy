@@ -38,6 +38,9 @@ function write(directory, file, content) {
   fs.writeFileSync(filePath, content);
 }
 
+// A staged page registry; the publish keeps the page build outputs of its pages.
+const stagedRegistry = JSON.stringify({ home: { pageId: 'home' }, 'module/page': {} });
+
 function read(file) {
   return fs.readFileSync(path.join(buildDirectory, file), 'utf8');
 }
@@ -46,7 +49,7 @@ beforeEach(() => {
   root = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-publish-build-'));
   buildDirectory = path.join(root, 'build');
   stagingDirectory = path.join(root, 'build-staging');
-  write(stagingDirectory, 'pageRegistry.json', 'new');
+  write(stagingDirectory, 'pageRegistry.json', stagedRegistry);
 });
 
 afterEach(() => {
@@ -146,7 +149,7 @@ test('the page registry arrives after every other new file and after stale files
       return;
     }
     checks += 1;
-    if (read('pageRegistry.json') === 'new') {
+    if (read('pageRegistry.json') === stagedRegistry) {
       const oldEndpoint = [...Array(200).keys()].some(
         (i) => read(`api/endpoint-${i}.json`) === 'old'
       );
@@ -163,7 +166,7 @@ test('the page registry arrives after every other new file and after stale files
 
   expect(checks).toBeGreaterThan(1);
   expect(early).toBe(0);
-  expect(read('pageRegistry.json')).toBe('new');
+  expect(read('pageRegistry.json')).toBe(stagedRegistry);
 });
 
 test('publishBuildDirectory keeps the control files the manager and dev tools write', async () => {
@@ -192,7 +195,7 @@ test('publishBuildDirectory retries a rename while another process holds the fil
   await publishBuildDirectory({ buildDirectory, stagingDirectory });
 
   expect(read('app.json')).toBe('new');
-  expect(read('pageRegistry.json')).toBe('new');
+  expect(read('pageRegistry.json')).toBe(stagedRegistry);
 });
 
 test('publishBuildDirectory fails with the rename error when a file stays locked', async () => {
@@ -234,7 +237,7 @@ test('publishBuildDirectory leaves an unchanged artifact in place and replaces a
 });
 
 test('publishBuildDirectory moves a byte-identical page registry and id counter anyway', async () => {
-  write(buildDirectory, 'pageRegistry.json', 'new');
+  write(buildDirectory, 'pageRegistry.json', stagedRegistry);
   write(buildDirectory, 'idCounter.json', '{"prefix":"a1b2"}');
   setMtime('pageRegistry.json', 1000);
   setMtime('idCounter.json', 1000);
@@ -248,14 +251,43 @@ test('publishBuildDirectory moves a byte-identical page registry and id counter 
 
 test('publishBuildDirectory removes stale files and keeps control files when artifacts are unchanged', async () => {
   write(buildDirectory, 'app.json', 'same');
-  write(buildDirectory, 'jitMaps/abc-1-1.json', '{}');
+  write(buildDirectory, 'menus.json', 'stale');
   write(buildDirectory, 'buildStatus.json', '{"status":"ok"}');
   write(stagingDirectory, 'app.json', 'same');
 
   await publishBuildDirectory({ buildDirectory, stagingDirectory });
 
   expect(read('app.json')).toBe('same');
-  expect(fs.existsSync(path.join(buildDirectory, 'jitMaps/abc-1-1.json'))).toBe(false);
+  expect(fs.existsSync(path.join(buildDirectory, 'menus.json'))).toBe(false);
   expect(read('buildStatus.json')).toBe('{"status":"ok"}');
   expect(fs.existsSync(stagingDirectory)).toBe(false);
+});
+
+test('publishBuildDirectory keeps what page builds wrote for the pages it publishes, and their key maps', async () => {
+  const kept = [
+    'pages/home.json',
+    'pages/home/requests/get_items.json',
+    'pages/module/page.json',
+    'pages/module/page/requests/save.json',
+    'jitMaps/abc123-1-1.json',
+  ];
+  const removed = [
+    'pages/removed.json',
+    'pages/removed/requests/get_items.json',
+    'jitMaps/endpoints-1-1.json',
+  ];
+  for (const file of [...kept, ...removed]) {
+    write(buildDirectory, file, 'page build');
+  }
+  write(stagingDirectory, 'pages/404.json', 'sourceless');
+
+  await publishBuildDirectory({ buildDirectory, stagingDirectory });
+
+  for (const file of kept) {
+    expect(read(file)).toBe('page build');
+  }
+  for (const file of removed) {
+    expect(fs.existsSync(path.join(buildDirectory, file))).toBe(false);
+  }
+  expect(read('pages/404.json')).toBe('sourceless');
 });

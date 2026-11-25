@@ -94,6 +94,35 @@ function trackMapWrites({ context }) {
   };
 }
 
+// appMeta carries the config build's buildId, a new id every config build, so
+// a page build that read it is out of date after any config publish. A read
+// of one of its fields marks the build; a type check (a symbol key) does not.
+function trackAppMetaReads({ context }) {
+  if (context.appMeta === null || typeof context.appMeta !== 'object') return;
+  const markRead = (key) => {
+    const reads = buildReads.getStore();
+    if (reads && typeof key === 'string') reads.readAppMeta = true;
+  };
+  context.appMeta = new Proxy(context.appMeta, {
+    get(target, key, receiver) {
+      markRead(key);
+      return Reflect.get(target, key, receiver);
+    },
+    getOwnPropertyDescriptor(target, key) {
+      markRead(key);
+      return Reflect.getOwnPropertyDescriptor(target, key);
+    },
+    has(target, key) {
+      markRead(key);
+      return Reflect.has(target, key);
+    },
+    ownKeys(target) {
+      markRead('');
+      return Reflect.ownKeys(target);
+    },
+  });
+}
+
 function trackFileReads({ context, configDirectory }) {
   context.readConfigFile = trackReadConfigFile({
     readConfigFile: context.readConfigFile,
@@ -126,20 +155,37 @@ function locateErrors({ error, context, configDirectory }) {
   }
 }
 
-// generation names the config build the page was built in, and checkedAt the
-// change event counter when its build started: what it read is current as of
-// that event.
-async function record({ pageId, context, configDirectory, generation, checkedAt, build }) {
-  const reads = { files: new Map(), mapsFiles: [], ranAppCode: false };
+// generation names the context generation the page was built in, checkedAt
+// the change event counter when its build started (what it read is current as
+// of that event), configBuild the config publish it started on and
+// registryEntry its page registry entry then, without the config build's key
+// prefix. isOutdated, asked when the build ends, says whether a config publish
+// landed while it ran: its page is rebuilt whatever the publish changed.
+async function record({
+  pageId,
+  context,
+  configDirectory,
+  generation,
+  checkedAt,
+  configBuild,
+  registryEntry,
+  isOutdated = () => false,
+  build,
+}) {
+  const reads = { files: new Map(), mapsFiles: [], ranAppCode: false, readAppMeta: false };
   const builtAt = Date.now();
   const describe = (errors) => ({
     builtAt,
     checkedAt,
+    configBuild,
     errors,
     files: reads.files,
     generation,
     mapsFiles: reads.mapsFiles,
+    outdated: isOutdated(),
     ranAppCode: reads.ranAppCode,
+    readAppMeta: reads.readAppMeta,
+    registryEntry,
   });
   const buildInFlight = { generation, reads };
   buildsInFlight.add(buildInFlight);
@@ -188,6 +234,7 @@ export default {
   get,
   mapsFiles,
   record,
+  trackAppMetaReads,
   trackFileReads,
   trackMapWrites,
   trackReadConfigFile,

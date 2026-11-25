@@ -33,6 +33,8 @@ function setupTestFixtures() {
 
   // lib/build/config.js reads this at import time (screenshotPage → basePath).
   write('build/config.json', {});
+  // Every config build writes it: the dev server reads the key prefix of each publish.
+  write('build/idCounter.json', { prefix: 'fx1_', counter: 1 });
   write('build/routes.json', [{ pageId: 'home', path: 'home' }]);
 
   // The client types a native shell carries (writeAvailableTypes), for target mobile.

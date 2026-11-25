@@ -60,6 +60,29 @@ const idCounterFile = 'idCounter.json';
 // build, or the build status the dev tools read.
 const controlFiles = new Set(['.restart', 'buildStatus.json', 'invalidatePages', 'reload']);
 
+// What the dev server's page builds wrote, which the config build does not
+// stage: a page's artifact and its requests' (pages/<pageId>.json,
+// pages/<pageId>/requests/<requestId>.json), and the key and ref map entries
+// each build added (jitMaps/). A config publish that leaves what page builds
+// read as it was keeps the pages built before it current (the JIT page
+// builder's adoptConfigBuild), so these stay while their page is in the staged
+// page registry; the page builder removes the jitMaps/ files no current page needs.
+// The endpoint builds' jitMaps/ files (endpoints-*) hold keys of endpoint
+// artifacts this publish replaces, so they go.
+function isKeptPageBuildOutput({ file, pageIds }) {
+  const name = file.split(path.sep).join('/');
+  if (name.startsWith('jitMaps/')) {
+    return !name.startsWith('jitMaps/endpoints-');
+  }
+  if (!name.startsWith('pages/')) return false;
+  const pagePath = name.slice('pages/'.length);
+  if (pagePath.endsWith('.json') && pageIds.has(pagePath.slice(0, -'.json'.length))) {
+    return true;
+  }
+  const requestsIndex = pagePath.lastIndexOf('/requests/');
+  return requestsIndex !== -1 && pageIds.has(pagePath.slice(0, requestsIndex));
+}
+
 // On Windows a rename over a file another process has open (the dev server
 // reading it, a virus scanner, the search indexer) fails for a moment with
 // EPERM, EBUSY or EACCES, so each rename is retried for a few seconds before
@@ -88,6 +111,13 @@ async function moveFile({ buildDirectory, stagingDirectory, file }) {
   await renameWithRetry({ from: path.join(stagingDirectory, file), to: target });
 }
 
+async function readStagedPageIds({ stagingDirectory }) {
+  const registry = JSON.parse(
+    await fs.readFile(path.join(stagingDirectory, pageRegistryFile), 'utf8')
+  );
+  return new Set(Object.keys(registry));
+}
+
 async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
   await fs.mkdir(buildDirectory, { recursive: true });
   const stagedFiles = await listFiles(stagingDirectory);
@@ -111,7 +141,13 @@ async function publishBuildDirectory({ buildDirectory, stagingDirectory }) {
   }
 
   const staged = new Set(stagedFiles);
-  const staleFiles = liveFiles.filter((file) => !staged.has(file) && !controlFiles.has(file));
+  const stagedPageIds = await readStagedPageIds({ stagingDirectory });
+  const staleFiles = liveFiles.filter(
+    (file) =>
+      !staged.has(file) &&
+      !controlFiles.has(file) &&
+      !isKeptPageBuildOutput({ file, pageIds: stagedPageIds })
+  );
   await Promise.all(staleFiles.map((file) => fs.rm(path.join(buildDirectory, file), RM_OPTIONS)));
 
   await moveFile({ buildDirectory, stagingDirectory, file: pageRegistryFile });

@@ -114,7 +114,7 @@ test('a page whose own build passes the map budget is built once', async () => {
   app.remove();
 });
 
-test('a config publish rebuilds every page after the map budget released a context', async () => {
+test('a config publish that changes a page build input rebuilds every page after the map budget released a context', async () => {
   const app = createApp({
     'pages/a.yaml': 'id: a\ntype: Box\n',
     'pages/b.yaml': 'id: b\ntype: Box\n',
@@ -122,6 +122,8 @@ test('a config publish rebuilds every page after the map budget released a conte
   await app.request('a');
   await app.request('b');
 
+  writeJson(path.join(app.buildDirectory, 'idCounter.json'), { prefix: 'cfg2_', counter: 10 });
+  writeJson(path.join(app.buildDirectory, 'theme.json'), { icons: { set: 'lucide' } });
   const registryPath = path.join(app.buildDirectory, 'pageRegistry.json');
   fs.copyFileSync(registryPath, `${registryPath}.staged`);
   fs.renameSync(`${registryPath}.staged`, registryPath);

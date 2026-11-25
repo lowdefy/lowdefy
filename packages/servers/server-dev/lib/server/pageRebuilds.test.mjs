@@ -44,6 +44,7 @@ function writeJson(filePath, data) {
 }
 
 let lastSignal = 0;
+let lastPublish = 1;
 
 // A config build's output, as far as a JIT page build reads it, and the app's
 // config files. pages maps a page id to its registry entry (refPath, and
@@ -86,8 +87,15 @@ function createApp({ files, pages }) {
     lastSignal += 1;
     writeFile(path.join(buildDirectory, 'invalidatePages'), String(lastSignal));
   };
-  // A config build publish renames a new page registry into place.
+  // A config build publish: a new key prefix, moved first, and a new page
+  // registry renamed into place last. The other artifacts here carry no keys,
+  // so they are as the config build before wrote them.
   app.publishRegistry = () => {
+    lastPublish += 1;
+    writeJson(path.join(buildDirectory, 'idCounter.json'), {
+      prefix: `cfg${lastPublish}_`,
+      counter: 10,
+    });
     const registryPath = path.join(buildDirectory, 'pageRegistry.json');
     const stagedPath = `${registryPath}.staged`;
     fs.copyFileSync(registryPath, stagedPath);
@@ -472,15 +480,16 @@ test('two registry publishes with the same modified time both recreate the conte
   const app = createApp(sharedRefPages);
   const registryPath = path.join(app.buildDirectory, 'pageRegistry.json');
   await app.request('a');
+  const firstContext = app.context();
   const { atime, mtime } = app.publishRegistry();
   fs.utimesSync(registryPath, atime, mtime);
-  expect(await app.request('a')).toBe('built');
-  expect(await app.request('a')).toBe('served');
+  const secondContext = app.context();
+  expect(secondContext).not.toBe(firstContext);
 
   app.publishRegistry();
   fs.utimesSync(registryPath, atime, mtime);
 
-  expect(await app.request('a')).toBe('built');
+  expect(app.context()).not.toBe(secondContext);
   app.remove();
 });
 

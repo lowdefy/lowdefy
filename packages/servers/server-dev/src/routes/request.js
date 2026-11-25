@@ -17,6 +17,7 @@
 import { callRequest, parseRequestBody } from '@lowdefy/api';
 
 import buildPageIfNeeded from '../../lib/server/jitPageBuilder.js';
+import loadDynamicJsMap from '../../lib/server/loadDynamicJsMap.js';
 import getPathSegments from '../lib/getPathSegments.js';
 
 async function requestHandler(c) {
@@ -46,6 +47,10 @@ async function requestHandler(c) {
     buildDirectory: context.buildDirectory,
     configDirectory: context.configDirectory,
   });
+  // The context read serverJsMap.js before the page build, which can rewrite
+  // it: with the page's own entries, or with those of the pages a config
+  // publish kept, which the publish's file lacks.
+  context.jsMap = loadDynamicJsMap(context.buildDirectory);
 
   context.logger.info({ event: 'call_request', pageId, requestId, blockId, actionId });
   const response = await callRequest(context, { blockId, pageId, payload, requestId });

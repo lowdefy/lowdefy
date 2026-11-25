@@ -17,6 +17,7 @@
 export { default as buildModuleDefs } from './build/buildModuleDefs.js';
 export { default as buildModules } from './build/buildModules.js';
 export { default as generateClientJsModule } from './build/buildJs/generateClientJsModule.js';
+export { default as generateJsMapFiles } from './build/buildJs/generateJsMapFiles.js';
 export { default as collectIconNames } from './build/buildImports/collectIconNames.js';
 export { default as defaultIconAliases } from './build/buildImports/defaultIconAliases.js';
 export { default as createIconContext } from './build/icons/createIconContext.js';

@@ -29,9 +29,9 @@ async function readModifiedAt(filePath) {
 }
 
 // A page built since the server started is edited when its next request would
-// rebuild it (see reviewBuiltPage): it was built on an earlier build context
-// (a config build was published since), or a change event since its build
-// touched it, which for a page whose build ran app code is any change event.
+// rebuild it (see reviewBuiltPage): a config build published since changed what
+// it was built from, or a change event since its build touched it, which for a
+// page whose build ran app code is any change event.
 // A page not built since the server started is edited when its own page file
 // changed after the start. signals is what syncBuildSignals returned.
 // Returns 'edited', 'unbuilt' (never built and not edited) or 'current'.

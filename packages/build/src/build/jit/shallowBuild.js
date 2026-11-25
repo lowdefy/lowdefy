@@ -110,6 +110,7 @@ import collectPageContent from '../collectPageContent.js';
 import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
 import createEndpointRegistry from './createEndpointRegistry.js';
 import releaseMergedModuleEntities from './releaseMergedModuleEntities.js';
+import writeEndpointList from './writeEndpointList.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
@@ -312,6 +313,7 @@ async function shallowBuild(options) {
     await writeConnections({ components, context });
     await writeDynamicPolicies({ context });
     await writeApi({ components, context });
+    await writeEndpointList({ components, context });
     await writeMcp({ components, context });
     await writeAgents({ components, context });
     await writeWebsockets({ components, context });

@@ -74,8 +74,17 @@ function createEntry({ node, segment, parentKeyMapId, parentRef }) {
 // The resolved ref of a node keyed on an earlier pass. Under the parent it was
 // keyed under, its entry inherits from the ref passed down; a node a build step
 // moved under another parent resolves its own chain once.
+// The dev server's JIT build contexts read the config build's entries through
+// get (its lazy key map), as the readers in @lowdefy/errors do.
+function readEntry({ keyMap, keyMapId }) {
+  if (typeof keyMap.get === 'function') {
+    return keyMap.get(keyMapId);
+  }
+  return keyMap[keyMapId];
+}
+
 function keyedRef({ keyMap, keyMapId, parentKeyMapId, parentRef }) {
-  const entry = keyMap[keyMapId];
+  const entry = readEntry({ keyMap, keyMapId });
   if (entry?.p === parentKeyMapId) {
     return entry.r !== undefined ? entry.r : parentRef;
   }

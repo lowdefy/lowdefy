@@ -25,6 +25,7 @@ import {
   createJitMaps,
   createReadConfigFile,
   generateClientJsModule,
+  generateJsMapFiles,
   hydrateDeferredRecords,
   prepareJitContext,
   restoreTenantTargets,
@@ -33,11 +34,12 @@ import {
 import checkPageRecord from './checkPageRecord.js';
 import contextMapBudget from './contextMapBudget.js';
 import continueJitKeys from './continueJitKeys.js';
+import createLazyKeyMap from './createLazyKeyMap.js';
+import fingerprintConfigBuild, { sameFingerprint } from './fingerprintConfigBuild.js';
 import createLogger from './log/createLogger.js';
 import pageBuildRecords from './pageBuildRecords.js';
 import PageCache from './pageCache.mjs';
 import pruneJitMaps from './pruneJitMaps.js';
-import readBuildApiArtifacts from './readBuildApiArtifacts.mjs';
 import skipStaleMapWrites from './skipStaleMapWrites.js';
 
 const jitLogger = createLogger({ name: 'jit-build' });
@@ -61,36 +63,39 @@ let budgetExceeded = false;
 // the same config build as the one before it, so its keys need their own
 // prefix, or both would hand out the same keys for different nodes.
 const childId = crypto.randomBytes(3).toString('hex');
-// The generation pages are built in. Only a config publish moves it: a page
-// built in an earlier generation is rebuilt.
+// The generation pages are built in. Only a config publish that changes what
+// page builds read moves it: a page built in an earlier generation is rebuilt.
 let contextGeneration = 1;
+// Counts the config publishes this process has seen. A page built before the
+// latest one stays current only while its registry entry is unchanged, it is
+// built from a source file and its build did not read appMeta.
+let configBuildSerial = 0;
+// What the page builds of the latest config publish read (fingerprintConfigBuild),
+// and its key prefix.
+let latestFingerprint = null;
 // Numbers each build context this process makes, and names its jitMaps files.
-// The map budget makes a new context within a generation, so a generation can
-// span several.
+// The map budget and a config publish that changed no page build input make a
+// new context within a generation, so a generation can span several.
 let contextSerial = 0;
 // What every build context of one generation shares, so a page built on a
-// context the map budget released still serves its _js entries and icons, and
-// a warning is logged once: the jsMap (written whole to the JS map files), the
-// JIT-discovered icon data and the warnings already logged. Null until the
-// generation's first context.
+// context the map budget or a config publish released still serves its _js
+// entries and icons, and a warning is logged once: the jsMap (written whole to
+// the JS map files), the JIT-discovered icon data and the warnings already
+// logged. Null until the generation's first context.
 let generationShared = null;
 // The directories of the latest build context, and a read cache of the current
 // change event over them, for checking a page's inputs while the map budget
 // has released the context.
 let latestDirectories = null;
 let releasedReadConfigFile = null;
+// The key prefix of the config build each build context was made from.
+const contextKeyPrefixes = new WeakMap();
 
 // Frozen snapshot of the icon names in the dev client bundle, from the initial
 // build. Module-level so it persists across context resets: skeleton rebuilds
 // rewrite iconImports.json with newly used names, but those are not in the
 // bundle until the server restarts. JIT delivers the rest as data.
 let bundledIcons = null;
-
-// The endpoint artifacts read so far, by file: the build context's endpoint
-// configs are read again after every change event, which parses only the files
-// that changed (an endpoint the manager rebuilt alone rewrites its artifact
-// with no config publish).
-const apiArtifactCache = new Map();
 
 // A missing artifact reads as null: a build writes some only when the app uses
 // them. An artifact that is there but unreadable is a fault, not an empty map: a
@@ -124,6 +129,10 @@ function readChangeSignal(buildDirectory) {
   }
 }
 
+function readLiveKeyPrefix(buildDirectory) {
+  return readJsonFile(path.join(buildDirectory, 'idCounter.json'))?.prefix ?? null;
+}
+
 // Every config build publish renames a new pageRegistry.json into place, so
 // its inode and mtime identify the published build, even two publishes in one
 // clock tick.
@@ -138,7 +147,6 @@ function readRegistryIdentity(buildDirectory) {
 
 function createBuildContext(buildDirectory, configDirectory) {
   const refMap = readJsonFile(path.join(buildDirectory, 'refMap.json')) ?? {};
-  const keyMap = readJsonFile(path.join(buildDirectory, 'keyMap.json')) ?? {};
   const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? { client: {}, server: {} };
   const connectionIds = readJsonFile(path.join(buildDirectory, 'connectionIds.json')) ?? [];
   const websocketIds = readJsonFile(path.join(buildDirectory, 'websocketIds.json')) ?? [];
@@ -165,9 +173,12 @@ function createBuildContext(buildDirectory, configDirectory) {
   });
   pageBuildRecords.trackFileReads({ context, configDirectory });
 
-  // Restore refMap, keyMap, jsMap, connectionIds, and websocketIds from skeleton build
+  // Restore refMap, jsMap, connectionIds, and websocketIds from skeleton build.
+  // The key map reads keyMap.json only when a lookup needs one of its entries.
   Object.assign(context.refMap, refMap);
-  Object.assign(context.keyMap, keyMap);
+  context.keyMap = createLazyKeyMap({
+    readSkeletonKeyMap: () => readJsonFile(path.join(buildDirectory, 'keyMap.json')),
+  });
   context.jsMap.client = jsMap.client ?? {};
   context.jsMap.server = jsMap.server ?? {};
   for (const id of connectionIds) {
@@ -214,16 +225,18 @@ function createBuildContext(buildDirectory, configDirectory) {
   // Restore app metadata so JIT page builds resolve _app / _build.app against
   // the same metadata the skeleton build computed.
   context.appMeta = readJsonFile(path.join(buildDirectory, 'appMeta.json')) ?? null;
+  pageBuildRecords.trackAppMetaReads({ context });
 
   // The shells and the shell plugins each carries, so a mobile page that uses
   // a plugin type some shell lacks fails here as in the full build
   // (validateNativePageTypes).
   context.mobileShells = readJsonFile(path.join(buildDirectory, 'mobileShells.json')) ?? [];
 
-  // Restore api endpoint configs so JIT CallAPI validation (validateCallApiRefs in
-  // buildPageJit) can resolve endpointIds. Without this the dev context has no
-  // components.api and every CallAPI action is flagged as a non-existent endpoint.
-  context.components = { api: readBuildApiArtifacts(buildDirectory, apiArtifactCache) };
+  // The endpoints' ids, types and links, which JIT CallAPI and Dynamic block
+  // validation (validateCallApiRefs, validateDynamicBlockRefs in buildPageJit)
+  // checks against. Without them every CallAPI action is flagged as a
+  // non-existent endpoint.
+  context.components = { api: readJsonFile(path.join(buildDirectory, 'endpoints.json')) ?? [] };
 
   if (!bundledIcons) {
     bundledIcons = new Set(readJsonFile(path.join(buildDirectory, 'iconImports.json')) ?? []);
@@ -241,6 +254,10 @@ function createBuildContext(buildDirectory, configDirectory) {
     };
   } else {
     context.dynamicIconData = generationShared.dynamicIconData;
+    // _js keys are content hashes, so a config publish that kept the
+    // generation adds its skeleton entries to the ones pages added.
+    Object.assign(generationShared.jsMap.client, context.jsMap.client);
+    Object.assign(generationShared.jsMap.server, context.jsMap.server);
     context.jsMap = generationShared.jsMap;
     context.seenSourceLines = generationShared.seenSourceLines;
   }
@@ -248,6 +265,7 @@ function createBuildContext(buildDirectory, configDirectory) {
 
   const idCounter = readJsonFile(path.join(buildDirectory, 'idCounter.json'));
   continueJitKeys({ idCounter, childId });
+  contextKeyPrefixes.set(context, idCounter.prefix);
 
   // The context's page builds write the entries they add to jitMaps/, one file
   // a build. A new context keeps only the files the latest build of each of
@@ -279,8 +297,9 @@ function createBuildContext(buildDirectory, configDirectory) {
   return context;
 }
 
-// A config publish: the next page build makes a new context, of a new
-// generation. Pages built on this one are rebuilt.
+// A config publish that changed what page builds read: the next page build
+// makes a new context, of a new generation. Pages built on this one are
+// rebuilt.
 function discardBuildContext() {
   keptContext = null;
   contextGeneration += 1;
@@ -298,9 +317,78 @@ function releaseBuildContext() {
   budgetExceeded = false;
 }
 
+// Writes a file whole, so the server never reads half of it.
+function writeFileAtomicSync(filePath, content) {
+  const temporaryPath = `${filePath}.${childId}.tmp`;
+  fs.writeFileSync(temporaryPath, content);
+  fs.renameSync(temporaryPath, filePath);
+}
+
+// A config publish that left what page builds read as it was: the pages built
+// in this generation stay current, so the generation stays. The next page
+// build makes a new context, since the context holds the config build's keys
+// (every node it restored carries one), and the publish replaced the maps
+// that resolve them. The publish wrote the JS map files from the skeleton's
+// entries only, so they are written again with the pages' entries too, before
+// a request runs a page's server _js.
+function keepGenerationOverConfigBuild({ buildDirectory }) {
+  keptContext = null;
+  budgetExceeded = false;
+  releasedReadConfigFile = null;
+  if (generationShared === null) return;
+  const jsMap = readJsonFile(path.join(buildDirectory, 'jsMap.json')) ?? {};
+  Object.assign(generationShared.jsMap.client, jsMap.client);
+  Object.assign(generationShared.jsMap.server, jsMap.server);
+  for (const [name, content] of Object.entries(
+    generateJsMapFiles({ jsMap: generationShared.jsMap })
+  )) {
+    const filePath = path.join(buildDirectory, name);
+    let live = null;
+    try {
+      live = fs.readFileSync(filePath, 'utf8');
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+    if (live !== content) {
+      fs.mkdirSync(path.dirname(filePath), { recursive: true });
+      writeFileAtomicSync(filePath, content);
+    }
+  }
+}
+
+// A config publish. The pages built so far keep their generation only when
+// every page build input is as it was and no page was added or removed: a page
+// build checks its links against every page id.
+function adoptConfigBuild({ buildDirectory, previousRegistry }) {
+  configBuildSerial += 1;
+  const fingerprint = fingerprintConfigBuild({ buildDirectory, previous: latestFingerprint });
+  const keep =
+    latestFingerprint !== null &&
+    sameFingerprint(fingerprint, latestFingerprint) &&
+    samePageIds(previousRegistry, registry);
+  latestFingerprint = fingerprint;
+  if (keep) {
+    keepGenerationOverConfigBuild({ buildDirectory });
+  } else {
+    discardBuildContext();
+  }
+}
+
+function samePageIds(a, b) {
+  const idsA = Object.keys(a ?? {});
+  const idsB = new Set(Object.keys(b ?? {}));
+  return idsA.length === idsB.size && idsA.every((pageId) => idsB.has(pageId));
+}
+
+// A page registry entry as a string to compare across config builds: an entry
+// carries keys of the config build it came from (its auth's ~k).
+function describeRegistryEntry({ entry, prefix }) {
+  return JSON.stringify(entry ?? null).replaceAll(prefix, '');
+}
+
 // The build context JIT page builds share. It outlives page edits. A config
-// publish recreates it in a new generation; passing contextMapBudget recreates
-// it in the same one.
+// publish recreates it, in a new generation when it changed what page builds
+// read; passing contextMapBudget recreates it in the same one.
 export function getBuildContext(buildDirectory, configDirectory) {
   keptContext ??= createBuildContext(buildDirectory, configDirectory);
   return keptContext;
@@ -310,7 +398,7 @@ export function getBuildContext(buildDirectory, configDirectory) {
 // through a fresh read cache, so a check or build sees what is on disk now;
 // builds already running keep the cache they started with, and what they read
 // is checked on the page's next request. Warnings are logged again.
-function startChangeEvent({ buildDirectory, configDirectory }) {
+function startChangeEvent({ configDirectory }) {
   eventCounter += 1;
   releasedReadConfigFile = null;
   generationShared?.seenSourceLines.clear();
@@ -319,9 +407,6 @@ function startChangeEvent({ buildDirectory, configDirectory }) {
     readConfigFile: createReadConfigFile({ directories: keptContext.directories }),
     configDirectory,
   });
-  // An edit that fed only endpoints rewrote their artifacts and published no
-  // config build, so this context stays: its endpoint configs are read again.
-  keptContext.components.api = readBuildApiArtifacts(buildDirectory, apiArtifactCache);
 }
 
 // Reads a page's inputs for the current change event: through the kept
@@ -333,46 +418,87 @@ function readConfigFileOfEvent() {
   return releasedReadConfigFile;
 }
 
+function readSignals() {
+  return {
+    registry,
+    eventCounter,
+    generation: contextGeneration,
+    configBuild: configBuildSerial,
+    prefix: latestFingerprint?.prefix ?? null,
+  };
+}
+
 // Reads what the manager and the config build changed since the last call, and
 // acts on it: a new build/invalidatePages value is a change event; a newly
-// published page registry discards the build context, and a context past its
-// budget releases it, so the next page build makes a new one. Both a page request and the
-// build status review call it first, so each sees an edit the other has not.
+// published page registry is adopted (adoptConfigBuild), and a context past
+// its budget is released, so the next page build makes a new one. A publish is
+// a change event too, so no page counts as checked since it. Both a page
+// request and the build status review call it first, so each sees an edit the
+// other has not.
 export function syncBuildSignals({ buildDirectory, configDirectory }) {
   const changeSignal = readChangeSignal(buildDirectory);
   if (changeSignal !== lastChangeSignal) {
     lastChangeSignal = changeSignal;
-    startChangeEvent({ buildDirectory, configDirectory });
+    startChangeEvent({ configDirectory });
   }
   const identity = readRegistryIdentity(buildDirectory);
   if (identity === null) {
-    return { registry: null, eventCounter, generation: contextGeneration };
+    return readSignals();
   }
   if (identity !== registryIdentity) {
     registryIdentity = identity;
+    const previousRegistry = registry;
     registry = readJsonFile(path.join(buildDirectory, 'pageRegistry.json'));
-    discardBuildContext();
+    adoptConfigBuild({ buildDirectory, previousRegistry });
+    startChangeEvent({ configDirectory });
   } else if (budgetExceeded) {
     releaseBuildContext();
   }
-  return { registry, eventCounter, generation: contextGeneration };
+  return readSignals();
 }
 
 function countAddedMapEntries(context) {
   return context.jitMaps.keys.added.length + context.jitMaps.refs.added.length;
 }
 
+// Whether a page built before the latest config publish still describes it
+// after it (the publish kept the generation, see adoptConfigBuild): its build
+// started from the config build before, and did not read appMeta, whose
+// buildId every config build changes. Its registry entry is unchanged, and it
+// is built from a source file: a page with none (the default 404) is served
+// from the config build's own artifact.
+function outlivesConfigBuilds({ pageId, record, registry: currentRegistry, prefix }) {
+  if (record.outdated || record.readAppMeta) return false;
+  const entry = currentRegistry?.[pageId];
+  if (type.isNone(entry?.refId)) return false;
+  return describeRegistryEntry({ entry, prefix }) === record.registryEntry;
+}
+
 // Whether a page's last build still describes it: 'current' or 'edited'. A
 // page built in an earlier generation is edited: its content, _js and icons
-// belong to a config build that is gone. A page checked up to the current change
-// event is current. Otherwise its last build's inputs are checked
-// (checkPageRecord), and a match moves its checkedAt to the event the check
-// started at, so the next request or review does not check it again. A page
-// request and the build status review both decide with this, so a build
-// status wait builds exactly the pages the next requests would.
-export async function reviewBuiltPage({ pageId, eventCounter: counter, generation }) {
+// belong to a config build that is gone; so is one that does not outlive the
+// config publishes since its build (outlivesConfigBuilds). A page checked up
+// to the current change event is current. Otherwise its last build's inputs
+// are checked (checkPageRecord), and a match moves its checkedAt to the event
+// the check started at, so the next request or review does not check it
+// again. A page request and the build status review both decide with this, so
+// a build status wait builds exactly the pages the next requests would.
+export async function reviewBuiltPage({
+  pageId,
+  eventCounter: counter,
+  generation,
+  configBuild,
+  registry: currentRegistry,
+  prefix,
+}) {
   const record = pageBuildRecords.get(pageId);
   if (!record || record.generation !== generation) return 'edited';
+  if (record.configBuild !== configBuild) {
+    if (!outlivesConfigBuilds({ pageId, record, registry: currentRegistry, prefix })) {
+      return 'edited';
+    }
+    record.configBuild = configBuild;
+  }
   const compiled = pageCache.get(pageId);
   if (record.checkedAt === counter || compiled?.checkedAt === counter) return 'current';
   const check = await checkPageRecord({ record, readConfigFile: readConfigFileOfEvent() });
@@ -390,14 +516,14 @@ export async function reviewBuiltPage({ pageId, eventCounter: counter, generatio
 }
 
 // Whether a compiled page can be served as it is.
-async function isPageCurrent({ pageId, eventCounter: counter, generation }) {
-  const compiled = pageCache.get(pageId);
-  if (!compiled || compiled.generation !== generation) return false;
-  if ((await reviewBuiltPage({ pageId, eventCounter: counter, generation })) !== 'current') {
+async function isPageCurrent(signals) {
+  const compiled = pageCache.get(signals.pageId);
+  if (!compiled || compiled.generation !== signals.generation) return false;
+  if ((await reviewBuiltPage(signals)) !== 'current') {
     return false;
   }
   // A rebuild that failed while the page was checked leaves nothing to serve.
-  return pageCache.isCompiled(pageId);
+  return pageCache.isCompiled(signals.pageId);
 }
 
 async function buildPage({ pageId, buildDirectory, configDirectory }) {
@@ -407,7 +533,12 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
   const context = getBuildContext(buildDirectory, configDirectory);
   const generation = contextGeneration;
   const checkedAt = eventCounter;
+  const configBuild = configBuildSerial;
   const pageRegistry = registry;
+  const registryEntry = describeRegistryEntry({
+    entry: pageRegistry[pageId],
+    prefix: latestFingerprint.prefix,
+  });
   pageCache.remove(pageId);
 
   jitLogger.info({ spin: 'start' }, `Building page "${pageId}"...`);
@@ -420,6 +551,11 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
       configDirectory,
       generation,
       checkedAt,
+      configBuild,
+      registryEntry,
+      // A publish moves idCounter.json first, and from then on the build's
+      // key and JS map writes are dropped (skipStaleMapWrites).
+      isOutdated: () => readLiveKeyPrefix(buildDirectory) !== contextKeyPrefixes.get(context),
       build: () => buildPageJit({ pageId, pageRegistry, context }),
     });
   } finally {

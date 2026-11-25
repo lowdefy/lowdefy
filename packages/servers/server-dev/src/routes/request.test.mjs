@@ -28,6 +28,9 @@ vi.doMock('../../lib/server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
   getPageJitEnrichment: vi.fn(() => ({})),
 }));
+// The real one imports the build's serverJsMap.js, which only a server has.
+const mockJsMap = { server: true };
+vi.doMock('../../lib/server/loadDynamicJsMap.js', () => ({ default: vi.fn(() => mockJsMap) }));
 
 const { default: requestHandler } = await import('./request.js');
 
@@ -86,6 +89,14 @@ test('requestHandler builds the page JIT before calling the request', async () =
     { blockId: 'b', pageId: 'dashboard', payload: {}, requestId: 'get_rows' }
   );
   expect(callOrder).toEqual(['build', 'call']);
+});
+
+test('requestHandler runs the request with the server JS map the page build left', async () => {
+  await post(createApp(), '/api/request/dashboard/get_rows');
+  expect(mockCallRequest).toHaveBeenCalledWith(
+    expect.objectContaining({ jsMap: mockJsMap }),
+    expect.anything()
+  );
 });
 
 test('requestHandler builds nested page ids as one page', async () => {
