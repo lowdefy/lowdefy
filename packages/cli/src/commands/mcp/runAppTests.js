@@ -26,7 +26,7 @@ import parseRepeat from '../test/parseRepeat.js';
 import parseTestSelection from '../test/parseTestSelection.js';
 import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
-import readJourneyConcurrency from '../test/readJourneyConcurrency.js';
+import readRunConcurrency from '../test/readRunConcurrency.js';
 import resolveJourneyPaths from '../test/resolveJourneyPaths.js';
 import readTestMode from '../test/readTestMode.js';
 import runDevJourneys from '../test/runDevJourneys.js';
@@ -58,8 +58,10 @@ import writeHeadlessRun from '../test/writeHeadlessRun.js';
 // same journey and build, is listed without running it again. `thorough` runs each journey
 // headless when it can and in the browser when it can't, and also runs in the browser, from step
 // 1, each one found to need a browser partway through; `browser` runs every journey in the
-// browser; `headless` is the default (readTestMode). `concurrency` keeps up to that many browser
-// journeys in flight (readJourneyConcurrency); a headless run goes one at a time and refuses it.
+// browser; `headless` is the default (readTestMode). `concurrency` keeps up to that many journeys
+// in flight (readRunConcurrency): on a headless run the headless journeys, which the dev server
+// runs side by side, by default as many as the machine's cores less one; on a thorough or browser
+// run the browser journeys, 1 to 3.
 //
 // The answer is cut to what an agent can read (compactTestResults); every
 // journey's result is in the file `resultFile` names. A journey's measured
@@ -86,26 +88,20 @@ async function runAppTests({
   if (repeatError) {
     return { summary: repeatError };
   }
-  const mode = readTestMode({
-    options: {
-      headless,
-      browser,
-      thorough,
-      typedOptions: type.isNone(concurrency) ? [] : ['concurrency'],
-    },
-    flagPrefix: '',
-  });
+  const mode = readTestMode({ options: { headless, browser, thorough }, flagPrefix: '' });
   if (!type.isUndefined(mode.error)) {
     return { summary: mode.error };
   }
   const { runner } = mode;
-  // Only browser runs go side by side; headless runs go one at a time.
-  const { readLimit, error: concurrencyError } =
-    runner === 'headless'
-      ? { readLimit: () => 1 }
-      : readJourneyConcurrency({ concurrency, name: 'concurrency', repeat });
-  if (concurrencyError) {
-    return { summary: concurrencyError };
+  const limits = readRunConcurrency({
+    runner,
+    concurrency,
+    typed: !type.isNone(concurrency),
+    name: 'concurrency',
+    repeat,
+  });
+  if (limits.error) {
+    return { summary: limits.error };
   }
   const tier = parseTier(tierValue);
   const usageWindow = `${parseUsageWindow(usageWindowValue)}m`;
@@ -167,7 +163,8 @@ async function runAppTests({
     entries: tiered.selected,
     url,
     runner,
-    readLimit,
+    readLimit: limits.browser.readLimit,
+    readHeadlessLimit: limits.headless.readLimit,
     records: runner === 'browser' ? {} : readHeadlessRun({ directories: context.directories }),
     repeat,
     recording,

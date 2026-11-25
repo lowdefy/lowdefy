@@ -59,36 +59,18 @@ test.each([
   );
 });
 
-test('refuses a typed --concurrency only on a headless run', () => {
-  expect(readTestMode({ options: { typedOptions: ['concurrency'] } }).error).toBe(
-    '--concurrency runs browser journeys side by side, and a headless run goes one at a time: drop --concurrency, or pass --thorough or --browser to run the browser journeys side by side.'
+test('takes a typed --concurrency on every runner', () => {
+  [{}, { headless: true }, { build: true }, { thorough: true }, { browser: true }].forEach(
+    (options) => {
+      expect(
+        readTestMode({ options: { ...options, typedOptions: ['concurrency'] } }).error
+      ).toBeUndefined();
+    }
   );
-  expect(
-    readTestMode({ options: { headless: true, typedOptions: ['concurrency'] } }).error
-  ).toMatch(/^--concurrency runs browser journeys side by side/);
-  expect(readTestMode({ options: { build: true, typedOptions: ['concurrency'] } }).error).toMatch(
-    /^--concurrency runs browser journeys side by side/
-  );
-  expect(readTestMode({ options: { thorough: true, typedOptions: ['concurrency'] } }).runner).toBe(
-    'mixed'
-  );
-  expect(readTestMode({ options: { browser: true, typedOptions: ['concurrency'] } }).runner).toBe(
-    'browser'
-  );
-  // One from lowdefy.yaml's cli config is not this run's choice.
-  expect(readTestMode({ options: { concurrency: 2 } }).runner).toBe('headless');
 });
 
 test('names the options without dashes for the MCP tool', () => {
   expect(
     readTestMode({ options: { browser: true, headless: true }, flagPrefix: '' }).error
   ).toMatch(/^browser, thorough and headless each pick/);
-  expect(
-    readTestMode({
-      options: { typedOptions: ['concurrency'] },
-      flagPrefix: '',
-    }).error
-  ).toBe(
-    'concurrency runs browser journeys side by side, and a headless run goes one at a time: drop concurrency, or pass thorough or browser to run the browser journeys side by side.'
-  );
 });

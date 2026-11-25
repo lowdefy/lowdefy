@@ -36,7 +36,7 @@ import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
 import readAccessMode from './readAccessMode.js';
 import readHeadlessRun from './readHeadlessRun.js';
-import readJourneyConcurrency from './readJourneyConcurrency.js';
+import readRunConcurrency from './readRunConcurrency.js';
 import readTestMode from './readTestMode.js';
 import readTestSecrets from './readTestSecrets.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
@@ -103,15 +103,16 @@ async function test({ context }) {
     refuse({ context, message: modeError });
     return;
   }
-  const headless = runner === 'headless';
-  // Only browser runs go side by side; headless runs go one at a time.
-  const { readLimit, error: concurrencyError } = headless
-    ? { readLimit: () => 1 }
-    : readJourneyConcurrency({
-        concurrency: context.options.concurrency,
-        name: '--concurrency',
-        repeat,
-      });
+  // A headless run's --concurrency sizes its headless journeys, a mixed or browser run's its browser
+  // journeys (readRunConcurrency).
+  const concurrency = readRunConcurrency({
+    runner,
+    concurrency: context.options.concurrency,
+    typed: (context.options.typedOptions ?? []).includes('concurrency'),
+    name: '--concurrency',
+    repeat,
+  });
+  const { error: concurrencyError } = concurrency;
   if (concurrencyError) {
     refuse({ context, message: concurrencyError });
     return;
@@ -149,7 +150,7 @@ async function test({ context }) {
     givenPaths,
     lint,
     paths,
-    readLimit,
+    concurrency,
     repeat,
     runner,
     tags,
@@ -170,25 +171,27 @@ async function test({ context }) {
     return;
   }
   try {
-    await testJourneys({ app: opened.app, context, ...options });
+    await testJourneys({ app: opened.app, context, secrets, ...options });
   } finally {
     await opened.app.close();
   }
 }
 
 // Selects the run's journeys and runs them: headless on the production build's app (`app`, given
-// for --build), or on a dev server, each where `runner` sends it (runDevJourneys).
+// for --build, with the run's test `secrets`), or on a dev server, each where `runner` sends it
+// (runDevJourneys), as many at once as `concurrency` (readRunConcurrency) allows.
 async function testJourneys({
   app,
   build,
+  concurrency,
   context,
   filters,
   givenPaths,
   lint,
   paths,
-  readLimit,
   repeat,
   runner,
+  secrets,
   tags,
   tier,
   usageWindow,
@@ -267,11 +270,13 @@ async function testJourneys({
   if (build) {
     const ran = await runHeadlessTests({
       app,
+      concurrency: concurrency.headless,
       context,
       selected: tiered.selected,
       skipped: tiered.skipped.length,
       records,
       repeat,
+      secrets,
     });
     if (ran.failed > 0) {
       process.exitCode = 1;
@@ -341,7 +346,8 @@ async function testJourneys({
       entries: tiered.selected,
       url: server.url,
       runner,
-      readLimit,
+      readLimit: concurrency.browser.readLimit,
+      readHeadlessLimit: concurrency.headless.readLimit,
       records,
       repeat,
       recording,

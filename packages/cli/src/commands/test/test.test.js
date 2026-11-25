@@ -1285,38 +1285,73 @@ test('test --concurrency out of range is refused before a server starts', async 
   expect(process.exitCode).toBe(1);
 });
 
-test('test --concurrency with --headless is refused before anything opens', async () => {
+test('test --headless --build refuses a --concurrency below 1 before anything opens', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
   context.options = {
     ...context.options,
     headless: true,
     build: true,
-    concurrency: '2',
+    concurrency: '0',
     typedOptions: ['headless', 'build', 'concurrency'],
   };
   await test({ context });
   expect(logs.error).toEqual([
-    '--concurrency runs browser journeys side by side, and a headless run goes one at a time: drop --concurrency, or pass --thorough or --browser to run the browser journeys side by side.',
+    '--concurrency must be a whole number of journeys at once, 1 or more. Received "0".',
   ]);
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockOpenTestApp).not.toHaveBeenCalled();
   expect(process.exitCode).toBe(1);
 });
 
-test('test --headless leaves a concurrency from lowdefy.yaml alone and runs one at a time', async () => {
+test('test --headless runs a typed --concurrency of data set journeys side by side, printed in selection order', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'slow' }));
+  writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'quick' }));
+  writeJourneyFile('c.yaml', dataJourneyYaml({ name: 'next' }));
+  context.options = {
+    ...context.options,
+    headless: true,
+    concurrency: '2',
+    typedOptions: ['headless', 'concurrency'],
+  };
+  const flight = { now: 0, max: 0, order: [] };
+  mockPost.mockImplementation(async (url, body) => {
+    flight.now += 1;
+    flight.max = Math.max(flight.max, flight.now);
+    expect(body.headless).toBe(true);
+    // The first journey answers last.
+    const first = flight.order.length === 0;
+    flight.order.push(first);
+    await new Promise((resolve) => setTimeout(resolve, first ? 60 : 0));
+    flight.now -= 1;
+    return { data: { passed: true, steps: [] } };
+  });
+  await test({ context });
+  expect(flight.max).toBe(2);
+  expect(logs.info.filter((line) => line.startsWith('PASS'))).toEqual([
+    expect.stringMatching(/^PASS {2}slow/),
+    expect.stringMatching(/^PASS {2}quick/),
+    expect.stringMatching(/^PASS {2}next/),
+  ]);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('test --headless leaves a concurrency from lowdefy.yaml to browser runs and runs at the default', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', dataJourneyYaml({ name: 'first' }));
   writeJourneyFile('b.yaml', dataJourneyYaml({ name: 'second' }));
   context.options = {
     ...context.options,
     headless: true,
-    concurrency: 2,
+    concurrency: 1,
     typedOptions: ['headless'],
   };
-  const flight = delayedPosts({ delays: {} });
+  // A headless post names no journey: each answers after 30 ms, keyed on its one step.
+  const flight = delayedPosts({ delays: { 1: 30 } });
   await test({ context });
-  expect(flight.max).toBe(1);
+  // The machine's cores less one, and no more than the two journeys.
+  expect(flight.max).toBe(Math.min(2, Math.max(1, os.availableParallelism() - 1)));
   expect(process.exitCode).toBeUndefined();
 });
 
@@ -2288,20 +2323,15 @@ test('a journey that fails in the browser part of a thorough run fails the run',
   expect(process.exitCode).toBe(1);
 });
 
-test('a default run refuses a typed --concurrency, and a thorough run takes it for its browser part', async () => {
+test('a default run and a thorough run both take a typed --concurrency', async () => {
   const { default: test } = await import('./test.js');
   context.options.concurrency = '2';
   context.options.typedOptions = ['concurrency'];
   writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
   await test({ context });
-  expect(logs.error).toEqual([
-    '--concurrency runs browser journeys side by side, and a headless run goes one at a time: drop --concurrency, or pass --thorough or --browser to run the browser journeys side by side.',
-  ]);
-  expect(mockStartDevServer).not.toHaveBeenCalled();
-  expect(process.exitCode).toBe(1);
+  expect(logs.error).toEqual([]);
+  expect(process.exitCode).toBeUndefined();
 
-  process.exitCode = undefined;
-  logs.error = [];
   context.options.thorough = true;
   await test({ context });
   expect(process.exitCode).toBeUndefined();

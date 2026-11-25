@@ -22,10 +22,8 @@
 // too, from step 1. browser makes it "browser": every journey in the browser. headless is the
 // default, kept so scripts that pass it keep working. The three options each pick the runner, so
 // two of them refuse the run. build runs on the production build, headless only: running browser
-// journeys on the production build is not built yet. A headless run goes one at a time, so a
-// concurrency typed for one is refused rather than ignored; one from lowdefy.yaml's cli config is
-// not chosen by this run, so it is left alone (`typedOptions` lists the options the run was given).
-// Messages name the options with `flagPrefix`: "--" on the command line, "" for the MCP tool's
+// journeys on the production build is not built yet. How many journeys run at once is read apart
+// (readHeadlessConcurrency, readJourneyConcurrency). Messages name the options with `flagPrefix`: "--" on the command line, "" for the MCP tool's
 // arguments.
 function readTestMode({ options, flagPrefix = '--' }) {
   const flag = (name) => `${flagPrefix}${name}`;
@@ -59,13 +57,6 @@ function readTestMode({ options, flagPrefix = '--' }) {
     runner = 'browser';
   } else if (thorough) {
     runner = 'mixed';
-  }
-  if (runner === 'headless' && (options.typedOptions ?? []).includes('concurrency')) {
-    return {
-      error: `${flag('concurrency')} runs browser journeys side by side, and a headless run goes one at a time: drop ${flag(
-        'concurrency'
-      )}, or pass ${flag('thorough')} or ${flag('browser')} to run the browser journeys side by side.`,
-    };
   }
   return { runner, build };
 }

@@ -683,7 +683,7 @@ program
   .addOption(
     new Option(
       '--concurrency <n>',
-      'Run up to n browser journeys at once (1 to 3). Headless journeys run one at a time. Journeys with no data set, or marked serial, run alone after the rest. Default 1, or LOWDEFY_JOURNEY_CONCURRENCY. One at a time under --repeat or while memory is short; refused unless --thorough or --browser. At 2 or more, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
+      'Run up to n journeys at once. A headless run (the default, and --build) runs n headless journeys side by side, by default as many as the machine has cores less one; with --build each runs in a worker thread of its own. With --thorough or --browser, n browser journeys at once (1 to 3), default 1 or LOWDEFY_JOURNEY_CONCURRENCY, and the headless part keeps its default. Journeys with no data set, or marked serial, run alone after the rest. One at a time under --repeat or while memory is short. At 2 or more browser journeys, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
     )
   )
   .addOption(options.configDirectory)

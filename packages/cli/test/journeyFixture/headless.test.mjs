@@ -276,6 +276,48 @@ test('--headless --build on a build older than the config exits non-zero with th
   }
 });
 
+// Four journeys on one data set that write the same collection, side by side
+// (_parallel/isolated.yaml): each sees only its own writes, and the run reports them in file order
+// although the first, which saves three items, finishes last.
+const parallelJourneys = path.join(
+  configDirectory,
+  'tests',
+  'journeys',
+  '_parallel',
+  'isolated.yaml'
+);
+const PARALLEL_NAMES = ['A', 'B', 'C', 'D'].map(
+  (letter) => `parallel journey ${letter} sees only its own items`
+);
+
+// The journeys the output reports, by name, in the order it reports them.
+function passLines(output) {
+  return [...output.matchAll(/(?:PASS|FAIL) {2}(.+?) {2}\(/g)].map((match) => match[1]);
+}
+
+test('--build --concurrency 4 runs journeys in worker threads, each on its own data, in file order', async () => {
+  const { code, output } = await runCli([
+    'test',
+    '--build',
+    '--concurrency',
+    '4',
+    '--config-directory',
+    configDirectory,
+    '--server-directory',
+    serverDirectory,
+    parallelJourneys,
+  ]);
+  expect(passLines(output)).toEqual(PARALLEL_NAMES);
+  expect(output).toContain('4 passed, 0 failed of 4 journeys');
+  expect(output).not.toContain('after an alone rerun');
+  expect(code).toBe(0);
+  const written = JSON.parse(fs.readFileSync(headlessRunPath(), 'utf8'));
+  expect(written.mode).toBe('build');
+  PARALLEL_NAMES.forEach((name) => {
+    expect(written.journeys[`tests/journeys/_parallel/isolated.yaml#${name}`].passed).toBe(true);
+  });
+});
+
 const fixtureUrl = process.env.LOWDEFY_JOURNEY_FIXTURE_URL;
 const devServerTest = fixtureUrl === undefined ? test.skip : test;
 
@@ -306,6 +348,32 @@ devServerTest(
       fs.readFileSync(path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json'), 'utf8')
     );
     expect(written.mode).toBe('dev');
+  }
+);
+
+devServerTest(
+  '--concurrency 4 runs journeys side by side on the dev server, each on its own data, in file order',
+  async () => {
+    const { code, output } = await runCli([
+      'test',
+      '--concurrency',
+      '4',
+      '--config-directory',
+      process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY,
+      '--url',
+      fixtureUrl,
+      path.join(
+        process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY,
+        'tests',
+        'journeys',
+        '_parallel',
+        'isolated.yaml'
+      ),
+    ]);
+    expect(passLines(output)).toEqual(PARALLEL_NAMES);
+    expect(output).toContain('4 passed, 0 failed of 4 journeys');
+    expect(output).not.toContain('after an alone rerun');
+    expect(code).toBe(0);
   }
 );
 

@@ -265,20 +265,25 @@ test('runAppTests with concurrency 2 reports progress as journeys finish and res
   expect(readResults(answer).map((result) => result.name)).toEqual(['slow list', 'orders list']);
 });
 
-test('runAppTests refuses concurrency with headless, and one out of range, without running anything', async () => {
+test('runAppTests refuses a concurrency out of range for its runner without running anything', async () => {
   writeJourney('orders.yaml', { name: 'orders list', pageId: 'orders', steps: [] });
-  const refused = {
-    summary:
-      'concurrency runs browser journeys side by side, and a headless run goes one at a time: drop concurrency, or pass thorough or browser to run the browser journeys side by side.',
-  };
-  expect(await runAppTests({ configDirectory, url, concurrency: 2 })).toEqual(refused);
-  expect(await runAppTests({ configDirectory, url, headless: true, concurrency: 2 })).toEqual(
-    refused
-  );
+  expect(await runAppTests({ configDirectory, url, concurrency: 0 })).toEqual({
+    summary: 'concurrency must be a whole number of journeys at once, 1 or more. Received 0.',
+  });
   expect(await runAppTests({ configDirectory, url, browser: true, concurrency: 5 })).toEqual({
     summary: 'concurrency must be an integer from 1 to 3. Received 5.',
   });
   expect(bodies).toEqual([]);
+});
+
+test('runAppTests takes a concurrency for a headless run', async () => {
+  writeJourney('orders.yaml', {
+    name: 'orders list',
+    pageId: 'orders',
+    steps: [{ wait: { ms: 1 } }],
+  });
+  const { summary } = await runAppTests({ configDirectory, url, headless: true, concurrency: 8 });
+  expect(summary).toEqual('1 passed, 0 failed of 1 journeys');
 });
 
 test('runAppTests runs only the journeys matching the filter', async () => {

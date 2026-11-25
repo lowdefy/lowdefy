@@ -30,8 +30,8 @@ function indexesOf({ routes, route }) {
 
 // Runs the selected journeys (`entries`, as selectTier gives them) on the dev server at `url`, each
 // once, where routeJourney sends it (`runner`: "headless", "mixed" or "browser"): first the
-// headless ones, one at a time, then the browser ones, up to readLimit() at once
-// (runJourneyPool), the browser run recording into `recording` as runRepeated does. A journey the
+// headless ones, up to readHeadlessLimit() at once, then the browser ones, up to readLimit() at once
+// (runJourneyPool), each reported in selection order whatever order they finish in, the browser run recording into `recording` as runRepeated does. A journey the
 // headless run finds needs a browser partway through is browser-only: neither passed nor failed.
 // On a headless run, one an earlier headless run found needs a browser, on the same journey and
 // build, is listed browser-only without running it up to its browser step again
@@ -56,6 +56,7 @@ async function runDevJourneys({
   url,
   runner,
   readLimit,
+  readHeadlessLimit = () => 1,
   records,
   repeat,
   recording,
@@ -88,11 +89,13 @@ async function runDevJourneys({
     );
   }
 
-  // Headless runs go one at a time: concurrent headless sessions on one dev server are untested.
+  // The dev server runs the headless journeys in flight side by side, in its one process: each on a
+  // data session of its own, while the journeys with no data set, or marked serial, run alone
+  // (runJourneyPool). One that fails beside another is run again alone before it is reported.
   const headlessIndexes = indexesOf({ routes, route: 'headless' });
   const headlessRuns = await runJourneyPool({
     entries: headlessIndexes.map((index) => entries[index]),
-    readLimit: () => 1,
+    readLimit: readHeadlessLimit,
     run: async ({ suite, item, usage }) => {
       const remembered =
         runner === 'headless'

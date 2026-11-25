@@ -16,66 +16,98 @@
 
 import { type } from '@lowdefy/helpers';
 
+import createHeadlessWorkers from './createHeadlessWorkers.js';
 import formatBrowserOnly from './formatBrowserOnly.js';
 import formatBrowserOnlyNote from './formatBrowserOnlyNote.js';
-import formatJourneyResult from './formatJourneyResult.js';
 import rememberedBrowserOnly from './rememberedBrowserOnly.js';
-import runJourneyHeadless from './runJourneyHeadless.js';
+import runHeadlessRepeated, { headlessSuite } from './runHeadlessRepeated.js';
 import runJourneyPool from './runJourneyPool.js';
-import runRepeated from './runRepeated.js';
 import runsOnlyInProcess from './runsOnlyInProcess.js';
 import summariseResults from './summariseResults.js';
 import writeHeadlessRun from './writeHeadlessRun.js';
 
 // `lowdefy test --build`: runs the selected journeys that need no browser on the app's production
-// build, in this process, with no dev server and no browser, so it takes no browser or journey run
-// slot. `app` is the run's one test app (openBuildApp), which checked the build and served the
-// access step; every journey, and every repeat of one, runs on it, each on a fresh session of its
-// data set, and the caller closes it. Journeys that need a browser are listed as browser-only,
-// with the first step that does, and are neither passed nor failed. One an earlier run found needs
-// a browser on this build (its buildId) is listed without running it up to that step again
-// (rememberedBrowserOnly); `records` is headless-run.json's journeys (readHeadlessRun). The
-// summary names each browser-only journey and the command that runs them in the browser
-// (formatBrowserOnlyNote). Returns { failed } once the run is reported.
-async function runHeadlessTests({ app, context, selected, skipped, records, repeat }) {
-  const headlessSuite = {
-    name: 'journeys',
-    run: ({ item }) => runJourneyHeadless({ app, context, item }),
-    format: formatJourneyResult,
-  };
-  const seen = new Set();
-  // One at a time: concurrent sessions on one test app are untested.
-  const pooled = await runJourneyPool({
-    entries: selected,
-    readLimit: () => 1,
-    run: async ({ item, usage }) => {
-      const remembered = rememberedBrowserOnly({
-        item,
-        records,
-        configDirectory: context.directories.config,
-        configHash: app.buildId,
-      });
-      if (!type.isUndefined(remembered)) {
-        return { ...remembered, usage };
-      }
-      return {
-        ...(await runRepeated({ suite: headlessSuite, context, item, repeat })),
-        usage,
-      };
-    },
-    onReported: ({ result }) => {
-      if (!type.isUndefined(result.browserOnly)) {
-        context.logger.info(formatBrowserOnly({ result }));
-        return;
-      }
-      const lines = headlessSuite.format({ result, seen });
-      if (result.passed) {
-        lines.forEach((line) => context.logger.info(line));
-      } else {
-        lines.forEach((line) => context.logger.error(line));
-      }
+// build, with no dev server and no browser, so it takes no browser or journey run slot. `app` is
+// the run's one test app in this thread (openBuildApp), which checked the build and served the
+// access step. Up to `concurrency.readLimit()` journeys run at once (runJourneyPool), and at most
+// `concurrency.size`: one in this thread on `app`, the rest in worker threads, each of which opens
+// the build once with the run's test `secrets` and runs one journey at a time
+// (createHeadlessWorkers). Each journey, and each repeat of one, runs on a fresh session of its
+// data set, with databases of its own on the run's one data store, and its own page state, so no
+// journey sees another's writes. Journeys with no data set, or marked serial, run alone after the
+// rest (runJourneyPool). The results are reported and recorded in selection order, whatever order
+// they finish in, and headless-run.json is written once, here. Journeys that need a browser are
+// listed as browser-only, with the first step that does, and are neither passed nor failed. One an
+// earlier run found needs a browser on this build (its buildId) is listed without running it up to
+// that step again (rememberedBrowserOnly); `records` is headless-run.json's journeys
+// (readHeadlessRun). The summary names each browser-only journey and the command that runs them in
+// the browser (formatBrowserOnlyNote). Returns { failed } once the run is reported; the worker
+// threads are closed by then, also when the run throws.
+async function runHeadlessTests({
+  app,
+  concurrency,
+  context,
+  selected,
+  skipped,
+  records,
+  repeat,
+  secrets,
+}) {
+  const workers = createHeadlessWorkers({
+    size: concurrency.size - 1,
+    workerData: {
+      directories: { config: context.directories.config, server: context.directories.server },
+      secrets,
     },
   });
+  // This thread runs a journey whenever it has none in flight, so a run of one journey at a time
+  // starts no worker thread.
+  let ownInFlight = false;
+  async function runItem({ item }) {
+    if (!ownInFlight) {
+      ownInFlight = true;
+      try {
+        return await runHeadlessRepeated({ app, context, item, repeat });
+      } finally {
+        ownInFlight = false;
+      }
+    }
+    return workers.run({ item, repeat });
+  }
+  const seen = new Set();
+  let pooled;
+  try {
+    pooled = await runJourneyPool({
+      entries: selected,
+      readLimit: concurrency.readLimit,
+      run: async ({ item, usage }) => {
+        const remembered = rememberedBrowserOnly({
+          item,
+          records,
+          configDirectory: context.directories.config,
+          configHash: app.buildId,
+        });
+        if (!type.isUndefined(remembered)) {
+          return { ...remembered, usage };
+        }
+        return { ...(await runItem({ item })), usage };
+      },
+      onReported: ({ result }) => {
+        if (!type.isUndefined(result.browserOnly)) {
+          context.logger.info(formatBrowserOnly({ result }));
+          return;
+        }
+        const lines = headlessSuite.format({ result, seen });
+        if (result.passed) {
+          lines.forEach((line) => context.logger.info(line));
+        } else {
+          lines.forEach((line) => context.logger.error(line));
+        }
+      },
+    });
+  } finally {
+    await workers.close();
+  }
   const isBrowserOnly = (result) => !type.isUndefined(result.browserOnly);
   const results = pooled.filter((result) => !isBrowserOnly(result));
   const browserOnly = pooled.filter(isBrowserOnly);

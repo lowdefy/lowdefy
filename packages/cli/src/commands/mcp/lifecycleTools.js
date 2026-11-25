@@ -123,9 +123,8 @@ const lifecycleTools = [
         concurrency: {
           type: 'integer',
           minimum: 1,
-          maximum: 3,
           description:
-            "Browser journeys at once on data sets (thorough or browser). Default 1. Above 1, other sessions' screenshots can wait for a browser.",
+            'Journeys on data sets at once. Headless: default cores less one. thorough or browser: browser journeys, 1 to 3, default 1.',
         },
         usageWindow: {
           type: 'string',

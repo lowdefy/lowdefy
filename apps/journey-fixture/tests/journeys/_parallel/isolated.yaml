@@ -1,0 +1,48 @@
+# Four journeys that write the same collection, run side by side by `lowdefy test --concurrency 4`
+# on the production build and on the dev server (packages/cli/test/journeyFixture/headless.test.mjs).
+# Each saves its own item on a data set of its own, so it sees the data set's one item and its own,
+# never another journey's. The first saves three items, so it finishes last when they run side by
+# side; the run still reports them in this order. In a folder starting with "_" so the suite's own
+# runs, and harden, leave it out.
+- name: parallel journey A sees only its own items
+  pageId: home
+  data: explore
+  user: member
+  steps:
+    - fill: { blockId: name_input, value: Parallel A1 }
+    - click: save_button
+    - expect: { db: { collection: items, match: { name: Parallel A1 }, count: 1 } }
+    - fill: { blockId: name_input, value: Parallel A2 }
+    - click: save_button
+    - expect: { db: { collection: items, match: { name: Parallel A2 }, count: 1 } }
+    - fill: { blockId: name_input, value: Parallel A3 }
+    - click: save_button
+    - expect: { db: { collection: items, match: { name: Parallel A3 }, count: 1 } }
+    - expect: { db: { collection: items, match: { kind: item }, count: 4 } }
+- name: parallel journey B sees only its own items
+  pageId: home
+  data: explore
+  user: member
+  steps:
+    - fill: { blockId: name_input, value: Parallel B1 }
+    - click: save_button
+    - expect: { db: { collection: items, match: { name: Parallel B1 }, count: 1 } }
+    - expect: { db: { collection: items, match: { kind: item }, count: 2 } }
+- name: parallel journey C sees only its own items
+  pageId: home
+  data: explore
+  user: member
+  steps:
+    - fill: { blockId: name_input, value: Parallel C1 }
+    - click: save_button
+    - expect: { db: { collection: items, match: { name: Parallel C1 }, count: 1 } }
+    - expect: { db: { collection: items, match: { kind: item }, count: 2 } }
+- name: parallel journey D sees only its own items
+  pageId: home
+  data: explore
+  user: member
+  steps:
+    - fill: { blockId: name_input, value: Parallel D1 }
+    - click: save_button
+    - expect: { db: { collection: items, match: { name: Parallel D1 }, count: 1 } }
+    - expect: { db: { collection: items, match: { kind: item }, count: 2 } }
