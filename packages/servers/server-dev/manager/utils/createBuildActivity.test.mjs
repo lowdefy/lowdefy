@@ -56,3 +56,40 @@ test('waitForIdle returns after the grace window when nothing starts', async () 
     sawBuild: false,
   });
 });
+
+test('waitForIdle returns at once when work settled within the grace before the call', async () => {
+  const activity = createBuildActivity({ onChange: () => {} });
+  activity.setBusy(true);
+  activity.setBusy(false);
+
+  const start = Date.now();
+  await expect(activity.waitForIdle({ graceMs: 500, intervalMs: 10 })).resolves.toEqual({
+    settled: true,
+    sawBuild: true,
+    waitedMs: 0,
+  });
+  expect(Date.now() - start).toBeLessThan(100);
+});
+
+test('waitForIdle waits out the grace when work settled longer ago than the grace', async () => {
+  const activity = createBuildActivity({ onChange: () => {} });
+  activity.setBusy(true);
+  activity.setBusy(false);
+  await new Promise((resolve) => setTimeout(resolve, 60));
+
+  const waited = await activity.waitForIdle({ graceMs: 40, intervalMs: 10 });
+  expect(waited).toMatchObject({ settled: true, sawBuild: false });
+  expect(waited.waitedMs).toBeGreaterThanOrEqual(40);
+});
+
+test('waitForIdle waits for work still running though earlier work settled within the grace', async () => {
+  const activity = createBuildActivity({ onChange: () => {} });
+  activity.setBusy(true);
+  activity.setBusy(false);
+  activity.setBusy(true);
+  setTimeout(() => activity.setBusy(false), 60);
+
+  const waited = await activity.waitForIdle({ graceMs: 500, intervalMs: 10 });
+  expect(waited).toMatchObject({ settled: true, sawBuild: true });
+  expect(waited.waitedMs).toBeGreaterThanOrEqual(50);
+});
