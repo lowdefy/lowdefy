@@ -14,6 +14,18 @@
   limitations under the License.
 */
 
+async function ldfTime(name, fn) {
+  const s = performance.now();
+  try {
+    return await fn();
+  } finally {
+    const r = globalThis.__ldfProf;
+    if (r) {
+      r.t[name] = (r.t[name] ?? 0) + performance.now() - s;
+      r.c[name] = (r.c[name] ?? 0) + 1;
+    }
+  }
+}
 import { type } from '@lowdefy/helpers';
 import { toWebhookBody } from '@lowdefy/node-utils';
 
@@ -58,14 +70,14 @@ async function openSession({ data, testApp }) {
   const { build, config } = testApp.directories;
   const named = type.isString(data);
   const [runtime, dataSet, connectionArtifacts] = await Promise.all([
-    loadSessionRuntime({ testApp }),
-    named
+    ldfTime('session.runtime', () => loadSessionRuntime({ testApp })),
+    ldfTime('session.readDataSet', () => named
       ? readDataSet({ configDirectory: config, buildDirectory: build, name: data })
-      : readEmptyDataSet({ buildDirectory: build, name: NO_DATA_SET }),
-    readConnectionArtifacts({ buildDirectory: build }),
+      : readEmptyDataSet({ buildDirectory: build, name: NO_DATA_SET })),
+    ldfTime('session.readConnectionArtifacts', () => readConnectionArtifacts({ buildDirectory: build })),
   ]);
-  const store = await getSessionStore({ testApp });
-  const dataSession = await openDataSession({ dataSet, logger: storeLogger, store });
+  const store = await ldfTime('session.store', () => getSessionStore({ testApp }));
+  const dataSession = await ldfTime('session.openDataSession', () => openDataSession({ dataSet, logger: storeLogger, store }));
   const testSession = {
     closed: false,
     // The built connections by id, for collection() and seed().

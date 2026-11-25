@@ -14,6 +14,24 @@
   limitations under the License.
 */
 
+function ldfMonitor(client, prefix) {
+  const started = new Map();
+  client.on('commandSucceeded', (event) => {
+    const r = globalThis.__ldfProf;
+    if (!r) return;
+    const name = `${prefix}:${event.commandName}`;
+    r.t[name] = (r.t[name] ?? 0) + event.duration;
+    r.c[name] = (r.c[name] ?? 0) + 1;
+    r.t.dbTotal = (r.t.dbTotal ?? 0) + event.duration;
+    r.c.dbTotal = (r.c.dbTotal ?? 0) + 1;
+  });
+  client.on('commandFailed', (event) => {
+    const r = globalThis.__ldfProf;
+    if (!r) return;
+    r.t.dbTotal = (r.t.dbTotal ?? 0) + event.duration;
+  });
+  return started;
+}
 import { MongoClient } from 'mongodb';
 
 import isDataStoreGone from './isDataStoreGone.js';
@@ -35,7 +53,9 @@ async function connectToRunStore({ ownerPid, recordPath, timeoutMs }) {
     const record = await waitForRunStoreRecord({ ownerPid, recordPath, timeoutMs });
     const client = new MongoClient(record.uri, {
       serverSelectionTimeoutMS: SERVER_SELECTION_TIMEOUT_MS,
+      monitorCommands: true,
     });
+    ldfMonitor(client, 'db.store');
     try {
       await client.connect();
       return { client, record };

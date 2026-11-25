@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { timeAsync, timeSync } from './prof.js';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -26,6 +27,7 @@ import createHeadlessHost from './createHeadlessHost.js';
 import loadClientPlugins from './loadClientPlugins.js';
 
 const NOT_FOUND_PATH = '404';
+const artifactCache = new Map();
 
 // A headless host for one journey on a production build that @lowdefy/test-utils' openTestApp
 // opened: a session is opened on data set `data` (or none), so requests and endpoint calls run in
@@ -36,7 +38,7 @@ const NOT_FOUND_PATH = '404';
 // serves every journey of a run (openTestApp checks the build and takes the app's secrets out of
 // the environment); the host's close() ends only its session, and the app's close() ends the app.
 async function createBuildHost({ app, data, stubs, user }) {
-  const session = await app.openSession({ data });
+  const session = await timeAsync('host.openSession', () => app.openSession({ data }));
   const calls = headlessCalls(session);
   let rootConfig;
   // The caller closes only a host it got back, so a session whose stubs or root config are
@@ -47,7 +49,7 @@ async function createBuildHost({ app, data, stubs, user }) {
       throw new Error(stubsError);
     }
     addJourneyStubs({ session: calls.dataSession, stubs });
-    rootConfig = await calls.readRootConfig({ user });
+    rootConfig = await timeAsync('host.readRootConfig', () => calls.readRootConfig({ user }));
   } catch (error) {
     await calls.close();
     throw error;
@@ -57,7 +59,7 @@ async function createBuildHost({ app, data, stubs, user }) {
   async function readPageConfig({ pageId, path, pathParams, urlQuery, user: pageUser }) {
     const matchedPath =
       path ?? buildPagePath({ pageId, path: rootConfig.pagePaths?.[pageId], pathParams });
-    const page = await calls.readPage({ path: matchedPath, urlQuery, user: pageUser ?? user });
+    const page = await timeAsync('host.readPage', () => calls.readPage({ path: matchedPath, urlQuery, user: pageUser ?? user }));
     // The page route sends a page that does not exist, and one the caller may not open, to the
     // not-found page, so neither reveals which it was.
     if (['not_found', 'unauthorized'].includes(page.status) && matchedPath !== NOT_FOUND_PATH) {
@@ -77,6 +79,18 @@ async function createBuildHost({ app, data, stubs, user }) {
   }
 
   function readArtifact(name) {
+    return timeSync(`artifact:${name.includes('/requests/') ? 'request' : name.split('/')[0]}`, () => readArtifactRaw(name));
+  }
+  function readArtifactRaw(name) {
+    // LDF-1164 prototype: one read per artifact per run (the production build does not change).
+    const cacheKey = `${calls.buildDirectory}:${name}`;
+    if (process.env.LDF_ARTIFACT_CACHE === '1') {
+      if (!artifactCache.has(cacheKey)) artifactCache.set(cacheKey, readArtifactUncached(name));
+      return artifactCache.get(cacheKey);
+    }
+    return readArtifactUncached(name);
+  }
+  function readArtifactUncached(name) {
     const filePath = path.join(calls.buildDirectory, name);
     if (!fs.existsSync(filePath)) {
       return null;
@@ -86,14 +100,14 @@ async function createBuildHost({ app, data, stubs, user }) {
 
   return createHeadlessHost({
     call: ({ actionId, blockId, endpointId, kind, pageId, payload, requestId, user: caller }) =>
-      calls.call({
+      timeAsync(`call:${kind}`, () => calls.call({
         body: kind === 'request' ? { actionId, blockId, payload } : { blockId, pageId, payload },
         endpointId,
         kind,
         pageId,
         requestId,
         user: caller ?? user,
-      }),
+      })),
     close: () => calls.close(),
     connections: calls.connections,
     dataSetName: calls.dataSetName,
@@ -108,10 +122,10 @@ async function createBuildHost({ app, data, stubs, user }) {
     readPageConfig,
     resolveUser: (pageUser) => calls.resolveUser(pageUser ?? user),
     rootConfig,
-    system: ({ endpointId, payload }) => calls.system({ endpointId, payload }),
+    system: ({ endpointId, payload }) => timeAsync('call:system', () => calls.system({ endpointId, payload })),
     userNames: calls.userNames,
     webhook: ({ endpointId, headers, query, rawBody }) =>
-      calls.webhook({ endpointId, headers, query, rawBody }),
+      timeAsync('call:webhook', () => calls.webhook({ endpointId, headers, query, rawBody })),
   });
 }
 

@@ -14,6 +14,20 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import { performance } from 'node:perf_hooks';
+async function timeAsync(name, fn) {
+  const s = performance.now();
+  try {
+    return await fn();
+  } finally {
+    const r = globalThis.__ldfProf;
+    if (r) {
+      r.t[name] = (r.t[name] ?? 0) + performance.now() - s;
+      r.c[name] = (r.c[name] ?? 0) + 1;
+    }
+  }
+}
 import { type } from '@lowdefy/helpers';
 import { classifyJourney } from '@lowdefy/node-utils';
 
@@ -31,7 +45,23 @@ const DEFAULT_STEP_TIMEOUT = 5000;
 // journey that needs a browser (classifyJourney, or an action the runner reaches that only a
 // browser can carry out) answers `browserOnly` ({ index, step, reason }, or { phase: 'open',
 // reason } when opening the page reached it) and is neither passed nor failed.
-async function runJourneyHeadless({ app, context, item }) {
+async function runJourneyHeadless(args) {
+  const prof = { t: {}, c: {}, steps: [] };
+  globalThis.__ldfProf = prof;
+  const cpu0 = process.cpuUsage();
+  const elu0 = performance.eventLoopUtilization();
+  const w0 = performance.now();
+  const result = await runJourneyHeadlessInner(args);
+  const elu = performance.eventLoopUtilization(elu0);
+  const cpu = process.cpuUsage(cpu0);
+  globalThis.__ldfProf = null;
+  if (process.env.LDF_PROF_FILE) {
+    fs.appendFileSync(process.env.LDF_PROF_FILE, JSON.stringify({ file: args.item.filePath, name: result.name, passed: result.passed, browserOnly: result.browserOnly ?? null, refused: result.refused ?? false, durationMs: result.durationMs, wall: performance.now() - w0, cpuMs: (cpu.user + cpu.system) / 1000, idleMs: elu.idle, activeMs: elu.active, data: args.item.journey?.data ?? null, stepCount: result.stepCount, ...prof }) + '\n');
+  }
+  return result;
+}
+
+async function runJourneyHeadlessInner({ app, context, item }) {
   const { filePath, journey } = item;
   const refused = checkJourneyItem({ item });
   if (!type.isUndefined(refused)) {
@@ -52,12 +82,12 @@ async function runJourneyHeadless({ app, context, item }) {
     };
   }
   // Loaded only for a headless run: it brings the client engine and the test harness.
-  const { createBuildHost, runHeadlessJourney } = await import('@lowdefy/journey-headless');
+  const { createBuildHost, runHeadlessJourney } = await timeAsync('import.journeyHeadless', () => import('@lowdefy/journey-headless'));
   const start = Date.now();
   const user = readHeadlessUser({ user: journey.user });
   let host;
   try {
-    host = await createBuildHost({ app, data: journey.data, stubs: journey.stubs, user });
+    host = await timeAsync('host.create', () => createBuildHost({ app, data: journey.data, stubs: journey.stubs, user }));
   } catch (error) {
     // The journey's data set or user could not be opened; every repeat would fail the same way.
     return {
@@ -72,14 +102,14 @@ async function runJourneyHeadless({ app, context, item }) {
   }
   let result;
   try {
-    result = await runHeadlessJourney({
+    result = await timeAsync('j.run', () => runHeadlessJourney({
       configDirectory: context.directories.config,
       host,
       journey: { ...journey, user },
       stepTimeout: journey.timeout ?? DEFAULT_STEP_TIMEOUT,
-    });
+    }));
   } finally {
-    await host.close();
+    await timeAsync('host.close', () => host.close());
   }
   const durationMs = Date.now() - start;
   if (!type.isNone(result.error)) {

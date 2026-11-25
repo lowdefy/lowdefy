@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { add, rec, timeAsync, timeSync } from './prof.js';
 import {
   ANSWER_STEP_KEYS,
   CALL_STEP_KEYS,
@@ -130,18 +131,18 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
   if (!type.isUndefined(unknownCaller)) {
     return { error: unknownCaller, refused: true };
   }
-  const windows = createAppErrorWindows({
+  const windows = timeSync('j.windows.create', () => createAppErrorWindows({
     configDirectory,
     errorSink: host.errorSink,
     usesSearchStage: (entry) => usesSearchStage({ entry, host }),
-  });
+  }));
   const actors = createHeadlessActors({
     host,
     onTrace: (payload) => {
       windows.onTrace(payload);
       onTrace?.(payload);
     },
-    plugins: await host.loadClientPlugins(),
+    plugins: await timeAsync('j.loadClientPlugins', () => host.loadClientPlugins()),
     start: { pageId, pathParams, urlQuery },
     stepTimeout,
     user,
@@ -165,10 +166,10 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
   let since = new Map();
 
   try {
-    await actors.open();
-    await actors.current().settle();
+    await timeAsync('j.open', () => actors.open());
+    await timeAsync('j.openSettle', () => actors.current().settle());
     // The browser reads no trace events for the open, only the errors it caused.
-    const findings = await windows.take({ pageId, withEmits: false });
+    const findings = await timeAsync('j.windows.take', () => windows.take({ pageId, withEmits: false }));
     if (findings.length > 0) {
       failure = toAppErrorFailure({ findings, phase: 'open' });
     }
@@ -208,7 +209,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       each.landedControl = undefined;
     });
     try {
-      checkStepReferences({ actor: actors.current(), host, journeyPageId: pageId, step });
+      timeSync('j.checkStepReferences', () => checkStepReferences({ actor: actors.current(), host, journeyPageId: pageId, step }));
       const stepAnswer = await races.run({
         index,
         step,
@@ -224,6 +225,9 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       });
     }
     const durationMs = Date.now() - started;
+    const profKey = key === 'expect' && type.isObject(step.expect) ? `expect.${Object.keys(step.expect).filter((k) => !['timeout', 'not'].includes(k)).join('+')}${step.expect.not ? '.not' : ''}` : key;
+    add(`step:${profKey}`, durationMs);
+    rec()?.steps.push([profKey, durationMs]);
     if (countBrowserOnly(actors) > triedBefore) {
       browserOnly = { index, step, reason: findBrowserOnly({ actors, from: triedBefore }) };
       results.push({ index, step, status: 'browser-only', durationMs });
@@ -244,7 +248,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       durationMs,
       ...(type.isNone(actor.landedControl) ? {} : { control: actor.landedControl }),
     });
-    const findings = await windows.take({ pageId: actor.page?.pageId ?? null });
+    const findings = await timeAsync('j.windows.take', () => windows.take({ pageId: actor.page?.pageId ?? null }));
     if (isExpectErrorStep(step) && type.isUndefined(stepFailure)) {
       failure = claimExpectedErrors({ step, index, held, findings });
       held = null;
@@ -268,8 +272,8 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
   // What the last step's effects raised once it had passed is judged against it.
   if (type.isUndefined(failure) && type.isUndefined(browserOnly) && steps.length > 0) {
     const index = steps.length - 1;
-    await actors.current().settle();
-    const findings = await windows.take({ pageId: actors.current().page?.pageId ?? null });
+    await timeAsync('j.endSettle', () => actors.current().settle());
+    const findings = await timeAsync('j.windows.take', () => windows.take({ pageId: actors.current().page?.pageId ?? null }));
     if (findings.length > 0) {
       results[index].status = 'failed';
       failure = toAppErrorFailure({ findings, index, step: steps[index] });
@@ -277,7 +281,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
   }
   // Every gate is released whatever happened; one left unreached, or a call left parked, is the
   // journey's failure when nothing failed before it.
-  const raceFailure = await races.finish();
+  const raceFailure = await timeAsync('j.racesFinish', () => races.finish());
   if (
     type.isUndefined(failure) &&
     type.isUndefined(browserOnly) &&
@@ -293,7 +297,7 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     steps.length > 0 &&
     !type.isNone(host.dataSession)
   ) {
-    failure = await findUnfiredFailGate({ session: host.dataSession, steps });
+    failure = await timeAsync('j.failGate', () => findUnfiredFailGate({ session: host.dataSession, steps }));
     if (!type.isUndefined(failure)) {
       results[failure.index].status = 'failed';
     }

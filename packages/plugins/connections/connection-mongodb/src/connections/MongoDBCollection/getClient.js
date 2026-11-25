@@ -14,6 +14,24 @@
   limitations under the License.
 */
 
+function ldfMonitor(client, prefix) {
+  const started = new Map();
+  client.on('commandSucceeded', (event) => {
+    const r = globalThis.__ldfProf;
+    if (!r) return;
+    const name = `${prefix}:${event.commandName}`;
+    r.t[name] = (r.t[name] ?? 0) + event.duration;
+    r.c[name] = (r.c[name] ?? 0) + 1;
+    r.t.dbTotal = (r.t.dbTotal ?? 0) + event.duration;
+    r.c.dbTotal = (r.c.dbTotal ?? 0) + 1;
+  });
+  client.on('commandFailed', (event) => {
+    const r = globalThis.__ldfProf;
+    if (!r) return;
+    r.t.dbTotal = (r.t.dbTotal ?? 0) + event.duration;
+  });
+  return started;
+}
 import { MongoClient } from 'mongodb';
 
 // Clients are cached for the lifetime of the process so requests share the driver's
@@ -23,7 +41,9 @@ const clientPromises = new Map();
 function getClient({ databaseUri, options }) {
   const key = `${databaseUri}:${JSON.stringify(options ?? {})}`;
   if (!clientPromises.has(key)) {
-    const clientPromise = new MongoClient(databaseUri, options).connect();
+    const ldfClient = new MongoClient(databaseUri, { ...(options ?? {}), monitorCommands: true });
+    ldfMonitor(ldfClient, 'db.app');
+    const clientPromise = ldfClient.connect();
     // Evict failed connects so the next request retries instead of replaying the rejection.
     clientPromise.catch(() => clientPromises.delete(key));
     clientPromises.set(key, clientPromise);

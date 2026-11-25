@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { performance } from 'node:perf_hooks';
+import { add, timeAsync, timeSync } from './prof.js';
 import { createStepRunner, updateLowdefyPage, waitForSettle } from '@lowdefy/client-core';
 import getContext from '@lowdefy/engine';
 import { serializer, type } from '@lowdefy/helpers';
@@ -179,7 +181,7 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
   }
 
   async function show({ page, urlQuery }) {
-    const config = serializer.deserialize({ pageConfig: page.pageConfig, rootConfig });
+    const config = timeSync('actor.show.deserialize', () => serializer.deserialize({ pageConfig: page.pageConfig, rootConfig }));
     const { lowdefy, globals, appContext } = client;
     globals.window.location = createLocation({ path: page.matchedPath, urlQuery });
     updateLowdefyPage({
@@ -224,22 +226,24 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
     };
     actor.page = shown;
     const progress = () => undefined;
+    const onInitStart = performance.now();
     await appContext._internal.runOnInit(progress);
     appContext._internal.runOnInitAsync(progress);
     await context._internal.runOnInit(progress);
     context._internal.runOnInitAsync(progress);
+    add('actor.show.onInit', performance.now() - onInitStart);
     registerBlockStandIns({ actor });
     // The web client's WebSocketsEffect opens the page's subscriptions once onInit has run, before
     // the blocks' onMount; the websocket client is inert (createActorClient).
     if (!sameContext) {
       context._internal.WebSockets.subscribeAll();
     }
-    await checkMounts(shown);
+    await timeAsync('actor.show.checkMounts', () => checkMounts(shown));
     reportParseErrors({ handleError: lowdefy._internal.handleError, page: actor.page });
   }
 
   async function load({ pageId, path, pathParams, urlQuery }) {
-    const page = await readPage({ pageId, path, pathParams, urlQuery });
+    const page = await timeAsync('actor.load.readPage', () => readPage({ pageId, path, pathParams, urlQuery }));
     loadCount += 1;
     client = createActorClient({
       actor,
@@ -295,16 +299,19 @@ function createHeadlessActor({ host, name, onTrace, plugins, stepTimeout, user }
   }
 
   async function settle() {
-    await idle();
+    await timeAsync('actor.settle.idle', () => idle());
     if (client === null) {
       return true;
     }
     registerBlockStandIns({ actor });
+    const settleStart = performance.now();
     const settled = await waitForSettle({
       getPageContext,
       lowdefy: client.lowdefy,
       timeout: Math.min(stepTimeout, SETTLE_MS),
     });
+    add('actor.settle.wait', performance.now() - settleStart);
+    if (!settled) add('actor.settle.timeout', performance.now() - settleStart);
     reportParseErrors({ handleError: client.lowdefy._internal.handleError, page: actor.page });
     return settled;
   }

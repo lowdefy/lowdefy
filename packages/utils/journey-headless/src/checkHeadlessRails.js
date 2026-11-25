@@ -14,6 +14,7 @@
   limitations under the License.
 */
 
+import { timeSync } from './prof.js';
 import { RAILED_STEPS } from '@lowdefy/node-utils';
 
 import HeadlessStepError from './HeadlessStepError.js';
@@ -26,7 +27,7 @@ function checkHeadlessRails({ actor, blockId, rails, step }) {
   if (rails === null) {
     return;
   }
-  const refused = rails.refusal({ pageId: actor.page.pageId, blockId, step });
+  const refused = timeSync('rails.refusal', () => rails.refusal({ pageId: actor.page.pageId, blockId, step }));
   if (refused === null) {
     return;
   }
