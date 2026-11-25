@@ -344,6 +344,20 @@ describe('resolveDeferred and the wait-graph', () => {
 });
 
 describe('registry serialization round-trip', () => {
+  test('serializeRegistry writes the same file whatever order the records were created in', async () => {
+    const { serializeRegistry } = await import('./deferredRegistry.js');
+    const records = [
+      { id: 'b:components.0.component', kind: 'component', body: { type: 'Box' }, env: {} },
+      { id: 'a:components.0.component', kind: 'component', body: { type: 'Card' }, env: {} },
+    ];
+    const first = createBuildContext();
+    records.forEach((record) => createRecord(first, record));
+    const second = createBuildContext();
+    [...records].reverse().forEach((record) => createRecord(second, record));
+
+    expect(serializeRegistry(second)).toBe(serializeRegistry(first));
+  });
+
   test('serializeRegistry strips runtime state; hydrate rebuilds it empty', async () => {
     const { serializeRegistry, hydrateDeferredRecords } = await import('./deferredRegistry.js');
     const context = createBuildContext();

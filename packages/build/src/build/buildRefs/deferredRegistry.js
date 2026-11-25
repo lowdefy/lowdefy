@@ -272,9 +272,14 @@ function assertNoPlaceholderLeaks(context) {
 // it empty. Must go through the marker-preserving serializer: record bodies
 // carry non-enumerable ~r/~l/~k markers that plain JSON.stringify would drop,
 // breaking error line-number pairing in JIT.
+// Records are created as refs resolve, in parallel, so they are written in id
+// order: the registry is read by id, and two builds of the same config then
+// write the same file, which the dev server compares to tell whether a config
+// build changed what pages read.
 function serializeRegistry(context) {
   const data = {};
-  for (const [id, record] of Object.entries(context.deferred ?? {})) {
+  const records = Object.entries(context.deferred ?? {}).sort(([a], [b]) => (a < b ? -1 : 1));
+  for (const [id, record] of records) {
     data[id] = { kind: record.kind, body: record.body, env: record.env, slot: record.slot };
   }
   return serializer.serializeToString(data);
