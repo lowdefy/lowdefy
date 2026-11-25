@@ -138,6 +138,18 @@ test('a system call bound to no organization whose routine fails says how to bin
   );
 });
 
+test('the app error of a faulted system call bound to no organization says how to bind one', async () => {
+  const result = await run({
+    steps: [{ call: { endpoint: 'record_caller', payload: { id: 'BR-1' }, as: 'system' } }],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(0);
+  expect(result.failure.message).toContain('Step 0 (call) caused an app error');
+  expect(result.failure.message).toContain(
+    'name them on the call, as: { system: { organization: <id>, caller: { id, name } } }.'
+  );
+});
+
 test('a signed-in caller cannot reach an InternalApi endpoint either: it answers as a missing one', async () => {
   const result = await run({
     steps: [{ call: { endpoint: 'close_runs' } }, { expect: { status: 200 } }],
@@ -152,6 +164,46 @@ test('a signed-in caller cannot reach an InternalApi endpoint either: it answers
   expect(
     await host.findDocuments({ collection: 'items', match: { kind: 'run', closed: true } })
   ).toEqual([]);
+});
+
+// Only a call step's `as: system` or `as: { system: { organization, caller } }` reaches the system
+// principal. A user object written into the journey that carries "system" never does: as the call's
+// caller it is refused before any call, and as the journey's user the server refuses it, so the
+// InternalApi endpoint never runs.
+test('an inline caller that carries "system" is refused before any call', async () => {
+  const result = await run({
+    steps: [
+      {
+        call: {
+          endpoint: 'record_caller',
+          payload: { id: 'inline' },
+          as: { id: 'u_1', roles: ['admin'], system: true },
+        },
+      },
+      { expect: { status: 200 } },
+    ],
+  });
+  expect(result.passed).toBeUndefined();
+  expect(result.error).toContain(
+    'Step 0: Step "call" requires "as" with "system" to be { system: { organization, caller? } }'
+  );
+  expect(await host.findDocuments({ collection: 'items', match: { kind: 'caller' } })).toEqual([]);
+});
+
+// The build host reads the app's root config as the journey's user when it is made, so it is refused
+// there, before any page opens or call runs; lowdefy test answers the journey refused.
+test('a journey user that carries "system" is refused before the journey runs', async () => {
+  await expect(
+    run({
+      steps: [
+        { call: { endpoint: 'record_caller', payload: { id: 'journey_user' } } },
+        { expect: { status: 200 } },
+      ],
+      user: { id: 'u_1', name: 'Nightly close', organization_id: 'org_a', system: true },
+    })
+  ).rejects.toThrow(
+    'An injected caller (dev mock user, headless or e2e user) can not carry "system".'
+  );
 });
 
 test('the webhook journey writes the signed events and refuses the wrong signature', async () => {

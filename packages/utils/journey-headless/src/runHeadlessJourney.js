@@ -205,18 +205,21 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       since = new Map(actors.all().map((actor) => [actor, actor.calls.length]));
     }
     let stepFailure;
+    // This step's own answer, never an earlier call's: a call or request that threw has none.
+    let stepAnswer;
     actors.all().forEach((each) => {
       each.landedControl = undefined;
     });
     try {
       checkStepReferences({ actor: actors.current(), host, journeyPageId: pageId, step });
-      const stepAnswer = await races.run({
+      const ran = await races.run({
         index,
         step,
         start: () => runHeadlessStep({ actors, answer, host, rails, since, step, stepTimeout }),
       });
       if (ANSWER_STEP_KEYS.includes(key)) {
-        answer = stepAnswer;
+        answer = ran;
+        stepAnswer = ran;
       }
     } catch (error) {
       stepFailure = noteSilentSubscriptions({
@@ -265,8 +268,8 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     results[index].status = 'failed';
     failure = toAppErrorFailure({ findings, index, step, stepFailure });
     // A system call bound to no organization whose routine faulted says how to bind one.
-    if (ANSWER_STEP_KEYS.includes(key) && !type.isUndefined(answer?.hint)) {
-      failure.message = withHint({ answer, message: failure.message });
+    if (!type.isUndefined(stepAnswer)) {
+      failure.message = withHint({ answer: stepAnswer, message: failure.message });
     }
   }
 

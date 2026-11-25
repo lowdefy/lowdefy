@@ -56,3 +56,10 @@ test('parseUserParam returns an error when a body value is neither an object nor
 test('parseUserParam returns an error for an empty string', () => {
   expect(parseUserParam({ value: '' }).error).toMatch(/must be a user object/);
 });
+
+test('parseUserParam returns an error for a user object that carries "system", from a body or a query', () => {
+  const message =
+    'The "user" param can not carry "system": _user.system marks only the stand-in caller a CallApi "caller" names. A journey runs an endpoint as the system with a "call" step "as: system", or "as: { system: { organization, caller } }" for a run bound to an organization.';
+  expect(parseUserParam({ value: { id: 'u_1', system: true } })).toEqual({ error: message });
+  expect(parseUserParam({ value: '{"id":"u_1","system":true}' })).toEqual({ error: message });
+});
