@@ -201,7 +201,9 @@ test('a journey user that carries "system" is refused before the journey runs', 
       ],
       user: { id: 'u_1', name: 'Nightly close', organization_id: 'org_a', system: true },
     })
-  ).rejects.toThrow('An injected caller (dev mock user, headless or e2e user) can not carry "system".');
+  ).rejects.toThrow(
+    'An injected caller (dev mock user, headless or e2e user) can not carry "system".'
+  );
 });
 
 test('the webhook journey writes the signed events and refuses the wrong signature', async () => {
