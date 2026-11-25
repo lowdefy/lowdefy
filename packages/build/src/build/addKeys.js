@@ -101,7 +101,34 @@ function arrayItemSegment({ index, item }) {
   return segment;
 }
 
-function recArray({ array, segment, keyMap, parentKeyMapId, parentRef, context }) {
+// A node keyed on an earlier pass needs no entry, so its segment is built only for a
+// node that is new: the second and third passes walk about 1.7 million keyed nodes on a
+// large app to key a few thousand new ones. key is the node's property name, its index in
+// an array (inArray), or null for the root.
+function nodeSegment({ node, key, inArray }) {
+  if (key === null) return 'root';
+  if (!inArray) return `.${key}`;
+  return Array.isArray(node) ? `[${key}]` : arrayItemSegment({ index: key, item: node });
+}
+
+// Keys each object and array child of node, in property order (array index order). The
+// checks rule out the other values first, so a string or number child costs one typeof.
+function addChildKeys({ node, inArray, keyMap, parentKeyMapId, parentRef, context }) {
+  const keys = inArray ? null : Object.keys(node);
+  const length = inArray ? node.length : keys.length;
+  for (let i = 0; i < length; i++) {
+    const key = inArray ? i : keys[i];
+    const child = node[key];
+    if (child === null || typeof child !== 'object') continue;
+    if (Array.isArray(child)) {
+      recArray({ array: child, key, inArray, keyMap, parentKeyMapId, parentRef, context });
+    } else if (type.isObject(child)) {
+      recAddKeys({ object: child, key, inArray, keyMap, parentKeyMapId, parentRef, context });
+    }
+  }
+}
+
+function recArray({ array, key, inArray, keyMap, parentKeyMapId, parentRef, context }) {
   let arrayKeyMapId;
   let arrayRef;
 
@@ -110,7 +137,12 @@ function recArray({ array, segment, keyMap, parentKeyMapId, parentRef, context }
     arrayRef = keyedRef({ keyMap, keyMapId: arrayKeyMapId, parentKeyMapId, parentRef });
   } else {
     arrayKeyMapId = makeId.next();
-    keyMap[arrayKeyMapId] = createEntry({ node: array, segment, parentKeyMapId, parentRef });
+    keyMap[arrayKeyMapId] = createEntry({
+      node: array,
+      segment: nodeSegment({ node: array, key, inArray }),
+      parentKeyMapId,
+      parentRef,
+    });
     arrayRef = ownRef(array);
     Object.defineProperty(array, '~k', {
       value: arrayKeyMapId,
@@ -122,31 +154,17 @@ function recArray({ array, segment, keyMap, parentKeyMapId, parentRef, context }
     delete array['~l'];
   }
 
-  array.forEach((item, index) => {
-    if (type.isObject(item)) {
-      recAddKeys({
-        object: item,
-        segment: arrayItemSegment({ index, item }),
-        keyMap,
-        parentKeyMapId: arrayKeyMapId,
-        parentRef: arrayRef,
-        context,
-      });
-    }
-    if (type.isArray(item)) {
-      recArray({
-        array: item,
-        segment: `[${index}]`,
-        keyMap,
-        parentKeyMapId: arrayKeyMapId,
-        parentRef: arrayRef,
-        context,
-      });
-    }
+  addChildKeys({
+    node: array,
+    inArray: true,
+    keyMap,
+    parentKeyMapId: arrayKeyMapId,
+    parentRef: arrayRef,
+    context,
   });
 }
 
-function recAddKeys({ object, segment, keyMap, parentKeyMapId, parentRef, context }) {
+function recAddKeys({ object, key, inArray, keyMap, parentKeyMapId, parentRef, context }) {
   let keyMapId;
   let objectRef;
 
@@ -156,7 +174,12 @@ function recAddKeys({ object, segment, keyMap, parentKeyMapId, parentRef, contex
     objectRef = keyedRef({ keyMap, keyMapId, parentKeyMapId, parentRef });
   } else {
     keyMapId = makeId.next();
-    const entry = createEntry({ node: object, segment, parentKeyMapId, parentRef });
+    const entry = createEntry({
+      node: object,
+      segment: nodeSegment({ node: object, key, inArray }),
+      parentKeyMapId,
+      parentRef,
+    });
     objectRef = ownRef(object);
 
     // Add entry to keyMap BEFORE validation so errors can resolve location
@@ -203,27 +226,13 @@ function recAddKeys({ object, segment, keyMap, parentKeyMapId, parentRef, contex
   }
 
   // Always recurse into children (they may be new objects without keys)
-  Object.keys(object).forEach((nextKey) => {
-    if (type.isObject(object[nextKey])) {
-      recAddKeys({
-        object: object[nextKey],
-        segment: `.${nextKey}`,
-        keyMap,
-        parentKeyMapId: keyMapId,
-        parentRef: objectRef,
-        context,
-      });
-    }
-    if (type.isArray(object[nextKey])) {
-      recArray({
-        array: object[nextKey],
-        segment: `.${nextKey}`,
-        keyMap,
-        parentKeyMapId: keyMapId,
-        parentRef: objectRef,
-        context,
-      });
-    }
+  addChildKeys({
+    node: object,
+    inArray: false,
+    keyMap,
+    parentKeyMapId: keyMapId,
+    parentRef: objectRef,
+    context,
   });
 }
 
@@ -231,7 +240,8 @@ function addKeys({ components, context }) {
   const keyMapId = makeId.next();
   recAddKeys({
     object: components,
-    segment: 'root',
+    key: null,
+    inArray: false,
     keyMap: context.keyMap,
     parentKeyMapId: keyMapId,
     parentRef: null,
