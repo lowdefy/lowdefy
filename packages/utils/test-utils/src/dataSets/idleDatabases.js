@@ -29,9 +29,9 @@ globalThis[POOL_KEY] ??= new Set();
 
 const idleDatabases = globalThis[POOL_KEY];
 
-// Two data sets with the same layout load the same databases, collections and indexes, so one's
-// databases take the other's documents with a reset. The documents are left out: a reset writes
-// the data set's documents anew, and on the dev server an edit to them keeps the layout.
+// The databases of a data set are reused while its layout stays: its name, its database targets,
+// which collection each connection names, and its indexes. The documents are left out: a reset
+// writes the data set's documents anew, and on the dev server an edit to them keeps the layout.
 function layoutKey({ dataSet }) {
   return JSON.stringify([
     dataSet.name,
@@ -74,7 +74,7 @@ function keepIdleDatabases({ dataSet, session, store }) {
     databaseName: session.databaseName,
     databases: session.databases,
     databaseCount: session.databaseCount,
-    indexNames: session.indexNames,
+    loadedIndexes: session.loadedIndexes,
   });
 }
 
@@ -83,7 +83,8 @@ function listIdlePrefixes() {
   return [...idleDatabases].map((entry) => entry.prefix);
 }
 
-// Forgets a store's idle databases, as the store stops: they go with it.
+// Forgets a store's idle databases, as the dev server's store stops or a store is found dead:
+// they go with it.
 function forgetIdleDatabases({ store }) {
   for (const entry of idleDatabases) {
     if (entry.store === store) idleDatabases.delete(entry);
@@ -100,8 +101,8 @@ async function dropDatabaseSets({ client, entries }) {
   );
 }
 
-// Drops a store's idle databases, as a test app lets go of its client on a run's store, which
-// stays up for the run's other test files.
+// Drops a store's idle databases, as a run store's client stops (getRunDataStore): the store stays
+// up for the run's other test files.
 async function dropIdleDatabases({ store }) {
   const entries = [...idleDatabases].filter((entry) => entry.store === store);
   entries.forEach((entry) => idleDatabases.delete(entry));

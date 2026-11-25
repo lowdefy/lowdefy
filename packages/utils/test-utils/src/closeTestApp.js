@@ -17,7 +17,6 @@
 import { type } from '@lowdefy/helpers';
 
 import closeSession from './closeSession.js';
-import { dropIdleDatabases } from './dataSets/idleDatabases.js';
 
 // Releases what the test app holds, so the test file's process can exit: its sessions (each
 // waits for its background work) and the databases they held, the driver clients the app's
@@ -46,8 +45,7 @@ async function closeTestApp({ testApp }) {
   }
   if (!type.isNone(testApp.store)) {
     const store = await testApp.store;
-    // Its sessions kept their databases for a next session (idleDatabases); none comes now.
-    await dropIdleDatabases({ store });
+    // Also drops the databases its sessions kept for a next session (idleDatabases).
     await store.stop();
   }
   testApp.fileCache.clear();

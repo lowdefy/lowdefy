@@ -14,13 +14,13 @@
   limitations under the License.
 */
 
-// Notes the indexes a collection of a session database was loaded with (loadDataSetCollection),
-// which a reset checks the collection against (reloadDataSession).
-function recordIndexNames({ session, databaseName, collectionName, indexNames }) {
-  if (!session.indexNames.has(databaseName)) {
-    session.indexNames.set(databaseName, new Map());
+// Notes the indexes a collection of a session database was loaded with (loadDataSetCollection,
+// described by describeIndexes), which a reset checks the collection against (reloadDataSession).
+function recordIndexes({ session, databaseName, collectionName, indexes }) {
+  if (!session.loadedIndexes.has(databaseName)) {
+    session.loadedIndexes.set(databaseName, new Map());
   }
-  session.indexNames.get(databaseName).set(collectionName, indexNames);
+  session.loadedIndexes.get(databaseName).set(collectionName, indexes);
 }
 
-export default recordIndexNames;
+export default recordIndexes;

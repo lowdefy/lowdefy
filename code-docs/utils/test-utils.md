@@ -114,18 +114,24 @@ pool holds one set per data set for the most sessions ever open on it at once.
 - **What stays apart.** Each session gets a new id and cookie, so a request still carrying the
   last journey's cookie is refused, never served on the next one's data. A session whose
   background work outlived the 30 s wait drops its databases instead, since that work may still
-  write to them.
-- **What a reset checks.** `loadDataSetCollection` returns the index names it created, recorded
-  on the session (`recordIndexNames`). A reset lists each database's collections and their
-  indexes: a collection whose index names still match (only `_id_` for one the data set does not
-  load) is emptied with `deleteMany`; any other collection, and any view, is dropped. Then each
+  write to them. So does a session closed while a request resolver under it still runs
+  (`session.running`, filled by `createGatedResolver`): a journey that failed or timed out can
+  end before its calls answer, and a resolver that already read its connection would write into
+  the next journey's data.
+- **What a reset checks.** `loadDataSetCollection` returns the collection's indexes as loaded
+  (`describeIndexes`), recorded on the session (`recordIndexes`). A reset lists each database's
+  collections, their options and their indexes: a collection with no options and the indexes it
+  was loaded with (only `_id_` for one the data set does not load) is emptied with `deleteMany`;
+  any other collection, and any view, is dropped. Then each
   data set collection is written again, or loaded as on open when it was dropped. A collection the
   last journey wrote with only an `_id` index stays, empty.
 - **Edits on the dev server.** A data set whose layout changed takes out and drops the idle entries
   of its old layout. An edit to its documents keeps the layout, and the reset writes the new ones.
-- **When they go.** `closeTestApp` drops the idle databases of its store before it lets go of its
-  client. A store's `stop()` forgets its entries (`forgetIdleDatabases`). The orphan sweep leaves
-  idle databases (`listIdlePrefixes`).
+- **When they go.** A run store client's `stop()` drops its idle databases (`dropIdleDatabases`),
+  as the store stays up for the run's other test files; `closeTestApp` stops it. The dev server's
+  store forgets its entries as it stops, and a store found dead forgets them too
+  (`forgetIdleDatabases`). The orphan sweep, which runs on every open, leaves idle databases
+  (`listIdlePrefixes`).
 
 ### A call
 

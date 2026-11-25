@@ -16,7 +16,7 @@
 
 import announceDataStoreDownload from './announceDataStoreDownload.js';
 import connectToRunStore from './connectToRunStore.js';
-import { forgetIdleDatabases } from './idleDatabases.js';
+import { dropIdleDatabases } from './idleDatabases.js';
 import getRunOwnerPid from './getRunOwnerPid.js';
 import getRunStoreRecordPath from './getRunStoreRecordPath.js';
 
@@ -56,8 +56,10 @@ async function getRunDataStore({ logger }) {
     stopping =
       stopping ??
       (async () => {
+        // The store stays up for the run's other test processes, so the databases this client
+        // kept idle are dropped, not left for the run's end.
+        await dropIdleDatabases({ store });
         store.stopped = true;
-        forgetIdleDatabases({ store });
         await client.close().catch(() => {});
       })();
     return stopping;

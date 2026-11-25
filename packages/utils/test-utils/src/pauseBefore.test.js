@@ -35,7 +35,7 @@ async function isSettled(promise) {
 }
 
 beforeEach(() => {
-  session = { failGates: [], pauseGates: [] };
+  session = { failGates: [], pauseGates: [], running: new Set() };
   testSession = { closed: false, dataSession: { session } };
   resolver = vi.fn(async (args) => `ran ${args.requestId}`);
   resolver.meta = { checkWrite: true };

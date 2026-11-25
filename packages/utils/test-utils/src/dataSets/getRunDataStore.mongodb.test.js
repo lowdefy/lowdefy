@@ -29,7 +29,6 @@ import { afterAll, expect, test, vi } from 'vitest';
 
 import dataSessionRegistry from './dataSessionRegistry.js';
 import getRunDataStore from './getRunDataStore.js';
-import { dropIdleDatabases } from './idleDatabases.js';
 import isProcessAlive from './isProcessAlive.js';
 import openDataSession from './openDataSession.js';
 import { IDLE_STOP_MS } from './runDataStoreKeeper.js';
@@ -272,11 +271,13 @@ test('a session on the run store names its databases after its process, and its 
 
   await opened.close();
   expect(dataSessionRegistry.has(opened.id)).toBe(false);
-  // Kept for the next session on the data set until the idle databases are dropped.
+  // Kept for the next session on the data set until this client stops, while the store stays up
+  // for the run's other test files.
   expect(await listDatabaseNames(store)).toContain(opened.session.databaseName);
-  await dropIdleDatabases({ store });
-  expect(await listDatabaseNames(store)).not.toContain(opened.session.databaseName);
-  await store.client.db(running).dropDatabase();
+  const other = await join();
+  await store.stop();
+  expect(await listDatabaseNames(other)).not.toContain(opened.session.databaseName);
+  await other.client.db(running).dropDatabase();
 });
 
 // A test file run in a worker thread (vitest's threads pool): it joins the run store, opens a

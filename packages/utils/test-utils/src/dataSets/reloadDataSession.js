@@ -14,35 +14,41 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
+import describeIndexes from './describeIndexes.js';
 import groupDataSetByCollection from './groupDataSetByCollection.js';
 import listSessionDatabases from './listSessionDatabases.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
-import recordIndexNames from './recordIndexNames.js';
+import recordIndexes from './recordIndexes.js';
 import seedDataSetCollection from './seedDataSetCollection.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
 
-// What a collection the data set does not load holds when it is first written: the _id index.
-const ID_INDEX_ONLY = new Set(['_id_']);
-
-function hasIndexNames({ indexes, names }) {
-  return indexes.length === names.size && indexes.every((index) => names.has(index.name));
+// Whether a collection holds what it held when the session loaded it: no options (a validator,
+// a collation, capped), and the indexes recorded at load (recordIndexes), or only the _id index
+// for a collection the data set does not load.
+function isAsLoaded({ indexes, loaded, options }) {
+  if (Object.keys(options ?? {}).length > 0) return false;
+  if (type.isUndefined(loaded)) {
+    return indexes.length === 1 && indexes[0].name === '_id_';
+  }
+  return describeIndexes(indexes) === loaded;
 }
 
-// Empties every collection of one session database whose indexes are the ones it was loaded with
-// (session.indexNames; only _id_ for a collection the data set does not load), and drops the rest:
-// a collection that gained or lost an index (an app can create one at run time, as the auth
-// adapter does), and a view or other collection that is not a plain one. Returns the names of the
-// collections it kept.
-async function emptyDatabase({ db, indexNames }) {
-  const collections = await db.listCollections({}, { nameOnly: true }).toArray();
+// Empties every collection of one session database that is as it was loaded (isAsLoaded), and
+// drops the rest: a collection that gained or lost an index or an option (an app can create an
+// index at run time, as the auth adapter does), and a view or other collection that is not a
+// plain one. Returns the names of the collections it kept.
+async function emptyDatabase({ db, loadedIndexes }) {
+  const collections = await db.listCollections().toArray();
   const kept = new Set();
   await Promise.all(
     collections
       .filter((collection) => !collection.name.startsWith('system.'))
-      .map(async ({ name, type }) => {
-        if (type === 'collection') {
+      .map(async ({ name, options, type: kind }) => {
+        if (kind === 'collection') {
           const indexes = await db.collection(name).indexes();
-          if (hasIndexNames({ indexes, names: indexNames?.get(name) ?? ID_INDEX_ONLY })) {
+          if (isAsLoaded({ indexes, loaded: loadedIndexes?.get(name), options })) {
             await db.collection(name).deleteMany({});
             kept.add(name);
             return;
@@ -69,7 +75,7 @@ async function reloadDataSession({ client, dataSet, session }) {
         databaseName,
         await emptyDatabase({
           db: client.db(databaseName),
-          indexNames: session.indexNames.get(databaseName),
+          loadedIndexes: session.loadedIndexes.get(databaseName),
         })
       );
     })
@@ -86,13 +92,13 @@ async function reloadDataSession({ client, dataSet, session }) {
         });
         return;
       }
-      const indexNames = await loadDataSetCollection({
+      const indexes = await loadDataSetCollection({
         db,
         dataSetName: dataSet.name,
         collectionName: group.collection,
         group,
       });
-      recordIndexNames({ session, databaseName, collectionName: group.collection, indexNames });
+      recordIndexes({ session, databaseName, collectionName: group.collection, indexes });
     })
   );
 }

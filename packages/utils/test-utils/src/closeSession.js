@@ -16,7 +16,7 @@
 
 // Ends a session when its app closes, with the data session's own close(): held routines are
 // released, background work is waited for, and the session's databases are kept for the app's
-// next session on its data set (closeTestApp drops them).
+// next session on its data set (the store's stop() drops them).
 async function closeSession({ testSession }) {
   if (testSession.closed) return;
   testSession.closed = true;

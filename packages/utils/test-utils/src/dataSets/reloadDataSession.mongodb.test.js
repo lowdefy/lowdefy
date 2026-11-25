@@ -161,3 +161,34 @@ test('reloadDataSession drops a collection a test made with an index of its own,
     { _id: 'm2', userId: 'u1' },
   ]);
 });
+
+test('reloadDataSession loads a data set collection again when a test gave it a validator', async () => {
+  opened = await openDataSession({ dataSet, logger, store });
+  const db = database(targetA);
+  await db.command({
+    collMod: 'tickets',
+    validator: { number: { $type: 'string' } },
+    validationAction: 'error',
+  });
+
+  await reloadDataSession({ client: store.client, dataSet, session: opened.session });
+
+  const [tickets] = await db.listCollections({ name: 'tickets' }).toArray();
+  expect(tickets.options).toEqual({});
+  // The validator would have refused a number.
+  await db.collection('tickets').insertOne({ _id: 't5', number: 5 });
+});
+
+test('reloadDataSession loads a data set collection again when a test hid one of its indexes', async () => {
+  opened = await openDataSession({ dataSet, logger, store });
+  const tickets = database(targetA).collection('tickets');
+  await database(targetA).command({
+    collMod: 'tickets',
+    index: { name: 'number_1', hidden: true },
+  });
+
+  await reloadDataSession({ client: store.client, dataSet, session: opened.session });
+
+  const index = (await tickets.indexes()).find(({ name }) => name === 'number_1');
+  expect(index.hidden).toBeUndefined();
+});

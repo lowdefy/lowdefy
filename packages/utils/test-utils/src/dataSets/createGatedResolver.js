@@ -21,11 +21,24 @@ import throwAtFailGate from './throwAtFailGate.js';
 // first, then a fail gate throws before the resolver runs. Operators are evaluated and schemas
 // checked before a resolver is called, so a held or failed request is built and not yet sent.
 // Schema and meta stay on the wrapper, as the request route reads them from the resolver.
+//
+// Each call is in session.running until it settles. A call still running when the session closes
+// may write after the session has let go of its databases, so close() then drops them rather than
+// keep them for the next session on the data set (openDataSession).
 function createGatedResolver({ resolver, session }) {
-  async function gatedResolver(args) {
+  async function gate(args) {
     await holdAtPauseGate({ args, session });
     throwAtFailGate({ args, session });
     return resolver(args);
+  }
+  function gatedResolver(args) {
+    const call = gate(args);
+    session.running.add(call);
+    const remove = () => {
+      session.running.delete(call);
+    };
+    call.then(remove, remove);
+    return call;
   }
   return Object.assign(gatedResolver, resolver);
 }

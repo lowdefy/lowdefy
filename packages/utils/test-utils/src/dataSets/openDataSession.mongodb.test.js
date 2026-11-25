@@ -22,6 +22,7 @@ import { Decimal128, MongoClient, ObjectId } from 'mongodb';
 import { parseDataSet } from '@lowdefy/node-utils';
 
 import addPauseGate from './addPauseGate.js';
+import createGatedResolver from './createGatedResolver.js';
 import applyDataSetRedirect from './applyDataSetRedirect.js';
 import holdAtPauseGate from './holdAtPauseGate.js';
 import { dropIdleDatabases } from './idleDatabases.js';
@@ -687,6 +688,45 @@ describe('a closed session keeps its databases for the next session on its data 
     expect(third.session.prefix).toEqual(first.session.prefix);
     expect([first.session.prefix, second.session.prefix]).not.toContain(fourth.session.prefix);
     await Promise.all([second.close(), third.close(), fourth.close()]);
+  });
+
+  test('a session closed while a request under it still runs drops its databases instead', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    let answer;
+    const resolver = createGatedResolver({
+      session: first.session,
+      resolver: () =>
+        new Promise((resolve) => {
+          answer = resolve;
+        }),
+    });
+    const call = resolver({ requestId: 'slow', connectionId: 'tickets' });
+    expect(first.session.running.size).toBe(1);
+    await first.close();
+    expect(await listDatabaseNames()).not.toContain(first.session.databaseName);
+    const second = await openDataSession({ dataSet, logger: mockLogger });
+    expect(second.session.prefix).not.toEqual(first.session.prefix);
+    answer('late');
+    await expect(call).resolves.toEqual('late');
+    expect(first.session.running.size).toBe(0);
+    await second.close();
+  });
+
+  test('a stopped store forgets them, and a session after it loads on the new store', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    await first.close();
+    await store.stop();
+    store = await getDataStore({ logger: mockLogger });
+    await client.close();
+    client = new MongoClient(store.uri);
+    await client.connect();
+    const second = await openDataSession({ dataSet, logger: mockLogger });
+    try {
+      expect(second.session.prefix).not.toEqual(first.session.prefix);
+      expect(second.session.databaseUri).toEqual(store.uri);
+    } finally {
+      await second.close();
+    }
   });
 
   test('an orphan sweep leaves them', async () => {

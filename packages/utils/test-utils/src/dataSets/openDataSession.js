@@ -22,11 +22,16 @@ import dataSessionRegistry from './dataSessionRegistry.js';
 import drainSessionWork from './drainSessionWork.js';
 import getDataStore from './getDataStore.js';
 import groupDataSetByCollection from './groupDataSetByCollection.js';
-import { dropDatabaseSets, keepIdleDatabases, takeIdleDatabases } from './idleDatabases.js';
+import {
+  dropDatabaseSets,
+  forgetIdleDatabases,
+  keepIdleDatabases,
+  takeIdleDatabases,
+} from './idleDatabases.js';
 import isDataStoreGone from './isDataStoreGone.js';
 import listSessionDatabases from './listSessionDatabases.js';
 import loadDataSetCollection from './loadDataSetCollection.js';
-import recordIndexNames from './recordIndexNames.js';
+import recordIndexes from './recordIndexes.js';
 import releasePauseGates from './releasePauseGates.js';
 import reloadDataSession from './reloadDataSession.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
@@ -62,9 +67,10 @@ function createClose({ dataSet, session, store, logger }) {
     // never sees the databases unowned.
     session.state = 'closed';
     dataSessionRegistry.delete(session.id);
-    // Work that outlived the wait may still hold a database and write to it, so its databases
+    // Work that outlived the wait, and a request still running (one whose journey failed or timed
+    // out before it answered), may still hold a database and write to it, so their databases
     // never reach another session.
-    if (drained && store.stopped !== true) {
+    if (drained && session.running.size === 0 && store.stopped !== true) {
       keepIdleDatabases({ dataSet, session, store });
       return;
     }
@@ -83,13 +89,13 @@ async function loadDatabaseSet({ client, dataSet, perRun, session }) {
   const results = await Promise.allSettled(
     groupDataSetByCollection({ dataSet }).map(async (group) => {
       const databaseName = sessionDatabaseName({ session, target: group.target });
-      const indexNames = await loadDataSetCollection({
+      const indexes = await loadDataSetCollection({
         db: client.db(databaseName),
         dataSetName: dataSet.name,
         collectionName: group.collection,
         group,
       });
-      recordIndexNames({ session, databaseName, collectionName: group.collection, indexNames });
+      recordIndexes({ session, databaseName, collectionName: group.collection, indexes });
     })
   );
   const failed = results.find((result) => result.status === 'rejected');
@@ -110,8 +116,8 @@ function createDatabaseSet({ dataSet, perRun }) {
     databaseName: `${prefix}_0`,
     databases: new Map(databaseTargets.map((target, index) => [target, `${prefix}_${index}`])),
     databaseCount: Math.max(databaseTargets.length, 1),
-    // The indexes each loaded collection holds, by database and collection (recordIndexNames).
-    indexNames: new Map(),
+    // The indexes each loaded collection holds, by database and collection (recordIndexes).
+    loadedIndexes: new Map(),
   };
 }
 
@@ -123,7 +129,7 @@ function reuseDatabaseSet(idle) {
     databaseName: idle.databaseName,
     databases: idle.databases,
     databaseCount: idle.databaseCount,
-    indexNames: idle.indexNames,
+    loadedIndexes: idle.loadedIndexes,
   };
 }
 
@@ -152,8 +158,9 @@ function openedSession({ dataSet, logger, session, store }) {
 // them (reloadDataSession) instead of loading a new set: creating and dropping databases is most
 // of what a journey waits on. So the store holds one set per data set for every session open on
 // it at once, never shared by two. A session whose background work outlived the wait drops its
-// databases instead, as that work may still write to them. A test app drops its idle databases
-// when it closes (closeTestApp), and a store's go when it stops.
+// databases instead, as that work may still write to them, and so does a session closed while a
+// request under it still runs (session.running). A run store's client drops its idle databases
+// when it stops (a test app's close() stops it); the dev server's store takes them with it.
 //
 // `store` is a test run's store (getRunDataStore), which the endpoint test harness passes; the
 // dev server passes none and gets its own (getDataStore). On a run's store the run's other test
@@ -177,6 +184,8 @@ async function openDataSession({ dataSet, logger, store: runStore }) {
     // readDataSession serves only open and closing sessions.
     state: 'loading',
     work: new Set(),
+    // The request resolver calls running under the session (createGatedResolver).
+    running: new Set(),
     // Requests sunk instead of sent to an outside service (see sinkExternalConnections), and
     // stubbed requests.
     sunk: [],
@@ -197,14 +206,18 @@ async function openDataSession({ dataSet, logger, store: runStore }) {
     if (type.isUndefined(idle)) {
       await loadDatabaseSet({ client, dataSet, perRun, session });
     } else {
-      await reloadDataSession({ client, dataSet, session });
+      await Promise.all([
+        sweepOrphanDatabases({ client, perRun }),
+        reloadDataSession({ client, dataSet, session }),
+      ]);
     }
   } catch (error) {
     dataSessionRegistry.delete(id);
     if (isDataStoreGone(error)) {
       // mongod is gone, and every session on it with it. Stopping the store clears it, so the next
       // journey starts a fresh one instead of failing until the dev server restarts. Its idle
-      // databases go with it.
+      // databases went with it, so they are forgotten, not dropped.
+      forgetIdleDatabases({ store });
       await store.stop().catch(() => {});
       const message = perRun
         ? `The test data store stopped responding (${error.message}). The next session joins a new one.`

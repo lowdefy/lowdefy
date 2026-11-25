@@ -484,6 +484,29 @@ chromiumTest(
       .collection(insert.coll)
       .findOne({ _id: 'later-1' });
     expect(kept).not.toBeNull();
+    // The next journey on the data set takes them: its reset empties the collection after the
+    // detached write landed, and the journey reads none of it.
+    const { result: next } = await runJourney({
+      data: 'shop',
+      user: 'owner',
+      steps: [
+        { click: 'list' },
+        { expect: { state: { path: 'listed.ids', equals: ['t-a1', 't-a2'] } } },
+      ],
+    });
+    expect(next.passed).toBe(true);
+    const insertIndex = storeEvents.indexOf(insert);
+    const resetIndex = storeEvents.findIndex(
+      (event, index) =>
+        index > insertIndex &&
+        event.operationType === 'delete' &&
+        event.db === insert.db &&
+        event.coll === insert.coll
+    );
+    expect(resetIndex).toBeGreaterThan(insertIndex);
+    expect(
+      await store.client.db(insert.db).collection(insert.coll).findOne({ _id: 'later-1' })
+    ).toBeNull();
     expect(await standInIds()).toEqual(['real-1']);
   }
 );
