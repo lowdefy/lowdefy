@@ -57,6 +57,8 @@ let home;
 let client;
 let shim;
 let devServers;
+// The arguments each fake dev server tool call received, in order.
+let receivedArgs;
 const originalHome = process.env.LOWDEFY_HOME;
 
 // A dev server's MCP endpoint answering each tool with the text its
@@ -75,6 +77,7 @@ async function startFakeDevServer(answers) {
       })),
     }));
     server.setRequestHandler(CallToolRequestSchema, (request) => {
+      receivedArgs.push({ name: request.params.name, arguments: request.params.arguments });
       const answer = answers[request.params.name];
       const text = typeof answer === 'string' ? answer : JSON.stringify(answer, null, 2);
       return { content: [{ type: 'text', text }] };
@@ -139,6 +142,7 @@ beforeEach(() => {
   home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-shim-notes-home-'));
   process.env.LOWDEFY_HOME = home;
   devServers = [];
+  receivedArgs = [];
 });
 
 afterEach(async () => {
@@ -256,7 +260,7 @@ test('shows each build warning in full once, then counts it while it stays uncha
   expect(second.build.warnings).toEqual([]);
   expect(second.build.warningsUnchanged).toEqual({
     count: 2,
-    note: '2 warning(s) unchanged since your last lowdefy_build_status answer are left out. Call with all: true to list every warning.',
+    note: "2 warning(s) unchanged since the last lowdefy_build_status answer this session (yours or another agent's) are left out. Call with all: true to list every warning.",
   });
 });
 
@@ -293,11 +297,58 @@ test('lists every warning with all: true, without passing all to the dev server'
   await connect();
   await buildStatus();
 
-  // The fake dev server answers the same either way; the shim adds nothing.
-  expect(await call('lowdefy_build_status', { all: true })).toEqual([
+  expect(await call('lowdefy_build_status', { all: true, wait: true })).toEqual([
     JSON.stringify(status, null, 2),
   ]);
+  expect(receivedArgs.at(-1)).toEqual({ name: 'lowdefy_build_status', arguments: { wait: true } });
   expect((await buildStatus()).build.warningsUnchanged.count).toBe(1);
+});
+
+test('passes all on to another tool', async () => {
+  devTools.tools.push({
+    name: 'lowdefy_other',
+    description: 'Other.',
+    inputSchema: { type: 'object', properties: {} },
+  });
+  try {
+    await makeApp('.', { lowdefy_build_status: {}, lowdefy_other: {} });
+    await connect();
+
+    await call('lowdefy_other', { all: true });
+    expect(receivedArgs.at(-1)).toEqual({ name: 'lowdefy_other', arguments: { all: true } });
+  } finally {
+    devTools.tools.pop();
+  }
+});
+
+test('counts a warning whose configKey alone changed, as every config build changes them', async () => {
+  const answers = {
+    lowdefy_build_status: {
+      build: { status: 'ok', warnings: [{ ...WARNING_A, configKey: 'a1_o1' }] },
+    },
+  };
+  await makeApp('.', answers);
+  await connect();
+  await buildStatus();
+
+  answers.lowdefy_build_status = {
+    build: { status: 'ok', warnings: [{ ...WARNING_A, configKey: 'b2_o9' }] },
+  };
+  const second = await buildStatus();
+  expect(second.build.warnings).toEqual([]);
+  expect(second.build.warningsUnchanged.count).toBe(1);
+});
+
+test('leaves out a passed-on notice and unchanged warnings from one answer', async () => {
+  const status = { build: { status: 'ok', warnings: [WARNING_A] }, agentFiles: [MISMATCH] };
+  await makeApp('.', { lowdefy_build_status: status });
+  await connect();
+  await buildStatus();
+
+  const second = await buildStatus();
+  expect(second).not.toHaveProperty('agentFiles');
+  expect(second.build.warnings).toEqual([]);
+  expect(second.build.warningsUnchanged.count).toBe(1);
 });
 
 test('remembers shown warnings for each app apart', async () => {
@@ -319,6 +370,6 @@ test('lists all on build status and describes the warnings it leaves out', async
   const tool = tools.find((entry) => entry.name === 'lowdefy_build_status');
   expect(tool.inputSchema.properties.all.type).toBe('boolean');
   expect(tool.description).toMatch(
-    /Warnings unchanged since your last call are counted, not listed\.$/
+    /Warnings unchanged since the last call this session are counted, not listed\.$/
   );
 });

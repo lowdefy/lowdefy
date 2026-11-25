@@ -42,8 +42,8 @@ function withNativePath(ignore) {
 // delay debounces a batch: every edit waits it out before its build starts. A
 // save of 200 files, written one after another or as atomic renames, reaches
 // the watcher with gaps short enough that 150 ms keeps it one batch, where
-// 100 ms split one save in 8 on a loaded machine. A save that splits still
-// builds right: the later batch queues behind the first, which stays busy.
+// 100 ms split one save in 8 on a loaded machine. A save that splits builds
+// twice, and the second build has every file.
 function setupWatcher({
   callback,
   context,

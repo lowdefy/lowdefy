@@ -57,18 +57,28 @@ test('waitForIdle returns after the grace window when nothing starts', async () 
   });
 });
 
-test('waitForIdle returns at once when work settled within the grace before the call', async () => {
+test('waitForIdle waits only the short grace when work settled within the grace before the call', async () => {
   const activity = createBuildActivity({ onChange: () => {} });
   activity.setBusy(true);
   activity.setBusy(false);
 
-  const start = Date.now();
-  await expect(activity.waitForIdle({ graceMs: 500, intervalMs: 10 })).resolves.toEqual({
-    settled: true,
-    sawBuild: true,
-    waitedMs: 0,
-  });
-  expect(Date.now() - start).toBeLessThan(100);
+  const waited = await activity.waitForIdle({ graceMs: 1000, seenGraceMs: 40, intervalMs: 10 });
+  expect(waited).toMatchObject({ settled: true, sawBuild: false });
+  expect(waited.waitedMs).toBeGreaterThanOrEqual(40);
+  expect(waited.waitedMs).toBeLessThan(500);
+});
+
+test('waitForIdle still catches an edit saved after earlier work settled', async () => {
+  const activity = createBuildActivity({ onChange: () => {} });
+  activity.setBusy(true);
+  activity.setBusy(false);
+  // The watcher reports the later edit 20 ms after the call.
+  setTimeout(() => activity.setBusy(true), 20);
+  setTimeout(() => activity.setBusy(false), 80);
+
+  const waited = await activity.waitForIdle({ graceMs: 1000, seenGraceMs: 60, intervalMs: 5 });
+  expect(waited).toMatchObject({ settled: true, sawBuild: true });
+  expect(waited.waitedMs).toBeGreaterThanOrEqual(70);
 });
 
 test('waitForIdle waits out the grace when work settled longer ago than the grace', async () => {

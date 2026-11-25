@@ -47,7 +47,7 @@ async function listDevTools() {
 // lowdefy_run_journey's stubs about 400, lowdefy_run_tests' concurrency about 230, its
 // browser and thorough runs (browser journeys only when asked) about 340, and
 // lowdefy_build_status's all option, which saves its answers the warnings already shown,
-// about 200.
+// about 230.
 test('the shim tools/list for a current dev server stays at most 44,250 characters', async () => {
   const tools = await listDevTools();
   const shim = createShim({

@@ -47,17 +47,23 @@ function createBuildActivity({ onChange }) {
   }
 
   // An edit reaches a watcher a moment after it is saved, so the wait first
-  // gives the watchers graceMs to start on it. Work that settled within
-  // graceMs before the call has already seen and processed the edit (an edit
-  // that reached a watcher while the work ran kept it busy), so the wait
-  // returns at once rather than waiting out the grace.
-  async function waitForIdle({ graceMs = 1000, timeoutMs = 120000, intervalMs = 50 } = {}) {
+  // gives the watchers graceMs to start on it. When work settled less than
+  // graceMs before the call, an edit saved before it settled has been seen and
+  // processed (one that reached a watcher while the work ran kept it busy), so
+  // the grace only has to cover an edit saved since: seenGraceMs, a few times
+  // the watcher's latency (at most 57 ms from a save to its event, measured on
+  // macOS).
+  async function waitForIdle({
+    graceMs = 1000,
+    seenGraceMs = 200,
+    timeoutMs = 120000,
+    intervalMs = 50,
+  } = {}) {
     const start = Date.now();
-    if (active === 0 && idleSince !== null && start - idleSince < graceMs) {
-      return { settled: true, sawBuild: true, waitedMs: 0 };
-    }
+    const settledRecently = active === 0 && idleSince !== null && start - idleSince < graceMs;
+    const windowMs = settledRecently ? Math.min(seenGraceMs, graceMs) : graceMs;
     let sawBuild = false;
-    while (Date.now() - start < graceMs) {
+    while (Date.now() - start < windowMs) {
       if (active > 0) {
         sawBuild = true;
         break;

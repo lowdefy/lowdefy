@@ -19,20 +19,24 @@ import { type } from '@lowdefy/helpers';
 const ALL_PROPERTY = {
   type: 'boolean',
   description:
-    'List every build warning. Without it, warnings unchanged since your last answer are only counted (build.warningsUnchanged).',
+    'List every build warning. Without it, unchanged ones are only counted (build.warningsUnchanged).',
 };
 
-export const DESCRIPTION_NOTE = ' Warnings unchanged since your last call are counted, not listed.';
+export const DESCRIPTION_NOTE =
+  ' Warnings unchanged since the last call this session are counted, not listed.';
 
 // The config build's warnings repeat on every build status answer until the
 // config changes, and on a large app they are most of the answer. Each
 // session gets a warning in full the first time and again whenever it
 // changes or comes back; an answer leaves out the warnings that were in the
 // session's last answer for that app as they are, and counts them. Errors are
-// never left out.
+// never left out. The shim cannot tell a session's agents apart, so a
+// subagent's answer counts as its parent's.
 function createShownWarnings() {
   // The warnings of each app's last answer, by config directory, as their
-  // JSON: a warning whose message, location or anything else changed is new.
+  // JSON without configKey: a warning whose message, location or anything else
+  // changed is new, but every config build gives each node a new key, which
+  // changes nothing the agent reads.
   const lastShown = new Map();
 
   function withAllOption(tool) {
@@ -52,7 +56,10 @@ function createShownWarnings() {
     if (!type.isArray(warnings)) {
       return value;
     }
-    const keys = warnings.map((warning) => JSON.stringify(warning));
+    const keys = warnings.map((warning) => {
+      const { configKey, ...stable } = warning ?? {};
+      return JSON.stringify(stable);
+    });
     const previous = lastShown.get(app.configDirectory) ?? new Set();
     lastShown.set(app.configDirectory, new Set(keys));
     if (all === true) {
@@ -70,7 +77,7 @@ function createShownWarnings() {
         warnings: fresh,
         warningsUnchanged: {
           count,
-          note: `${count} warning(s) unchanged since your last lowdefy_build_status answer are left out. Call with all: true to list every warning.`,
+          note: `${count} warning(s) unchanged since the last lowdefy_build_status answer this session (yours or another agent's) are left out. Call with all: true to list every warning.`,
         },
       },
     };
