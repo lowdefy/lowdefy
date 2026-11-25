@@ -22,39 +22,59 @@ import { beforeEach, expect, test, vi } from 'vitest';
 // through context.handleError as runRoutine does.
 
 const mockHandleError = vi.fn(async () => {});
-vi.doMock('../server/createLowdefyContext.js', () => ({
-  default: vi.fn(async () => ({ handleError: mockHandleError, rid: 'rid_1' })),
+const mockCreateLowdefyContext = vi.fn(async () => ({
+  handleError: mockHandleError,
+  readConfigFile: async () => [{ pageId: 'later', path: 'later' }],
+  rid: 'rid_1',
 }));
+vi.doMock('../server/createLowdefyContext.js', () => ({ default: mockCreateLowdefyContext }));
+// Each read of the build's secret names answers a new object, so a test sees which one a call ran on.
+let secretsRead = 0;
+const mockCreateHeadlessSecrets = vi.fn(({ secrets }) => {
+  secretsRead += 1;
+  return { secrets: { ...secrets, read: secretsRead }, scrubSecrets: (value) => value };
+});
+vi.doMock('./createHeadlessSecrets.js', () => ({ default: mockCreateHeadlessSecrets }));
 const mockCallEndpoint = vi.fn();
 const mockRunWebhookEndpoint = vi.fn();
-const mockSendDetachedRequest = vi.fn();
+const mockGetPageConfig = vi.fn();
 vi.doMock('@lowdefy/api', () => ({
   callEndpoint: mockCallEndpoint,
-  callRequest: vi.fn(),
-  getPageConfig: vi.fn(),
+  callRequest: vi.fn(async () => ({ success: true, response: null })),
+  getPageConfig: mockGetPageConfig,
   getRootConfig: vi.fn(async () => ({})),
   parseRequestBody: ({ text }) => JSON.parse(text),
   redactErrorResponse: (context, error) => ({ name: error.name, message: error.message }),
   runDetachedEndpoint: vi.fn(),
   runWebhookEndpoint: mockRunWebhookEndpoint,
-  sendDetachedRequest: mockSendDetachedRequest,
 }));
 vi.doMock('@lowdefy/journey-headless', () => ({
   createHeadlessHost: (host) => host,
   loadClientPlugins: vi.fn(),
 }));
 vi.doMock('@lowdefy/test-utils/dataSets', () => ({ findSessionDocuments: vi.fn() }));
-vi.doMock('../server/jitPageBuilder.js', () => ({ default: vi.fn() }));
+const mockBuildContext = { jsMap: { client: {} } };
+const mockBuildPageWithContext = vi.fn(async () => ({
+  result: { built: true },
+  buildContext: mockBuildContext,
+}));
+const mockGetPageJitEnrichment = vi.fn();
+vi.doMock('../server/jitPageBuilder.js', () => ({
+  buildPageWithContext: mockBuildPageWithContext,
+  default: vi.fn(),
+  getPageJitEnrichment: mockGetPageJitEnrichment,
+}));
 vi.doMock('./readBuildArtifact.js', () => ({ default: vi.fn() }));
 vi.doMock('./readConnectionPlugins.js', () => ({ default: vi.fn(async () => ({})) }));
 vi.doMock('../server/auth/resolveHeadlessUser.js', () => ({ default: vi.fn() }));
 
 const { default: createDevServerHost } = await import('./createDevServerHost.js');
 
-function createHost() {
+function createHost({ secrets } = {}) {
   return createDevServerHost({
     counter: { recordCall: vi.fn() },
     origin: 'http://localhost:3227',
+    secrets,
   });
 }
 
@@ -69,9 +89,12 @@ async function logFaults(context) {
 
 beforeEach(() => {
   mockHandleError.mockClear();
+  mockCreateLowdefyContext.mockClear();
+  mockCreateHeadlessSecrets.mockClear();
+  secretsRead = 0;
+  mockBuildPageWithContext.mockClear();
   mockCallEndpoint.mockReset();
   mockRunWebhookEndpoint.mockReset();
-  mockSendDetachedRequest.mockReset();
 });
 
 test('the dev server host marks a fault a :catch handled caught on a webhook answer', async () => {
@@ -113,10 +136,10 @@ test('the dev server host marks a fault a :catch handled caught on a call answer
   ]);
 });
 
-// A detached CallApi on the dev server is sent over its own /api/detached route, as always
-// (sendDetachedRequest), and listed on the answer once sent, as the build host lists the ones it
-// takes, so expect.calls reads them the same on either host.
-test('the dev server host sends a detached call for real and lists it on the answer', async () => {
+// A detached CallApi is recorded on the answer and never sent, as the build host takes it: sent over
+// the dev server's /api/detached route, its target would run on the server's real secrets and add
+// writes and outside calls to the journey's data session that a build run never makes.
+test('the dev server host records a detached call and never sends it', async () => {
   mockCallEndpoint.mockImplementation(async (context) => {
     context.sendDetached(context, {
       endpointId: 'detached_log',
@@ -128,30 +151,74 @@ test('the dev server host sends a detached call for real and lists it on the ans
   const host = await createHost();
   const answer = await host.call({ endpointId: 'notify', kind: 'endpoint', payload: {} });
   expect(answer.response).toEqual({ notified: true });
-  expect(mockSendDetachedRequest).toHaveBeenCalledTimes(1);
-  expect(mockSendDetachedRequest.mock.calls[0][1]).toMatchObject({
-    endpointId: 'detached_log',
-    payload: { source: 'notify' },
-  });
   expect(answer.detached).toEqual([{ endpointId: 'detached_log', payload: { source: 'notify' } }]);
+  expect(answer.faults).toEqual([]);
 });
 
-test('the dev server host lists no detached call whose send failed', async () => {
-  mockSendDetachedRequest.mockImplementation(() => {
-    throw new Error('CallApi with "detached: true" requires the CRON_SECRET environment variable.');
+// A page the dev server builds on demand carries its _js as _jsEntries, as the page route folds it
+// in (getPageJitEnrichment, from the context the page was built on), so a headless journey reads
+// _js the client map it loaded at its first journey lacks.
+test("the dev server host folds the built page's _js entries into its page config", async () => {
+  mockGetPageConfig.mockResolvedValue({
+    status: 'ok',
+    pageConfig: { id: 'page:later', blocks: [{ properties: { title: { _js: 'h_later' } } }] },
+    pageId: 'later',
+    pathParams: {},
   });
-  mockCallEndpoint.mockImplementation(async (context) => {
-    try {
-      context.sendDetached(context, { endpointId: 'detached_log', payload: {}, step: {} });
-    } catch (error) {
-      await context.handleError(error);
-    }
-    return { success: true, response: { notified: false } };
+  mockGetPageJitEnrichment.mockReturnValue({
+    jsEntries: "export default { 'h_later': () => { return 1; } };",
   });
   const host = await createHost();
-  const answer = await host.call({ endpointId: 'notify', kind: 'endpoint', payload: {} });
-  expect(answer.detached).toEqual([]);
-  expect(answer.faults.map(({ message }) => message)).toEqual([
-    'CallApi with "detached: true" requires the CRON_SECRET environment variable.',
-  ]);
+  const page = await host.readPageConfig({ pageId: 'later' });
+  expect(mockBuildPageWithContext).toHaveBeenCalledWith(
+    expect.objectContaining({ pageId: 'later' })
+  );
+  expect(mockGetPageJitEnrichment.mock.calls[0][0].buildContext).toBe(mockBuildContext);
+  expect(page.pageConfig._jsEntries).toBe("export default { 'h_later': () => { return 1; } };");
+});
+
+test('the dev server host adds no _jsEntries to a page with no _js', async () => {
+  mockGetPageConfig.mockResolvedValue({
+    status: 'ok',
+    pageConfig: { id: 'page:later', blocks: [] },
+    pageId: 'later',
+    pathParams: {},
+  });
+  mockGetPageJitEnrichment.mockReturnValue({});
+  const host = await createHost();
+  const page = await host.readPageConfig({ pageId: 'later' });
+  expect(page.pageConfig).toEqual({ id: 'page:later', blocks: [] });
+});
+
+// Every call runs on the stand-ins with the run's test values over them, never the app's real
+// secrets; a page the journey reaches is built before its names are read again, so a secret only
+// its requests name gets a stand-in too.
+test('the dev server host runs each call on test secrets, read again once it builds a page', async () => {
+  mockGetPageConfig.mockResolvedValue({
+    status: 'ok',
+    pageConfig: { id: 'page:later', blocks: [] },
+    pageId: 'later',
+    pathParams: {},
+  });
+  mockGetPageJitEnrichment.mockReturnValue({});
+  const host = await createHost({ secrets: { ORG_ID: 'org_test' } });
+  expect(mockCreateHeadlessSecrets).toHaveBeenCalledTimes(1);
+  expect(mockCreateHeadlessSecrets.mock.calls[0][0]).toEqual(
+    expect.objectContaining({ secrets: { ORG_ID: 'org_test' } })
+  );
+  expect(mockCreateLowdefyContext.mock.calls[0][0].testSecrets.secrets).toEqual({
+    ORG_ID: 'org_test',
+    read: 1,
+  });
+  await host.readPageConfig({ pageId: 'later' });
+  expect(mockCreateHeadlessSecrets).toHaveBeenCalledTimes(2);
+  // A request on the page: built (already current, and already read), then run on the latest read.
+  mockBuildPageWithContext.mockResolvedValueOnce({ result: true, buildContext: null });
+  await host.call({ kind: 'request', pageId: 'later', requestId: 'load', payload: {} });
+  expect(mockCreateHeadlessSecrets).toHaveBeenCalledTimes(2);
+  expect(mockCreateLowdefyContext.mock.calls.at(-1)[0].testSecrets.secrets.read).toBe(secretsRead);
+  // Rebuilt (an edit): read again before the call's context.
+  await host.call({ kind: 'request', pageId: 'later', requestId: 'load', payload: {} });
+  expect(mockCreateHeadlessSecrets).toHaveBeenCalledTimes(3);
+  expect(mockCreateLowdefyContext.mock.calls.at(-1)[0].testSecrets.secrets.read).toBe(secretsRead);
 });

@@ -318,7 +318,7 @@ One request is not sunk: an `SMTP` request whose connection points at the dev se
 
 Data set users are injected callers. A journey that signs up or signs in through the app's own auth is an auth journey, and stays off data sets: run it against a test database as described under [The database](/config-tests#the-database). Two combinations are refused rather than run silently wrong:
 
-- `user: none` on a data set journey while auth is configured. A signed-out actor's sign-in would write sessions to the app's real auth database while its requests read the data set.
+- `user: none` on a data set journey that opens a page, while auth is configured. A signed-out actor's sign-in would write sessions to the app's real auth database while its requests read the data set. A journey with no `pageId` (calls and webhooks only) signs nobody in, so it runs signed out.
 - Any data set journey while `auth.dev.mockUser` (or `LOWDEFY_DEV_USER`) is active. The mock user wins over the injected user, so the journey would act as someone outside the data set.
 
 ## Agents

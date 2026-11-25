@@ -24,7 +24,6 @@ import {
   redactErrorResponse,
   runDetachedEndpoint,
   runWebhookEndpoint,
-  sendDetachedRequest,
 } from '@lowdefy/api';
 import { expectedAnswers, isExpectedError, isForcedFailure } from '@lowdefy/errors';
 import { buildPagePath, serializer, type } from '@lowdefy/helpers';
@@ -32,9 +31,11 @@ import { createHeadlessHost, loadClientPlugins } from '@lowdefy/journey-headless
 import { matchPagePath } from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
-import buildPageIfNeeded from '../server/jitPageBuilder.js';
+import { buildPageWithContext, getPageJitEnrichment } from '../server/jitPageBuilder.js';
+import createHeadlessSecrets from './createHeadlessSecrets.js';
 import createInProcessRequest from './createInProcessRequest.js';
 import readBuildArtifact from './readBuildArtifact.js';
+import readClientJsMap from './readClientJsMap.js';
 import readConnectionPlugins from './readConnectionPlugins.js';
 import { JOURNEY_COOKIES, writeJourneyCookie } from '../server/journeyCookies.js';
 import recordingCookiePayload from '../server/recording/recordingCookiePayload.js';
@@ -119,6 +120,9 @@ async function answer({ context, detached, faults, run }) {
  * - cookies: the journey cookies its browser contexts would carry (recording, mutant).
  * - counter: a network counter (createNetworkCounter) every page read and call is recorded on,
  *   for the run's exercised paths.
+ * - secrets: the run's test values for the app's secrets, by name. Every call runs on the
+ *   stand-ins a production build's test run reads, with these over them, never on the app's real
+ *   LOWDEFY_SECRET_* (createHeadlessSecrets).
  */
 async function createDevServerHost({
   counter,
@@ -126,6 +130,7 @@ async function createDevServerHost({
   mutantCookie,
   origin,
   recording,
+  secrets,
   session,
   store,
   user,
@@ -148,6 +153,20 @@ async function createDevServerHost({
     );
   }
   const users = dataSet?.users ?? {};
+
+  // The stand-ins cover the secrets the dev build names, and the dev server builds pages on demand:
+  // the names are read again the first time this journey reads or requests a page (another journey
+  // or a tab may have built it since), and after each build of one.
+  let testSecrets = createHeadlessSecrets({ buildDirectory, secrets });
+  const scannedPageIds = new Set();
+  async function buildPage(pageId) {
+    const built = await buildPageWithContext({ pageId, buildDirectory, configDirectory });
+    if (built.result !== false && (built.result?.built === true || !scannedPageIds.has(pageId))) {
+      scannedPageIds.add(pageId);
+      testSecrets = createHeadlessSecrets({ buildDirectory, secrets });
+    }
+    return built;
+  }
 
   // A user as calls name one (a data set user's name, "none", an object, or none for the
   // journey's), as createLowdefyContext injects it: an object, merged there over the roleless
@@ -178,6 +197,7 @@ async function createDevServerHost({
     const context = await createLowdefyContext({
       c: createInProcessRequest({ cookies, method, origin, path: requestPath }),
       dataSession: session?.session,
+      testSecrets,
       user: toCaller(callUser),
     });
     // The faults the call logs at error level, as answerCall's faults: what a browser journey's
@@ -195,13 +215,13 @@ async function createDevServerHost({
       }
       return handleError(error, options);
     };
-    // The detached CallApi calls the call makes, as answerCall's detached: the build host takes
-    // them and never runs their targets, while the dev server sends each over its own
-    // /api/detached route as it always does (sendDetachedRequest), and records it once sent, so
-    // expect.calls reads a journey's detached calls the same on either host.
+    // The detached CallApi calls the call makes, as answerCall's detached: taken and recorded, and
+    // their targets never run, as on the build host. Sent over the dev server's /api/detached
+    // route, a target would run on the server's own secrets and add its writes and outside calls
+    // to the journey's data session, which a build run of the journey never sees. expect.calls
+    // reads them the same on either host. A browser journey's detached calls are still sent.
     const detached = [];
     context.sendDetached = (callerContext, args) => {
-      sendDetachedRequest(callerContext, args);
       detached.push({ endpointId: args.endpointId, payload: serializer.copy(args.payload) });
     };
     return { context, detached, faults };
@@ -223,8 +243,9 @@ async function createDevServerHost({
       routes: await context.readConfigFile('routes.json'),
       path: matchedPath,
     });
+    let buildContext = null;
     if (match !== null) {
-      await buildPageIfNeeded({ pageId: match.pageId, buildDirectory, configDirectory });
+      ({ buildContext } = await buildPage(match.pageId));
     }
     counter.recordCall({ url: `${origin}/api/page/${matchedPath}`, method: 'GET' });
     const page = await getPageConfig(context, { path: matchedPath, urlQuery: urlQuery ?? {} });
@@ -238,9 +259,17 @@ async function createDevServerHost({
         `Page "${pageId ?? matchedPath}" did not open: the page route answered "${page.status}".`
       );
     }
+    const pageConfig = JSON.parse(JSON.stringify(page.pageConfig));
+    // As the page route folds them in: the page's _js, as module text the headless actor evaluates
+    // over the client map it loaded at its first journey, which holds no _js a later page build
+    // added (journey-headless's readPageJsMap).
+    const { jsEntries } = getPageJitEnrichment({ pageConfig, buildContext });
+    if (!type.isUndefined(jsEntries)) {
+      pageConfig._jsEntries = jsEntries;
+    }
     return {
       matchedPath,
-      pageConfig: JSON.parse(JSON.stringify(page.pageConfig)),
+      pageConfig,
       pageId: page.pageId,
       pathParams: page.pathParams,
     };
@@ -261,14 +290,17 @@ async function createDevServerHost({
     counter.recordCall({ url: `${origin}${requestPath}`, method: 'POST' });
     const body = kind === 'request' ? { actionId, blockId, payload } : { blockId, pageId, payload };
     const parsed = parseRequestBody({ text: JSON.stringify(body) });
+    if (kind === 'request') {
+      // As the request route does: the page's request artifact is built before it is read. Built
+      // before the call's context, so its stand-ins cover the secrets the request names.
+      await buildPage(pageId);
+    }
     const { context, detached, faults } = await createContext({
       callUser,
       method: 'POST',
       requestPath,
     });
     if (kind === 'request') {
-      // As the request route does: the page's request artifact is built before it is read.
-      await buildPageIfNeeded({ pageId, buildDirectory, configDirectory });
       return answer({
         context,
         detached,
@@ -398,9 +430,16 @@ async function createDevServerHost({
     dataSession: session?.session ?? null,
     errorSink: createErrorSink(),
     findDocuments,
-    loadClientPlugins: () => {
+    // The plugins are imported once; the _js map is read as the file is now, so app events' _js a
+    // config rebuild changed resolves without a restart (readClientJsMap). A page's own _js comes
+    // with its config (readPageConfig).
+    loadClientPlugins: async () => {
       clientPlugins = clientPlugins ?? loadClientPlugins({ buildDirectory });
-      return clientPlugins;
+      const plugins = await clientPlugins;
+      return {
+        ...plugins,
+        jsMap: readClientJsMap({ buildDirectory, fallback: plugins.jsMap }),
+      };
     },
     readArtifact,
     readPageConfig,

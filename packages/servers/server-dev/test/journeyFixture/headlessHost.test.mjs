@@ -167,6 +167,42 @@ fixtureTest('an edited page is run by the next headless journey, with no build',
   expect(restored.passed).toBe(true);
 });
 
+// The headless host loads the client plugins, clientJsMap.js among them, once per dev server
+// process (Node caches the import). A _js the page gains after that is in the page's _jsEntries,
+// which the host reads as the browser does, never in the cached map.
+fixtureTest('a _js a page build adds after the first headless journey resolves', async () => {
+  const first = await postJourney({ ...SAVE, headless: true });
+  expect(first.passed).toBe(true);
+  const original = fs.readFileSync(homePage, 'utf8');
+  const { atime, mtime } = fs.statSync(homePage);
+  // A value of this run's own, so its _js hash is new to the dev server.
+  const value = `js-${Date.now()}`;
+  const edited = original.replace(
+    /params:\n {12}saved: true/,
+    `params:\n            saved:\n              _js: "return '${value}';"`
+  );
+  expect(edited).not.toBe(original);
+  const expectJs = {
+    ...SAVE,
+    steps: [...SAVE.steps.slice(0, 3), { expect: { state: { path: 'saved', equals: value } } }],
+  };
+  try {
+    fs.writeFileSync(homePage, edited);
+    const result = await postHeadlessUntil({
+      body: expectJs,
+      until: ({ passed, failure }) =>
+        passed || /_js function not found/.test(JSON.stringify(failure ?? '')),
+    });
+    expect(result.failure).toBeUndefined();
+    expect(result.passed).toBe(true);
+  } finally {
+    fs.writeFileSync(homePage, original);
+    fs.utimesSync(homePage, atime, mtime);
+  }
+  const restored = await postHeadlessUntil({ body: SAVE, until: ({ passed }) => passed });
+  expect(restored.passed).toBe(true);
+});
+
 fixtureTest('headless must be true or false', async () => {
   const { status, body } = await postJson({
     path: '/lowdefy-docs/journey',
@@ -220,7 +256,8 @@ fixtureTest(
 
 // tests/journeys/_headless/system.yaml and webhook.yaml: the InternalApi close_runs answers only a
 // call as system, and payment_events' verify gate passes the signed bodies and refuses the wrong
-// signature (the dev server is given the test secret the signatures are computed with).
+// signature, computed with the stand-in test-secret-FIXTURE_WEBHOOK_SECRET a headless journey reads
+// (the fixture also gives the dev server that value, for the browser run in calls.test.mjs).
 // stubs.yaml: an answer stub stands in for the rate service and fail gates fail writes once, twice
 // and every time; expect.error reads each forced message the dev server recorded.
 fixtureTest.each([['system.yaml'], ['webhook.yaml'], ['stubs.yaml']])(
@@ -237,6 +274,33 @@ fixtureTest.each([['system.yaml'], ['webhook.yaml'], ['stubs.yaml']])(
     expect(body.steps.map((step) => step.status)).toEqual(journey.steps.map(() => 'ok'));
   }
 );
+
+// The fixture configures auth. A journey on a data set with user none is refused only when it opens
+// a page, where a signed-out actor could sign in through the app: webhook.yaml's first journey,
+// which opens none, runs signed out.
+fixtureTest('a page-less webhook journey with user none runs on a data set', async () => {
+  const journey = { ...readHeadlessJourney('webhook.yaml'), user: 'none' };
+  expect(journey.data).toBe('outside');
+  expect(journey.pageId).toBeUndefined();
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: { ...journey, headless: true },
+  });
+  expect(status).toBe(200);
+  expect(body.failure).toBeUndefined();
+  expect(body.passed).toBe(true);
+});
+
+fixtureTest('a journey that opens a page with user none on a data set is refused', async () => {
+  const { status, body } = await postJson({
+    path: '/lowdefy-docs/journey',
+    body: { ...SAVE, user: 'none', headless: true },
+  });
+  expect(status).toBe(400);
+  expect(body.error).toBe(
+    'The journey on data set "explore" has user "none", which is refused while auth is configured: signing in through the app would write to the app\'s real auth database. Name a data set user instead; runs that sign in stay off data sets.'
+  );
+});
 
 // The second journey of tests/journeys/_headless/webhook.yaml: a fail gate fails the event write
 // inside payment_events, whose 500 names no request id; expect.error reads the forced message by

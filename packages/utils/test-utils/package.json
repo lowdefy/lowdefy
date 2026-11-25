@@ -26,7 +26,8 @@
     ".": "./dist/index.js",
     "./assert": "./dist/assert/index.js",
     "./dataSets": "./dist/dataSets/index.js",
-    "./headless": "./dist/headless/index.js"
+    "./headless": "./dist/headless/index.js",
+    "./secrets": "./dist/secrets/index.js"
   },
   "files": [
     "dist/*"

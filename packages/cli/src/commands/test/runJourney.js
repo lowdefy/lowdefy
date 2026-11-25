@@ -19,6 +19,7 @@ import { type } from '@lowdefy/helpers';
 import httpFetch from '../../utils/httpFetch.js';
 import readResponseBody from '../../utils/readResponseBody.js';
 import checkJourneyItem from './checkJourneyItem.js';
+import readTestSecrets from './readTestSecrets.js';
 import recordingJourneyName from './recordingJourneyName.js';
 
 // The journey's own time: the route's, counted from the browser slot it waited `waitedMs` for, or,
@@ -43,7 +44,10 @@ function describeErrorResponse({ status, data }) {
 // run passes the config `mutant` to apply to this run's browsers. `headless`
 // asks the dev server to run the journey with no browser; a journey that needs
 // one answers `browserOnly` ({ index, step, reason }, or { phase: 'open',
-// reason } when opening the page needed it), neither passed nor failed.
+// reason } when opening the page needed it), neither passed nor failed. A
+// headless journey carries this command's LOWDEFY_TEST_SECRET_* values
+// (readTestSecrets), which the dev server reads over the stand-ins, as
+// --headless --build does, whichever server runs it.
 async function runJourney({ context, item, url, recordRun, mutant, headless = false }) {
   const { filePath, journey } = item;
   const refused = checkJourneyItem({ item });
@@ -66,6 +70,7 @@ async function runJourney({ context, item, url, recordRun, mutant, headless = fa
   };
   if (headless) {
     body.headless = true;
+    body.secrets = readTestSecrets({ env: process.env });
   }
   if (!type.isNone(recordRun)) {
     body.recording = {

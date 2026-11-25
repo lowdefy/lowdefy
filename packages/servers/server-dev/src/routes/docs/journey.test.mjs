@@ -565,3 +565,50 @@ test('docsJourneyHandler returns 400 when headless is not a boolean', async () =
   expect(result.data.error).toBe('The "headless" param must be true or false. Received "yes".');
   expect(mockRunJourneyHeadless).not.toHaveBeenCalled();
 });
+
+// lowdefy test sends its LOWDEFY_TEST_SECRET_* with a headless journey, so they apply whichever
+// dev server runs it, as they do with --headless --build.
+test('docsJourneyHandler passes test secrets to a headless journey', async () => {
+  mockRunJourneyHeadless.mockResolvedValue({ pageId: 'form', passed: true, steps: [] });
+  const c = createContext({
+    pageId: 'form',
+    steps: [{ click: 'save' }],
+    headless: true,
+    secrets: { WEBHOOK_SECRET: 'test-value' },
+  });
+  const result = await docsJourneyHandler(c);
+  expect(result.status).toBe(200);
+  expect(mockRunJourneyHeadless).toHaveBeenCalledWith(
+    expect.objectContaining({ secrets: { WEBHOOK_SECRET: 'test-value' } })
+  );
+});
+
+test.each([[['a']], [{ KEY: 5 }], ['value']])(
+  'docsJourneyHandler refuses secrets %j that are not an object of strings with 400',
+  async (secrets) => {
+    const c = createContext({
+      pageId: 'form',
+      steps: [{ click: 'save' }],
+      headless: true,
+      secrets,
+    });
+    const result = await docsJourneyHandler(c);
+    expect(result.status).toBe(400);
+    expect(result.data.error).toMatch('The "secrets" param must be an object of strings');
+    expect(mockRunJourneyHeadless).not.toHaveBeenCalled();
+  }
+);
+
+test('docsJourneyHandler refuses secrets on a browser journey with 400', async () => {
+  const c = createContext({
+    pageId: 'form',
+    steps: [{ click: 'save' }],
+    secrets: { WEBHOOK_SECRET: 'test-value' },
+  });
+  const result = await docsJourneyHandler(c);
+  expect(result.status).toBe(400);
+  expect(result.data.error).toBe(
+    'The "secrets" param sets test values for a headless journey ("headless": true). A browser journey reads the app\'s own secrets.'
+  );
+  expect(mockRunJourney).not.toHaveBeenCalled();
+});

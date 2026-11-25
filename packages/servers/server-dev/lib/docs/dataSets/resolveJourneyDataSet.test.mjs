@@ -100,6 +100,24 @@ test('resolveJourneyDataSet refuses user none on a data set while auth is config
   expect(error).toMatch('has user "none", which is refused while auth is configured');
 });
 
+// A journey with no page (calls and webhooks only) signs nobody in, so it runs signed out on a data
+// set as it does on a production build.
+test('resolveJourneyDataSet allows user none on a data set for a run that opens no page', async () => {
+  const { error, user, dataSet } = await resolve({
+    data: 'empty-org',
+    user: 'none',
+    opensPage: false,
+  });
+  expect(error).toBeUndefined();
+  expect(user).toEqual('none');
+  expect(dataSet.name).toEqual('empty-org');
+});
+
+test('resolveJourneyDataSet refuses user none on a data set for a run that opens a page', async () => {
+  const { error } = await resolve({ data: 'empty-org', user: 'none', opensPage: true });
+  expect(error).toMatch('has user "none", which is refused while auth is configured');
+});
+
 test('resolveJourneyDataSet allows user none on a data set when auth is not configured', async () => {
   const { error, user } = await resolve({ data: 'empty-org', user: 'none', authConfigured: false });
   expect(error).toBeUndefined();

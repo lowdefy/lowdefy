@@ -290,3 +290,27 @@ test('runJourneyHeadless refuses hold and expect.sunk on a journey with no data 
   expect(mockResolveJourneyDataSet).not.toHaveBeenCalled();
   expect(mockRunHeadlessJourney).not.toHaveBeenCalled();
 });
+
+// The user "none" refusal on a data set guards a run that signs in through a page: a journey with
+// no pageId opens none, so it asks for no refusal.
+test('runJourneyHeadless tells resolveJourneyDataSet whether the journey opens a page', async () => {
+  mockRunHeadlessJourney.mockResolvedValue({ pageId: null, passed: true, steps: [] });
+  mockResolveJourneyDataSet.mockResolvedValue({ user: 'none' });
+  await runJourneyHeadless({
+    origin,
+    user: 'none',
+    steps: [{ webhook: { endpoint: 'events', body: {} } }, { expect: { status: 200 } }],
+    readConfigFile,
+  });
+  await runJourneyHeadless({
+    origin,
+    pageId: 'form',
+    user: 'none',
+    steps: [{ click: 'save' }],
+    readConfigFile,
+  });
+  expect(mockResolveJourneyDataSet.mock.calls.map(([args]) => args.opensPage)).toEqual([
+    false,
+    true,
+  ]);
+});

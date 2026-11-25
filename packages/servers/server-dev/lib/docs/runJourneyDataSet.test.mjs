@@ -141,7 +141,21 @@ test('runJourney passes data, user and the auth mode to the data set resolver', 
       user: 'owner',
       authConfigured: true,
       mockUserActive: false,
+      opensPage: true,
     })
+  );
+});
+
+// A journey with no pageId opens no page in the browser either, so its user "none" signs nobody in.
+test('runJourney tells the data set resolver a page-less journey opens no page', async () => {
+  await runJourney({
+    origin,
+    steps: [{ call: { endpoint: 'notify' } }],
+    data: 'sample',
+    user: 'none',
+  });
+  expect(mockResolveJourneyDataSet).toHaveBeenCalledWith(
+    expect.objectContaining({ data: 'sample', user: 'none', opensPage: false })
   );
 });
 

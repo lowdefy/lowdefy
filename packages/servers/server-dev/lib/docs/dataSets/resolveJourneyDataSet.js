@@ -38,8 +38,11 @@ function describeDeclaredUsers({ users }) {
 // user would stand in for the journey instead of it running signed out.
 //
 // Two refusals keep a data-set journey off the app's real auth database:
-// - `user: none` while auth is configured: a signed-out actor signs in through the auth engine,
-//   which is bound to the real auth database while its requests read the data set;
+// - `user: none` while auth is configured, for a run that opens a page: a signed-out actor signs in
+//   through the app's pages and its auth engine, which is bound to the real auth database while its
+//   requests read the data set. A journey with no pageId runs every step without a page (calls,
+//   webhooks, endpoints `as: system`; describePageNeed refuses any other), so it signs nobody in and
+//   runs, as on a production build. `opensPage` is false only for such a journey;
 // - any data-set journey while a dev mock user is active: the mock user wins over the injected
 //   caller, so the journey would silently act as someone outside the data set.
 //
@@ -53,6 +56,7 @@ async function resolveJourneyDataSet({
   buildDirectory,
   authConfigured,
   mockUserActive,
+  opensPage = true,
 }) {
   if (type.isNone(data)) {
     if (user === 'none' && mockUserActive) {
@@ -76,7 +80,7 @@ async function resolveJourneyDataSet({
       )} cannot run while a dev mock user is active (auth.dev.mockUser or LOWDEFY_DEV_USER): every request would act as the mock user, who is not in the data set. Remove the mock user to run on data sets.`,
     };
   }
-  if (user === 'none' && authConfigured) {
+  if (user === 'none' && authConfigured && opensPage) {
     return {
       error: `The ${subject} on data set ${JSON.stringify(
         data

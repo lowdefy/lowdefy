@@ -85,7 +85,16 @@ function isMcpPath(path) {
 // renderer's cookie user is. A `dataSession` option runs a call the dev
 // server makes itself (run_request, run_endpoint on a data set) on that data
 // session's databases, as a journey's cookie does for its browser requests.
-async function createLowdefyContext({ c, user, dataSession: callDataSession, onContext }) {
+// A `testSecrets` option ({ secrets, scrubSecrets }) replaces the app's secrets for the call: the
+// headless journey host runs on the stand-ins a production build's test run reads, never on the
+// app's real LOWDEFY_SECRET_* (createHeadlessSecrets).
+async function createLowdefyContext({
+  c,
+  user,
+  dataSession: callDataSession,
+  onContext,
+  testSecrets,
+}) {
   // A journey on a data set: this request, and only this one, reads the session's databases.
   // Read before anything else, so a request that outlived its session never reaches any database.
   const dataSession = callDataSession ?? readDataSession(c.req.header('cookie'));
@@ -125,8 +134,8 @@ async function createLowdefyContext({ c, user, dataSession: callDataSession, onC
       method: c.req.method,
       hostname: c.req.header('host'),
     },
-    scrubSecrets,
-    secrets,
+    scrubSecrets: testSecrets?.scrubSecrets ?? scrubSecrets,
+    secrets: testSecrets?.secrets ?? secrets,
     // Error locations resolve through it (handleError, logClientError): JIT
     // page builds write their keys to jitMaps/, not keyMap.json.
     readMaps: () => readMergedMaps({ buildDirectory }),
