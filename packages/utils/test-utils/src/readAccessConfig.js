@@ -14,8 +14,23 @@
   limitations under the License.
 */
 
+import fs from 'node:fs';
+import path from 'node:path';
+
 import listEndpointFiles from './listEndpointFiles.js';
 import readBuildJson from './readBuildJson.js';
+
+// The gate reads an endpoint's id, type and auth (and its config key for an error), so only those
+// are deserialized: the routine, most of an endpoint's file, is parsed as plain JSON and dropped.
+function readEndpointAccess({ directories, filePath, serializer }) {
+  const endpoint = JSON.parse(fs.readFileSync(path.join(directories.build, filePath), 'utf8'));
+  return serializer.deserialize({
+    '~k': endpoint['~k'],
+    auth: endpoint.auth,
+    endpointId: endpoint.endpointId,
+    type: endpoint.type,
+  });
+}
 
 // What the gate is asked about: every page route and every endpoint in the build. A page's auth
 // is read from routes.json, the artifact the page route matches a path on, so no page file is
@@ -27,7 +42,7 @@ function readAccessConfig({ testApp }) {
     testApp.accessConfig = {
       pages: readBuildJson({ directories, filePath: 'routes.json', serializer }),
       endpoints: listEndpointFiles({ directories }).map((filePath) =>
-        readBuildJson({ directories, filePath, serializer })
+        readEndpointAccess({ directories, filePath, serializer })
       ),
     };
   }
