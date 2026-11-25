@@ -15,9 +15,10 @@
 */
 
 import createFindEndpointOfKey from './createFindEndpointOfKey.js';
+import listWarning from './listWarning.js';
 
-// Sorts a config build's build status warnings by the endpoint each was found
-// in, so an endpoint rebuilt alone replaces only its own (buildEndpointsJit).
+// Sorts a config build's warnings (context.warnings) by the endpoint each was
+// found in, so an endpoint rebuilt alone replaces only its own (buildEndpointsJit).
 // A warning with no config key, or one outside every endpoint, stays with the
 // rest of the config's.
 function attributeEndpointWarnings({ endpointRegistry, keyMap, warnings }) {
@@ -25,15 +26,16 @@ function attributeEndpointWarnings({ endpointRegistry, keyMap, warnings }) {
   const byEndpoint = new Map();
   const other = [];
   for (const warning of warnings) {
+    const listed = listWarning(warning);
     const endpointId = findEndpointOfKey(warning.configKey);
     if (endpointId === null) {
-      other.push(warning);
+      other.push(listed);
       continue;
     }
     if (!byEndpoint.has(endpointId)) {
       byEndpoint.set(endpointId, []);
     }
-    byEndpoint.get(endpointId).push(warning);
+    byEndpoint.get(endpointId).push(listed);
   }
   endpointRegistry.warnings = { byEndpoint, other };
 }

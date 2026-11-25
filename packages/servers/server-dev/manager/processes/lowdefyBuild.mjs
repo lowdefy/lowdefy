@@ -29,7 +29,11 @@ function formatDuration(ms) {
   return `${(ms / 1000).toFixed(2)}s`;
 }
 
-function lowdefyBuild({ buildQueue, directories, logger, options }) {
+// Sets lastBuildFailed, and on success the page and endpoint registries and
+// the kept build context, on context before the queue moves on, so an endpoint
+// build queued behind this build reads them.
+function lowdefyBuild(context) {
+  const { buildQueue, directories, logger, options } = context;
   async function build({ pluginInstallFollows = false } = {}) {
     logger.info({ spin: 'start' }, 'Building config...');
     const startTime = Date.now();
@@ -73,6 +77,7 @@ function lowdefyBuild({ buildQueue, directories, logger, options }) {
         errors: error.errors ?? [serializeBuildException(error)],
         warnings: error.warnings ?? [],
       });
+      context.lastBuildFailed = true;
       throw error;
     }
 
@@ -82,8 +87,12 @@ function lowdefyBuild({ buildQueue, directories, logger, options }) {
     attributeEndpointWarnings({
       endpointRegistry: result.endpointRegistry,
       keyMap: result.context.keyMap,
-      warnings,
+      warnings: result.context.warnings ?? [],
     });
+    context.lastBuildFailed = false;
+    context.pageRegistry = result.pageRegistry;
+    context.endpointRegistry = result.endpointRegistry;
+    context.buildContext = result.context;
 
     // Return result so getContext can store registries
     const duration = Date.now() - startTime;

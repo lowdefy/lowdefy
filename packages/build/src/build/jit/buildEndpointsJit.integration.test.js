@@ -199,7 +199,7 @@ async function configBuild(name) {
   attributeEndpointWarnings({
     endpointRegistry: result.endpointRegistry,
     keyMap: result.context.keyMap,
-    warnings,
+    warnings: result.context.warnings,
   });
   return { buildDir, result, warnings };
 }
@@ -434,5 +434,106 @@ describe('falls back to a config build', () => {
     expect((await endpointBuild({ build, endpointIds: ['inline'] })).fallback).toMatch(
       'no source file'
     );
+  });
+});
+
+describe('review cases', () => {
+  test('a list that holds an inline endpoint and a ref to another rebuilds the config', async () => {
+    writeFile(
+      'lowdefy.yaml',
+      files['lowdefy.yaml'].replace('    - _ref: api/list.yaml\n', '    - _ref: api/mixed.yaml\n')
+    );
+    writeFile(
+      'api/mixed.yaml',
+      "- id: three\n  type: Api\n  routine:\n    - ':return': three\n- _ref: api/four.yaml\n"
+    );
+    writeFile('api/four.yaml', "id: four\ntype: Api\nroutine:\n  - ':return': four\n");
+    const build = await configBuild('dev');
+    expect(readersOf(build, 'api/mixed.yaml')).toBeNull();
+    expect(readersOf(build, 'api/four.yaml')).toEqual(['four']);
+  });
+
+  test('an undefined operator the config build warned about rebuilds the config', async () => {
+    writeFile(
+      'api/two.yaml',
+      files['api/two.yaml'].replace('_ref: api/shared/answer.yaml', '_payloda: x')
+    );
+    const build = await configBuild('dev');
+    expect(build.warnings.some((warning) => warning.message.includes('"_payloda"'))).toBe(true);
+    writeFile(
+      'api/two.yaml',
+      `${fs.readFileSync(path.join(configDir, 'api/two.yaml'), 'utf8')}# edit\n`
+    );
+    expect((await endpointBuild({ build, endpointIds: ['two'] })).fallback).toMatch(
+      'undefined type'
+    );
+  });
+
+  test('~ignoreBuildChecks on the _ref that holds an endpoint rebuilds the config', async () => {
+    writeFile(
+      'lowdefy.yaml',
+      files['lowdefy.yaml'].replace(
+        '    - - _ref: api/one.yaml\n',
+        "    - - _ref:\n          path: api/one.yaml\n          '~ignoreBuildChecks': true\n"
+      )
+    );
+    const build = await configBuild('dev');
+    expect((await endpointBuild({ build, endpointIds: ['one'] })).fallback).toMatch(
+      'no source file'
+    );
+  });
+
+  test('a warning in a file two endpoints share is listed once, as a config build lists it', async () => {
+    writeFile('api/shared/answer.yaml', 'value: 42\nmisspelt:\n  _step: missing\n');
+    const build = await configBuild('dev');
+    writeFile('api/two.yaml', `${files['api/two.yaml']}# edit\n`);
+    const rebuilt = await endpointBuild({ build, endpointIds: ['two'] });
+    expect(rebuilt.fallback).toBeUndefined();
+    const full = await configBuild('full');
+    expect(full.warnings.filter((warning) => warning.source?.includes('answer.yaml'))).toHaveLength(1);
+    expect(locations(rebuilt.warnings)).toEqual(locations(full.warnings));
+  });
+
+  test('one file named two ways is read by both endpoints', async () => {
+    writeFile(
+      'api/two.yaml',
+      files['api/two.yaml'].replace(
+        '_ref: api/shared/answer.yaml',
+        '_ref: ./api/shared/answer.yaml'
+      )
+    );
+    const build = await configBuild('dev');
+    expect(readersOf(build, 'api/shared/answer.yaml').sort()).toEqual(['one', 'two']);
+  });
+
+  test('reordering the endpoints in a file rebuilds the config', async () => {
+    const build = await configBuild('dev');
+    const [three, four] = files['api/list.yaml'].split(/(?=^- id: four)/m);
+    writeFile('api/list.yaml', `${four}${three}`);
+    expect((await endpointBuild({ build, endpointIds: ['three'] })).fallback).toMatch(
+      'holds changed'
+    );
+  });
+
+  test('a second endpoint build keys on, and a config build after it starts afresh', async () => {
+    const build = await configBuild('dev');
+    writeFile('api/two.yaml', `${files['api/two.yaml']}# one\n`);
+    expect((await endpointBuild({ build, endpointIds: ['two'] })).fallback).toBeUndefined();
+    writeFile('api/two.yaml', `${files['api/two.yaml']}# two\n`);
+    expect((await endpointBuild({ build, endpointIds: ['two'] })).fallback).toBeUndefined();
+    expect(fs.readdirSync(path.join(build.buildDir, 'jitMaps')).sort()).toEqual([
+      'endpoints-1-1.json',
+      'endpoints-2-1.json',
+    ]);
+    const first = readArtifact(build.buildDir, 'jitMaps/endpoints-1-1.json');
+    const second = readArtifact(build.buildDir, 'jitMaps/endpoints-2-1.json');
+    expect(Object.keys(first.keyMap).filter((key) => Object.hasOwn(second.keyMap, key))).toEqual(
+      []
+    );
+
+    const next = await configBuild('dev');
+    expect(next.result.endpointRegistry.builds).toBe(0);
+    writeFile('api/two.yaml', files['api/two.yaml']);
+    expect((await endpointBuild({ build: next, endpointIds: ['two'] })).fallback).toBeUndefined();
   });
 });

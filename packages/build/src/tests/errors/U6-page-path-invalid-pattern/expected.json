@@ -2,7 +2,9 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["has a placeholder inside segment"],
+      "errors": [
+        "has a placeholder inside segment"
+      ],
       "errorContains": [
         "Page \"ticket\": Page path \"tickets/ticket-{id}\" has a placeholder inside segment \"ticket-{id}\".",
         "lowdefy.yaml:12"

@@ -26,7 +26,7 @@ pages:
         properties:
           url: /items
           method: GET
-
+      
       # GET with query parameters
       - id: searchItems
         type: AxiosHttp
@@ -44,7 +44,7 @@ pages:
               _payload: query
             limit:
               _payload: limit
-
+      
       # POST with body
       - id: createItem
         type: AxiosHttp
@@ -62,7 +62,7 @@ pages:
               _payload: name
             description:
               _payload: description
-
+      
       # MongoDB find
       - id: findItems
         type: MongoDBFind
@@ -78,7 +78,7 @@ pages:
             sort:
               createdAt: -1
             limit: 20
-
+      
       # MongoDB insert
       - id: insertItem
         type: MongoDBInsertOne
@@ -94,8 +94,9 @@ pages:
               _payload: name
             value:
               _payload: value
-            createdAt: "_date: '2024-01-15T12:00:00.000Z'"
-
+            createdAt:
+              "_date: '2024-01-15T12:00:00.000Z'"
+      
       # MongoDB update
       - id: updateItem
         type: MongoDBUpdateOne
@@ -113,8 +114,9 @@ pages:
             $set:
               name:
                 _payload: newName
-              updatedAt: "_date: '2024-01-15T12:00:00.000Z'"
-
+              updatedAt:
+                "_date: '2024-01-15T12:00:00.000Z'"
+      
       # MongoDB aggregate
       - id: aggregateStats
         type: MongoDBAggregate
@@ -137,7 +139,7 @@ pages:
         type: Title
         properties:
           content: Request & Payload Demo
-
+      
       - id: searchSection
         type: Card
         properties:
@@ -161,7 +163,7 @@ pages:
                 - id: doSearch
                   type: Request
                   params: searchItems
-
+      
       - id: filterSection
         type: Card
         properties:
@@ -229,7 +231,7 @@ pages:
             type: TextInput
             properties:
               title: New Name
-
+      
       - id: resultsList
         type: List
         properties:

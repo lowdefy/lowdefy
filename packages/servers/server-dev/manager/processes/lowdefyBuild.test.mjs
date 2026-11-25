@@ -215,6 +215,36 @@ test('lowdefyBuild starts a build only after the previous one has finished', asy
   expect(events).toEqual(['first start', 'first end', 'second start']);
 });
 
+test('lowdefyBuild stores its result on context before the next queued build starts', async () => {
+  const context = createContext();
+  const endpointRegistry = { endpoints: new Map() };
+  const buildContext = { warnings: [] };
+  mockShallowBuild.mockResolvedValueOnce({
+    components: {},
+    pageRegistry: 'pages',
+    endpointRegistry,
+    context: buildContext,
+  });
+  const build = lowdefyBuild(context);
+  build();
+  const seen = await context.buildQueue(() => ({
+    buildContext: context.buildContext,
+    endpointRegistry: context.endpointRegistry,
+    lastBuildFailed: context.lastBuildFailed,
+    pageRegistry: context.pageRegistry,
+  }));
+  expect(seen).toEqual({
+    buildContext,
+    endpointRegistry,
+    lastBuildFailed: false,
+    pageRegistry: 'pages',
+  });
+
+  mockShallowBuild.mockRejectedValueOnce(new Error('Build failed'));
+  build().catch(() => {});
+  expect(await context.buildQueue(() => context.lastBuildFailed)).toBe(true);
+});
+
 // Loads lowdefyBuild again with plain functions for everything it imports. A vitest
 // mock records every value it resolves to, and what a cleared mock still holds
 // differs between vitest versions, so a mock would be a second thing that could

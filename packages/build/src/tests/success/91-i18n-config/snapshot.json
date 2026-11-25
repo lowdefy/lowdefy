@@ -905,7 +905,10 @@
   "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
-      "actions": ["Link", "SetDarkMode"],
+      "actions": [
+        "Link",
+        "SetDarkMode"
+      ],
       "blocks": [
         "Anchor",
         "Box",
@@ -930,7 +933,10 @@
         "Spinner",
         "Throw"
       ],
-      "operators": ["_not", "_type"],
+      "operators": [
+        "_not",
+        "_type"
+      ],
       "icons": [
         "FileSearch",
         "check",
@@ -946,7 +952,9 @@
       ]
     },
     "home": {
-      "actions": ["SetDarkMode"],
+      "actions": [
+        "SetDarkMode"
+      ],
       "blocks": [
         "Anchor",
         "Box",
@@ -969,7 +977,10 @@
         "Spinner",
         "Throw"
       ],
-      "operators": ["_not", "_type"],
+      "operators": [
+        "_not",
+        "_type"
+      ],
       "icons": [
         "check",
         "close",
@@ -1154,7 +1165,11 @@
         "properties": {
           "darkMode": {
             "type": "string",
-            "enum": ["system", "light", "dark"],
+            "enum": [
+              "system",
+              "light",
+              "dark"
+            ],
             "description": "Set dark mode preference. When not provided, cycles through light, dark, and system."
           }
         },
@@ -1306,7 +1321,10 @@
     "Box": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -1548,7 +1566,10 @@
     "Anchor": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -1647,7 +1668,10 @@
               "description": "Disable the anchor if true."
             },
             "icon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block for anchor icon.",
               "docs": {
                 "displayType": "icon"
@@ -1870,7 +1894,10 @@
     "ClickableHtml": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -1942,7 +1969,9 @@
                   {
                     "type": "object",
                     "additionalProperties": false,
-                    "required": ["name"],
+                    "required": [
+                      "name"
+                    ],
                     "properties": {
                       "name": {
                         "type": "string",
@@ -2125,7 +2154,10 @@
     "DangerousHtml": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -2333,7 +2365,10 @@
     "Dynamic": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -2599,7 +2634,10 @@
     "Html": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -2818,7 +2856,10 @@
     "Icon": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -2898,7 +2939,10 @@
               "description": "Number of degrees to rotate the icon."
             },
             "size": {
-              "type": ["string", "number"],
+              "type": [
+                "string",
+                "number"
+              ],
               "description": "Size of the icon.",
               "docs": {
                 "displayType": "number"
@@ -3074,7 +3118,10 @@
     "Img": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -3133,7 +3180,9 @@
         "properties": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["src"],
+          "required": [
+            "src"
+          ],
           "properties": {
             "src": {
               "type": "string",
@@ -3146,21 +3195,34 @@
             },
             "crossOrigin": {
               "type": "string",
-              "enum": ["anonymous", "use-credentials"],
+              "enum": [
+                "anonymous",
+                "use-credentials"
+              ],
               "description": "Indicates if the fetching of the image must be done using a CORS request."
             },
             "decoding": {
               "type": "string",
-              "enum": ["sync", "async", "auto"],
+              "enum": [
+                "sync",
+                "async",
+                "auto"
+              ],
               "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
             },
             "height": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the image: a number of pixels, or a string such as `100%` or `auto` that the browser reads as the height attribute."
             },
             "loading": {
               "type": "string",
-              "enum": ["eager", "lazy"],
+              "enum": [
+                "eager",
+                "lazy"
+              ],
               "description": "How the browser should load the image. Eager loads the image immediately, lazy, defers loading until the image it reaches a calculated distance from the viewport, as defined by the browser."
             },
             "sizes": {
@@ -3176,7 +3238,10 @@
               }
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the image: a number of pixels, or a string such as `100%` that the browser reads as the width attribute."
             }
           }
@@ -3313,7 +3378,10 @@
     "List": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -3375,12 +3443,21 @@
           "properties": {
             "direction": {
               "type": "string",
-              "enum": ["row", "column", "row-reverse", "column-reverse"],
+              "enum": [
+                "row",
+                "column",
+                "row-reverse",
+                "column-reverse"
+              ],
               "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block."
             },
             "wrap": {
               "type": "string",
-              "enum": ["wrap", "nowrap", "wrap-reverse"],
+              "enum": [
+                "wrap",
+                "nowrap",
+                "wrap-reverse"
+              ],
               "description": "Specifies wrapping style to be applied to List block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the List block - defaults to 'wrap', requires List direction to be set."
             },
             "scroll": {
@@ -3539,7 +3616,10 @@
     "PollingTimer": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -3620,7 +3700,9 @@
               "description": "Pause ticking while the browser tab is hidden (`document.visibilityState`), and resume when it becomes visible again. Ticks missed while hidden are not fired on resume; the next tick fires `interval` ms after the tab is visible."
             }
           },
-          "required": ["interval"]
+          "required": [
+            "interval"
+          ]
         },
         "class": {
           "oneOf": [
@@ -3750,7 +3832,10 @@
     "Span": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -3975,7 +4060,10 @@
     "Throw": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -4147,7 +4235,10 @@
     "Result": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -4208,7 +4299,10 @@
           "additionalProperties": false,
           "properties": {
             "icon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to use as result image.",
               "docs": {
                 "displayType": "icon"
@@ -4223,7 +4317,10 @@
                   "description": "Icon color."
                 },
                 "size": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Size of the icon. Defaults to `theme.icons.size`."
                 },
                 "rotate": {
@@ -4254,7 +4351,15 @@
             },
             "status": {
               "type": "string",
-              "enum": ["success", "error", "info", "warning", "404", "403", "500"],
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "404",
+                "403",
+                "500"
+              ],
               "default": "info",
               "description": "Status of the result. Determines image and color."
             },
@@ -4554,7 +4659,10 @@
     "Message": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -4629,7 +4737,10 @@
               "description": "Pause the auto-dismiss timer while the mouse is over the message."
             },
             "icon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize message icon.",
               "docs": {
                 "displayType": "icon"
@@ -4644,7 +4755,10 @@
                   "description": "Icon color."
                 },
                 "size": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Size of the icon. Defaults to `theme.icons.size`."
                 },
                 "rotate": {
@@ -4675,7 +4789,13 @@
             },
             "status": {
               "type": "string",
-              "enum": ["success", "error", "info", "warning", "loading"],
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "loading"
+              ],
               "default": "success",
               "description": "Message status type."
             },
@@ -4898,7 +5018,10 @@
     "ProgressBar": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -4974,11 +5097,17 @@
               "description": "Width transition duration in milliseconds."
             },
             "height": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the skeleton."
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton."
             }
           }
@@ -5115,7 +5244,10 @@
     "Skeleton": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -5176,14 +5308,20 @@
           "additionalProperties": false,
           "properties": {
             "height": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the skeleton.",
               "docs": {
                 "displayType": "string"
               }
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
@@ -5323,7 +5461,10 @@
     "SkeletonAvatar": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -5387,13 +5528,20 @@
               "type": "string",
               "default": "medium",
               "description": "Size of the skeleton.",
-              "enum": ["small", "medium", "large"]
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
             },
             "shape": {
               "type": "string",
               "default": "round",
               "description": "Shape of the skeleton.",
-              "enum": ["square", "round"]
+              "enum": [
+                "square",
+                "round"
+              ]
             }
           }
         },
@@ -5529,7 +5677,10 @@
     "SkeletonButton": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -5593,16 +5744,26 @@
               "type": "string",
               "default": "default",
               "description": "Shape of the skeleton; round gives fully rounded ends.",
-              "enum": ["default", "round"]
+              "enum": [
+                "default",
+                "round"
+              ]
             },
             "size": {
               "type": "string",
               "default": "medium",
               "description": "Size of the skeleton.",
-              "enum": ["small", "medium", "large"]
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
@@ -5742,7 +5903,10 @@
     "SkeletonInput": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -5811,31 +5975,47 @@
               "type": "string",
               "default": "medium",
               "description": "Size of the skeleton.",
-              "enum": ["small", "medium", "large"]
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
               }
             },
             "labelHeight": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the skeleton.",
               "docs": {
                 "displayType": "string"
               }
             },
             "labelWidth": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
               }
             },
             "inputHeight": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the skeleton.",
               "docs": {
                 "displayType": "string"
@@ -6002,7 +6182,10 @@
     "SkeletonParagraph": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -6068,7 +6251,10 @@
               "description": "Number of paragraph lines of the skeleton."
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
@@ -6208,7 +6394,10 @@
     "Spinner": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -6269,7 +6458,10 @@
           "additionalProperties": false,
           "properties": {
             "size": {
-              "type": ["string", "number"],
+              "type": [
+                "string",
+                "number"
+              ],
               "description": "Size of the icon spinner: small, medium, large, or a pixel number."
             }
           }
@@ -6494,7 +6686,9 @@
           },
           {
             "type": "object",
-            "required": ["type"],
+            "required": [
+              "type"
+            ],
             "properties": {
               "type": {
                 "type": "string",

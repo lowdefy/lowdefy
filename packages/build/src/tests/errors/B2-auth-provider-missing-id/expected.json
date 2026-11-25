@@ -2,8 +2,13 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["should have required property \"id\""],
-      "errorContains": ["Auth provider should have required property \"id\".", "lowdefy.yaml:14"]
+      "errors": [
+        "should have required property \"id\""
+      ],
+      "errorContains": [
+        "Auth provider should have required property \"id\".",
+        "lowdefy.yaml:14"
+      ]
     }
   ]
 }

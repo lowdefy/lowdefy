@@ -14,13 +14,15 @@
   limitations under the License.
 */
 
+import normalizeRefPath from './normalizeRefPath.js';
+
 // The endpoints to rebuild for edited skeleton source files, or null when one
 // of the files is read by more than endpoints with a source of their own, and
 // the config must be built. Each file is named as refMap names it: relative to
 // the config directory for the app's files, absolute for a module's.
 function findEndpointsReadingFiles({ endpointRegistry, files }) {
   const endpointIds = new Set();
-  for (const file of files) {
+  for (const file of files.map(normalizeRefPath)) {
     if (endpointRegistry.otherFiles.has(file)) {
       return null;
     }

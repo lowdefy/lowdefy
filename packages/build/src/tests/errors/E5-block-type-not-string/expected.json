@@ -2,7 +2,9 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Block type is not a string"],
+      "errors": [
+        "Block type is not a string"
+      ],
       "errorContains": [
         "Block type is not a string at \"badType\" on page \"home\".",
         "lowdefy.yaml:16"

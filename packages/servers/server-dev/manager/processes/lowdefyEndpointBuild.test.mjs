@@ -47,7 +47,7 @@ beforeEach(() => {
     directories: { build: buildDirectory },
     endpointRegistry: { endpoints: new Map() },
     lastBuildFailed: false,
-    logger: { info: vi.fn() },
+    logger: { info: vi.fn(), warn: vi.fn() },
   };
   mockFindEndpointsReadingFiles.mockReturnValue(['one']);
   mockBuildEndpointsJit.mockResolvedValue({
@@ -140,4 +140,14 @@ test('waits for the config build before it in the queue, and reads its result', 
   await configBuild;
 
   await expect(endpointBuild).resolves.toBe(false);
+});
+
+test('logs a fault in the endpoint build itself before the config build', async () => {
+  const error = new TypeError('x is undefined');
+  mockBuildEndpointsJit.mockResolvedValue({ fallback: 'it failed: x is undefined', error });
+  const build = lowdefyEndpointBuild(context);
+
+  await expect(build({ files: ['api/one.yaml'] })).resolves.toBe(false);
+
+  expect(context.logger.warn).toHaveBeenCalledWith(error);
 });

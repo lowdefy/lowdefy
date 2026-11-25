@@ -2,7 +2,9 @@
   "tests": [
     {
       "mode": "dev",
-      "errors": ["NonExistentBlockType"],
+      "errors": [
+        "NonExistentBlockType"
+      ],
       "errorContains": [
         "Block type \"NonExistentBlockType\" was used but is not defined.",
         "pages/home.yaml:12"
@@ -10,7 +12,9 @@
     },
     {
       "mode": "prod",
-      "errors": ["NonExistentBlockType"],
+      "errors": [
+        "NonExistentBlockType"
+      ],
       "errorContains": [
         "Block type \"NonExistentBlockType\" was used but is not defined.",
         "pages/home.yaml:12"

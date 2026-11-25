@@ -35,12 +35,13 @@ import lowdefySchema from '../../lowdefySchema.js';
 import createReadConfigFile from '../../utils/readConfigFile.js';
 import createWriteBuildArtifact from '../../utils/writeBuildArtifact.js';
 import makeId from '../../utils/makeId.js';
-import serializeBuildException from '../../utils/serializeBuildException.js';
 import tryBuildStep from '../../utils/tryBuildStep.js';
 import createFindEndpointOfKey from './createFindEndpointOfKey.js';
 import createJitMaps from './createJitMaps.js';
 import createPageBuildContext from './createPageBuildContext.js';
 import listSkeletonSourceFiles from './listSkeletonSourceFiles.js';
+import listWarning from './listWarning.js';
+import normalizeRefPath from './normalizeRefPath.js';
 import resolveSourceFile from './resolveSourceFile.js';
 
 // One object, so the compiled validator is reused across builds.
@@ -141,10 +142,12 @@ async function resolveGroup({ group, buildContext }) {
     tagRefDeep(endpoint, refDef.id);
   }
   const ids = endpoints.map((endpoint) => endpoint.id);
+  // In the same order too: the order keys each endpoint and lists link routes
+  // and cron schedules.
   if (
     endpoints.length !== items.length ||
     ids.length !== group.endpointIds.length ||
-    !group.endpointIds.every((endpointId) => ids.includes(endpointId))
+    !group.endpointIds.every((endpointId, index) => ids[index] === endpointId)
   ) {
     fallBack(`the endpoints "${group.source.refPath}" holds changed`);
   }
@@ -153,7 +156,7 @@ async function resolveGroup({ group, buildContext }) {
   for (const refId of idsInCounterRange({ prefix: makeId.prefix, from, to: makeId.counter })) {
     const refPath = buildContext.refMap[refId]?.path;
     if (type.isString(refPath)) {
-      files.add(refPath);
+      files.add(normalizeRefPath(refPath));
     }
   }
   return { endpoints, files };
@@ -205,12 +208,12 @@ function checkIcons({ endpoints, buildContext, directories }) {
 // An unset variable's warning lists every place the config build read it,
 // so it changes with an endpoint's reads.
 function checkEnvWarnings({ endpointRegistry, files }) {
-  for (const warning of endpointRegistry.warnings.other) {
+  for (const { warning } of endpointRegistry.warnings.other) {
     if (warning.checkSlug !== 'secrets' || !warning.message.startsWith('Environment variable "')) {
       continue;
     }
     for (const file of files) {
-      if (warning.message.includes(file) || (warning.source ?? '').startsWith(`${file}:`)) {
+      if (warning.message.includes(file) || (warning.source ?? '').includes(file)) {
         fallBack('an unset environment variable warning lists one of its files');
       }
     }
@@ -228,15 +231,60 @@ function previousFiles({ endpointIds, endpointRegistry }) {
 }
 
 // The warnings the build status lists after the rebuild: the config build's,
-// with the rebuilt endpoints' replaced by what their builds found. A warning is
-// listed as often as the config build lists it: a node a build checks twice
-// warns twice.
+// with the rebuilt endpoints' replaced by what their builds found, each listed
+// once per listing key as handleWarning lists them.
 function mergeWarnings({ endpointRegistry }) {
-  const warnings = [...endpointRegistry.warnings.other];
-  for (const endpointWarnings of endpointRegistry.warnings.byEndpoint.values()) {
-    warnings.push(...endpointWarnings);
+  const listed = new Set();
+  const warnings = [];
+  const lists = [endpointRegistry.warnings.other, ...endpointRegistry.warnings.byEndpoint.values()];
+  for (const list of lists) {
+    for (const { listKey, warning } of list) {
+      if (listed.has(listKey)) continue;
+      listed.add(listKey);
+      warnings.push(warning);
+    }
   }
   return warnings;
+}
+
+const undefinedTypePattern = /^\w+ type "([^"]+)" was used but is not defined/;
+
+// buildTypes warns about a type the app uses and no plugin defines at the
+// first place the config build counted it, which can be another endpoint's.
+function checkUndefinedTypes({ endpointRegistry, endpointIds, counters }) {
+  const undefinedTypes = new Set();
+  const lists = [endpointRegistry.warnings.other, ...endpointRegistry.warnings.byEndpoint.values()];
+  for (const list of lists) {
+    for (const { warning } of list) {
+      const match = undefinedTypePattern.exec(warning.message);
+      if (match) undefinedTypes.add(match[1]);
+    }
+  }
+  if (undefinedTypes.size === 0) return;
+  for (const endpointId of endpointIds) {
+    for (const { warning } of endpointRegistry.warnings.byEndpoint.get(endpointId) ?? []) {
+      if (undefinedTypePattern.test(warning.message)) {
+        fallBack(`the config build warned about an undefined type in endpoint "${endpointId}"`);
+      }
+    }
+  }
+  for (const typeName of listCountedTypes(counters)) {
+    if (undefinedTypes.has(typeName)) {
+      fallBack(`it uses "${typeName}", which no plugin defines`);
+    }
+  }
+}
+
+function listCountedTypes(counters) {
+  const typeNames = [];
+  for (const counter of Object.values(counters)) {
+    if (type.isFunction(counter.getCounts)) {
+      typeNames.push(...Object.keys(counter.getCounts()));
+      continue;
+    }
+    typeNames.push(...listCountedTypes(counter));
+  }
+  return typeNames;
 }
 
 // Rebuilds and rewrites the endpoints a set of edited files feed, without the
@@ -371,6 +419,11 @@ async function buildEndpointsJit({
     if (newTypes.length > 0) {
       fallBack(`it uses ${newTypes[0]}, which the config build did not`);
     }
+    checkUndefinedTypes({
+      endpointRegistry,
+      endpointIds: rebuiltIds,
+      counters: buildContext.typeCounters,
+    });
     checkJsMap({ buildContext, keptContext });
     checkIcons({ endpoints: builtEndpoints, buildContext, directories });
 
@@ -400,7 +453,6 @@ async function buildEndpointsJit({
       { atomic: true }
     );
 
-    const warnings = buildContext.warnings.map(serializeBuildException);
     for (const endpoint of builtEndpoints) {
       const entry = endpointRegistry.endpoints.get(endpoint.endpointId);
       entry.rootKey = endpoint['~k'];
@@ -411,18 +463,11 @@ async function buildEndpointsJit({
       endpointRegistry,
       keyMap: buildContext.keyMap,
     });
-    const otherWarnings = new Set(
-      endpointRegistry.warnings.other.map((warning) => `${warning.source}\n${warning.message}`)
-    );
-    for (const warning of warnings) {
-      let endpointId = findEndpointOfKey(warning.configKey);
-      if (endpointId === null) {
-        // A warning about no endpoint node, such as two plugins sharing a
-        // check id, which the config build lists with the rest of the config's.
-        if (otherWarnings.has(`${warning.source}\n${warning.message}`)) continue;
-        endpointId = rebuiltIds[0];
-      }
-      endpointRegistry.warnings.byEndpoint.get(endpointId).push(warning);
+    for (const warning of buildContext.warnings) {
+      // A warning about no endpoint node (two plugins sharing a check id) is
+      // listed once with the rest by its listing key.
+      const endpointId = findEndpointOfKey(warning.configKey) ?? rebuiltIds[0];
+      endpointRegistry.warnings.byEndpoint.get(endpointId).push(listWarning(warning));
     }
     return {
       endpointIds: builtEndpoints.map((endpoint) => endpoint.endpointId),
@@ -433,8 +478,12 @@ async function buildEndpointsJit({
     if (error instanceof Fallback) {
       return { fallback: error.message };
     }
-    // The config build reports the error as a full build does.
-    return { fallback: `it failed: ${error.message}` };
+    // The config build reports the error as a full build does. An error that
+    // is no config error is a fault in this build, which the caller logs.
+    return {
+      fallback: `it failed: ${error.message}`,
+      ...(error.isLowdefyError === true ? {} : { error }),
+    };
   }
 }
 

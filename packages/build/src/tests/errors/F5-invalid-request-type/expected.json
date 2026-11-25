@@ -2,7 +2,9 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["AxiosHtt"],
+      "errors": [
+        "AxiosHtt"
+      ],
       "errorContains": [
         "Request type \"AxiosHtt\" was used but is not defined. Did you mean \"AxiosHttp\"?",
         "lowdefy.yaml:23"

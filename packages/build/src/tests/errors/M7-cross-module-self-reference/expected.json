@@ -3,7 +3,10 @@
     {
       "mode": "prod",
       "expectThrow": true,
-      "errorContains": ["maps to itself", "cannot depend on its own entry"]
+      "errorContains": [
+        "maps to itself",
+        "cannot depend on its own entry"
+      ]
     }
   ]
 }

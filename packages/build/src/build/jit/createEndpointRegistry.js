@@ -20,6 +20,7 @@ import { resolveKeyEntry } from '@lowdefy/errors';
 import makeId from '../../utils/makeId.js';
 import findSourceRef from './findSourceRef.js';
 import getModuleEntryId from './getModuleEntryId.js';
+import normalizeRefPath from './normalizeRefPath.js';
 
 // The source ref that owns a ref: the nearest ancestor-or-self that is an
 // endpoint's source. Every ref a source's content reads descends from it, so a
@@ -82,9 +83,12 @@ function createEndpointRegistry({ components, context, pageIds, skeletonSourceFi
     const sourceRef = type.isNone(refId)
       ? null
       : findSourceRef({ refId, refMap, unresolvedRefVars });
-    // A resolver's output depends on whatever its code reads, which no ref records.
+    // A resolver's output depends on whatever its code reads, which no ref
+    // records. ~ignoreBuildChecks on the root may come from the _ref that
+    // holds the source (the walker copies it onto the content), which a
+    // source resolved on its own does not see.
     const source =
-      type.isNone(sourceRef) || type.isNone(sourceRef.path)
+      type.isNone(sourceRef) || type.isNone(sourceRef.path) || !type.isUndefined(keyMap[rootKey]?.i)
         ? null
         : {
             refId: sourceRef.refId,
@@ -108,20 +112,37 @@ function createEndpointRegistry({ components, context, pageIds, skeletonSourceFi
     });
   }
 
+  // A source whose content holds another endpoint's source (a list of inline
+  // endpoints and refs) can drop that endpoint without its own endpoints
+  // changing, so an edit to it rebuilds the config.
+  for (const sourceRefId of [...sources.keys()]) {
+    let current = refMap[sourceRefId]?.parent;
+    while (!type.isNone(current)) {
+      if (sources.has(current)) {
+        for (const endpointId of sources.get(current)) {
+          endpoints.get(endpointId).source = null;
+        }
+        sources.delete(current);
+      }
+      current = refMap[current]?.parent;
+    }
+  }
+
   const findOwningSource = createFindOwningSource({ refMap, sources });
   const filesBySource = new Map();
   const otherFiles = new Set();
   for (const [refId, entry] of Object.entries(refMap)) {
     if (!type.isString(entry.path)) continue;
+    const file = normalizeRefPath(entry.path);
     const owner = findOwningSource(refId);
     if (type.isNone(owner)) {
-      otherFiles.add(entry.path);
+      otherFiles.add(file);
       continue;
     }
     if (!filesBySource.has(owner)) {
       filesBySource.set(owner, new Set());
     }
-    filesBySource.get(owner).add(entry.path);
+    filesBySource.get(owner).add(file);
   }
   for (const [sourceRefId, endpointIds] of sources) {
     const files = filesBySource.get(sourceRefId) ?? new Set();

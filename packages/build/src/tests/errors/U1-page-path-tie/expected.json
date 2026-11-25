@@ -2,7 +2,9 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["match the same URLs"],
+      "errors": [
+        "match the same URLs"
+      ],
       "errorContains": [
         "Pages \"ticket\" and \"ticket-copy\" match the same URLs, with paths \"Tickets/{id}\" and \"tickets/{ticket_id}\".",
         "Change one of the paths. Page \"ticket\" is at ",

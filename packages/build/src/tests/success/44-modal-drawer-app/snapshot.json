@@ -1218,7 +1218,10 @@
   "mobile/typeSets.json": {},
   "pageTypeSets.json": {
     "404": {
-      "actions": ["Link", "SetDarkMode"],
+      "actions": [
+        "Link",
+        "SetDarkMode"
+      ],
       "blocks": [
         "Anchor",
         "Box",
@@ -1243,7 +1246,10 @@
         "Spinner",
         "Throw"
       ],
-      "operators": ["_not", "_type"],
+      "operators": [
+        "_not",
+        "_type"
+      ],
       "icons": [
         "FileSearch",
         "check",
@@ -1259,7 +1265,11 @@
       ]
     },
     "home": {
-      "actions": ["CallMethod", "DisplayMessage", "SetDarkMode"],
+      "actions": [
+        "CallMethod",
+        "DisplayMessage",
+        "SetDarkMode"
+      ],
       "blocks": [
         "Anchor",
         "Box",
@@ -1288,7 +1298,10 @@
         "Throw",
         "Title"
       ],
-      "operators": ["_not", "_type"],
+      "operators": [
+        "_not",
+        "_type"
+      ],
       "icons": [
         "Save",
         "check",
@@ -1756,7 +1769,10 @@
       "type": "object",
       "params": {
         "type": "object",
-        "required": ["blockId", "method"],
+        "required": [
+          "blockId",
+          "method"
+        ],
         "properties": {
           "blockId": {
             "type": "string",
@@ -1781,7 +1797,13 @@
         "properties": {
           "status": {
             "type": "string",
-            "enum": ["success", "error", "info", "warning", "loading"],
+            "enum": [
+              "success",
+              "error",
+              "info",
+              "warning",
+              "loading"
+            ],
             "description": "The message status type."
           },
           "content": {
@@ -1852,7 +1874,11 @@
         "properties": {
           "darkMode": {
             "type": "string",
-            "enum": ["system", "light", "dark"],
+            "enum": [
+              "system",
+              "light",
+              "dark"
+            ],
             "description": "Set dark mode preference. When not provided, cycles through light, dark, and system."
           }
         },
@@ -2028,7 +2054,10 @@
     "Box": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -2270,7 +2299,10 @@
     "Anchor": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -2369,7 +2401,10 @@
               "description": "Disable the anchor if true."
             },
             "icon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block for anchor icon.",
               "docs": {
                 "displayType": "icon"
@@ -2592,7 +2627,10 @@
     "ClickableHtml": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -2664,7 +2702,9 @@
                   {
                     "type": "object",
                     "additionalProperties": false,
-                    "required": ["name"],
+                    "required": [
+                      "name"
+                    ],
                     "properties": {
                       "name": {
                         "type": "string",
@@ -2847,7 +2887,10 @@
     "DangerousHtml": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -3055,7 +3098,10 @@
     "Dynamic": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -3321,7 +3367,10 @@
     "Html": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -3540,7 +3589,10 @@
     "Icon": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -3620,7 +3672,10 @@
               "description": "Number of degrees to rotate the icon."
             },
             "size": {
-              "type": ["string", "number"],
+              "type": [
+                "string",
+                "number"
+              ],
               "description": "Size of the icon.",
               "docs": {
                 "displayType": "number"
@@ -3796,7 +3851,10 @@
     "Img": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -3855,7 +3913,9 @@
         "properties": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["src"],
+          "required": [
+            "src"
+          ],
           "properties": {
             "src": {
               "type": "string",
@@ -3868,21 +3928,34 @@
             },
             "crossOrigin": {
               "type": "string",
-              "enum": ["anonymous", "use-credentials"],
+              "enum": [
+                "anonymous",
+                "use-credentials"
+              ],
               "description": "Indicates if the fetching of the image must be done using a CORS request."
             },
             "decoding": {
               "type": "string",
-              "enum": ["sync", "async", "auto"],
+              "enum": [
+                "sync",
+                "async",
+                "auto"
+              ],
               "description": "An image decoding hint to the browser. Sync for atomic presentation with other content, async,  to reduce delay in presenting other content and auto leave to browser to decide."
             },
             "height": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the image: a number of pixels, or a string such as `100%` or `auto` that the browser reads as the height attribute."
             },
             "loading": {
               "type": "string",
-              "enum": ["eager", "lazy"],
+              "enum": [
+                "eager",
+                "lazy"
+              ],
               "description": "How the browser should load the image. Eager loads the image immediately, lazy, defers loading until the image it reaches a calculated distance from the viewport, as defined by the browser."
             },
             "sizes": {
@@ -3898,7 +3971,10 @@
               }
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the image: a number of pixels, or a string such as `100%` that the browser reads as the width attribute."
             }
           }
@@ -4035,7 +4111,10 @@
     "List": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -4097,12 +4176,21 @@
           "properties": {
             "direction": {
               "type": "string",
-              "enum": ["row", "column", "row-reverse", "column-reverse"],
+              "enum": [
+                "row",
+                "column",
+                "row-reverse",
+                "column-reverse"
+              ],
               "description": "List content along a 'row' or down a 'column'. Applies the 'flex-direction' css property to the List block."
             },
             "wrap": {
               "type": "string",
-              "enum": ["wrap", "nowrap", "wrap-reverse"],
+              "enum": [
+                "wrap",
+                "nowrap",
+                "wrap-reverse"
+              ],
               "description": "Specifies wrapping style to be applied to List block as 'wrap', 'nowrap' or 'wrap-reverse'. Applies the 'flex-wrap' css property to the List block - defaults to 'wrap', requires List direction to be set."
             },
             "scroll": {
@@ -4261,7 +4349,10 @@
     "PollingTimer": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -4342,7 +4433,9 @@
               "description": "Pause ticking while the browser tab is hidden (`document.visibilityState`), and resume when it becomes visible again. Ticks missed while hidden are not fired on resume; the next tick fires `interval` ms after the tab is visible."
             }
           },
-          "required": ["interval"]
+          "required": [
+            "interval"
+          ]
         },
         "class": {
           "oneOf": [
@@ -4472,7 +4565,10 @@
     "Span": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -4697,7 +4793,10 @@
     "Throw": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -4869,7 +4968,10 @@
     "Modal": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -4935,7 +5037,10 @@
               "description": "Center the modal vertically."
             },
             "closable": {
-              "type": ["boolean", "object"],
+              "type": [
+                "boolean",
+                "object"
+              ],
               "default": true,
               "description": "Whether a close (x) button is visible on top right of the modal dialog or not. Set `{ disabled: true }` to show the button disabled.",
               "docs": {
@@ -4992,7 +5097,11 @@
             },
             "padding": {
               "type": "string",
-              "enum": ["default", "compact", "none"],
+              "enum": [
+                "default",
+                "compact",
+                "none"
+              ],
               "default": "default",
               "description": "Space inside the modal. `compact` tightens it to 16px. `none` removes the body padding so content such as a table, list or image runs edge to edge; the header and footer keep their padding."
             },
@@ -5011,7 +5120,10 @@
               "description": "Show footer area."
             },
             "mask": {
-              "type": ["boolean", "object"],
+              "type": [
+                "boolean",
+                "object"
+              ],
               "default": true,
               "description": "Whether to show the mask. Set an object to configure the mask with `enabled`, `blur` and `closable`.",
               "docs": {
@@ -5063,7 +5175,11 @@
               }
             },
             "width": {
-              "type": ["string", "number", "object"],
+              "type": [
+                "string",
+                "number",
+                "object"
+              ],
               "default": 520,
               "description": "Width of the modal dialog. Set an object of breakpoints (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`) for a responsive width.",
               "docs": {
@@ -5072,27 +5188,45 @@
               "additionalProperties": false,
               "properties": {
                 "xs": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Width on extra small screens."
                 },
                 "sm": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Width on small screens."
                 },
                 "md": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Width on medium screens."
                 },
                 "lg": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Width on large screens."
                 },
                 "xl": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Width on extra large screens."
                 },
                 "xxl": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Width on extra extra large screens."
                 }
               }
@@ -5138,11 +5272,17 @@
                   "description": "Background color of the modal footer."
                 },
                 "contentPadding": {
-                  "type": ["number", "string"],
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "description": "Padding of the content area."
                 },
                 "headerPadding": {
-                  "type": ["number", "string"],
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "description": "Padding of the header area."
                 },
                 "headerBorderBottom": {
@@ -5159,7 +5299,10 @@
                   "description": "Padding of the body area."
                 },
                 "footerPadding": {
-                  "type": ["number", "string"],
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "description": "Padding of the footer area."
                 },
                 "footerBorderTop": {
@@ -5167,24 +5310,39 @@
                   "description": "Border top of the footer."
                 },
                 "footerBorderRadius": {
-                  "type": ["number", "string"],
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "description": "Border radius of the footer."
                 },
                 "footerMarginTop": {
-                  "type": ["number", "string"],
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "default": 8,
                   "description": "Margin top of the footer."
                 },
                 "confirmBodyPadding": {
-                  "type": ["number", "string"],
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "description": "Padding of the confirm modal body."
                 },
                 "confirmIconMarginInlineEnd": {
-                  "type": ["number", "string"],
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "description": "Inline end margin of the confirm modal icon."
                 },
                 "confirmBtnsMarginTop": {
-                  "type": ["number", "string"],
+                  "type": [
+                    "number",
+                    "string"
+                  ],
                   "description": "Margin top of the confirm modal buttons."
                 },
                 "borderRadiusLG": {
@@ -5639,7 +5797,10 @@
     "TextInput": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -5706,7 +5867,14 @@
             },
             "type": {
               "type": "string",
-              "enum": ["text", "number", "password", "tel", "email", "url"],
+              "enum": [
+                "text",
+                "number",
+                "password",
+                "tel",
+                "email",
+                "url"
+              ],
               "default": "text",
               "description": "The type of input, (see <a href='https://developer.mozilla.org/docs/Web/HTML/Element/input#Form_%3Cinput%3E_types'>MDN</a>)."
             },
@@ -5743,7 +5911,10 @@
               "description": "Prefix text for the block, priority over prefixIcon."
             },
             "prefixIcon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to prefix the text input.",
               "docs": {
                 "displayType": "icon"
@@ -5758,7 +5929,10 @@
                   "description": "Icon color."
                 },
                 "size": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Size of the icon. Defaults to `theme.icons.size`."
                 },
                 "rotate": {
@@ -5866,7 +6040,10 @@
                 },
                 "align": {
                   "type": "string",
-                  "enum": ["left", "right"],
+                  "enum": [
+                    "left",
+                    "right"
+                  ],
                   "default": "left",
                   "description": "Align label left or right when inline."
                 },
@@ -5964,7 +6141,11 @@
             },
             "size": {
               "type": "string",
-              "enum": ["small", "middle", "large"],
+              "enum": [
+                "small",
+                "middle",
+                "large"
+              ],
               "default": "middle",
               "description": "Size of the block."
             },
@@ -5978,7 +6159,10 @@
               "description": "Suffix text for the block, shown before suffixIcon."
             },
             "suffixIcon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to suffix the text input.",
               "docs": {
                 "displayType": "icon"
@@ -5993,7 +6177,10 @@
                   "description": "Icon color."
                 },
                 "size": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Size of the icon. Defaults to `theme.icons.size`."
                 },
                 "rotate": {
@@ -6029,7 +6216,12 @@
             },
             "variant": {
               "type": "string",
-              "enum": ["outlined", "filled", "borderless", "underlined"],
+              "enum": [
+                "outlined",
+                "filled",
+                "borderless",
+                "underlined"
+              ],
               "description": "Input visual variant. The deprecated bordered: false takes precedence and renders the input as 'borderless'."
             },
             "theme": {
@@ -6607,7 +6799,10 @@
     "Switch": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -6673,7 +6868,10 @@
               "description": "Autofocus to the block on page load."
             },
             "checkedIcon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to shown when switch is checked (true).",
               "docs": {
                 "displayType": "icon"
@@ -6688,7 +6886,10 @@
                   "description": "Icon color."
                 },
                 "size": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Size of the icon. Defaults to `theme.icons.size`."
                 },
                 "rotate": {
@@ -6813,7 +7014,10 @@
                 },
                 "align": {
                   "type": "string",
-                  "enum": ["left", "right"],
+                  "enum": [
+                    "left",
+                    "right"
+                  ],
                   "default": "left",
                   "description": "Align label left or right when inline."
                 },
@@ -6895,7 +7099,10 @@
             },
             "size": {
               "type": "string",
-              "enum": ["small", "default"],
+              "enum": [
+                "small",
+                "default"
+              ],
               "default": "default",
               "description": "Size of the block."
             },
@@ -6905,7 +7112,10 @@
               "description": "Title to describe the input component, if no title is specified the block id is displayed - supports html."
             },
             "uncheckedIcon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to shown when switch is unchecked (false).",
               "docs": {
                 "displayType": "icon"
@@ -6920,7 +7130,10 @@
                   "description": "Icon color."
                 },
                 "size": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Size of the icon. Defaults to `theme.icons.size`."
                 },
                 "rotate": {
@@ -7354,7 +7567,10 @@
     "Drawer": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -7415,7 +7631,10 @@
           "additionalProperties": false,
           "properties": {
             "closable": {
-              "type": ["boolean", "object"],
+              "type": [
+                "boolean",
+                "object"
+              ],
               "default": true,
               "description": "Whether a close (x) button is visible in the Drawer header or not. Set an object to disable the button or to move it to the end of the header.",
               "docs": {
@@ -7430,7 +7649,10 @@
                 },
                 "placement": {
                   "type": "string",
-                  "enum": ["start", "end"],
+                  "enum": [
+                    "start",
+                    "end"
+                  ],
                   "default": "start",
                   "description": "Place the close button at the start or the end of the header."
                 }
@@ -7467,7 +7689,10 @@
               "description": "Render the blocks inside the Drawer before it is first opened, so their methods can be called and their onMount events run while it is still closed."
             },
             "getContainer": {
-              "type": ["string", "boolean"],
+              "type": [
+                "string",
+                "boolean"
+              ],
               "description": "Where the Drawer is mounted. By default it is mounted on the page body. Set to `false` to render it in place, inside the nearest positioned parent (give that parent `position: relative`), or to a CSS selector to mount it in the first matching element."
             },
             "loading": {
@@ -7476,7 +7701,10 @@
               "description": "Show a loading skeleton in place of the Drawer body."
             },
             "mask": {
-              "type": ["boolean", "object"],
+              "type": [
+                "boolean",
+                "object"
+              ],
               "default": true,
               "description": "Whether to show the mask. Set an object to configure the mask with `enabled`, `blur` and `closable`.",
               "docs": {
@@ -7511,7 +7739,11 @@
             },
             "padding": {
               "type": "string",
-              "enum": ["default", "compact", "none"],
+              "enum": [
+                "default",
+                "compact",
+                "none"
+              ],
               "default": "default",
               "description": "Space inside the drawer. `compact` tightens the header and body. `none` removes the body padding so content such as a table or list runs edge to edge; the header and footer keep their padding."
             },
@@ -7521,7 +7753,10 @@
               "description": "Let the user resize the Drawer by dragging its edge. The configured size is the starting size."
             },
             "size": {
-              "type": ["string", "number"],
+              "type": [
+                "string",
+                "number"
+              ],
               "description": "Size of the Drawer: width for left and right placements, height for top and bottom. `default` (378px), `large` (736px), a number of pixels or a CSS length. Takes precedence over width and height.",
               "docs": {
                 "displayType": "string"
@@ -7532,7 +7767,10 @@
               "description": "The title of the Drawer - supports html."
             },
             "width": {
-              "type": ["string", "number"],
+              "type": [
+                "string",
+                "number"
+              ],
               "default": 378,
               "description": "Width of the Drawer dialog.",
               "docs": {
@@ -7540,7 +7778,10 @@
               }
             },
             "height": {
-              "type": ["string", "number"],
+              "type": [
+                "string",
+                "number"
+              ],
               "default": 378,
               "description": "When placement is top or bottom, height of the Drawer dialog.",
               "docs": {
@@ -7554,7 +7795,12 @@
             },
             "placement": {
               "type": "string",
-              "enum": ["top", "right", "bottom", "left"],
+              "enum": [
+                "top",
+                "right",
+                "bottom",
+                "left"
+              ],
               "default": "right",
               "description": "The placement of the Drawer."
             },
@@ -8048,7 +8294,10 @@
     "Result": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -8109,7 +8358,10 @@
           "additionalProperties": false,
           "properties": {
             "icon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize icon to use as result image.",
               "docs": {
                 "displayType": "icon"
@@ -8124,7 +8376,10 @@
                   "description": "Icon color."
                 },
                 "size": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Size of the icon. Defaults to `theme.icons.size`."
                 },
                 "rotate": {
@@ -8155,7 +8410,15 @@
             },
             "status": {
               "type": "string",
-              "enum": ["success", "error", "info", "warning", "404", "403", "500"],
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "404",
+                "403",
+                "500"
+              ],
               "default": "info",
               "description": "Status of the result. Determines image and color."
             },
@@ -8455,7 +8718,10 @@
     "Message": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -8530,7 +8796,10 @@
               "description": "Pause the auto-dismiss timer while the mouse is over the message."
             },
             "icon": {
-              "type": ["string", "object"],
+              "type": [
+                "string",
+                "object"
+              ],
               "description": "Icon name (a semantic name like `edit`, a Lucide icon name like `Pencil`, or a set-qualified name like `tabler:Pencil`) or properties of an Icon block to customize message icon.",
               "docs": {
                 "displayType": "icon"
@@ -8545,7 +8814,10 @@
                   "description": "Icon color."
                 },
                 "size": {
-                  "type": ["string", "number"],
+                  "type": [
+                    "string",
+                    "number"
+                  ],
                   "description": "Size of the icon. Defaults to `theme.icons.size`."
                 },
                 "rotate": {
@@ -8576,7 +8848,13 @@
             },
             "status": {
               "type": "string",
-              "enum": ["success", "error", "info", "warning", "loading"],
+              "enum": [
+                "success",
+                "error",
+                "info",
+                "warning",
+                "loading"
+              ],
               "default": "success",
               "description": "Message status type."
             },
@@ -8799,7 +9077,10 @@
     "ProgressBar": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -8875,11 +9156,17 @@
               "description": "Width transition duration in milliseconds."
             },
             "height": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the skeleton."
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton."
             }
           }
@@ -9016,7 +9303,10 @@
     "Skeleton": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -9077,14 +9367,20 @@
           "additionalProperties": false,
           "properties": {
             "height": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the skeleton.",
               "docs": {
                 "displayType": "string"
               }
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
@@ -9224,7 +9520,10 @@
     "SkeletonAvatar": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -9288,13 +9587,20 @@
               "type": "string",
               "default": "medium",
               "description": "Size of the skeleton.",
-              "enum": ["small", "medium", "large"]
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
             },
             "shape": {
               "type": "string",
               "default": "round",
               "description": "Shape of the skeleton.",
-              "enum": ["square", "round"]
+              "enum": [
+                "square",
+                "round"
+              ]
             }
           }
         },
@@ -9430,7 +9736,10 @@
     "SkeletonButton": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -9494,16 +9803,26 @@
               "type": "string",
               "default": "default",
               "description": "Shape of the skeleton; round gives fully rounded ends.",
-              "enum": ["default", "round"]
+              "enum": [
+                "default",
+                "round"
+              ]
             },
             "size": {
               "type": "string",
               "default": "medium",
               "description": "Size of the skeleton.",
-              "enum": ["small", "medium", "large"]
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
@@ -9643,7 +9962,10 @@
     "SkeletonInput": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -9712,31 +10034,47 @@
               "type": "string",
               "default": "medium",
               "description": "Size of the skeleton.",
-              "enum": ["small", "medium", "large"]
+              "enum": [
+                "small",
+                "medium",
+                "large"
+              ]
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
               }
             },
             "labelHeight": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the skeleton.",
               "docs": {
                 "displayType": "string"
               }
             },
             "labelWidth": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
               }
             },
             "inputHeight": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Height of the skeleton.",
               "docs": {
                 "displayType": "string"
@@ -9903,7 +10241,10 @@
     "SkeletonParagraph": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -9969,7 +10310,10 @@
               "description": "Number of paragraph lines of the skeleton."
             },
             "width": {
-              "type": ["number", "string"],
+              "type": [
+                "number",
+                "string"
+              ],
               "description": "Width of the skeleton.",
               "docs": {
                 "displayType": "string"
@@ -10109,7 +10453,10 @@
     "Spinner": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "type"],
+      "required": [
+        "id",
+        "type"
+      ],
       "properties": {
         "id": {
           "type": "string"
@@ -10170,7 +10517,10 @@
           "additionalProperties": false,
           "properties": {
             "size": {
-              "type": ["string", "number"],
+              "type": [
+                "string",
+                "number"
+              ],
               "description": "Size of the icon spinner: small, medium, large, or a pixel number."
             }
           }
@@ -10395,7 +10745,9 @@
           },
           {
             "type": "object",
-            "required": ["type"],
+            "required": [
+              "type"
+            ],
             "properties": {
               "type": {
                 "type": "string",

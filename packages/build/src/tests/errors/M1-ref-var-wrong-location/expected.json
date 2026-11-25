@@ -2,7 +2,9 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": ["undefinedBlockId"],
+      "warnings": [
+        "undefinedBlockId"
+      ],
       "warningContains": [
         "_state references \"undefinedBlockId\" on page \"templatePage\"",
         "lowdefy.yaml:30"
@@ -10,7 +12,9 @@
     },
     {
       "mode": "prod",
-      "warnings": ["undefinedBlockId"],
+      "warnings": [
+        "undefinedBlockId"
+      ],
       "warningContains": [
         "_state references \"undefinedBlockId\" on page \"templatePage\"",
         "lowdefy.yaml:30"

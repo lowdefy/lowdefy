@@ -3,11 +3,7 @@
     {
       "mode": "prod",
       "expectThrow": true,
-      "errorContains": [
-        "var \"components\" must be type \"object\"",
-        "(has properties)",
-        "dashboard"
-      ]
+      "errorContains": ["var \"components\" must be type \"object\"", "(has properties)", "dashboard"]
     }
   ]
 }

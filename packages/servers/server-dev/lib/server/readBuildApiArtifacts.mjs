@@ -26,6 +26,24 @@ function readIdentity(filePath) {
   return `${stat.ino}:${stat.mtimeNs}:${stat.size}`;
 }
 
+// A config publish removes the artifacts of endpoints that are gone while the
+// dev server reads the directory: a file listed and then removed is gone.
+function readApiConfig({ filePath, cache }) {
+  try {
+    const identity = readIdentity(filePath);
+    const cached = cache.get(filePath);
+    if (cached?.identity === identity) {
+      return cached.config;
+    }
+    const config = serializer.deserialize(JSON.parse(fs.readFileSync(filePath, 'utf8')));
+    cache.set(filePath, { identity, config });
+    return config;
+  } catch (error) {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  }
+}
+
 // Recursively collect every endpoint artifact under the api directory. Module
 // endpoints are written to build/api/<moduleId>/<endpointId>.json because their
 // scoped endpointId contains a "/" (buildModules prefixes ids with the module entry
@@ -39,15 +57,9 @@ function readApiConfigs({ directory, cache, seen }) {
       continue;
     }
     if (!entry.name.endsWith('.json')) continue;
+    const config = readApiConfig({ filePath: entryPath, cache });
+    if (config === null) continue;
     seen.add(entryPath);
-    const identity = readIdentity(entryPath);
-    const cached = cache.get(entryPath);
-    if (cached?.identity === identity) {
-      configs.push(cached.config);
-      continue;
-    }
-    const config = serializer.deserialize(JSON.parse(fs.readFileSync(entryPath, 'utf8')));
-    cache.set(entryPath, { identity, config });
     configs.push(config);
   }
   return configs;

@@ -2,11 +2,15 @@
   "tests": [
     {
       "mode": "prod",
-      "errorContains": ["`slug` is required on the app but is not set."]
+      "errorContains": [
+        "`slug` is required on the app but is not set."
+      ]
     },
     {
       "mode": "dev",
-      "errorContains": ["`slug` is required on the app but is not set."]
+      "errorContains": [
+        "`slug` is required on the app but is not set."
+      ]
     }
   ]
 }

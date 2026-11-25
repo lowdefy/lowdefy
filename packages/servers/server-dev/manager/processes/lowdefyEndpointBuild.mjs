@@ -57,6 +57,10 @@ function lowdefyEndpointBuild(context) {
       directories: { build: directories.build },
     });
     if (result.fallback) {
+      if (result.error) {
+        // A fault in the endpoint build itself, not in the config.
+        logger.warn(result.error);
+      }
       logger.info(`Building config: ${result.fallback}.`);
       return false;
     }

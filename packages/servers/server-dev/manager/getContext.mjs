@@ -102,22 +102,10 @@ async function getContext() {
   context.installPlugins = installPlugins(context);
 
   context.buildQueue = createBuildQueue();
-  // Wrap lowdefyBuild to capture and store the shallow build result
+  // lowdefyBuild stores the shallow build result on context; callers get nothing back.
   const buildFn = lowdefyBuild(context);
   context.lowdefyBuild = async (buildOptions) => {
-    let result;
-    try {
-      result = await buildFn(buildOptions);
-    } catch (error) {
-      context.lastBuildFailed = true;
-      throw error;
-    }
-    context.lastBuildFailed = false;
-    if (result) {
-      context.pageRegistry = result.pageRegistry;
-      context.endpointRegistry = result.endpointRegistry;
-      context.buildContext = result.context;
-    }
+    await buildFn(buildOptions);
   };
   context.lowdefyEndpointBuild = lowdefyEndpointBuild(context);
 

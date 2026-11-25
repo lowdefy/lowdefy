@@ -2,8 +2,13 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": ["Request id missing at page"],
-      "errorContains": ["Request id missing at page \"home\".", "lowdefy.yaml:22"]
+      "errors": [
+        "Request id missing at page"
+      ],
+      "errorContains": [
+        "Request id missing at page \"home\".",
+        "lowdefy.yaml:22"
+      ]
     }
   ]
 }
