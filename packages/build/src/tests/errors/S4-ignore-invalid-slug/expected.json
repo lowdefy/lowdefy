@@ -2,9 +2,7 @@
   "tests": [
     {
       "mode": "dev",
-      "errors": [
-        "Invalid check slug(s)"
-      ],
+      "errors": ["Invalid check slug(s)"],
       "errorContains": [
         "Invalid check slug(s): \"Invalid_Slug\". Check slugs are kebab-case",
         "lowdefy.yaml:12"

@@ -2,9 +2,7 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": [
-        "is the \"auth.authPages.signIn\" page"
-      ],
+      "errors": ["is the \"auth.authPages.signIn\" page"],
       "errorContains": [
         "Page \"login\" is the \"auth.authPages.signIn\" page, so its path \"{tenant}/login\" cannot have placeholders.",
         "lowdefy.yaml:24"

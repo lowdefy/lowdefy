@@ -2,9 +2,7 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": [
-        "contact_company_ids"
-      ],
+      "warnings": ["contact_company_ids"],
       "warningContains": [
         "_state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page.",
         "request-template.yaml:11"
@@ -12,9 +10,7 @@
     },
     {
       "mode": "prod",
-      "warnings": [
-        "contact_company_ids"
-      ],
+      "warnings": ["contact_company_ids"],
       "warningContains": [
         "_state references \"contact_company_ids\" on page \"contacts-new\", but no input block with id \"contact_company_ids\" exists on this page.",
         "request-template.yaml:11"

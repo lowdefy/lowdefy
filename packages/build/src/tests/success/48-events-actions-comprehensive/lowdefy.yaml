@@ -23,7 +23,7 @@ pages:
         type: Title
         properties:
           content: Events & Actions Demo
-      
+
       # SetState actions
       - id: stateCard
         type: Card
@@ -71,7 +71,7 @@ pages:
               onClick:
                 - id: reset
                   type: Reset
-      
+
       # Link actions
       - id: linkCard
         type: Card
@@ -109,7 +109,7 @@ pages:
                   params:
                     url: https://example.com
                     newTab: true
-      
+
       # DisplayMessage actions
       - id: messageCard
         type: Card
@@ -152,7 +152,7 @@ pages:
                   params:
                     content: Please be careful!
                     status: warning
-      
+
       # Action with skip and async
       - id: advancedCard
         type: Card
@@ -208,7 +208,7 @@ pages:
                   type: DisplayMessage
                   params:
                     content: Done!
-      
+
       # Debounce events
       - id: debounceCard
         type: Card
@@ -231,7 +231,7 @@ pages:
                         _nunjucks: 'Searching for: {{ query }}'
                         query:
                           _state: searchInput
-  
+
   - id: about
     type: Box
     properties:

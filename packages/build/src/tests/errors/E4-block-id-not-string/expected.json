@@ -2,13 +2,8 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": [
-        "Block id is not a string"
-      ],
-      "errorContains": [
-        "Block id is not a string at page \"home\".",
-        "lowdefy.yaml:16"
-      ]
+      "errors": ["Block id is not a string"],
+      "errorContains": ["Block id is not a string at page \"home\".", "lowdefy.yaml:16"]
     }
   ]
 }

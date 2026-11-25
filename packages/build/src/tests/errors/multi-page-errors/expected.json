@@ -2,11 +2,7 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": [
-        "undefinedState1",
-        "undefinedState2",
-        "undefinedState3"
-      ],
+      "warnings": ["undefinedState1", "undefinedState2", "undefinedState3"],
       "warningContains": [
         "_state references \"undefinedState1\" on page \"page1\"",
         "lowdefy.yaml:19",
@@ -18,11 +14,7 @@
     },
     {
       "mode": "prod",
-      "warnings": [
-        "undefinedState1",
-        "undefinedState2",
-        "undefinedState3"
-      ],
+      "warnings": ["undefinedState1", "undefinedState2", "undefinedState3"],
       "warningContains": [
         "_state references \"undefinedState1\" on page \"page1\"",
         "lowdefy.yaml:19",

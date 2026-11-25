@@ -24,7 +24,10 @@ export { default as getLucideIconNames } from './build/icons/getLucideIconNames.
 export { default as loadIconSets } from './build/icons/loadIconSets.js';
 export { default as resolveIconName } from './build/icons/resolveIconName.js';
 export { default as shallowBuild } from './build/jit/shallowBuild.js';
+export { default as attributeEndpointWarnings } from './build/jit/attributeEndpointWarnings.js';
+export { default as buildEndpointsJit } from './build/jit/buildEndpointsJit.js';
 export { default as buildPageJit } from './build/jit/buildPageJit.js';
+export { default as findEndpointsReadingFiles } from './build/jit/findEndpointsReadingFiles.js';
 export { default as createJitMaps } from './build/jit/createJitMaps.js';
 export { default as createPageBuildContext } from './build/jit/createPageBuildContext.js';
 export { default as pageBuildOwnedFields } from './build/jit/pageBuildOwnedFields.js';

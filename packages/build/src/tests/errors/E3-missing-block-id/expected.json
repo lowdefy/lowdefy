@@ -2,13 +2,8 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": [
-        "Block id missing at page"
-      ],
-      "errorContains": [
-        "Block id missing at page \"home\".",
-        "lowdefy.yaml:16"
-      ]
+      "errors": ["Block id missing at page"],
+      "errorContains": ["Block id missing at page \"home\".", "lowdefy.yaml:16"]
     }
   ]
 }

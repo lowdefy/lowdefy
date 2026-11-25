@@ -2,9 +2,7 @@
   "tests": [
     {
       "mode": "dev",
-      "warnings": [
-        "undefinedBlockId"
-      ],
+      "warnings": ["undefinedBlockId"],
       "warningContains": [
         "_state references \"undefinedBlockId\" on page \"templatePage\"",
         "page-template.yaml.njk:11"
@@ -12,9 +10,7 @@
     },
     {
       "mode": "prod",
-      "warnings": [
-        "undefinedBlockId"
-      ],
+      "warnings": ["undefinedBlockId"],
       "warningContains": [
         "_state references \"undefinedBlockId\" on page \"templatePage\"",
         "page-template.yaml.njk:11"

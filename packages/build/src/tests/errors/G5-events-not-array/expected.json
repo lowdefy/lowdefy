@@ -2,9 +2,7 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": [
-        "Actions must be an array"
-      ],
+      "errors": ["Actions must be an array"],
       "errorContains": [
         "Actions must be an array at \"button\" in event \"onClick\" on page \"home\".",
         "lowdefy.yaml:21"

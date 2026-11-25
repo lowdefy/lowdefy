@@ -2,9 +2,7 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": [
-        "Action type is not a string"
-      ],
+      "errors": ["Action type is not a string"],
       "errorContains": [
         "Action type is not a string on action \"action1\" on event \"onClick\" on block \"button\" on page \"home\".",
         "lowdefy.yaml:23"

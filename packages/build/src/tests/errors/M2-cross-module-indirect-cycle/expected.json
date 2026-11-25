@@ -3,9 +3,7 @@
     {
       "mode": "prod",
       "expectThrow": true,
-      "errorContains": [
-        "Circular module reference detected"
-      ]
+      "errorContains": ["Circular module reference detected"]
     }
   ]
 }

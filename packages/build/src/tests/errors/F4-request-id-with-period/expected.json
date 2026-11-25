@@ -2,9 +2,7 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": [
-        "contains invalid characters"
-      ],
+      "errors": ["contains invalid characters"],
       "errorContains": [
         "Request id \"my.request\" at page \"home\" contains invalid characters.",
         "lowdefy.yaml:23"

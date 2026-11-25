@@ -2,9 +2,7 @@
   "tests": [
     {
       "mode": "prod",
-      "errors": [
-        "SetStat"
-      ],
+      "errors": ["SetStat"],
       "errorContains": [
         "Action type \"SetStat\" was used but is not defined. Did you mean \"SetState\"?",
         "lowdefy.yaml:23"

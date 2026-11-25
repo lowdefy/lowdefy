@@ -3,9 +3,7 @@
     {
       "mode": "prod",
       "expectThrow": true,
-      "errorContains": [
-        "does not declare dependency \"nonexistent\""
-      ]
+      "errorContains": ["does not declare dependency \"nonexistent\""]
     }
   ]
 }

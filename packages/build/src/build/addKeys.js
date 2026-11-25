@@ -227,14 +227,17 @@ function recAddKeys({ object, segment, keyMap, parentKeyMapId, parentRef, contex
   });
 }
 
-function addKeys({ components, context }) {
-  const keyMapId = makeId.next();
+// parent ({ keyMapId, segment, ref }) keys the root as a child of a node keyed
+// before: the dev server's endpoint build keys a rebuilt endpoint under the api
+// array the config build keyed, with the segment it had there, so its errors
+// and warnings locate as they do in a full build.
+function addKeys({ components, context, parent }) {
   recAddKeys({
     object: components,
-    segment: 'root',
+    segment: parent?.segment ?? 'root',
     keyMap: context.keyMap,
-    parentKeyMapId: keyMapId,
-    parentRef: null,
+    parentKeyMapId: parent?.keyMapId ?? makeId.next(),
+    parentRef: parent?.ref ?? null,
     context,
   });
 }

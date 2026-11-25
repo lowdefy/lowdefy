@@ -11,4 +11,4 @@ lowdefy: local
 pages:
   - id: post
     type: Box
-    path: {slug}
+    path: { slug }
