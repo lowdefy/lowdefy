@@ -31,6 +31,12 @@ const ARTIFACT_FOLDERS = ['pages', 'api', 'connections', 'websockets'];
 // hashed), so a cache written by another version is never read.
 const CACHE_VERSION = 1;
 
+// An artifact modified this recently when it is hashed is hashed but not cached. A file system
+// that keeps modified times to the second (HFS+, exFAT, some network and container mounts) gives a
+// rewrite in that same second the same time, and one of the same size would then hit the cache
+// with the old content's hash. Git treats its index the same way ("racy git").
+const SETTLE_MS = 2000;
+
 function sha1(text) {
   return crypto.createHash('sha1').update(text).digest('hex');
 }
@@ -101,7 +107,8 @@ function writeCache({ cachePath, buildDirectory, artifacts }) {
 // same hash. Null when the build cannot be read, which no record ever matches.
 //
 // Each artifact's own hash is kept in .lowdefy/test/build-hashes.json by its path, size and
-// modified time, so an artifact the build has not written since is never read again: a run's
+// modified time, so an artifact the build has not written since is never read again (one written
+// in the last 2 seconds is read each time, SETTLE_MS): a run's
 // end hash reads only the pages the run built on demand, and the next run's start hash reads
 // only what the server rebuilt in between. The build's other files, keyMap.json and refMap.json
 // among them, are never read.
@@ -124,12 +131,15 @@ function hashBuild({ context }) {
       const entry = cached[file];
       if (entry?.size === size && entry?.mtimeMs === mtimeMs) {
         artifacts[file] = entry;
-      } else {
-        const artifact = normaliseArtifact(JSON.parse(fs.readFileSync(filePath, 'utf8')));
-        artifacts[file] = { size, mtimeMs, hash: sha1(stableStringify(artifact)) };
-        changed = true;
+        return `${file}\t${entry.hash}`;
       }
-      return `${file}\t${artifacts[file].hash}`;
+      const artifact = normaliseArtifact(JSON.parse(fs.readFileSync(filePath, 'utf8')));
+      const hash = sha1(stableStringify(artifact));
+      if (Date.now() - mtimeMs >= SETTLE_MS) {
+        artifacts[file] = { size, mtimeMs, hash };
+      }
+      changed = true;
+      return `${file}\t${hash}`;
     });
     if (changed) {
       writeCache({ cachePath, buildDirectory, artifacts });

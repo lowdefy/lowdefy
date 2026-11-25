@@ -51,6 +51,7 @@ function writeBuild({ page = { id: 'page:a', title: 'A' }, buildId = 'one', mark
     path.join(build(), 'pages', 'a.json'),
     JSON.stringify({ ...page, '~k': marker })
   );
+  settle('pages/a.json');
 }
 
 test('the hash ignores the buildId and the location markers of a rebuild', () => {
@@ -88,9 +89,21 @@ function readSpy() {
       .sort();
 }
 
-function writeArtifact(file, value) {
+// Each write lands a second after the one before, ten minutes ago: settled, so the cache keeps it
+// (SETTLE_MS), and with its own modified time.
+let writtenAt = Date.now() / 1000 - 600;
+
+function settle(file) {
+  writtenAt += 1;
+  fs.utimesSync(path.join(build(), file), writtenAt, writtenAt);
+}
+
+function writeArtifact(file, value, { settled = true } = {}) {
   fs.mkdirSync(path.dirname(path.join(build(), file)), { recursive: true });
   fs.writeFileSync(path.join(build(), file), JSON.stringify(value));
+  if (settled) {
+    settle(file);
+  }
 }
 
 test('the hash reads only the artifacts it hashes, never keyMap.json or refMap.json', () => {
@@ -184,4 +197,31 @@ test('a cache cut short is read as no cache', () => {
   const first = hashBuild({ context });
   fs.writeFileSync(path.join(context.directories.test, 'build-hashes.json'), '{"vers');
   expect(hashBuild({ context })).toEqual(first);
+});
+
+test('an artifact rewritten with other content of the same size moves the hash', () => {
+  withTestDirectory();
+  writeBuild({});
+  writeArtifact('api/e.json', { id: 'e', title: 'Foo' });
+  const first = hashBuild({ context });
+  writeArtifact('api/e.json', { id: 'e', title: 'Bar' });
+  const read = readSpy();
+  expect(hashBuild({ context })).not.toEqual(first);
+  expect(read()).toEqual(['api/e.json']);
+});
+
+test('an artifact written in the last 2 seconds is read on every hash until it settles', () => {
+  withTestDirectory();
+  writeBuild({});
+  writeArtifact('pages/b.json', { id: 'page:b' }, { settled: false });
+  const first = hashBuild({ context });
+  let read = readSpy();
+  expect(hashBuild({ context })).toEqual(first);
+  expect(read()).toEqual(['pages/b.json']);
+  vi.restoreAllMocks();
+  settle('pages/b.json');
+  hashBuild({ context });
+  read = readSpy();
+  expect(hashBuild({ context })).toEqual(first);
+  expect(read()).toEqual([]);
 });

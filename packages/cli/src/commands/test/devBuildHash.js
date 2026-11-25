@@ -17,9 +17,10 @@
 import { type } from '@lowdefy/helpers';
 
 // The key a dev server run takes headless-run.json's records on (findBrowserOnlyRecord): the
-// server's build (`buildHash`, hashBuild as the run starts or ends) and the app's config source as the run started
-// (`sourceHash`, hashConfigSources), so an edit to any config file runs a remembered journey
-// headless again, whether or not the server rebuilt its page. Null when either cannot be read.
+// server's build (`buildHash`, hashBuild as the run starts or ends) and the app's config source as
+// the run started (`sourceHash`, hashConfigSources), so an edit to any config file runs a
+// remembered journey headless again, whether or not the server rebuilt its page. Null when either
+// cannot be read.
 function devBuildHash({ buildHash, sourceHash }) {
   if (type.isNone(buildHash) || type.isNone(sourceHash)) {
     return null;
