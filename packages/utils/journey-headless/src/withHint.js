@@ -18,7 +18,7 @@ import { type } from '@lowdefy/helpers';
 
 // An expect step's failure message about a call's answer, with the hint the call carries (a system
 // call bound to no organization says how to bind one), if any.
-function withHint(message, answer) {
+function withHint({ answer, message }) {
   if (type.isUndefined(answer.hint)) {
     return message;
   }

@@ -25,10 +25,10 @@ function expectAnswerStatus({ answer, status }) {
   }
   const error = answer.error === null ? '' : `: ${answer.error}`;
   throw new HeadlessStepError(
-    withHint(
-      `Expected ${answer.description} to answer ${status} but it answered ${answer.status}${error}.`,
-      answer
-    ),
+    withHint({
+      answer,
+      message: `Expected ${answer.description} to answer ${status} but it answered ${answer.status}${error}.`,
+    }),
     { actual: answer.status, expected: status }
   );
 }

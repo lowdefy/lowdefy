@@ -14,32 +14,18 @@
   limitations under the License.
 */
 
-import { type } from '@lowdefy/helpers';
-
-// What the server would log of a fault, scrubbed of the values the call marked, as its logger
-// scrubs a line: a fault is printed with the journey's result after the call's scope has ended.
-function scrubFault({ fault, scrub }) {
-  if (type.isString(fault.message)) {
-    fault.message = scrub(fault.message);
-  }
-  if (type.isString(fault.stack)) {
-    fault.stack = scrub(fault.stack);
-  }
-}
-
 // A host call run in a credential scope of its own, as the server runs each request in one
 // (runInCredentialScope in its app): `_credential` marks what the routine gives it, and what the
-// server logs, what the data session sinks and the faults the call answers with are scrubbed of
-// it. credentialScope is the host's { run: runInCredentialScope, bindScrub: bindCredentialScrub }
-// from the @lowdefy/node-utils its @lowdefy/api imports: the scope is module state, so another
-// copy of the package would set a scope the routine never reads.
-function createScopedCall({ credentialScope, run }) {
+// server logs and what the data session sinks are scrubbed of it. credentialScope is the host's
+// { run: runInCredentialScope, bindScrub: bindCredentialScrub } from the @lowdefy/node-utils its
+// @lowdefy/api imports: the scope is module state, so another copy of the package would set a
+// scope the routine never reads. onScope takes the scope's bound scrub, which keeps scrubbing what
+// the call marked after the scope ends, for the journey's result (createHeadlessHost).
+function createScopedCall({ credentialScope, onScope, run }) {
   return function scopedCall(args) {
-    return credentialScope.run(async () => {
-      const scrub = credentialScope.bindScrub();
-      const answer = await run(args);
-      (answer.faults ?? []).forEach((fault) => scrubFault({ fault, scrub }));
-      return answer;
+    return credentialScope.run(() => {
+      onScope(credentialScope.bindScrub());
+      return run(args);
     });
   };
 }

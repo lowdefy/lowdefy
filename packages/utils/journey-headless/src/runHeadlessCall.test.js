@@ -99,6 +99,30 @@ test('runHeadlessCall hints at the binding when a call as system bound to no org
   );
 });
 
+test('runHeadlessCall hints at the binding when the routine of a call as system bound to no organization fails', async () => {
+  const { actors, host } = createSetup();
+  host.system = async () => ({ ...createAnswer(200), success: false });
+  const answer = await runHeadlessCall({
+    actors,
+    host,
+    step: { call: { endpoint: 'nightly_close', as: 'system' } },
+  });
+  expect(answer.hint).toContain('as: { system: { organization: <id>, caller: { id, name } } }.');
+});
+
+test('runHeadlessCall gives no hint to a person whose call is refused', async () => {
+  const { actors, host } = createSetup();
+  const person = { calls: [], user: 'operator' };
+  actors.callerFor = async () => person;
+  host.call = async () => createAnswer(400);
+  const answer = await runHeadlessCall({
+    actors,
+    host,
+    step: { call: { endpoint: 'nightly_close', as: 'operator' } },
+  });
+  expect(answer.hint).toBeUndefined();
+});
+
 test('runHeadlessCall gives no hint on a refused call bound to an organization', async () => {
   const { actors, host } = createSetup({ status: 400 });
   const answer = await runHeadlessCall({

@@ -105,6 +105,39 @@ test('a routine that marks a credential answers, in a credential scope of its ow
   expect(result.steps.map((step) => step.status)).toEqual(credentialJourney.steps.map(() => 'ok'));
 });
 
+test('what a call marked with _credential stays out of the journey result, a failure included', async () => {
+  const marked = 'payload-credential-0042';
+  const result = await run({
+    steps: [
+      { call: { endpoint: 'mark_credential', payload: { value: marked } } },
+      { expect: { calls: { endpoint: 'mark_credential', response: { signature: 'another' } } } },
+    ],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(1);
+  expect(result.failure.actual).toEqual({
+    signature: '[REDACTED]',
+    token: '[REDACTED]',
+  });
+  expect(JSON.stringify(result)).not.toContain(marked);
+  // The payload the call sent is scrubbed too: the value was marked in the call's scope.
+  expect(result.calls[0].payload).toEqual({ value: '[REDACTED]' });
+});
+
+test('a system call bound to no organization whose routine fails says how to bind one', async () => {
+  const result = await run({
+    steps: [
+      // BR-1 is a run of the data set, so the routine's insert fails on its _id.
+      { call: { endpoint: 'record_caller', payload: { id: 'BR-1' }, as: 'system' } },
+      { expect: { error: 'never in the answer' } },
+    ],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toContain(
+    'name them on the call, as: { system: { organization: <id>, caller: { id, name } } }.'
+  );
+});
+
 test('a signed-in caller cannot reach an InternalApi endpoint either: it answers as a missing one', async () => {
   const result = await run({
     steps: [{ call: { endpoint: 'close_runs' } }, { expect: { status: 200 } }],

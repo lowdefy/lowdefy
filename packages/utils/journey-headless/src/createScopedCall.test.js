@@ -30,47 +30,41 @@ const credentialScope = { bindScrub: bindCredentialScrub, run: runInCredentialSc
 test('createScopedCall runs a call in a credential scope, so the routine can mark a credential', async () => {
   const scopedCall = createScopedCall({
     credentialScope,
+    onScope: () => undefined,
     run: async ({ token }) => {
       markCredential(token);
-      return {
-        status: 200,
-        response: { token },
-        faults: [],
-        logged: scrubCredentials(`token ${token}`),
-      };
+      return { status: 200, logged: scrubCredentials(`token ${token}`) };
     },
   });
   const answer = await scopedCall({ token: 'a-long-signing-secret' });
-  expect(answer.status).toEqual(200);
-  expect(answer.response).toEqual({ token: 'a-long-signing-secret' });
-  expect(answer.logged).toEqual('token [REDACTED]');
+  expect(answer).toEqual({ status: 200, logged: 'token [REDACTED]' });
 });
 
 test('createScopedCall gives each call a scope of its own', async () => {
   const scopedCall = createScopedCall({
     credentialScope,
+    onScope: () => undefined,
     run: async ({ mark, text }) => {
       if (mark) markCredential(text);
-      return { faults: [], logged: scrubCredentials(text) };
+      return scrubCredentials(text);
     },
   });
-  expect((await scopedCall({ mark: true, text: 'first-call-secret' })).logged).toEqual(
-    '[REDACTED]'
-  );
-  expect((await scopedCall({ mark: false, text: 'first-call-secret' })).logged).toEqual(
-    'first-call-secret'
-  );
+  expect(await scopedCall({ mark: true, text: 'first-call-secret' })).toEqual('[REDACTED]');
+  expect(await scopedCall({ mark: false, text: 'first-call-secret' })).toEqual('first-call-secret');
 });
 
-test('createScopedCall scrubs the credentials the call marked from its faults', async () => {
+test('createScopedCall gives onScope a scrub that still scrubs what the call marked after it ends', async () => {
+  const scrubs = [];
   const scopedCall = createScopedCall({
     credentialScope,
+    onScope: (scrub) => scrubs.push(scrub),
     run: async () => {
       markCredential('a-long-signing-secret');
-      return { faults: [new Error('Signing with a-long-signing-secret failed.')] };
     },
   });
-  const { faults } = await scopedCall({});
-  expect(faults[0].message).toEqual('Signing with [REDACTED] failed.');
-  expect(faults[0].stack).not.toContain('a-long-signing-secret');
+  await scopedCall({});
+  expect(scrubs).toHaveLength(1);
+  expect(scrubs[0]('Signing with a-long-signing-secret failed.')).toEqual(
+    'Signing with [REDACTED] failed.'
+  );
 });

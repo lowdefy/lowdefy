@@ -22,19 +22,19 @@ import withHint from './withHint.js';
 function expectAnswerError({ answer, text }) {
   if (answer.error === null) {
     throw new HeadlessStepError(
-      withHint(
-        `Expected ${answer.description} to answer with an error containing "${text}" but it answered ${answer.status} with no error.`,
-        answer
-      ),
+      withHint({
+        answer,
+        message: `Expected ${answer.description} to answer with an error containing "${text}" but it answered ${answer.status} with no error.`,
+      }),
       { actual: answer.status, expected: `an error containing "${text}"` }
     );
   }
   if (!answer.error.includes(text)) {
     throw new HeadlessStepError(
-      withHint(
-        `Expected ${answer.description} to answer with an error containing "${text}" but its error was "${answer.error}".`,
-        answer
-      ),
+      withHint({
+        answer,
+        message: `Expected ${answer.description} to answer with an error containing "${text}" but its error was "${answer.error}".`,
+      }),
       { actual: answer.error, expected: `an error containing "${text}"` }
     );
   }

@@ -37,9 +37,14 @@ function callAs({ as, call, caller, host, payload }) {
 }
 
 // A system call bound to no organization that is refused or fails says how to bind it, since an
-// endpoint that runs per organization refuses such a run in its own words.
+// endpoint that runs per organization refuses such a run in its own words, and the tenant wall
+// fails its routine (answered 200 with success: false) in a CallApi's.
 function readHint({ as, answer }) {
-  if (answer.status < 400 || readSystemCaller(as)?.organization !== null) {
+  const systemCaller = readSystemCaller(as);
+  if (systemCaller === null || systemCaller.organization !== null) {
+    return undefined;
+  }
+  if (answer.success !== false && answer.status < 400) {
     return undefined;
   }
   return UNBOUND_HINT;
@@ -53,7 +58,7 @@ function readHint({ as, answer }) {
 // (recordDetachedCalls), and the server's faults go to the error sink (addServerFaults). A call a
 // fail gate failed answers with the forced message (readForcedError), not the generic one the
 // client sees. A system call bound to no organization that fails carries a hint on binding one,
-// which the expect steps add to their failures.
+// which the expect steps and an app-error failure of the step add to their messages.
 async function runHeadlessCall({ actors, host, step }) {
   const isCall = !type.isUndefined(step.call);
   const params = isCall ? step.call : step.request;

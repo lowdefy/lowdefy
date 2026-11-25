@@ -452,7 +452,7 @@ steps:
         count: 2
 ```
 
-A scheduled run reaches an endpoint that runs per organization through a `CallApi` with `organization`, and often `caller`, which binds the target to that organization. `as: { system: { organization, caller } }` gives a call the same binding: the tenant wall filters and stamps with `organization`, and `_user` is the stand-in caller `{ id, name, organization_id, system: true }`, exactly what that `CallApi` gives its target. `caller` is optional, as on `CallApi`; without it `_user` is null. A call `as: system` with no organization that answers an error says how to name one.
+A scheduled run reaches an endpoint that runs per organization through a `CallApi` with `organization`, and often `caller`, which binds the target to that organization. `as: { system: { organization, caller } }` gives a call the same binding: the tenant wall filters and stamps with `organization`, and `_user` is the stand-in caller `{ id, name, organization_id, system: true }`, exactly what that `CallApi` gives its target. `caller` is optional, as on `CallApi`; without it `_user` is null. When a call `as: system` with no organization is refused or its routine fails, the failing step says how to name one.
 
 ```yaml
 name: a call bound to an organization runs as its stand-in caller

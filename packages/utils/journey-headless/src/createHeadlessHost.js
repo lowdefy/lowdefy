@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import createScopedCall from './createScopedCall.js';
+import scrubMarkedValues from './scrubMarkedValues.js';
 
 /**
  * What a headless page runs on: the build, the server and the data, given by a host so the
@@ -72,6 +73,10 @@ import createScopedCall from './createScopedCall.js';
  *   bindCredentialScrub from the @lowdefy/node-utils the host's @lowdefy/api imports. Each call,
  *   system call and webhook runs in a credential scope of its own, as the server runs each
  *   request (createScopedCall).
+ *
+ * createHeadlessHost adds scrubCredentials: (value) => value, a copy of a value with every string
+ * scrubbed of what the host's calls marked so far, which the runner applies to the journey's
+ * result.
  */
 
 /**
@@ -142,6 +147,7 @@ const SCOPED_KEYS = ['call', 'system', 'webhook'];
 // Checks a host against the shape above, so a host that misses a part fails where it is made,
 // not in the middle of a journey, and runs its calls each in a credential scope of its own, as
 // the server runs each request, so every host gives an endpoint the scope a real request gives it.
+// What the calls mark is kept out of the journey's result (scrubCredentials).
 function createHeadlessHost(host) {
   if (!type.isObject(host)) {
     throw new Error(`A headless host is an object. Received ${JSON.stringify(host)}.`);
@@ -150,10 +156,16 @@ function createHeadlessHost(host) {
   if (missing.length > 0) {
     throw new Error(`The headless host is missing ${missing.join(', ')}.`);
   }
+  const scrubs = [];
   const scoped = { ...host };
   SCOPED_KEYS.forEach((key) => {
-    scoped[key] = createScopedCall({ credentialScope: host.credentialScope, run: host[key] });
+    scoped[key] = createScopedCall({
+      credentialScope: host.credentialScope,
+      onScope: (scrub) => scrubs.push(scrub),
+      run: host[key],
+    });
   });
+  scoped.scrubCredentials = (value) => scrubMarkedValues({ scrubs, value });
   return scoped;
 }
 
