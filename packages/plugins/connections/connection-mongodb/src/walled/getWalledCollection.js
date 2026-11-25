@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import applyTenantToFilter from '../connections/MongoDBCollection/tenant/applyTenantToFilter.js';
 import assertTenantWritable from '../connections/MongoDBCollection/tenant/assertTenantWritable.js';
 import applyTenantToUpdate from '../connections/MongoDBCollection/tenant/applyTenantToUpdate.js';
+import excludeLogFields from '../connections/MongoDBCollection/excludeLogFields.js';
 import getCollection from '../connections/MongoDBCollection/getCollection.js';
 import mapMongoError from '../connections/MongoDBCollection/mapMongoError.js';
 import stampTenantOnLogRecord from '../connections/MongoDBCollection/tenant/stampTenantOnLogRecord.js';
@@ -176,16 +177,19 @@ function getWalledCollection({
         if (logCollection) {
           await logCollection.insertOne(
             stampTenantOnLogRecord({
-              record: {
-                args: { filter: query, update: change, options },
-                connectionId,
-                requestId,
-                before,
-                after: after ?? null,
-                timestamp: new Date(),
-                type: 'MongoDBFindOneAndUpdate',
-                meta: connection.changeLog?.meta,
-              },
+              record: excludeLogFields({
+                connection,
+                record: {
+                  args: { filter: query, update: change, options },
+                  connectionId,
+                  requestId,
+                  before,
+                  after: after ?? null,
+                  timestamp: new Date(),
+                  type: 'MongoDBFindOneAndUpdate',
+                  meta: connection.changeLog?.meta,
+                },
+              }),
               tenant,
             })
           );
