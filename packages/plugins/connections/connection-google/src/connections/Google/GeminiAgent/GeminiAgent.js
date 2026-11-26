@@ -23,13 +23,22 @@ async function resolver({ connection, properties, context }) {
   if (props.thinkingConfig) google.thinkingConfig = props.thinkingConfig;
   if (props.safetySettings) google.safetySettings = props.safetySettings;
 
-  if (Object.keys(google).length > 0) {
-    props.providerOptions = {
-      ...props.providerOptions,
-      google: { ...props.providerOptions?.google, ...google },
-    };
+  if (Object.keys(google).length === 0) {
+    return handleAgentChat({ connection, properties, context });
   }
-  return handleAgentChat({ connection, properties, context });
+  // A new agent object, so the provider options never land on a config another request reads.
+  const providerOptions = {
+    ...props.providerOptions,
+    google: { ...props.providerOptions?.google, ...google },
+  };
+  return handleAgentChat({
+    connection,
+    properties: {
+      ...properties,
+      agent: { ...properties.agent, properties: { ...props, providerOptions } },
+    },
+    context,
+  });
 }
 
 const GeminiAgent = { schema, resolver };

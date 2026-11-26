@@ -66,7 +66,7 @@ test('AIGatewayAgent resolver maps order/only to providerOptions.gateway', async
 
   await AIGatewayAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     gateway: { order: ['vertex', 'anthropic'], only: ['anthropic', 'vertex'] },
   });
 });
@@ -92,7 +92,7 @@ test('AIGatewayAgent resolver maps fallbackModels to providerOptions.gateway.mod
 
   await AIGatewayAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     gateway: { models: ['openai/gpt-5-mini', 'google/gemini-2.0-flash'] },
   });
 });
@@ -120,7 +120,7 @@ test('AIGatewayAgent resolver maps user, tags, zeroDataRetention', async () => {
 
   await AIGatewayAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     gateway: { user: 'user-123', tags: ['chat', 'v2'], zeroDataRetention: true },
   });
 });
@@ -150,7 +150,7 @@ test('AIGatewayAgent resolver maps providerTimeouts and byok', async () => {
 
   await AIGatewayAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     gateway: { providerTimeouts, byok },
   });
 });
@@ -180,7 +180,7 @@ test('AIGatewayAgent resolver merges sugar props with existing providerOptions',
 
   await AIGatewayAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     gateway: { user: 'preexisting-user', tags: ['demo'] },
     anthropic: { thinking: { type: 'enabled', budgetTokens: 5000 } },
   });
@@ -202,7 +202,34 @@ test('AIGatewayAgent resolver does not set providerOptions when no sugar props',
 
   await AIGatewayAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toBeUndefined();
+  expect(
+    mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions
+  ).toBeUndefined();
+});
+
+test('AIGatewayAgent resolver leaves the agent properties it is passed unchanged', async () => {
+  mockHandleAgentChat.mockResolvedValue({ text: 'ok' });
+
+  const { default: AIGatewayAgent } = await import('./AIGatewayAgent.js');
+
+  const agentProperties = {
+    model: 'anthropic/claude-sonnet-4.5',
+    user: 'user-a',
+    providerOptions: { gateway: { order: ['anthropic'] } },
+  };
+  const original = structuredClone(agentProperties);
+  const args = {
+    connection: { provider: vi.fn() },
+    properties: { agent: { properties: agentProperties }, messages: [] },
+    context: {},
+  };
+
+  await AIGatewayAgent.resolver(args);
+
+  expect(agentProperties).toEqual(original);
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties).not.toBe(
+    agentProperties
+  );
 });
 
 test('AIGatewayAgent has schema', async () => {

@@ -23,13 +23,22 @@ async function resolver({ connection, properties, context }) {
   if (props.thinking) anthropic.thinking = props.thinking;
   if (props.effort) anthropic.effort = props.effort;
 
-  if (Object.keys(anthropic).length > 0) {
-    props.providerOptions = {
-      ...props.providerOptions,
-      anthropic: { ...props.providerOptions?.anthropic, ...anthropic },
-    };
+  if (Object.keys(anthropic).length === 0) {
+    return handleAgentChat({ connection, properties, context });
   }
-  return handleAgentChat({ connection, properties, context });
+  // A new agent object, so the provider options never land on a config another request reads.
+  const providerOptions = {
+    ...props.providerOptions,
+    anthropic: { ...props.providerOptions?.anthropic, ...anthropic },
+  };
+  return handleAgentChat({
+    connection,
+    properties: {
+      ...properties,
+      agent: { ...properties.agent, properties: { ...props, providerOptions } },
+    },
+    context,
+  });
 }
 
 const ClaudeAgent = { schema, resolver };

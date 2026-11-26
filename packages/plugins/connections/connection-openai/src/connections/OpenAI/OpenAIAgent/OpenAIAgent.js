@@ -23,13 +23,22 @@ async function resolver({ connection, properties, context }) {
   if (props.reasoningEffort) openai.reasoningEffort = props.reasoningEffort;
   if (props.reasoningSummary) openai.reasoningSummary = props.reasoningSummary;
 
-  if (Object.keys(openai).length > 0) {
-    props.providerOptions = {
-      ...props.providerOptions,
-      openai: { ...props.providerOptions?.openai, ...openai },
-    };
+  if (Object.keys(openai).length === 0) {
+    return handleAgentChat({ connection, properties, context });
   }
-  return handleAgentChat({ connection, properties, context });
+  // A new agent object, so the provider options never land on a config another request reads.
+  const providerOptions = {
+    ...props.providerOptions,
+    openai: { ...props.providerOptions?.openai, ...openai },
+  };
+  return handleAgentChat({
+    connection,
+    properties: {
+      ...properties,
+      agent: { ...properties.agent, properties: { ...props, providerOptions } },
+    },
+    context,
+  });
 }
 
 const OpenAIAgent = { schema, resolver };

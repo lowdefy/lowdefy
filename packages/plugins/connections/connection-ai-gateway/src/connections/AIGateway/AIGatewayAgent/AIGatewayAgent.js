@@ -29,13 +29,22 @@ async function resolver({ connection, properties, context }) {
   if (props.providerTimeouts) gateway.providerTimeouts = props.providerTimeouts;
   if (props.byok) gateway.byok = props.byok;
 
-  if (Object.keys(gateway).length > 0) {
-    props.providerOptions = {
-      ...props.providerOptions,
-      gateway: { ...props.providerOptions?.gateway, ...gateway },
-    };
+  if (Object.keys(gateway).length === 0) {
+    return handleAgentChat({ connection, properties, context });
   }
-  return handleAgentChat({ connection, properties, context });
+  // A new agent object, so the provider options never land on a config another request reads.
+  const providerOptions = {
+    ...props.providerOptions,
+    gateway: { ...props.providerOptions?.gateway, ...gateway },
+  };
+  return handleAgentChat({
+    connection,
+    properties: {
+      ...properties,
+      agent: { ...properties.agent, properties: { ...props, providerOptions } },
+    },
+    context,
+  });
 }
 
 const AIGatewayAgent = { schema, resolver };

@@ -51,8 +51,10 @@ async function prepareAgent(
     sharedState: agentContext.sharedState ?? null,
   };
 
-  // Evaluate operators in agent properties (e.g. _user, _secret, _payload)
-  agentConfig.properties = context.evaluateOperators({
+  // Evaluate operators in agent properties (e.g. _user, _secret, _payload). The result is kept
+  // apart from agentConfig: readConfigFile hands every request on this server process the same
+  // cached object, so a value written onto it would be what the next caller's chat reads.
+  const properties = context.evaluateOperators({
     input: agentConfig.properties ?? {},
     location: agentConfig.agentId,
     payload: agentContext,
@@ -172,9 +174,14 @@ async function prepareAgent(
   // Resolve MCP connection references to inline config.
   // Agent-level overrides (like confirm) may still contain operators —
   // handleAgentChat evaluates those via its existing evaluateOperators call.
-  agentConfig.mcp = await resolverContext.resolveMcpSources({ agentConfig });
+  const mcp = await resolverContext.resolveMcpSources({ agentConfig });
 
-  return { agentConfig, connectionInstance, agentType, resolverContext };
+  return {
+    agentConfig: { ...agentConfig, properties, mcp },
+    connectionInstance,
+    agentType,
+    resolverContext,
+  };
 }
 
 export default prepareAgent;

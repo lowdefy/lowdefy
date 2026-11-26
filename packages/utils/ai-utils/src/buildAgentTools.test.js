@@ -103,6 +103,39 @@ test('buildAgentTools creates sub-agent tools from agent.agents references', asy
   expect(tools.researcher.description).toBe('Delegate task to the researcher agent');
 });
 
+test('buildAgentTools leaves the sub-agent config getAgentConfig returns unchanged', async () => {
+  const { default: buildAgentTools } = await import('./buildAgentTools.js');
+
+  // getAgentConfig returns the one cached config object every request on the server shares.
+  const subAgentConfig = {
+    agentId: 'researcher',
+    connectionId: 'anthropic',
+    tools: [],
+    mcp: [{ connectionId: 'docs-mcp' }],
+    properties: { model: 'test', maxSteps: 5 },
+  };
+  const original = structuredClone(subAgentConfig);
+
+  const agent = { tools: [], mcp: [], agents: [{ agentId: 'researcher' }] };
+
+  const context = {
+    logger: testLogger,
+    getEndpointConfig: vi.fn(),
+    callEndpoint: vi.fn(),
+    evaluateOperators: vi.fn((x) => x),
+    getAgentConfig: vi.fn().mockResolvedValue(subAgentConfig),
+    getConnectionForAgent: vi
+      .fn()
+      .mockResolvedValue({ provider: vi.fn().mockReturnValue('sub-model') }),
+    resolveMcpSources: vi.fn().mockResolvedValue([]),
+  };
+
+  await buildAgentTools({ agent, context });
+
+  expect(context.resolveMcpSources).toHaveBeenCalledWith({ agentConfig: subAgentConfig });
+  expect(subAgentConfig).toEqual(original);
+});
+
 test('buildAgentTools sub-agent tool uses custom description when provided', async () => {
   const { default: buildAgentTools } = await import('./buildAgentTools.js');
 

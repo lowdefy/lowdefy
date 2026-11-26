@@ -58,7 +58,7 @@ test('ClaudeAgent resolver maps thinking to providerOptions', async () => {
 
   await ClaudeAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     anthropic: { thinking },
   });
 });
@@ -79,7 +79,7 @@ test('ClaudeAgent resolver maps effort to providerOptions', async () => {
 
   await ClaudeAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     anthropic: { effort: 'high' },
   });
 });
@@ -107,7 +107,7 @@ test('ClaudeAgent resolver merges sugar props with existing providerOptions', as
 
   await ClaudeAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     anthropic: { cacheControl: true, thinking },
   });
 });
@@ -128,7 +128,34 @@ test('ClaudeAgent resolver does not set providerOptions when no sugar props', as
 
   await ClaudeAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toBeUndefined();
+  expect(
+    mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions
+  ).toBeUndefined();
+});
+
+test('ClaudeAgent resolver leaves the agent properties it is passed unchanged', async () => {
+  mockHandleAgentChat.mockResolvedValue({ text: 'ok' });
+
+  const { default: ClaudeAgent } = await import('./ClaudeAgent.js');
+
+  const agentProperties = {
+    model: 'claude-3-5-sonnet',
+    effort: 'high',
+    providerOptions: { anthropic: { cacheControl: true } },
+  };
+  const original = structuredClone(agentProperties);
+  const args = {
+    connection: { provider: vi.fn() },
+    properties: { agent: { properties: agentProperties }, messages: [] },
+    context: {},
+  };
+
+  await ClaudeAgent.resolver(args);
+
+  expect(agentProperties).toEqual(original);
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties).not.toBe(
+    agentProperties
+  );
 });
 
 test('ClaudeAgent has schema', async () => {
