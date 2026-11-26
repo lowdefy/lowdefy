@@ -182,6 +182,45 @@ test('accessMatrix denies every caller an InternalApi endpoint, whatever its aut
   });
 });
 
+test('accessMatrix reads an endpoint with roles in serialized arrays and a routine', async () => {
+  const app = await openBuild({
+    authJson,
+    dataSets,
+    endpoints: [
+      {
+        id: 'endpoint:audit',
+        type: 'Api',
+        endpointId: 'audit',
+        auth: { public: false, roles: { '~arr': ['auditor'] } },
+        routine: { '~arr': [{ id: 'request:audit:find', type: 'MongoDBFind', stepId: 'find' }] },
+      },
+    ],
+    routes,
+  });
+  const matrix = await app.accessMatrix({ data: 'roles' });
+  expect(matrix.endpoints.audit).toEqual({
+    auditor: 'allow',
+    member: 'deny',
+    none: 'deny',
+    unenrolled_auditor: 'enrol_required',
+  });
+});
+
+test("accessMatrix names an endpoint's config key when its auth.public is not true or false", async () => {
+  const app = await openBuild({
+    authJson,
+    dataSets,
+    endpoints: [
+      { id: 'endpoint:bad', type: 'Api', endpointId: 'bad', auth: { public: 'yes' }, '~k': 'k1' },
+    ],
+    routes,
+  });
+  await expect(app.accessMatrix({ data: 'roles' })).rejects.toMatchObject({
+    message: 'auth.public must be true or false.',
+    configKey: 'k1',
+  });
+});
+
 test("accessMatrix lists a module's endpoint under its scoped id", async () => {
   const app = await openBuild({ authJson, dataSets, endpoints, routes });
   const matrix = await app.accessMatrix({ data: 'roles' });

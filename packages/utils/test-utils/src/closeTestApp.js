@@ -48,6 +48,7 @@ async function closeTestApp({ testApp }) {
     await store.stop();
   }
   testApp.fileCache.clear();
+  testApp.dataSets.clear();
   const failed = closed.find((result) => result.status === 'rejected');
   if (!type.isUndefined(failed)) {
     throw failed.reason;

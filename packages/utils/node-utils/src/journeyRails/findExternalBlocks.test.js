@@ -264,3 +264,26 @@ test('findExternalBlocks lets a block reach an external type with request resolv
   // An undeclared type is still refused.
   expect(blocks.report).toEqual([{ connectionId: 'sql', type: 'Knex', dataSet: null }]);
 });
+
+test('findExternalBlocks reads each endpoint once however many blocks call it', () => {
+  const page = JSON.parse(fs.readFileSync(path.join(buildDirectory, 'pages/tickets.json'), 'utf8'));
+  page.slots.content.blocks['~arr'].push(
+    block('assign_again', onClick({ id: 'c', type: 'CallAPI', params: { endpointId: 'assign' } })),
+    block('notify', onClick({ id: 'c', type: 'CallAPI', params: { endpointId: 'notify' } }))
+  );
+  write('pages/tickets.json', page);
+  const reads = [];
+  function countingReadArtifact(name) {
+    reads.push(name);
+    return readArtifact(name);
+  }
+  const { blocks } = findExternalBlocks({
+    readArtifact: countingReadArtifact,
+    pageId: 'tickets',
+    connections,
+  });
+  expect(blocks.assign_again).toEqual([mailer]);
+  expect(blocks.notify).toEqual([mailer]);
+  expect(reads.filter((name) => name === 'api/assign.json')).toHaveLength(1);
+  expect(reads.filter((name) => name === 'api/notify.json')).toHaveLength(1);
+});

@@ -57,25 +57,45 @@ function createConnectionReader({ readArtifact }) {
 
 // The connections an endpoint's routine reaches, through endpoints its
 // CallApi steps call. A dev build only warns about a call to an endpoint
-// with no artifact (callapi-refs), so such a call reaches nothing.
-function endpointConnections({ readArtifact, endpointId }) {
-  const connections = new Set();
-  const seen = new Set();
-  const queue = [endpointId];
-  while (queue.length > 0) {
-    const id = queue.shift();
-    if (seen.has(id)) continue;
-    seen.add(id);
-    const endpoint = readArtifact(`api/${id}.json`);
-    if (endpoint === null) continue;
-    readRoutineSteps({ routine: endpoint.routine }).forEach((step) => {
-      if (type.isString(step.connectionId)) connections.add(step.connectionId);
-      if (step.type === 'CallApi' && type.isString(step.properties?.endpointId)) {
-        queue.push(step.properties.endpointId);
+// with no artifact (callapi-refs), so such a call reaches nothing. Each
+// endpoint's steps are read once per page, and each closure walked once:
+// a shell page's blocks call the same endpoints many times over.
+function createEndpointConnections({ readArtifact }) {
+  const edges = new Map();
+  const closures = new Map();
+  function readEdges(endpointId) {
+    if (!edges.has(endpointId)) {
+      const connectionIds = [];
+      const calls = [];
+      const endpoint = readArtifact(`api/${endpointId}.json`);
+      if (endpoint !== null) {
+        readRoutineSteps({ routine: endpoint.routine }).forEach((step) => {
+          if (type.isString(step.connectionId)) connectionIds.push(step.connectionId);
+          if (step.type === 'CallApi' && type.isString(step.properties?.endpointId)) {
+            calls.push(step.properties.endpointId);
+          }
+        });
       }
-    });
+      edges.set(endpointId, { connectionIds, calls });
+    }
+    return edges.get(endpointId);
   }
-  return connections;
+  return function endpointConnections(endpointId) {
+    if (closures.has(endpointId)) return closures.get(endpointId);
+    const connections = new Set();
+    const seen = new Set();
+    const queue = [endpointId];
+    while (queue.length > 0) {
+      const id = queue.shift();
+      if (seen.has(id)) continue;
+      seen.add(id);
+      const { connectionIds, calls } = readEdges(id);
+      connectionIds.forEach((connectionId) => connections.add(connectionId));
+      queue.push(...calls);
+    }
+    closures.set(endpointId, connections);
+    return connections;
+  };
 }
 
 // The declared data-set mode of a connection type, from the plugin connection map the gate reads.
@@ -103,6 +123,7 @@ function findExternalBlocks({ readArtifact, pageId, connections }) {
   }
   const pageRequestIds = (page.requests ?? []).map((request) => request.requestId);
   const connectionType = createConnectionReader({ readArtifact });
+  const endpointConnections = createEndpointConnections({ readArtifact });
   const blocks = {};
   pageBlocks(page).forEach(({ blockId, actions }) => {
     const reached = new Set();
@@ -114,8 +135,8 @@ function findExternalBlocks({ readArtifact, pageId, connections }) {
         });
       }
       if (action.type === 'CallAPI' && type.isString(action.params?.endpointId)) {
-        endpointConnections({ readArtifact, endpointId: action.params.endpointId }).forEach(
-          (connectionId) => reached.add(connectionId)
+        endpointConnections(action.params.endpointId).forEach((connectionId) =>
+          reached.add(connectionId)
         );
       }
     });

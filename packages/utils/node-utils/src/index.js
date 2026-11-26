@@ -23,6 +23,7 @@ import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 import collectPluginDefinitions from './collectPluginDefinitions.js';
 import compareProcessStartTimes from './compareProcessStartTimes.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
+import createArtifactReader from './createArtifactReader.js';
 import createConnectPublic from './createConnectPublic.js';
 import createDevAppLink from './devices/createDevAppLink.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
@@ -30,6 +31,7 @@ import createLookupPublicAddress from './createLookupPublicAddress.js';
 import createSecretScrubber from './createSecretScrubber.js';
 import devPassiveHeader from './devPassiveHeader.js';
 import dataSetNamePattern from './dataSetNamePattern.js';
+import deepFreeze from './deepFreeze.js';
 import findAndroidDevice from './devices/findAndroidDevice.js';
 import findAndroidTool from './devices/findAndroidTool.js';
 import findAvailablePort from './findAvailablePort.js';
@@ -161,12 +163,14 @@ export {
   copyFileOrDirectory,
   countDataSetDocuments,
   countTextTokens,
+  createArtifactReader,
   createClientAddressResolver,
   createConnectPublic,
   createLookupPublicAddress,
   createSecretScrubber,
   devPassiveHeader,
   dataSetNamePattern,
+  deepFreeze,
   failurePathKey,
   findAndroidDevice,
   findAndroidTool,
