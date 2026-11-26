@@ -615,6 +615,23 @@ test('runAppTests with headless posts every journey headless and reports a brows
   });
 });
 
+test('runAppTests is never in CI for the failure a plain lowdefy test gives there on a skip', async () => {
+  vi.stubEnv('CI', 'true');
+  try {
+    writeJourney('shots.yaml', {
+      name: 'orders screenshot',
+      pageId: 'shots',
+      steps: [{ screenshot: true }],
+    });
+    const result = await runAppTests({ configDirectory, url });
+    expect(result.summary).toMatch(/^0 passed, 0 failed of 0 journeys, 1 browser-only not run\n/);
+    expect(result.summary).not.toContain('In CI');
+    expect(process.exitCode).toBeUndefined();
+  } finally {
+    vi.unstubAllEnvs();
+  }
+});
+
 // A dev server whose headless runs find every journey needs a browser at its first step, and whose
 // browser runs pass.
 function answerPartway() {

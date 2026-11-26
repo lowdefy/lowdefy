@@ -88,6 +88,8 @@ function journeyYaml({ name, steps = '  - click: submit\n' }) {
 
 beforeEach(() => {
   process.exitCode = undefined;
+  // The runs here are outside CI unless a test says otherwise, also when the suite runs in CI.
+  vi.stubEnv('CI', '');
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-command-'));
   logs = { info: [], warn: [], error: [] };
   context = {
@@ -126,6 +128,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.unstubAllEnvs();
   process.exitCode = originalExitCode;
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
@@ -2448,4 +2451,118 @@ test('--access refuses --browser and --thorough, naming the command meant', asyn
   };
   await test({ context });
   expect(logs.error[0]).toMatch(/^--access checks the access table alone: drop --thorough/);
+});
+
+// In CI, a run given no mode flag fails when it skipped a journey the browser would run, so a CI job
+// that ran its browser journeys with a plain lowdefy test before v8 does not go green without them.
+
+const CI_FAILURE =
+  "1 journey needs a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here.";
+
+test('in CI, a plain run that skips a browser journey fails, naming the count and the ways out', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  expect(logs.info).toContain(PARTWAY_LINE);
+  expect(logs.info).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(logs.error).toEqual([CI_FAILURE]);
+  expect(process.exitCode).toBe(1);
+  expect(context.sendTelemetry).toHaveBeenCalled();
+});
+
+test('in CI, --headless skips a browser journey and exits 0', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  context.options = { ...context.options, headless: true, typedOptions: ['headless'] };
+  await test({ context });
+  expect(logs.info).toContain(PARTWAY_LINE);
+  expect(logs.error).toEqual([]);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('in CI, a plain run that skips nothing exits 0', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  await test({ context });
+  expect(logs.info[logs.info.length - 1]).toBe('1 passed, 0 failed of 1 journeys');
+  expect(logs.error).toEqual([]);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('outside CI, a plain run that skips a browser journey exits 0', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  // CI set to false says the run is not in CI.
+  for (const value of ['', 'false']) {
+    vi.stubEnv('CI', value);
+    logs.error = [];
+    fs.rmSync(path.join(context.directories.test, 'headless-run.json'), { force: true });
+    await test({ context });
+    expect(logs.error).toEqual([]);
+    expect(process.exitCode).toBeUndefined();
+  }
+});
+
+test('in CI, a plain run fails on a skip --thorough would not run only when another journey is skipped too', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  mockPost.mockResolvedValue({ data: { browserOnly: PARTWAY } });
+  // A hold step: no run takes the journey to the browser, so no flag would run it.
+  writeJourneyFile('h.yaml', HELD_JOURNEY);
+  await test({ context });
+  expect(logs.error).toEqual([]);
+  expect(process.exitCode).toBeUndefined();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  expect(logs.error).toEqual([CI_FAILURE]);
+  expect(process.exitCode).toBe(1);
+});
+
+test('in CI, --build with no mode flag fails on a browser-only journey, and --headless --build exits 0', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'downloads a file' }));
+  headlessContext();
+  context.options = { ...context.options, headless: undefined, typedOptions: ['build'] };
+  mockRunHeadlessJourney.mockImplementation(async ({ journey }) =>
+    journey.name === 'downloads a file'
+      ? {
+          pageId: 'form',
+          steps: [],
+          browserOnly: {
+            index: 0,
+            step: { click: 'submit' },
+            reason: 'DownloadFile needs the browser.',
+          },
+        }
+      : { pageId: 'form', passed: true, steps: [] }
+  );
+  await test({ context });
+  expect(logs.info).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(logs.error).toEqual([
+    "1 journey needs a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, run them in the browser on the dev server with lowdefy test --thorough, without --build, or pass --headless to say on purpose that browser journeys don't run here.",
+  ]);
+  expect(process.exitCode).toBe(1);
+
+  process.exitCode = undefined;
+  logs.error = [];
+  context.options = { ...context.options, headless: true, typedOptions: ['build', 'headless'] };
+  await test({ context });
+  expect(logs.info).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(logs.error).toEqual([]);
+  expect(process.exitCode).toBeUndefined();
 });

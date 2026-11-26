@@ -51,7 +51,9 @@ function journeysPath(...segments) {
   return path.join(configDirectory, 'tests', 'journeys', ...segments);
 }
 
-function runTest(args) {
+// Outside CI unless `env` sets CI, also when the suite runs in CI: in CI a plain run that skips a
+// browser journey fails.
+function runTest(args, env = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(
       process.execPath,
@@ -69,7 +71,10 @@ function runTest(args) {
         path.join('tests', 'journeys', '_headless', 'plugin_block.yaml'),
         path.join('tests', 'journeys', '_headless', 'save.yaml'),
       ],
-      { cwd: configDirectory, env: { ...process.env, LOWDEFY_DISABLE_TELEMETRY: 'true' } }
+      {
+        cwd: configDirectory,
+        env: { ...process.env, CI: '', LOWDEFY_DISABLE_TELEMETRY: 'true', ...env },
+      }
     );
     let output = '';
     child.stdout.on('data', (data) => {
@@ -149,6 +154,27 @@ fixtureTest(
       new RegExp(`PASS {2}${FOUND} {2}\\(2 steps, \\d+ms\\) {2}\\[browser\\]`)
     );
     expect(thorough.output).not.toContain('BROWSER-ONLY');
+    expect(thorough.output).toContain('4 passed, 0 failed of 4 journeys');
+    expect(thorough.code).toBe(0);
+  }
+);
+
+fixtureTest(
+  'in CI a plain run that skips browser journeys fails, and --headless or --thorough passes',
+  async () => {
+    const plain = await runTest([], { CI: 'true' });
+    expect(plain.output).toContain('2 passed, 0 failed of 2 journeys, 2 browser-only not run');
+    expect(plain.output).toContain(
+      "2 journeys need a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here."
+    );
+    expect(plain.code).toBe(1);
+
+    const headless = await runTest(['--headless'], { CI: 'true' });
+    expect(headless.output).toContain('2 passed, 0 failed of 2 journeys, 2 browser-only not run');
+    expect(headless.output).not.toContain('In CI');
+    expect(headless.code).toBe(0);
+
+    const thorough = await runTest(['--thorough'], { CI: 'true' });
     expect(thorough.output).toContain('4 passed, 0 failed of 4 journeys');
     expect(thorough.code).toBe(0);
   }
