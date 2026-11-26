@@ -42,6 +42,7 @@ import createPageBuildContext from './createPageBuildContext.js';
 import listSkeletonSourceFiles from './listSkeletonSourceFiles.js';
 import listWarning from './listWarning.js';
 import normalizeRefPath from './normalizeRefPath.js';
+import pruneEndpointMaps from './pruneEndpointMaps.js';
 import resolveSourceFile from './resolveSourceFile.js';
 
 // One object, so the compiled validator is reused across builds.
@@ -441,17 +442,30 @@ async function buildEndpointsJit({
       to: makeId.counter,
     });
     endpointRegistry.builds += 1;
+    const mapsFileName = `endpoints-${endpointRegistry.builds}-1.json`;
     // The dev server's error handler and tools read jitMaps/ with keyMap.json
     // (readMergedMaps); the dev server keeps endpoints- files until the next
     // config build publishes (pruneJitMaps).
     await buildContext.writeBuildArtifact(
-      `jitMaps/endpoints-${endpointRegistry.builds}-1.json`,
+      `jitMaps/${mapsFileName}`,
       serializer.serializeToString({
         keyMap: pickEntries({ map: buildContext.keyMap, ids: mapIds }),
         refMap: pickEntries({ map: buildContext.refMap, ids: mapIds }),
       }),
       { atomic: true }
     );
+    const builtIds = builtEndpoints.map((endpoint) => endpoint.endpointId);
+    pruneEndpointMaps({
+      endpointRegistry,
+      rebuiltIds: builtIds,
+      keyMap: buildContext.keyMap,
+      refMap: buildContext.refMap,
+      directories,
+    });
+    endpointRegistry.mapsFiles.set(mapsFileName, {
+      endpointIds: new Set(builtIds),
+      ids: mapIds,
+    });
 
     for (const endpoint of builtEndpoints) {
       const entry = endpointRegistry.endpoints.get(endpoint.endpointId);
@@ -471,7 +485,7 @@ async function buildEndpointsJit({
       endpointRegistry.warnings.byEndpoint.get(endpointId).push(listWarning(warning));
     }
     return {
-      endpointIds: builtEndpoints.map((endpoint) => endpoint.endpointId),
+      endpointIds: builtIds,
       skeletonSourceFiles: listSkeletonSourceFiles({ endpointRegistry }),
       warnings: mergeWarnings({ endpointRegistry }),
     };

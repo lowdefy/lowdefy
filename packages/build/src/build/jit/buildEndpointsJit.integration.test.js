@@ -520,20 +520,52 @@ describe('review cases', () => {
     );
   });
 
+  test('an endpoint rebuilt again drops the map entries of its earlier build, and keeps those of an endpoint that was not', async () => {
+    const build = await configBuild('dev');
+    const { keyMap, refMap } = build.result.context;
+    writeFile('api/one.yaml', `${files['api/one.yaml']}# one\n`);
+    expect((await endpointBuild({ build, endpointIds: ['one'] })).fallback).toBeUndefined();
+    const sizeAfterFirst = Object.keys(keyMap).length;
+    writeFile('api/both.yaml', `${files['api/both.yaml']}# both\n`);
+    expect((await endpointBuild({ build, endpointIds: ['both'] })).fallback).toBeUndefined();
+    const ofOne = readArtifact(build.buildDir, 'jitMaps/endpoints-1-1.json');
+    const ofBoth = readArtifact(build.buildDir, 'jitMaps/endpoints-2-1.json');
+
+    for (let edit = 0; edit < 5; edit += 1) {
+      writeFile('api/one.yaml', `${files['api/one.yaml']}# edit ${edit}\n`);
+      expect((await endpointBuild({ build, endpointIds: ['one'] })).fallback).toBeUndefined();
+    }
+    expect(fs.readdirSync(path.join(build.buildDir, 'jitMaps')).sort()).toEqual([
+      'endpoints-2-1.json',
+      'endpoints-7-1.json',
+    ]);
+    // One copy of each rebuilt endpoint's entries, however often it is rebuilt.
+    expect(Object.keys(keyMap).length).toBe(sizeAfterFirst + Object.keys(ofBoth.keyMap).length);
+    for (const id of [...Object.keys(ofOne.keyMap), ...Object.keys(ofOne.refMap)]) {
+      expect(Object.hasOwn(keyMap, id) || Object.hasOwn(refMap, id)).toBe(false);
+    }
+    for (const id of Object.keys(ofBoth.keyMap)) {
+      expect(Object.hasOwn(keyMap, id)).toBe(true);
+    }
+    // The live artifact's keys still resolve.
+    const artifact = readArtifact(build.buildDir, 'api/one.json');
+    expect(Object.hasOwn(keyMap, artifact['~k'])).toBe(true);
+  });
+
   test('a second endpoint build keys on, and a config build after it starts afresh', async () => {
     const build = await configBuild('dev');
     writeFile('api/two.yaml', `${files['api/two.yaml']}# one\n`);
     expect((await endpointBuild({ build, endpointIds: ['two'] })).fallback).toBeUndefined();
+    const first = readArtifact(build.buildDir, 'jitMaps/endpoints-1-1.json');
     writeFile('api/two.yaml', `${files['api/two.yaml']}# two\n`);
     expect((await endpointBuild({ build, endpointIds: ['two'] })).fallback).toBeUndefined();
+    // The second build replaced the only endpoint the first file's entries named.
     expect(fs.readdirSync(path.join(build.buildDir, 'jitMaps')).sort()).toEqual([
-      'endpoints-1-1.json',
       'endpoints-2-1.json',
     ]);
     // The rebuilt endpoint still reads its files, so the next edit rebuilds it again.
     expect(readersOf(build, 'api/two.yaml')).toEqual(['two']);
     expect(readersOf(build, 'api/shared/answer.yaml').sort()).toEqual(['one', 'two']);
-    const first = readArtifact(build.buildDir, 'jitMaps/endpoints-1-1.json');
     const second = readArtifact(build.buildDir, 'jitMaps/endpoints-2-1.json');
     expect(Object.keys(first.keyMap).filter((key) => Object.hasOwn(second.keyMap, key))).toEqual(
       []
