@@ -215,7 +215,7 @@ function readReachReason({ actor, description, match }) {
   )} too, whose onClick a headless run does not fire for it: ${BROWSER}.`;
 }
 
-// A click by `text` or `containing` (LDF-1146): the element it lands on in a ClickableHtml
+// A click by `text` or `containing`: the element it lands on in a ClickableHtml
 // (readTextTarget, pickMatch) gets the click through the block's stand-in (clickMatch), after
 // the other open dropdowns hear the pointer leave, and on a data-set journey once the rails allow
 // a click on its block. A match behind an open popup's mask, or one whose click a headless run
@@ -269,7 +269,7 @@ async function clickText({ actor, rails, step, stepTimeout }) {
   await actor.settle();
 }
 
-// expect.visible or expect.hidden by `text` or `containing` (LDF-1146), as the browser reads the
+// expect.visible or expect.hidden by `text` or `containing`, as the browser reads the
 // nth match (the first without nth): visible holds once more than nth matches show, hidden while
 // no more than nth do. The ClickableHtml blocks' matches count at least what a browser counts, so
 // visible holds and hidden fails on them alone. Visible with no such match, or hidden while

@@ -29,7 +29,12 @@ import {
   findUnfiredFailGate,
   HeadlessStepError,
 } from '@lowdefy/journey-headless';
-import { ANSWER_STEP_KEYS, getStepKey, RAILED_STEPS } from '@lowdefy/node-utils';
+import {
+  ANSWER_STEP_KEYS,
+  getStepKey,
+  INTERACTION_STEP_KEYS,
+  RAILED_STEPS,
+} from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
@@ -1657,12 +1662,10 @@ async function settlePage({ page, timeout }) {
     .catch(() => {});
 }
 
-const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];
-
 // The steps that open a new window for wait.request: an interaction, or a step
 // that loads or switches to a page. Before the first of them the window is the
 // page open.
-const REQUEST_WINDOW_STEPS = [...INTERACTION_STEPS, 'goto', 'as'];
+const REQUEST_WINDOW_STEPS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
 
 const SETTLE_TIMEOUT_MS = 5000;
 
@@ -1775,7 +1778,7 @@ async function runJourneySteps({ journey, steps }) {
     await appErrors?.openWindow({ page: journey.actors.current().page });
     try {
       const ran = await runStep({ journey, step, index, screenshots, requestWindowStart });
-      if (INTERACTION_STEPS.includes(getStepKey(step))) {
+      if (INTERACTION_STEP_KEYS.includes(getStepKey(step))) {
         await settlePage({
           page: journey.actors.current().page,
           timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),

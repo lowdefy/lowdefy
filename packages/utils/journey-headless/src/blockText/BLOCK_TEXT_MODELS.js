@@ -22,7 +22,7 @@ import isFlexElement from './isFlexElement.js';
 import isStyledStyle from './isStyledStyle.js';
 import { mayApplyClass } from './readClassToken.js';
 
-// What each block type the headless run knows draws as text (LDF-1147), read from its component
+// What each block type the headless run knows draws as text, read from its component
 // in the browser: a function of { block, properties, areaNames, ancestors (the blocks holding it,
 // nearest first), i18n, customBreakpoints (readClassToken's) } that returns
 // { pieces, areas, open }.

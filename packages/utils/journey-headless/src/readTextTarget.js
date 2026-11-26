@@ -124,7 +124,7 @@ function isMenuLayer({ actor, block }) {
 }
 
 // What a `text` or `containing` target names on the actor's page, read from the ClickableHtml
-// blocks it shows (LDF-1146), as the browser runner looks (runJourneySteps' locateMatches): in the
+// blocks it shows, as the browser runner looks (runJourneySteps' locateMatches): in the
 // block a blockId names and the blocks inside it, else on the whole page, where antd also draws
 // a ClickableHtml's open popover and confirm. A `text` target with no blockId is looked for in
 // the front-most open layer first, a menu and then a Modal or Drawer, and on the page when that

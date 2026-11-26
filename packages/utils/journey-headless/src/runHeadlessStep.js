@@ -42,7 +42,7 @@ import waitForNextTask from './waitForNextTask.js';
 import waitForRequestCall from './waitForRequestCall.js';
 import waitForShownBlock from './waitForShownBlock.js';
 
-const STEP_RUNNER_KEYS = ['click', 'fill', 'select', 'press', 'wait'];
+const STEP_RUNNER_KEYS = ['fill', 'select', 'press', 'wait'];
 const INTERACTION_KEYS = ['click', 'open', 'fill', 'select', 'press'];
 
 function readGoto(goto) {
@@ -151,7 +151,7 @@ function railClick({ actor, landed, rails }) {
 // clicks its trigger too); a block with none is left to the browser, where the click lands on a
 // control inside it. On a data-set journey the click is checked against the rails before it acts,
 // a dropdown's stand-in opening it included (railClick); a rowKey or control target's block is the
-// target's own. Resolves true when the click is done.
+// target's own.
 async function runBlockClick({ actor, rails, step, stepTimeout }) {
   const target = step.click;
   const block = await waitForShownBlock({ actor, target, timeout: stepTimeout });
@@ -164,24 +164,23 @@ async function runBlockClick({ actor, rails, step, stepTimeout }) {
       target,
       what: `a click on a ${Object.hasOwn(target, 'control') ? 'control' : 'rowKey'} target`,
     });
-    return true;
+    return;
   }
   if (BLOCK_STAND_INS[block.type]?.answersBlockClick?.({ block }) === true) {
     const landed = BLOCK_STAND_INS[block.type].clickLandsOn?.({ actor, block }) ?? block;
     railClick({ actor, landed, rails });
     await runStandIn({ actor, block, part: 'clickBlock', what: 'a click on the block' });
-    return true;
+    return;
   }
   if (!Object.hasOwn(block.Events.events, 'onClick')) {
     actor.browserOnly.push(
       `Block "${block.blockId}" has no onClick: in a browser a click on it lands on a control inside it.`
     );
-    return true;
+    return;
   }
   railClick({ actor, landed: block, rails });
   await pointerClick({ actor, block, click: () => actor.stepRunner.run({ step }) });
   await actor.settle();
-  return true;
 }
 
 // expect.visible or expect.hidden by text or containing reads the ClickableHtml blocks the page
@@ -238,7 +237,7 @@ async function runStandInExpect({ actor, step, stepTimeout }) {
 //
 // A click, expect.visible or expect.hidden by text or containing looks for what it names in the
 // ClickableHtml blocks the page shows, and leaves the step to the browser when none shows it or
-// another block may (runTextTarget, LDF-1146).
+// another block may (runTextTarget).
 //
 // Before a block step acts, its block must be shown, as the browser waits for a visible target. A
 // click on a rowKey or control target, an open, a plain click a component answers itself (a
@@ -291,7 +290,8 @@ async function runHeadlessStep({ actors, answer, host, rails, since, step, stepT
     await clickText({ actor, rails, step, stepTimeout });
     return undefined;
   }
-  if (key === 'click' && (await runBlockClick({ actor, rails, step, stepTimeout }))) {
+  if (key === 'click') {
+    await runBlockClick({ actor, rails, step, stepTimeout });
     return undefined;
   }
   if (key === 'open') {
