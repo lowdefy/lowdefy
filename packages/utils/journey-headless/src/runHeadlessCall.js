@@ -15,19 +15,39 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { readSystemCaller } from '@lowdefy/node-utils';
 
 import addServerFaults from './addServerFaults.js';
 import readAnswerError from './readAnswerError.js';
 import readForcedError from './readForcedError.js';
 import recordDetachedCalls from './recordDetachedCalls.js';
 
+const UNBOUND_HINT =
+  'It ran as the system bound to no organization. An endpoint that runs per organization needs the binding a CallApi with "organization" and "caller" gives it: name them on the call, as: { system: { organization: <id>, caller: { id, name } } }.';
+
 // The answer of the call the caller makes: a call `as: system` runs the endpoint as the system does
-// (host.system), anything else as the caller's user (host.call).
-function callAs({ call, caller, host, payload }) {
+// (host.system), bound to the organization and stand-in caller `as.system` names, if any; anything
+// else as the caller's user (host.call).
+function callAs({ as, call, caller, host, payload }) {
   if (caller.system === true) {
-    return host.system({ endpointId: call.endpointId, payload });
+    const { organization, caller: standIn } = readSystemCaller(as);
+    return host.system({ endpointId: call.endpointId, payload, organization, caller: standIn });
   }
   return host.call({ ...call, payload, user: caller.user });
+}
+
+// A system call bound to no organization that is refused or fails says how to bind it, since an
+// endpoint that runs per organization refuses such a run in its own words, and the tenant wall
+// fails its routine (answered 200 with success: false) in a CallApi's.
+function readHint({ as, answer }) {
+  const systemCaller = readSystemCaller(as);
+  if (systemCaller === null || systemCaller.organization !== null) {
+    return undefined;
+  }
+  if (answer.success !== false && answer.status < 400) {
+    return undefined;
+  }
+  return UNBOUND_HINT;
 }
 
 // Runs a call or request step: the payload as it is given goes to the host's in-process call, as
@@ -37,7 +57,8 @@ function callAs({ call, caller, host, payload }) {
 // recorded on the caller, for expect.calls, with the detached calls its routine made after it
 // (recordDetachedCalls), and the server's faults go to the error sink (addServerFaults). A call a
 // fail gate failed answers with the forced message (readForcedError), not the generic one the
-// client sees.
+// client sees. A system call bound to no organization that fails carries a hint on binding one,
+// which the expect steps and an app-error failure of the step add to their messages.
 async function runHeadlessCall({ actors, host, step }) {
   const isCall = !type.isUndefined(step.call);
   const params = isCall ? step.call : step.request;
@@ -46,7 +67,7 @@ async function runHeadlessCall({ actors, host, step }) {
   const call = isCall
     ? { endpointId: params.endpoint, kind: 'endpoint' }
     : { kind: 'request', pageId: params.pageId, requestId: params.requestId };
-  const answer = await callAs({ call, caller, host, payload });
+  const answer = await callAs({ as: params.as, call, caller, host, payload });
   addServerFaults({ call, errorSink: host.errorSink, faults: answer.faults });
   caller.calls.push({
     ...call,
@@ -64,6 +85,7 @@ async function runHeadlessCall({ actors, host, step }) {
     error:
       readForcedError({ body: answer.body, session: host.dataSession }) ??
       readAnswerError({ body: answer.body, status: answer.status }),
+    hint: readHint({ as: params.as, answer }),
     status: answer.status,
   };
 }

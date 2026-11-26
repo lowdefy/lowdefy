@@ -96,6 +96,7 @@ async function createBuildHost({ app, data, stubs, user }) {
       }),
     close: () => calls.close(),
     connections: calls.connections,
+    credentialScope: calls.credentialScope,
     dataSetName: calls.dataSetName,
     dataSession: calls.dataSession,
     errorSink: createErrorSink(),
@@ -108,7 +109,8 @@ async function createBuildHost({ app, data, stubs, user }) {
     readPageConfig,
     resolveUser: (pageUser) => calls.resolveUser(pageUser ?? user),
     rootConfig,
-    system: ({ endpointId, payload }) => calls.system({ endpointId, payload }),
+    system: ({ caller, endpointId, organization, payload }) =>
+      calls.system({ caller, endpointId, organization, payload }),
     userNames: calls.userNames,
     webhook: ({ endpointId, headers, query, rawBody }) =>
       calls.webhook({ endpointId, headers, query, rawBody }),

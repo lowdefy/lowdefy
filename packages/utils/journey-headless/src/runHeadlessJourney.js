@@ -41,6 +41,7 @@ import runHeadlessStep from './runHeadlessStep.js';
 import toJsonValue from './toJsonValue.js';
 import toStepFailure from './toStepFailure.js';
 import usesSearchStage from './usesSearchStage.js';
+import withHint from './withHint.js';
 
 // A call or request names its caller by a data set user's name, "none" or a user object, and a
 // call also "system". A name that is not in the data set fails the journey before any call, with
@@ -204,18 +205,21 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       since = new Map(actors.all().map((actor) => [actor, actor.calls.length]));
     }
     let stepFailure;
+    // This step's own answer, never an earlier call's: a call or request that threw has none.
+    let stepAnswer;
     actors.all().forEach((each) => {
       each.landedControl = undefined;
     });
     try {
       checkStepReferences({ actor: actors.current(), host, journeyPageId: pageId, step });
-      const stepAnswer = await races.run({
+      const ran = await races.run({
         index,
         step,
         start: () => runHeadlessStep({ actors, answer, host, rails, since, step, stepTimeout }),
       });
       if (ANSWER_STEP_KEYS.includes(key)) {
-        answer = stepAnswer;
+        answer = ran;
+        stepAnswer = ran;
       }
     } catch (error) {
       stepFailure = noteSilentSubscriptions({
@@ -263,6 +267,10 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
     }
     results[index].status = 'failed';
     failure = toAppErrorFailure({ findings, index, step, stepFailure });
+    // A system call bound to no organization whose routine faulted says how to bind one.
+    if (!type.isUndefined(stepAnswer)) {
+      failure.message = withHint({ answer: stepAnswer, message: failure.message });
+    }
   }
 
   // What the last step's effects raised once it had passed is judged against it.
@@ -308,14 +316,16 @@ async function runHeadlessJourney({ configDirectory, host, journey, onTrace, ste
       .flatMap((actor) => actor.calls.map((call) => ({ actor: actor.name, ...call }))),
     messages: actors.all().flatMap((actor) => actor.messages),
   };
+  // What the calls marked with _credential stays out of the result, which is printed after their
+  // scopes have ended.
   if (!type.isUndefined(browserOnly)) {
-    return { ...result, browserOnly };
+    return host.scrubCredentials({ ...result, browserOnly });
   }
   result.passed = type.isUndefined(failure);
   if (!type.isUndefined(failure)) {
     result.failure = failure;
   }
-  return result;
+  return host.scrubCredentials(result);
 }
 
 export default runHeadlessJourney;

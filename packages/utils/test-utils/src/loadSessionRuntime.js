@@ -51,6 +51,12 @@ async function load({ testApp }) {
       : (await importServerModule({ directories, name: '@lowdefy/connection-mongodb/clients' }))
           .closeClients,
     config: readBuildJson({ directories, filePath: 'config.json', serializer }),
+    // The server's own scope functions: a credential is marked in the scope of the
+    // @lowdefy/node-utils the server's @lowdefy/api imports, never this package's copy.
+    credentialScope: {
+      bindScrub: nodeUtils.bindCredentialScrub,
+      run: nodeUtils.runInCredentialScope,
+    },
     connections: connections.default,
     i18n: readBuildJson({ directories, filePath: 'i18n.json', serializer }),
     interpolateProperties: notifications.interpolateProperties,

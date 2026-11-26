@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import normaliseJourneySteps from './normaliseJourneySteps.js';
+import readSystemCaller from './readSystemCaller.js';
 import { getStepKey } from './validateJourneySteps.js';
 
 // Steps a headless run takes: they act on blocks by id, move between pages, switch caller, wait
@@ -50,7 +51,7 @@ function needsInProcess(step) {
   if (IN_PROCESS_STEP_KEYS.includes(key)) {
     return `step "${key}" needs the headless runner, which keeps a held call parked in its own process`;
   }
-  if (key === 'call' && step.call.as === 'system') {
+  if (key === 'call' && readSystemCaller(step.call.as) !== null) {
     return 'step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET';
   }
   return undefined;

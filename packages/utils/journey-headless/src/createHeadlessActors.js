@@ -14,9 +14,10 @@
   limitations under the License.
 */
 
-import createHeadlessActor from './createHeadlessActor.js';
-
 import { type } from '@lowdefy/helpers';
+import { readSystemCaller } from '@lowdefy/node-utils';
+
+import createHeadlessActor from './createHeadlessActor.js';
 
 const MAIN_ACTOR = 'main';
 const SYSTEM = 'system';
@@ -73,8 +74,8 @@ function createHeadlessActors({ host, onTrace, plugins, start, stepTimeout, user
     currentName = name;
   }
 
-  // The caller of a call step `as: system`: no user and no page, marked `system`, so the call
-  // runs the endpoint as a cron or detached run does (host.system).
+  // The caller of a call step `as: system`, bound to an organization or not: no user and no page,
+  // marked `system`, so the call runs the endpoint as a cron or detached run does (host.system).
   function openSystem() {
     if (systemActor === null) {
       systemActor = createHeadlessActor({
@@ -93,13 +94,13 @@ function createHeadlessActors({ host, onTrace, plugins, start, stepTimeout, user
   // Who a call or request step calls as, without switching the actor the journey acts as, as the
   // browser runner picks it: the current actor when the step names no one, the actor of that name
   // for a name, an actor of its own for "none" (signed out) or an inline user object, and the
-  // system caller for "system" (a call step only). Its calls are recorded on that actor, for
-  // expect.calls.
+  // system caller for "system" or { system: { organization, caller? } } (a call step only). Its
+  // calls are recorded on that actor, for expect.calls.
   async function callerFor(as) {
     if (type.isUndefined(as)) {
       return actors.get(currentName);
     }
-    if (as === SYSTEM) {
+    if (readSystemCaller(as) !== null) {
       return openSystem();
     }
     if (as === 'none' || type.isObject(as)) {

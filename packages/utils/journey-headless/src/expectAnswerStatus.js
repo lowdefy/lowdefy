@@ -15,6 +15,7 @@
 */
 
 import HeadlessStepError from './HeadlessStepError.js';
+import withHint from './withHint.js';
 
 // expect.status: the HTTP status of the answer to the call or request step before it, with the
 // browser runner's message.
@@ -24,7 +25,10 @@ function expectAnswerStatus({ answer, status }) {
   }
   const error = answer.error === null ? '' : `: ${answer.error}`;
   throw new HeadlessStepError(
-    `Expected ${answer.description} to answer ${status} but it answered ${answer.status}${error}.`,
+    withHint({
+      answer,
+      message: `Expected ${answer.description} to answer ${status} but it answered ${answer.status}${error}.`,
+    }),
     { actual: answer.status, expected: status }
   );
 }
