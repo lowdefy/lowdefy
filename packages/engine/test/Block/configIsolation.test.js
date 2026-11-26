@@ -174,6 +174,27 @@ test('rows added and moved after mount build from the untouched config', async (
   expect(list.subSlots).toHaveLength(3);
 });
 
+test('a write into the shared config throws where the config is frozen', async () => {
+  const context = await testContext({ lowdefy, pageConfig: listPage() });
+  const { map } = context._internal.RootSlots;
+  const list = map.list;
+  const row0 = map['list.0.text'];
+
+  expect(() => {
+    row0.properties.index = 1;
+  }).toThrow(TypeError);
+  expect(() => {
+    row0.properties.mirror._state = 'list.1.text';
+  }).toThrow(TypeError);
+  expect(() => list.slots.content.blocks.push({ id: 'extra', type: 'Box' })).toThrow(TypeError);
+  expect(map['list.1.text'].eval.properties).toEqual({ index: 1, mirror: 'b' });
+
+  // Only the config is frozen: the fetched page config, and the slot objects each Slots builds to
+  // hold its Block instances, stay writable.
+  expect(Object.isFrozen(context._internal.pageConfig)).toBe(false);
+  expect(Object.isFrozen(list.subSlots[0].slots.content)).toBe(false);
+});
+
 test('page instances of one page config each copy it', async () => {
   const lowdefyApp = {
     contexts: {},
@@ -220,4 +241,6 @@ test('page instances of one page config each copy it', async () => {
   expect(titleOne.properties).toEqual({ label: 'Title' });
   expect(titleOne.properties).not.toBe(titleTwo.properties);
   expect(titleOne.properties).not.toBe(config.slots.content.blocks[0].properties);
+  // Without freezeConfig, as in production, nothing is frozen.
+  expect(Object.isFrozen(titleOne.properties)).toBe(false);
 });

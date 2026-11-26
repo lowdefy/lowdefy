@@ -114,6 +114,9 @@ function initLowdefyContext({
 
     if (stage === 'dev' || stage === 'e2e') {
       window.lowdefy = lowdefy;
+      // A block that writes into its config throws here rather than leaking into the other list
+      // rows and containers that share it in production (see the engine's freezeConfig).
+      lowdefy._internal.freezeConfig = true;
     }
   }
 

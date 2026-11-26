@@ -20,6 +20,7 @@ import { WebParser } from '@lowdefy/operators';
 import Actions from './Actions.js';
 import createUpdaters from './createUpdaters.js';
 import DependencyTracker from './tracking/DependencyTracker.js';
+import freezeConfig from './freezeConfig.js';
 import readMcpDisplayMode from './tracking/readMcpDisplayMode.js';
 import readMediaViewport from './tracking/readMediaViewport.js';
 import Slots from './Slots.js';
@@ -144,8 +145,12 @@ function createContext({
   // The context's one config copy, for a page or the app context. Page instances of one page share
   // its fetched config, so each context copies it once here, and every container and list row below
   // reads this copy (see Slots).
+  const slotsConfig = serializer.copy({ root: { blocks: [_internal.rootBlock] } });
+  if (lowdefy._internal.freezeConfig === true) {
+    freezeConfig({ config: slotsConfig });
+  }
   _internal.RootSlots = new Slots({
-    slots: serializer.copy({ root: { blocks: [_internal.rootBlock] } }),
+    slots: slotsConfig,
     context: ctx,
   });
   _internal.RootSlots.init(serializer.copy(ctx.state));

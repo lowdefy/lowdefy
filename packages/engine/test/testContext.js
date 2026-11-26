@@ -41,6 +41,8 @@ const testContext = async ({ lowdefy, pageConfig, path, pathParams }) => {
       logger: { error: () => {}, warn: () => {}, log: () => {}, debug: () => {} },
       handleError: () => {},
       translate: (key, values) => translate({ key, values, i18n: lowdefy?.i18n }),
+      // A write into shared block config throws in the engine's tests (see freezeConfig).
+      freezeConfig: true,
       ...lowdefy?._internal,
       operators: testOperators,
       actions: { ...testActions, ...lowdefy?._internal?.actions },
