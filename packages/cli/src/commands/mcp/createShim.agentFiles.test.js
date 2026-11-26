@@ -264,6 +264,24 @@ test('shows each build warning in full once, then counts it while it stays uncha
   });
 });
 
+test('a new session, or another agent with its own lowdefy mcp, gets every warning in full once', async () => {
+  const answers = {
+    lowdefy_build_status: { build: { status: 'ok', errors: [], warnings: [WARNING_A, WARNING_B] } },
+  };
+  await makeApp('.', answers);
+  await connect();
+  await buildStatus();
+  expect((await buildStatus()).build.warningsUnchanged.count).toBe(2);
+  await client.close();
+  await shim.close();
+
+  await connect();
+  const first = await buildStatus();
+  expect(first.build.warnings).toEqual([WARNING_A, WARNING_B]);
+  expect(first.build.warningsUnchanged).toBeUndefined();
+  expect((await buildStatus()).build.warningsUnchanged.count).toBe(2);
+});
+
 test('shows new, changed and returning warnings in full, and every error', async () => {
   const errors = [{ message: 'Broken.', source: 'pages/c.yaml:1' }];
   const answers = {
