@@ -193,6 +193,19 @@ test('classifyJourney calls a call as system and a webhook headless, and marks t
   expect(classify(steps.slice(0, 2))).toEqual({ headless: true });
 });
 
+test('classifyJourney marks a call as the system bound to an organization as needing the runner in process', () => {
+  const step = { call: { endpoint: 'nightly_close', as: { system: { organization: 'org_a' } } } };
+  expect(classify([step])).toEqual({
+    headless: true,
+    inProcess: {
+      index: 0,
+      step,
+      reason:
+        'step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET',
+    },
+  });
+});
+
 test('classifyJourney keeps inProcess on a journey that also needs the browser', () => {
   expect(
     classify([{ hold: { requestId: 'claim_run' } }, { fill: { text: 'Name', value: 'Ada' } }])

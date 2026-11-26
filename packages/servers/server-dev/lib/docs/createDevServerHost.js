@@ -28,7 +28,7 @@ import {
 import { expectedAnswers, isExpectedError, isForcedFailure } from '@lowdefy/errors';
 import { buildPagePath, serializer, type } from '@lowdefy/helpers';
 import { createHeadlessHost, loadClientPlugins } from '@lowdefy/journey-headless';
-import { matchPagePath } from '@lowdefy/node-utils';
+import { bindCredentialScrub, matchPagePath, runInCredentialScope } from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import { buildPageWithContext, getPageJitEnrichment } from '../server/jitPageBuilder.js';
@@ -329,9 +329,11 @@ async function createDevServerHost({
   }
 
   // A call `as: system`: the endpoint runs as POST /api/detached runs it for a cron or a system
-  // dispatcher, through runDetachedEndpoint with a system principal, so there is no user and an
-  // InternalApi endpoint is callable. In process, so the route's CRON_SECRET gate is not crossed.
-  async function system({ endpointId, payload }) {
+  // dispatcher, through runDetachedEndpoint with a system principal, so an InternalApi endpoint is
+  // callable. With an organization (and stand-in caller) the principal carries the binding a
+  // CallApi with "organization" and "caller" gives its target; with none there is no user. In
+  // process, so the route's CRON_SECRET gate is not crossed.
+  async function system({ caller = null, endpointId, organization = null, payload }) {
     const requestPath = `/api/detached/${endpointId}`;
     counter.recordCall({ url: `${origin}${requestPath}`, method: 'POST' });
     const parsed = parseRequestBody({ text: JSON.stringify({ payload }) });
@@ -348,7 +350,7 @@ async function createDevServerHost({
         runDetachedEndpoint(callContext, {
           endpointId,
           payload: parsed.payload,
-          principal: { system: true },
+          principal: { system: true, organizationId: organization, user: caller },
         }),
     });
   }
@@ -426,6 +428,7 @@ async function createDevServerHost({
     // The data session belongs to the journey run, which closes it (runJourneyHeadless).
     close: async () => {},
     connections: await readConnectionPlugins(),
+    credentialScope: { bindScrub: bindCredentialScrub, run: runInCredentialScope },
     dataSetName: dataSet?.name ?? null,
     dataSession: session?.session ?? null,
     errorSink: createErrorSink(),

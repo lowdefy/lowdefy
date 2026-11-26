@@ -26,3 +26,11 @@ test('expectAnswerStatus passes on the status the answer has, and names its erro
     'Expected endpoint "auditor_only" to answer 200 but it answered 403: Not allowed.'
   );
 });
+
+test('expectAnswerStatus adds the hint the answer carries to its failure', () => {
+  const answer = { ...refused, hint: 'Name the organization.' };
+  expect(() => expectAnswerStatus({ answer, status: 403 })).not.toThrow();
+  expect(() => expectAnswerStatus({ answer, status: 200 })).toThrow(
+    'Expected endpoint "auditor_only" to answer 200 but it answered 403: Not allowed.. Name the organization.'
+  );
+});

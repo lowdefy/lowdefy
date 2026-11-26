@@ -234,6 +234,7 @@ async function runTestJourney({
     },
     resolveUser: () => null,
     rootConfig,
+    scrubCredentials: (value) => value,
     system: () => undefined,
     userNames: [],
     webhook: () => undefined,
