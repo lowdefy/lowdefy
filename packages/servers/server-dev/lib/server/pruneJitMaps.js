@@ -19,7 +19,9 @@ import path from 'path';
 
 // Removes every jitMaps file but those named in `keep`. A page build's
 // temporary file (written whole, then renamed to .json) is left for that build
-// to rename.
+// to rename. The manager's endpoint builds write endpoints-<n>-1.json; they hold
+// the keys of live endpoint artifacts, and the manager removes each once its
+// endpoints are rebuilt again, or the next config build publishes.
 function pruneJitMaps({ buildDirectory, keep }) {
   const keptFiles = new Set(keep);
   const jitMapsDirectory = path.join(buildDirectory, 'jitMaps');
@@ -27,7 +29,7 @@ function pruneJitMaps({ buildDirectory, keep }) {
     return;
   }
   for (const file of fs.readdirSync(jitMapsDirectory)) {
-    if (file.endsWith('.json') && !keptFiles.has(file)) {
+    if (file.endsWith('.json') && !keptFiles.has(file) && !file.startsWith('endpoints-')) {
       fs.rmSync(path.join(jitMapsDirectory, file), { force: true });
     }
   }

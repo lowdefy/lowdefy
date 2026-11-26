@@ -53,6 +53,19 @@ test('pruneJitMaps keeps the named files and temporary files, removing every oth
   ]);
 });
 
+test('pruneJitMaps keeps the maps files of endpoints the manager rebuilt alone', () => {
+  for (const file of ['abc-1-1.json', 'endpoints-1-1.json', 'endpoints-2-1.json']) {
+    fs.writeFileSync(path.join(buildDirectory, 'jitMaps', file), '{}');
+  }
+
+  pruneJitMaps({ buildDirectory, keep: [] });
+
+  expect(fs.readdirSync(path.join(buildDirectory, 'jitMaps')).sort()).toEqual([
+    'endpoints-1-1.json',
+    'endpoints-2-1.json',
+  ]);
+});
+
 test('pruneJitMaps does nothing when no page has been built', () => {
   fs.rmSync(path.join(buildDirectory, 'jitMaps'), { recursive: true });
   expect(() => pruneJitMaps({ buildDirectory, keep: ['abc-1-1.json'] })).not.toThrow();

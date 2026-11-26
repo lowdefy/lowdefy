@@ -21,7 +21,7 @@ import { vi, expect, test } from 'vitest';
 import { ConfigError, createKeyPathResolver, resolveConfigLocation } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
-import buildPageIfNeeded, { getBuildContext } from './jitPageBuilder.js';
+import buildPageIfNeeded, { getBuildContext, syncBuildSignals } from './jitPageBuilder.js';
 import createHandleError from './log/createHandleError.js';
 import pageBuildRecords from './pageBuildRecords.js';
 import readMergedMaps from './readMergedMaps.js';
@@ -242,6 +242,42 @@ test('after a config publish the next context keeps no jitMaps files of an earli
   expect(files).toHaveLength(1);
   expect(files).not.toContain(second);
   expect(Number(files[0].split('-')[1])).toBe(Number(second.split('-')[1]) + 1);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+// The manager rebuilds an endpoint alone by writing its artifact whole and
+// signalling a change, with no config publish.
+function rewriteEndpoint(buildDirectory, endpoint) {
+  const filePath = path.join(buildDirectory, 'api', `${endpoint.endpointId}.json`);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(`${filePath}.tmp`, serializer.serializeToString(endpoint));
+  fs.renameSync(`${filePath}.tmp`, filePath);
+}
+
+test('an endpoint rebuilt with no config publish reaches the kept context at the next change event', async () => {
+  const { root, buildDirectory, configDirectory } = createApp({
+    pages: { a: 'id: a\ntype: Box\n' },
+  });
+  rewriteEndpoint(buildDirectory, { id: 'endpoint:one', endpointId: 'one', type: 'Api' });
+  rewriteEndpoint(buildDirectory, { id: 'endpoint:two', endpointId: 'two', type: 'Api' });
+  await buildPageIfNeeded({ pageId: 'a', buildDirectory, configDirectory });
+  const context = getBuildContext(buildDirectory, configDirectory);
+  const two = context.components.api.find((config) => config.endpointId === 'two');
+
+  rewriteEndpoint(buildDirectory, {
+    id: 'endpoint:one',
+    endpointId: 'one',
+    type: 'Api',
+    link: true,
+  });
+  fs.writeFileSync(path.join(buildDirectory, 'invalidatePages'), String(Date.now()));
+  syncBuildSignals({ buildDirectory, configDirectory });
+
+  expect(getBuildContext(buildDirectory, configDirectory)).toBe(context);
+  const configs = new Map(context.components.api.map((config) => [config.endpointId, config]));
+  expect(configs.get('one').link).toBe(true);
+  // An artifact that did not change is not read again.
+  expect(configs.get('two')).toBe(two);
   fs.rmSync(root, { recursive: true, force: true });
 });
 
