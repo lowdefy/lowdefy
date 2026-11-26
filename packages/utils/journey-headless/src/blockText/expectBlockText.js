@@ -75,7 +75,7 @@ function describeOpen({ blockId, contains, reading }) {
   return `Block "${blockId}" may show "${contains}" across its text, as a layout a headless page does not know draws it: ${BROWSER}.`;
 }
 
-// expect.text (LDF-1147): waits, as the browser runner does, for the text a browser reads in the
+// expect.text: waits, as the browser runner does, for the text a browser reads in the
 // block (readBlockText) to contain `contains`. It passes once a run shows it. While it is not
 // found it waits: at the timeout it fails as the browser step fails, when no layout could show
 // it, and leaves the step to the browser (actor.browserOnly) when the block may show it in text

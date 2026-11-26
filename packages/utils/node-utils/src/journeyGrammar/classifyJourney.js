@@ -57,7 +57,7 @@ function needsInProcess(step) {
   return undefined;
 }
 // Checks a headless run reads from the engine, the calls it recorded or the data session. A text
-// check reads the text a block draws from its evaluated properties (LDF-1147); when the block may
+// check reads the text a block draws from its evaluated properties; when the block may
 // draw text the run cannot read, the step runs in a browser.
 const HEADLESS_EXPECT_KEYS = [
   'calls',
@@ -76,7 +76,7 @@ const HEADLESS_EXPECT_KEYS = [
 // and control are, so it is a DOM key only without rowKey.
 const DOM_TARGET_KEYS = ['text', 'containing', 'row', 'column', 'nth'];
 // Target keys a headless run reads from a ClickableHtml's html on a click, expect.visible or
-// expect.hidden (LDF-1146): a `text` or `containing` target, with the `nth` that picks among its
+// expect.hidden: a `text` or `containing` target, with the `nth` that picks among its
 // matches. Whether a ClickableHtml shows it is known only when the step runs, which then leaves
 // the step to the browser when none does.
 const HTML_TEXT_KEYS = ['text', 'containing'];

@@ -40,7 +40,7 @@ import loadHtmlDom from './loadHtmlDom.js';
 // buttons are the block's ok and cancel controls: ok fires the event, cancel drops it, and a click
 // anywhere else, or new html, closes it, as a click outside (leave) or HtmlComponent does.
 //
-// A `text` or `containing` target lands on an element too (clickMatch, from textMatches; LDF-1146).
+// A `text` or `containing` target lands on an element too (clickMatch, from textMatches).
 // A click on a data-popover trigger opens its popover (state.popover), whose content a later
 // target reaches, as HtmlOverlay shows it: a data-event in it fires and closes it, a click outside
 // it, a click on its trigger or Escape closes it, and new html keeps it open on the same trigger

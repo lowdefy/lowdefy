@@ -22,7 +22,7 @@ import scrubMarkedValues from './scrubMarkedValues.js';
 /**
  * What a headless page runs on: the build, the server and the data, given by a host so the
  * runner never imports from a server. Two hosts give it: a production build through
- * @lowdefy/test-utils (createBuildHost), and the dev server (to come).
+ * @lowdefy/test-utils (createBuildHost), and the dev server (server-dev's createDevServerHost).
  *
  * @typedef {Object} HeadlessHost
  * @property {Object} rootConfig The root config the page route sends with every page, as JSON,

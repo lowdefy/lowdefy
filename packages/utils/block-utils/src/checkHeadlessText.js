@@ -18,7 +18,7 @@ import { ConfigError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 // Checks a block meta's headlessText, what a headless journey reads as the text a block draws when
-// it has no text model of its own (LDF-1147): the paths of the properties the block draws as
+// it has no text model of its own: the paths of the properties the block draws as
 // visible text, in order, such as ['title', 'content']. The build checks it as it writes
 // blockMetas.json (@lowdefy/build writeBlockSchemaMap), and the headless runner as it reads a
 // block's text (@lowdefy/journey-headless readTextModel). Anything else throws, naming the block

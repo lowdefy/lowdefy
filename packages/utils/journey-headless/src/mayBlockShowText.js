@@ -35,7 +35,7 @@ function readHtmlUnits({ cache, html, parse, pre }) {
 }
 
 // The units one piece of a block's text model shows, and why some of it is not known (or null),
-// as LDF-1147's readBlockText reads them.
+// as readBlockText reads them.
 function readPieceUnits({ cache, parse, piece }) {
   if (!type.isUndefined(piece.text)) {
     return { units: [normalizeShownText(piece.text)], open: null };
@@ -72,7 +72,7 @@ function collectValues(value, values = []) {
 }
 
 // Whether a block other than a ClickableHtml may show `text` in a browser, on the safe side: a
-// block with no text model (LDF-1147's readTextModel), or one whose model leaves some of its text
+// block with no text model (readTextModel), or one whose model leaves some of its text
 // open, may show anything; otherwise it may when its model's text or any string or number in its
 // properties could read as the text (mayShowText). Its areas count as drawn and the blocks in them
 // are read on their own, so an area the model leaves out cannot hide text it draws.

@@ -141,7 +141,7 @@ function findHiddenPopup({ block, ancestors, page }) {
   );
 }
 
-// The text a browser's text check reads in a block (LDF-1147): its own text and the text of the
+// The text a browser's text check reads in a block: its own text and the text of the
 // blocks inside it a browser draws, each from its text model (readTextModel). The browser runner
 // reads the block's innerText and, for a Modal or Drawer, its portal's: a block inside another
 // Modal or Drawer is drawn in that one's portal, so it is not in the text. A block is drawn when
