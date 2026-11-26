@@ -120,11 +120,10 @@ pool holds one set per data set for the most sessions ever open on it at once.
   the next journey's data.
 - **What a reset checks.** `loadDataSetCollection` returns the collection's indexes as loaded
   (`describeIndexes`), recorded on the session (`recordIndexes`). A reset lists each database's
-  collections, their options and their indexes: a collection with no options and the indexes it
-  was loaded with (only `_id_` for one the data set does not load) is emptied with `deleteMany`;
-  any other collection, and any view, is dropped. Then each
-  data set collection is written again, or loaded as on open when it was dropped. A collection the
-  last journey wrote with only an `_id` index stays, empty.
+  collections, their options and their indexes: a data set collection with no options and the
+  indexes it was loaded with is emptied with `deleteMany`; any other collection (one the data set
+  does not load included, as a fresh load would not have it), and any view, is dropped. Then each
+  data set collection is written again, or loaded as on open when it was dropped.
 - **Edits on the dev server.** A data set whose layout changed takes out and drops the idle entries
   of its old layout. An edit to its documents keeps the layout, and the reset writes the new ones.
 - **When they go.** A run store client's `stop()` drops its idle databases (`dropIdleDatabases`),

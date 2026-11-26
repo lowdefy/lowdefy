@@ -35,6 +35,7 @@ import recordIndexes from './recordIndexes.js';
 import releasePauseGates from './releasePauseGates.js';
 import reloadDataSession from './reloadDataSession.js';
 import sessionDatabaseName from './sessionDatabaseName.js';
+import settleAll from './settleAll.js';
 import sweepOrphanDatabases from './sweepOrphanDatabases.js';
 
 const DRAIN_TIMEOUT_MS = 30000;
@@ -85,8 +86,8 @@ function createClose({ dataSet, session, store, logger }) {
 // Loads a new set of databases with the data set, after dropping the databases no session owns.
 async function loadDatabaseSet({ client, dataSet, perRun, session }) {
   await sweepOrphanDatabases({ client, perRun });
-  // allSettled, so no collection is still loading when a failed load drops the databases.
-  const results = await Promise.allSettled(
+  // settleAll, so no collection is still loading when a failed load drops the databases.
+  await settleAll(
     groupDataSetByCollection({ dataSet }).map(async (group) => {
       const databaseName = sessionDatabaseName({ session, target: group.target });
       const indexes = await loadDataSetCollection({
@@ -98,10 +99,6 @@ async function loadDatabaseSet({ client, dataSet, perRun, session }) {
       recordIndexes({ session, databaseName, collectionName: group.collection, indexes });
     })
   );
-  const failed = results.find((result) => result.status === 'rejected');
-  if (!type.isUndefined(failed)) {
-    throw failed.reason;
-  }
 }
 
 // A new set of databases, under a prefix of its own: one per database target the build names,
@@ -206,7 +203,7 @@ async function openDataSession({ dataSet, logger, store: runStore }) {
     if (type.isUndefined(idle)) {
       await loadDatabaseSet({ client, dataSet, perRun, session });
     } else {
-      await Promise.all([
+      await settleAll([
         sweepOrphanDatabases({ client, perRun }),
         reloadDataSession({ client, dataSet, session }),
       ]);

@@ -669,8 +669,8 @@ describe('a closed session keeps its databases for the next session on its data 
       expect(dataSessionRegistry.has(first.id)).toBe(false);
       expect(dataSessionRegistry.get(second.id)).toBe(second.session);
       const reset = await describeDatabase(second.session);
-      // A collection the last session wrote stays, empty, when it kept the _id index alone.
-      expect(reset).toEqual({ ...loaded, counters: { documents: [], indexes: ['_id_'] } });
+      // A collection the last session only wrote to is gone, as on a fresh load.
+      expect(reset).toEqual(loaded);
     } finally {
       await second.close();
     }
