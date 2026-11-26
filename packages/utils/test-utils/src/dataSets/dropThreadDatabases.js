@@ -17,7 +17,8 @@
 // Drops the databases a stopped thread of this process left on the dev server's store: a journey
 // worker thread's sessions carry its thread id (ld_p<pid>t<threadId>_, openDataSession), and no
 // other thread's sweep drops them (sweepOrphanDatabases). The dev server's journey pool calls it
-// once a thread has stopped, so a thread that crashed mid-journey leaves nothing behind.
+// once a thread has stopped, so a thread that crashed mid-journey leaves no databases behind (a
+// drop that fails is logged, and those databases stay until the store stops).
 async function dropThreadDatabases({ client, threadId }) {
   const prefix = `ld_p${process.pid}t${threadId}_`;
   const { databases } = await client.db('admin').admin().listDatabases({ nameOnly: true });

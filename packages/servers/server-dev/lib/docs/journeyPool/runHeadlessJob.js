@@ -16,6 +16,7 @@
 
 import { type } from '@lowdefy/helpers';
 
+import getBuildId from '../getBuildId.js';
 import { openMutantRun } from '../../server/mutants/mutantRuns.js';
 import runJourneyHeadless from '../runJourneyHeadless.js';
 
@@ -24,8 +25,20 @@ import runJourneyHeadless from '../runJourneyHeadless.js';
 // or null. A mutant run opens here, in this thread's registry, since the journey's API contexts
 // read it there (createLowdefyContext); it closes once the journey has closed every actor, so no
 // call still carries its cookie. Answers { result, mutant }: runJourneyHeadless's result, and the
-// mutant run's { id, applied, misses }, or null.
+// mutant run's { id, applied, misses }, or null. A mutant's key names a node only within the build
+// it was listed against, and a journey can wait for a thread while a config build lands: one
+// listed against another build by the time a thread takes it answers stale, as the route does.
 async function runHeadlessJob({ params, mutant, pageBuilds, getStore }) {
+  if (!type.isNone(mutant) && mutant.buildId !== getBuildId()) {
+    return {
+      result: {
+        error:
+          'The mutant was listed against another build. List the mutants again (POST /lowdefy-docs/mutants) and run the new one.',
+        stale: true,
+      },
+      mutant: null,
+    };
+  }
   const mutantRun = type.isNone(mutant) ? null : openMutantRun({ mutant });
   try {
     const result = await runJourneyHeadless({

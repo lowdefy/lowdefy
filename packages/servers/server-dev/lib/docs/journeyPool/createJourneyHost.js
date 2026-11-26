@@ -15,11 +15,26 @@
 */
 
 import { type } from '@lowdefy/helpers';
-import { getDataStore } from '@lowdefy/test-utils/dataSets';
+import { getDataStore, isDataStoreGone } from '@lowdefy/test-utils/dataSets';
 
 import createLogger from '../../server/log/createLogger.js';
 
 const logger = createLogger();
+
+// The dev server's data store, answering: one whose mongod has gone (it was killed, or the machine
+// slept) is stopped and a fresh one started, so a thread never joins a dead store. On the main
+// thread a journey's session open finds it gone the same way (openDataSession).
+async function readLiveDataStore() {
+  const store = await getDataStore({ logger });
+  try {
+    await store.client.db('admin').command({ ping: 1 });
+    return store;
+  } catch (error) {
+    if (!isDataStoreGone(error)) throw error;
+    await store.stop();
+    return getDataStore({ logger });
+  }
+}
 
 // A page build's outcome as the journey thread reads it (createDevServerHost reads `built`): the
 // build's own result can carry values a thread cannot be sent.
@@ -31,7 +46,7 @@ function toThreadResult(result) {
 // What the main thread answers one journey's thread (createJourneyPool's host): its page builds,
 // on `pageBuilds` (createLocalPageBuilds), each build's context kept for the journey's length under
 // a handle the thread passes back for the page's _js; and the data store, which the main thread
-// keeps (getDataStore) and stops when a thread finds it gone. A thread that joins the store is
+// keeps (getDataStore), answered only while it responds, and stops when a thread finds it gone. A thread that joins the store is
 // added to `storeThreads`, so its databases are dropped once it stops (getJourneyPool).
 function createJourneyHost({ pageBuilds, storeThreads }) {
   const builds = new Map();
@@ -51,7 +66,7 @@ function createJourneyHost({ pageBuilds, storeThreads }) {
     },
     async dataStoreUri(args, { threadId }) {
       storeThreads.add(threadId);
-      const store = await getDataStore({ logger });
+      const store = await readLiveDataStore();
       return store.uri;
     },
     async dataStoreGone({ uri }) {

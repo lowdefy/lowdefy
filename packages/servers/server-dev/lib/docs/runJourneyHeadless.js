@@ -213,19 +213,20 @@ async function runJourneyHeadless({
     addJourneyStubs({ session: session.session, stubs });
     loadMs = Date.now() - loadStart;
   }
-  // The step checks read the pages' built artifacts; a page the route table does not know is left
-  // to those checks, which name it.
   const pageBuilds = givenPageBuilds ?? (await readLocalPageBuilds());
-  const routes = readBuildArtifact({ name: 'routes.json' }) ?? [];
-  const knownPageIds = new Set(routes.map((route) => route.pageId));
-  for (const stepPageId of listStepPageIds({ pageId, steps })) {
-    if (knownPageIds.has(stepPageId)) {
-      await pageBuilds.build({ pageId: stepPageId });
-    }
-  }
   const counter = createNetworkCounter({ origin, basePath: '' });
   const observations = createJourneyObservations();
   try {
+    // The step checks read the pages' built artifacts; a page the route table does not know is
+    // left to those checks, which name it. Inside the try, so a build that throws still closes the
+    // session.
+    const routes = readBuildArtifact({ name: 'routes.json' }) ?? [];
+    const knownPageIds = new Set(routes.map((route) => route.pageId));
+    for (const stepPageId of listStepPageIds({ pageId, steps })) {
+      if (knownPageIds.has(stepPageId)) {
+        await pageBuilds.build({ pageId: stepPageId });
+      }
+    }
     const host = await createDevServerHost({
       counter,
       dataSet,

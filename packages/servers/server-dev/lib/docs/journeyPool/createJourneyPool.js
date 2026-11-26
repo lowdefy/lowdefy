@@ -54,7 +54,7 @@ function toError({ message, stack }) {
 // - `onThreadStopped({ threadId })` is called once a thread has stopped, however it stopped.
 //
 // close() stops every thread and fails the journeys still waiting. `started` counts the threads
-// started so far.
+// started so far, and `running` the threads running now.
 function createJourneyPool({
   size,
   readSignature,
@@ -109,10 +109,21 @@ function createJourneyPool({
 
   // A free thread takes the first waiting journey, or another idle thread takes it; one left idle
   // stops after idleMs.
+  // A waiting journey that cannot be given a thread (a thread would not start) fails, rather than
+  // throwing out of the thread event that freed the place.
+  function dispatchWaiting() {
+    const job = waiting.shift();
+    try {
+      dispatch(job);
+    } catch (error) {
+      job.reject(error);
+    }
+  }
+
   function free(thread) {
     thread.job = null;
     if (waiting.length > 0) {
-      dispatch(waiting.shift());
+      dispatchWaiting();
     }
     if (thread.job === null && !thread.retiring && !thread.stopped) {
       thread.idleTimer = setTimeout(() => retire(thread), idleMs);
@@ -193,14 +204,17 @@ function createJourneyPool({
       }
       free(thread);
     });
-    // An answer that could not be read leaves its job unanswered: it fails, and the thread is free.
+    // A message that could not be read may have been the journey's answer or one of its calls,
+    // which would then wait forever: the journey fails and the thread is stopped, so no journey of
+    // its is left running beside the next.
     worker.on('messageerror', (error) => {
       const job = thread.job;
       if (job === null) return;
+      thread.job = null;
       job.reject(
-        new Error(`The answer from the journey thread could not be read: ${error?.message}`)
+        new Error(`A message from the journey thread could not be read: ${error?.message}`)
       );
-      free(thread);
+      retire(thread);
     });
     // `cause` is the thread's error, or its exit code.
     function stop(cause) {
@@ -223,7 +237,7 @@ function createJourneyPool({
       Promise.resolve(onThreadStopped?.({ threadId: thread.threadId })).catch(() => {});
       // A waiting journey takes the place this thread left.
       if (!closed && waiting.length > 0) {
-        dispatch(waiting.shift());
+        dispatchWaiting();
       }
     }
     worker.on('error', (error) => stop(error));
@@ -259,7 +273,7 @@ function createJourneyPool({
     get started() {
       return started;
     },
-    get size() {
+    get running() {
       return threads.size;
     },
   };

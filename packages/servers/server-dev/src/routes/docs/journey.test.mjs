@@ -30,8 +30,9 @@ const mockPageBuilds = { build: vi.fn(), jsEntries: vi.fn() };
 vi.doMock('../../../lib/docs/createLocalPageBuilds.js', () => ({
   default: () => mockPageBuilds,
 }));
-// The journey pool, run in this thread: runHeadlessJob as a journey thread runs it.
-const { default: runHeadlessJob } = await import('../../../lib/docs/journeyPool/runHeadlessJob.js');
+// The journey pool, run in this thread: runHeadlessJob as a journey thread runs it (imported below,
+// once getBuildId is mocked).
+let runHeadlessJob;
 const mockRunPooledJourney = vi.fn(({ params, mutant, pageBuilds }) =>
   runHeadlessJob({ params, mutant, pageBuilds })
 );
@@ -45,6 +46,7 @@ const mockGetBuildId = vi.fn(() => 'build-1');
 vi.doMock('../../../lib/docs/getBuildId.js', () => ({
   default: mockGetBuildId,
 }));
+({ default: runHeadlessJob } = await import('../../../lib/docs/journeyPool/runHeadlessJob.js'));
 const { readMutantRun } = await import('../../../lib/server/mutants/mutantRuns.js');
 const { journeyActorToken } = await import('../../../lib/server/auth/journeyActor.js');
 
@@ -605,6 +607,22 @@ test('docsJourneyHandler runs a headless mutant journey in the pool and answers 
   expect(
     readMutantRun(`lowdefy_journey_mutant=${journeyActorToken}.${runDuringJourney.id}`)
   ).toBeNull();
+});
+
+// A config build can land while a headless journey waits for a thread: its thread checks the
+// mutant's build again before it opens the run.
+test('docsJourneyHandler answers 409 stale when the build changed before a thread took the mutant journey', async () => {
+  mockGetBuildId.mockReturnValueOnce('build-1').mockReturnValueOnce('build-2');
+  const c = createContext({
+    pageId: 'form',
+    steps: [{ click: 'submit' }],
+    headless: true,
+    mutant,
+  });
+  const result = await docsJourneyHandler(c);
+  expect(result.status).toBe(409);
+  expect(result.data.stale).toBe(true);
+  expect(mockRunJourneyHeadless).not.toHaveBeenCalled();
 });
 
 // A journey thread that stopped mid-journey (it crashed, or ran out of memory) fails that journey.

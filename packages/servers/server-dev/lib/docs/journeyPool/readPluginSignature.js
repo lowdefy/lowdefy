@@ -31,8 +31,17 @@ function listFiles(directory) {
   });
 }
 
+// The _js maps every JIT page build that adds _js rewrites (writePageJit). A thread reads both as
+// they are now, on every call and page (loadDynamicJsMap, readClientJsMap), so a change to them
+// needs no new thread: counted, they would retire every thread during the first run after each
+// config build.
+const READ_FRESH = new Set([
+  path.join('operators', 'serverJsMap.js'),
+  path.join('operators', 'clientJsMap.js'),
+]);
+
 // What a journey thread's server code depends on that can change while the dev server runs: the
-// dev build's plugin files (build/plugins/), each by its path, size and mtime. A thread imports them
+// dev build's plugin files (build/plugins/), each by its path, size and mtime, but the _js maps. A thread imports them
 // once, while the main thread's Vite module graph reloads the ones a config build rewrites in place
 // (agents, steps, websockets, notifications), so the journey pool replaces a thread started on
 // another signature (createJourneyPool). A change to a file the server reads at start restarts the
@@ -40,6 +49,7 @@ function listFiles(directory) {
 function readPluginSignature({ buildDirectory = path.join(process.cwd(), 'build') } = {}) {
   const pluginsDirectory = path.join(buildDirectory, 'plugins');
   return listFiles(pluginsDirectory)
+    .filter((filePath) => !READ_FRESH.has(path.relative(pluginsDirectory, filePath)))
     .sort()
     .map((filePath) => {
       // A file a build removes between the listing and this read is gone from the signature.

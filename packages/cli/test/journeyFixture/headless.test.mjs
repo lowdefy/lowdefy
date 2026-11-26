@@ -354,12 +354,10 @@ devServerTest(
 );
 
 devServerTest(
-  '--concurrency 4 runs journeys side by side on the dev server, each on its own data, in file order',
+  'a plain run puts journeys side by side on the dev server, each in a thread on its own data, in file order',
   async () => {
     const { code, output } = await runCli([
       'test',
-      '--concurrency',
-      '4',
       '--config-directory',
       process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY,
       '--url',

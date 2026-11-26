@@ -29,6 +29,7 @@ import dataSessionRegistry from './dataSessionRegistry.js';
 import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
 import getRunDataStore from './getRunDataStore.js';
+import isDataStoreGone from './isDataStoreGone.js';
 import joinDataStore from './joinDataStore.js';
 import listUnansweredStubs from './listUnansweredStubs.js';
 import listUnfiredFailGates from './listUnfiredFailGates.js';
@@ -38,6 +39,7 @@ import openDataSession from './openDataSession.js';
 import raceToPauseGate from './raceToPauseGate.js';
 import readDataSet from './readDataSet.js';
 import readForcedFailure from './readForcedFailure.js';
+import readStartedDataStore from './readStartedDataStore.js';
 import recordForcedFailure from './recordForcedFailure.js';
 import releasePauseGates from './releasePauseGates.js';
 import sinkExternalConnections from './sinkExternalConnections.js';
@@ -60,6 +62,7 @@ export {
   findSessionDocuments,
   getDataStore,
   getRunDataStore,
+  isDataStoreGone,
   joinDataStore,
   listUnansweredStubs,
   listUnfiredFailGates,
@@ -69,6 +72,7 @@ export {
   raceToPauseGate,
   readDataSet,
   readForcedFailure,
+  readStartedDataStore,
   recordForcedFailure,
   releasePauseGates,
   sinkExternalConnections,

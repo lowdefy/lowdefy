@@ -142,7 +142,7 @@ test('createJourneyPool stops a thread that has had no journey for idleMs', asyn
   await vi.waitFor(() => {
     expect(onThreadStopped).toHaveBeenCalledWith({ threadId });
   });
-  expect(pool.size).toBe(0);
+  expect(pool.running).toBe(0);
 });
 
 test('createJourneyPool fails a journey whose params cannot be sent, and frees its thread', async () => {

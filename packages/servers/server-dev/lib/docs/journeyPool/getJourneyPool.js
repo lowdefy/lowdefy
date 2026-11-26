@@ -15,7 +15,7 @@
 */
 
 import { readHeadlessThreadLimit } from '@lowdefy/node-utils';
-import { dropThreadDatabases, getDataStore } from '@lowdefy/test-utils/dataSets';
+import { dropThreadDatabases, readStartedDataStore } from '@lowdefy/test-utils/dataSets';
 
 import createJourneyPool from './createJourneyPool.js';
 import createLogger from '../../server/log/createLogger.js';
@@ -29,12 +29,15 @@ const POOL_KEY = Symbol.for('lowdefy.devServer.journeyPool');
 
 function createPoolState() {
   // The threads that asked for the data store: their sessions' databases are dropped once they
-  // stop (createJourneyHost adds them).
+  // stop (createJourneyHost adds them), on the store if one is running. A store that stopped took
+  // them with it, so none is started for this.
   const storeThreads = new Set();
   async function onThreadStopped({ threadId }) {
     if (!storeThreads.delete(threadId)) return;
+    const started = readStartedDataStore();
+    if (started === null) return;
     try {
-      const store = await getDataStore({ logger });
+      const store = await started;
       await dropThreadDatabases({ client: store.client, threadId });
     } catch (error) {
       logger.debug(
@@ -54,10 +57,11 @@ function createPoolState() {
 }
 
 // The dev server's journey pool (createJourneyPool), started on first use, with the threads that
-// joined its data store ({ pool, storeThreads }). It runs at most as many threads as the machine has
-// cores (less one above 4 cores), and no more than one per GiB of memory (readHeadlessThreadLimit), the rule
-// `lowdefy test` sizes its runs by: the pool serves every caller of the dev server, so two runs at
-// once share its threads instead of starting twice as many.
+// joined its data store ({ pool, storeThreads }). It runs at most as many threads as the machine
+// has cores (less one above 4 cores), and no more than one per GiB of memory
+// (readHeadlessThreadLimit), the rule `lowdefy test` sizes its runs by: the pool serves every
+// caller of the dev server, so two runs at once share its threads instead of starting twice as
+// many.
 function getJourneyPool() {
   globalThis[POOL_KEY] ??= createPoolState();
   return globalThis[POOL_KEY];

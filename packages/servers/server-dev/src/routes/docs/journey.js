@@ -274,6 +274,9 @@ async function docsJourneyHandler(c) {
   if (result.refused === true) {
     return c.json({ error: result.error }, 400);
   }
+  if (result.stale === true) {
+    return c.json({ error: result.error, stale: true }, 409);
+  }
   if (result.error) {
     return c.json({ error: result.error }, 502);
   }
