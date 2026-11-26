@@ -30,9 +30,12 @@ const configDirectory = process.env.LOWDEFY_JOURNEY_FIXTURE_DIRECTORY;
 const fixtureTest = fixtureUrl === undefined ? test.skip : test;
 const CLI = fileURLToPath(new URL('../../dist/index.js', import.meta.url));
 
+// On a data set: a plain lowdefy test runs it headless, and a headless journey with no data set
+// reads stand-in secrets, so its save would fail.
 const REVIEWED = `- name: saves a reviewed item
   pageId: home
-  user: none
+  data: harden
+  user: member
   tags: [review]
   steps:
     - fill: { blockId: name_input, value: Reviewed item }

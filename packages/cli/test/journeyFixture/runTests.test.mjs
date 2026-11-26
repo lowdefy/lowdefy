@@ -20,8 +20,8 @@ import { expect, test } from 'vitest';
 
 import runAppTests from '../../dist/commands/mcp/runAppTests.js';
 
-// What lowdefy_run_tests answers for the fixture app's own suite, run in a
-// real browser: the journey's measured path reaches exercised.json and stays
+// What lowdefy_run_tests answers for the fixture app's own suite, run with
+// thorough, so the journeys that need a browser run in one: the journey's measured path reaches exercised.json and stays
 // out of the answer and of results.json.
 
 const fixtureUrl = process.env.LOWDEFY_JOURNEY_FIXTURE_URL;
@@ -36,6 +36,7 @@ fixtureTest(
     const answer = await runAppTests({
       configDirectory,
       url: fixtureUrl,
+      thorough: true,
       onProgress: (event) => progress.push(event),
     });
 

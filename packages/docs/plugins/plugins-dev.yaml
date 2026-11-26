@@ -181,7 +181,7 @@ _ref:
             };
             ```
 
-            A headless journey (`lowdefy test --headless`) loads no block component, so a `CallMethod` on one of your blocks needs the browser and the journey is listed browser-only there. A method that only fires one of the block's own events can say so in `meta.headlessMethods`, as `{ method: event }`. A headless journey then runs the event for it, with the method's first argument as `_event`, and `CallMethod` waits for its actions, as in the browser:
+            A headless journey (`lowdefy test`) loads no block component, so a `CallMethod` on one of your blocks needs the browser and the journey is listed browser-only there. A method that only fires one of the block's own events can say so in `meta.headlessMethods`, as `{ method: event }`. A headless journey then runs the event for it, with the method's first argument as `_event`, and `CallMethod` waits for its actions, as in the browser:
 
             ```js
             // src/blocks/ActionChain/meta.js: registers run, which fires onRun

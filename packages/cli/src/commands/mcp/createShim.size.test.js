@@ -45,7 +45,7 @@ async function listDevTools() {
 // this is a deliberate change. The phone tools (lowdefy_device and the device
 // parameters) take about 2,000 of it, headless journeys and tests about 500,
 // lowdefy_run_journey's stubs about 400, lowdefy_run_tests' concurrency about 230, and its
-// browser and thorough runs (the mixed default) about 340.
+// browser and thorough runs (browser journeys only when asked) about 340.
 test('the shim tools/list for a current dev server stays at most 44,050 characters', async () => {
   const tools = await listDevTools();
   const shim = createShim({

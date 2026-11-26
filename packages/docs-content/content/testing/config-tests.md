@@ -17,7 +17,7 @@ Each kind of test has one way to write it:
 | Library, plugin and Lambda code                                                                                               | Unit tests.                                                                                                         |
 | What a journey cannot say: a value computed in code, an answer computed from the request, thousands of rows generated in code | A [test-utils test](/endpoint-tests), whose file says why a journey can't express it.                               |
 
-`lowdefy test` runs journeys on the development server, each once, headless when it can and in a browser when it can't, and `lowdefy test --headless --build` runs the ones that need no browser on a production build. An app with Playwright specs on `@lowdefy/e2e-utils` moves them to journeys: see [Moving from e2e-utils](/e2e-utils-migration).
+`lowdefy test` runs the journeys that need no browser on the development server, headless, `lowdefy test --thorough` runs the rest in a browser too, and `lowdefy test --build` runs the headless ones on a production build. An app with Playwright specs on `@lowdefy/e2e-utils` moves them to journeys: see [Moving from e2e-utils](/e2e-utils-migration).
 
 ## Layout
 
@@ -263,7 +263,7 @@ A `Search` block keeps its input in a modal outside its own element. Open it wit
 
 ## Page-less journeys
 
-A journey with no `pageId` opens no page: it tests endpoint and server logic by calling the server directly. Its steps may only be `call`, `request`, `webhook`, `hold`, `release`, `as`, `wait: { ms }` and the checks that need no page: `expect` on `error`, `status`, `db`, `sunk` and `calls` (for a request, with its `pageId`). Run it headless: `lowdefy test --headless --build` in CI, or `lowdefy test --headless` and the `lowdefy_run_journey` tool with `headless: true` while you edit.
+A journey with no `pageId` opens no page: it tests endpoint and server logic by calling the server directly. Its steps may only be `call`, `request`, `webhook`, `hold`, `release`, `as`, `wait: { ms }` and the checks that need no page: `expect` on `error`, `status`, `db`, `sunk` and `calls` (for a request, with its `pageId`). Run it headless: `lowdefy test --build --headless` in CI, or `lowdefy test` and the `lowdefy_run_journey` tool with `headless: true` while you edit.
 
 Nothing in a journey is evaluated with operators while it runs. Payloads, headers, `match` and expected values are sent and compared as written, so a payload can carry an operator object a page never would. A value a check would compute, such as a price or a total, is written into the journey, or into a row of its [case table](#case-tables).
 
@@ -615,7 +615,7 @@ A plain `lowdefy test`, and the `lowdefy_run_tests` agent tool, never read that 
 pnpx lowdefy@7 test
 ```
 
-With no options, `lowdefy test` prepares `.lowdefy/dev` exactly as `lowdefy dev` does, starts the development server on a free port without opening a browser, runs every journey once, [headless](#headless-runs) when it can and in the browser when it can't, prints the results and stops the server. See [Where each journey runs](#where-each-journey-runs).
+With no options, `lowdefy test` prepares `.lowdefy/dev` exactly as `lowdefy dev` does, starts the development server on a free port without opening a browser, runs every journey that needs no browser [headless](#headless-runs), lists the ones that need a browser, prints the results and stops the server. See [Where each journey runs](#where-each-journey-runs).
 
 `lowdefy test` needs only Node.js, pnpm and a Chromium the dev server can launch. The dev server uses Playwright's `chromium-headless-shell`, which it downloads itself the first time a browser tool needs it, and falls back to an installed Google Chrome meanwhile. Set `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` to turn the download off.
 
@@ -663,28 +663,43 @@ SKIP deprecated  member prints a ticket  0.4/day (3m)
 
 ### Where each journey runs
 
-| Command                   | Where the journeys run                                                                                                                                                                                                                                                                                                 |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `lowdefy test`            | Each journey once. One whose steps need a browser ([the table below](#headless-runs)) runs in the browser, the rest [headless](#headless-runs). A journey the headless run finds needs a browser partway through stops there and is listed `BROWSER-ONLY`, with the step and why: it neither passes nor fails the run. |
-| `lowdefy test --thorough` | As `lowdefy test`, and a journey found to need a browser partway through then runs in the browser too, from step 1, in the same run. Use it in CI.                                                                                                                                                                     |
-| `lowdefy test --browser`  | Every journey in the browser.                                                                                                                                                                                                                                                                                          |
-| `lowdefy test --headless` | Only the journeys that need no browser. The rest are listed browser-only. See [Headless runs](#headless-runs).                                                                                                                                                                                                         |
+| Command                   | Where the journeys run                                                                                                                                                                                                                                                                       |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `lowdefy test`            | Only the journeys that need no browser, [headless](#headless-runs). A journey whose steps need a browser ([the table below](#headless-runs)), or that the headless run finds needs one partway through, is listed `BROWSER-ONLY` with the step and why: it neither passes nor fails the run. |
+| `lowdefy test --thorough` | Each journey once: headless when it can, in the browser when it can't. A journey the headless run finds needs a browser partway through then runs in the browser too, from step 1, in the same run. Use it in CI.                                                                            |
+| `lowdefy test --browser`  | Every journey in the browser.                                                                                                                                                                                                                                                                |
+| `lowdefy test --headless` | As `lowdefy test`. Kept so scripts that pass it keep working.                                                                                                                                                                                                                                |
 
-Each journey's line ends with where it ran, `[headless]` or `[browser]`:
+After the summary, a run that left journeys browser-only names each one with its file and the step that needs a browser, and prints the command that runs them there:
 
 ```
-PASS  member creates a control  (5 steps, 412ms)  [headless]
-PASS  reads the page title  (1 steps, 1840ms)  [browser]
+PASS  member creates a control  (5 steps, 412ms)
 BROWSER-ONLY  copies the invite link  step 2 (click "copy_link"): CopyToClipboard needs the browser.
-2 passed, 0 failed of 2 journeys, 1 browser-only not run
-The next lowdefy test runs the browser-only journeys in the browser while they and the app config are unchanged; lowdefy test --thorough runs them there in this run.
+1 passed, 0 failed of 1 journeys, 1 browser-only not run
+Not run, needs a browser:
+  copies the invite link (tests/journeys/invites.yaml)  step 2 (click "copy_link"): CopyToClipboard needs the browser.
+Run them in the browser: lowdefy test --thorough tests/journeys/invites.yaml
 ```
 
-`.lowdefy/test/headless-run.json` remembers each journey a headless run found needs a browser partway through. The next `lowdefy test` sends it straight to the browser, without its headless steps, while the journey is unchanged and the development server's build is the one that run saw. Editing the journey, or the app's routes, auth, connections, endpoints or app-wide config, runs it headless again. A change inside a page alone, or a Lowdefy upgrade that lets the headless runner take the step, may leave it in the browser, where it is still checked in full. To try it headless again, run `lowdefy test --headless` once, which records each journey that now passes headless, or delete `headless-run.json`. A run of some journeys keeps the records of the others.
+The exit code stays `0`: a browser-only journey is not a failure, except on a plain run in CI (see below). A `--thorough` run ends each journey's line with where it ran, `[headless]` or `[browser]`.
 
-A journey with a `hold`, `release` or `call` as `system` step never goes to the browser, which cannot take those steps. If it also needs a browser, a plain `lowdefy test` and `--thorough` leave it browser-only, and the note after the summary says so; `--browser` refuses it.
+`.lowdefy/test/headless-run.json` remembers each journey a headless run found needs a browser, with the journey and the build it was found on. While both are unchanged, the next `lowdefy test` lists the journey as browser-only without running its headless steps again, its line ending `found by an earlier run, not run again`, and `lowdefy test --thorough` sends it straight to the browser. On the development server, editing the journey or any file of the app's config (outside `tests/journeys/`) runs it headless again. With `--build`, so does each new `lowdefy build`. A Lowdefy upgrade that lets the headless runner take the step may leave the record standing: delete `headless-run.json` to run every journey headless again. A run of some journeys keeps the records of the others.
 
-A fresh CI checkout has no `headless-run.json`, so a plain `lowdefy test` there only reports a journey found to need a browser partway through, and never runs it in a browser. Run `lowdefy test --thorough` in CI.
+A journey with a `hold`, `release` or `call` as `system` step never goes to the browser, which cannot take those steps. If it also needs a browser, every run leaves it browser-only: the note after the summary says so and leaves its file out of the command. `--browser` refuses it.
+
+A plain `lowdefy test` runs no journey in a browser. Run `lowdefy test --thorough` in CI, so the browser journeys run there.
+
+In CI, a plain run that skips a browser journey fails, so a CI job that ran its browser journeys with `lowdefy test` before v8 doesn't go green without them. When the `CI` environment variable is set (GitHub Actions, GitLab and most CI services set `CI=true`) and the run was given none of `--headless`, `--thorough` and `--browser`, a run that left a journey browser-only exits with code `1`:
+
+```
+1 passed, 0 failed of 1 journeys, 1 browser-only not run
+Not run, needs a browser:
+  copies the invite link (tests/journeys/invites.yaml)  step 2 (click "copy_link"): CopyToClipboard needs the browser.
+Run them in the browser: lowdefy test --thorough tests/journeys/invites.yaml
+1 journey a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here.
+```
+
+Pass `--thorough` to run them, or `--headless` to say that browser journeys don't run in this job. `--build` with no mode flag counts as a plain run, so a CI job on the production build runs `lowdefy test --build --headless`. A journey that no run takes to the browser (one with a `hold`, `release` or `call` as `system` step) doesn't count, since no flag would run it. `CI` set to `false` or `0` counts as unset. Outside CI, and in the `lowdefy_run_tests` agent tool, a browser-only journey never fails the run.
 
 `--browser`, `--thorough` and `--headless` each pick where the journeys run: pass at most one.
 
@@ -696,12 +711,12 @@ A fresh CI checkout has no `headless-run.json`, so a plain `lowdefy test` there 
 - `--tier <tier>`: Only run the journeys in this popularity tier of the selection: `common` (p50), `wide` (p80), `edge` (p95) or `full` (every journey, the default). See [Usage and tiers](#usage-and-tiers).
 - `--usage-window <months>`: The calendar months recent use is ranked over, for `--tier` and the `PASS` line, such as `6m`. The default is `3m`.
 - `--repeat <n>`: Run each journey `n` times in a row (1 to 10) and classify it, as described in [Replaying candidates](#replaying-candidates).
-- `--concurrency <n>`: Run up to `n` browser journeys at once (1 to 3). Headless journeys run one at a time. The default is 1, or the `LOWDEFY_JOURNEY_CONCURRENCY` environment variable. See [Journeys side by side](#journeys-side-by-side).
+- `--concurrency <n>`: Run up to `n` browser journeys at once (1 to 3), with `--thorough` or `--browser`. Headless journeys run one at a time. The default is 1, or the `LOWDEFY_JOURNEY_CONCURRENCY` environment variable. See [Journeys side by side](#journeys-side-by-side).
 - `--lint`: Check the journeys for the [lint rules](#lint) and run nothing.
-- `--thorough`: Also run each journey found to need a browser partway through in the browser, from step 1, in the same run. For CI. See [Where each journey runs](#where-each-journey-runs).
+- `--thorough`: Run each journey headless when it can and in the browser when it can't, and run each journey found to need a browser partway through in the browser too, from step 1, in the same run. Use it in CI. See [Where each journey runs](#where-each-journey-runs).
 - `--browser`: Run every journey in the browser.
-- `--headless`: Run only the journeys that need no browser, in Node, and list the rest as browser-only. On the development server, or on the production build with `--build`. See [headless runs](#headless-runs).
-- `--build`: With `--headless`, run on the production build in this process. A run that also takes its browser journeys on the production build is not supported yet.
+- `--headless`: Run only the journeys that need no browser, in Node, and list the rest as browser-only: the default. In CI, pass it to say on purpose that browser journeys don't run there. See [headless runs](#headless-runs) and [Where each journey runs](#where-each-journey-runs).
+- `--build`: Run headless on the production build in this process. A run that also takes its browser journeys on the production build is not supported yet, so `--thorough` and `--browser` refuse it.
 - `--server-directory <path>`: With `--build`, `--access` or `--update-access`, the built server to read, when it is not `.lowdefy/server`.
 - `--access`: Only check the [access table](/access-table), `tests/access.yaml`, against the production build, and run no journeys.
 - `--update-access`: Rewrite `tests/access.yaml` from the production build, and run nothing else. See [the first file](/access-table#the-first-file).
@@ -712,30 +727,30 @@ A fresh CI checkout has no `headless-run.json`, so a plain `lowdefy test` there 
 
 ### Journeys side by side
 
-By default `lowdefy test` runs one journey at a time, so a suite takes the sum of its journeys' times. `lowdefy test --concurrency 2` keeps two browser journeys in flight; on a small app that about halves a run. The `lowdefy_run_tests` agent tool takes the same limit as `concurrency`, and `LOWDEFY_JOURNEY_CONCURRENCY=2` sets it for both.
+By default `lowdefy test` runs one journey at a time, so a suite takes the sum of its journeys' times. `lowdefy test --thorough --concurrency 2` keeps two browser journeys in flight; on a small app that about halves a run. The `lowdefy_run_tests` agent tool takes the same limit as `concurrency`, and `LOWDEFY_JOURNEY_CONCURRENCY=2` sets it for both.
 
 - A journey on a [data set](/journey-data-sets) runs beside others, since each run has databases of its own.
 - A journey with no `data`, which runs against the database your app points at, and a journey marked `serial: true`, run alone with nothing else in flight, after the others.
 - Results, `.lowdefy/test/results.json` and the run's other files keep the order the journeys were selected in. The output prints the journeys that ran side by side first, then the ones that ran alone, each in selection order.
 - A `PASS` line shows the journey's own time, counted from when it got a browser. The wait for one is kept as `waitedMs` in the results file.
 - The run goes one at a time under `--repeat` above 1, since a journey that fails only beside another is the flakiness `--repeat` is asked to find, and while the operating system reports memory pressure.
-- Headless journeys always go one at a time. In a run with browser journeys, `--concurrency` sets how many of those run at once; with `--headless` it is refused.
+- Headless journeys always go one at a time. In a `--thorough` or `--browser` run, `--concurrency` sets how many browser journeys run at once; a headless run refuses it.
 - A journey that fails while another journey is in flight is run again alone before it is reported: the run starts no new journey, waits for the ones in flight and runs it once more. If it passes alone, it is reported as a `PASS` with a line under it naming what it first failed on, the closing line counts it, as in `48 passed (3 after an alone rerun)`, and the run takes one fewer journey at a time from then on. If it fails alone, it is reported as a `FAIL` with the alone run's failure. `.lowdefy/test/results.json` keeps `contended: true` and the first failure as `contendedFailure`, and the `lowdefy_run_tests` answer counts these journeys as `contended`. A journey that passed only alone counts as not passing in the run's measured coverage.
 
 Every browser operation on the machine shares three browser slots: journeys, screenshots, state inspection and the other agent tools of every development server. At 2 or more, a screenshot or state inspection from another session can wait through several journeys for a free slot, up to its five-minute limit. With two test runs at 2 each on one machine, 7 of 13 screenshots taken during the runs waited over 60 seconds. Raise the limit when the machine is yours alone for the run.
 
 ### Exit codes
 
-| Exit code | Meaning                                                                                                                                                                                                                                                                                                                                                                                     |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                                                                                                                                                                             |
-| `1`       | At least one journey failed, the [access table](/access-table) differs from the build, a journey file was invalid, a path, glob, `--tag` or `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found; with `--tier`, the selection had too little production use to cut a tier. |
+| Exit code | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `1`       | At least one journey failed, the [access table](/access-table) differs from the build, a journey file was invalid, a path, glob, `--tag` or `--filter` matched no journey, or a `--journeys-directory` held no journeys. In CI, a run given none of `--headless`, `--thorough` and `--browser` left a journey browser-only. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found; with `--tier`, the selection had too little production use to cut a tier. |
 
 A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key, a step the grammar refuses, named by its index) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
 
 ## Headless runs
 
-Most of what a journey checks is the app's own logic: an event runs its actions, a request runs, state changes, a block shows or hides, the database changes. None of that needs a browser. `lowdefy test` runs each journey that needs no browser in Node, and `lowdefy test --headless` runs only those, on the development server while you edit, or on a production build: their pages run on Lowdefy's client engine, with the page's own event chains, and their requests and endpoint calls run in the same process on the journey's data set and user. No block is rendered and no browser is started, so a journey takes about as long as its requests do.
+Most of what a journey checks is the app's own logic: an event runs its actions, a request runs, state changes, a block shows or hides, the database changes. None of that needs a browser. `lowdefy test` runs only the journeys that need no browser, in Node, on the development server while you edit, or on a production build with `--build`: their pages run on Lowdefy's client engine, with the page's own event chains, and their requests and endpoint calls run in the same process on the journey's data set and user. No block is rendered and no browser is started, so a journey takes about as long as its requests do.
 
 Nothing in a journey says which kind it is. Its steps decide: a journey runs headless when every step and check is in the left column.
 
@@ -748,15 +763,18 @@ Nothing in a journey says which kind it is. Its steps decide: a journey runs hea
 
 `hold`, `release` and a `call` `as: system` run only headless; a browser run refuses them. A journey's `stubs` work in both.
 
-`lowdefy test` runs every other journey in the browser. `--headless` lists it as browser-only, with the first step that needs a browser, and neither passes nor fails it:
+`lowdefy test` lists every other journey as browser-only, with the first step that needs a browser, and neither passes nor fails it; `--thorough` runs it in the browser:
 
 ```
 PASS  saves an item headless and sees it in state  (5 steps, 412ms)
 BROWSER-ONLY  reads the page title  step 0 (expect: { title }): expect "title" reads the page in a browser
 1 passed, 0 failed of 1 journeys, 1 browser-only not run
+Not run, needs a browser:
+  reads the page title (tests/journeys/title.yaml)  step 0 (expect: { title }): expect "title" reads the page in a browser
+Run them in the browser: lowdefy test --thorough tests/journeys/title.yaml
 ```
 
-A journey can also turn out to need a browser while it runs. An auth action (`Login`, `Logout`, the sign-up and two-factor family), an action that uses a browser API (`CopyToClipboard`, `ScrollTo`, `SetFocus`, `GeolocationCurrentPosition`, `SetDarkMode`, `SetLocale`, `PdfMake`), a click on a block with no `onClick` of its own (a browser lands it on a control inside the block), a `text` or `containing` target that no `ClickableHtml` shows (below), an `open`, a `rowKey` or a `control` target on a block the headless runner does not stand in for (it names the block and its type), or a `CallMethod` on such a block, such as one from the app's own plugin (it names the block, its type and the method; a plugin block can declare methods that run headless, below), a `Publish` to a websocket, or an `expect: { state }` or `wait: { state }` whose path reads a `Table`'s value (the table writes its view and selection there in a browser), stops the journey there and lists it as browser-only. When the page's own `onInit` or `onMount` reaches one, the journey is listed browser-only `on open`. `lowdefy test` runs such a journey in the browser from the next run on, and `--thorough` in the same run: see [Where each journey runs](#where-each-journey-runs).
+A journey can also turn out to need a browser while it runs. An auth action (`Login`, `Logout`, the sign-up and two-factor family), an action that uses a browser API (`CopyToClipboard`, `ScrollTo`, `SetFocus`, `GeolocationCurrentPosition`, `SetDarkMode`, `SetLocale`, `PdfMake`), a click on a block with no `onClick` of its own (a browser lands it on a control inside the block), a `text` or `containing` target that no `ClickableHtml` shows (below), an `open`, a `rowKey` or a `control` target on a block the headless runner does not stand in for (it names the block and its type), or a `CallMethod` on such a block, such as one from the app's own plugin (it names the block, its type and the method; a plugin block can declare methods that run headless, below), a `Publish` to a websocket, or an `expect: { state }` or `wait: { state }` whose path reads a `Table`'s value (the table writes its view and selection there in a browser), stops the journey there and lists it as browser-only. When the page's own `onInit` or `onMount` reaches one, the journey is listed browser-only `on open`. `lowdefy test` remembers it and lists it without running it again while the journey and the build are unchanged, and `--thorough` runs it in the browser in the same run: see [Where each journey runs](#where-each-journey-runs).
 
 A block from your own plugin says in its meta which of its methods run headless, in `headlessMethods`. A method that only fires one of the block's own events names that event, `{ run: 'onRun' }`: a headless `CallMethod` runs the event and waits for its actions. A method that changes only what the block draws, sets no state and calls nothing is declared `null`, `{ merge: null }`: a headless `CallMethod` on it does nothing, resolves with no value, and the journey goes on. Seeing what it drew still needs the browser: once a `CallMethod` has called such a method, an `expect: { text }` that may read that block runs only there, even when the block declares its text in `headlessText` (below). Declare `null` for nothing else: on a method that sets state or calls a request, or does more than fire one of its block's events, a headless run would do less than the browser, so a check could pass in one and fail in the other. Leave such a method out, and its `CallMethod` stays browser-only. A declared method runs headless only once the browser would render the block; while the block is hidden, a `CallMethod` on it is browser-only.
 
@@ -795,7 +813,7 @@ A `click`, `visible` or `hidden` by `text` or `containing` is decided when the s
 
 ```
 lowdefy build
-lowdefy test --headless --build
+lowdefy test --build --headless
 ```
 
 `--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run. A `CallApi` with `detached: true` is recorded instead of sent, since it dispatches through the server's own route: the routine carries on as on a server, the endpoint it starts never runs, and `expect: { calls }` reads it as a call to that endpoint, with its payload. An auth step cannot run on a build, since no auth engine runs: it fails as a config error. A routine that handles the failure in the `:catch` of its `:try` still passes, see below. The results are written to `.lowdefy/test/headless-run.json`.
@@ -803,7 +821,7 @@ lowdefy test --headless --build
 The app's real secrets are never read: every secret the build names reads the stand-in `test-secret-<NAME>`, and no `LOWDEFY_SECRET_*` variable reaches the run, whether it comes from the shell, CI or the app's `.env` file. A headless run on the dev server reads the same, see below. To give a secret a test value, set `LOWDEFY_TEST_SECRET_<NAME>` in the environment of the command:
 
 ```
-LOWDEFY_TEST_SECRET_ORG_ID=org-a lowdefy test --headless --build
+LOWDEFY_TEST_SECRET_ORG_ID=org-a lowdefy test --build
 ```
 
 Every journey of the run reads `org-a` for `_secret: ORG_ID`, and a secret with no test value keeps its stand-in. Use it for logic that compares a secret with data, such as an id the data set also holds. Set the same test values in CI, so the run gives the same answer there.
@@ -813,14 +831,14 @@ A sunk request's record has every secret value of 8 or more characters, test val
 ### While you edit
 
 ```
-lowdefy test --headless
+lowdefy test
 ```
 
 A headless run does not count a server error that the routine's own `:catch` handled, and neither does a browser run: the routine dealt with it and answered, so the journey is judged by the answer and by what was written. An error that no `:catch` handles fails the journey at its step, and so does one the `:catch` passes on, as `:throw: { _error: true }` does.
 
-Without `--build`, a headless run uses the development server, as a plain `lowdefy test` does: it starts one, or uses the one `--url` names. Pages are built on demand, so a config edit needs no rebuild, and every journey runs on its own [data set](/journey-data-sets) session. A headless journey's pages and calls read the secrets a `--build` run reads: `test-secret-<NAME>`, with the command's `LOWDEFY_TEST_SECRET_<NAME>` over them, never the `LOWDEFY_SECRET_*` the dev server holds, so it gives the same answer as on a build. That holds for a journey with no data set too: a request that needs a real secret, such as the app's database URI, fails as it does on a build, so give the journey a data set. A `CallApi` with `detached: true` is recorded and its endpoint never runs, as on a build. The dev server's own routes, and the journeys that run in a browser, keep the app's secrets, and a browser journey's detached calls still run. A headless run starts no browser and takes no journey run slot, so it does not wait behind browser runs on the machine. What it exercised counts in `.lowdefy/test/exercised.json` for lint and `journeys harden`; it records no traces for session logs. The results are written to `.lowdefy/test/headless-run.json`.
+Without `--build`, a headless run uses the development server: it starts one, or uses the one `--url` names. Pages are built on demand, so a config edit needs no rebuild, and every journey runs on its own [data set](/journey-data-sets) session. A headless journey's pages and calls read the secrets a `--build` run reads: `test-secret-<NAME>`, with the command's `LOWDEFY_TEST_SECRET_<NAME>` over them, never the `LOWDEFY_SECRET_*` the dev server holds, so it gives the same answer as on a build. That holds for a journey with no data set too: a request that needs a real secret, such as the app's database URI, fails as it does on a build, so give the journey a data set. A `CallApi` with `detached: true` is recorded and its endpoint never runs, as on a build. The dev server's own routes, and the journeys that run in a browser, keep the app's secrets, and a browser journey's detached calls still run. A headless run starts no browser, so it takes only its worktree's journey run slot: it waits for another run in the same app folder, which may stop the server it uses, but not behind browser runs elsewhere on the machine. What it exercised counts in `.lowdefy/test/exercised.json` for lint and `journeys harden`; it records no traces for session logs. The results are written to `.lowdefy/test/headless-run.json`.
 
-The `lowdefy_run_tests` agent tool runs each journey where `lowdefy test` does, and takes `browser: true`, `thorough: true` or `headless: true` as the CLI takes the flags. The `lowdefy_run_journey` tool takes `headless: true`, and `lowdefy_run_journey` needs no `pageId` for a [page-less journey](#calls-requests-and-the-database). A journey that needs a browser comes back with `browserOnly`, naming the step.
+The `lowdefy_run_tests` agent tool runs each journey where `lowdefy test` does, headless by default, and takes `browser: true`, `thorough: true` or `headless: true` as the CLI takes the flags. Its `summary` names the browser-only journeys and the `lowdefy_run_tests` call that runs them in the browser, and `.lowdefy/test/results.json` keeps each under `browserOnly`, never as passed or skipped. The `lowdefy_run_journey` tool takes `headless: true`, and `lowdefy_run_journey` needs no `pageId` for a [page-less journey](#calls-requests-and-the-database). A journey that needs a browser comes back with `browserOnly`, naming the step.
 
 ## Hardening journeys
 
@@ -960,7 +978,7 @@ Each cycle ends with the ledger committed and its servers stopped, so you can in
 - Recordings are kept for 7 days or 200 MB, whichever comes first. The development server deletes older ones at start and then every hour.
 - Set `LOWDEFY_DEV_RECORD=false` in your shell or in the app's `.env` to turn recording off. Old recordings are still pruned.
 
-`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--tag`, no `--filter`, no `--tier` but `full`, and only the first of `--repeat` runs. Skipping `deprecated: true` journeys still counts as the whole suite. Only journeys that run in the browser record, so a plain `lowdefy test` records the ones it ran there, and `lowdefy test --browser` records the whole suite. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
+`lowdefy test` records too, as `journey` traces under `.lowdefy/traces/journey/`, but only when it runs the whole suite once: no journey paths, no `--tag`, no `--filter`, no `--tier` but `full`, and only the first of `--repeat` runs. Skipping `deprecated: true` journeys still counts as the whole suite. Only journeys that run in the browser record, so a plain `lowdefy test` records nothing, `lowdefy test --thorough` records the ones it ran there, and `lowdefy test --browser` records the whole suite. Those traces show what the suite actually drives. Screenshots, state inspection and other agent tools never record.
 
 ### Session logs
 
@@ -1115,7 +1133,7 @@ Tier pX holds the shortest run of journeys, from the top, whose summed rates rea
 
 The flow measure groups sessions into flows only when the window holds 100,000 rows or more, or with `--group`; otherwise it is left out, the summary says why, and you read the sessions with [`lowdefy journeys session --source production`](#production-session-logs). `--no-group` leaves it out at any size. The other four measures are always computed. Journeys with `deprecated: true` are left out of every measure: they are never run, so a flow only a deprecated journey walks reads as uncovered. A journey runs as its inline user's role set, as each data set user its `user` names (read from its data set file), or signed out with no user; `user: none` signs in through the app, so it counts for no role set. Coverage has no tiers: its flows are counted over the mining window of at most 30 days, not by month, so they have no rate to rank by.
 
-Coverage also reads the newest full test run that the development server recorded (a plain `lowdefy test`, or `lowdefy_run_tests` with no paths, tags, filter or tier). It holds only the journeys that ran in the browser: run `lowdefy test --browser` for a measure of the whole suite. The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
+Coverage also reads the newest full test run that the development server recorded (`lowdefy test --thorough` or `--browser`, or `lowdefy_run_tests` with `thorough` or `browser`, with no paths, tags, filter or tier). It holds only the journeys that ran in the browser, so a plain `lowdefy test`, which runs none there, records nothing: run `lowdefy test --browser` for a measure of the whole suite. The interaction measure then adds a measured share beside the static one: the production interactions that run actually drove. Failure coverage becomes measured: a failure counts as covered when a journey that passed in that run produced the same failed event, because a journey that reaches a failure and still passes asserts it. The test runner keeps which journeys passed in `.lowdefy/test/run.json`. Without a recorded run, failure coverage is reported as reached: a journey does the interaction that failed, which does not show it checks the outcome.
 
 It writes whether flows were grouped (`flowGrouping`), the measures, a production profile (the top flows per entry page when grouped, failure paths, frustrated blocks, role sets per page, entry pages, and per block and column the clicks, distinct clicked-text tokens and most-clicked tokens) and each journey's interactions to `.lowdefy/test/coverage.json`, which is rewritten on every run and not committed. With a mutation report, the suite's mutation score is added as a sixth number.
 

@@ -15,16 +15,18 @@
 */
 
 // Where `lowdefy test` and lowdefy_run_tests run their journeys, from browser, thorough, headless
-// and build: { runner, thorough, build } or { error }. `runner` is "mixed" by default: each journey
-// runs once, headless when it can and in the browser when it can't; with thorough, a journey the
-// headless run finds needs a browser partway through runs in the browser too. "browser" runs every
-// journey in the browser and "headless" only those that need none. The three options each pick
-// the runner, so two of them refuse the run. build runs on the production build, headless only:
-// running a mixed run's browser journeys on the production build is not built yet. Headless runs
-// go one at a time, so a concurrency typed beside headless is refused rather than ignored; one
-// from lowdefy.yaml's cli config is not chosen by this run, so it is left alone (`typedOptions`
-// lists the options the run was given). Messages name the options with `flagPrefix`: "--" on the
-// command line, "" for the MCP tool's arguments.
+// and build: { runner, build } or { error }. `runner` is "headless" by default: only the journeys
+// that need no browser run, and the rest are listed browser-only, with the step that needs one.
+// thorough makes it "mixed": each journey runs headless when it can and in the browser when it
+// can't, and a journey the headless run finds needs a browser partway through runs in the browser
+// too, from step 1. browser makes it "browser": every journey in the browser. headless is the
+// default, kept so scripts that pass it keep working. The three options each pick the runner, so
+// two of them refuse the run. build runs on the production build, headless only: running browser
+// journeys on the production build is not built yet. A headless run goes one at a time, so a
+// concurrency typed for one is refused rather than ignored; one from lowdefy.yaml's cli config is
+// not chosen by this run, so it is left alone (`typedOptions` lists the options the run was given).
+// Messages name the options with `flagPrefix`: "--" on the command line, "" for the MCP tool's
+// arguments.
 function readTestMode({ options, flagPrefix = '--' }) {
   const flag = (name) => `${flagPrefix}${name}`;
   const browser = options.browser === true;
@@ -35,35 +37,37 @@ function readTestMode({ options, flagPrefix = '--' }) {
     return {
       error: `${flag('browser')}, ${flag('thorough')} and ${flag(
         'headless'
-      )} each pick where the journeys run: pass one of them. ${flag(
-        'browser'
-      )} runs every journey in the browser; ${flag(
+      )} each pick where the journeys run: pass one of them. By default (or with ${flag(
+        'headless'
+      )}) only the journeys that need no browser run; ${flag(
         'thorough'
       )} runs each journey headless when it can and in the browser when it can't, and also runs in the browser each journey found to need one partway through; ${flag(
-        'headless'
-      )} runs only the journeys that need no browser.`,
+        'browser'
+      )} runs every journey in the browser.`,
     };
   }
-  if (build && !headless) {
+  // Only the command line takes build.
+  if (build && (browser || thorough)) {
     return {
-      error:
-        '--build runs the journeys that need no browser on the production build: pass --headless with it, as in "lowdefy test --headless --build". Running the browser journeys on the production build is not supported yet; run "lowdefy test --thorough" to run them on the dev server.',
+      error: `--build runs the journeys that need no browser on the production build. Running the browser journeys on the production build is not supported yet: drop --build and run "lowdefy test --${
+        browser ? 'browser' : 'thorough'
+      }" to run them on the dev server.`,
     };
   }
-  if (headless && (options.typedOptions ?? []).includes('concurrency')) {
+  let runner = 'headless';
+  if (browser) {
+    runner = 'browser';
+  } else if (thorough) {
+    runner = 'mixed';
+  }
+  if (runner === 'headless' && (options.typedOptions ?? []).includes('concurrency')) {
     return {
       error: `${flag('concurrency')} runs browser journeys side by side, and a headless run goes one at a time: drop ${flag(
         'concurrency'
-      )}, or drop ${flag('headless')} to run the browser journeys side by side.`,
+      )}, or pass ${flag('thorough')} or ${flag('browser')} to run the browser journeys side by side.`,
     };
   }
-  let runner = 'mixed';
-  if (browser) {
-    runner = 'browser';
-  } else if (headless) {
-    runner = 'headless';
-  }
-  return { runner, thorough, build };
+  return { runner, build };
 }
 
 export default readTestMode;

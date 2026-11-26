@@ -271,7 +271,7 @@ test('runJourney does not apply the name limit to a persona run name', async () 
   expect(refused.message).toContain('at most 100 characters');
 });
 
-// A headless journey on the dev server reads the secrets --headless --build reads: the stand-ins,
+// A headless journey on the dev server reads the secrets --build reads: the stand-ins,
 // with this command's LOWDEFY_TEST_SECRET_* over them. The real LOWDEFY_SECRET_* never leave it.
 test('runJourney sends the test secrets, and never the real ones, with a headless journey', async () => {
   const { default: runJourney } = await import('./runJourney.js');

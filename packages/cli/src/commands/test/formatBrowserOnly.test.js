@@ -59,3 +59,17 @@ test('says a thorough run runs the journey in the browser next', () => {
     'BROWSER-ONLY  goes next  step 1 (click "next"): needs a browser here; running it in the browser'
   );
 });
+
+test('says a journey an earlier run found was not run again', () => {
+  expect(
+    formatBrowserOnly({
+      result: {
+        name: 'goes next',
+        browserOnly: { index: 1, step: { click: 'next' }, reason: 'needs a browser here' },
+        remembered: true,
+      },
+    })
+  ).toBe(
+    'BROWSER-ONLY  goes next  step 1 (click "next"): needs a browser here; found by an earlier run, not run again'
+  );
+});

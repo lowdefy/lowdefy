@@ -40,8 +40,8 @@ but also behaviour no journey documents yet. You write one journey per goal and 
 
 - A journey that passes joins the suite.
 - A journey that fails, with an app error or because its goal is not met, is a **finding**,
-  reported with that journey. The journey fails under \`lowdefy test\` until the bug is fixed, and
-  is the regression test after.
+  reported with that journey. The journey fails under \`lowdefy test\` (\`--thorough\` when it
+  needs a browser) until the bug is fixed, and is the regression test after.
 
 You report a finding only with a journey that fails with it. What you think looks broken, or looks
 fine, is not a finding. This runs on a pull request, with the developer there: never nightly, never

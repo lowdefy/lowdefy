@@ -56,7 +56,7 @@ vi.doMock('./acquireJourneyRunSlots.js', () => ({
   default: mockAcquireJourneyRunSlots,
 }));
 
-// The headless run's harness and runner, loaded only by --headless --build.
+// The headless run's harness and runner, loaded only by --build.
 const mockOpenTestApp = vi.fn();
 vi.doMock('@lowdefy/test-utils', () => ({ openTestApp: mockOpenTestApp }));
 const mockCreateBuildHost = vi.fn();
@@ -88,6 +88,8 @@ function journeyYaml({ name, steps = '  - click: submit\n' }) {
 
 beforeEach(() => {
   process.exitCode = undefined;
+  // The runs here are outside CI unless a test says otherwise, also when the suite runs in CI.
+  vi.stubEnv('CI', '');
   configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-command-'));
   logs = { info: [], warn: [], error: [] };
   context = {
@@ -117,7 +119,7 @@ beforeEach(() => {
   mockPost.mockResolvedValue({ data: { passed: true, steps: [] } });
   mockGet.mockResolvedValue({ data: { buildId: 'build-1' } });
   mockOpenTestApp.mockReset();
-  mockOpenTestApp.mockResolvedValue({ close: vi.fn() });
+  mockOpenTestApp.mockResolvedValue({ buildId: 'build-id-1', close: vi.fn() });
   mockHostClose.mockReset();
   mockCreateBuildHost.mockReset();
   mockCreateBuildHost.mockResolvedValue({ close: mockHostClose });
@@ -126,6 +128,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.unstubAllEnvs();
   process.exitCode = originalExitCode;
   fs.rmSync(configDirectory, { recursive: true, force: true });
 });
@@ -1117,7 +1120,11 @@ test('test exits 75 without starting a server when no journey run slot frees', a
     Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' })
   );
   await test({ context });
-  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({ context, command: 'lowdefy test' });
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: true,
+  });
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockPost).not.toHaveBeenCalled();
   expect(logs.error).toEqual([
@@ -1188,17 +1195,18 @@ test('test frees the journey run slots when a signal stops the run', async () =>
   }
 });
 
-test('test --build without --headless is refused before anything runs', async () => {
+test('test --build without --headless runs headless on the production build', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
+  context.directories.server = path.join(configDirectory, '.lowdefy', 'server');
+  writeBuildAuth();
   context.options = { port: 3000, build: true };
   await test({ context });
-  expect(logs.error[0]).toMatch(
-    /^--build runs the journeys that need no browser on the production build: pass --headless with it/
-  );
-  expect(process.exitCode).toBe(1);
   expect(mockStartDevServer).not.toHaveBeenCalled();
-  expect(mockOpenTestApp).not.toHaveBeenCalled();
+  expect(mockOpenTestApp).toHaveBeenCalledTimes(1);
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(1);
+  expect(logs.info[logs.info.length - 1]).toBe('1 passed, 0 failed of 1 journeys');
+  expect(process.exitCode).toBeUndefined();
 });
 
 function dataJourneyYaml({ name, serial = false }) {
@@ -1273,7 +1281,7 @@ test('test runs one journey at a time by default and a serial journey alone', as
 test('test --concurrency out of range is refused before a server starts', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'first journey' }));
-  context.options = { ...context.options, concurrency: '4' };
+  context.options = { ...context.options, browser: true, concurrency: '4' };
   await test({ context });
   expect(logs.error).toEqual(['--concurrency must be an integer from 1 to 3. Received "4".']);
   expect(mockStartDevServer).not.toHaveBeenCalled();
@@ -1292,7 +1300,7 @@ test('test --concurrency with --headless is refused before anything opens', asyn
   };
   await test({ context });
   expect(logs.error).toEqual([
-    '--concurrency runs browser journeys side by side, and a headless run goes one at a time: drop --concurrency, or drop --headless to run the browser journeys side by side.',
+    '--concurrency runs browser journeys side by side, and a headless run goes one at a time: drop --concurrency, or pass --thorough or --browser to run the browser journeys side by side.',
   ]);
   expect(mockStartDevServer).not.toHaveBeenCalled();
   expect(mockOpenTestApp).not.toHaveBeenCalled();
@@ -1315,7 +1323,7 @@ test('test --headless leaves a concurrency from lowdefy.yaml alone and runs one 
   expect(process.exitCode).toBeUndefined();
 });
 
-test('test --headless posts each journey headless to the dev server, takes no slots and lists browser-only ones', async () => {
+test('test --headless posts each journey headless to the dev server, takes only the worktree slot and lists browser-only ones', async () => {
   const { default: test } = await import('./test.js');
   writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
   writeJourneyFile('b.yaml', journeyYaml({ name: 'reads the title' }));
@@ -1337,7 +1345,11 @@ test('test --headless posts each journey headless to the dev server, takes no sl
       },
     });
   await test({ context });
-  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
   expect(mockStartDevServer).toHaveBeenCalledWith({ context });
   expect(mockPost).toHaveBeenCalledTimes(2);
   expect(mockPost.mock.calls.every(([, body]) => body.headless === true)).toBe(true);
@@ -1345,7 +1357,7 @@ test('test --headless posts each journey headless to the dev server, takes no sl
   expect(logs.info).toContain(
     'BROWSER-ONLY  reads the title  step 0 (click "submit"): DownloadFile needs the browser.'
   );
-  expect(logs.info[logs.info.length - 1]).toBe(
+  expect(logs.info[logs.info.length - 2]).toBe(
     '1 passed, 0 failed of 1 journeys, 1 browser-only not run'
   );
   expect(process.exitCode).toBeUndefined();
@@ -1418,15 +1430,21 @@ test('test --headless --build runs headless journeys on the build with no server
     expect.stringMatching(/^PASS {2}clicks submit {2}\(1 steps, \d+ms\)$/),
     'BROWSER-ONLY  reads the title  step 1 (expect: { title }): expect "title" reads the page in a browser',
     '1 passed, 0 failed of 1 journeys, 1 browser-only not run',
+    [
+      'Not run, needs a browser:',
+      `  reads the title (${fromCwd('b.yaml')})  step 1 (expect: { title }): expect "title" reads the page in a browser`,
+      `Run them in the browser: lowdefy test --thorough --config-directory ${configFromCwd()} ${fromCwd('b.yaml')}`,
+    ].join('\n'),
   ]);
   expect(process.exitCode).toBeUndefined();
   const written = JSON.parse(
     fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8')
   );
+  // Taken on the production build, by its build id.
   expect(written.journeys['tests/journeys/a.yaml#clicks submit']).toEqual({
     passed: true,
     hash: expect.stringMatching(/^[0-9a-f]{40}$/),
-    configHashes: [],
+    configHashes: ['build-id-1'],
   });
   expect(written.journeys['tests/journeys/b.yaml#reads the title'].browserOnly.index).toBe(1);
   expect(fs.existsSync(path.join(context.directories.test, 'run.json'))).toBe(false);
@@ -1509,6 +1527,62 @@ test('test --headless --build fails on a failed journey and does not repeat one 
     '0 passed, 1 failed of 1 journeys, 1 browser-only not run'
   );
   expect(process.exitCode).toBe(1);
+});
+
+test('test --build lists a journey an earlier run found browser-only on the same build without running it again', async () => {
+  const { default: test } = await import('./test.js');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'downloads a file' }));
+  headlessContext();
+  mockRunHeadlessJourney.mockImplementation(async ({ journey }) => {
+    if (journey.name === 'downloads a file') {
+      return {
+        pageId: 'form',
+        steps: [],
+        browserOnly: {
+          index: 0,
+          step: { click: 'submit' },
+          reason: 'DownloadFile needs the browser.',
+        },
+      };
+    }
+    return { pageId: 'form', passed: true, steps: [] };
+  });
+  await test({ context });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(2);
+
+  // The same build: only the other journey runs.
+  mockRunHeadlessJourney.mockClear();
+  logs.info = [];
+  await test({ context });
+  expect(mockRunHeadlessJourney.mock.calls.map(([{ journey }]) => journey.name)).toEqual([
+    'clicks submit',
+  ]);
+  expect(logs.info).toContain(
+    'BROWSER-ONLY  downloads a file  step 0 (click "submit"): DownloadFile needs the browser; found by an earlier run, not run again'
+  );
+  expect(logs.info[logs.info.length - 2]).toBe(
+    '1 passed, 0 failed of 1 journeys, 1 browser-only not run'
+  );
+  expect(logs.info[logs.info.length - 1]).toMatch(
+    /\(found by an earlier run\)\nRun them in the browser: lowdefy test --thorough /
+  );
+  expect(process.exitCode).toBeUndefined();
+
+  expect(
+    JSON.parse(fs.readFileSync(path.join(context.directories.test, 'headless-run.json'), 'utf8'))
+      .journeys['tests/journeys/b.yaml#downloads a file']
+  ).toEqual({
+    browserOnly: { index: 0, step: { click: 'submit' }, reason: 'DownloadFile needs the browser.' },
+    hash: expect.stringMatching(/^[0-9a-f]{40}$/),
+    configHashes: ['build-id-1'],
+  });
+
+  // A new build: it runs again.
+  mockRunHeadlessJourney.mockClear();
+  mockOpenTestApp.mockResolvedValue({ buildId: 'build-id-2', close: vi.fn() });
+  await test({ context });
+  expect(mockRunHeadlessJourney).toHaveBeenCalledTimes(2);
 });
 
 // One test app per run: the access step and every journey, and every repeat of one, use the app
@@ -1780,7 +1854,7 @@ test('test --access with a journey option is refused before the build opens', as
   accessContext({ access: true, tag: ['smoke'], typedOptions: ['tag'] });
   await test({ context });
   expect(logs.error).toEqual([
-    '--access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.',
+    '--access checks the access table alone: drop --tag, or run "lowdefy test --build --tag <tag>" to check the table and run those journeys.',
   ]);
   expect(mockOpenTestApp).not.toHaveBeenCalled();
   expect(process.exitCode).toBe(1);
@@ -1866,7 +1940,8 @@ test('test --lint prints nothing about access', async () => {
   expect(mockOpenTestApp).not.toHaveBeenCalled();
 });
 
-// The default run: each journey once, headless when it can and in the browser when it can't.
+// The default run: only the journeys that need no browser, headless. --thorough runs each journey
+// headless when it can and in the browser when it can't.
 
 function titleJourneyYaml({ name }) {
   return `name: ${name}\npageId: form\nsteps:\n  - expect:\n      title:\n        contains: home\n`;
@@ -1875,6 +1950,12 @@ function titleJourneyYaml({ name }) {
 function partwayJourneyYaml({ name, label = 'submit' }) {
   return `name: ${name}\npageId: form\nsteps:\n  - click: ${label}\n  - click: next\n`;
 }
+
+const TITLE = {
+  index: 0,
+  step: { expect: { title: { contains: 'home' } } },
+  reason: 'expect "title" reads the page in a browser',
+};
 
 const PARTWAY = {
   index: 1,
@@ -1901,6 +1982,10 @@ function answerMixedRuns() {
     if (body.headless === true && body.steps.some((step) => step.click === 'next')) {
       return { data: { browserOnly: PARTWAY } };
     }
+    // The dev server's headless runner classifies a title check before it opens the page.
+    if (body.headless === true && body.steps.some((step) => step.expect?.title)) {
+      return { data: { browserOnly: TITLE } };
+    }
     return { data: { passed: true, steps: [] } };
   });
 }
@@ -1918,34 +2003,80 @@ function readHeadlessRunFile() {
   );
 }
 
-test('test runs each journey once by default: headless when it can, in the browser when the classifier says it needs one', async () => {
+// The config directory as the browser-only note's command names it: from the working directory.
+function configFromCwd() {
+  return path.relative(process.cwd(), configDirectory).split(path.sep).join('/');
+}
+
+// A journey file's path as the browser-only note names it: from the working directory.
+function fromCwd(fileName) {
+  return path
+    .relative(process.cwd(), path.join(configDirectory, 'tests', 'journeys', fileName))
+    .split(path.sep)
+    .join('/');
+}
+
+const PARTWAY_LINE =
+  'BROWSER-ONLY  goes next  step 1 (click "next"): the click lands on a block the headless run cannot model';
+
+test('test runs only the journeys that need no browser by default, and names the rest with the command that runs them', async () => {
   const { default: test } = await import('./test.js');
   writeDevBuild();
   answerMixedRuns();
   writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
-  writeJourneyFile('b.yaml', titleJourneyYaml({ name: 'reads the title' }));
   writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
   await test({ context });
   expect(postedRuns()).toEqual([
     { headless: true, first: { click: 'submit' } },
     { headless: true, first: { click: 'submit' } },
-    { headless: false, first: { expect: { title: { contains: 'home' } } } },
   ]);
+  // A journey the classifier marks browser-only is posted headless too, and never to the browser.
+  mockPost.mockClear();
+  logs.info = [];
+  writeJourneyFile('b.yaml', titleJourneyYaml({ name: 'reads the title' }));
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'b.yaml')];
+  await test({ context });
+  expect(postedRuns()).toEqual([
+    { headless: true, first: { expect: { title: { contains: 'home' } } } },
+  ]);
+  expect(logs.info[logs.info.length - 2]).toBe(
+    '0 passed, 0 failed of 0 journeys, 1 browser-only not run'
+  );
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
+  delete context.options.paths;
+  fs.rmSync(path.join(configDirectory, 'tests', 'journeys', 'b.yaml'));
+  fs.rmSync(path.join(context.directories.test, 'headless-run.json'));
+  mockPost.mockClear();
+  logs.info = [];
+  await test({ context });
+  expect(postedRuns()).toEqual([
+    { headless: true, first: { click: 'submit' } },
+    { headless: true, first: { click: 'submit' } },
+  ]);
+  expect(mockPost.mock.calls.every(([, body]) => body.recording === undefined)).toBe(true);
   expect(logs.info).toContainEqual(
-    expect.stringMatching(/^PASS {2}clicks submit {2}\(1 steps, \d+ms\) {2}\[headless\]$/)
+    expect.stringMatching(/^PASS {2}clicks submit {2}\(1 steps, \d+ms\)$/)
   );
-  expect(logs.info).toContainEqual(
-    expect.stringMatching(/^PASS {2}reads the title {2}\(1 steps, \d+ms\) {2}\[browser\]$/)
-  );
-  expect(logs.info).toContain(
-    'BROWSER-ONLY  goes next  step 1 (click "next"): the click lands on a block the headless run cannot model'
-  );
-  expect(logs.info).toContain('2 passed, 0 failed of 2 journeys, 1 browser-only not run');
-  expect(logs.info[logs.info.length - 1]).toMatch(/^The next lowdefy test runs the browser-only/);
+  expect(logs.info).toContain(PARTWAY_LINE);
+  expect(logs.info.slice(-2)).toEqual([
+    '1 passed, 0 failed of 1 journeys, 1 browser-only not run',
+    [
+      'Not run, needs a browser:',
+      `  goes next (${fromCwd('c.yaml')})  step 1 (click "next"): the click lands on a block the headless run cannot model`,
+      `Run them in the browser: lowdefy test --thorough --config-directory ${configFromCwd()} ${fromCwd('c.yaml')}`,
+    ].join('\n'),
+  ]);
   expect(process.exitCode).toBeUndefined();
-  // The classifier's browser-only journey takes the journey run slots.
-  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledTimes(1);
-  expect(mockReleaseSlots).toHaveBeenCalledTimes(1);
+  // A headless run starts no browser, so it takes only its worktree's journey run slot.
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
   const written = readHeadlessRunFile();
   expect(written.mode).toEqual('dev');
   expect(Object.keys(written.journeys).sort()).toEqual([
@@ -1955,20 +2086,31 @@ test('test runs each journey once by default: headless when it can, in the brows
   expect(written.journeys['tests/journeys/c.yaml#goes next']).toEqual({
     browserOnly: PARTWAY,
     hash: expect.stringMatching(/^[0-9a-f]{40}$/),
-    configHashes: [expect.stringMatching(/^[0-9a-f]{40}$/)],
+    // The dev server's build and the config source as the run started (devBuildHash).
+    configHashes: [expect.stringMatching(/^[0-9a-f]{40}\+[0-9a-f]{40}$/)],
   });
 });
 
-test('test takes no journey run slot when every journey of a default run goes headless', async () => {
+test('--headless runs as the default does', async () => {
   const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
   writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  context.options = { ...context.options, headless: true, typedOptions: ['headless'] };
   await test({ context });
-  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
-  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'submit' } }]);
-  expect(logs.info[logs.info.length - 1]).toEqual('1 passed, 0 failed of 1 journeys');
+  expect(postedRuns().every((run) => run.headless)).toBe(true);
+  expect(logs.info[logs.info.length - 1]).toMatch(
+    /\nRun them in the browser: lowdefy test --thorough /
+  );
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
 });
 
-test('a later default run sends a journey found partway through straight to the browser, and keeps its record', async () => {
+test('a later default run lists a journey found partway through without running it again, and keeps its record', async () => {
   const { default: test } = await import('./test.js');
   writeDevBuild();
   answerMixedRuns();
@@ -1977,19 +2119,25 @@ test('a later default run sends a journey found partway through straight to the 
   await test({ context });
   const recorded = readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next'];
   mockPost.mockClear();
-  mockAcquireJourneyRunSlots.mockClear();
   logs.info = [];
 
   await test({ context });
-  expect(postedRuns()).toEqual([
-    { headless: true, first: { click: 'submit' } },
-    { headless: false, first: { click: 'submit' } },
+  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'submit' } }]);
+  expect(logs.info).toContain(`${PARTWAY_LINE}; found by an earlier run, not run again`);
+  expect(logs.info.slice(-2)).toEqual([
+    '1 passed, 0 failed of 1 journeys, 1 browser-only not run',
+    [
+      'Not run, needs a browser:',
+      `  goes next (${fromCwd('c.yaml')})  step 1 (click "next"): the click lands on a block the headless run cannot model  (found by an earlier run)`,
+      `Run them in the browser: lowdefy test --thorough --config-directory ${configFromCwd()} ${fromCwd('c.yaml')}`,
+    ].join('\n'),
   ]);
-  expect(logs.info).toContainEqual(
-    expect.stringMatching(/^PASS {2}goes next {2}\(2 steps, \d+ms\) {2}\[browser\]$/)
-  );
-  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 journeys');
-  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledTimes(1);
+  expect(process.exitCode).toBeUndefined();
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
+    context,
+    command: 'lowdefy test',
+    browser: false,
+  });
   expect(readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next']).toEqual(recorded);
 
   // A run of a subset keeps the records of the journeys it did not select.
@@ -2000,7 +2148,7 @@ test('a later default run sends a journey found partway through straight to the 
   expect(readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next']).toEqual(recorded);
 });
 
-test('a record of a journey found partway through stops counting when the journey or the config changes', async () => {
+test('a journey found partway through runs again once the journey or the config changes', async () => {
   const { default: test } = await import('./test.js');
   writeDevBuild();
   answerMixedRuns();
@@ -2019,10 +2167,62 @@ test('a record of a journey found partway through stops counting when the journe
   await test({ context });
   expect(postedRuns()).toEqual([{ headless: true, first: { click: 'save' } }]);
 
-  // Neither changed since: straight to the browser.
+  // Neither changed since: it is listed, not run.
   mockPost.mockClear();
   await test({ context });
-  expect(postedRuns()).toEqual([{ headless: false, first: { click: 'save' } }]);
+  expect(postedRuns()).toEqual([]);
+  expect(logs.info[logs.info.length - 2]).toBe(
+    '0 passed, 0 failed of 0 journeys, 1 browser-only not run'
+  );
+});
+
+test('a journey found partway through runs again after an edit to any config file, built or not', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  fs.mkdirSync(path.join(configDirectory, 'pages'), { recursive: true });
+  fs.writeFileSync(path.join(configDirectory, 'pages', 'form.yaml'), 'id: form\ntype: Box\n');
+  await test({ context });
+  mockPost.mockClear();
+  await test({ context });
+  expect(postedRuns()).toEqual([]);
+
+  // The page's source changed, though the server has not rebuilt it: the build hash is the same.
+  fs.writeFileSync(path.join(configDirectory, 'pages', 'form.yaml'), 'id: form\ntype: Card\n');
+  await test({ context });
+  expect(postedRuns()).toEqual([{ headless: true, first: { click: 'submit' } }]);
+
+  // An edit to another journey file is not a config edit.
+  mockPost.mockClear();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  context.options.paths = [path.join(configDirectory, 'tests', 'journeys', 'c.yaml')];
+  await test({ context });
+  expect(postedRuns()).toEqual([]);
+});
+
+test('test --thorough runs each journey once, headless when it can, in the browser when the classifier says it needs one', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', titleJourneyYaml({ name: 'reads the title' }));
+  context.options.thorough = true;
+  await test({ context });
+  expect(postedRuns()).toEqual([
+    { headless: true, first: { click: 'submit' } },
+    { headless: false, first: { expect: { title: { contains: 'home' } } } },
+  ]);
+  expect(logs.info).toContainEqual(
+    expect.stringMatching(/^PASS {2}clicks submit {2}\(1 steps, \d+ms\) {2}\[headless\]$/)
+  );
+  expect(logs.info).toContainEqual(
+    expect.stringMatching(/^PASS {2}reads the title {2}\(1 steps, \d+ms\) {2}\[browser\]$/)
+  );
+  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 journeys');
+  // A thorough run may need the browser for any journey, so it takes the slots up front.
+  expect(mockAcquireJourneyRunSlots).toHaveBeenCalledTimes(1);
+  expect(mockReleaseSlots).toHaveBeenCalledTimes(1);
 });
 
 test('test --thorough runs a journey found partway through in the browser from step 1, in the same run', async () => {
@@ -2038,18 +2238,36 @@ test('test --thorough runs a journey found partway through in the browser from s
     { headless: true, first: { click: 'submit' } },
     { headless: false, first: { click: 'submit' } },
   ]);
-  expect(logs.info).toContain(
-    'BROWSER-ONLY  goes next  step 1 (click "next"): the click lands on a block the headless run cannot model; running it in the browser'
-  );
+  expect(logs.info).toContain(`${PARTWAY_LINE}; running it in the browser`);
   expect(logs.info).toContainEqual(
     expect.stringMatching(/^PASS {2}goes next {2}\(2 steps, \d+ms\) {2}\[browser\]$/)
   );
   expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 journeys');
-  // A thorough run may need the browser for any journey, so it takes the slots up front.
   expect(mockAcquireJourneyRunSlots).toHaveBeenCalledTimes(1);
   expect(readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next'].browserOnly).toEqual(
     PARTWAY
   );
+});
+
+test('test --thorough sends a journey a default run found partway through straight to the browser', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  const recorded = readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next'];
+  mockPost.mockClear();
+  logs.info = [];
+
+  context.options.thorough = true;
+  await test({ context });
+  expect(postedRuns()).toEqual([
+    { headless: true, first: { click: 'submit' } },
+    { headless: false, first: { click: 'submit' } },
+  ]);
+  expect(logs.info[logs.info.length - 1]).toEqual('2 passed, 0 failed of 2 journeys');
+  expect(readHeadlessRunFile().journeys['tests/journeys/c.yaml#goes next']).toEqual(recorded);
 });
 
 test('a journey that fails in the browser part of a thorough run fails the run', async () => {
@@ -2073,11 +2291,21 @@ test('a journey that fails in the browser part of a thorough run fails the run',
   expect(process.exitCode).toBe(1);
 });
 
-test('a default run takes --concurrency for its browser part and runs its headless part one at a time', async () => {
+test('a default run refuses a typed --concurrency, and a thorough run takes it for its browser part', async () => {
   const { default: test } = await import('./test.js');
   context.options.concurrency = '2';
   context.options.typedOptions = ['concurrency'];
   writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  await test({ context });
+  expect(logs.error).toEqual([
+    '--concurrency runs browser journeys side by side, and a headless run goes one at a time: drop --concurrency, or pass --thorough or --browser to run the browser journeys side by side.',
+  ]);
+  expect(mockStartDevServer).not.toHaveBeenCalled();
+  expect(process.exitCode).toBe(1);
+
+  process.exitCode = undefined;
+  logs.error = [];
+  context.options.thorough = true;
   await test({ context });
   expect(process.exitCode).toBeUndefined();
   expect(logs.info[logs.info.length - 1]).toEqual('1 passed, 0 failed of 1 journeys');
@@ -2099,15 +2327,18 @@ test.each([
   expect(mockStartDevServer).not.toHaveBeenCalled();
 });
 
-test.each([[{ thorough: true }], [{ browser: true }]])(
+test.each([
+  [{ thorough: true }, '--thorough'],
+  [{ browser: true }, '--browser'],
+])(
   'test --build refuses %j until the browser part runs on the production build',
-  async (flags) => {
+  async (flags, flag) => {
     const { default: test } = await import('./test.js');
     writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
     context.options = { port: 3000, build: true, ...flags };
     await test({ context });
-    expect(logs.error[0]).toMatch(
-      /pass --headless with it, as in "lowdefy test --headless --build"/
+    expect(logs.error[0]).toBe(
+      `--build runs the journeys that need no browser on the production build. Running the browser journeys on the production build is not supported yet: drop --build and run "lowdefy test ${flag}" to run them on the dev server.`
     );
     expect(process.exitCode).toBe(1);
     expect(mockStartDevServer).not.toHaveBeenCalled();
@@ -2136,16 +2367,23 @@ test('a record counts on a dev server kept running, whose build gained the pages
 
   mockPost.mockClear();
   await test({ context });
+  expect(postedRuns()).toEqual([]);
+
+  context.options.thorough = true;
+  await test({ context });
   expect(postedRuns()).toEqual([{ headless: false, first: { click: 'submit' } }]);
 });
+
+const HELD_JOURNEY =
+  'name: holds and goes next\npageId: form\ndata: base\nsteps:\n  - hold: { requestId: save }\n  - click: next\n';
+
+const HELD_NOTE =
+  'It has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.';
 
 test('a thorough run leaves a journey with a step only the headless runner takes browser-only', async () => {
   const { default: test } = await import('./test.js');
   mockPost.mockResolvedValue({ data: { browserOnly: PARTWAY } });
-  writeJourneyFile(
-    'h.yaml',
-    'name: holds and goes next\npageId: form\ndata: base\nsteps:\n  - hold: { requestId: save }\n  - click: next\n'
-  );
+  writeJourneyFile('h.yaml', HELD_JOURNEY);
   context.options.thorough = true;
   await test({ context });
   expect(postedRuns()).toEqual([{ headless: true, first: { hold: { requestId: 'save' } } }]);
@@ -2153,28 +2391,26 @@ test('a thorough run leaves a journey with a step only the headless runner takes
     'BROWSER-ONLY  holds and goes next  step 1 (click "next"): the click lands on a block the headless run cannot model'
   );
   expect(process.exitCode).toBeUndefined();
-  // This run was thorough, and no run takes the journey to the browser: the note says why.
-  expect(logs.info.some((line) => line.includes('--thorough'))).toBe(false);
+  // No run takes the journey to the browser: the note names it and says why, with no command.
   expect(logs.info[logs.info.length - 1]).toBe(
-    '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
+    [
+      'Not run, needs a browser:',
+      `  holds and goes next (${fromCwd('h.yaml')})  step 1 (click "next"): the click lands on a block the headless run cannot model`,
+      HELD_NOTE,
+    ].join('\n')
   );
 });
 
-test('a default run never says a journey with a step only the headless runner takes goes to the browser next', async () => {
+test('a default run gives no command for a journey with a step only the headless runner takes', async () => {
   const { default: test } = await import('./test.js');
   mockPost.mockResolvedValue({ data: { browserOnly: PARTWAY } });
-  writeJourneyFile(
-    'h.yaml',
-    'name: holds and goes next\npageId: form\ndata: base\nsteps:\n  - hold: { requestId: save }\n  - click: next\n'
-  );
+  writeJourneyFile('h.yaml', HELD_JOURNEY);
   await test({ context });
-  expect(logs.info.some((line) => line.startsWith('The next lowdefy test'))).toBe(false);
-  expect(logs.info[logs.info.length - 1]).toBe(
-    '1 browser-only journey also has a hold, release or call as system step, which only the headless runner takes, so no run takes it to the browser.'
-  );
+  expect(logs.info.some((line) => line.includes('--thorough'))).toBe(false);
+  expect(logs.info[logs.info.length - 1].split('\n').slice(-1)).toEqual([HELD_NOTE]);
 });
 
-test('a default run routes by the records it read before taking the slots, not by a record written after', async () => {
+test('a default run skips by the records it read before the server started, not by a record written after', async () => {
   const { default: test } = await import('./test.js');
   writeDevBuild();
   answerMixedRuns();
@@ -2183,17 +2419,14 @@ test('a default run routes by the records it read before taking the slots, not b
   const filePath = path.join(context.directories.test, 'headless-run.json');
   const recorded = fs.readFileSync(filePath, 'utf8');
 
-  // The record lands while the server starts, after the run decided it needs no browser slot:
-  // another run of the app wrote it.
+  // The record lands while the server starts: another run of the app wrote it.
   fs.rmSync(filePath);
   mockPost.mockClear();
-  mockAcquireJourneyRunSlots.mockClear();
   mockStartDevServer.mockImplementation(async () => {
     fs.writeFileSync(filePath, recorded);
     return { url: 'http://localhost:3228', stop: mockStop };
   });
   await test({ context });
-  expect(mockAcquireJourneyRunSlots).not.toHaveBeenCalled();
   expect(postedRuns()).toEqual([{ headless: true, first: { click: 'submit' } }]);
 });
 
@@ -2218,4 +2451,118 @@ test('--access refuses --browser and --thorough, naming the command meant', asyn
   };
   await test({ context });
   expect(logs.error[0]).toMatch(/^--access checks the access table alone: drop --thorough/);
+});
+
+// In CI, a run given no mode flag fails when it skipped a journey the browser would run, so a CI job
+// that ran its browser journeys with a plain lowdefy test before v8 does not go green without them.
+
+const CI_FAILURE =
+  "1 journey a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here.";
+
+test('in CI, a plain run that skips a browser journey fails, naming the count and the ways out', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  expect(logs.info).toContain(PARTWAY_LINE);
+  expect(logs.info).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(logs.error).toEqual([CI_FAILURE]);
+  expect(process.exitCode).toBe(1);
+  expect(context.sendTelemetry).toHaveBeenCalled();
+});
+
+test('in CI, --headless skips a browser journey and exits 0', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  context.options = { ...context.options, headless: true, typedOptions: ['headless'] };
+  await test({ context });
+  expect(logs.info).toContain(PARTWAY_LINE);
+  expect(logs.error).toEqual([]);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('in CI, a plain run that skips nothing exits 0', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  await test({ context });
+  expect(logs.info[logs.info.length - 1]).toBe('1 passed, 0 failed of 1 journeys');
+  expect(logs.error).toEqual([]);
+  expect(process.exitCode).toBeUndefined();
+});
+
+test('outside CI, a plain run that skips a browser journey exits 0', async () => {
+  const { default: test } = await import('./test.js');
+  writeDevBuild();
+  answerMixedRuns();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  // CI set to false says the run is not in CI.
+  for (const value of ['', 'false']) {
+    vi.stubEnv('CI', value);
+    logs.error = [];
+    fs.rmSync(path.join(context.directories.test, 'headless-run.json'), { force: true });
+    await test({ context });
+    expect(logs.error).toEqual([]);
+    expect(process.exitCode).toBeUndefined();
+  }
+});
+
+test('in CI, a plain run fails on a skip --thorough would not run only when another journey is skipped too', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  mockPost.mockResolvedValue({ data: { browserOnly: PARTWAY } });
+  // A hold step: no run takes the journey to the browser, so no flag would run it.
+  writeJourneyFile('h.yaml', HELD_JOURNEY);
+  await test({ context });
+  expect(logs.error).toEqual([]);
+  expect(process.exitCode).toBeUndefined();
+  writeJourneyFile('c.yaml', partwayJourneyYaml({ name: 'goes next' }));
+  await test({ context });
+  expect(logs.error).toEqual([CI_FAILURE]);
+  expect(process.exitCode).toBe(1);
+});
+
+test('in CI, --build with no mode flag fails on a browser-only journey, and --headless --build exits 0', async () => {
+  const { default: test } = await import('./test.js');
+  vi.stubEnv('CI', 'true');
+  writeJourneyFile('a.yaml', journeyYaml({ name: 'clicks submit' }));
+  writeJourneyFile('b.yaml', journeyYaml({ name: 'downloads a file' }));
+  headlessContext();
+  context.options = { ...context.options, headless: undefined, typedOptions: ['build'] };
+  mockRunHeadlessJourney.mockImplementation(async ({ journey }) =>
+    journey.name === 'downloads a file'
+      ? {
+          pageId: 'form',
+          steps: [],
+          browserOnly: {
+            index: 0,
+            step: { click: 'submit' },
+            reason: 'DownloadFile needs the browser.',
+          },
+        }
+      : { pageId: 'form', passed: true, steps: [] }
+  );
+  await test({ context });
+  expect(logs.info).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(logs.error).toEqual([
+    "1 journey a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --headless to say on purpose that browser journeys don't run in this step, and run them in another step with lowdefy test --thorough on the dev server.",
+  ]);
+  expect(process.exitCode).toBe(1);
+
+  process.exitCode = undefined;
+  logs.error = [];
+  context.options = { ...context.options, headless: true, typedOptions: ['build', 'headless'] };
+  await test({ context });
+  expect(logs.info).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
+  expect(logs.error).toEqual([]);
+  expect(process.exitCode).toBeUndefined();
 });

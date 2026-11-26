@@ -295,7 +295,7 @@ const devToolDefinitions = {
         .boolean()
         .optional()
         .describe(
-          'No browser: run on the client engine, much faster. A journey that needs a browser answers browserOnly with that step, or phase "open".'
+          'No browser, much faster: pass it unless only a browser shows the check. A journey that needs one answers browserOnly with that step, or phase "open".'
         ),
       steps: z
         .array(z.record(z.string(), z.any()))

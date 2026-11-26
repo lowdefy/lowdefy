@@ -72,7 +72,7 @@ function writeTestBuild({
   );
   writeFile(
     path.join(buildDirectory, 'appMeta.json'),
-    JSON.stringify({ name: 'test-build', lowdefyVersion })
+    JSON.stringify({ name: 'test-build', lowdefyVersion, buildId: 'test-build-id' })
   );
   writeFile(path.join(buildDirectory, 'auth.json'), JSON.stringify(authJson));
   writeFile(path.join(buildDirectory, 'routes.json'), JSON.stringify(routes));

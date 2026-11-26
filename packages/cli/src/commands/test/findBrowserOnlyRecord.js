@@ -17,19 +17,25 @@
 import { type } from '@lowdefy/helpers';
 import { relativePosixPath } from '@lowdefy/node-utils';
 
+import checkJourneyItem from './checkJourneyItem.js';
 import hashJourney from './hashJourney.js';
 
-// The record of an earlier headless run on the dev server that found this journey needs a
-// browser, while the journey is unchanged (hashJourney), or undefined. A record from the
-// production build carries no config hash (writeHeadlessRun) and is never one. `records` is
-// headless-run.json's journeys (readHeadlessRun).
-function findBrowserOnlyRecord({ records, configDirectory, item }) {
+// The record of an earlier headless run that found this journey needs a browser, while the
+// journey is unchanged (hashJourney) and the build is one that run took it on: `configHash`, the
+// build this run starts on (hashBuild of the dev server's build, or the production build's
+// buildId), is one of the record's configHashes. Undefined otherwise, and for a journey no runner
+// can take (checkJourneyItem). A record from before records carried hashes never counts.
+// `records` is headless-run.json's journeys (readHeadlessRun).
+function findBrowserOnlyRecord({ records, configDirectory, item, configHash }) {
+  if (!type.isUndefined(checkJourneyItem({ item })) || type.isNone(configHash)) {
+    return undefined;
+  }
   const file = relativePosixPath({ from: configDirectory, to: item.filePath });
   const record = records[`${file}#${item.journey.name}`];
   if (
     type.isNone(record?.browserOnly) ||
     record.hash !== hashJourney(item.journey) ||
-    (record.configHashes ?? []).length === 0
+    !(record.configHashes ?? []).includes(configHash)
   ) {
     return undefined;
   }
