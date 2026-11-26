@@ -33,11 +33,11 @@ test('isCi reads the CI variable, with empty, false and 0 saying it is not CI', 
 
 test('in CI with no mode flag and a skip, the message names the count and both ways out', () => {
   expect(readCiBrowserOnlyFailure({ env: { CI: 'true' }, options: {}, browserOnly: skipped })).toBe(
-    "2 journeys need a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here."
+    "2 journeys a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here."
   );
   expect(
     readCiBrowserOnlyFailure({ env: { CI: 'true' }, options: {}, browserOnly: [skipped[0]] })
-  ).toMatch(/^1 journey needs a browser and did not run\./);
+  ).toMatch(/^1 journey a browser run would take did not run\./);
 });
 
 test('in CI, --build with no mode flag names the dev server run, since --build refuses --thorough', () => {
@@ -49,7 +49,7 @@ test('in CI, --build with no mode flag names the dev server run, since --build r
       build: true,
     })
   ).toBe(
-    "2 journeys need a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, run them in the browser on the dev server with lowdefy test --thorough, without --build, or pass --headless to say on purpose that browser journeys don't run here."
+    "2 journeys a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --headless to say on purpose that browser journeys don't run in this step, and run them in another step with lowdefy test --thorough on the dev server."
   );
 });
 
@@ -102,5 +102,5 @@ test('a journey no run takes to the browser does not count', () => {
       browserOnly: skipped,
       inProcess: [skipped[0]],
     })
-  ).toMatch(/^1 journey needs a browser/);
+  ).toMatch(/^1 journey a browser run would take/);
 });

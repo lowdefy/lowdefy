@@ -669,7 +669,7 @@ In CI, a plain run that skips a browser journey fails, so a CI job that ran its 
 Not run, needs a browser:
   copies the invite link (tests/journeys/invites.yaml)  step 2 (click "copy_link"): CopyToClipboard needs the browser.
 Run them in the browser: lowdefy test --thorough tests/journeys/invites.yaml
-1 journey needs a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here.
+1 journey a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here.
 ```
 
 Pass `--thorough` to run them, or `--headless` to say that browser journeys don't run in this job. `--build` with no mode flag counts as a plain run, so a CI job on the production build runs `lowdefy test --build --headless`. A journey that no run takes to the browser (one with a `hold`, `release` or `call` as `system` step) doesn't count, since no flag would run it. `CI` set to `false` or `0` counts as unset. Outside CI, and in the `lowdefy_run_tests` agent tool, a browser-only journey never fails the run.

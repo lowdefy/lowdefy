@@ -149,7 +149,7 @@ test('in CI --build with no mode flag fails on the browser journey, and --headle
   const plain = await runHeadless({ mode: [], env: { CI: 'true' } });
   expect(plain.output).toContain('2 passed, 0 failed of 2 journeys, 1 browser-only not run');
   expect(plain.output).toContain(
-    "1 journey needs a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, run them in the browser on the dev server with lowdefy test --thorough, without --build, or pass --headless to say on purpose that browser journeys don't run here."
+    "1 journey a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --headless to say on purpose that browser journeys don't run in this step, and run them in another step with lowdefy test --thorough on the dev server."
   );
   expect(plain.code).toBe(1);
 

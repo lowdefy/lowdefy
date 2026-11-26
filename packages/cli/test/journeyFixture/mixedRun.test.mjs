@@ -165,7 +165,7 @@ fixtureTest(
     const plain = await runTest([], { CI: 'true' });
     expect(plain.output).toContain('2 passed, 0 failed of 2 journeys, 2 browser-only not run');
     expect(plain.output).toContain(
-      "2 journeys need a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here."
+      "2 journeys a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here."
     );
     expect(plain.code).toBe(1);
 

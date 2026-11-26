@@ -44,11 +44,14 @@ function readCiBrowserOnlyFailure({ env, options, browserOnly, inProcess = [], b
   if (count === 0) {
     return undefined;
   }
-  const journeys = count === 1 ? '1 journey needs a browser' : `${count} journeys need a browser`;
-  const run = build
-    ? 'run them in the browser on the dev server with lowdefy test --thorough, without --build'
-    : 'pass --thorough to run them in the browser';
-  return `${journeys} and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, ${run}, or pass --headless to say on purpose that browser journeys don't run here.`;
+  const journeys =
+    count === 1
+      ? '1 journey a browser run would take'
+      : `${count} journeys a browser run would take`;
+  const fix = build
+    ? "pass --headless to say on purpose that browser journeys don't run in this step, and run them in another step with lowdefy test --thorough on the dev server"
+    : "pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here";
+  return `${journeys} did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, ${fix}.`;
 }
 
 export { isCi };

@@ -2457,7 +2457,7 @@ test('--access refuses --browser and --thorough, naming the command meant', asyn
 // that ran its browser journeys with a plain lowdefy test before v8 does not go green without them.
 
 const CI_FAILURE =
-  "1 journey needs a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here.";
+  "1 journey a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here.";
 
 test('in CI, a plain run that skips a browser journey fails, naming the count and the ways out', async () => {
   const { default: test } = await import('./test.js');
@@ -2554,7 +2554,7 @@ test('in CI, --build with no mode flag fails on a browser-only journey, and --he
   await test({ context });
   expect(logs.info).toContain('1 passed, 0 failed of 1 journeys, 1 browser-only not run');
   expect(logs.error).toEqual([
-    "1 journey needs a browser and did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, run them in the browser on the dev server with lowdefy test --thorough, without --build, or pass --headless to say on purpose that browser journeys don't run here.",
+    "1 journey a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --headless to say on purpose that browser journeys don't run in this step, and run them in another step with lowdefy test --thorough on the dev server.",
   ]);
   expect(process.exitCode).toBe(1);
 
