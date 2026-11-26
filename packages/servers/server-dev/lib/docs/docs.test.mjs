@@ -46,10 +46,11 @@ vi.doMock('../server/createLowdefyContext.js', () => ({
 // findConfig force-builds a page when pageId is passed — the fixture pages
 // only exist as pre-written build artifacts, so stub the JIT builder out.
 const mockBuildPageIfNeeded = vi.fn(async () => true);
+const mockListCurrentBuilds = vi.fn(() => listFixtureCurrentBuilds({ fixtureDir }));
 vi.doMock('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
   reviewBuiltPage: async () => 'current',
-  listCurrentBuilds: () => listFixtureCurrentBuilds({ fixtureDir }),
+  listCurrentBuilds: mockListCurrentBuilds,
   syncBuildSignals: () => ({
     registry: JSON.parse(
       fs.readFileSync(path.join(fixtureDir, 'build', 'pageRegistry.json'), 'utf8')
@@ -380,6 +381,21 @@ test('findConfig scans keyMap for a matching id when no pageId is given', async 
   expect(result.matches[0].location.source).toContain(`${path.join('pages', 'home.yaml')}:5`);
   expect(result.matches[1].keyPath).toEqual('root.blocks[0:my_button:Button]');
   expect(result.note).toContain('Pass ?pageId=');
+});
+
+test('findConfig without a pageId leaves out the key map entries and requests of a page whose build is not current', async () => {
+  const { pageIds, mapsFiles } = await listFixtureCurrentBuilds({ fixtureDir });
+  pageIds.delete('home');
+  pageIds.delete('other');
+  mapsFiles.delete('abc123-1-1.json');
+  mockListCurrentBuilds.mockResolvedValueOnce({ pageIds, mapsFiles });
+  const result = await findConfig({ id: 'my_button' });
+  expect(result.matches.length).toEqual(1);
+  expect(result.matches[0].keyPath).toEqual('root.blocks[0:my_button:Button]');
+
+  mockListCurrentBuilds.mockResolvedValueOnce({ pageIds, mapsFiles });
+  const request = await findConfig({ id: 'req-tenant' });
+  expect(request.matches[0].hazards.map((hazard) => hazard.id)).not.toContain('tenant-wall-lookup');
 });
 
 test('findConfig with pageId only returns matches on that page', async () => {

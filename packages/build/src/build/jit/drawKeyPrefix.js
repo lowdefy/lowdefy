@@ -20,22 +20,26 @@ import { randomBytes } from 'crypto';
 const prefixCount = 65536;
 
 const drawnPrefixes = new Set();
+let lastPrefix = null;
 
 // The key prefix of a dev config build. The dev server tells config builds
 // apart by it: a page build that a publish overtook (skipStaleMapWrites and
 // the page builder's in-flight check), and a key of an earlier build, which
 // must name no node of the new one. Drawn at random, two builds of one dev
-// session shared a prefix about once in 65,536 publishes, so a prefix this
-// process drew before is drawn again, until every prefix has been used once.
+// session shared a prefix about once in 65,536 publishes, so the draw is
+// repeated while it gives a prefix this process drew before, until every
+// prefix has been used once; then it only avoids the last.
 function drawKeyPrefix() {
   if (drawnPrefixes.size === prefixCount) {
     drawnPrefixes.clear();
+    drawnPrefixes.add(lastPrefix);
   }
   let prefix;
   do {
     prefix = `${randomBytes(2).toString('hex')}_`;
   } while (drawnPrefixes.has(prefix));
   drawnPrefixes.add(prefix);
+  lastPrefix = prefix;
   return prefix;
 }
 

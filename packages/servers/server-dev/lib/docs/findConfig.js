@@ -318,7 +318,7 @@ async function findConfig({ id, pageId }) {
   // page's earlier builds, and its builds before a config publish that changed
   // what it reads, until the page is built again. The endpoint builds' files
   // hold the keys of live endpoint artifacts.
-  const { mapsFiles } = await listCurrentBuilds({ buildDirectory, configDirectory });
+  const { pageIds, mapsFiles } = await listCurrentBuilds({ buildDirectory, configDirectory });
   const { keyMap, refMap } = await readMergedMaps({
     buildDirectory,
     includeJitMapsFile: (file) => file.startsWith('endpoints-') || mapsFiles.has(file),
@@ -329,7 +329,8 @@ async function findConfig({ id, pageId }) {
     refMap,
     resolveKeyPath: createKeyPathResolver({ keyMap }),
     configDirectory,
-    requestPageIds: Object.keys(pageRegistry),
+    // A stale request artifact can name another connection.
+    requestPageIds: Object.keys(pageRegistry).filter((registeredId) => pageIds.has(registeredId)),
   });
   return {
     matches,
