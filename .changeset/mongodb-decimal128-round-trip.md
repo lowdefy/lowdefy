@@ -1,5 +1,5 @@
 ---
-'@lowdefy/connection-mongodb': minor
+'@lowdefy/connection-mongodb': major
 '@lowdefy/operators-js': minor
 '@lowdefy/server-dev': minor
 '@lowdefy/node-utils': minor
@@ -12,4 +12,4 @@ The new `_decimal` operator writes a decimal in a MongoDB request: `_decimal: '1
 
 The value is always a string and never passes through a JavaScript number. A number given to `_decimal` (`_decimal: 19.99` unquoted in YAML) fails with an error that says to quote it, instead of returning a rounded value. The connection's change log and the walled client that plugins use keep decimals too, and a journey data set fixture can seed one with `{ '~dec': '12.50' }`. A journey's `expect: { db }` reads a stored decimal as `{ '~dec': '0.30' }` as well, and its `match` takes the fixture markers (`{ '~dec' }`, `{ _oid }` and `{ '~d' }`), so it can find a document by an exact decimal, an ObjectId or a date.
 
-If your app already reads Decimal128 fields, they used to arrive as `{ $numberDecimal: '19.99' }`, a form that could not be written back. They now arrive as `{ '~dec': '19.99' }`: change any `$numberDecimal` you read in config to `~dec`.
+**Breaking:** if your app already reads Decimal128 fields, they used to arrive as `{ $numberDecimal: '19.99' }`, a form that could not be written back. They now arrive as `{ '~dec': '19.99' }`: change any `$numberDecimal` you read in config to `~dec`.
