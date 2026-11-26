@@ -19,6 +19,7 @@ import { UserError } from '@lowdefy/errors';
 import getCurrentEnvironment from '../../context/getCurrentEnvironment.js';
 import createWalledResolver from './createWalledResolver.js';
 import invokeEndpoint from '../endpoints/invokeEndpoint.js';
+import readRequestEndpointId from './readRequestEndpointId.js';
 import stampTypedError from './stampTypedError.js';
 import wrapResolverError from './wrapResolverError.js';
 
@@ -36,7 +37,8 @@ async function callRequestResolver(
     tenantGuard,
   }
 ) {
-  const { blockId, endpointId, logger, pageId, payload, signal } = context;
+  const { blockId, logger, pageId, payload, signal } = context;
+  const endpointId = readRequestEndpointId(context, { requestConfig });
   // stepId for endpoint steps (after build), requestId for page requests
   const stepOrRequestId = requestConfig.stepId ?? requestConfig.requestId;
 
@@ -116,7 +118,7 @@ async function callRequestResolver(
     // stepId, not requestId: on an error requestId is the HTTP request's id (context.rid)
     // everywhere else.
     const fields = {
-      endpointId: requestConfig.endpointId ?? endpointId,
+      endpointId,
       stepId: stepOrRequestId,
       connectionId: requestConfig.connectionId,
     };

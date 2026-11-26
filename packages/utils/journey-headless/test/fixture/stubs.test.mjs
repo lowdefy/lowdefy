@@ -30,7 +30,7 @@ import journeyFixture from './journeyFixture.mjs';
 // service price_run asks, and fail gates that fail a write once, twice and every time, on data set
 // "stubs". Each journey runs on a host of its own on the file's one app, so on a fresh session.
 
-const [stubsJourney, pageJourney] = YAML.parse(
+const [stubsJourney, pageJourney, nestedJourney] = YAML.parse(
   fs.readFileSync(
     path.join(journeyFixture.configDirectory, 'tests', 'journeys', '_headless', 'stubs.yaml'),
     'utf8'
@@ -75,6 +75,16 @@ test('the stubs journey answers the rate service, and its forced failures read a
   forced.forEach((call) => {
     expect(call.error.message).not.toContain('on purpose');
   });
+});
+
+test('a fail gate narrowed to the endpoint a nested CallApi reaches fires on its request', async () => {
+  const result = await run(nestedJourney);
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(nestedJourney.steps.map(() => 'ok'));
+  expect(host.dataSession.failGates.map(({ endpoint, fired }) => ({ endpoint, fired }))).toEqual([
+    { endpoint: 'log_activity', fired: 1 },
+  ]);
 });
 
 test('an answer stub on a request type the app does not have is refused when the host opens', async () => {
