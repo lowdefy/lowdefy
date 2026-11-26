@@ -2,7 +2,7 @@
 
 How Lowdefy's config tests (journeys) are built in code: the grammar, selection, the runner, data sets, app errors, traces and session logs, production evidence and tiers, hardening, and pull request scope. What a journey does for an app developer, and every command option, is in the user docs under `packages/docs/testing/`: `config-tests.md`, `journey-data-sets.md` and `explore-pull-request.md`. This page names where each piece lives and the rules that are not visible from those docs. How to run the framework's own journey suites is in [testing.md](../testing.md).
 
-The designs behind it are in Pelican, under the LDF-133 (Journey loop) project.
+The designs behind it are in the task tracker, under the LDF-133 (Journey loop) project.
 
 ## Where the code lives
 
@@ -258,7 +258,7 @@ The PostHog plugin's `before_send` masks clicked text the page config does not s
 
 ## Headless runs
 
-A headless run takes the journeys that need no browser and runs them in Node: the page's own event chains on `@lowdefy/engine` and `@lowdefy/client-core`, its requests and endpoint calls in process through `@lowdefy/api`, no React and no DOM. The design is "Headless journeys" in Pelican, under the cheaper journey testing project.
+A headless run takes the journeys that need no browser and runs them in Node: the page's own event chains on `@lowdefy/engine` and `@lowdefy/client-core`, its requests and endpoint calls in process through `@lowdefy/api`, no React and no DOM. The design is "Headless journeys" in the task tracker, under the cheaper journey testing project.
 
 **Classification.** `classifyJourney({ journey })` (node-utils `journeyGrammar/`) reads the steps alone: `{ headless: true }`, or `{ headless: false, index, step, reason }` for the first step that needs a browser (`screenshot`, `email`, `press` other than Enter or Escape, a `fill` from an email, a click with `count` above 1, a `row` target, `nth` on its own, a `text` or `containing` target on a `fill`, `select` or `open`, or a `column` without `rowKey`, `expect` `title` or `effect`, and `expect.text` with `text`, `containing`, `row`, `rowKey`, `column` or `nth` beside its `blockId`). `open` and the `rowKey` and `control` target keys are headless: both runners read a row and a control by key (`journeyTargetSelectors.gridSelector({ kind: 'rowKey' })`, `controlSelector`, the `data-lf-block`/`data-lf-control`/`data-lf-row-key` marks, `isGeneratedRowKey`). The reasons for `row` and `text` name `rowKey` and `control` as the headless replacements. A click, `expect.visible` or `expect.hidden` by `text` or `containing`, with the `nth` beside them and no `row`, `rowKey`, `column` or `control`, is left to the run, which reads it in `ClickableHtml` blocks (below). A step can still need the browser at run time; the runner reports that (below). Lint L8 runs it on the journey with its page-reading targets swapped (for a click, the control its measured run clicked, from `exercised.controls`; else the `blockId` alone), to name journeys one key away from headless.
 
