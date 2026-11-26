@@ -3383,7 +3383,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "9c4402b5b2c5f485c4d9e39a7bd2d47cc685f9fcdcb1002bbab9cd95dfcb0fe3"
+      "hash": "f8bb51fc8f4cb2075c3bc31917bce7d98cb1d2291b7047554aa75a819b2a4fd6"
     },
     "testing/journey-data-sets": {
       "files": [
@@ -4913,7 +4913,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "1e836000f854b09ae0b0c16257d295c350cc1c3c06be6c4c9e6d4c71aba5b16b"
+      "hash": "c8f35443942045bc76cd22f6b0fd75e17751f7e7972e6780d863222cbee08a2a"
     },
     "connections/mssql": {
       "files": [

@@ -225,3 +225,18 @@ test('an artifact written in the last 2 seconds is read on every hash until it s
   expect(hashBuild({ context })).toEqual(first);
   expect(read()).toEqual([]);
 });
+
+test('a same-size rewrite in the same modified-time second as the hash moves the hash', () => {
+  // A file system that keeps modified times to the second gives both writes the same time.
+  const second = Math.floor(Date.now() / 1000);
+  withTestDirectory();
+  writeBuild({});
+  writeArtifact('api/e.json', { id: 'e', title: 'Foo' }, { settled: false });
+  fs.utimesSync(path.join(build(), 'api', 'e.json'), second, second);
+  const first = hashBuild({ context });
+  writeArtifact('api/e.json', { id: 'e', title: 'Bar' }, { settled: false });
+  fs.utimesSync(path.join(build(), 'api', 'e.json'), second, second);
+  const read = readSpy();
+  expect(hashBuild({ context })).not.toEqual(first);
+  expect(read()).toEqual(['api/e.json']);
+});
