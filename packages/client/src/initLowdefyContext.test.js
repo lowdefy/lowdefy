@@ -265,3 +265,15 @@ test('initLowdefyContext watches the page unload once across renders', () => {
   const events = args.window.addEventListener.mock.calls.map(([name]) => name);
   expect(events).toEqual(['beforeunload', 'pagehide', 'pageshow']);
 });
+
+test('initLowdefyContext freezes block config on the dev and e2e servers only', () => {
+  const production = baseArgs();
+  initLowdefyContext(production);
+  expect(production.lowdefy._internal.freezeConfig).toBeUndefined();
+
+  ['dev', 'e2e'].forEach((stage) => {
+    const args = { ...baseArgs(), stage };
+    initLowdefyContext(args);
+    expect(args.lowdefy._internal.freezeConfig).toBe(true);
+  });
+});

@@ -18,13 +18,16 @@ import { serializer, type } from '@lowdefy/helpers';
 import Block from './Block.js';
 import getFieldsAndParents from './getFieldsAndParents.js';
 
+// slots is block config, which the engine only reads. createContext copies the page's config once,
+// so nested containers and list rows share that copy: each Slots builds its own slot objects to
+// hold its Block instances (initSlotBlocks) and never writes into the config it was given.
 class Slots {
   constructor({ arrayIndices = [], slots, context }) {
     this.id = Math.random()
       .toString(36)
       .replace(/[^a-z]+/g, '')
       .substring(0, 5);
-    this.slots = serializer.copy(slots || []);
+    this.slots = slots || [];
     this.arrayIndices = arrayIndices;
     this.context = context;
     this.map = {};
@@ -41,15 +44,21 @@ class Slots {
     this.resetBlocks(initState);
   };
 
-  // Replace Slot blocks array with Block instances
+  // Replace the slot config with slot objects of this Slots' own, each holding its Block instances.
+  // The config stays as it was: the blocks of every other container and list row read it too.
   initSlotBlocks = () => {
     if (type.isObject(this.slots)) {
-      Object.values(this.slots).forEach((slot) => {
+      const slots = {};
+      Object.keys(this.slots).forEach((key) => {
+        const slot = this.slots[key];
         // Handle slots with no blocks - render as empty
         const blocksConfig = slot.blocks ?? [];
-        const blocks = blocksConfig.map((slotBlock) => new Block(this, slotBlock));
-        slot.blocks = blocks;
+        slots[key] = {
+          ...slot,
+          blocks: blocksConfig.map((slotBlock) => new Block(this, slotBlock)),
+        };
       });
+      this.slots = slots;
     }
   };
 
@@ -84,7 +93,7 @@ class Slots {
   };
 
   recEval = (visibleParent) => {
-    let repeat = { value: false };
+    const repeat = { value: false };
     this.loopBlocks((block) => block.evaluate(visibleParent, repeat));
     return repeat.value;
   };
