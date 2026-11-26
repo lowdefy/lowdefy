@@ -61,8 +61,9 @@ async function runScheduledEndpoint(context, { endpointId, cron, environment }) 
   applySystemTrust(context);
 
   // An authored schedule.payload that breaks the endpoint's own contract fails
-  // the run.
-  const schedulePayload = schedule.payload ?? {};
+  // the run. The payload is copied because schedule belongs to the endpoint config every request
+  // on the server process shares, and validation can rewrite values in place (`transform`).
+  const schedulePayload = serializer.copy(schedule.payload ?? {});
   validatePayload({ endpointConfig, payload: schedulePayload });
 
   const routineContext = {

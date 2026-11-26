@@ -58,7 +58,7 @@ test('OpenAIAgent resolver maps reasoningEffort to providerOptions', async () =>
 
   await OpenAIAgent.resolver(args);
 
-  expect(properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     openai: { reasoningEffort: 'high' },
   });
 });
@@ -76,7 +76,7 @@ test('OpenAIAgent resolver maps reasoningSummary to providerOptions', async () =
 
   await OpenAIAgent.resolver(args);
 
-  expect(properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     openai: { reasoningSummary: 'detailed' },
   });
 });
@@ -96,7 +96,7 @@ test('OpenAIAgent resolver maps both reasoning props to providerOptions', async 
 
   await OpenAIAgent.resolver(args);
 
-  expect(properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     openai: { reasoningEffort: 'medium', reasoningSummary: 'auto' },
   });
 });
@@ -120,7 +120,7 @@ test('OpenAIAgent resolver merges with existing providerOptions', async () => {
 
   await OpenAIAgent.resolver(args);
 
-  expect(properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     openai: { strictJsonSchema: true, reasoningEffort: 'high' },
   });
 });
@@ -138,7 +138,34 @@ test('OpenAIAgent resolver does not set providerOptions when no sugar props', as
 
   await OpenAIAgent.resolver(args);
 
-  expect(properties.agent.properties.providerOptions).toBeUndefined();
+  expect(
+    mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions
+  ).toBeUndefined();
+});
+
+test('OpenAIAgent resolver leaves the agent properties it is passed unchanged', async () => {
+  mockHandleAgentChat.mockResolvedValue({ text: 'ok' });
+
+  const { default: OpenAIAgent } = await import('./OpenAIAgent.js');
+
+  const agentProperties = {
+    model: 'o3',
+    reasoningEffort: 'high',
+    providerOptions: { openai: { strictJsonSchema: true } },
+  };
+  const original = structuredClone(agentProperties);
+  const args = {
+    connection: { provider: vi.fn() },
+    properties: { agent: { properties: agentProperties }, messages: [] },
+    context: {},
+  };
+
+  await OpenAIAgent.resolver(args);
+
+  expect(agentProperties).toEqual(original);
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties).not.toBe(
+    agentProperties
+  );
 });
 
 test('OpenAIAgent has schema', async () => {

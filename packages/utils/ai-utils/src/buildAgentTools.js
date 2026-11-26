@@ -202,9 +202,14 @@ async function buildAgentTools({ agent, context, depth = 0, autoApprove = false 
         `Sub-agent tool "${subAgentToolName}" uses a reserved key name.`
       );
     }
-    const subAgentConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
-    const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentConfig });
-    subAgentConfig.mcp = await context.resolveMcpSources({ agentConfig: subAgentConfig });
+    // getAgentConfig returns the config object every request on the server process shares, so
+    // the resolved MCP sources go on a new object rather than onto it.
+    const subAgentFileConfig = await context.getAgentConfig({ agentId: subAgentRef.agentId });
+    const subConnection = await context.getConnectionForAgent({ agentConfig: subAgentFileConfig });
+    const subAgentConfig = {
+      ...subAgentFileConfig,
+      mcp: await context.resolveMcpSources({ agentConfig: subAgentFileConfig }),
+    };
 
     // Recursively build sub-agent's tools
     const {

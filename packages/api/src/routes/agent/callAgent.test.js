@@ -94,7 +94,7 @@ test('callAgent loads agent config, creates connection, and calls resolver', asy
   expect(mockCreate).toHaveBeenCalledWith({ connection: { apiKey: 'sk-test' } });
   expect(mockResolver).toHaveBeenCalledWith({
     connection: { provider: 'mock-provider' },
-    properties: { agent: agentConfig, messages },
+    properties: { agent: { ...agentConfig, mcp: [] }, messages },
     context: expect.objectContaining({
       callEndpoint: expect.any(Function),
       getEndpointConfig: expect.any(Function),

@@ -62,7 +62,7 @@ test('GeminiAgent resolver maps thinkingConfig to providerOptions.google', async
 
   await GeminiAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     google: { thinkingConfig: { thinkingBudget: 8192, includeThoughts: true } },
   });
 });
@@ -88,7 +88,7 @@ test('GeminiAgent resolver maps safetySettings to providerOptions.google', async
 
   await GeminiAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     google: { safetySettings },
   });
 });
@@ -115,7 +115,7 @@ test('GeminiAgent resolver merges sugar with existing providerOptions', async ()
 
   await GeminiAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     google: {
       cachedContent: 'cachedContents/abc',
       thinkingConfig: { thinkingBudget: 4096 },
@@ -150,7 +150,7 @@ test('GeminiAgent resolver maps both thinkingConfig and safetySettings together'
 
   await GeminiAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toEqual({
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions).toEqual({
     google: {
       cachedContent: 'cachedContents/abc',
       thinkingConfig,
@@ -175,7 +175,34 @@ test('GeminiAgent resolver does not modify providerOptions when no sugar props',
 
   await GeminiAgent.resolver(args);
 
-  expect(args.properties.agent.properties.providerOptions).toBeUndefined();
+  expect(
+    mockHandleAgentChat.mock.lastCall[0].properties.agent.properties.providerOptions
+  ).toBeUndefined();
+});
+
+test('GeminiAgent resolver leaves the agent properties it is passed unchanged', async () => {
+  mockHandleAgentChat.mockResolvedValue({ text: 'ok' });
+
+  const { default: GeminiAgent } = await import('./GeminiAgent.js');
+
+  const agentProperties = {
+    model: 'gemini-2.5-pro',
+    thinkingConfig: { thinkingBudget: 1024 },
+    providerOptions: { google: { structuredOutputs: true } },
+  };
+  const original = structuredClone(agentProperties);
+  const args = {
+    connection: { provider: vi.fn() },
+    properties: { agent: { properties: agentProperties }, messages: [] },
+    context: {},
+  };
+
+  await GeminiAgent.resolver(args);
+
+  expect(agentProperties).toEqual(original);
+  expect(mockHandleAgentChat.mock.lastCall[0].properties.agent.properties).not.toBe(
+    agentProperties
+  );
 });
 
 test('GeminiAgent has schema', async () => {

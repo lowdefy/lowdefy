@@ -227,3 +227,23 @@ test('rejects a schedule payload that violates the endpoint payloadSchema before
   );
   expect(runRoutine).not.toHaveBeenCalled();
 });
+
+test('leaves the cached endpoint schedule payload unchanged when the payloadSchema transforms it', async () => {
+  const endpoint = {
+    endpointId: 'purge',
+    type: 'Api',
+    payloadSchema: {
+      type: 'object',
+      properties: { mode: { type: 'string', transform: ['trim'] } },
+    },
+    schedules: [{ cron: '0 6 * * *', payload: { mode: '  full  ' } }],
+    routine: [],
+  };
+  const context = makeContext(endpoint);
+
+  await runScheduledEndpoint(context, { endpointId: 'purge', cron: '0 6 * * *' });
+
+  const [, routineContext] = runRoutine.mock.calls[0];
+  expect(routineContext.payload).toEqual({ mode: 'full' });
+  expect(endpoint.schedules[0].payload).toEqual({ mode: '  full  ' });
+});
