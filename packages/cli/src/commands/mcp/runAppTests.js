@@ -61,8 +61,8 @@ import writeHeadlessRun from '../test/writeHeadlessRun.js';
 // browser; `headless` is the default (readTestMode). `concurrency` keeps up to that many journeys
 // in flight (readRunConcurrency): headless journeys, which the dev server runs side by side in its
 // worker threads, and on a thorough or browser run browser journeys, 1 to 3. Without it, the
-// headless journeys run at the machine's default: its cores less one, and no more than one per
-// 4 GiB of memory.
+// headless journeys run at the machine's default: its cores (less one above 4 cores), and no more
+// than one per GiB of memory.
 //
 // The answer is cut to what an agent can read (compactTestResults); every
 // journey's result is in the file `resultFile` names. A journey's measured

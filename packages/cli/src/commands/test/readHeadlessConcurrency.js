@@ -35,17 +35,19 @@ function cachePressure({ readPressure, now }) {
   };
 }
 
-// How many headless journeys one test run keeps in flight: { size, readLimit } or { error }.
-// `size` is the most the run ever runs at once, the number of places it opens to run them in
+// How many headless journeys one test run keeps in flight: { size, readLimit } or { error }. `size`
+// is the most the run ever runs at once, the number of places it opens to run them in
 // (runHeadlessTests' worker threads); readLimit() is how many it may run now. The size is
 // `concurrency` when the run was given one (`typed`: --concurrency on the command line, or
 // lowdefy_run_tests' concurrency), any integer from 1 up, named `name` in a refusal; else the
-// machine's cores less one, and no more than one per 4 GiB of memory (readHeadlessThreadLimit). A concurrency
-// from lowdefy.yaml's cli config or LOWDEFY_JOURNEY_CONCURRENCY is not read: both size browser journeys, which share three browser
-// slots (readJourneyConcurrency). A --repeat run measures flakiness, so it runs one at a time: a
-// journey that fails only beside another is the flakiness it was asked to find. readLimit() reads
-// memory pressure (the pool calls it before starting a journey beside another), at most once a
-// second, and gives 1 while it is warn or critical.
+// machine's cores (less one above 4 cores), and no more than one per GiB of memory
+// (readHeadlessThreadLimit). A
+// concurrency from lowdefy.yaml's cli config or LOWDEFY_JOURNEY_CONCURRENCY is not read: both size
+// browser journeys, which share three browser slots (readJourneyConcurrency). A --repeat run
+// measures flakiness, so it runs one at a time: a journey that fails only beside another is the
+// flakiness it was asked to find. readLimit() reads memory pressure (the pool calls it before
+// starting a journey beside another), at most once a second, and gives 1 while it is warn or
+// critical.
 function readHeadlessConcurrency({
   concurrency: value,
   typed,

@@ -115,6 +115,7 @@ test('runs one journey in this thread and the rest in worker threads, reported i
   // The workers take the run's directories and test secrets, and up to size less this thread.
   expect(mockWorkers.size).toBe(2);
   expect(mockWorkers.workerData).toEqual({
+    buildId: 'build-1',
     directories: { config: context.directories.config, server: context.directories.server },
     secrets: { API_KEY: 'test-key' },
   });

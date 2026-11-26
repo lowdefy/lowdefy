@@ -22,7 +22,7 @@
     pnpm app:build                                                   # app/ with defaults
     pnpm app:build --config-directory /path/to/app --log-level debug # external app
     pnpm app:build --skip-build                                      # skip monorepo build
-    pnpm app:build --server-directory _server/prod-pelican           # a second copy beside _server/prod
+    pnpm app:build --server-directory _server/prod-other             # a second copy beside _server/prod
     pnpm app:build --no-client-build                                 # config build only, as `lowdefy build --no-client-build`
 
   How it works:

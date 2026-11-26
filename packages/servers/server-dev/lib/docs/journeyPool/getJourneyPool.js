@@ -55,7 +55,7 @@ function createPoolState() {
 
 // The dev server's journey pool (createJourneyPool), started on first use, with the threads that
 // joined its data store ({ pool, storeThreads }). It runs at most as many threads as the machine has
-// cores less one, and no more than one per 4 GiB of memory (readHeadlessThreadLimit), the rule
+// cores (less one above 4 cores), and no more than one per GiB of memory (readHeadlessThreadLimit), the rule
 // `lowdefy test` sizes its runs by: the pool serves every caller of the dev server, so two runs at
 // once share its threads instead of starting twice as many.
 function getJourneyPool() {

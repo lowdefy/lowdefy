@@ -57,6 +57,7 @@ async function runHeadlessTests({
   const workers = createHeadlessWorkers({
     size: concurrency.size - 1,
     workerData: {
+      buildId: app.buildId,
       directories: { config: context.directories.config, server: context.directories.server },
       secrets,
     },

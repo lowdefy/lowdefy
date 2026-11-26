@@ -23,7 +23,7 @@ const normal = () => 'normal';
 const GIB = 1024 ** 3;
 const memory = 64 * GIB;
 
-test('readHeadlessConcurrency defaults to the cores less one', () => {
+test('readHeadlessConcurrency defaults to the cores less one above 4 cores', () => {
   const read = readHeadlessConcurrency({
     name: '--concurrency',
     repeat: 1,
@@ -35,7 +35,23 @@ test('readHeadlessConcurrency defaults to the cores less one', () => {
   expect(read.readLimit()).toBe(7);
 });
 
-test('readHeadlessConcurrency keeps the default to one journey per 4 GiB of memory', () => {
+test('readHeadlessConcurrency defaults to every core on up to 4 cores', () => {
+  const read = (cores, bytes) =>
+    readHeadlessConcurrency({
+      name: '--concurrency',
+      repeat: 1,
+      cores,
+      memory: bytes,
+      readPressure: normal,
+    }).size;
+  // A GitHub-hosted runner: 2 cores and 7 GB on a private repository, 4 and 16 GB on a public one.
+  expect(read(2, 7 * GIB)).toBe(2);
+  expect(read(4, 16 * GIB)).toBe(4);
+  expect(read(3, memory)).toBe(3);
+  expect(read(1, memory)).toBe(1);
+});
+
+test('readHeadlessConcurrency keeps the default to one journey per GiB of memory', () => {
   const read = (bytes) =>
     readHeadlessConcurrency({
       name: '--concurrency',
@@ -44,9 +60,10 @@ test('readHeadlessConcurrency keeps the default to one journey per 4 GiB of memo
       memory: bytes,
       readPressure: normal,
     }).size;
-  expect(read(16 * GIB)).toBe(4);
-  expect(read(8 * GIB)).toBe(2);
-  expect(read(3 * GIB)).toBe(1);
+  expect(read(16 * GIB)).toBe(9);
+  expect(read(8 * GIB)).toBe(8);
+  expect(read(3 * GIB)).toBe(3);
+  expect(read(1.5 * GIB)).toBe(1);
   // A typed concurrency is the run's own choice.
   expect(
     readHeadlessConcurrency({
@@ -61,14 +78,18 @@ test('readHeadlessConcurrency keeps the default to one journey per 4 GiB of memo
   ).toBe(8);
 });
 
-test('readHeadlessConcurrency runs one at a time on one or two cores, and reads no pressure', () => {
-  [1, 2].forEach((cores) => {
-    const readPressure = vi.fn(normal);
-    const read = readHeadlessConcurrency({ name: '--concurrency', repeat: 1, cores, readPressure });
-    expect(read.size).toBe(1);
-    expect(read.readLimit()).toBe(1);
-    expect(readPressure).not.toHaveBeenCalled();
+test('readHeadlessConcurrency runs one at a time on one core, and reads no pressure', () => {
+  const readPressure = vi.fn(normal);
+  const read = readHeadlessConcurrency({
+    name: '--concurrency',
+    repeat: 1,
+    cores: 1,
+    memory,
+    readPressure,
   });
+  expect(read.size).toBe(1);
+  expect(read.readLimit()).toBe(1);
+  expect(readPressure).not.toHaveBeenCalled();
 });
 
 test('readHeadlessConcurrency takes a typed concurrency above the cores and the browser limit', () => {
@@ -156,14 +177,14 @@ test('readHeadlessConcurrency gives 1 while memory pressure is warn or critical,
     readPressure,
     now: () => clock,
   });
-  expect(read.size).toBe(3);
+  expect(read.size).toBe(4);
   const limits = [];
   [0, 500, 1000, 2000, 3000].forEach((at) => {
     clock = at;
     limits.push(read.readLimit());
   });
   // The reading at 0 holds at 500; 1000, 2000 and 3000 each read again.
-  expect(limits).toEqual([3, 3, 1, 1, 3]);
+  expect(limits).toEqual([4, 4, 1, 1, 4]);
   expect(readPressure).toHaveBeenCalledTimes(4);
 });
 

@@ -20,17 +20,21 @@ import readHeadlessThreadLimit from './readHeadlessThreadLimit.js';
 
 const GiB = 1024 ** 3;
 
-test('readHeadlessThreadLimit leaves one core for the run', () => {
+test('readHeadlessThreadLimit leaves one core for the run above 4 cores', () => {
   expect(readHeadlessThreadLimit({ cores: 10, memory: 64 * GiB })).toBe(9);
 });
 
-test('readHeadlessThreadLimit keeps one thread per 4 GiB of memory', () => {
-  expect(readHeadlessThreadLimit({ cores: 10, memory: 16 * GiB })).toBe(4);
+test('readHeadlessThreadLimit runs on every core of a machine with up to 4', () => {
+  expect(readHeadlessThreadLimit({ cores: 2, memory: 7 * GiB })).toBe(2);
+  expect(readHeadlessThreadLimit({ cores: 4, memory: 16 * GiB })).toBe(4);
 });
 
-test('readHeadlessThreadLimit is at least one on one core or little memory', () => {
-  expect(readHeadlessThreadLimit({ cores: 1, memory: 64 * GiB })).toBe(1);
-  expect(readHeadlessThreadLimit({ cores: 8, memory: 2 * GiB })).toBe(1);
+test('readHeadlessThreadLimit keeps one thread per GiB of memory', () => {
+  expect(readHeadlessThreadLimit({ cores: 10, memory: 6 * GiB })).toBe(6);
+});
+
+test('readHeadlessThreadLimit is at least one on little memory', () => {
+  expect(readHeadlessThreadLimit({ cores: 8, memory: 0.5 * GiB })).toBe(1);
 });
 
 test('readHeadlessThreadLimit reads the machine when given nothing', () => {

@@ -512,7 +512,7 @@ test('formatJourneyResult says a PASS came alone after an open failure beside ot
     })
   ).toEqual([
     'PASS  submits the form  (3 steps, 1234ms)',
-    '      passed alone after failing beside other journeys: The page did not open in 30000ms.',
+    '      passed alone after failing beside other journeys (serial: true runs it alone): The page did not open in 30000ms.',
   ]);
 });
 
@@ -532,7 +532,7 @@ test('formatJourneyResult names the step a contended PASS first failed at', () =
       },
     })[1]
   ).toBe(
-    '      passed alone after failing beside other journeys: step 2 (click "save"): save is disabled'
+    '      passed alone after failing beside other journeys (serial: true runs it alone): step 2 (click "save"): save is disabled'
   );
 });
 

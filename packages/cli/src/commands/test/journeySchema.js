@@ -337,12 +337,12 @@ const properties = {
       'Marks a journey whose flow is being retired from the app. `lowdefy journeys evidence --refresh` keeps counting its production use.',
     errorMessage: 'Journey "deprecated" should be true or false.',
   },
-  // Read by the browser test pool: a journey marked serial runs with no
-  // other journey in flight.
+  // Read by the journey pool (runJourneyPool): a journey marked serial runs with no other journey
+  // in flight, in a browser run and in a side-by-side headless run.
   serial: {
     type: 'boolean',
     description:
-      'Runs the journey with no other journey in flight. Mark a data-set journey that depends on something outside its data session: the clock, a file, or an outside service that is not stubbed.',
+      'Runs the journey with no other journey in flight. Mark a data-set journey whose outcome depends on timing or on state outside its data session: a step that waits a fixed time for background work, a file the app writes, or state a plugin keeps in memory. Outside services need no serial: under a data set they are stubbed or sunk.',
     errorMessage: 'Journey "serial" should be true or false.',
   },
   evidence: evidenceSchema,
