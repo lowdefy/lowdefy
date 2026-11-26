@@ -98,13 +98,14 @@ function withEvidence({ line, evidence, usage }) {
 }
 
 // A journey that failed beside others and passed when rerun alone (runJourneyPool) says so under
-// its PASS line, with what the first attempt failed on.
+// its PASS line, with what the first attempt failed on, and points at serial: true, which runs it
+// alone from the start.
 function contendedLines({ result }) {
   if (result.contended !== true) {
     return [];
   }
   return [
-    `      passed alone after failing beside other journeys: ${failureDetail(
+    `      passed alone after failing beside other journeys (serial: true runs it alone): ${failureDetail(
       result.contendedFailure
     )}`,
   ];

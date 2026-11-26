@@ -16,23 +16,24 @@
 
 import { parentPort, workerData } from 'node:worker_threads';
 
-import openBuildApp from './openBuildApp.js';
+import openWorkerBuild from './openWorkerBuild.js';
 import runHeadlessRepeated from './runHeadlessRepeated.js';
 
 // A worker thread of a --build run (createHeadlessWorkers): it opens the production build once, as
-// the run's own thread did (openBuildApp, with the run's test `secrets`), at its first journey, and
-// runs each journey the run posts it on that app, one at a time (runHeadlessRepeated), each on a
-// fresh session of its data set on the run's one data store. It answers each { id, item, repeat }
-// with { id, result }, or { id, error: { message, stack } } when the run threw ({ id, error:
-// { message, refused: true } } for every journey once the build would not open), and { type: 'close' }
-// with { type: 'closed' } once its app is closed. Its globals and module state are its own, so
-// journeys in other threads never share them.
-const { directories, secrets } = workerData;
+// the run's own thread did (openWorkerBuild, with the run's test `secrets`, refusing a build other
+// than the run's `buildId`), at its first journey, and runs each journey the run posts it on that
+// app, one at a time (runHeadlessRepeated), each on a fresh session of its data set on the run's
+// one data store. It answers each { id, item, repeat } with { id, result }, or { id, error: {
+// message, stack } } when the run threw ({ id, error: { message, refused: true } } for every
+// journey once the build would not open), and { type: 'close' } with { type: 'closed' } once its
+// app is closed. Its globals and module state are its own, so journeys in other threads never share
+// them.
+const { buildId, directories, secrets } = workerData;
 const context = { directories };
 let opening;
 
 function openApp() {
-  opening = opening ?? openBuildApp({ context, secrets });
+  opening = opening ?? openWorkerBuild({ buildId, context, secrets });
   return opening;
 }
 

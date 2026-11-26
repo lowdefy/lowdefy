@@ -20,10 +20,14 @@ import { type } from '@lowdefy/helpers';
 import readMemoryPressure from '../hub/readMemoryPressure.js';
 
 // A --build run's worker thread holds the whole server and client engine: about 400 MB on a large
-// production app. Nine of them on a 16 GB machine shared with a dev server and other runs brought
-// macOS to memory pressure, which turns a run serial (readLimit), so the default keeps one journey
-// thread per 4 GiB of the memory the process may use (its container's limit when it has one).
-const MEMORY_PER_JOURNEY = 4 * 1024 ** 3;
+// production app. One journey thread per GiB of the memory the process may use (its container's
+// limit when it has one) leaves each thread more than twice that, so a 2-core 7 GB CI runner still
+// runs two journeys at once.
+const MEMORY_PER_JOURNEY = 1024 ** 3;
+// Up to this many cores, the run uses every one: a CI runner has 2 to 4, and the run's own work
+// (the CLI, the data store) waits on journeys more than it competes with them. Above it, one core
+// is left for that work.
+const ALL_CORES_UP_TO = 4;
 // How long a memory pressure reading holds: reading it runs a command, and the pool reads it before
 // every journey it starts beside another.
 const PRESSURE_TTL_MS = 1000;
@@ -33,10 +37,11 @@ function readMemory() {
   return constrained > 0 ? Math.min(constrained, os.totalmem()) : os.totalmem();
 }
 
-// The default: one core is left for the run itself (the CLI, the dev server's other work, the data
-// store), one journey per MEMORY_PER_JOURNEY, and at least one journey.
+// The default: every core on a machine of up to ALL_CORES_UP_TO cores, else every core but one; no
+// more than one journey per MEMORY_PER_JOURNEY; and at least one journey.
 function readDefault({ cores, memory }) {
-  return Math.max(1, Math.min(cores - 1, Math.floor(memory / MEMORY_PER_JOURNEY)));
+  const byCores = cores <= ALL_CORES_UP_TO ? cores : cores - 1;
+  return Math.max(1, Math.min(byCores, Math.floor(memory / MEMORY_PER_JOURNEY)));
 }
 
 function cachePressure({ readPressure, now }) {
@@ -51,17 +56,18 @@ function cachePressure({ readPressure, now }) {
   };
 }
 
-// How many headless journeys one test run keeps in flight: { size, readLimit } or { error }.
-// `size` is the most the run ever runs at once, the number of places it opens to run them in
+// How many headless journeys one test run keeps in flight: { size, readLimit } or { error }. `size`
+// is the most the run ever runs at once, the number of places it opens to run them in
 // (runHeadlessTests' worker threads); readLimit() is how many it may run now. The size is
 // `concurrency` when the run was given one (`typed`: --concurrency on the command line, or
 // lowdefy_run_tests' concurrency), any integer from 1 up, named `name` in a refusal; else the
-// machine's cores less one, and no more than one per 4 GiB of memory (readDefault). A concurrency
-// from lowdefy.yaml's cli config or LOWDEFY_JOURNEY_CONCURRENCY is not read: both size browser journeys, which share three browser
-// slots (readJourneyConcurrency). A --repeat run measures flakiness, so it runs one at a time: a
-// journey that fails only beside another is the flakiness it was asked to find. readLimit() reads
-// memory pressure (the pool calls it before starting a journey beside another), at most once a
-// second, and gives 1 while it is warn or critical.
+// machine's cores (less one above 4 cores), and no more than one per GiB of memory (readDefault). A
+// concurrency from lowdefy.yaml's cli config or LOWDEFY_JOURNEY_CONCURRENCY is not read: both size
+// browser journeys, which share three browser slots (readJourneyConcurrency). A --repeat run
+// measures flakiness, so it runs one at a time: a journey that fails only beside another is the
+// flakiness it was asked to find. readLimit() reads memory pressure (the pool calls it before
+// starting a journey beside another), at most once a second, and gives 1 while it is warn or
+// critical.
 function readHeadlessConcurrency({
   concurrency: value,
   typed,
