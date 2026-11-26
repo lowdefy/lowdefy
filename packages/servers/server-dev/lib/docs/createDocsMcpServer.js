@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import path from 'node:path';
+
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { isExpectedError } from '@lowdefy/errors';
 import { createTraceId, type } from '@lowdefy/helpers';
@@ -47,6 +49,7 @@ import runJourneyHeadless from './runJourneyHeadless.js';
 import selectExercised from './selectExercised.js';
 import runDeviceJourney from './device/runDeviceJourney.js';
 import runRequest from './runRequest.js';
+import { listCurrentBuilds } from '../server/jitPageBuilder.js';
 import createLogger from '../server/log/createLogger.js';
 import lowdefyConfig from '../build/config.js';
 import devToolDefinitions, { INSTRUCTIONS } from './devToolDefinitions.js';
@@ -248,7 +251,13 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
     })
   );
 
-  registerDevTool('lowdefy_app_map', () => textResult(getAppMap()));
+  registerDevTool('lowdefy_app_map', async () => {
+    const { pageIds } = await listCurrentBuilds({
+      buildDirectory: path.join(process.cwd(), 'build'),
+      configDirectory: process.env.LOWDEFY_DIRECTORY_CONFIG || process.cwd(),
+    });
+    return textResult(getAppMap({ builtPageIds: pageIds }));
+  });
 
   registerDevTool('lowdefy_check', async () => textResult(await runCheck()));
 

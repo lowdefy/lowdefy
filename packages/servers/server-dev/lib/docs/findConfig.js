@@ -18,7 +18,7 @@ import path from 'node:path';
 import { UserError, createKeyPathResolver, resolveConfigLocation } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
-import buildPageIfNeeded from '../server/jitPageBuilder.js';
+import buildPageIfNeeded, { listCurrentBuilds } from '../server/jitPageBuilder.js';
 import readMergedMaps from '../server/readMergedMaps.js';
 import getHazards from './getHazards.js';
 import readBuildArtifact from './readBuildArtifact.js';
@@ -314,7 +314,15 @@ async function findConfig({ id, pageId }) {
         };
   }
 
-  const { keyMap, refMap } = await readMergedMaps({ buildDirectory });
+  // Only the entries of pages whose last build is current: jitMaps/ keeps a
+  // page's earlier builds, and its builds before a config publish that changed
+  // what it reads, until the page is built again. The endpoint builds' files
+  // hold the keys of live endpoint artifacts.
+  const { mapsFiles } = await listCurrentBuilds({ buildDirectory, configDirectory });
+  const { keyMap, refMap } = await readMergedMaps({
+    buildDirectory,
+    includeJitMapsFile: (file) => file.startsWith('endpoints-') || mapsFiles.has(file),
+  });
   const matches = scanKeyMapWithDeIndex({
     id,
     keyMap,
@@ -326,7 +334,7 @@ async function findConfig({ id, pageId }) {
   return {
     matches,
     note:
-      'Scanned without a pageId — only pages built since the last two page edits are ' +
+      'Scanned without a pageId — only pages built since their last change are ' +
       'covered; content on other pages was not scanned. Pass ?pageId= to force-build and ' +
       'scan a specific page.',
   };

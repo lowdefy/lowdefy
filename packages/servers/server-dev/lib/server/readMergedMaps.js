@@ -60,9 +60,9 @@ function compareWriteOrder(a, b) {
 
 // The dev server's key and ref maps: the config build's keyMap.json and
 // refMap.json, plus the entries every retained JIT page build wrote to
-// jitMaps/. Read in full on each call; only the error path and the dev tools
-// call it.
-async function readMergedMaps({ buildDirectory }) {
+// jitMaps/, or only the files includeJitMapsFile keeps. Read in full on each
+// call; only the error path and the dev tools call it.
+async function readMergedMaps({ buildDirectory, includeJitMapsFile = () => true }) {
   const jitMapsDirectory = path.join(buildDirectory, 'jitMaps');
   const [keyMap, refMap, files] = await Promise.all([
     readJson(path.join(buildDirectory, 'keyMap.json')),
@@ -72,7 +72,7 @@ async function readMergedMaps({ buildDirectory }) {
   const merged = { keyMap, refMap };
   const jitMaps = await Promise.all(
     files
-      .filter((file) => file.endsWith('.json'))
+      .filter((file) => file.endsWith('.json') && includeJitMapsFile(file))
       .sort(compareWriteOrder)
       .map((file) => readJsonIfExists(path.join(jitMapsDirectory, file)))
   );

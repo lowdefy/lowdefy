@@ -25,7 +25,7 @@ import os from 'os';
 import path from 'path';
 import { expect, test, vi } from 'vitest';
 
-import buildPageIfNeeded from './jitPageBuilder.js';
+import buildPageIfNeeded, { listCurrentBuilds } from './jitPageBuilder.js';
 
 vi.setConfig({ testTimeout: 120000, hookTimeout: 120000 });
 
@@ -114,6 +114,20 @@ function createApp() {
         ? 'served'
         : 'built',
     readArtifact: (name) => fs.readFileSync(path.join(buildDirectory, name), 'utf8'),
+    // What the dev tools that read artifacts without building take as current.
+    currentBuilds: async () => {
+      const { pageIds, mapsFiles } = await listCurrentBuilds({ buildDirectory, configDirectory });
+      return {
+        home: pageIds.has('home'),
+        other: pageIds.has('other'),
+        mapsFiles: [...mapsFiles].sort(),
+      };
+    },
+    listJitMapsFiles: () =>
+      fs
+        .readdirSync(path.join(buildDirectory, 'jitMaps'))
+        .filter((name) => name.endsWith('.json'))
+        .sort(),
     remove: () => fs.rmSync(root, { recursive: true, force: true }),
   };
   return app;
@@ -143,5 +157,38 @@ test('real config builds: an edit page builds do not read keeps the pages, one t
   expect(app.readArtifact('api/ping.json')).toContain('Second label');
   expect(await requestAll(app)).toEqual({ home: 'built', other: 'served' });
   expect(app.readArtifact('pages/home.json')).toContain('Second label');
+  app.remove();
+});
+
+test('real config builds: a page artifact the dev tools read without building counts as current only until a publish or an edit changes what its build read', async () => {
+  const app = createApp();
+  app.configBuild();
+  await requestAll(app);
+  const built = await app.currentBuilds();
+  expect(built).toMatchObject({ home: true, other: true });
+  expect(built.mapsFiles.length).toBeGreaterThan(0);
+
+  // A menu edit keeps both pages, and their maps files.
+  app.edit('lowdefy.yaml', 'title: Home', 'title: Start');
+  app.configBuild();
+  expect(await app.currentBuilds()).toEqual(built);
+
+  // A global edit changes what page builds read. The publish keeps the page
+  // artifacts and their maps files on disk until each page is built again.
+  app.edit('lowdefy.yaml', 'name: Publish test\n', 'name: Publish test\nglobal:\n  mode: one\n');
+  app.configBuild();
+  expect(await app.currentBuilds()).toEqual({ home: false, other: false, mapsFiles: [] });
+  expect(fs.existsSync(path.join(app.buildDirectory, 'pages', 'home.json'))).toBe(true);
+  expect(app.listJitMapsFiles()).toEqual(built.mapsFiles);
+
+  expect(await app.request('home')).toBe('built');
+  const homeBuilt = await app.currentBuilds();
+  expect(homeBuilt).toMatchObject({ home: true, other: false });
+  expect(homeBuilt.mapsFiles.length).toBeGreaterThan(0);
+  expect(homeBuilt.mapsFiles.some((name) => built.mapsFiles.includes(name))).toBe(false);
+
+  // The label file feeds the endpoint and the home page.
+  app.endpointEdit('shared/label.yaml', 'First label', 'Second label');
+  expect(await app.currentBuilds()).toMatchObject({ home: false, other: false });
   app.remove();
 });

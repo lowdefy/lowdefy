@@ -19,7 +19,7 @@ import path from 'path';
 
 import { vi, expect, test } from 'vitest';
 
-import setupTestFixtures from './setupTestFixtures.mjs';
+import setupTestFixtures, { listFixtureCurrentBuilds } from './setupTestFixtures.mjs';
 
 // The docs service reads build artifacts and node_modules from process.cwd()
 // (the running server directory) — point it at the fixture server before the
@@ -49,6 +49,7 @@ const mockBuildPageIfNeeded = vi.fn(async () => true);
 vi.doMock('../server/jitPageBuilder.js', () => ({
   default: mockBuildPageIfNeeded,
   reviewBuiltPage: async () => 'current',
+  listCurrentBuilds: () => listFixtureCurrentBuilds({ fixtureDir }),
   syncBuildSignals: () => ({
     registry: JSON.parse(
       fs.readFileSync(path.join(fixtureDir, 'build', 'pageRegistry.json'), 'utf8')
@@ -586,7 +587,7 @@ test('runRequest refuses with the build errors when the page fails to build', as
 });
 
 test('getAppMap includes built page detail and a note for unbuilt pages', () => {
-  const map = getAppMap();
+  const map = getAppMap({ builtPageIds: new Set(['home', 'other', 'legal']) });
 
   const home = map.pages.find((page) => page.pageId === 'home');
   expect(home.built).toBe(true);
@@ -605,8 +606,18 @@ test('getAppMap includes built page detail and a note for unbuilt pages', () => 
   expect(map.note).toContain('1 page(s) have not been built');
 });
 
+test('getAppMap lists a page whose artifact is not its current build as not built', () => {
+  const map = getAppMap({ builtPageIds: new Set(['other', 'legal']) });
+
+  const home = map.pages.find((page) => page.pageId === 'home');
+  expect(home.built).toBe(false);
+  expect(home.blockCount).toBeUndefined();
+  expect(home.requests).toBeUndefined();
+  expect(map.note).toContain('2 page(s) have not been built since their last change');
+});
+
 test('getAppMap includes connections, endpoints, agents, menus and websockets', () => {
-  const map = getAppMap();
+  const map = getAppMap({ builtPageIds: new Set() });
   expect(map.connections).toEqual([{ id: 'axios', type: 'AxiosHttp' }]);
   expect(map.endpoints).toEqual([{ id: 'resolve_greeting', type: 'InternalApi' }]);
   expect(map.agents).toEqual([{ id: 'assistant', type: 'OpenAiAgent' }]);

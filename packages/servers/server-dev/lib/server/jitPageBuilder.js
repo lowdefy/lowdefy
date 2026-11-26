@@ -601,6 +601,31 @@ async function buildPage({ pageId, buildDirectory, configDirectory }) {
   return { result: { built: true, warnings: result?._warnings }, buildContext: context };
 }
 
+// The pages whose artifact on disk describes them now, and the jitMaps files
+// their builds wrote, for the dev tools that read artifacts without building
+// (lowdefy_app_map, lowdefy_find_config without a page). A page artifact
+// stays on disk after an edit or a config publish that changed what its build
+// read, until the page is built again, and so do its jitMaps files. A page
+// with no source file (the default 404) is served from the config build's
+// own artifact, which is current.
+export async function listCurrentBuilds({ buildDirectory, configDirectory }) {
+  const signals = syncBuildSignals({ buildDirectory, configDirectory });
+  const pageIds = new Set();
+  const mapsFiles = new Set();
+  for (const [pageId, entry] of Object.entries(signals.registry ?? {})) {
+    if (type.isNone(entry?.refId)) {
+      pageIds.add(pageId);
+      continue;
+    }
+    if (!(await isPageCurrent({ pageId, ...signals }))) continue;
+    pageIds.add(pageId);
+    for (const name of pageBuildRecords.get(pageId)?.mapsFiles ?? []) {
+      mapsFiles.add(name);
+    }
+  }
+  return { pageIds, mapsFiles };
+}
+
 // Serves a page from its last JIT build while that build is current, else
 // builds it. Returns { result, buildContext }: result is false for a page not
 // in the registry, true for a page already current, or the build's result;

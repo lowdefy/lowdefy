@@ -430,4 +430,21 @@ function setupTestFixtures() {
   return fixtureDir;
 }
 
+// The page builder's listCurrentBuilds over the fixture: no page builder ran,
+// so every page with an artifact counts as current, with every jitMaps file.
+export async function listFixtureCurrentBuilds({ fixtureDir }) {
+  const pagesDir = path.join(fixtureDir, 'build', 'pages');
+  const jitMapsDir = path.join(fixtureDir, 'build', 'jitMaps');
+  const pageIds = fs.existsSync(pagesDir)
+    ? fs
+        .readdirSync(pagesDir)
+        .filter((name) => name.endsWith('.json'))
+        .map((name) => name.slice(0, -'.json'.length))
+    : [];
+  return {
+    pageIds: new Set(pageIds),
+    mapsFiles: new Set(fs.existsSync(jitMapsDir) ? fs.readdirSync(jitMapsDir) : []),
+  };
+}
+
 export default setupTestFixtures;

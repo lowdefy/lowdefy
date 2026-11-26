@@ -61,7 +61,10 @@ function summarizeRequests({ pageId, requests }) {
 // A page's `path` is the URL pattern it is served at (its id when it declares
 // none). A pattern with placeholders, e.g. "tickets/{space}/{ticket_id}", needs
 // `pathParams` to open in the page tools.
-function getPages() {
+// A page artifact counts as built only while it is the page's current build
+// (builtPageIds): an artifact stays on disk after an edit or a config publish
+// that changed what the page reads, until the page is built again.
+function getPages({ builtPageIds }) {
   const registry = readBuildArtifact({ name: 'pageRegistry.json' }) ?? {};
   const routes = readBuildArtifact({ name: 'routes.json', deserialize: true });
   const pathByPageId = new Map(routes.map((route) => [route.pageId, route.path]));
@@ -69,7 +72,9 @@ function getPages() {
   let unbuiltCount = 0;
 
   Object.entries(registry).forEach(([pageId, entry]) => {
-    const built = readBuildArtifact({ name: `pages/${pageId}.json`, deserialize: true });
+    const built = builtPageIds.has(pageId)
+      ? readBuildArtifact({ name: `pages/${pageId}.json`, deserialize: true })
+      : null;
     const page = {
       pageId,
       path: pathByPageId.get(pageId),
@@ -159,10 +164,11 @@ function getWebsockets() {
 // Compact snapshot of the whole app for an agent to orient itself: every
 // page (with block/request detail only for pages that have a built
 // artifact — pages are JIT-built on first visit, see lib/docs/getPageConfig.js),
-// menus, connections, api endpoints, agents and websockets.
-function getAppMap() {
+// menus, connections, api endpoints, agents and websockets. builtPageIds are
+// the pages whose artifact is current (listCurrentBuilds in the page builder).
+function getAppMap({ builtPageIds }) {
   const buildDirectory = path.join(process.cwd(), 'build');
-  const { pages, unbuiltCount } = getPages();
+  const { pages, unbuiltCount } = getPages({ builtPageIds });
 
   const map = {
     pages,
@@ -175,7 +181,7 @@ function getAppMap() {
 
   if (unbuiltCount > 0) {
     map.note =
-      `${unbuiltCount} page(s) have not been built yet, so only "file" and "auth" are shown ` +
+      `${unbuiltCount} page(s) have not been built since their last change, so only "file" and "auth" are shown ` +
       'for them. Visit the page in the browser, or GET /lowdefy-docs/page-config/{pageId}, to trigger ' +
       'a build and see their blocks and requests.';
   }

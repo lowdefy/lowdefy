@@ -24,7 +24,7 @@ import { LoggingMessageNotificationSchema } from '@modelcontextprotocol/sdk/type
 
 import { vi, expect, test } from 'vitest';
 
-import setupTestFixtures from './setupTestFixtures.mjs';
+import setupTestFixtures, { listFixtureCurrentBuilds } from './setupTestFixtures.mjs';
 
 // The docs service reads build artifacts from process.cwd() — point it at the
 // fixture server before the modules are imported.
@@ -45,6 +45,11 @@ const mockInspectState = vi.fn();
 vi.doMock('./inspectState.js', () => ({ default: mockInspectState }));
 const mockGetPageConfig = vi.fn();
 vi.doMock('./getPageConfig.js', () => ({ default: mockGetPageConfig }));
+// The fixture's page artifacts and jitMaps files come from no page build.
+vi.doMock('../server/jitPageBuilder.js', async (importOriginal) => ({
+  ...(await importOriginal()),
+  listCurrentBuilds: () => listFixtureCurrentBuilds({ fixtureDir }),
+}));
 
 const { default: createDocsMcpServer, subscribeMcpServerToDevEvents } =
   await import('./createDocsMcpServer.js');
