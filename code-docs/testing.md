@@ -441,7 +441,7 @@ A larger app's test processes are larger than the fixture's.
 
 ## An app from another repository
 
-To run an app that lives in another repository (Pelican, a modules-mongodb demo app) on this
+To run an app that lives in another repository (a production app, a modules-mongodb demo app) on this
 checkout's packages, for example to try an unreleased branch, use the same scripts as
 `pnpm app:dev`, from this checkout's root, with the app's config directory and a server
 directory of its own:
