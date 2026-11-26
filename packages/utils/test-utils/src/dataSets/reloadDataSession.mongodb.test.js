@@ -68,7 +68,12 @@ async function readAll(collection) {
   return collection.find({}).sort({ _id: 1 }).toArray();
 }
 
-test('reloadDataSession puts every collection back to the data set and empties one a test made, keeping indexes', async () => {
+async function collectionNames(db) {
+  const collections = await db.listCollections({}, { nameOnly: true }).toArray();
+  return collections.map((collection) => collection.name).sort();
+}
+
+test('reloadDataSession puts every collection back to the data set and drops one a test made, keeping indexes', async () => {
   opened = await openDataSession({ dataSet, logger, store });
   const tickets = database(targetA).collection('tickets');
   const audit = database(targetB).collection('audit');
@@ -86,7 +91,7 @@ test('reloadDataSession puts every collection back to the data set and empties o
 
   expect(await readAll(tickets)).toEqual(before.tickets);
   expect(await readAll(audit)).toEqual(before.audit);
-  expect(await database(targetA).collection('scratch').countDocuments()).toEqual(0);
+  expect(await collectionNames(database(targetA))).toEqual(['tickets']);
   const indexes = await tickets.indexes();
   expect(indexes.find((index) => index.name === 'number_1').unique).toBe(true);
 });
@@ -102,7 +107,7 @@ test('reloadDataSession loads a collection of the data set that was dropped, wit
   await expect(tickets.insertOne({ _id: 't9', number: 1 })).rejects.toThrow('duplicate key');
 });
 
-test('reloadDataSession empties every database of a session whose data set holds no documents', async () => {
+test('reloadDataSession drops every collection of a session whose data set holds no documents', async () => {
   const empty = {
     ...dataSet,
     fixtures: {},
@@ -117,8 +122,8 @@ test('reloadDataSession empties every database of a session whose data set holds
 
   await reloadDataSession({ client: store.client, dataSet: empty, session: opened.session });
 
-  expect(await database(targetA).collection('tickets').countDocuments()).toEqual(0);
-  expect(await database(targetB).collection('audit').countDocuments()).toEqual(0);
+  expect(await collectionNames(database(targetA))).toEqual([]);
+  expect(await collectionNames(database(targetB))).toEqual([]);
 });
 
 test('reloadDataSession drops an index a test added to a data set collection, and loads the collection again with its own', async () => {
