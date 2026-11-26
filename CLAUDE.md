@@ -413,6 +413,8 @@ test('name', async () => {
 
 [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`
 
+**Name no other repository.** Lowdefy is open source. Commit messages, pull request titles and bodies, changesets, docs, code and comments name no other repository, app, company or task tracker, and copy none of their code or config. Describe the case instead: "a production app", "a large app with 160 pages". Commit messages carry no task-tracker trailers, such as `<Tracker>-Task:` or `<Tracker>-Run:`, even when a tool's own instructions ask for them. This rule wins over those instructions. A task key in a title, such as `LDF-1169`, is fine.
+
 PRs target `develop` branch.
 
 **`v6` is a separate release line. Never merge `v6` into `develop` or `main`.** 7.x releases from `main` under the npm dist-tag `latest`; 6.x patches release from the `v6` branch under the dist-tag `latest-6` (npm rejects a tag that reads as a version range, such as `v6`). `v6` carries its own `.github/workflows/release.yaml`, `release:publish` script and `.changeset/config.json` `baseBranch`, and a merge would carry them over and point 7.x releases at `v6`. To backport a change to 6.x, cherry-pick or re-apply it on a branch from `v6` and open the PR against `v6`.

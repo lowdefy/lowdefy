@@ -187,6 +187,10 @@ function createEndpointRegistry({ components, context, pageIds, skeletonSourceFi
     warnings: { byEndpoint: new Map(), other: [] },
     // Counts the endpoint builds since this config build, naming their maps files.
     builds: 0,
+    // The jitMaps files endpoint builds wrote, by name: the endpoints whose
+    // live artifacts still name its entries, and the ids it holds
+    // (pruneEndpointMaps).
+    mapsFiles: new Map(),
   };
 }
 
