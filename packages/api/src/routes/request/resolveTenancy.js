@@ -17,6 +17,8 @@
 import { AuthenticationError, ConfigError, TenantIntegrityError } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
+import readRequestEndpointId from './readRequestEndpointId.js';
+
 // The engine computes the tenant verdict, the connection enforces it. This is
 // the compute half, for a request, step or websocket against a connection:
 // resolve the verdict (the tenant field and the caller's organization id the
@@ -177,7 +179,7 @@ function resolveTenancy(context, { connection, connectionConfig, requestConfig, 
           collection: type.isString(collection) ? collection : null,
           configKey: requestConfig['~k'],
           connectionId: connectionConfig.connectionId,
-          endpointId: context.endpointId,
+          endpointId: readRequestEndpointId(context, { requestConfig }),
           field,
         }
       );

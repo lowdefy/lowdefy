@@ -72,3 +72,17 @@
     - click: save_button
     - wait: { request: save_item }
     - expect: { db: { collection: items, match: { kind: item }, count: 0 } }
+# A fail gate narrowed to the endpoint whose routine holds the request: notify reaches log_activity
+# through a nested CallApi, and the gate names log_activity, not notify, the endpoint the call came
+# in on. The forced failure stops notify's routine, so no activity is written.
+- name: a fail gate narrowed to a nested endpoint fires inside its CallApi
+  data: stubs
+  user: finance
+  stubs:
+    - requestId: insert_activity
+      endpoint: log_activity
+      fail: Nested activity write failed on purpose
+  steps:
+    - call: { endpoint: notify }
+    - expect: { error: Nested activity write failed on purpose }
+    - expect: { db: { collection: items, match: { kind: activity }, count: 0 } }

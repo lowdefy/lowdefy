@@ -19,6 +19,7 @@ import { ConfigError } from '@lowdefy/errors';
 import evaluateRoutineOperators from '../endpoints/evaluateRoutineOperators.js';
 import getConnection from '../connections/getConnection.js';
 import getConnectionConfig from '../connections/getConnectionConfig.js';
+import readRequestEndpointId from './readRequestEndpointId.js';
 import resolveTenancy from './resolveTenancy.js';
 
 // The seam a plugin uses to reach a walled MongoDB collection: the resolver
@@ -65,7 +66,7 @@ function createWalledResolver(context, { requestConfig, routineContext }) {
     return {
       connection: properties,
       connectionId,
-      endpointId: context.endpointId,
+      endpointId: readRequestEndpointId(context, { requestConfig }),
       requestId: requestConfig.stepId ?? requestConfig.requestId,
       tenant,
       tenantGuard,
