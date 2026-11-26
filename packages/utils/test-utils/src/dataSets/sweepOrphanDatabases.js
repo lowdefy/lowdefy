@@ -17,6 +17,7 @@
 import { threadId } from 'node:worker_threads';
 
 import dataSessionRegistry from './dataSessionRegistry.js';
+import { listIdlePrefixes } from './idleDatabases.js';
 import isProcessAlive from './isProcessAlive.js';
 
 const ownerPattern = /^ld_p(\d+)(?:t(\d+))?_/;
@@ -36,7 +37,8 @@ function isHeldElsewhere(name) {
   return Number(match[2] ?? 0) !== threadId;
 }
 
-// Drops every session database on the store that no registered session owns: one left behind by a
+// Drops every session database on the store that no registered session owns and that is not
+// kept idle for the next session on its data set (idleDatabases): one left behind by a
 // write that was still in flight when its session dropped its databases, or by a dev server that
 // stopped mid-run. A session owns every database under its prefix (<prefix>_<n>), including one it
 // numbers after this sweep lists them.
@@ -47,7 +49,10 @@ function isHeldElsewhere(name) {
 // and of this process's other threads. The dev server never passes it: its store has one process
 // and one thread.
 async function sweepOrphanDatabases({ client, perRun = false }) {
-  const prefixes = [...dataSessionRegistry.values()].map((session) => `${session.prefix}_`);
+  const prefixes = [
+    ...[...dataSessionRegistry.values()].map((session) => session.prefix),
+    ...listIdlePrefixes(),
+  ].map((prefix) => `${prefix}_`);
   const { databases } = await client.db('admin').admin().listDatabases({ nameOnly: true });
   await Promise.all(
     databases

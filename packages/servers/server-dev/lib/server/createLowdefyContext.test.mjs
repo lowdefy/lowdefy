@@ -280,6 +280,7 @@ function registerSession(state = 'open') {
     databases: new Map([[JSON.stringify(['secret:MONGODB_URI', null]), 'ld_aaaaaaaaaaaa_0']]),
     databaseCount: 1,
     work: new Set(),
+    running: new Set(),
     sunk: [],
     stubs: [],
     failGates: [],

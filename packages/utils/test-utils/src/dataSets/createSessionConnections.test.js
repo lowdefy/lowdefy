@@ -55,7 +55,14 @@ const args = {
 let session;
 beforeEach(() => {
   vi.clearAllMocks();
-  session = { name: 'billing', sunk: [], stubs: [], failGates: [], pauseGates: [] };
+  session = {
+    name: 'billing',
+    sunk: [],
+    stubs: [],
+    failGates: [],
+    pauseGates: [],
+    running: new Set(),
+  };
 });
 
 function build() {

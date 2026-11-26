@@ -17,6 +17,7 @@
 import { MongoClient } from 'mongodb';
 
 import announceDataStoreDownload from './announceDataStoreDownload.js';
+import { forgetIdleDatabases } from './idleDatabases.js';
 import registerDataStoreShutdown from './registerDataStoreShutdown.js';
 import removeDataStoreFiles from './removeDataStoreFiles.js';
 import startDataStoreReplSet from './startDataStoreReplSet.js';
@@ -44,6 +45,7 @@ async function startDataStore({ logger }) {
   }
   // Past the awaits above, getDataStore has cached the promise this call returned.
   const storePromise = globalThis[STORE_KEY];
+  const store = { client, uri };
   let unregisterShutdown;
   let stopping;
   // Stops mongod and removes its temporary database directory. A later getDataStore() starts a new
@@ -55,6 +57,8 @@ async function startDataStore({ logger }) {
         if (globalThis[STORE_KEY] === storePromise) {
           delete globalThis[STORE_KEY];
         }
+        store.stopped = true;
+        forgetIdleDatabases({ store });
         await client.close().catch(() => {});
         // stop() skips or fails its cleanup when mongod has already died, which is when this store
         // most needs it: its directory may still hold a session's rows.
@@ -70,12 +74,14 @@ async function startDataStore({ logger }) {
     return stopping;
   }
   unregisterShutdown = registerDataStoreShutdown({ replSet, stop });
-  return { client, uri, stop };
+  store.stop = stop;
+  return store;
 }
 
 // The in-memory MongoDB replica set journey data sessions load into, started on first use. There
-// is no idle stop: an idle store holds no session databases, and a restart would land on a new port
-// while the connection plugin's cached clients keep polling the old one. It stops, with its
+// is no idle stop: it holds the idle databases of closed sessions for the next journey on their
+// data set (idleDatabases), and a restart would land on a new port while the connection plugin's
+// cached clients keep polling the old one. It stops, with its
 // temporary directory removed, when the dev server process shuts down. A failed start is not
 // cached, so the next call tries again, and a store found dead (openDataSession) is stopped, so the
 // next call starts a fresh one. `logger` is the caller's own (the dev server's, for journeys): the

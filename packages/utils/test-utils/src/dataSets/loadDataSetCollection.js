@@ -14,13 +14,14 @@
   limitations under the License.
 */
 
-import insertFixture from './insertFixture.js';
-import insertGeneratedDocuments from './insertGeneratedDocuments.js';
+import describeIndexes from './describeIndexes.js';
 import mergeCollectionIndexes from './mergeCollectionIndexes.js';
+import seedDataSetCollection from './seedDataSetCollection.js';
 
-// Loads one collection into a fresh session database: indexes first, on the empty collection, so a
-// fixture that breaks a unique index fails here instead of loading; then the generated documents;
-// then the fixtures.
+// Loads one collection into a session database it is not in yet: indexes first, on the empty
+// collection, so a document that breaks a unique index fails here instead of loading; then the
+// generated documents and the fixtures, in one bulk write. Returns the indexes the collection
+// holds, _id_ included (describeIndexes), which a reset checks it against (reloadDataSession).
 async function loadDataSetCollection({ db, dataSetName, collectionName, group }) {
   const collection = await db.createCollection(collectionName);
   const indexes = mergeCollectionIndexes({
@@ -31,12 +32,8 @@ async function loadDataSetCollection({ db, dataSetName, collectionName, group })
   if (indexes.length > 0) {
     await collection.createIndexes(indexes);
   }
-  for (const batch of group.generated) {
-    await insertGeneratedDocuments({ collection, dataSetName, batch });
-  }
-  for (const fixture of group.fixtures) {
-    await insertFixture({ collection, dataSetName, fixture });
-  }
+  await seedDataSetCollection({ collection, dataSetName, group });
+  return describeIndexes(await collection.indexes());
 }
 
 export default loadDataSetCollection;

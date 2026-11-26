@@ -270,9 +270,14 @@ test('a session on the run store names its databases after its process, and its 
   expect(names).toContain(opened.session.databaseName);
 
   await opened.close();
-  expect(await listDatabaseNames(store)).not.toContain(opened.session.databaseName);
   expect(dataSessionRegistry.has(opened.id)).toBe(false);
-  await store.client.db(running).dropDatabase();
+  // Kept for the next session on the data set until this client stops, while the store stays up
+  // for the run's other test files.
+  expect(await listDatabaseNames(store)).toContain(opened.session.databaseName);
+  const other = await join();
+  await store.stop();
+  expect(await listDatabaseNames(other)).not.toContain(opened.session.databaseName);
+  await other.client.db(running).dropDatabase();
 });
 
 // A test file run in a worker thread (vitest's threads pool): it joins the run store, opens a

@@ -22,8 +22,10 @@ import { Decimal128, MongoClient, ObjectId } from 'mongodb';
 import { parseDataSet } from '@lowdefy/node-utils';
 
 import addPauseGate from './addPauseGate.js';
+import createGatedResolver from './createGatedResolver.js';
 import applyDataSetRedirect from './applyDataSetRedirect.js';
 import holdAtPauseGate from './holdAtPauseGate.js';
+import { dropIdleDatabases } from './idleDatabases.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
@@ -41,6 +43,11 @@ beforeAll(async () => {
   store = await getDataStore({ logger: mockLogger });
   client = new MongoClient(store.uri);
   await client.connect();
+});
+
+// Each test starts with no idle databases, so none reuses another's.
+afterEach(async () => {
+  await dropIdleDatabases({ store });
 });
 
 afterAll(async () => {
@@ -313,7 +320,7 @@ test('a session database runs a transaction and opens a change stream', async ()
   }
 });
 
-test('two sessions on one data set are isolated, and close() drops the database', async () => {
+test('two sessions on one data set are isolated, and close() keeps the databases until the idle ones are dropped', async () => {
   const dataSet = makeDataSet({
     collections: { tickets: 'tickets' },
     fixtures: { tickets: [{ _id: 't1' }] },
@@ -325,10 +332,15 @@ test('two sessions on one data set are isolated, and close() drops the database'
   expect(await sessionDb(second.session).collection('tickets').countDocuments()).toBe(1);
   await first.close();
   await second.close();
+  expect(first.session.state).toEqual('closed');
+  expect(dataSessionRegistry.has(first.id)).toBe(false);
+  expect(await listDatabaseNames()).toEqual(
+    expect.arrayContaining([first.session.databaseName, second.session.databaseName])
+  );
+  await dropIdleDatabases({ store });
   const names = await listDatabaseNames();
   expect(names).not.toContain(first.session.databaseName);
   expect(names).not.toContain(second.session.databaseName);
-  expect(first.session.state).toEqual('closed');
 });
 
 describe('two databases that name one collection', () => {
@@ -390,7 +402,7 @@ indexes:
     return client.db(properties.databaseName);
   }
 
-  test('each databaseUri secret loads into and reads its own session database, and close() drops both', async () => {
+  test('each databaseUri secret loads into and reads its own session database, and both drop with the idle databases', async () => {
     const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'targets' });
     const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
     let names;
@@ -416,6 +428,7 @@ indexes:
     } finally {
       await close();
     }
+    await dropIdleDatabases({ store });
     const left = await listDatabaseNames();
     names.forEach((name) => expect(left).not.toContain(name));
   });
@@ -453,7 +466,7 @@ indexes:
     }
   });
 
-  test('a session database the gate numbers after open survives a concurrent sweep and drops on close()', async () => {
+  test('a session database the gate numbers after open survives a concurrent sweep, is emptied when the next session reuses it, and drops with the idle databases', async () => {
     const dataSet = await readDataSet({ configDirectory, buildDirectory, name: 'targets' });
     const first = await openDataSession({ dataSet, logger: mockLogger });
     // A target the build did not name, as a config mutant's would be.
@@ -475,6 +488,16 @@ indexes:
     expect(await listDatabaseNames()).toContain(lateName);
     await second.close();
     await first.close();
+    expect(await listDatabaseNames()).toContain(lateName);
+    // Two idle sets: one of them is the first session's, with the late target in it.
+    const third = await openDataSession({ dataSet, logger: mockLogger });
+    const fourth = await openDataSession({ dataSet, logger: mockLogger });
+    const reused = [third, fourth].find(({ session }) => session.prefix === first.session.prefix);
+    expect([...reused.session.databases.values()]).toContain(lateName);
+    expect(await client.db(lateName).collection('users').countDocuments()).toBe(0);
+    await third.close();
+    await fourth.close();
+    await dropIdleDatabases({ store });
     expect(await listDatabaseNames()).not.toContain(lateName);
   });
 });
@@ -564,4 +587,201 @@ test('openDataSession sweeps an ld_ database no open session owns', async () => 
   expect(names).toContain('not_a_session');
   await close();
   await client.db('not_a_session').dropDatabase();
+});
+
+test('openDataSession writes generated documents before fixtures, so a fixture replaces a generated document with its _id', async () => {
+  const dataSet = makeDataSet({
+    collections: { tickets: 'tickets', 'tickets-archive': 'tickets' },
+    generated: {
+      tickets: [
+        { _id: 'g1', title: 'generated' },
+        { _id: 'g2', title: 'generated' },
+      ],
+    },
+    fixtures: {
+      tickets: [{ _id: 'g2', title: 'fixture' }],
+      'tickets-archive': [{ title: 'no id' }],
+    },
+  });
+  const { session, close } = await openDataSession({ dataSet, logger: mockLogger });
+  try {
+    const found = await sessionDb(session).collection('tickets').find({}).toArray();
+    expect(found.map(({ title }) => title).sort()).toEqual(['fixture', 'generated', 'no id']);
+    expect(found.find((document) => document._id === 'g2').title).toEqual('fixture');
+  } finally {
+    await close();
+  }
+});
+
+describe('a closed session keeps its databases for the next session on its data set', () => {
+  const dataSet = makeDataSet({
+    collections: { tickets: 'tickets', 'tickets-archive': 'tickets' },
+    indexes: { tickets: [{ key: { number: 1 }, name: 'number_1', unique: true }] },
+    generated: { 'tickets-archive': [{ _id: 'g1', number: 100 }] },
+    fixtures: {
+      tickets: [
+        { _id: 't1', number: 1, stage: 'open' },
+        { _id: 't2', number: 2, stage: 'open' },
+      ],
+    },
+  });
+
+  async function describeDatabase(session) {
+    const db = sessionDb(session);
+    const collections = await db.listCollections({}, { nameOnly: true }).toArray();
+    const names = collections
+      .map((collection) => collection.name)
+      .filter((name) => !name.startsWith('system.'))
+      .sort();
+    const described = {};
+    for (const name of names) {
+      described[name] = {
+        documents: await db.collection(name).find({}).sort({ _id: 1 }).toArray(),
+        indexes: (await db.collection(name).indexes()).map((index) => index.name).sort(),
+      };
+    }
+    return described;
+  }
+
+  test('the next session reuses them and starts from exactly the data set, whatever the last one wrote', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    const loaded = await describeDatabase(first.session);
+    expect(Object.keys(loaded)).toEqual(['tickets']);
+    expect(loaded.tickets.indexes).toEqual(['_id_', 'number_1']);
+
+    const db = sessionDb(first.session);
+    const tickets = db.collection('tickets');
+    await tickets.updateOne({ _id: 't1' }, { $set: { stage: 'closed' } });
+    await tickets.deleteOne({ _id: 't2' });
+    await tickets.insertOne({ _id: 't3', number: 3 });
+    await tickets.createIndex({ stage: 1 }, { name: 'stage_1' });
+    // A consecutive id counts on from the documents there, so a leftover one would move it on.
+    await db.collection('counters').insertOne({ _id: 'INV-7' });
+    await db.collection('members').createIndex({ userId: 1 }, { unique: true });
+    await db.createCollection('open_tickets', { viewOn: 'tickets', pipeline: [] });
+    await first.close();
+
+    const second = await openDataSession({ dataSet, logger: mockLogger });
+    try {
+      expect(second.session.prefix).toEqual(first.session.prefix);
+      expect(second.id).not.toEqual(first.id);
+      expect(second.cookie).not.toEqual(first.cookie);
+      expect(dataSessionRegistry.has(first.id)).toBe(false);
+      expect(dataSessionRegistry.get(second.id)).toBe(second.session);
+      const reset = await describeDatabase(second.session);
+      // A collection the last session only wrote to is gone, as on a fresh load.
+      expect(reset).toEqual(loaded);
+    } finally {
+      await second.close();
+    }
+  });
+
+  test('two sessions open at once never share databases, and a third waits for neither', async () => {
+    const [first, second] = await Promise.all([
+      openDataSession({ dataSet, logger: mockLogger }),
+      openDataSession({ dataSet, logger: mockLogger }),
+    ]);
+    expect(first.session.prefix).not.toEqual(second.session.prefix);
+    await first.close();
+    const third = await openDataSession({ dataSet, logger: mockLogger });
+    const fourth = await openDataSession({ dataSet, logger: mockLogger });
+    expect(third.session.prefix).toEqual(first.session.prefix);
+    expect([first.session.prefix, second.session.prefix]).not.toContain(fourth.session.prefix);
+    await Promise.all([second.close(), third.close(), fourth.close()]);
+  });
+
+  test('a session closed while a request under it still runs drops its databases instead', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    let answer;
+    const resolver = createGatedResolver({
+      session: first.session,
+      resolver: () =>
+        new Promise((resolve) => {
+          answer = resolve;
+        }),
+    });
+    const call = resolver({ requestId: 'slow', connectionId: 'tickets' });
+    expect(first.session.running.size).toBe(1);
+    await first.close();
+    expect(await listDatabaseNames()).not.toContain(first.session.databaseName);
+    const second = await openDataSession({ dataSet, logger: mockLogger });
+    expect(second.session.prefix).not.toEqual(first.session.prefix);
+    answer('late');
+    await expect(call).resolves.toEqual('late');
+    expect(first.session.running.size).toBe(0);
+    await second.close();
+  });
+
+  test('a call that reaches its resolver after close() is refused, so it never writes into the kept databases', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    const resolver = createGatedResolver({ session: first.session, resolver: () => 'ran' });
+    await first.close();
+    await expect(resolver({ requestId: 'late', connectionId: 'tickets' })).rejects.toThrow(
+      `Data session ${first.id} has ended.`
+    );
+    expect(first.session.running.size).toBe(0);
+  });
+
+  test('a stopped store forgets them, and a session after it loads on the new store', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    await first.close();
+    await store.stop();
+    store = await getDataStore({ logger: mockLogger });
+    await client.close();
+    client = new MongoClient(store.uri);
+    await client.connect();
+    const second = await openDataSession({ dataSet, logger: mockLogger });
+    try {
+      expect(second.session.prefix).not.toEqual(first.session.prefix);
+      expect(second.session.databaseUri).toEqual(store.uri);
+    } finally {
+      await second.close();
+    }
+  });
+
+  test('an orphan sweep leaves them', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    await first.close();
+    const other = await openDataSession({
+      dataSet: makeDataSet({ name: 'other' }),
+      logger: mockLogger,
+    });
+    await other.close();
+    expect(await listDatabaseNames()).toContain(first.session.databaseName);
+  });
+
+  test('a data set whose indexes changed since drops them and loads a new set', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    await first.close();
+    const edited = {
+      ...dataSet,
+      indexes: { tickets: [{ key: { stage: 1 }, name: 'stage_1' }] },
+    };
+    const second = await openDataSession({ dataSet: edited, logger: mockLogger });
+    try {
+      expect(second.session.prefix).not.toEqual(first.session.prefix);
+      expect(await listDatabaseNames()).not.toContain(first.session.databaseName);
+      const indexes = await sessionDb(second.session).collection('tickets').indexes();
+      expect(indexes.map((index) => index.name).sort()).toEqual(['_id_', 'stage_1']);
+    } finally {
+      await second.close();
+    }
+  });
+
+  test('the next session reads the data set it is given, so an edit to the documents shows', async () => {
+    const first = await openDataSession({ dataSet, logger: mockLogger });
+    await first.close();
+    const edited = {
+      ...dataSet,
+      fixtures: { tickets: [{ _id: 't9', number: 9 }] },
+    };
+    const second = await openDataSession({ dataSet: edited, logger: mockLogger });
+    try {
+      expect(second.session.prefix).toEqual(first.session.prefix);
+      const ids = await sessionDb(second.session).collection('tickets').distinct('_id');
+      expect(ids.sort()).toEqual(['g1', 't9']);
+    } finally {
+      await second.close();
+    }
+  });
 });

@@ -27,7 +27,7 @@ let resolver;
 let gated;
 
 beforeEach(() => {
-  session = { failGates: [], pauseGates: [] };
+  session = { failGates: [], pauseGates: [], running: new Set() };
   resolver = vi.fn(async (args) => `ran ${args.requestId}`);
   gated = createGatedResolver({ resolver, session });
 });

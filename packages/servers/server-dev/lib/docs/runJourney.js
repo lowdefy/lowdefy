@@ -436,7 +436,7 @@ async function runJourneyInBrowser({
     }
     releaseRunBuffer(runBuffer);
     // After the actors: no browser request still carries the data cookie. close() then waits for
-    // the session's background work before it drops the database. openJourney closed its own
+    // the session's background work before it lets go of the databases. openJourney closed its own
     // actors when the first page failed to open.
     if (session !== null) {
       await session.close();

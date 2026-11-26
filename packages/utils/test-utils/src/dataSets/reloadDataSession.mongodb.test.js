@@ -68,7 +68,12 @@ async function readAll(collection) {
   return collection.find({}).sort({ _id: 1 }).toArray();
 }
 
-test('reloadDataSession puts every collection back to the data set and empties one a test made, keeping indexes', async () => {
+async function collectionNames(db) {
+  const collections = await db.listCollections({}, { nameOnly: true }).toArray();
+  return collections.map((collection) => collection.name).sort();
+}
+
+test('reloadDataSession puts every collection back to the data set and drops one a test made, keeping indexes', async () => {
   opened = await openDataSession({ dataSet, logger, store });
   const tickets = database(targetA).collection('tickets');
   const audit = database(targetB).collection('audit');
@@ -86,7 +91,7 @@ test('reloadDataSession puts every collection back to the data set and empties o
 
   expect(await readAll(tickets)).toEqual(before.tickets);
   expect(await readAll(audit)).toEqual(before.audit);
-  expect(await database(targetA).collection('scratch').countDocuments()).toEqual(0);
+  expect(await collectionNames(database(targetA))).toEqual(['tickets']);
   const indexes = await tickets.indexes();
   expect(indexes.find((index) => index.name === 'number_1').unique).toBe(true);
 });
@@ -102,7 +107,7 @@ test('reloadDataSession loads a collection of the data set that was dropped, wit
   await expect(tickets.insertOne({ _id: 't9', number: 1 })).rejects.toThrow('duplicate key');
 });
 
-test('reloadDataSession empties every database of a session whose data set holds no documents', async () => {
+test('reloadDataSession drops every collection of a session whose data set holds no documents', async () => {
   const empty = {
     ...dataSet,
     fixtures: {},
@@ -117,6 +122,78 @@ test('reloadDataSession empties every database of a session whose data set holds
 
   await reloadDataSession({ client: store.client, dataSet: empty, session: opened.session });
 
-  expect(await database(targetA).collection('tickets').countDocuments()).toEqual(0);
-  expect(await database(targetB).collection('audit').countDocuments()).toEqual(0);
+  expect(await collectionNames(database(targetA))).toEqual([]);
+  expect(await collectionNames(database(targetB))).toEqual([]);
+});
+
+test('reloadDataSession drops an index a test added to a data set collection, and loads the collection again with its own', async () => {
+  opened = await openDataSession({ dataSet, logger, store });
+  const tickets = database(targetA).collection('tickets');
+  await tickets.deleteMany({});
+  await tickets.createIndex({ stage: 1 }, { unique: true, name: 'stage_unique' });
+
+  await reloadDataSession({ client: store.client, dataSet, session: opened.session });
+
+  const names = (await tickets.indexes()).map((index) => index.name).sort();
+  expect(names).toEqual(['_id_', 'number_1']);
+  expect((await readAll(tickets)).map((ticket) => ticket._id)).toEqual(['g1', 't1', 't2']);
+  // The data set's documents share a stage, so the test's unique index would have refused them.
+  await tickets.insertOne({ _id: 't4', number: 4, stage: 'open' });
+});
+
+test('reloadDataSession drops a collection a test made with an index of its own, and a view', async () => {
+  opened = await openDataSession({ dataSet, logger, store });
+  const db = database(targetA);
+  await db.collection('members').createIndex({ userId: 1 }, { unique: true });
+  await db.collection('members').insertOne({ _id: 'm1', userId: 'u1' });
+  await db.createCollection('open_tickets', {
+    viewOn: 'tickets',
+    pipeline: [{ $match: { stage: 'open' } }],
+  });
+
+  await reloadDataSession({ client: store.client, dataSet, session: opened.session });
+
+  const collections = await db.listCollections({}, { nameOnly: true }).toArray();
+  expect(
+    collections
+      .map((collection) => collection.name)
+      .filter((name) => !name.startsWith('system.'))
+      .sort()
+  ).toEqual(['tickets']);
+  // Twice in a row: the index that would refuse it went with the collection.
+  await db.collection('members').insertMany([
+    { _id: 'm1', userId: 'u1' },
+    { _id: 'm2', userId: 'u1' },
+  ]);
+});
+
+test('reloadDataSession loads a data set collection again when a test gave it a validator', async () => {
+  opened = await openDataSession({ dataSet, logger, store });
+  const db = database(targetA);
+  await db.command({
+    collMod: 'tickets',
+    validator: { number: { $type: 'string' } },
+    validationAction: 'error',
+  });
+
+  await reloadDataSession({ client: store.client, dataSet, session: opened.session });
+
+  const [tickets] = await db.listCollections({ name: 'tickets' }).toArray();
+  expect(tickets.options).toEqual({});
+  // The validator would have refused a number.
+  await db.collection('tickets').insertOne({ _id: 't5', number: 5 });
+});
+
+test('reloadDataSession loads a data set collection again when a test hid one of its indexes', async () => {
+  opened = await openDataSession({ dataSet, logger, store });
+  const tickets = database(targetA).collection('tickets');
+  await database(targetA).command({
+    collMod: 'tickets',
+    index: { name: 'number_1', hidden: true },
+  });
+
+  await reloadDataSession({ client: store.client, dataSet, session: opened.session });
+
+  const index = (await tickets.indexes()).find(({ name }) => name === 'number_1');
+  expect(index.hidden).toBeUndefined();
 });
