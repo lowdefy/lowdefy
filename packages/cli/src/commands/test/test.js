@@ -357,7 +357,7 @@ async function testJourneys({
     // The build as the server serves it before any journey opens a page, and the config source as
     // the run starts, which the records of headless-run.json are taken against (devBuildHash).
     const sourceHash = hashConfigSources({ configDirectory: context.directories.config });
-    const configHash = devBuildHash({ context, sourceHash });
+    const configHash = devBuildHash({ buildHash: hashBuild({ context }), sourceHash });
     const ran = await runDevJourneys({
       context,
       entries: tiered.selected,
@@ -384,12 +384,13 @@ async function testJourneys({
     results.push(...ran.results);
     browserOnly.push(...ran.browserOnly);
     inProcess.push(...ran.inProcess);
-    // The build once the run's pages were built.
+    // The build once the run's pages were built, hashed once for both records.
+    const endBuildHash = hashBuild({ context });
     writeExercised({
       directories: context.directories,
       results,
       buildId: await fetchBuildId({ url: server.url }),
-      configHash: hashBuild({ context }),
+      configHash: endBuildHash,
     });
     writeTestRun({ directories: context.directories, results });
     if (ran.headless.results.length + ran.headless.browserOnly.length + ran.remembered.length > 0) {
@@ -399,7 +400,7 @@ async function testJourneys({
         browserOnly: ran.headless.browserOnly,
         remembered: ran.remembered,
         mode: 'dev',
-        configHashes: [configHash, devBuildHash({ context, sourceHash })],
+        configHashes: [configHash, devBuildHash({ buildHash: endBuildHash, sourceHash })],
       });
     }
   } finally {
