@@ -25,9 +25,15 @@ import { wait } from '@lowdefy/helpers';
 // because a restart ends every wait running in the dev server.
 function createBuildActivity({ onChange }) {
   let active = 0;
+  // When the work last settled: every change batch, build and restart ends
+  // here, so it is also when the latest edit was processed.
+  let idleSince = null;
 
   function setBusy(busy) {
     active += busy ? 1 : -1;
+    if (active === 0) {
+      idleSince = Date.now();
+    }
     onChange(active > 0);
   }
 
@@ -41,11 +47,23 @@ function createBuildActivity({ onChange }) {
   }
 
   // An edit reaches a watcher a moment after it is saved, so the wait first
-  // gives the watchers graceMs to start on it.
-  async function waitForIdle({ graceMs = 1000, timeoutMs = 120000, intervalMs = 50 } = {}) {
+  // gives the watchers graceMs to start on it. When work settled less than
+  // graceMs before the call, an edit saved before it settled has been seen and
+  // processed (one that reached a watcher while the work ran kept it busy), so
+  // the grace only has to cover an edit saved since: seenGraceMs, a few times
+  // the watcher's latency (at most 57 ms from a save to its event, measured on
+  // macOS).
+  async function waitForIdle({
+    graceMs = 1000,
+    seenGraceMs = 200,
+    timeoutMs = 120000,
+    intervalMs = 50,
+  } = {}) {
     const start = Date.now();
+    const settledRecently = active === 0 && idleSince !== null && start - idleSince < graceMs;
+    const windowMs = settledRecently ? Math.min(seenGraceMs, graceMs) : graceMs;
     let sawBuild = false;
-    while (Date.now() - start < graceMs) {
+    while (Date.now() - start < windowMs) {
       if (active > 0) {
         sawBuild = true;
         break;

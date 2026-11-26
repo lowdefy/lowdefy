@@ -22,7 +22,7 @@ class BatchChanges {
     this._call = this._call.bind(this);
     this.args = [];
     this.busy = false;
-    this.delay = delay || 500;
+    this.delay = delay;
     this.fn = fn;
     this.onBusy = onBusy ?? (() => {});
     this.repeat = false;

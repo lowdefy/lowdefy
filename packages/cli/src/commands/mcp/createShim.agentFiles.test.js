@@ -57,6 +57,8 @@ let home;
 let client;
 let shim;
 let devServers;
+// The arguments each fake dev server tool call received, in order.
+let receivedArgs;
 const originalHome = process.env.LOWDEFY_HOME;
 
 // A dev server's MCP endpoint answering each tool with the text its
@@ -75,6 +77,7 @@ async function startFakeDevServer(answers) {
       })),
     }));
     server.setRequestHandler(CallToolRequestSchema, (request) => {
+      receivedArgs.push({ name: request.params.name, arguments: request.params.arguments });
       const answer = answers[request.params.name];
       const text = typeof answer === 'string' ? answer : JSON.stringify(answer, null, 2);
       return { content: [{ type: 'text', text }] };
@@ -139,6 +142,7 @@ beforeEach(() => {
   home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-shim-notes-home-'));
   process.env.LOWDEFY_HOME = home;
   devServers = [];
+  receivedArgs = [];
 });
 
 afterEach(async () => {
@@ -156,7 +160,7 @@ afterEach(async () => {
 test('passes a notice on once, then leaves agentFiles out and the rest of the result as it was', async () => {
   const status = {
     buildId: 'b1',
-    build: { status: 'ok', warnings: ['w'] },
+    build: { status: 'ok', warnings: [] },
     agentFiles: [MISMATCH],
   };
   await makeApp('.', { lowdefy_build_status: status });
@@ -236,4 +240,154 @@ test('never alters another tool result', async () => {
   } finally {
     devTools.tools.pop();
   }
+});
+
+const WARNING_A = { message: 'Block type "Buton" is deprecated.', source: 'pages/a.yaml:3' };
+const WARNING_B = { message: '_state references undefined blockId.', source: 'pages/b.yaml:9' };
+
+test('shows each build warning in full once, then counts it while it stays unchanged', async () => {
+  const answers = {
+    lowdefy_build_status: {
+      build: { status: 'ok', errors: [], warnings: [WARNING_A, WARNING_B] },
+    },
+  };
+  await makeApp('.', answers);
+  await connect();
+
+  expect((await buildStatus()).build.warnings).toEqual([WARNING_A, WARNING_B]);
+
+  const second = await buildStatus();
+  expect(second.build.warnings).toEqual([]);
+  expect(second.build.warningsUnchanged).toEqual({
+    count: 2,
+    note: "2 warning(s) unchanged since the last lowdefy_build_status answer this session (yours or another agent's) are left out. Call with all: true to list every warning.",
+  });
+});
+
+test('a new session, or another agent with its own lowdefy mcp, gets every warning in full once', async () => {
+  const answers = {
+    lowdefy_build_status: { build: { status: 'ok', errors: [], warnings: [WARNING_A, WARNING_B] } },
+  };
+  await makeApp('.', answers);
+  await connect();
+  await buildStatus();
+  expect((await buildStatus()).build.warningsUnchanged.count).toBe(2);
+  await client.close();
+  await shim.close();
+
+  await connect();
+  const first = await buildStatus();
+  expect(first.build.warnings).toEqual([WARNING_A, WARNING_B]);
+  expect(first.build.warningsUnchanged).toBeUndefined();
+  expect((await buildStatus()).build.warningsUnchanged.count).toBe(2);
+});
+
+test('shows new, changed and returning warnings in full, and every error', async () => {
+  const errors = [{ message: 'Broken.', source: 'pages/c.yaml:1' }];
+  const answers = {
+    lowdefy_build_status: { build: { status: 'error', errors, warnings: [WARNING_A, WARNING_B] } },
+  };
+  await makeApp('.', answers);
+  await connect();
+  await buildStatus();
+
+  const changed = { ...WARNING_B, source: 'pages/b.yaml:10' };
+  answers.lowdefy_build_status = {
+    build: { status: 'error', errors, warnings: [WARNING_A, changed] },
+  };
+  const second = await buildStatus();
+  expect(second.build.errors).toEqual(errors);
+  expect(second.build.warnings).toEqual([changed]);
+  expect(second.build.warningsUnchanged.count).toBe(1);
+
+  answers.lowdefy_build_status = { build: { status: 'error', errors, warnings: [changed] } };
+  expect((await buildStatus()).build.warningsUnchanged.count).toBe(1);
+  answers.lowdefy_build_status = {
+    build: { status: 'error', errors, warnings: [WARNING_A, changed] },
+  };
+  // WARNING_A went away for one answer, so it comes back in full.
+  expect((await buildStatus()).build.warnings).toEqual([WARNING_A]);
+});
+
+test('lists every warning with all: true, without passing all to the dev server', async () => {
+  const status = { build: { status: 'ok', warnings: [WARNING_A] } };
+  await makeApp('.', { lowdefy_build_status: status });
+  await connect();
+  await buildStatus();
+
+  expect(await call('lowdefy_build_status', { all: true, wait: true })).toEqual([
+    JSON.stringify(status, null, 2),
+  ]);
+  expect(receivedArgs.at(-1)).toEqual({ name: 'lowdefy_build_status', arguments: { wait: true } });
+  expect((await buildStatus()).build.warningsUnchanged.count).toBe(1);
+});
+
+test('passes all on to another tool', async () => {
+  devTools.tools.push({
+    name: 'lowdefy_other',
+    description: 'Other.',
+    inputSchema: { type: 'object', properties: {} },
+  });
+  try {
+    await makeApp('.', { lowdefy_build_status: {}, lowdefy_other: {} });
+    await connect();
+
+    await call('lowdefy_other', { all: true });
+    expect(receivedArgs.at(-1)).toEqual({ name: 'lowdefy_other', arguments: { all: true } });
+  } finally {
+    devTools.tools.pop();
+  }
+});
+
+test('counts a warning whose configKey alone changed, as every config build changes them', async () => {
+  const answers = {
+    lowdefy_build_status: {
+      build: { status: 'ok', warnings: [{ ...WARNING_A, configKey: 'a1_o1' }] },
+    },
+  };
+  await makeApp('.', answers);
+  await connect();
+  await buildStatus();
+
+  answers.lowdefy_build_status = {
+    build: { status: 'ok', warnings: [{ ...WARNING_A, configKey: 'b2_o9' }] },
+  };
+  const second = await buildStatus();
+  expect(second.build.warnings).toEqual([]);
+  expect(second.build.warningsUnchanged.count).toBe(1);
+});
+
+test('leaves out a passed-on notice and unchanged warnings from one answer', async () => {
+  const status = { build: { status: 'ok', warnings: [WARNING_A] }, agentFiles: [MISMATCH] };
+  await makeApp('.', { lowdefy_build_status: status });
+  await connect();
+  await buildStatus();
+
+  const second = await buildStatus();
+  expect(second).not.toHaveProperty('agentFiles');
+  expect(second.build.warnings).toEqual([]);
+  expect(second.build.warningsUnchanged.count).toBe(1);
+});
+
+test('remembers shown warnings for each app apart', async () => {
+  const status = { build: { status: 'ok', warnings: [WARNING_A] } };
+  await makeApp('apps/one', { lowdefy_build_status: status });
+  await makeApp('apps/two', { lowdefy_build_status: status });
+  await connect();
+
+  await buildStatus({ directory: 'apps/one' });
+  expect((await buildStatus({ directory: 'apps/two' })).build.warnings).toEqual([WARNING_A]);
+  expect((await buildStatus({ directory: 'apps/one' })).build.warnings).toEqual([]);
+});
+
+test('lists all on build status and describes the warnings it leaves out', async () => {
+  await makeApp('.', { lowdefy_build_status: { build: { status: 'ok' } } });
+  await connect();
+
+  const { tools } = await client.listTools();
+  const tool = tools.find((entry) => entry.name === 'lowdefy_build_status');
+  expect(tool.inputSchema.properties.all.type).toBe('boolean');
+  expect(tool.description).toMatch(
+    /Warnings unchanged since the last call this session are counted, not listed\.$/
+  );
 });
