@@ -14,8 +14,6 @@
   limitations under the License.
 */
 
-import { randomBytes } from 'crypto';
-
 import { BuildError } from '@lowdefy/errors';
 
 import createContext from '../../createContext.js';
@@ -108,13 +106,14 @@ import buildShallowPages from './buildShallowPages.js';
 import collectPageContent from '../collectPageContent.js';
 import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
 import createEndpointRegistry from './createEndpointRegistry.js';
+import drawKeyPrefix from './drawKeyPrefix.js';
 import releaseMergedModuleEntities from './releaseMergedModuleEntities.js';
 import writeEndpointList from './writeEndpointList.js';
 import writeModules from './writeModules.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
-  makeId.reset({ prefix: `${randomBytes(2).toString('hex')}_` });
+  makeId.reset({ prefix: drawKeyPrefix() });
 
   let context;
   try {
