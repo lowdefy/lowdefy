@@ -163,6 +163,46 @@ test('T7 a click with row, column, text or nth gives the object form without nul
   ]);
 });
 
+test('T7 a click in a keyed row names the row by key, and a control click names its control', () => {
+  expect(
+    steps([
+      entry,
+      traceRecord({ at: 1, block: 'grid', row: 3, rowKey: 'inv-4', column: 'name' }),
+      traceRecord({ at: 3, block: 'delete_modal', control: 'ok' }),
+      traceRecord({
+        at: 5,
+        block: 'grid',
+        row: 1,
+        rowKey: 'inv-2',
+        column: 'actions',
+        control: 'onPay',
+      }),
+    ])
+  ).toEqual([
+    { click: { blockId: 'grid', rowKey: 'inv-4', column: 'name' } },
+    { click: { blockId: 'delete_modal', control: 'ok' } },
+    { click: { blockId: 'grid', rowKey: 'inv-2', column: 'actions', control: 'onPay' } },
+  ]);
+});
+
+test('T7 a change in a keyed row keeps the row, since fill takes no rowKey', () => {
+  expect(
+    steps([
+      entry,
+      traceRecord({
+        at: 1,
+        kind: 'change',
+        block: 'lines',
+        blockType: 'TextInput',
+        row: 2,
+        rowKey: 'l-3',
+        column: 'qty',
+        value: '4',
+      }),
+    ])
+  ).toEqual([{ fill: { blockId: 'lines', row: 2, column: 'qty', value: '4', from: 'recorded' } }]);
+});
+
 test('T8 a click with no observed event is still a step', () => {
   expect(
     steps([

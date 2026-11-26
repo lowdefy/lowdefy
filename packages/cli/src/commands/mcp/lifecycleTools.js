@@ -73,7 +73,7 @@ const lifecycleTools = [
   {
     name: 'lowdefy_run_tests',
     description:
-      'Run this app\'s tests (as `lowdefy test` does) against its dev server, starting it if needed. Choose the journeys for the pages your change touches (`lowdefy journeys scope` lists those pages) with `paths`, `tags` or `filter`: no arguments runs the full suite, every journey under tests/journeys/, sub-folders included, except folders starting with "_" (such as _candidates), so run it only when a person asks. `paths` runs journey files, folders or globs (`tests/journeys/review/**`); `tags` runs the journeys carrying any of the tags. `filter` narrows by name; paths, tags and filter combine. A journey whose `user` is a list of data set users runs once as each, named "<name> [<user>]" (filter "[admin]" picks one). `tier` then runs only the most-used journeys of that selection, by their production use. When agents share a change, the merging agent runs the touched journeys once, after the last merge. Journeys marked `deprecated: true` are skipped. Returns `summary`, `failed` (each failing or flaky journey with its report: the failing step with expected and actual), `passed` and `skipped` (one line per journey, carrying its tier, rank, rate and failures) and `resultFile`. When the answer cannot fit everything, `omitted` counts what was left out, and `resultFile` (.lowdefy/test/results.json) holds every journey of the run. Add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.',
+      'Run this app\'s tests (as `lowdefy test` does) against its dev server, starting it if needed. Choose the journeys for the pages your change touches (`lowdefy journeys scope` lists those pages) with `paths`, `tags` or `filter`: no arguments runs the full suite, every journey under tests/journeys/, sub-folders included, except folders starting with "_" (such as _candidates), so run it only when a person asks. `paths`, `tags` and `filter` combine. A journey with a `cases` table runs once per row, named "<name> [<row>]", and one whose `user` is a list of data set users once as each, "<name> [<user>]" (filter "[admin]" picks one). Journeys run headless; one needing a browser is listed unrun under `browserOnly`, and `summary` says how to run it. Use `thorough` or `browser` only if a person asks or the change shows only in a browser. `browser` can\'t run `hold`, `release` or calls `as: system`. `tier` then runs only the most-used journeys of that selection, by their production use. When agents share a change, the merging agent runs the touched journeys once, after the last merge. Journeys marked `deprecated: true` are skipped. Returns `summary`, `failed` (each failing or flaky journey with its report: the failing step with expected and actual), `browserOnly` (journeys left unrun that need a browser), `passed` and `skipped` (one line per journey, carrying its tier, rank, rate and failures) and `resultFile`. When the answer cannot fit everything, `omitted` counts what was left out, and `resultFile` (.lowdefy/test/results.json) holds every journey of the run. Add a journey (the steps you verified with lowdefy_run_journey) for behaviour you fixed.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -107,6 +107,25 @@ const lifecycleTools = [
           enum: ['common', 'wide', 'edge', 'full'],
           description:
             'Only run the journeys in this popularity tier of the selection, ranked by recent production use: common (the most-used journeys making up half of use, the happy paths), wide (80%), edge (95%, the edge cases real users still reach) or full (every journey, the default). Journeys with no counts for their current steps run in every tier. Refused when the selection has fewer than 100 production matches in the usage window.',
+        },
+        headless: {
+          type: 'boolean',
+          description: 'The default: only journeys that need no browser.',
+        },
+        browser: {
+          type: 'boolean',
+          description: 'Every journey in the browser.',
+        },
+        thorough: {
+          type: 'boolean',
+          description: 'Also run journeys that need a browser, in it.',
+        },
+        concurrency: {
+          type: 'integer',
+          minimum: 1,
+          maximum: 3,
+          description:
+            "Browser journeys at once on data sets (thorough or browser). Default 1. Above 1, other sessions' screenshots can wait for a browser.",
         },
         usageWindow: {
           type: 'string',

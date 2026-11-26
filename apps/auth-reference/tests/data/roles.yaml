@@ -1,0 +1,9 @@
+# The users the fixture access table tests of @lowdefy/test-utils check this app's pages and
+# endpoints as (packages/utils/test-utils/test/fixtureApps/accessMatrix.test.mjs). They are
+# injected callers, not accounts: no journey signs in as them. The app requires a second factor
+# (auth.twoFactor.required), and only a caller that carries two_factor_enrolled: false is asked to
+# enrol. Change it only together with that test.
+users:
+  admin: { id: u_admin, roles: [user-admin], two_factor_enrolled: true }
+  auditor: { id: u_auditor, roles: [auditor], two_factor_enrolled: true }
+  unenrolled_auditor: { id: u_unenrolled_auditor, roles: [auditor], two_factor_enrolled: false }

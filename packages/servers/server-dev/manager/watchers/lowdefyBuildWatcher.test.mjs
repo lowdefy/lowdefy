@@ -112,12 +112,18 @@ beforeEach(async () => {
   write(path.join(configDir, 'pages.yaml'), '- _ref: pages/home.yaml\n');
   write(path.join(configDir, 'pages', 'home.yaml'), 'id: home\ntype: Box\n');
   write(path.join(configDir, 'menus', 'main.yaml'), '- id: main\n');
+  write(path.join(configDir, 'api', 'one.yaml'), 'id: one\ntype: Api\n');
   write(path.join(localModuleRoot, 'module.lowdefy.yaml'), 'name: Layout\n');
   write(path.join(localModuleRoot, 'menus.yaml'), '- id: main\n');
   write(path.join(worktreeDir, 'modules', 'shared', 'title-block.yaml'), 'id: title\n');
   write(
     path.join(buildDir, 'skeletonSourceFiles.json'),
-    JSON.stringify(['menus/main.yaml', 'pages.yaml', path.join(localModuleRoot, 'menus.yaml')])
+    JSON.stringify([
+      'api/one.yaml',
+      'menus/main.yaml',
+      'pages.yaml',
+      path.join(localModuleRoot, 'menus.yaml'),
+    ])
   );
   write(
     path.join(buildDir, 'routes.json'),
@@ -153,6 +159,8 @@ beforeEach(async () => {
     logger: { info: vi.fn(), warn: vi.fn(), error: vi.fn() },
     buildActivity: { setBusy: vi.fn() },
     lowdefyBuild: vi.fn(async () => {}),
+    // Resolves false when the config must be built instead.
+    lowdefyEndpointBuild: vi.fn(async () => false),
     pageRegistry: new Map([['home', { pageId: 'home', refPath: 'pages/home.yaml' }]]),
     options: { watch: [], watchIgnore: [] },
     reloadClients: vi.fn(async () => {}),
@@ -212,6 +220,58 @@ test('a --watch glob watches the files it matches and no others', async () => {
 
   expect(isWatched({ configWatcher, filePath: block })).toBe(true);
   expect(isWatched({ configWatcher, filePath: notes })).toBe(false);
+});
+
+test('an edit to a skeleton file only endpoints read rebuilds those endpoints, not the config', async () => {
+  context.lowdefyEndpointBuild.mockResolvedValue(true);
+  await startWatcher();
+  fs.appendFileSync(path.join(configDir, 'api', 'one.yaml'), 'description: One\n');
+
+  await waitFor(invalidated, { description: 'pages to be invalidated' });
+  await waitFor(() => context.reloadClients.mock.calls.length > 0, {
+    description: 'clients to reload',
+  });
+  expect(context.lowdefyEndpointBuild).toHaveBeenCalledWith({ files: ['api/one.yaml'] });
+  expect(context.lowdefyBuild).not.toHaveBeenCalled();
+  expect(context.syncServer).not.toHaveBeenCalled();
+});
+
+test('a skeleton file edit the endpoint build cannot take rebuilds the config', async () => {
+  await startWatcher();
+  fs.appendFileSync(path.join(configDir, 'api', 'one.yaml'), 'description: One\n');
+
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
+  expect(context.lowdefyEndpointBuild).toHaveBeenCalledWith({ files: ['api/one.yaml'] });
+  expect(context.lowdefyEndpointBuild.mock.invocationCallOrder[0]).toBeLessThan(
+    context.lowdefyBuild.mock.invocationCallOrder[0]
+  );
+  expect(context.syncServer).toHaveBeenCalledTimes(1);
+});
+
+test('a module skeleton file reaches the endpoint build by its absolute path', async () => {
+  await startWatcher();
+  fs.appendFileSync(path.join(localModuleRoot, 'menus.yaml'), '- id: other\n');
+
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
+  expect(context.lowdefyEndpointBuild).toHaveBeenCalledWith({
+    files: [path.join(localModuleRoot, 'menus.yaml')],
+  });
+});
+
+test('after a failed config build, an endpoint file edit rebuilds the config', async () => {
+  context.lastBuildFailed = true;
+  context.lowdefyEndpointBuild.mockResolvedValue(true);
+  await startWatcher();
+  fs.appendFileSync(path.join(configDir, 'api', 'one.yaml'), 'description: One\n');
+
+  await waitFor(() => context.lowdefyBuild.mock.calls.length === 1, {
+    description: 'a config build',
+  });
+  expect(context.lowdefyEndpointBuild).not.toHaveBeenCalled();
 });
 
 test('a page file edit that changes the page path rebuilds the config', async () => {

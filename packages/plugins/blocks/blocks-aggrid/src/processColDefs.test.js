@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { renderToStaticMarkup } from 'react-dom/server';
+
 import processColDefs from './processColDefs.js';
 import { expect, test } from 'vitest';
 
@@ -33,4 +35,17 @@ test('processColDefs keeps a named cellRenderer when ellipsis is set', () => {
   expect(colDef.cellRenderer).toBe('agAnimateShowChangeCellRenderer');
   expect(colDef.cellClass).toBe('lf-ellipsis-2');
   expect(colDef.ellipsis).toBeUndefined();
+});
+
+// The cell renderers mark their controls with the grid's block id for journeys.
+test('processColDefs passes the grid block id to a cell renderer', () => {
+  const [colDef] = processColDefs(
+    [{ field: 'active', cell: { type: 'switch', eventName: 'onToggle' } }],
+    { blockId: 'invoices', methods: {}, components: {} }
+  );
+  const element = colDef.cellRenderer({ value: true, data: { active: true }, node: { id: 'r1' } });
+  const html = renderToStaticMarkup(element);
+  expect(html).toContain('data-lf-block="invoices"');
+  expect(html).toContain('data-lf-control="onToggle"');
+  expect(html).toContain('data-lf-row-key="r1"');
 });

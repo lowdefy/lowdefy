@@ -79,6 +79,16 @@ function validateTraceTarget({ target }) {
       target.column
     )}.`;
   }
+  if (!isStringOrNone(target.row_key)) {
+    return `Trace record "target.row_key" should be a string or null. Received ${JSON.stringify(
+      target.row_key
+    )}.`;
+  }
+  if (!isStringOrNone(target.control)) {
+    return `Trace record "target.control" should be a string or null. Received ${JSON.stringify(
+      target.control
+    )}.`;
+  }
   if (!isIndexOrNone(target.row)) {
     return `Trace record "target.row" should be a zero-based integer or null. Received ${JSON.stringify(
       target.row

@@ -29,6 +29,10 @@ import hashConfigContent from './hashConfigContent.js';
 // a build reads are attributed through async context rather than the context.
 const buildReads = new AsyncLocalStorage();
 const records = new Map();
+// The builds running now, each as { generation, reads }. A build's record is
+// written when it ends, so until then this is the only place that names the
+// jitMaps/ file it writes.
+const buildsInFlight = new Set();
 
 // Recorded for a file a build read twice with different content, or could not
 // read: no content on disk matches it, so the page is always rebuilt.
@@ -59,6 +63,34 @@ function trackReadConfigFile({ readConfigFile, configDirectory }) {
     }
     if (reads) recordRead({ reads, filePath: absolutePath, hash: hashConfigContent(content) });
     return content;
+  };
+}
+
+// A page build writes the key and ref entries it added to one jitMaps/ file
+// (writeJitMaps), also when it fails. Recording its name lets the dev server
+// keep exactly the files that resolve the errors current pages report. A write
+// skipStaleMapWrites drops never reaches this wrapper, so it is not recorded.
+//
+// The name is recorded before the write starts: a new build context prunes
+// jitMaps/ by these names (mapsFiles), and it can be made while the write is
+// under way, after which the file is in place and would be removed as one no
+// build wrote.
+function trackMapWrites({ context }) {
+  const writeBuildArtifact = context.writeBuildArtifact;
+  context.writeBuildArtifact = async (filePath, content, options) => {
+    const reads = buildReads.getStore();
+    if (!reads || !filePath.startsWith('jitMaps/')) {
+      await writeBuildArtifact(filePath, content, options);
+      return;
+    }
+    const name = path.posix.basename(filePath);
+    reads.mapsFiles.push(name);
+    try {
+      await writeBuildArtifact(filePath, content, options);
+    } catch (error) {
+      reads.mapsFiles.splice(reads.mapsFiles.lastIndexOf(name), 1);
+      throw error;
+    }
   };
 }
 
@@ -94,11 +126,11 @@ function locateErrors({ error, context, configDirectory }) {
   }
 }
 
-// generation names the build context the page was built on, and checkedAt the
+// generation names the config build the page was built in, and checkedAt the
 // change event counter when its build started: what it read is current as of
 // that event.
 async function record({ pageId, context, configDirectory, generation, checkedAt, build }) {
-  const reads = { files: new Map(), ranAppCode: false };
+  const reads = { files: new Map(), mapsFiles: [], ranAppCode: false };
   const builtAt = Date.now();
   const describe = (errors) => ({
     builtAt,
@@ -106,26 +138,57 @@ async function record({ pageId, context, configDirectory, generation, checkedAt,
     errors,
     files: reads.files,
     generation,
+    mapsFiles: reads.mapsFiles,
     ranAppCode: reads.ranAppCode,
   });
-  let result;
+  const buildInFlight = { generation, reads };
+  buildsInFlight.add(buildInFlight);
   try {
-    result = await buildReads.run(reads, build);
-  } catch (error) {
-    locateErrors({ error, context, configDirectory });
-    records.set(pageId, describe(mapPageBuildErrors(error)));
-    throw error;
+    let result;
+    try {
+      result = await buildReads.run(reads, build);
+    } catch (error) {
+      locateErrors({ error, context, configDirectory });
+      records.set(pageId, describe(mapPageBuildErrors(error)));
+      throw error;
+    }
+    // A plugin install ends the build before the page is built, so the page's
+    // previous record still describes it.
+    if (!result?.installing) {
+      records.set(pageId, describe(null));
+    }
+    return result;
+  } finally {
+    buildsInFlight.delete(buildInFlight);
   }
-  // A plugin install ends the build before the page is built, so the page's
-  // previous record still describes it.
-  if (!result?.installing) {
-    records.set(pageId, describe(null));
-  }
-  return result;
 }
 
 function get(pageId) {
   return records.get(pageId) ?? null;
 }
 
-export default { get, record, trackFileReads, trackReadConfigFile };
+// The jitMaps/ files the latest builds of a generation's pages wrote, and the
+// ones its builds still running have written or are writing.
+function mapsFiles({ generation }) {
+  const names = [];
+  for (const pageRecord of records.values()) {
+    if (pageRecord.generation === generation) {
+      names.push(...pageRecord.mapsFiles);
+    }
+  }
+  for (const buildInFlight of buildsInFlight) {
+    if (buildInFlight.generation === generation) {
+      names.push(...buildInFlight.reads.mapsFiles);
+    }
+  }
+  return names;
+}
+
+export default {
+  get,
+  mapsFiles,
+  record,
+  trackFileReads,
+  trackMapWrites,
+  trackReadConfigFile,
+};

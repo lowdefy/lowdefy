@@ -21,10 +21,25 @@ import {
   getShortcutModifier,
   getState,
 } from '@lowdefy/e2e-utils/runtime';
-import { getStepKey } from '@lowdefy/node-utils';
+import {
+  expectAnswerError,
+  expectAnswerStatus,
+  expectDb,
+  expectSunk,
+  findUnfiredFailGate,
+  HeadlessStepError,
+} from '@lowdefy/journey-headless';
+import {
+  ANSWER_STEP_KEYS,
+  getStepKey,
+  INTERACTION_STEP_KEYS,
+  RAILED_STEPS,
+} from '@lowdefy/node-utils';
+import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
 import checkAuthActionsRan from './rails/checkAuthActionsRan.js';
-import checkClickRails from './rails/checkClickRails.js';
+import checkPressRails from './rails/checkPressRails.js';
+import checkStepRails from './rails/checkStepRails.js';
 import checkStepReferences from './checkStepReferences.js';
 import createLeftOriginError from './createLeftOriginError.js';
 import { buildPageUrl } from './getBrowser.js';
@@ -36,6 +51,8 @@ import nextJourneySequence from './nextJourneySequence.js';
 import openJourneyEmail from './openJourneyEmail.js';
 import readJourneyEmailMatch from './readJourneyEmailMatch.js';
 import readPagePath from './readPagePath.js';
+import runJourneyCall from './runJourneyCall.js';
+import runJourneyWebhook from './runJourneyWebhook.js';
 import shownTextSelector from './shownTextSelector.js';
 
 // Playwright colours its call log with ANSI escapes; the result is read by an
@@ -81,12 +98,49 @@ function capitalise(text) {
 // @lowdefy/helpers, where the engine's describe functions read them too.
 const {
   checkboxOption: CHECKBOX_OPTION,
+  controlSelector,
   dropdownOption: DROPDOWN_OPTION,
+  dropdownTrigger: DROPDOWN_TRIGGER,
   gridSelector,
   interactiveControl: INTERACTIVE_CONTROL,
+  isGeneratedRowKey,
   layers: LAYERS,
   radioOption: RADIO_OPTION,
 } = journeyTargetSelectors;
+
+// An element antd is animating out: still visible, but no longer what a person acts on. antd's
+// motion (rc-motion) gives it the class `ant-<motion>-leave` until it is hidden, for the motions
+// antd 6 uses: Modal and ConfirmModal (zoom, their mask fade), Drawer (panel motions), dropdown,
+// select, cascader and picker popups (slides), ColorPicker's popover and a vertical Menu's
+// submenu popup (zoom-big), and an inline Menu's submenu (motion-collapse). Only whole class
+// names match, so a block id or class with "leave" in it (the portal class
+// `ldf-portal-leave_modal`, `annual-leave`) does not count as leaving.
+const LEAVING_MOTIONS = [
+  'zoom',
+  'zoom-big',
+  'fade',
+  'slide-up',
+  'slide-down',
+  'slide-left',
+  'slide-right',
+  'drawer-panel-motion-left',
+  'drawer-panel-motion-right',
+  'drawer-panel-motion-top',
+  'drawer-panel-motion-bottom',
+  'motion-collapse',
+];
+const LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave`).join(', ');
+const INSIDE_LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave *`).join(', ');
+// An element antd is animating in or out, by the same motions: rc-motion gives it
+// `ant-<motion>-appear` or `-enter` while it shows, and `-leave` while it hides.
+const MOVING = LEAVING_MOTIONS.flatMap((motion) =>
+  ['appear', 'enter', 'leave'].map((phase) => `.ant-${motion}-${phase}`)
+).join(', ');
+
+// The cell a row-key target with no column or control clicks: the row's first cell. AG Grid draws
+// cells out of display order (ensureDomOrder is off), so it is the cell AG Grid and Table number
+// first, not the first cell element.
+const FIRST_CELL = '[aria-colindex="1"]';
 
 // A lazy block (createLazyBlock in @lowdefy/block-utils) shows its wrapper and
 // a fallback before its implementation, and counts itself in
@@ -151,6 +205,9 @@ function describeScopeParts(target) {
   if (!type.isUndefined(target.row)) {
     parts.push(`row ${target.row}`);
   }
+  if (!type.isUndefined(target.rowKey)) {
+    parts.push(`row key "${target.rowKey}"`);
+  }
   if (!type.isUndefined(target.column)) {
     parts.push(`column "${target.column}"`);
   }
@@ -164,6 +221,9 @@ function describeTarget(target) {
   if (!type.isUndefined(target.text)) {
     parts.push(`control "${target.text}"`);
   }
+  if (!type.isUndefined(target.control)) {
+    parts.push(`control key "${target.control}"`);
+  }
   if (!type.isUndefined(target.containing)) {
     parts.push(`text containing "${target.containing}"`);
   }
@@ -176,7 +236,8 @@ function describeTarget(target) {
 // The element the target's scope keys name: the block wrapper, narrowed to a
 // grid row (the row as displayed: ag-grid's `.ag-row[row-index]`, rendered once
 // per pinned/centre column container before AG Grid 36, or a Table's
-// `.lf-table-row[data-row-index]`)
+// `.lf-table-row[data-row-index]`; or the row by its key: ag-grid's
+// `.ag-row[row-id]`, a Table's `.lf-table-row[data-row-key]`)
 // and to a cell (ag-grid's `.ag-cell[col-id]` or a Table's
 // `.lf-table-gridcell[data-col-key]`: the column's field, colId or key). Undefined for a page-wide `text` target,
 // which has no scope narrower than the page.
@@ -187,6 +248,9 @@ function resolveScope({ page, target }) {
   let scope = getBlock(page, target.blockId);
   if (!type.isUndefined(target.row)) {
     scope = scope.locator(gridSelector({ kind: 'row', value: target.row }));
+  }
+  if (!type.isUndefined(target.rowKey)) {
+    scope = scope.locator(gridSelector({ kind: 'rowKey', value: target.rowKey }));
   }
   if (!type.isUndefined(target.column)) {
     scope = scope.locator(gridSelector({ kind: 'cell', value: target.column }));
@@ -202,6 +266,7 @@ function resolveMatchScope({ page, target }) {
   if (
     type.isUndefined(scope) ||
     !type.isUndefined(target.row) ||
+    !type.isUndefined(target.rowKey) ||
     !type.isUndefined(target.column)
   ) {
     return scope;
@@ -298,7 +363,18 @@ function plural({ count, word }) {
 // A target with `nth` also waits for a first match before it is resolved, so
 // the front-most open layer is chosen (locatePageWideText) once the control is
 // showing, not before a dialog the previous step opened has rendered.
-async function resolveActionTarget({ page, target, timeout }) {
+//
+// beforeReveal runs once, before a `control` target hovers its row or opens a
+// dropdown to show the control: those act on the block too (a dropdown fires
+// onOpenChange), so a click's step rails check must come first.
+async function resolveActionTarget({ page, target, timeout, beforeReveal }) {
+  await refuseGeneratedRowKey({ page, target });
+  if (!type.isUndefined(target.control)) {
+    return locateControl({ page, target, timeout, beforeReveal });
+  }
+  if (!type.isUndefined(target.rowKey)) {
+    await waitForOneKeyedRow({ page, target, timeout });
+  }
   if (!namesMatches(target)) {
     return resolveTarget({ page, target });
   }
@@ -327,16 +403,241 @@ async function resolveActionTarget({ page, target, timeout }) {
   return matches.first();
 }
 
-// A target that names a control (`text`, `nth`) or the words shown
+// A target that names a control (`text`, `nth`, `control`) or the words shown
 // (`containing`) is clicked as is - a click on a list row's text reaches the
 // row's own click handler, the way a person clicks the row; a target that
 // names a container (block, row, cell) is clicked on the first control inside
-// it, or on itself when it has none.
+// it, or on itself when it has none. A row named by key with no column is
+// clicked on its first cell, as that cell's own target would be.
 async function resolveClickLocator({ located, target, timeout }) {
-  if (namesMatches(target) || !type.isUndefined(target.nth)) {
+  if (namesMatches(target) || !type.isUndefined(target.nth) || !type.isUndefined(target.control)) {
     return located;
   }
+  if (!type.isUndefined(target.rowKey) && type.isUndefined(target.column)) {
+    return resolveClickTarget({ scope: located.locator(FIRST_CELL), timeout });
+  }
   return resolveClickTarget({ scope: located, timeout });
+}
+
+// A grid writes a generated key (`__row_<n>`) for a row whose data has none, and it changes
+// between renders, so a step that names a row by one fails before it acts, with the grid's fix.
+async function refuseGeneratedRowKey({ page, target }) {
+  if (type.isUndefined(target.rowKey) || !isGeneratedRowKey(target.rowKey)) {
+    return;
+  }
+  const { type: blockType } = (await readBlockFacts({ page, blockId: target.blockId })) ?? {};
+  const grid = type.isNone(blockType)
+    ? `block "${target.blockId}"`
+    : `block "${target.blockId}" (${blockType})`;
+  const fix =
+    blockType === 'Table'
+      ? 'give rows an `_id` or `id`, or set `rowKey`'
+      : 'give rows an `id` or set `rowId`';
+  throw new JourneyStepError(
+    `Row key "${target.rowKey}" is a key ${grid} generated for a row with no key of its own, and it changes between renders: ${fix}, and name the row by that key.`,
+    {
+      expected: `a row key the data of ${grid} holds`,
+      actual: `the generated row key "${target.rowKey}"`,
+    }
+  );
+}
+
+// The rows of the target's block with its row key. A row AG Grid splits across pinned containers
+// holds its first cell once, so the rows with a first cell count the rows.
+function keyedRows({ page, target }) {
+  return getBlock(page, target.blockId)
+    .locator(gridSelector({ kind: 'rowKey', value: target.rowKey }))
+    .filter({ has: page.locator(FIRST_CELL) });
+}
+
+// A row key names one row: waits for it to show, and fails when several rows carry the key, as a
+// `text` that matches several controls does. A key no row carries fails the wait.
+async function waitForOneKeyedRow({ page, target, timeout }) {
+  const rows = keyedRows({ page, target });
+  await rows.first().waitFor({ state: 'visible', timeout });
+  const count = await rows.count();
+  if (count > 1) {
+    const where = `block "${target.blockId}"`;
+    throw new JourneyStepError(
+      `Matched ${plural({ count, word: 'row' })} with key "${
+        target.rowKey
+      }" in ${where}; a row key names one row, so give each row its own key.`,
+      {
+        expected: `exactly one row with key "${target.rowKey}" in ${where}`,
+        actual: plural({ count, word: 'row' }),
+      }
+    );
+  }
+}
+
+// The dropdown triggers in a scope whose popup is not showing: antd marks an open trigger
+// `ant-dropdown-open`, and Table's cell menu sets aria-expanded.
+const CLOSED_DROPDOWN_TRIGGER = DROPDOWN_TRIGGER.split(',')
+  .map((selector) => `${selector.trim()}:not(.ant-dropdown-open):not([aria-expanded="true"])`)
+  .join(', ');
+
+// The dropdown popups antd draws in document.body. A cell's menu draws its items there, so a
+// control target with a column looks in the cell and in the open popups.
+const DROPDOWN_POPUP = '.ant-dropdown';
+
+// The visible elements marked with the target's block, control key and row key: page-wide (antd
+// draws modal footers, confirm dialogs and dropdown popups outside the block), or in the cell
+// and the open dropdown popups when a column is given. A closed popup antd leaves in the DOM is
+// hidden, and one still fading out is leaving, so neither matches.
+function controlMatches({ page, target }) {
+  const selector = `${controlSelector({
+    blockId: target.blockId,
+    control: target.control,
+    rowKey: target.rowKey,
+  })}:not(${INSIDE_LEAVING})`;
+  if (type.isUndefined(target.column)) {
+    return page.locator(selector).filter({ visible: true });
+  }
+  return resolveScope({ page, target })
+    .locator(selector)
+    .or(page.locator(DROPDOWN_POPUP).locator(selector))
+    .filter({ visible: true });
+}
+
+// How the block's dropdown opens: its `trigger` property (hover, click or contextMenu), else hover
+// for DropdownMenu (its default) and click for any other. A block the page does not hold opens
+// on click.
+async function readDropdownTrigger({ page, blockId }) {
+  const facts = await readBlockFacts({ page, blockId });
+  if (type.isNone(facts)) return 'click';
+  if (!type.isNone(facts.trigger)) return facts.trigger;
+  return facts.type === 'DropdownMenu' ? 'hover' : 'click';
+}
+
+// Opens a dropdown the way a person does: a hover dropdown by hovering its trigger, a
+// contextMenu dropdown by right-clicking it, any other by clicking it. Only the block's own
+// trigger reads the block's `trigger`; a row's or a cell's is a cell menu, which opens on click.
+async function openDropdown({ page, target, trigger, timeout }) {
+  const isBlockScope =
+    !type.isUndefined(target.blockId) &&
+    type.isUndefined(target.row) &&
+    type.isUndefined(target.rowKey) &&
+    type.isUndefined(target.column);
+  const opensOn = isBlockScope
+    ? await readDropdownTrigger({ page, blockId: target.blockId })
+    : 'click';
+  if (opensOn === 'hover') {
+    await trigger.hover({ timeout });
+    return;
+  }
+  await trigger.click({ timeout, button: opensOn === 'contextMenu' ? 'right' : 'left' });
+}
+
+// A ClickableHtml element in popover content waits hidden in the block's html until a click on
+// its data-popover trigger opens the popover. The trigger of the popover whose hidden content
+// holds the control the selector names, or null when no popover holds it.
+async function findPopoverTrigger({ page, target, selector }) {
+  // A block the page does not draw (hidden) has no wrapper, and evaluate would wait for one.
+  if ((await getBlock(page, target.blockId).count()) === 0) return null;
+  const id = await getBlock(page, target.blockId).evaluate((wrapper, controlSelector) => {
+    const content = [...wrapper.querySelectorAll('[data-popover-content]')].find(
+      (element) => element.querySelector(controlSelector) !== null
+    );
+    return content?.getAttribute('data-popover-content') ?? null;
+  }, selector);
+  if (id === null) return null;
+  return getBlock(page, target.blockId)
+    .locator(`[data-popover="${id.replace(/["\\]/g, '\\$&')}"]`)
+    .filter({ visible: true })
+    .first();
+}
+
+// The one visible control a `control` target names. When none shows it reveals the control as a
+// person would: it hovers the target's row (a Table's `showOn: hover` buttons mount only then),
+// then opens the first closed dropdown trigger in the scope (the cell, else the row, else the
+// block) and waits for its popup, or opens the ClickableHtml popover that holds it. Several visible
+// matches fail with the count, as a `text` that matches several controls does; none within the
+// timeout fails naming what was tried. beforeReveal (a click's step rails) runs once, before the
+// first hover or open.
+async function locateControl({ page, target, timeout, beforeReveal }) {
+  const deadline = Date.now() + timeout;
+  const description = describeTarget(target);
+  const matches = controlMatches({ page, target });
+  const triggers = resolveScope({ page, target })
+    .locator(CLOSED_DROPDOWN_TRIGGER)
+    .filter({ visible: true });
+  await waitForLoadingBlocks({ page, timeout });
+  let hoveredRow = type.isUndefined(target.rowKey);
+  let openedOf = 0;
+  let openedPopover = false;
+  let revealChecked = type.isUndefined(beforeReveal);
+  const checkBeforeReveal = async () => {
+    if (!revealChecked) {
+      revealChecked = true;
+      await beforeReveal();
+    }
+  };
+  for (;;) {
+    const count = await matches.count();
+    if (count === 1) {
+      return matches.first();
+    }
+    if (count > 1) {
+      throw new JourneyStepError(
+        `Matched ${plural({
+          count,
+          word: 'visible control',
+        })} for ${description}; add a rowKey (and a column) to name one.`,
+        {
+          expected: `exactly one visible control for ${description}`,
+          actual: plural({ count, word: 'control' }),
+        }
+      );
+    }
+    const remaining = Math.max(deadline - Date.now(), 1);
+    if (!hoveredRow) {
+      const row = keyedRows({ page, target }).first();
+      if (await row.isVisible()) {
+        await checkBeforeReveal();
+        await row.hover({ timeout: remaining });
+        hoveredRow = true;
+        continue;
+      }
+    }
+    if (openedOf === 0 && (await triggers.count()) > 0) {
+      openedOf = await triggers.count();
+      await checkBeforeReveal();
+      await openDropdown({ page, target, trigger: triggers.first(), timeout: remaining });
+      continue;
+    }
+    if (!openedPopover) {
+      openedPopover = true;
+      const popoverTrigger = await findPopoverTrigger({
+        page,
+        target,
+        selector: controlSelector({
+          blockId: target.blockId,
+          control: target.control,
+          rowKey: target.rowKey,
+        }),
+      });
+      if (popoverTrigger !== null && (await popoverTrigger.count()) > 0) {
+        await checkBeforeReveal();
+        await popoverTrigger.click({ timeout: remaining });
+        continue;
+      }
+    }
+    if (Date.now() >= deadline) {
+      const tried =
+        openedOf > 1
+          ? ` The scope held ${openedOf} dropdown triggers and the first was opened; add a column to name the cell whose menu holds the control.`
+          : '';
+      throw new JourneyStepError(
+        `No visible control for ${description} showed within ${timeout} ms.${tried}`,
+        {
+          expected: `a visible control for ${description}`,
+          actual:
+            openedOf > 0 ? 'no visible control after opening its dropdown' : 'no visible control',
+        }
+      );
+    }
+    await page.waitForTimeout(50);
+  }
 }
 
 // The element a person clicks to open an input's popup: the trigger antd draws
@@ -367,19 +668,25 @@ const POPUP = [
 // Marks the popups already showing before an `open` step clicks, so the step
 // waits for a popup its own click opened: the dropdown a previous step opened
 // stays visible while it fades out, and would otherwise pass for the new one.
+// A popup fading out (LEAVING, on the popup or, for ColorPicker's
+// `.ant-color-picker-inner`, on the popover around it) is not showing: it is
+// not marked, and never counts as new, so a dropdown reopened while its popup
+// fades (antd reuses the element) is found once it shows again.
 const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
 
-const NEW_POPUP = POPUP.map((selector) => `${selector}:not([${SHOWING_BEFORE}])`).join(', ');
+const NEW_POPUP = POPUP.map(
+  (selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING}):not(${INSIDE_LEAVING})`
+).join(', ');
 
 async function markShowingPopups({ page }) {
   await page
     .locator(POPUP.join(', '))
     .evaluateAll(
-      (popups, attribute) =>
+      (popups, { attribute, leaving }) =>
         popups
-          .filter((popup) => popup.checkVisibility())
+          .filter((popup) => popup.checkVisibility() && popup.closest(leaving) === null)
           .forEach((popup) => popup.setAttribute(attribute, '')),
-      SHOWING_BEFORE
+      { attribute: SHOWING_BEFORE, leaving: LEAVING }
     );
 }
 
@@ -394,12 +701,30 @@ async function unmarkPopups({ page }) {
     );
 }
 
+// The data-set rails of one step that acts on a block (see checkStepRails): checked once, before
+// the step first acts on the page. A `control` target is checked before its hover or open
+// reveals the control (its block is the target's own, so no element is needed), else on the
+// element the step acts on. blockId() is the block it checked, for checkAuthActionsRan.
+function createStepRails({ journey, page, target, step }) {
+  let checked = false;
+  let blockId = null;
+  return {
+    check: async (locator) => {
+      if (checked) return;
+      checked = true;
+      blockId = await checkStepRails({ journey, page, locator, target, step });
+    },
+    blockId: () => blockId,
+  };
+}
+
 // Opens the popup of the input the target names and waits until it shows, so
 // a screenshot or a `select`-less inspection sees the options. A block with no
 // popup trigger (a button) is clicked as `click` does; a block whose click
 // opens nothing fails the step, since `open` promises a popup.
-async function runOpen({ page, step, timeout }) {
+async function runOpen({ journey, page, step, timeout }) {
   const target = normaliseTarget(step.open);
+  const rails = createStepRails({ journey, page, target, step: 'open' });
   await markShowingPopups({ page });
   try {
     await actOnTarget({
@@ -411,10 +736,14 @@ async function runOpen({ page, step, timeout }) {
         // implementation has rendered); counted once either shows.
         await trigger.or(located).first().waitFor({ state: 'visible', timeout });
         await waitForLoadingBlocks({ page, timeout });
+        // Checked before the dropdown opens: opening it fires the block's onOpenChange.
         if ((await trigger.count()) > 0) {
-          await trigger.click({ timeout });
+          await rails.check(trigger);
+          await openDropdown({ page, target, trigger, timeout });
         } else {
-          await (await resolveClickLocator({ located, target, timeout })).click({ timeout });
+          const locator = await resolveClickLocator({ located, target, timeout });
+          await rails.check(locator);
+          await locator.click({ timeout });
         }
       },
     });
@@ -433,6 +762,7 @@ async function runOpen({ page, step, timeout }) {
   }
   // Popups animate in; a capture mid-animation is faded or offset.
   await page.waitForTimeout(250);
+  return { blockId: rails.blockId() };
 }
 
 // `count` clicks in quick succession through one Playwright click, as a
@@ -440,17 +770,89 @@ async function runOpen({ page, step, timeout }) {
 // double click is never turned into a second submit after the first settled.
 async function runClick({ journey, page, step, timeout }) {
   const { count = 1, ...target } = normaliseTarget(step.click);
-  let blockId = null;
+  const rails = createStepRails({ journey, page, target, step: 'click' });
+  let control = null;
   await actOnTarget({
     target,
     action: async () => {
-      const located = await resolveActionTarget({ page, target, timeout });
+      const located = await resolveActionTarget({
+        page,
+        target,
+        timeout,
+        beforeReveal: () => rails.check(null),
+      });
       const locator = await resolveClickLocator({ located, target, timeout });
-      blockId = await checkClickRails({ journey, page, locator });
+      await rails.check(locator);
+      await restOnHoverDropdownItem({ page, target, locator, timeout });
+      if (readsPage(target)) {
+        control = await readMarkedControl({ locator });
+      }
       await locator.click({ timeout, clickCount: count });
     },
   });
-  return { blockId };
+  return { blockId: rails.blockId(), control };
+}
+
+// Whether a click target reads the page: its text, the words shown, a pick among matches or a
+// displayed row.
+function readsPage(target) {
+  return namesMatches(target) || !type.isUndefined(target.nth) || !type.isUndefined(target.row);
+}
+
+// The control target the element a page-reading click lands on (at its centre) carries (its control
+// marks: a ClickableHtml element, a grid cell's button, a modal's ok), when it names that one
+// visible element, else null. Lint L8 reads it from the journey's measured run to suggest the
+// target.
+async function readMarkedControl({ locator }) {
+  const marked = await locator.evaluate((element, attributes) => {
+    // The click lands at the element's centre, on what is drawn there: a button inside a card.
+    const box = element.getBoundingClientRect();
+    const hit = element.ownerDocument.elementFromPoint(
+      box.left + box.width / 2,
+      box.top + box.height / 2
+    );
+    const clicked = hit !== null && element.contains(hit) ? hit : element;
+    const node = clicked.closest(`[${attributes.blockId}][${attributes.control}]`);
+    if (node === null) return null;
+    const mark = (name) => {
+      const value = node.getAttribute(attributes[name]);
+      return value === '' ? null : value;
+    };
+    const target = { blockId: mark('blockId'), control: mark('control'), rowKey: mark('rowKey') };
+    const selector = Object.entries(target)
+      .filter(([, value]) => value !== null)
+      .map(([name, value]) => `[${attributes[name]}="${value.replace(/["\\]/g, '\\$&')}"]`)
+      .join('');
+    const visible = [...element.ownerDocument.querySelectorAll(selector)].filter((match) =>
+      match.checkVisibility()
+    );
+    return visible.length === 1 ? target : null;
+  }, journeyTargetSelectors.controlAttributes);
+  if (marked === null || type.isNone(marked.blockId) || type.isNone(marked.control)) return null;
+  if (!type.isNone(marked.rowKey) && isGeneratedRowKey(marked.rowKey)) return null;
+  return marked;
+}
+
+// antd's Dropdown waits mouseEnterDelay (0.15 s; the blocks do not set it) after the pointer
+// enters a hover dropdown's popup, then opens the dropdown. A click on an item within that wait
+// closes the dropdown before the wait ends, and the dropdown opens again, with onOpenChange, under
+// a pointer that never moved. A person is never that quick, so a click on a hover dropdown's
+// control first rests on it past the wait, with room for a busy page. A row's or a cell's control
+// is in a cell menu, which opens on click (see openDropdown), so it is clicked at once.
+const HOVER_ENTER_WAIT_MS = 300;
+
+async function restOnHoverDropdownItem({ page, target, locator, timeout }) {
+  if (
+    type.isUndefined(target.control) ||
+    !type.isUndefined(target.row) ||
+    !type.isUndefined(target.rowKey) ||
+    !type.isUndefined(target.column)
+  ) {
+    return;
+  }
+  if ((await readDropdownTrigger({ page, blockId: target.blockId })) !== 'hover') return;
+  await locator.hover({ timeout });
+  await page.waitForTimeout(HOVER_ENTER_WAIT_MS);
 }
 
 // Where a fill looks for the input. A block that renders its input in a portal (the Search
@@ -472,6 +874,7 @@ function fillScope({ page, target, located }) {
 // person types a one-time code from their inbox into the tab they started in.
 async function runFill({ journey, page, step, timeout }) {
   const { value: literal, fromEmail, ...target } = step.fill;
+  const rails = createStepRails({ journey, page, target, step: 'fill' });
   let value = literal;
   if (!type.isUndefined(fromEmail)) {
     value = await readJourneyEmailMatch({
@@ -497,27 +900,36 @@ async function runFill({ journey, page, step, timeout }) {
         throw await createNoInputError({ page, target, error });
       }
       if ((await input.count()) === 0 && (await colorTrigger.count()) > 0) {
+        await rails.check(colorTrigger);
         await fillColorPicker({ page, target, trigger: colorTrigger, value, timeout });
         return;
       }
+      await rails.check(input);
       await input.fill(String(value), { timeout });
     },
   });
+  return { blockId: rails.blockId() };
 }
 
-// The engine's type for the block a fill names, or null when the shown page does not
-// hold it or the tab is between pages.
-async function readBlockType({ page, blockId }) {
+// The engine's type for a block and its `trigger` property (how its dropdown opens), or null
+// when the shown page does not hold it or the tab is between pages.
+async function readBlockFacts({ page, blockId }) {
   try {
     return await page.evaluate((id) => {
       const lowdefy = window.lowdefy;
       if (!lowdefy?.pageId || lowdefy._devNavigating === true) return null;
       const shownKey = lowdefy.pageInstances?.[lowdefy.pageId]?.at(-1);
-      return lowdefy.contexts?.[shownKey]?._internal?.RootSlots?.map?.[id]?.type ?? null;
+      const block = lowdefy.contexts?.[shownKey]?._internal?.RootSlots?.map?.[id];
+      if (!block) return null;
+      return { type: block.type ?? null, trigger: block.eval?.properties?.trigger ?? null };
     }, blockId);
   } catch {
     return null;
   }
+}
+
+async function readBlockType({ page, blockId }) {
+  return (await readBlockFacts({ page, blockId }))?.type ?? null;
 }
 
 async function createNoInputError({ page, target, error }) {
@@ -592,27 +1004,9 @@ async function fillColorPicker({ page, target, trigger, value, timeout }) {
     .catch(() => {});
 }
 
-// The options of a radio group, a button selector or a segmented control are
-// all on the page already: the one labelled `text` is clicked, no dropdown.
-async function selectRadioOption({ options, target, text, timeout }) {
-  const option = options
-    .filter({ hasText: exactText(text) })
-    .filter({ visible: true })
-    .first();
-  try {
-    await option.click({ timeout });
-  } catch (error) {
-    const description = describeTarget(target);
-    throw new JourneyStepError(`No option with text "${text}" in ${description}.`, {
-      expected: `option "${text}" in ${description}`,
-      actual: cleanMessage(error),
-    });
-  }
-}
-
-// A checkbox option is ticked, never toggled: clicking one already ticked would
-// untick it, so a step that selects it reads the same on a rerun.
-async function tickCheckboxOption({ options, target, text, timeout }) {
+// The visible option labelled exactly `text` among a radio or checkbox group's options. It
+// shows with the block, so a missing one fails the step at once with what was looked for.
+async function findShownOption({ options, target, text, timeout }) {
   const option = options
     .filter({ hasText: exactText(text) })
     .filter({ visible: true })
@@ -626,6 +1020,24 @@ async function tickCheckboxOption({ options, target, text, timeout }) {
       actual: cleanMessage(error),
     });
   }
+  return option;
+}
+
+// The options of a radio group, a button selector or a segmented control are
+// all on the page already: the one labelled `text` is clicked, no dropdown. The rails check
+// the block of the option picked, since a container can hold several groups.
+async function selectRadioOption({ options, rails, target, text, timeout }) {
+  const option = await findShownOption({ options, target, text, timeout });
+  await rails.check(option);
+  await actOnTarget({ target, action: () => option.click({ timeout }) });
+}
+
+// A checkbox option is ticked, never toggled: clicking one already ticked would
+// untick it, so a step that selects it reads the same on a rerun. The rails check the block of
+// the option picked, as for a radio option.
+async function tickCheckboxOption({ options, rails, target, text, timeout }) {
+  const option = await findShownOption({ options, target, text, timeout });
+  await rails.check(option);
   if (await option.locator('input[type="checkbox"]').isChecked()) {
     return;
   }
@@ -638,9 +1050,10 @@ async function tickCheckboxOption({ options, target, text, timeout }) {
 // and the option with exactly `value` as text is clicked — Ant Design renders
 // options into a portal, so they are searched page-wide, restricted to visible
 // ones so the hidden accessibility list is never matched.
-async function runSelect({ page, step, timeout }) {
+async function runSelect({ journey, page, step, timeout }) {
   const { value, ...target } = step.select;
   const text = String(value);
+  const rails = createStepRails({ journey, page, target, step: 'select' });
   let scope;
   await actOnTarget({
     target,
@@ -652,28 +1065,35 @@ async function runSelect({ page, step, timeout }) {
       await scope.first().waitFor({ state: 'visible', timeout });
     },
   });
+  // Each way below is checked against the block of the element it picks (a container target's
+  // scope holds the input block whose onChange the pick fires, and a radio or checkbox option
+  // may sit in a second group in it), before it picks.
   const native = scope.locator('select');
   if ((await native.count()) > 0) {
     await actOnTarget({
       target,
-      action: () => native.first().selectOption({ label: text }, { timeout }),
+      action: async () => {
+        await rails.check(native.first());
+        await native.first().selectOption({ label: text }, { timeout });
+      },
     });
-    return;
+    return { blockId: rails.blockId() };
   }
   const radioOptions = scope.locator(RADIO_OPTION);
   if ((await radioOptions.count()) > 0) {
-    await selectRadioOption({ options: radioOptions, target, text, timeout });
-    return;
+    await selectRadioOption({ options: radioOptions, rails, target, text, timeout });
+    return { blockId: rails.blockId() };
   }
   const checkboxOptions = scope.locator(CHECKBOX_OPTION);
   if ((await checkboxOptions.count()) > 0) {
-    await tickCheckboxOption({ options: checkboxOptions, target, text, timeout });
-    return;
+    await tickCheckboxOption({ options: checkboxOptions, rails, target, text, timeout });
+    return { blockId: rails.blockId() };
   }
   await actOnTarget({
     target,
     action: async () => {
       const locator = await resolveClickLocator({ located: scope, target, timeout });
+      await rails.check(locator);
       await locator.click({ timeout });
     },
   });
@@ -702,16 +1122,35 @@ async function runSelect({ page, step, timeout }) {
     .first()
     .waitFor({ state: 'hidden', timeout: Math.min(timeout, 1000) })
     .catch(() => {});
+  return { blockId: rails.blockId() };
+}
+
+// An overlay antd is still animating stays on the page's Escape stack as it was before the
+// motion: one opening has not fired its afterOpenChange yet, and one closing takes the Escape, so
+// the overlay under it stays open. Escape waits, up to a second, for every overlay to come to
+// rest, as a person presses it at a page that has settled and a headless run models one.
+async function waitForOverlayMotion({ page, timeout }) {
+  await page
+    .waitForFunction((selector) => document.querySelector(selector) === null, MOVING, {
+      timeout: Math.min(timeout, 1000),
+    })
+    .catch(() => {});
 }
 
 // `Mod` in a chord resolves to Meta or Control from the platform the page
-// reports, the way the app's own shortcut handling (tinykeys) does.
-async function runPress({ page, step }) {
+// reports, the way the app's own shortcut handling (tinykeys) does. The rails check the press
+// before it is pressed: the focused block and each block whose shortcut it fires. Escape first
+// waits for the overlays to come to rest (waitForOverlayMotion).
+async function runPress({ journey, page, step, timeout }) {
   const modifier = await getShortcutModifier(page);
   const key = step.press
     .split('+')
     .map((part) => (part === 'Mod' ? modifier : part))
     .join('+');
+  if (key === 'Escape') {
+    await waitForOverlayMotion({ page, timeout });
+  }
+  const blockId = await checkPressRails({ journey, page, key, modifier });
   try {
     await page.keyboard.press(key);
   } catch (error) {
@@ -720,6 +1159,7 @@ async function runPress({ page, step }) {
       actual: cleanMessage(error),
     });
   }
+  return { blockId };
 }
 
 // Goes back one entry in the browser history, the way the Back button does.
@@ -776,7 +1216,9 @@ async function runGoto({ page, step, origin, timeout }) {
       actual: cleanMessage(error),
     });
   }
-  await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {});
+  await page
+    .waitForFunction(isPageReady, { deadline: Date.now() + timeout }, { timeout })
+    .catch(() => {});
 }
 
 // Polls a page read until it satisfies `check`, or fails once `timeout` has
@@ -886,9 +1328,43 @@ async function expectState({ page, params, timeout }) {
   }
 }
 
+// A control target is expected as it is clicked: the one visible element marked with its block,
+// key and row key, wherever antd draws it. Several visible fail with the count, as the click
+// would.
+async function expectVisibleControl({ page, target, timeout }) {
+  const description = describeTarget(target);
+  const matches = controlMatches({ page, target });
+  try {
+    await matches.first().waitFor({ state: 'visible', timeout });
+  } catch (error) {
+    throw new JourneyStepError(`Expected ${description} to be visible.`, {
+      expected: `${description} to be visible`,
+      actual: cleanMessage(error),
+    });
+  }
+  const count = await matches.count();
+  if (count > 1) {
+    throw new JourneyStepError(
+      `Expected ${description} to be visible, and matched ${plural({
+        count,
+        word: 'visible control',
+      })}; add a rowKey to name one.`,
+      {
+        expected: `exactly one visible control for ${description}`,
+        actual: plural({ count, word: 'control' }),
+      }
+    );
+  }
+}
+
 async function expectVisible({ page, params, timeout }) {
   const target = normaliseTarget(params);
   const description = describeTarget(target);
+  await refuseGeneratedRowKey({ page, target });
+  if (!type.isUndefined(target.control)) {
+    await expectVisibleControl({ page, target, timeout });
+    return;
+  }
   try {
     const located = await resolveTarget({ page, target });
     await located.waitFor({ state: 'visible', timeout });
@@ -906,8 +1382,11 @@ async function expectVisible({ page, params, timeout }) {
 async function expectHidden({ page, params, timeout }) {
   const target = normaliseTarget(params);
   const description = describeTarget(target);
+  await refuseGeneratedRowKey({ page, target });
   try {
-    const located = await resolveTarget({ page, target });
+    const located = type.isUndefined(target.control)
+      ? await resolveTarget({ page, target })
+      : controlMatches({ page, target });
     await located.filter({ visible: true }).first().waitFor({ state: 'hidden', timeout });
   } catch (error) {
     throw new JourneyStepError(`Expected ${description} to be hidden.`, {
@@ -986,6 +1465,7 @@ async function tryReadTargetText({ page, target, timeout }) {
 async function expectText({ page, params, timeout }) {
   const { contains, ...target } = params;
   const description = describeTarget(target);
+  await refuseGeneratedRowKey({ page, target });
   const expected = `${description} text to contain "${contains}"`;
   const deadline = Date.now() + timeout;
   let read = await tryReadTargetText({ page, target, timeout });
@@ -1083,6 +1563,30 @@ function expectEffect({ journey }) {
   }
 }
 
+// What expect.db reads in a browser run, as a headless host's findDocuments: the journey's data
+// session databases on the data store.
+function createDbReader({ journey }) {
+  return {
+    findDocuments: ({ collection, connectionId, match }) => {
+      if (type.isNone(journey.dataSession)) {
+        throw new Error(
+          'expect.db reads the journey\'s data set database, and this journey declares no "data".'
+        );
+      }
+      return findSessionDocuments({
+        buildDirectory: journey.buildDirectory,
+        client: journey.dataStore.client,
+        collection,
+        connectionId,
+        match,
+        session: journey.dataSession.session,
+      });
+    },
+  };
+}
+
+// The checks on a call's answer, the database and the outside requests are the headless runner's
+// own (@lowdefy/journey-headless), so each check has one implementation on every host.
 async function runExpect({ journey, page, step, timeout }) {
   const expectation = step.expect;
   const key = getStepKey(expectation);
@@ -1110,13 +1614,27 @@ async function runExpect({ journey, page, step, timeout }) {
       await expectTitle({ page, params, timeout });
       return;
     case 'error':
-      // Claimed when the step's window closes (see observe/claimExpectedErrors).
+      // After a call or request, the answer's error. App errors are claimed when the step's
+      // window closes (see observe/claimExpectedErrors).
+      if (!type.isUndefined(journey.lastAnswer)) {
+        expectAnswerError({ answer: journey.lastAnswer, text: params });
+      }
       return;
     case 'effect':
       expectEffect({ journey });
       return;
-    default:
+    case 'status':
+      expectAnswerStatus({ answer: journey.lastAnswer, status: params });
       return;
+    case 'db':
+      await expectDb({ host: createDbReader({ journey }), params, timeout });
+      return;
+    case 'sunk':
+      await expectSunk({ params, session: journey.dataSession?.session, timeout });
+      return;
+    default:
+      // The grammar admits nothing else; an expectation it gains is not passed unchecked.
+      throw new Error(`The browser journey runner has no expect "${key}".`);
   }
 }
 
@@ -1128,24 +1646,26 @@ async function runExpect({ journey, page, step, timeout }) {
 // finds. Waits for the instance on screen, since a click may have navigated
 // to another page or instance.
 //
-// Never longer than SETTLE_TIMEOUT_MS, however long the steps may wait: an
-// event that ends in a Wait (a sign-in link's resend cooldown) keeps the page
-// unsettled for as long as it waits, and every step after it waits for what it
-// needs on its own.
+// Never longer than SETTLE_TIMEOUT_MS, however long the steps may wait: every
+// step after it waits for what it needs on its own. An event that only sleeps
+// in a Wait until after this settle gives up (a sign-in link's resend
+// cooldown, a page that polls with a Wait) is not waited for at all, since
+// the settle could not outlast it; one whose Wait ends sooner (a pause before
+// a request) is, as any working event (see isPageReady).
 async function settlePage({ page, timeout }) {
   const pageId = await page.evaluate(() => window.lowdefy?.pageId);
   if (type.isNone(pageId)) {
     return;
   }
-  await page.waitForFunction(isPageReady, undefined, { timeout }).catch(() => {});
+  await page
+    .waitForFunction(isPageReady, { deadline: Date.now() + timeout }, { timeout })
+    .catch(() => {});
 }
-
-const INTERACTION_STEPS = ['click', 'open', 'fill', 'select', 'press', 'back'];
 
 // The steps that open a new window for wait.request: an interaction, or a step
 // that loads or switches to a page. Before the first of them the window is the
 // page open.
-const REQUEST_WINDOW_STEPS = [...INTERACTION_STEPS, 'goto', 'as'];
+const REQUEST_WINDOW_STEPS = [...INTERACTION_STEP_KEYS, 'goto', 'as'];
 
 const SETTLE_TIMEOUT_MS = 5000;
 
@@ -1157,17 +1677,13 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
     case 'click':
       return runClick({ journey, page, step, timeout });
     case 'open':
-      await runOpen({ page, step, timeout });
-      return;
+      return runOpen({ journey, page, step, timeout });
     case 'fill':
-      await runFill({ journey, page, step, timeout });
-      return;
+      return runFill({ journey, page, step, timeout });
     case 'select':
-      await runSelect({ page, step, timeout });
-      return;
+      return runSelect({ journey, page, step, timeout });
     case 'press':
-      await runPress({ page, step, timeout });
-      return;
+      return runPress({ journey, page, step, timeout });
     case 'back':
       await runBack({ page, timeout });
       return;
@@ -1195,13 +1711,21 @@ async function runStep({ journey, step, index, screenshots, requestWindowStart }
     case 'expect':
       await runExpect({ journey, page, step, timeout });
       return;
-    default:
+    case 'call':
+    case 'request':
+      await runJourneyCall({ journey, step, timeout });
       return;
+    case 'webhook':
+      await runJourneyWebhook({ journey, step, timeout });
+      return;
+    default:
+      // The grammar admits nothing else; a step it gains is not passed unchecked.
+      throw new Error(`The browser journey runner has no step "${getStepKey(step)}".`);
   }
 }
 
 function toFailure({ error, index, step }) {
-  if (error instanceof JourneyStepError) {
+  if (error instanceof JourneyStepError || error instanceof HeadlessStepError) {
     // `actual` is null rather than undefined so the key survives JSON — an
     // agent reading the failure sees "found nothing", not a missing field.
     return {
@@ -1244,27 +1768,36 @@ async function runJourneySteps({ journey, steps }) {
       continue;
     }
     const started = Date.now();
+    // A call's or webhook's answer is read only by the expect steps straight after it.
+    if (!['expect', ...ANSWER_STEP_KEYS].includes(getStepKey(step))) {
+      journey.lastAnswer = undefined;
+    }
     if (REQUEST_WINDOW_STEPS.includes(getStepKey(step))) {
       requestWindowStart = nextJourneySequence();
     }
     await appErrors?.openWindow({ page: journey.actors.current().page });
     try {
       const ran = await runStep({ journey, step, index, screenshots, requestWindowStart });
-      if (INTERACTION_STEPS.includes(getStepKey(step))) {
+      if (INTERACTION_STEP_KEYS.includes(getStepKey(step))) {
         await settlePage({
           page: journey.actors.current().page,
           timeout: Math.min(journey.stepTimeout, SETTLE_TIMEOUT_MS),
         });
       }
-      if (getStepKey(step) === 'click') {
+      if (Object.hasOwn(RAILED_STEPS, getStepKey(step))) {
         await checkAuthActionsRan({
           journey,
           page: journey.actors.current().page,
           blockId: ran?.blockId,
+          step: getStepKey(step),
         });
       }
       await journey.actors.sampleRendered();
-      results.push({ index, step, status: 'ok', durationMs: Date.now() - started });
+      const result = { index, step, status: 'ok', durationMs: Date.now() - started };
+      if (!type.isNone(ran?.control)) {
+        result.control = ran.control;
+      }
+      results.push(result);
     } catch (error) {
       failure = toFailure({ error, index, step });
       results.push({ index, step, status: 'failed', durationMs: Date.now() - started });
@@ -1293,6 +1826,15 @@ async function runJourneySteps({ journey, steps }) {
   }
   if (!type.isUndefined(appErrors) && type.isUndefined(failure) && steps.length > 0) {
     failure = await appErrors.judgeDrain({ journey, steps, results });
+  }
+  // A fail gate the journey's stubs set that no request reached, or an answer stub naming its
+  // request that never answered, fails it at its last step, once the session's background work
+  // has drained. A journey on no data set has no fail gates.
+  if (type.isUndefined(failure) && steps.length > 0 && !type.isNone(journey.dataSession)) {
+    failure = await findUnfiredFailGate({ session: journey.dataSession.session, steps });
+    if (!type.isUndefined(failure)) {
+      results[failure.index].status = 'failed';
+    }
   }
   return { results, screenshots, failure };
 }

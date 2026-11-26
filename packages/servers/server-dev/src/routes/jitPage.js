@@ -146,8 +146,9 @@ async function jitPageHandler(c) {
   // Fold this page's JIT-discovered _js entries and dynamic icons into the
   // response the client already awaits, so first paint has everything it needs
   // without the two secondary fetches that stalled in Vite's transform window.
-  // Read from the context the page was built on: another request can discard
-  // it while getPageConfig runs.
+  // Read from what buildPageWithContext returned, the context the page was
+  // built on or its generation's shared _js entries and icons: another request
+  // can discard both while getPageConfig runs.
   const { jsEntries, dynamicIcons } = getPageJitEnrichment({ pageConfig, buildContext });
   if (jsEntries) pageConfig._jsEntries = jsEntries;
   if (dynamicIcons) pageConfig._dynamicIcons = dynamicIcons;

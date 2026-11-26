@@ -46,10 +46,11 @@ vi.doMock('../server/createLowdefyContext.js', () => ({
 // are mocked so the test checks who the routine runs as and on which database.
 const mockReadDataSet = vi.fn();
 const mockOpenDataSession = vi.fn();
-vi.doMock('./dataSets/readDataSet.js', () => ({ default: mockReadDataSet }));
-vi.doMock('./dataSets/getDataStore.js', () => ({ default: async () => ({}) }));
-vi.doMock('./dataSets/openDataSession.js', () => ({
-  default: mockOpenDataSession,
+vi.doMock('@lowdefy/test-utils/dataSets', async (importOriginal) => ({
+  ...(await importOriginal()),
+  getDataStore: async () => ({}),
+  openDataSession: mockOpenDataSession,
+  readDataSet: mockReadDataSet,
 }));
 vi.doMock('./readDevAuthMode.js', () => ({
   default: () => ({ authConfigured: true, mockUserActive: false }),
@@ -133,7 +134,7 @@ test("runEndpoint runs as a data set user, on the data set's own database", asyn
 
   expect(result.refused).toBe(false);
   expect(result.success).toBe(true);
-  expect(mockOpenDataSession).toHaveBeenCalledWith({ dataSet });
+  expect(mockOpenDataSession).toHaveBeenCalledWith({ dataSet, logger: expect.anything() });
   expect(mockCreateLowdefyContext).toHaveBeenCalledWith({
     c: honoContext,
     user: member,

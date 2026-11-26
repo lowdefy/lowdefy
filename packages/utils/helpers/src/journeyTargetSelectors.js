@@ -57,20 +57,24 @@ const interactiveControlRules = [
     .map((role) => ({ selector: `[role="${role}"]` })),
 ];
 
-// The grids a journey target's `row` and `column` reach, as a displayed row and a cell inside it.
-// A row's attribute holds its zero-based displayed index and a cell's holds the column key.
+// The grids a journey target's `row`, `rowKey` and `column` reach, as a displayed row, a row by
+// its key and a cell inside it. A row's attribute holds its zero-based displayed index, a row
+// key's holds the row's key (ag-grid's node id, Table's rowKey) and a cell's holds the column key.
 // Header rows and header cells are not matched: ag-grid's header cells are `.ag-header-cell`, and
 // the Table header row carries the index `header` (-1), which is no journey row. A Table header
 // cell carries the same class and column key as a body cell, so a Table cell must also be a
 // `gridcell` (header cells are `columnheader`). A row keyed by pinned position (ag-grid `t-0`) is
-// no journey row either.
+// no journey row either. No header row carries a row key: ag-grid's header rows are
+// `.ag-header-row`, and the Table header row has no `data-row-key`.
 const gridRules = [
   {
     row: { attribute: 'row-index', className: 'ag-row' },
+    rowKey: { attribute: 'row-id', className: 'ag-row' },
     cell: { attribute: 'col-id', className: 'ag-cell' },
   },
   {
     row: { attribute: 'data-row-index', className: 'lf-table-row', header: '-1' },
+    rowKey: { attribute: 'data-row-key', className: 'lf-table-row' },
     cell: { attribute: 'data-col-key', className: 'lf-table-gridcell', role: 'gridcell' },
   },
 ];
@@ -90,9 +94,54 @@ function gridPartSelector({ part, value }) {
   return `.${part.className}[${part.attribute}]${role}${header}`;
 }
 
-// The selector for a row (kind `row`) or a cell (kind `cell`) of any grid.
+// The selector for a row by displayed index (kind `row`), a row by key (kind `rowKey`) or a cell
+// (kind `cell`) of any grid.
 function gridSelector({ kind, value }) {
   return gridRules.map((rule) => gridPartSelector({ part: rule[kind], value })).join(', ');
+}
+
+// A grid writes a generated key (`__row_<n>`) for a row whose data has none. It changes between
+// renders, so a journey never names a row by it.
+const generatedRowKeyPrefix = '__row_';
+
+function isGeneratedRowKey(rowKey) {
+  return String(rowKey).startsWith(generatedRowKeyPrefix);
+}
+
+// Every control a `control` target names carries its block's id and its key, and a grid cell
+// control its row's key, so it names its block wherever antd draws it: a modal footer, a
+// confirm dialog, a dropdown popup in document.body.
+const controlAttributes = {
+  blockId: 'data-lf-block',
+  control: 'data-lf-control',
+  rowKey: 'data-lf-row-key',
+};
+
+// The selector for the control keyed `control` that block `blockId` draws, in the row keyed
+// `rowKey` when one is given.
+function controlSelector({ blockId, control, rowKey }) {
+  const rowPart = type.isNone(rowKey) ? '' : `[${controlAttributes.rowKey}=${quoted(rowKey)}]`;
+  return `[${controlAttributes.blockId}=${quoted(blockId)}][${controlAttributes.control}=${quoted(
+    control
+  )}]${rowPart}`;
+}
+
+// A ClickableHtml element names a journey control by the event it fires (data-event), and the
+// row it stands for by this attribute: `{ blockId, control: onOpen, rowKey: '42' }` names
+// `<div data-event="onOpen" data-id="42">`. Its value is also the event's `id`.
+const dataEventKeyAttribute = 'data-id';
+
+// The DOM attributes that mark one control: spread them onto the element (or a menu item, which
+// antd passes to its <li>). A control drawn with no block id (a component used outside a block)
+// carries no marks, and a row key is written only in a grid row.
+function controlMarks({ blockId, control, rowKey }) {
+  if (type.isNone(blockId) || type.isNone(control)) return {};
+  const marks = {
+    [controlAttributes.blockId]: String(blockId),
+    [controlAttributes.control]: String(control),
+  };
+  if (!type.isNone(rowKey)) marks[controlAttributes.rowKey] = String(rowKey);
+  return marks;
 }
 
 // A block that renders into a portal (Modal, Drawer) puts this class on the portal's root, so a
@@ -106,14 +155,22 @@ const journeyTargetSelectors = {
   // Every block renders a wrapper with id `bl-<blockId>`.
   blockWrapperPrefix: 'bl-',
   checkboxOption,
+  controlAttributes,
+  controlMarks,
+  controlSelector,
+  dataEventKeyAttribute,
+  // The elements that open a dropdown: antd's Dropdown trigger and a Table cell menu's button.
+  dropdownTrigger: '.ant-dropdown-trigger, .lf-table-menu-trigger',
   // The options of a dropdown, the elements a `select` step clicks.
   dropdownOption: '.ant-select-item-option, [role="option"]',
   gridPartSelector,
   gridRules,
   gridSelector,
+  generatedRowKeyPrefix,
   interactiveControl: interactiveControlRules.map(selectorOf).join(', '),
   interactiveControlRules,
   interactiveRoles,
+  isGeneratedRowKey,
   // Portal layers, front-most first: an open dropdown menu covers a dialog, a dialog covers the
   // page.
   layers: ['[role="menu"]', '[role="dialog"]'],

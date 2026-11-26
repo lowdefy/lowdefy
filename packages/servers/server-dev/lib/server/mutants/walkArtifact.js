@@ -15,9 +15,9 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { isRoutineStep } from '@lowdefy/node-utils';
 
 import getArtifactKind from './getArtifactKind.js';
-import isRoutineStep from '../isRoutineStep.js';
 
 function rootScope({ artifact, root }) {
   const kind = getArtifactKind(artifact);

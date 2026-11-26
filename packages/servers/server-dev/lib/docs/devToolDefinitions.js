@@ -284,14 +284,23 @@ const devToolDefinitions = {
 
   lowdefy_run_journey: {
     description:
-      'Drive a page of the running dev server headless through declarative steps and assert what happens - the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. A step that fails stops the journey and comes back as data (passed: false, failure with index, step, expected, actual and message, later steps skipped), never as a tool error. A journey also fails at the step that raises an app error (an action error that is not a user error, an uncaught page error, a server error or 5xx): failure.kind "app-error" with errors [{kind, message, source, configKey}]. failure.kind "dev-server" means the dev server lost its web server and the request got no answer, so the result says nothing about the app: check the dev server log and run it again. A failed Validate, a Throw action and 401/403 refusals never count; {"expect": {"error": text}} straight after an interaction claims an intended error. Returns the final page state (see state) and any screenshots, as images after the JSON.' +
+      'Drive a page of the running dev server headless through declarative steps and assert what happens - the way to verify behaviour (a form submits, a modal opens, a filter works), not just layout. A step that fails stops the journey and comes back as data (passed: false, failure with index, step, expected, actual and message, later steps skipped), never as a tool error. A journey also fails at the step that raises an app error (an action error that is not a user error, an uncaught page error, a server error or 5xx): failure.kind "app-error" with errors [{kind, message, source, configKey}]. failure.kind "dev-server" means the dev server lost its web server and the request got no answer, so the result says nothing about the app: check the dev server log and run it again. A failed Validate, a Throw action and 401/403 refusals never count; {"expect": {"error": text}} straight after an interaction claims an intended error. Returns the final page state (see state) and any screenshots, as images after the JSON. It refuses cases, and _ref for part of a journey: run its file through lowdefy_run_tests.' +
       CALLER_NOTE,
     inputSchema: {
-      pageId: z.string().describe('The page id to open.'),
+      pageId: z
+        .string()
+        .optional()
+        .describe('The page id to open; leave it out when every step only calls the server.'),
+      headless: z
+        .boolean()
+        .optional()
+        .describe(
+          'No browser, much faster: pass it unless only a browser shows the check. A journey that needs one answers browserOnly with that step, or phase "open".'
+        ),
       steps: z
         .array(z.record(z.string(), z.any()))
         .describe(
-          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect. lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. On a phone (device) only click, fill, select, press, wait, screenshot and expect state run.'
+          'Ordered steps, one key each: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook (hold, release and a call as: system headless only). lowdefy_get_schema with kind "journey-step" returns the grammar of every step with examples, or of one with type, e.g. "expect". A target is a blockId or {"blockId", "row", "column", "text", "containing", "nth"}; "text" alone reaches dialog, menu and email buttons. Every id a step names is checked against the build before it runs. On a phone (device) only click, fill, select, press, wait, screenshot and expect state run.'
         ),
       device: deviceSchema.describe('A phone to run on instead, by tab id.'),
       user: z
@@ -311,8 +320,14 @@ const devToolDefinitions = {
         .describe(
           'A data set in tests/data/<name>.yaml: the journey runs on a fresh in-memory MongoDB database loaded with it, so it may write freely, and user and "as" can name its users. Format: lowdefy_get_doc testing/journey-data-sets.'
         ),
+      stubs: z
+        .array(z.record(z.string(), z.any()))
+        .optional()
+        .describe(
+          'Needs data; literal, no _ref. {connectionType, requestType, answer, requestId?, endpoint?, pageId?, match?} answers an outside request; {requestId, endpoint?, pageId?, fail, times?} fails matching requests (once, n or "all") with that message, which expect.error reads.'
+        ),
       pathParams: z
-        .record(z.string(), z.string())
+        .record(z.string(), z.any())
         .optional()
         .describe(
           'Values for the placeholders of the page\'s path, read by _path_params, e.g. {"space": "support", "ticket_id": "1"} for path "{space}/tickets/{ticket_id}".'
@@ -342,6 +357,9 @@ const devToolDefinitions = {
         .describe(
           "What the result carries of what the run exercised (every request, endpoint, event and rendered block it touched). Omitted: only a count of each. true: the full block, e.g. to check that a block rendered or which requests ran. false: leave it out. `lowdefy test` and the journey lints always read the full block; this only shapes this tool's response."
         ),
+      // Taken only to be refused (the description says so): left out of the schema, a case table
+      // would be dropped and the journey run once with each _case sent as a literal object.
+      cases: z.any().optional(),
     },
   },
 

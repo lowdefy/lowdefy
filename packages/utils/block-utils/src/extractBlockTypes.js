@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import collectNativeIgnoredPaths from './collectNativeIgnoredPaths.js';
 
 function extractBlockTypes(metas) {
@@ -24,7 +26,7 @@ function extractBlockTypes(metas) {
   for (const [name, meta] of entries) {
     icons[name] = meta.icons ?? [];
     const entry = { category: meta.category };
-    if (meta.valueType != null) entry.valueType = meta.valueType;
+    if (!type.isNone(meta.valueType)) entry.valueType = meta.valueType;
     if (meta.initValue !== undefined) entry.initValue = meta.initValue;
     if (meta.slots !== undefined) entry.slots = meta.slots;
     if (meta.cssKeys) entry.cssKeys = Object.keys(meta.cssKeys);
@@ -32,6 +34,11 @@ function extractBlockTypes(metas) {
     // itself; the build counts them wherever the block is used.
     if (meta.actions) entry.actions = meta.actions;
     if (meta.operators) entry.operators = meta.operators;
+    // Methods a headless journey runs without the component: { [method]: event it fires, or null
+    // for a no-op }.
+    if (meta.headlessMethods) entry.headlessMethods = meta.headlessMethods;
+    // The property paths a headless journey reads as the block's text (headlessText).
+    if (meta.headlessText) entry.headlessText = meta.headlessText;
     // Properties a native block accepts but a phone cannot honour; the build warns on them.
     const nativeIgnored = collectNativeIgnoredPaths(meta.properties);
     if (nativeIgnored.length > 0) entry.nativeIgnored = nativeIgnored;

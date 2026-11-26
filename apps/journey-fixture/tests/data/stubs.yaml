@@ -1,0 +1,7 @@
+# The data set the stubs journey runs on (tests/journeys/_headless/stubs.yaml): one run nobody has
+# approved or priced, and no activity. Change it only together with that journey.
+fixtures:
+  fixture_db:
+    - { _id: BR-1, kind: run }
+users:
+  finance: { id: u_finance, roles: [] }

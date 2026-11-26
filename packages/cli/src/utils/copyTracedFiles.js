@@ -31,8 +31,21 @@ async function inBatches(items, worker) {
 // node_modules entries are relative symlinks into a .pnpm virtual store (at the workspace root for
 // workspace members), and nft's fileList contains both the symlink paths and the real target files,
 // all relative to `base` — recreating both yields a working resolution tree inside the function.
-async function copyTracedFiles({ base, entrypoints, functionDirectory, logger, processCwd }) {
-  const { fileList, warnings } = await nodeFileTrace(entrypoints, { base, processCwd });
+// filter is called with each traced file's absolute path, as fs-extra's copy filter is, and leaves
+// out the files it returns false for.
+async function copyTracedFiles({
+  base,
+  entrypoints,
+  filter,
+  functionDirectory,
+  logger,
+  processCwd,
+}) {
+  const { fileList, warnings } = await nodeFileTrace(entrypoints, {
+    base,
+    ignore: (file) => !filter(path.join(base, file)),
+    processCwd,
+  });
   for (const warning of warnings) {
     logger.debug(`nft: ${warning.message}`);
   }

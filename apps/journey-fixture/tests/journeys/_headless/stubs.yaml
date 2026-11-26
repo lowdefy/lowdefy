@@ -1,0 +1,88 @@
+# A journey's stubs: an answer stub stands in for the rate service (api/price_run.yaml), and fail
+# gates fail a write once, twice (times: 2) and every time (times: all). The first price write fails
+# and its retry writes the stubbed rate; the first two approvals fail and the third claims the run;
+# every activity write fails. expect.error reads each forced message from the server's record of the
+# call, and expect.sunk the rate requests, stubbed ones included. Run by `lowdefy test --headless
+# --build`, the @lowdefy/journey-headless fixture suite (packages/utils/journey-headless/test/
+# fixture/stubs.test.mjs) and the dev server's fixture suite, headless and in a browser
+# (packages/servers/server-dev/test/journeyFixture/headlessHost.test.mjs). In a folder starting
+# with "_" so the browser suites leave it out.
+- name: stubs answer the rate service and fail writes on purpose
+  data: stubs
+  user: finance
+  stubs:
+    - connectionType: AxiosHttp
+      requestType: AxiosHttp
+      endpoint: price_run
+      answer: { status: 200, data: { rate: 1.5 } }
+    - requestId: save_price
+      endpoint: price_run
+      fail: Price write failed on purpose
+    - requestId: claim_run
+      endpoint: approve_run
+      fail: Claim failed on purpose
+      times: 2
+    - requestId: insert_activity
+      endpoint: log_activity
+      fail: Activity log is down
+      times: all
+  steps:
+    - call: { endpoint: price_run, payload: { id: BR-1, currency: EUR } }
+    - expect: { error: Price write failed on purpose }
+    - expect: { db: { collection: items, match: { kind: price }, count: 0 } }
+    - call: { endpoint: price_run, payload: { id: BR-1, currency: EUR } }
+    - expect: { status: 200 }
+    - expect:
+        db:
+          collection: items
+          match: { kind: price }
+          equals:
+            - { run: BR-1, rate: 1.5 }
+    - expect: { sunk: { connectionType: AxiosHttp, requestId: fetch_rate, count: 2 } }
+    - expect: { sunk: { requestId: fetch_rate, match: { url: /rates, params: { currency: EUR } } } }
+    - call: { endpoint: approve_run, payload: { id: BR-1 } }
+    - expect: { error: Claim failed on purpose }
+    - call: { endpoint: approve_run, payload: { id: BR-1 } }
+    - expect: { error: Claim failed on purpose }
+    - call: { endpoint: approve_run, payload: { id: BR-1 } }
+    - expect: { status: 200 }
+    - expect:
+        db:
+          collection: items
+          match: { _id: BR-1, approved_by: u_finance }
+          count: 1
+    - call: { endpoint: log_activity, payload: { source: first } }
+    - expect: { error: Activity log is down }
+    - call: { endpoint: log_activity, payload: { source: second } }
+    - expect: { error: Activity log is down }
+    - expect: { db: { collection: items, match: { kind: activity }, count: 0 } }
+# A fail gate on a page's own request, fired by a click: the Save button's save_item request fails
+# on purpose. The client's failed Request action, the server's 500 and its error are the test's
+# doing, so none of them is an app error, and nothing is saved.
+- name: a forced failure of a page request a click fires is no app error
+  pageId: home
+  data: stubs
+  user: finance
+  stubs:
+    - requestId: save_item
+      pageId: home
+      fail: Save failed on purpose
+  steps:
+    - fill: { blockId: name_input, value: Forced item }
+    - click: save_button
+    - wait: { request: save_item }
+    - expect: { db: { collection: items, match: { kind: item }, count: 0 } }
+# A fail gate narrowed to the endpoint whose routine holds the request: notify reaches log_activity
+# through a nested CallApi, and the gate names log_activity, not notify, the endpoint the call came
+# in on. The forced failure stops notify's routine, so no activity is written.
+- name: a fail gate narrowed to a nested endpoint fires inside its CallApi
+  data: stubs
+  user: finance
+  stubs:
+    - requestId: insert_activity
+      endpoint: log_activity
+      fail: Nested activity write failed on purpose
+  steps:
+    - call: { endpoint: notify }
+    - expect: { error: Nested activity write failed on purpose }
+    - expect: { db: { collection: items, match: { kind: activity }, count: 0 } }

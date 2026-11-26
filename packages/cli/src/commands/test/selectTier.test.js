@@ -16,7 +16,7 @@
 
 import path from 'path';
 
-import expandPersonas from './expandPersonas.js';
+import expandJourney from './expandJourney.js';
 import flowLines from '../journeys/evidence/flowLines.js';
 import selectTier from './selectTier.js';
 import sequenceId from '../journeys/evidence/sequenceId.js';
@@ -60,7 +60,7 @@ function journey({ name, blockId, sessions, months, ...rest }) {
 
 function entries(...items) {
   return items
-    .flatMap((item) => expandPersonas({ item }))
+    .flatMap((item) => expandJourney({ item }))
     .map((item) => ({ suite: 'journeys', item }));
 }
 

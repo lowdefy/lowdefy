@@ -14,4 +14,6 @@
   limitations under the License.
 */
 
+export { default as FixtureSignature } from './FixtureSignature/FixtureSignature.js';
+export { default as UndeclaredFixture } from './UndeclaredFixture/UndeclaredFixture.js';
 export { default as WalledFixture } from './WalledFixture/WalledFixture.js';

@@ -1,0 +1,28 @@
+# An internal endpoint that runs per organization, as a cron's CallApi with "organization" and
+# "caller" reaches it: it records who it ran as. A journey calls it with
+# `as: { system: { organization, caller } }` (tests/journeys/_headless/system.yaml, and the
+# system calls sample of the config tests docs page), run headless by
+# packages/utils/journey-headless/test/fixture/outside.test.mjs and on the dev server by
+# packages/servers/server-dev/test/journeyFixture/headlessHost.test.mjs.
+id: record_caller
+type: InternalApi
+routine:
+  - id: record
+    type: MongoDBInsertOne
+    connectionId: fixture_db
+    properties:
+      doc:
+        _id:
+          _payload: id
+        kind: caller
+        caller:
+          id:
+            _user: id
+          name:
+            _user: name
+          organization_id:
+            _user: organization_id
+          system:
+            _user: system
+  - ':return':
+      recorded: true

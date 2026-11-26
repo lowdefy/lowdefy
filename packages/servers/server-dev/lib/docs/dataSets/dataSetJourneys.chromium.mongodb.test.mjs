@@ -131,14 +131,10 @@ const { default: websocketHandler } = await import('../../../src/routes/websocke
 const { handleWebSocketUpgrade } = await import('../../../src/websocket/devWebSocket.js');
 const { getBrowser } = await import('../getBrowser.js');
 // The connection plugin keeps one driver client per URI for the life of the process; the suite
-// closes them so the test worker can exit. Imported by file: the package does not export it.
-const { closeClients } = await import(
-  path.join(
-    serverDevDirectory,
-    'node_modules/@lowdefy/connection-mongodb/dist/connections/MongoDBCollection/getClient.js'
-  )
-);
-const { default: getDataStore } = await import('./getDataStore.js');
+// closes them so the test worker can exit.
+const { closeClients } = await import('@lowdefy/connection-mongodb/clients');
+const { getDataStore } = await import('@lowdefy/test-utils/dataSets');
+const { default: createLogger } = await import('../../server/log/createLogger.js');
 const { default: getBuildId } = await import('../getBuildId.js');
 const { serializer } = await import('@lowdefy/helpers');
 
@@ -250,9 +246,11 @@ function createApp() {
   return app;
 }
 
+// Whether this machine can launch Chromium. The journeys launch their own browser, for the
+// server's origin, through the journey route.
 let browser = null;
 try {
-  browser = await getBrowser();
+  browser = await getBrowser({ origin: 'http://127.0.0.1' });
 } catch {
   browser = null;
 }
@@ -313,9 +311,9 @@ beforeAll(async () => {
     .collection('tickets')
     .insertOne({ _id: 'crm-real-1', organization_id: 'org_a' });
 
-  store = await getDataStore();
+  store = await getDataStore({ logger: createLogger() });
   // Every write on the data store, in order, so a test can tell which session database a detached
-  // write reached and that it landed before the session dropped it.
+  // write reached.
   storeEvents = [];
   storeWatch = store.client.watch([], { fullDocument: 'default' });
   storeWatch.on('change', (change) => {
@@ -461,7 +459,7 @@ chromiumTest('as: outsider acts as that data set user and sees only its own org'
 });
 
 chromiumTest(
-  'a detached CallApi on the last step writes to the session database before the session drops it',
+  'a detached CallApi on the last step writes to the session database before the session closes',
   async () => {
     storeEvents.length = 0;
     const { result } = await runJourney({
@@ -479,11 +477,27 @@ chromiumTest(
     );
     expect(insert).toBeDefined();
     expect(insert.db).toMatch(/^ld_[0-9a-f]{12}_\d+$/);
-    const insertIndex = storeEvents.indexOf(insert);
-    const dropIndex = storeEvents.findIndex(
-      (event) => event.operationType === 'dropDatabase' && event.db === insert.db
-    );
-    expect(dropIndex).toBeGreaterThan(insertIndex);
+    // The session waited for it, so it kept its databases for the next journey on the data set
+    // rather than dropping them under work still running, and they still hold the write.
+    const kept = await store.client
+      .db(insert.db)
+      .collection(insert.coll)
+      .findOne({ _id: 'later-1' });
+    expect(kept).not.toBeNull();
+    // The next journey on the data set takes them, and its reset removes the detached write: had
+    // it landed after the reset, it would still be there.
+    const { result: next } = await runJourney({
+      data: 'shop',
+      user: 'owner',
+      steps: [
+        { click: 'list' },
+        { expect: { state: { path: 'listed.ids', equals: ['t-a1', 't-a2'] } } },
+      ],
+    });
+    expect(next.passed).toBe(true);
+    expect(
+      await store.client.db(insert.db).collection(insert.coll).findOne({ _id: 'later-1' })
+    ).toBeNull();
     expect(await standInIds()).toEqual(['real-1']);
   }
 );
@@ -704,18 +718,13 @@ chromiumTest(
       ],
     });
     expect(result.passed).toBe(true);
-    // Each target's fixtures loaded into a database of its own, and both dropped with the session.
+    // Each target's fixtures loaded into a database of its own.
     const fixtureDatabases = new Set(
       storeEvents
         .filter((event) => event.operationType === 'insert' && event.id === 't-a1')
         .map((event) => event.db)
     );
     expect(fixtureDatabases.size).toBe(2);
-    fixtureDatabases.forEach((name) => {
-      expect(
-        storeEvents.some((event) => event.operationType === 'dropDatabase' && event.db === name)
-      ).toBe(true);
-    });
   }
 );
 

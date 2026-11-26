@@ -14,8 +14,14 @@
   limitations under the License.
 */
 
-import hashJourney from './hashJourney.js';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import { expect, test } from 'vitest';
+
+import discoverJourneys from './discoverJourneys.js';
+import expandJourney from './expandJourney.js';
+import hashJourney from './hashJourney.js';
 
 const journey = {
   name: 'Save an order',
@@ -50,4 +56,49 @@ test('hashJourney changes when any field the run reads changes', () => {
   ].forEach((change) => {
     expect(hashJourney({ ...journey, ...change })).not.toEqual(base);
   });
+});
+
+test('hashJourney changes when a stub changes, and a journey without stubs keeps its hash', () => {
+  const stub = { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { ok: true } };
+  const base = hashJourney(journey);
+  const stubbed = hashJourney({ ...journey, stubs: [stub] });
+  expect(stubbed).not.toEqual(base);
+  expect(hashJourney({ ...journey, stubs: [{ ...stub, answer: { ok: false } }] })).not.toEqual(
+    stubbed
+  );
+  // The hash journeys had before stubs, so committed exercised.json entries stay current.
+  expect(base).toBe('45e11cc0fe00f5aa045581549d2506e31a610dbf');
+});
+
+test('hashJourney hashes the expanded run, so a changed referred file or case row changes it', () => {
+  const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-hash-journey-'));
+  const journeysDirectory = path.join(configDirectory, 'tests', 'journeys');
+  fs.mkdirSync(journeysDirectory, { recursive: true });
+  fs.mkdirSync(path.join(configDirectory, 'tests', 'shared'));
+  const context = { directories: { config: configDirectory, journeys: journeysDirectory } };
+  function runHashes({ steps, cases }) {
+    fs.writeFileSync(path.join(configDirectory, 'tests', 'shared', 'steps.yaml'), steps);
+    fs.writeFileSync(path.join(configDirectory, 'tests', 'shared', 'cases.yaml'), cases);
+    return discoverJourneys({ context })
+      .flatMap((item) => expandJourney({ item }))
+      .map((item) => hashJourney(item.journey));
+  }
+  try {
+    fs.writeFileSync(
+      path.join(journeysDirectory, 'a.yaml'),
+      'name: calls\ncases:\n  _ref: tests/shared/cases.yaml\nsteps:\n  _ref: tests/shared/steps.yaml\n'
+    );
+    const steps = '- call: { endpoint: { _case: endpoint } }\n- expect: { status: 200 }\n';
+    const cases = '- { name: one, endpoint: save }\n- { name: two, endpoint: send }\n';
+    const before = runHashes({ steps, cases });
+    expect(before).toHaveLength(2);
+    expect(before[0]).not.toEqual(before[1]);
+    const changedSteps = runHashes({ steps: steps.replace('200', '201'), cases });
+    expect(changedSteps[0]).not.toEqual(before[0]);
+    expect(changedSteps[1]).not.toEqual(before[1]);
+    const changedRow = runHashes({ steps, cases: cases.replace('send', 'post') });
+    expect(changedRow).toEqual([before[0], expect.not.stringMatching(before[1])]);
+  } finally {
+    fs.rmSync(configDirectory, { recursive: true, force: true });
+  }
 });

@@ -33,13 +33,21 @@ connections:
     type: AxiosHttp
     properties:
       baseURL: http://127.0.0.1:9
+  # A connection whose type declares no dataSet: the data-set rails test clicks the OK button of a
+  # modal whose onOk calls a request on it, and the click is refused before it acts.
+  - id: rails_undeclared
+    type: UndeclaredFixture
   - _ref: connections/storage_bucket.yaml
   - _ref: connections/walled_runtime.yaml
+  - _ref: connections/fixture_signature.yaml
+  - _ref: connections/rate_service.yaml
 
 # Auth exists only to gate auditor_only, so a journey can be refused by a real
 # auth gate. An API key strategy is the one auth mechanism that needs no
 # database and no login method; every page and every other endpoint stays
-# public, and journeys still act as injected callers.
+# public, and journeys still act as injected callers. A webhook endpoint must be
+# listed public by name, so every endpoint but auditor_only is listed: a new
+# endpoint is added here, or it is protected.
 auth:
   secret:
     _secret: FIXTURE_AUTH_SECRET
@@ -54,9 +62,36 @@ auth:
   roles:
     - id: auditor
   api:
+    public:
+      - notify
+      - log_activity
+      - detached_log
+      - explode
+      - typed_order
+      - save_walled
+      - approve_run
+      - close_runs
+      - payment_events
+      - caught_webhook
+      - price_run
+      - log_payload
+      - caught_operator
+      - rethrown_operator
+      - search_companies
+      - record_caller
+      - mark_credential
     roles:
       auditor:
         - auditor_only
+  websockets:
+    public:
+      - live_feed
+
+# The live feed pages/live_feed.yaml subscribes to on mount. A Channel sends only what a client
+# publishes, and nothing here publishes, so it never sends a message.
+websockets:
+  - id: live_feed
+    type: Channel
 
 api:
   - _ref: api/notify.yaml
@@ -66,6 +101,17 @@ api:
   - _ref: api/auditor_only.yaml
   - _ref: api/typed_order.yaml
   - _ref: api/save_walled.yaml
+  - _ref: api/approve_run.yaml
+  - _ref: api/close_runs.yaml
+  - _ref: api/payment_events.yaml
+  - _ref: api/caught_webhook.yaml
+  - _ref: api/price_run.yaml
+  - _ref: api/log_payload.yaml
+  - _ref: api/caught_operator.yaml
+  - _ref: api/rethrown_operator.yaml
+  - _ref: api/search_companies.yaml
+  - _ref: api/record_caller.yaml
+  - _ref: api/mark_credential.yaml
 
 pages:
   - _ref: pages/home.yaml
@@ -77,6 +123,7 @@ pages:
   - _ref: pages/app_errors.yaml
   - _ref: pages/app_errors_open.yaml
   - _ref: pages/timing.yaml
+  - _ref: pages/polling.yaml
   - _ref: pages/targets.yaml
   - _ref: pages/fill.yaml
   - _ref: pages/rails.yaml
@@ -88,3 +135,18 @@ pages:
   - _ref: pages/handoff.yaml
   - _ref: pages/selectors.yaml
   - _ref: pages/containing_split.yaml
+  - _ref: pages/controls.yaml
+  - _ref: pages/popup_parity.yaml
+  - _ref: pages/clickable_targets.yaml
+  - _ref: pages/search_targets.yaml
+  - _ref: pages/input_events.yaml
+  - _ref: pages/skeleton_loading.yaml
+  - _ref: pages/popup_targets.yaml
+  - _ref: pages/escape_targets.yaml
+  - _ref: pages/grid_targets.yaml
+  - _ref: pages/headless_gaps.yaml
+  - _ref: pages/caught_faults.yaml
+  - _ref: pages/plugin_block.yaml
+  - _ref: pages/text_targets.yaml
+  - _ref: pages/text_checks.yaml
+  - _ref: pages/live_feed.yaml

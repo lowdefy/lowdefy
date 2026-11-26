@@ -1,0 +1,49 @@
+# An InternalApi endpoint runs only as the system (as: system), run headless by
+# `lowdefy test --headless --build` and the @lowdefy/journey-headless fixture suite
+# (packages/utils/journey-headless/test/fixture/outside.test.mjs). A browser run refuses as: system.
+# In a folder starting with "_" so the browser suites leave it out.
+# A signed-in caller's call is answered as a missing endpoint, a fault, so the refused call is
+# made signed out.
+- name: only a system call closes the runs
+  data: outside
+  user: operator
+  steps:
+    - call: { endpoint: close_runs, as: none }
+    - expect: { status: 401 }
+    - expect:
+        db:
+          collection: items
+          match: { kind: run, closed: true }
+          count: 0
+    - call: { endpoint: close_runs, as: system }
+    - expect: { status: 200 }
+    - expect:
+        db:
+          collection: items
+          match: { kind: run, closed: true }
+          count: 2
+
+# A cron reaches an endpoint that runs per organization through a CallApi with "organization" and
+# "caller": the call names the same binding, so the endpoint runs as the stand-in caller in that
+# organization.
+- name: a call bound to an organization runs as its stand-in caller
+  data: outside
+  user: operator
+  steps:
+    - call:
+        endpoint: record_caller
+        payload: { id: nightly }
+        as:
+          system:
+            organization: org_a
+            caller: { id: nightly_close, name: Nightly close }
+    - expect: { status: 200 }
+    - expect:
+        db:
+          collection: items
+          match: { _id: nightly }
+          equals:
+            - _id: nightly
+              kind: caller
+              caller:
+                { id: nightly_close, name: Nightly close, organization_id: org_a, system: true }

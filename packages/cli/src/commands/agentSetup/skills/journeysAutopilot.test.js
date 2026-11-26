@@ -166,7 +166,9 @@ test('journeys-autopilot hardens with one worker, screenshots with the data set 
 test('journeys-autopilot skips signed-out visitors and never runs journeys as a public role', () => {
   const skill = journeysAutopilot();
   expect(skill).toContain('the reason "signed-out runs stay on the auth harness"');
-  expect(skill).toContain('`user: none` on a data set is refused');
+  expect(skill).toContain(
+    '`user: none` on a data set journey that opens a\n   page is refused while auth is configured'
+  );
   expect(skill).not.toContain('or public');
   expect(skill).toContain('role: admin               # a data set user name\n');
 });
@@ -232,7 +234,7 @@ test('journeys-autopilot extends an existing data set and takes existing journey
   expect(skill).toContain('Never rewrite, move, rename or duplicate one');
   expect(skill).toContain('A failing one stays where it is');
   expect(skill).toContain(
-    'Run them once with `lowdefy test --config-directory <app>` (the whole suite)'
+    'Run them once with `lowdefy test --config-directory <app> --thorough` (the whole suite'
   );
 });
 
@@ -247,7 +249,7 @@ test('journeys-autopilot never edits a developer journey when a variant grants a
 test('journeys-autopilot runs the whole suite on a fix branch before pushing it', () => {
   const skill = journeysAutopilot();
   expect(skill).toContain(
-    'then the whole suite once\n  (`lowdefy test --config-directory <app>`: a fix can break a journey'
+    'then the whole suite once\n  (`lowdefy test --config-directory <app> --thorough`: a fix can break a journey'
   );
 });
 

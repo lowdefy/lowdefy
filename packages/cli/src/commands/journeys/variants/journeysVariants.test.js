@@ -96,6 +96,8 @@ beforeEach(() => {
   context = {
     directories: {
       config: configDirectory,
+      build: path.join(configDirectory, '.lowdefy', 'server', 'build'),
+      dev: path.join(configDirectory, '.lowdefy', 'dev'),
       journeys: journeysPath(),
       test: path.join(configDirectory, '.lowdefy', 'test'),
     },
@@ -141,7 +143,7 @@ test('journeysVariants --no-run measures the journey once, writes the variants a
   ]);
   expect(logs.info.filter((line) => line.startsWith('SKIPPED'))).toEqual([
     'SKIPPED  role: the journey declares no data: set',
-    'SKIPPED  role: the journey declares no data: set',
+    'SKIPPED  tenant: the journey declares no data: set',
     'SKIPPED  tenant: the journey declares no data: set',
     'SKIPPED  empty: pass --empty-data <data set> to write it',
     'SKIPPED  volume: pass --volume-data <data set> to write it',
@@ -264,8 +266,7 @@ test('journeysVariants writes the data-set kinds from data set files, byte for b
   expect(process.exitCode).toBeUndefined();
   expect(listVariants()).toEqual([
     'member-opens-a-ticket-empty.yaml',
-    'member-opens-a-ticket-role-1.yaml',
-    'member-opens-a-ticket-role-2.yaml',
+    'member-opens-a-ticket-role.yaml',
     'member-opens-a-ticket-tenant.yaml',
   ]);
   expect(logs.info).toContain('SKIPPED  volume: data set "big-org" has no user "member"');
@@ -293,25 +294,9 @@ test('journeysVariants writes the data-set kinds from data set files, byte for b
       '',
     ].join('\n')
   );
-  expect(read('member-opens-a-ticket-role-2.yaml')).toEqual(
-    [
-      'name: "member opens a ticket — role: refused to guest"',
-      'pageId: tickets',
-      'user: guest',
-      'data: tickets',
-      'variant:',
-      '  of: member opens a ticket',
-      '  kind: role',
-      '  detail: refused to guest',
-      'steps:',
-      '  - expect: { url: { contains: /404 } }',
-      '  - expect: { hidden: tickets_grid }',
-      '',
-    ].join('\n')
-  );
-  expect(read('member-opens-a-ticket-role-1.yaml')).toContain('user: admin\n');
-  expect(read('member-opens-a-ticket-role-1.yaml')).toContain('detail: granted to admin [admin]\n');
-  expect(read('member-opens-a-ticket-role-1.yaml')).toContain(
+  expect(read('member-opens-a-ticket-role.yaml')).toContain('user: admin\n');
+  expect(read('member-opens-a-ticket-role.yaml')).toContain('detail: granted to admin [admin]\n');
+  expect(read('member-opens-a-ticket-role.yaml')).toContain(
     'steps:\n  # Passes? Keep admin as a persona of "member opens a ticket", not a copy: set its user to [member, admin] and delete this file.\n  - click:'
   );
   expect(read('member-opens-a-ticket-empty.yaml')).toContain('data: empty-org\n');
@@ -415,6 +400,41 @@ test('journeysVariants replays a granted role variant, whose comment is no place
   expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*granted to admin/));
 });
 
+test('journeysVariants replays a headless variant the runner finds needs a browser in the browser', async () => {
+  writeDataSet(
+    'tickets',
+    [
+      'users:',
+      '  member: { id: u_1, roles: [member] }',
+      '  admin: { id: u_2, roles: [admin] }',
+      '',
+    ].join('\n')
+  );
+  fs.writeFileSync(
+    journeysPath('tickets.yaml'),
+    JSON.stringify({ ...journey, data: 'tickets', user: 'member' })
+  );
+  mockPost.mockImplementation(async (target, body) =>
+    body.headless === true
+      ? { data: { browserOnly: { index: 1, step: { click: 'save' }, reason: 'needs one' } } }
+      : { data: { passed: true, steps: [], exercised } }
+  );
+  await variants({ kinds: 'role' });
+  const bodies = mockPost.mock.calls.map(([, body]) => [body.user, body.headless === true]);
+  // The baseline, then each of the granted variant's three replays tries headless and runs in
+  // the browser.
+  expect(bodies).toEqual([
+    ['member', false],
+    ['admin', true],
+    ['admin', false],
+    ['admin', true],
+    ['admin', false],
+    ['admin', true],
+    ['admin', false],
+  ]);
+  expect(logs.info).toContainEqual(expect.stringMatching(/^PASS .*granted to admin/));
+});
+
 test('journeysVariants exits 75 without measuring or writing when no journey run slot frees', async () => {
   mockAcquireJourneyRunSlots.mockRejectedValue(
     Object.assign(new Error('busy'), { code: 'MACHINE_SLOT_TIMEOUT', slot: 'journey-run' })
@@ -423,6 +443,7 @@ test('journeysVariants exits 75 without measuring or writing when no journey run
   expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
     context,
     command: 'lowdefy journeys variants',
+    browser: true,
   });
   expect(mockPost).not.toHaveBeenCalled();
   expect(listVariants()).toEqual([]);

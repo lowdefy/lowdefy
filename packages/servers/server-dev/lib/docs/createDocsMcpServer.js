@@ -17,12 +17,13 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { isExpectedError } from '@lowdefy/errors';
 import { createTraceId, type } from '@lowdefy/helpers';
-import { validateJourneyUser } from '@lowdefy/node-utils';
+import { validateJourneyStubs, validateJourneyUser } from '@lowdefy/node-utils';
 
 import deviceAction from './device/deviceAction.js';
 import { subscribe as subscribeToDevEvents } from './devEventBus.js';
 import findConfig from './findConfig.js';
 import findPageBlock from './findPageBlock.js';
+import findSentPlaceholder from './findSentPlaceholder.js';
 import fitResponse from './fitResponse.js';
 import getAppMap from './getAppMap.js';
 import getBuildStatus from './getBuildStatus.js';
@@ -42,6 +43,7 @@ import runCheck from './runCheck.js';
 import runEndpoint from './runEndpoint.js';
 import runJourney from './runJourney.js';
 import runJourneyAsUsers from './runJourneyAsUsers.js';
+import runJourneyHeadless from './runJourneyHeadless.js';
 import selectExercised from './selectExercised.js';
 import runDeviceJourney from './device/runDeviceJourney.js';
 import runRequest from './runRequest.js';
@@ -374,14 +376,39 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       state,
       timeout,
       data,
+      stubs,
       exercised,
       device,
+      headless,
+      cases,
     }) => {
+      const placeholderError = findSentPlaceholder({
+        cases,
+        data,
+        pageId,
+        pathParams,
+        steps,
+        stubs,
+        urlQuery,
+        user,
+      });
+      if (placeholderError) {
+        return notFoundResult(placeholderError);
+      }
+      // The schema takes any value, so a placeholder in one is refused by name above, not as a
+      // type mismatch; every other value must be a string, as the journey route requires.
+      if (!type.isNone(pathParams) && !Object.values(pathParams).every(type.isString)) {
+        return notFoundResult(
+          `The "pathParams" param must be an object of strings, one per path placeholder. Received ${JSON.stringify(
+            pathParams
+          )}.`
+        );
+      }
       if (!type.isNone(device)) {
         const refused = deviceParamsError({
           tool: 'lowdefy_run_journey',
-          params: { urlQuery, user, data, exercised },
-          names: ['urlQuery', 'user', 'data', 'exercised'],
+          params: { urlQuery, user, data, stubs, exercised },
+          names: ['urlQuery', 'user', 'data', 'stubs', 'exercised'],
         });
         if (refused !== null) {
           return refused;
@@ -410,6 +437,10 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       if (userError) {
         return notFoundResult(userError);
       }
+      const { error: stubsError } = validateJourneyStubs({ stubs });
+      if (stubsError) {
+        return notFoundResult(stubsError);
+      }
       // One params object for both branches, so neither can drop a parameter
       // the other passes. basePath is read as the HTTP route reads it, so
       // expect.calls counts and app errors match under a basePath.
@@ -422,10 +453,13 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
         state,
         stepTimeout: timeout,
         data,
+        stubs,
         basePath: lowdefyConfig.basePath ?? '',
       };
+      // headless: true runs the journey with no browser (runJourneyHeadless).
+      const runOne = headless === true ? runJourneyHeadless : runJourney;
       if (type.isArray(user)) {
-        const { passed, runs } = await runJourneyAsUsers({ ...params, users: user });
+        const { passed, runs } = await runJourneyAsUsers({ ...params, run: runOne, users: user });
         // Every run's screenshots follow the JSON as images, run by run in
         // the order of the runs, each named in its run.
         const summary = {
@@ -449,7 +483,7 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
           ],
         };
       }
-      const result = await runJourney({
+      const result = await runOne({
         ...params,
         user,
         // Each call is its own journey run, recorded apart from the suite's.
@@ -458,7 +492,8 @@ function createDocsMcpServer({ origin, honoContext, version } = {}) {
       if (result.error) {
         return notFoundResult(result.error);
       }
-      const { screenshots, exercised: resultExercised, ...rest } = result;
+      // A headless run takes no screenshots, and a browser-only one runs nothing.
+      const { screenshots = [], exercised: resultExercised, ...rest } = result;
       const summary = {
         ...rest,
         ...selectExercised({ exercised: resultExercised, selection: exercised }),

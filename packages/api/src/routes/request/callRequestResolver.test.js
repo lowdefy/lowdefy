@@ -698,3 +698,21 @@ test('a refused request keeps the hint its connection gave', async () => {
   expect(caught.code).toBe(11000);
   expect(caught.hint).toBe('Insert with MongoDBUpdateOne and upsert: true.');
 });
+
+test('a request in a nested endpoint reaches its resolver keyed by its own endpoint', async () => {
+  const context = createTestContext();
+  let received;
+  const requestResolver = vi.fn((args) => {
+    received = args;
+    return 'ok';
+  });
+  await callRequestResolver(context, {
+    connectionProperties: {},
+    endpointDepth: 1,
+    requestConfig: { ...requestConfig, stepId: 'inner_step', endpointId: 'inner_endpoint' },
+    requestProperties: {},
+    requestResolver,
+  });
+  expect(received.endpointId).toBe('inner_endpoint');
+  expect(received.requestId).toBe('inner_step');
+});

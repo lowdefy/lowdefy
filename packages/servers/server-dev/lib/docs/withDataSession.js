@@ -15,13 +15,16 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { getDataStore, openDataSession } from '@lowdefy/test-utils/dataSets';
 
-import getDataStore from './dataSets/getDataStore.js';
-import openDataSession from './dataSets/openDataSession.js';
+import createLogger from '../server/log/createLogger.js';
 
-// Runs `task` on a data set's own databases when the call named one: fresh
-// databases on the dev server's memory store, loaded with the data set and
-// dropped once the task settles, exactly as a journey's. The task gets
+const logger = createLogger();
+
+// Runs `task` on a data set's own databases when the call named one: databases
+// on the dev server's memory store holding exactly the data set, closed once
+// the task settles, exactly as a journey's (openDataSession keeps them for the
+// next session on the data set). The task gets
 // `dataCookie` (for a headless browser context, see openPage) and
 // `dataSession` (for a context the dev server builds itself, see
 // createLowdefyContext); both are undefined without a data set. A data set
@@ -31,7 +34,7 @@ async function withDataSession({ dataSet, task }) {
     return task({});
   }
   try {
-    await getDataStore();
+    await getDataStore({ logger });
   } catch (error) {
     return {
       error: `Could not start the data store for data set "${dataSet.name}": ${error.message}`,
@@ -39,7 +42,7 @@ async function withDataSession({ dataSet, task }) {
   }
   let session;
   try {
-    session = await openDataSession({ dataSet });
+    session = await openDataSession({ dataSet, logger });
   } catch (error) {
     return { error: error.message };
   }

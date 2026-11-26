@@ -108,6 +108,8 @@ import buildMobilePageIndexShallow from './buildMobilePageIndexShallow.js';
 import buildShallowPages from './buildShallowPages.js';
 import collectPageContent from '../collectPageContent.js';
 import collectSkeletonSourceFiles from './collectSkeletonSourceFiles.js';
+import createEndpointRegistry from './createEndpointRegistry.js';
+import releaseMergedModuleEntities from './releaseMergedModuleEntities.js';
 import writeSourcelessPages from './writeSourcelessPages.js';
 
 async function shallowBuild(options) {
@@ -158,6 +160,8 @@ async function shallowBuild(options) {
     buildModules({ components, context });
     // Collect skeleton source files while ~r markers still exist on objects.
     const skeletonSourceFiles = collectSkeletonSourceFiles({ components, context });
+    // After collectSkeletonSourceFiles, the last reader of a manifest's pages.
+    releaseMergedModuleEntities({ context });
 
     // Phase 3.5: Constant-fold static runtime operators, mirroring the full
     // build (index.js). Without this, content preserved at skeleton — inline
@@ -287,6 +291,15 @@ async function shallowBuild(options) {
 
     logCollectedErrors(context);
 
+    // After the last addKeys: the dev server rebuilds an endpoint alone from it
+    // when an edit feeds only endpoints (buildEndpointsJit).
+    const endpointRegistry = createEndpointRegistry({
+      components,
+      context,
+      pageIds: (components.pages ?? []).map((page) => page.pageId),
+      skeletonSourceFiles,
+    });
+
     // Write all build artifacts
     await cleanBuildDirectory({ context });
     // Again: cleanBuildDirectory removed it.
@@ -387,7 +400,7 @@ async function shallowBuild(options) {
     await copyPublicFolder({ components, context });
     await copyAgentFileSystems({ components, context });
 
-    return { components, pageRegistry, context };
+    return { components, endpointRegistry, pageRegistry, context };
   } catch (err) {
     if (err instanceof BuildError) {
       throw err;

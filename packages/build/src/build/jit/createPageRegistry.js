@@ -15,78 +15,25 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { resolveKeyEntry } from '@lowdefy/errors';
 
-// Walk up from ~r to find the page's source file for JIT re-resolution.
-// Templates receive vars (they need id, title, etc. from the page file),
-// while page files are self-contained or receive vars from a collection file.
-// Stop at the first ref called WITHOUT vars — that's the page file.
-// When ALL refs have vars (module pages), fall back to the first child of root.
-// When the child of root has no path (resolver ref), go shallower — capture
-// the resolver's info so JIT can re-run it with freshly resolved vars.
-function findPageSourceRef(refId, refMap, unresolvedRefVars) {
-  let current = refId;
-  let firstChildOfRoot = null;
-
-  while (!type.isNone(current)) {
-    const entry = refMap[current];
-    if (!entry) {
-      return null;
-    }
-
-    const hasVars = !type.isNone(unresolvedRefVars[current]);
-
-    // Track the first child of root as fallback
-    const parentEntry = !type.isNone(entry.parent) ? refMap[entry.parent] : null;
-    if (parentEntry && type.isNone(parentEntry.parent) && !firstChildOfRoot) {
-      // Resolver ref: capture the resolver's original definition and vars
-      // so JIT can re-run the resolver (instead of falling through to the
-      // template file below it, which would discard the resolver's vars).
-      firstChildOfRoot = entry.path
-        ? {
-            path: entry.path,
-            unresolvedVars: unresolvedRefVars[current] ?? null,
-            transformer: entry.transformer ?? null,
-          }
-        : { path: null, original: refMap[current].original };
-    }
-
-    // First ref without vars = self-contained page file
-    if (!hasVars) {
-      if (!type.isNone(entry.parent)) {
-        return { path: entry.path, unresolvedVars: null, transformer: entry.transformer ?? null };
-      }
-      // Reached root — use first child of root
-      return firstChildOfRoot;
-    }
-
-    current = entry.parent;
-  }
-  return firstChildOfRoot;
-}
-
-function getModuleEntryId(pageId, context) {
-  for (const entryId of Object.keys(context.modules ?? {})) {
-    if (pageId.startsWith(`${entryId}/`)) {
-      return entryId;
-    }
-  }
-  return null;
-}
+import findSourceRef from './findSourceRef.js';
+import getModuleEntryId from './getModuleEntryId.js';
 
 function createPageRegistry({ components, context }) {
   const registry = new Map();
   const unresolvedRefVars = context.unresolvedRefVars ?? {};
 
   (components.pages ?? []).forEach((page) => {
-    // Read ~r from keyMap — addKeys moves ~r there and deletes it from objects.
-    const keyMapEntry = context.keyMap[page['~k']];
-    const refId = keyMapEntry?.['~r'] ?? null;
+    // addKeys moves ~r into the keyMap and deletes it from objects. A page
+    // inline in a ref file carries no ref of its own, so resolve it.
+    const refId = resolveKeyEntry({ keyMap: context.keyMap, configKey: page['~k'] })?.refId ?? null;
     const sourceRef = !type.isNone(refId)
-      ? findPageSourceRef(refId, context.refMap, unresolvedRefVars)
+      ? findSourceRef({ refId, refMap: context.refMap, unresolvedRefVars })
       : null;
 
     // Inline pages (defined directly in lowdefy.yaml) have a refId pointing to
-    // the root ref but findPageSourceRef returns null because there is no
+    // the root ref but findSourceRef returns null because there is no
     // separate source file. Set refId to null so buildPageJit serves them from
     // the pre-built artifact written by buildShallowPages.
     const isInline =

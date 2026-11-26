@@ -29,7 +29,7 @@ import { createUrl } from './url.js';
 // one would name the frame's own origin.
 function createLinkComponent({ origin = '', router }) {
   function Link({ children, href, onClick, replace, scroll, ...props }) {
-    const hrefObject = type.isString(href) ? { pathname: href } : href ?? {};
+    const hrefObject = type.isString(href) ? { pathname: href } : (href ?? {});
     const { pathname, query } = hrefObject;
     const url = `${origin}${createUrl({ basePath: router.basePath, pathname, query })}`;
 

@@ -41,6 +41,7 @@ fixtures:
   tickets:
     - { _id: t-empty-title, organizationId: org_a, title: '', created: { '~d': 1700000000000 } }
     - { ref: { _oid: 64b7f0c2a1b2c3d4e5f60718 } }
+    - { amount: { '~dec': '1234.50' } }
 indexes:
   tickets:
     - { key: { organizationId: 1, number: 1 }, unique: true }
@@ -60,6 +61,7 @@ test('parseDataSet returns fixtures, users and indexes with no build present', a
     created: { '~d': 1700000000000 },
   });
   expect(dataSet.fixtures.tickets[1]).toEqual({ ref: { _oid: '64b7f0c2a1b2c3d4e5f60718' } });
+  expect(dataSet.fixtures.tickets[2]).toEqual({ amount: { '~dec': '1234.50' } });
   expect(dataSet.users).toEqual({
     owner: { id: 'u_1', roles: ['admin'], organizationId: 'org_a' },
   });
@@ -149,6 +151,13 @@ test('parseDataSet refuses a user named none', async () => {
   writeDataSet('alpha.yaml', 'users:\n  none: { id: u_1 }\n');
   await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
     'users key "none" is reserved'
+  );
+});
+
+test('parseDataSet refuses a user named system, which `as: system` on a call means', async () => {
+  writeDataSet('alpha.yaml', 'users:\n  system: { id: u_1 }\n');
+  await expect(parseDataSet({ configDirectory, name: 'alpha' })).rejects.toThrow(
+    'users key "system" is reserved: `as: system` on a call runs the endpoint as a cron or internal run does, with no user.'
   );
 });
 

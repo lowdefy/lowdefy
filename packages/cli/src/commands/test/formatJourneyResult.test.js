@@ -87,6 +87,35 @@ test('formatJourneyResult prints the message when a journey failed without a ste
   ]);
 });
 
+test('formatJourneyResult prints the stack of a run that threw once across the run', () => {
+  const stack =
+    'TypeError: x is undefined\n    at runJourney (runJourney.js:10:5)\n    at run (test.js:4:2)';
+  const result = (name) => ({
+    name,
+    filePath: `/app/tests/journeys/${name}.yaml`,
+    passed: false,
+    repeat: 1,
+    message: 'The journey run failed with an error: x is undefined',
+    stack,
+  });
+  const seen = new Set();
+  expect(formatJourneyResult({ result: result('a'), seen })).toEqual([
+    'FAIL  a',
+    '      file: /app/tests/journeys/a.yaml',
+    '      The journey run failed with an error: x is undefined',
+    '      stack:',
+    '        TypeError: x is undefined',
+    '        at runJourney (runJourney.js:10:5)',
+    '        at run (test.js:4:2)',
+  ]);
+  expect(formatJourneyResult({ result: result('b'), seen })).toEqual([
+    'FAIL  b',
+    '      file: /app/tests/journeys/b.yaml',
+    '      The journey run failed with an error: x is undefined',
+    '      stack: as printed above',
+  ]);
+});
+
 test('formatJourneyResult prints the data set line once across several journeys on one data set', () => {
   const seen = new Set();
   const data = { name: 'sample', loadMs: 900, documents: 41212 };
@@ -467,4 +496,86 @@ test('formatJourneyResult lists the app errors beside a left-origin failure', ()
   expect(lines.at(-1)).toEqual(
     '      server-error  Unrecognized pipeline stage  pages/tickets.yaml:42'
   );
+});
+
+test('formatJourneyResult says a PASS came alone after an open failure beside other journeys', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'submits the form',
+        passed: true,
+        stepCount: 3,
+        durationMs: 1234,
+        contended: true,
+        contendedFailure: { message: 'The page did not open in 30000ms.' },
+      },
+    })
+  ).toEqual([
+    'PASS  submits the form  (3 steps, 1234ms)',
+    '      passed alone after failing beside other journeys: The page did not open in 30000ms.',
+  ]);
+});
+
+test('formatJourneyResult names the step a contended PASS first failed at', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'submits the form',
+        passed: true,
+        stepCount: 3,
+        durationMs: 1234,
+        contended: true,
+        contendedFailure: {
+          failure: { index: 2, step: { click: 'save' }, message: 'save is disabled' },
+          message: 'save is disabled',
+        },
+      },
+    })[1]
+  ).toBe(
+    '      passed alone after failing beside other journeys: step 2 (click "save"): save is disabled'
+  );
+});
+
+test('formatJourneyResult says where a journey of a mixed run ran at the end of its first line', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'submits the form',
+        passed: true,
+        stepCount: 3,
+        durationMs: 1234,
+        ranIn: 'headless',
+      },
+    })
+  ).toEqual(['PASS  submits the form  (3 steps, 1234ms)  [headless]']);
+  const [first, second] = formatJourneyResult({
+    result: {
+      name: 'reads the title',
+      filePath: '/app/tests/journeys/title.yaml',
+      passed: false,
+      stepCount: 1,
+      durationMs: 10,
+      message: 'title is "Away"',
+      ranIn: 'browser',
+    },
+  });
+  expect(first).toBe('FAIL  reads the title  [browser]');
+  expect(second).toBe('      file: /app/tests/journeys/title.yaml');
+});
+
+test('formatJourneyResult names no runner for a journey no runner took', () => {
+  expect(
+    formatJourneyResult({
+      result: {
+        name: 'bad file',
+        filePath: '/app/tests/journeys/bad.yaml',
+        passed: false,
+        refused: true,
+        stepCount: 0,
+        durationMs: 0,
+        message: 'Could not parse',
+        ranIn: 'headless',
+      },
+    })[0]
+  ).toBe('FAIL  bad file');
 });

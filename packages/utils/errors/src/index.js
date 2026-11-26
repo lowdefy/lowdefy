@@ -74,10 +74,21 @@
  *   loadAndResolveErrorLocation - Async: reads keyMap/refMap files at runtime
  *   shouldSuppressBuildCheck   - Check ~ignoreBuildChecks in parent chain
  *
+ * Key Map Readers (entries in the full or the short shape; nothing else reads entry fields):
+ *   resolveKeyEntry           - One entry → {path, refId, line, parentId, ignoreBuildChecks}
+ *   createKeyPathResolver     - Memoised resolver for scans over the whole key map
+ *
+ * Columnar Key Maps (production servers hold the key map in columns, not a million objects):
+ *   encodeColumnarKeyMap      - Short-shape key map → columns (the build writes keyMap.json.gz)
+ *   createColumnarKeyMap      - Columns → a key map every reader above takes in place of keyMap
+ *
  * Error Field Utilities:
  *   errorSummaryForLog        - {name, message, code, statusCode, cause} an error may log
+ *   expectedAnswers           - The HTTP status, warning line and page text for each expected outcome
  *   expectedErrorNames        - Set of error class names that are expected outcomes, not faults
  *   isExpectedError           - The one test for an expected outcome versus a fault
+ *   isForcedFailure           - Whether an error is a test fail gate's forced failure
+ *   markForcedFailure         - Brands the error a test fail gate throws as forced
  *   readErrorCodes            - {code, statusCode} from one error node's own fields
  *   lowdefyErrorNames         - Set of Lowdefy error class names
  *   lowdefyErrorTypes         - Lowdefy error class by name, for reviving and reshaping errors
@@ -90,13 +101,19 @@ import BlockError from './BlockError.js';
 import BuildError from './BuildError.js';
 import ConfigError from './ConfigError.js';
 import ConfigWarning from './ConfigWarning.js';
+import createColumnarKeyMap from './createColumnarKeyMap.js';
+import createKeyPathResolver from './createKeyPathResolver.js';
+import encodeColumnarKeyMap from './encodeColumnarKeyMap.js';
 import errorSummaryForLog from './errorSummaryForLog.js';
 import errorToDisplayString from './errorToDisplayString.js';
+import expectedAnswers from './expectedAnswers.js';
 import expectedErrorNames from './expectedErrorNames.js';
 import isExpectedError from './isExpectedError.js';
+import isForcedFailure from './isForcedFailure.js';
 import LowdefyInternalError from './LowdefyInternalError.js';
 import lowdefyErrorNames from './lowdefyErrorNames.js';
 import lowdefyErrorTypes from './lowdefyErrorTypes.js';
+import markForcedFailure from './markForcedFailure.js';
 import OperatorError from './OperatorError.js';
 import PluginError from './PluginError.js';
 import readErrorCodes from './readErrorCodes.js';
@@ -104,6 +121,7 @@ import RequestError from './RequestError.js';
 import resolveConfigLocation from './resolveConfigLocation.js';
 import loadAndResolveErrorLocation from './loadAndResolveErrorLocation.js';
 import resolveErrorLocation from './resolveErrorLocation.js';
+import resolveKeyEntry from './resolveKeyEntry.js';
 import ServiceError from './ServiceError.js';
 import shouldSuppressBuildCheck, {
   PLUGIN_CHECKS_SLUG,
@@ -122,13 +140,19 @@ export {
   BuildError,
   ConfigError,
   ConfigWarning,
+  createColumnarKeyMap,
+  createKeyPathResolver,
+  encodeColumnarKeyMap,
   errorSummaryForLog,
   errorToDisplayString,
+  expectedAnswers,
   expectedErrorNames,
   isExpectedError,
+  isForcedFailure,
   LowdefyInternalError,
   lowdefyErrorNames,
   lowdefyErrorTypes,
+  markForcedFailure,
   OperatorError,
   PluginError,
   PLUGIN_CHECKS_SLUG,
@@ -138,6 +162,7 @@ export {
   resolveConfigLocation,
   loadAndResolveErrorLocation,
   resolveErrorLocation,
+  resolveKeyEntry,
   ServiceError,
   shouldSuppressBuildCheck,
   TenantIntegrityError,

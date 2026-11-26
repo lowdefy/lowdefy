@@ -1,0 +1,23 @@
+atlas_search:
+  _ref:
+    path: app_config.yaml
+    key: atlas_search
+fields:
+  show_honorific: true
+  profile:
+    _ref: modules/shared/profile/fields.yaml
+  global_attributes:
+    _ref: modules/contacts/global_attributes_fields.yaml
+request_stages:
+  write: []
+event_display:
+  demo:
+    create-contact: "{{ user.profile.name }} created contact {{ target.name }}"
+    update-contact: "{{ user.profile.name }} updated contact {{ target.name }}"
+components:
+  sidebar_slots:
+    _ref:
+      path: modules/contacts/sidebar_slots.yaml.njk
+      vars:
+        ids:
+          _var: ids

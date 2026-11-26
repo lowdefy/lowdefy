@@ -20,6 +20,7 @@ import { WebParser } from '@lowdefy/operators';
 import Actions from './Actions.js';
 import createUpdaters from './createUpdaters.js';
 import DependencyTracker from './tracking/DependencyTracker.js';
+import freezeConfig from './freezeConfig.js';
 import readMcpDisplayMode from './tracking/readMcpDisplayMode.js';
 import readMediaViewport from './tracking/readMediaViewport.js';
 import Slots from './Slots.js';
@@ -29,7 +30,7 @@ import updateMcp from './tracking/updateMcp.js';
 import updateMedia from './tracking/updateMedia.js';
 import WebSockets from './WebSockets.js';
 
-const blockData = (config) => {
+function blockData(config) {
   const {
     slots,
     blockId,
@@ -82,7 +83,7 @@ const blockData = (config) => {
     });
   }
   return result;
-};
+}
 
 // Builds an engine context around one root block: the page's root block for a
 // page context, and a block-less root carrying the app events for the app context.
@@ -141,8 +142,15 @@ function createContext({
   _internal.Actions = new Actions(ctx);
   _internal.Requests = new Requests(ctx);
   _internal.WebSockets = new WebSockets(ctx);
+  // The context's one config copy, for a page or the app context. Page instances of one page share
+  // its fetched config, so each context copies it once here, and every container and list row below
+  // reads this copy (see Slots).
+  const slotsConfig = serializer.copy({ root: { blocks: [_internal.rootBlock] } });
+  if (lowdefy._internal.freezeConfig === true) {
+    freezeConfig({ config: slotsConfig });
+  }
   _internal.RootSlots = new Slots({
-    slots: { root: { blocks: [_internal.rootBlock] } },
+    slots: slotsConfig,
     context: ctx,
   });
   _internal.RootSlots.init(serializer.copy(ctx.state));

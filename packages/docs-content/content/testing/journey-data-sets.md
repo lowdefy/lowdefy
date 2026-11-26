@@ -58,7 +58,7 @@ users:
 | Key        | Description                                                                                                                                                                                                                                                                                                                                                        |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `extends`  | Data sets to load first, by name, e.g. `[base]`. See [Extending a data set](#extending-a-data-set).                                                                                                                                                                                                                                                                |
-| `fixtures` | Documents to load, keyed by connection id. Dates use the serializer's `{ "~d": "2026-01-02T00:00:00.000Z" }` marker and ObjectIds use `{ _oid: '<hex>' }`. A fixture with an `_id` replaces any earlier document with that `_id`; one without is inserted.                                                                                                         |
+| `fixtures` | Documents to load, keyed by connection id. Dates use the serializer's `{ "~d": "2026-01-02T00:00:00.000Z" }` marker, ObjectIds use `{ _oid: '<hex>' }` and MongoDB decimals use `{ '~dec': '12.50' }` (a string, stored as a Decimal128). A fixture with an `_id` replaces any earlier document with that `_id`; one without is inserted.                          |
 | `generate` | Documents made from a small spec with a fixed seed, keyed by connection id like `fixtures`. See [Generated documents](#generated-documents).                                                                                                                                                                                                                       |
 | `users`    | The people journeys act as, keyed by name. Each is an inline user object, the shape a journey's inline `user:` takes. They are injected callers and carry no credentials: `password` is refused.                                                                                                                                                                   |
 | `indexes`  | Indexes to create, keyed by connection id, in the shape MongoDB's `listIndexes()` returns: `key`, an optional `name`, and any other option (`unique`, `sparse`, `partialFilterExpression`, `collation`, `weights`, …), passed to `createIndexes` as given. `v` and `ns` are refused. Two connections that load one collection in one database merge their indexes. |
@@ -112,7 +112,7 @@ Each key under `generate` other than `seed` is a connection id, with `count` (ho
 
 | Kind       | Example                                              | Makes                                                                                                                                                                             |
 | ---------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| a literal  | `currency: ZAR`                                      | The value as written, in every document. A string, number, boolean, `null`, list, or a `~d` date or `_oid` marker. Write any other object as `{ literal: { ... } }`.              |
+| a literal  | `currency: ZAR`                                      | The value as written, in every document. A string, number, boolean, `null`, list, or a `~d` date, `_oid` or `~dec` marker. Write any other object as `{ literal: { ... } }`.      |
 | `oneOf`    | `{ oneOf: [draft, sent, paid], weights: [1, 2, 5] }` | One of the values. `weights` is optional, one number per value; without it each value is equally likely.                                                                          |
 | `number`   | `{ number: { min: 10, max: 5000, decimals: 2 } }`    | A number from `min` to `max`, rounded to `decimals` places (default `0`, whole numbers).                                                                                          |
 | `date`     | `{ date: { from: 2026-01-01, to: 2026-09-30 } }`     | A date between `from` and `to`, loaded as a date, as a fixture's `~d` marker is. Each bound is a UTC date (`2026-01-31`) or a date-time with its offset (`2026-01-31T09:00:00Z`). |
@@ -197,9 +197,9 @@ Fixture records are test data written for the journey: never rows copied with cr
 A data set journey runs on the running dev server, beside your own browser tabs:
 
 1. The dev server starts one in-memory MongoDB replica set the first time a data set journey runs, on a free port from 49152 up so it never holds a port one of your apps needs. It stops, and its files are removed, when the dev server stops; if it dies, the journey that finds it fails and the next one starts a new store. The first run downloads the MongoDB binary once (`Downloading MongoDB <version> for journey data sets (once).`). Set `MONGOMS_VERSION` to match your cluster's MongoDB version.
-2. Each journey run gets fresh databases on it, one per database target (see **One database per target** above), each loaded with its connections' indexes, then generated documents, then fixtures. Runs never see each other's writes, so an agent's journey can run alongside `lowdefy test`.
+2. Each journey run gets databases of its own on it, one per database target (see **One database per target** above), each loaded with its connections' indexes, then generated documents, then fixtures. Runs never see each other's writes, so an agent's journey can run alongside `lowdefy test`. The databases a finished run used are kept for the next run on the same data set, which empties them and loads the data set again, as that is several times faster than creating new ones. A collection that gained an index or an option is dropped first, and so is a view and any collection the data set does not load, so each run starts from exactly its data set's collections, documents and indexes.
 3. Every browser the journey opens carries a cookie that only the dev server's own headless browser can produce. Requests with it read the run's databases. Your own tabs carry no such cookie and keep using your real database on the same server.
-4. When the journey ends, its browsers close, the dev server waits up to 30 seconds for background work the journey started (detached `CallApi` calls, background endpoint work), and then drops the run's databases.
+4. When the journey ends, its browsers close, the dev server waits up to 30 seconds for background work the journey started (detached `CallApi` calls, background endpoint work), and then keeps the run's databases for the next run on its data set. They are dropped instead when background work is still running after the 30 seconds, or a request of the run is still running, and in any case when the dev server stops.
 
 **What is redirected:** every connection read under a data set journey goes through one check, for requests, endpoint routines, background and detached endpoint calls, websocket change stream sources, and module connections alike. The check reads the connection type's `meta.dataSet` declaration:
 
@@ -214,7 +214,7 @@ The browsers a data set journey opens stay on one host of the dev server. A requ
 
 **What is not redirected:**
 
-- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP, object storage) are never given the run's databases. Their requests are sunk, as described below. What does not go through a request resolver still reaches the real service: an agent calling its model provider through its connection is not sunk, and an `external` type with no request resolvers (such as `Mcp`) is refused by the click rails.
+- Connection types declared `external` (HTTP APIs, email, payments, AI providers, MCP, object storage) are never given the run's databases. Their requests are sunk, as described below. What does not go through a request resolver still reaches the real service: an agent calling its model provider through its connection is not sunk, and an `external` type with no request resolvers (such as `Mcp`) is refused by the step rails.
 - Code that reads a database URI from anywhere but its connection's `properties`, such as a secret or environment variable read directly. A plugin type that declares `redirect` and does this breaks its declaration.
 - The auth engine. Data set journeys never reach it: their requests carry injected users, and `/api/auth/*` answers 404 for them.
 - Atlas Search (`$search`, `$vectorSearch`): pages whose requests use it fail on the in-memory database, which has no search engine.
@@ -275,9 +275,9 @@ The sunk request is recorded in `sunk` like any other, with its `connectionType`
 
 The dev server cannot check a `walled` or `external` declaration, since a connection's properties are evaluated later and may read secrets. It is your promise as the plugin author.
 
-## Clicks a data set journey refuses
+## Steps a data set journey refuses
 
-A data set journey fails two kinds of click, so that it never reaches a real service and never fails for a reason that is not the app's. A click on a connection the data set cannot run is refused before it acts, naming the block and why; a click that runs an auth action fails once it has run:
+A data set journey checks every step that acts on a block and can fire its events: `click`, `open` (which fires a dropdown's `onOpenChange`), `fill` and `select` (which fire the input's `onChange`), and `press` (which fires the events of the blocks around the focused element, such as an input's `onPressEnter`, a button's `onClick` or a modal's `onCancel` on Escape, and of every shown block whose event `shortcut` the keys match). It fails two kinds of such step, so that it never reaches a real service and never fails for a reason that is not the app's. A step on a connection the data set cannot run is refused before it acts (an `open` before the dropdown opens), naming the block and why; a step that runs an auth action fails once it has run. The examples below are clicks; an `open`, `fill`, `select` or `press` names itself instead (`... so a data-set journey cannot fill it.`, `... cannot press a key that fires its events.`).
 
 - A click on a block whose events reach a connection, through a `Request` action or a `CallAPI` into an endpoint routine, whose type declares nothing, declares `external` but has no request resolvers, or that has no connection artifact. Connections whose type declares `redirect` or `walled` (such as `MongoDBCollection`) run against the run's databases, and connections whose type declares `external` have their requests sunk, so both can be clicked. The message names the declaration, so you know what to change:
 
@@ -289,7 +289,9 @@ A data set journey fails two kinds of click, so that it never reaches a real ser
 
 - A click that runs an action that calls the auth engine (`Logout`, `Login`, `ChangePassword` and the other auth actions). Data set users are injected and have no auth session, so these fail every time. Unlike the connection check, this one is made while the click runs: the step fails only if the action executes, and the message names the block and the action (`Block "logout_button" ran the auth action Logout, which a data-set journey cannot run: ...`). A click whose auth action is skipped works, so you can test the paths that stop before it: a `Validate` that throws on an empty form, an endpoint that refuses a duplicate, an action with a `skip:` condition that is true.
 
-The block is the one the click lands on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. Request and endpoint ids computed by operators are not followed by the connection check. Journeys without `data:` click anything. Cover such controls with a journey that runs off data sets, against a test database.
+Headless runs (`lowdefy test`) refuse the same steps before they act. A headless `press` is Enter in the input filled last, and checks the blocks the browser checks: that input, the blocks around it up to an enclosing modal or drawer, and every shown block whose `shortcut` Enter fires. A headless run stops at an auth action instead, and reports that the journey needs a browser.
+
+The block is the one the step acts on: the target's block, or for a `text` or `containing` target, the nearest block around the element it matched. A `select` checks the block of the option it picks, and a `press` checks every block it can fire: the blocks around the focused element (an open modal or drawer included) and each block with a matching `shortcut`. Request and endpoint ids computed by operators are not followed by the connection check. Journeys without `data:` act on anything. Cover such controls with a journey that runs off data sets, against a test database.
 
 ## Requests to outside services are sunk
 
@@ -310,7 +312,7 @@ sunk:
 
 `request` is the request's evaluated properties with the app's secrets scrubbed. The connection's own properties, which hold its credentials, are never recorded.
 
-A routine that reads a sunk request's response gets `null`, so a step that needs the response (an order id from a payment API) reads nothing: give such a branch a journey off data sets, or an endpoint that tolerates a missing response.
+A routine that reads a sunk request's response gets `null`, so a step that needs the response (an order id from a payment API) reads nothing. Give the journey a [stub](/config-tests#stubs-and-forced-failures) that answers the request; a stubbed request is still recorded in `sunk`, and `expect: { sunk }` checks what was asked.
 
 One request is not sunk: an `SMTP` request whose connection points at the dev server's mail capture (`LOWDEFY_DEV_SMTP_PORT`, on `127.0.0.1`, `localhost` or `::1`), so the `email` step keeps reading the mail a journey sends there. Nothing leaves the machine.
 
@@ -318,7 +320,7 @@ One request is not sunk: an `SMTP` request whose connection points at the dev se
 
 Data set users are injected callers. A journey that signs up or signs in through the app's own auth is an auth journey, and stays off data sets: run it against a test database as described under [The database](/config-tests#the-database). Two combinations are refused rather than run silently wrong:
 
-- `user: none` on a data set journey while auth is configured. A signed-out actor's sign-in would write sessions to the app's real auth database while its requests read the data set.
+- `user: none` on a data set journey that opens a page, while auth is configured. A signed-out actor's sign-in would write sessions to the app's real auth database while its requests read the data set. A journey with no `pageId` (calls and webhooks only) signs nobody in, so it runs signed out.
 - Any data set journey while `auth.dev.mockUser` (or `LOWDEFY_DEV_USER`) is active. The mock user wins over the injected user, so the journey would act as someone outside the data set.
 
 ## Agents

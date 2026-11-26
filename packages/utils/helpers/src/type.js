@@ -19,9 +19,17 @@
 // without a Node-only branch.
 const TYPED_ARRAY_RE = /^(Int|Uint|Float)\d+(Clamped)?Array$|^Buffer$/;
 
-function ctorName(val) {
-  const ctor = val.constructor;
-  return typeof ctor === 'function' ? ctor.name : null;
+// The kind of a non-array object that no built-in instanceof check matched, from its
+// constructor (read once by the caller).
+function kindFromConstructor(val, ctor) {
+  const name = typeof ctor === 'function' ? ctor.name : null;
+  if (name && TYPED_ARRAY_RE.test(name)) return name.toLowerCase();
+  // Tail check: only plain objects map to 'object'. Non-plain web platform objects
+  // (URL, Headers, URLSearchParams, etc.) and user classes with Symbol.toStringTag fall
+  // through to the constructor-name branch so type.isObject preserves its
+  // "plain object only" contract.
+  if (Object.prototype.toString.call(val) === '[object Object]') return 'object';
+  return name ? name.toLowerCase() : 'object';
 }
 
 function isArray(val) {
@@ -42,6 +50,20 @@ function kindOf(val) {
   const t = typeof val;
   if (t !== 'object' && t !== 'function') return t;
   if (Array.isArray(val)) return 'array';
+  // Fast path for plain objects, the build's commonest value. An object whose prototype is
+  // Object.prototype or null has no built-in class on its chain, so none of the instanceof
+  // checks below can match. With the plain Object constructor (or none, for a null
+  // prototype) the constructor branch returns 'object' whatever Object.prototype.toString
+  // says, so the answer is the one the full path gives. Anything else takes the full path,
+  // with the constructor read once, as the full path reads it.
+  if (t === 'object') {
+    const proto = Object.getPrototypeOf(val);
+    if (proto === Object.prototype || proto === null) {
+      const ctor = val.constructor;
+      if (ctor === Object || ctor === undefined) return 'object';
+      return kindFromConstructor(val, ctor);
+    }
+  }
   if (val instanceof Date) return 'date';
   if (val instanceof Error) return 'error';
   if (val instanceof RegExp) return 'regexp';
@@ -51,14 +73,7 @@ function kindOf(val) {
   if (val instanceof WeakSet) return 'weakset';
   if (val instanceof Promise) return 'promise';
   if (t === 'function') return 'function';
-  const name = ctorName(val);
-  if (name && TYPED_ARRAY_RE.test(name)) return name.toLowerCase();
-  // Tail check: only plain objects map to 'object'. Non-plain web platform objects
-  // (URL, Headers, URLSearchParams, etc.) and user classes with Symbol.toStringTag fall
-  // through to the constructor-name branch so type.isObject preserves its
-  // "plain object only" contract.
-  if (Object.prototype.toString.call(val) === '[object Object]') return 'object';
-  return name ? name.toLowerCase() : 'object';
+  return kindFromConstructor(val, val.constructor);
 }
 
 const reISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$/;

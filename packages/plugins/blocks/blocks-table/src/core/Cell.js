@@ -31,6 +31,7 @@ function renderContent({ api, col, lead, original }) {
     return <LazyCell api={api} col={col} lead={lead} original={original} rowKey={rowKey} />;
   }
   return renderCell({
+    blockId: api.blockId,
     column: col.column,
     row: original,
     rowKey,

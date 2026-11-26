@@ -15,6 +15,7 @@
 */
 
 import appFolder from './appFolder.js';
+import testLevel from './testLevel.js';
 
 // The journeys-from-production skill: the coding agent mines journeys from
 // production analytics. It picks the window, pulls and measures, then reads
@@ -64,6 +65,8 @@ Never:
 - call PostHog through its MCP, its API or a URL, or run HogQL;
 - add text to the config to resolve a token, or write a guessed value into a journey to see what
   production showed.
+
+${testLevel()}
 
 ## 1. Pick the window
 

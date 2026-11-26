@@ -182,6 +182,27 @@ test('isPageReady returns true when every websocket channel is connected', () =>
   expect(isPageReady()).toBe(true);
 });
 
+test('isPageReady returns false while a subscription the page holds open has not connected', () => {
+  const context = settledContext({ websockets: { orders: { connected: false, error: null } } });
+  context._internal.WebSockets = { active: new Set(['orders']) };
+  setWindow(context);
+
+  expect(isPageReady()).toBe(false);
+});
+
+test('isPageReady returns true with a declared subscription the page has not opened or has closed', () => {
+  const context = settledContext({
+    websockets: {
+      orders: { connected: true, error: null },
+      thread: { connected: false, error: null },
+    },
+  });
+  context._internal.WebSockets = { active: new Set(['orders']) };
+  setWindow(context);
+
+  expect(isPageReady()).toBe(true);
+});
+
 test('isPageReady returns true for a settled page with blocks, requests and websockets', () => {
   setWindow(
     settledContext({
@@ -233,4 +254,112 @@ test('isPageReady returns true once no table holds its loading skeleton', () => 
   global.window.__lowdefySkeletonHolds = 0;
 
   expect(isPageReady()).toBe(true);
+});
+
+// An event sleeping in a Wait action (the engine's createWait) says until when.
+const DEADLINE = 10000;
+
+function sleepingRootContext({ onInitAsync }) {
+  const root = { Events: { events: { onInitAsync } } };
+  return {
+    _internal: {
+      onInitDone: true,
+      RootSlots: { map: { root }, slots: { root: { blocks: [root] } } },
+    },
+    requests: {},
+  };
+}
+
+test('isPageReady returns false while an event sleeps in a Wait that ends before the deadline', () => {
+  setWindow(
+    settledContext({
+      blocks: {
+        save: { Events: { events: { onClick: { loading: true, waitingUntil: DEADLINE - 1 } } } },
+      },
+    })
+  );
+
+  expect(isPageReady({ deadline: DEADLINE })).toBe(false);
+});
+
+test('isPageReady returns true while the only running event sleeps in a Wait that ends after the deadline', () => {
+  setWindow(
+    settledContext({
+      blocks: {
+        clock: {
+          Events: { events: { onMountAsync: { loading: true, waitingUntil: DEADLINE + 1 } } },
+        },
+      },
+    })
+  );
+
+  expect(isPageReady({ deadline: DEADLINE })).toBe(true);
+});
+
+test('isPageReady returns false while one event sleeps past the deadline and another is working', () => {
+  setWindow(
+    settledContext({
+      blocks: {
+        clock: {
+          Events: { events: { onMountAsync: { loading: true, waitingUntil: DEADLINE + 1 } } },
+        },
+        save: { Events: { events: { onClick: { loading: true, waitingUntil: null } } } },
+      },
+    })
+  );
+
+  expect(isPageReady({ deadline: DEADLINE })).toBe(false);
+});
+
+test('isPageReady counts an event sleeping in a Wait when the caller gives no deadline', () => {
+  setWindow(
+    settledContext({
+      blocks: {
+        clock: {
+          Events: { events: { onMountAsync: { loading: true, waitingUntil: DEADLINE + 1 } } },
+        },
+      },
+    })
+  );
+
+  expect(isPageReady()).toBe(false);
+});
+
+test('isPageReady does not count a sleeping mark on an event that is not loading', () => {
+  setWindow(
+    settledContext({
+      blocks: {
+        clock: { Events: { events: { onRun: { loading: false, waitingUntil: DEADLINE - 1 } } } },
+      },
+    })
+  );
+
+  expect(isPageReady({ deadline: DEADLINE })).toBe(true);
+});
+
+test('isPageReady returns true while onInitAsync sleeps in a Wait that ends after the deadline', () => {
+  setWindow(sleepingRootContext({ onInitAsync: { loading: true, waitingUntil: DEADLINE + 1 } }));
+
+  expect(isPageReady({ deadline: DEADLINE })).toBe(true);
+});
+
+test('isPageReady returns false while onInitAsync sleeps in a Wait that ends before the deadline', () => {
+  setWindow(sleepingRootContext({ onInitAsync: { loading: true, waitingUntil: DEADLINE - 1 } }));
+
+  expect(isPageReady({ deadline: DEADLINE })).toBe(false);
+});
+
+test('isPageReady returns false while onInitAsync is working', () => {
+  setWindow(sleepingRootContext({ onInitAsync: { loading: true, waitingUntil: null } }));
+
+  expect(isPageReady({ deadline: DEADLINE })).toBe(false);
+});
+
+test('isPageReady returns true while the app onInitAsync sleeps in a Wait that ends after the deadline', () => {
+  setWindow(settledContext());
+  global.window.lowdefy.appContext = sleepingRootContext({
+    onInitAsync: { loading: true, waitingUntil: DEADLINE + 1 },
+  });
+
+  expect(isPageReady({ deadline: DEADLINE })).toBe(true);
 });

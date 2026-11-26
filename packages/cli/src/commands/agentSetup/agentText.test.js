@@ -16,6 +16,7 @@
 
 import agentsMd from './agentsMd.js';
 import skills from './skills/index.js';
+import testLevel from './skills/testLevel.js';
 import { expect, test } from 'vitest';
 
 // Every app in a repository renders the same agent files, so the text names
@@ -43,4 +44,65 @@ test('journeys-autopilot stops and lists the apps instead of guessing', () => {
   expect(autopilot).toContain(
     'When that leaves several, stop and list the app folders instead of guessing.'
   );
+});
+
+const journeySkills = texts.filter(({ name }) => name.startsWith('journeys-'));
+
+test('there are five journey skills', () => {
+  expect(journeySkills.map(({ name }) => name).sort()).toEqual([
+    'journeys-autopilot',
+    'journeys-from-dev',
+    'journeys-from-pr',
+    'journeys-from-production',
+    'journeys-harden',
+  ]);
+});
+
+test.each(journeySkills)('$name gives each kind of check one home', ({ text }) => {
+  expect(text).toContain(testLevel());
+  expect(text).toContain('## Where each check lives');
+  expect(text).toContain('A write journey ends with\n  `expect: { db }` on what was stored');
+  expect(text).toContain('a journey with\n  no `pageId` and `call`, `request` or `webhook` steps');
+  expect(text).toContain(
+    'call the request or endpoint with `lowdefy_run_request` or\n  `lowdefy_run_endpoint`, passing `user` and `data`.'
+  );
+  expect(text).toContain('which cells changed and why.');
+});
+
+test.each(journeySkills)(
+  '$name sends cases, stubs, races and cron to page-less journeys',
+  ({ text }) => {
+    expect(text).toContain('journey with a `cases` table');
+    expect(text).toContain('outside services and forced failures are its `stubs`');
+    expect(text).toContain('races are\n  `hold` and `release`');
+    expect(text).toContain('cron and internal endpoints are `call` with `as: system`');
+    expect(text).toContain('(`tests/endpoints/`), and the file says why.');
+  }
+);
+
+test('journeys-autopilot leaves who can open which page to the access table', () => {
+  const autopilot = skills.find((skill) => skill.name === 'journeys-autopilot').render();
+  expect(autopilot).toContain('is checked by `tests/access.yaml`');
+  expect(autopilot).toContain('name each changed cell of `tests/access.yaml` in the pull request');
+  expect(autopilot).not.toContain('`refusal` item');
+  expect(autopilot).not.toContain('refusals and permissions');
+  expect(autopilot).not.toContain('accessMatrix');
+});
+
+test('journeys-autopilot writes one journey per write, asserting what it stored', () => {
+  const autopilot = skills.find((skill) => skill.name === 'journeys-autopilot').render();
+  expect(autopilot).toContain(
+    'A `write` item is one journey: the\n   role uses the control and the journey asserts what it stored'
+  );
+  expect(autopilot).toContain(
+    '- A write ends with `expect: { db: { collection, match } }` on the document it stored'
+  );
+  expect(autopilot).not.toContain('endpoint_test');
+  expect(autopilot).not.toContain('an endpoint test for what the write stored');
+});
+
+test('the testing rules are the same text for every CLI version, and name no server', () => {
+  const rules = (cliVersion) => agentsMd({ cliVersion, skills }).split('### Testing a change')[1];
+  expect(rules('7.0.0')).toEqual(rules('8.1.0'));
+  expect(rules('7.0.0')).not.toMatch(/localhost|127\.0\.0\.1|https?:\/\//);
 });

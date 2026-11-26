@@ -1,0 +1,25 @@
+# The page that subscribes to a websocket on mount (live_feed, a Channel in lowdefy.yaml): the cli
+# fixture tests (packages/cli/test/journeyFixture/headless.test.mjs) see `lowdefy test --headless
+# --build` pass its journey (tests/journeys/_headless/live_feed.yaml) with no app error and no
+# subscribe timeout waited out, and the browser pass the same journey.
+id: live_feed
+type: Box
+subscriptions:
+  - websocketId: live_feed
+    events:
+      onSubscribe:
+        - id: mark_subscribed
+          type: SetState
+          params:
+            subscribed: true
+      onMessage:
+        - id: mark_message
+          type: SetState
+          params:
+            got_message: true
+blocks:
+  - id: live_feed_title
+    type: Title
+    properties:
+      content: Live feed
+      level: 2

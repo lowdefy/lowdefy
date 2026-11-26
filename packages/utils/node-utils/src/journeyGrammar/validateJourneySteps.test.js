@@ -100,14 +100,14 @@ test('validateJourneySteps rejects steps that are not an array', () => {
 test('validateJourneySteps names the index and key of an unknown step', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a' }, { hover: 'b' }] });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 1: Unknown journey step "hover". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
 test('validateJourneySteps rejects a step with more than one key', () => {
   const result = validateJourneySteps({ steps: [{ click: 'a', fill: { blockId: 'b' } }] });
   expect(result.error).toEqual(
-    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "click, fill". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
 });
 
@@ -148,7 +148,7 @@ test.each([
   ],
   [
     { click: { blockId: 'grid', colum: 'actions' } },
-    /Step "click" has unknown key "colum". Keys are: blockId, text, containing, row, column, nth/,
+    /Step "click" has unknown key "colum". Keys are: blockId, text, containing, row, rowKey, column, control, nth/,
   ],
   [
     { click: { blockId: 'grid', colum: 'a', rows: 1 } },
@@ -202,7 +202,7 @@ test.each([
   ],
   [
     { expect: { text: { blockId: 'grid', row: 0, contains: 'a', equals: 'a' } } },
-    /Step "expect.text" has unknown key "equals". Keys are: blockId, text, containing, row, column, nth, contains/,
+    /Step "expect.text" has unknown key "equals". Keys are: blockId, text, containing, row, rowKey, column, nth, contains/,
   ],
   [{ expect: { url: '/detail' } }, /Step "expect.url" requires \{ contains \}/],
   [{ back: 'home' }, /Step "back" takes no value: write \{ "back": true \}. Received "home"/],
@@ -324,7 +324,7 @@ test('validateJourneySteps rejects from on click, press and wait', () => {
       ''
     )
   ).toBe(
-    'Step 0: Step "click" has unknown key "from". Keys are: blockId, text, containing, row, column, nth, count.'
+    'Step 0: Step "click" has unknown key "from". Keys are: blockId, text, containing, row, rowKey, column, control, nth, count.'
   );
   expect(
     validateJourneySteps({ steps: [{ press: { key: 'Enter', from: 'recorded' } }] }).error.replace(
@@ -419,7 +419,7 @@ test('validateJourneySteps rejects malformed expect.calls', () => {
   );
   expect(error({ count: 1 })).toContain('requires exactly one of "request" or "endpoint"');
   expect(error({ endpoint: 'notify', pageId: 'tickets', count: 1 })).toBe(
-    'Step 0: Step "expect.calls" has unknown key "pageId". Keys are: endpoint, count.'
+    'Step 0: Step "expect.calls" has unknown key "pageId". Keys are: endpoint, count, payload, response.'
   );
   expect(error({ request: 'save', count: -1 })).toBe(
     'Step 0: Step "expect.calls" requires "count" to be a whole number of calls, 0 or more. Received -1.'
@@ -581,6 +581,579 @@ test('validateJourneySteps ends an expect error with examples of that expect kin
 
 test('validateJourneySteps lists the valid step names for an unknown step', () => {
   expect(validateJourneySteps({ steps: [{ browser_forward: true }] }).error).toBe(
-    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 0: Unknown journey step "browser_forward". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
+});
+
+test('validateJourneySteps accepts call and request, with payload and as', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { call: { endpoint: 'tickets-add-comment' } },
+        {
+          call: { endpoint: 'tickets-add-comment', payload: { ticket_id: 'T-1' }, as: 'client_b' },
+        },
+        { call: { endpoint: 'tickets-list', as: 'none' } },
+        { call: { endpoint: 'tickets-list', as: { roles: ['admin'] } } },
+        { request: { pageId: 'ticket', requestId: 'get_ticket' } },
+        { request: { pageId: 'ticket', requestId: 'get_ticket', payload: { _id: { $ne: null } } } },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed call and request steps', () => {
+  function error(step) {
+    return validateJourneySteps({ steps: [step] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ call: 'tickets-list' })).toBe(
+    'Step 0: Step "call" requires { endpoint, payload?, as? }. Received "tickets-list".'
+  );
+  expect(error({ call: { endpoint: '' } })).toBe(
+    'Step 0: Step "call" requires "endpoint" to be a non-empty string. Received "".'
+  );
+  expect(error({ call: { endpoint: 'e', pageId: 'p' } })).toBe(
+    'Step 0: Step "call" has unknown key "pageId". Keys are: endpoint, payload, as.'
+  );
+  expect(error({ call: { endpoint: 'e', payload: 'x' } })).toBe(
+    'Step 0: Step "call" requires "payload" to be an object. Received "x".'
+  );
+  expect(error({ call: { endpoint: 'e', as: ['a', 'b'] } })).toBe(
+    'Step 0: Step "call" requires "as" to be a data set user\'s name, "none" to call signed out, or an inline user object. Received ["a","b"].'
+  );
+  expect(error({ call: { endpoint: 'e', as: '' } })).toContain('Step "call" requires "as" to be');
+  expect(error({ call: { endpoint: 'e', as: 3 } })).toContain('Received 3.');
+  expect(error({ request: { requestId: 'get_ticket' } })).toBe(
+    'Step 0: Step "request" requires "pageId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ request: { pageId: 'ticket' } })).toBe(
+    'Step 0: Step "request" requires "requestId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ request: [] })).toBe(
+    'Step 0: Step "request" requires { pageId, requestId, payload?, as? }. Received [].'
+  );
+  expect(validateJourneySteps({ steps: [{ request: {} }] }).error).toMatch(
+    / Example: \{"request":\{"pageId":"orders","requestId":"get_order"/
+  );
+});
+
+test('validateJourneySteps accepts expect.status and expect.error after a call or request, with expects between', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { call: { endpoint: 'tickets-add-comment' } },
+        { expect: { status: 404 } },
+        { expect: { error: 'Ticket not found.' } },
+        { expect: { db: { collection: 'log-events', match: {}, count: 0 } } },
+        { expect: { status: 404 } },
+        { request: { pageId: 'ticket', requestId: 'get_ticket' } },
+        { expect: { error: 'Not allowed.' } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects an expect.status with no call or request before it', () => {
+  expect(validateJourneySteps({ steps: [{ expect: { status: 403 } }] }).error).toBe(
+    'Step 0: Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after the start of the journey.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ call: { endpoint: 'e' } }, { click: 'save' }, { expect: { status: 403 } }],
+    }).error
+  ).toBe(
+    'Step 2: Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after a "click" step.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ call: { endpoint: 'e' } }, { wait: { ms: 10 } }, { expect: { error: 'x' } }],
+    }).error
+  ).toContain('Step 2: Step "expect.error" must directly follow an interaction step');
+  expect(
+    validateJourneySteps({ steps: [{ call: { endpoint: 'e' } }, { expect: { effect: true } }] })
+      .error
+  ).toContain('Step 1: Step "expect.effect" must directly follow an interaction step');
+});
+
+test.each([
+  [{ status: '403' }, 'Received "403".'],
+  [{ status: 99 }, 'Received 99.'],
+  [{ status: 600 }, 'Received 600.'],
+  [{ status: 403.5 }, 'Received 403.5.'],
+])('validateJourneySteps rejects expect %j', (expectation, message) => {
+  const result = validateJourneySteps({
+    steps: [{ call: { endpoint: 'e' } }, { expect: expectation }],
+  });
+  expect(result.error).toContain(
+    'Step 1: Step "expect.status" requires an HTTP status code, a whole number from 100 to 599, e.g. 403.'
+  );
+  expect(result.error).toContain(message);
+});
+
+test('validateJourneySteps accepts hold and release, with expect steps reading the release', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim_run' } },
+        { call: { endpoint: 'run-approve', payload: { id: 'BR-1' } } },
+        { call: { endpoint: 'run-approve', payload: { id: 'BR-1' }, as: 'other' } },
+        { expect: { status: 200 } },
+        { release: 'claim_run' },
+        { expect: { status: 200 } },
+        { expect: { error: 'already approved' } },
+        { hold: { requestId: 'claim_run', endpoint: 'run-approve', pageId: 'runs' } },
+        { release: 'claim_run' },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed hold and release steps', () => {
+  function error(step) {
+    return validateJourneySteps({ steps: [step] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ hold: 'claim_run' })).toBe(
+    'Step 0: Step "hold" requires { requestId, endpoint?, pageId? }. Received "claim_run".'
+  );
+  expect(error({ hold: {} })).toBe(
+    'Step 0: Step "hold" requires "requestId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ hold: { requestId: 'r', endpoint: '' } })).toBe(
+    'Step 0: Step "hold" requires "endpoint" to be a non-empty string. Received "".'
+  );
+  expect(error({ hold: { requestId: 'r', pageId: 3 } })).toBe(
+    'Step 0: Step "hold" requires "pageId" to be a non-empty string. Received 3.'
+  );
+  expect(error({ hold: { requestId: 'r', times: 2 } })).toBe(
+    'Step 0: Step "hold" has unknown key "times". Keys are: requestId, endpoint, pageId.'
+  );
+  expect(error({ release: ['r'] })).toBe(
+    'Step 0: Step "release" requires the requestId of a "hold" step before it, or { requestId, endpoint?, pageId? }. Received ["r"].'
+  );
+  expect(error({ release: { endpoint: 'e' } })).toBe(
+    'Step 0: Step "release" requires "requestId" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ release: { requestId: 'r', pageId: '' } })).toBe(
+    'Step 0: Step "release" requires "pageId" to be a non-empty string. Received "".'
+  );
+  expect(error({ release: { requestId: 'r', times: 2 } })).toBe(
+    'Step 0: Step "release" has unknown key "times". Keys are: requestId, endpoint, pageId.'
+  );
+  expect(validateJourneySteps({ steps: [{ hold: [] }] }).error).toMatch(
+    / Example: \{"hold":\{"requestId":"claim_order"\}\}/
+  );
+});
+
+test('validateJourneySteps rejects a release that names no gate a hold before it set', () => {
+  expect(validateJourneySteps({ steps: [{ release: 'claim_run' }] }).error).toBe(
+    'Step 0: Step "release" names request "claim_run", which no "hold" step before it holds. A release lets go of the call a hold parked.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ hold: { requestId: 'other_request' } }, { release: 'claim_run' }],
+    }).error
+  ).toBe(
+    'Step 1: Step "release" names request "claim_run", which no "hold" step before it holds. A release lets go of the call a hold parked.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [{ release: 'claim_run' }, { hold: { requestId: 'claim_run' } }],
+    }).error
+  ).toContain('Step 0: Step "release" names request "claim_run", which no "hold"');
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim_run' } },
+        { release: 'claim_run' },
+        { release: 'claim_run' },
+      ],
+    }).error
+  ).toBe(
+    'Step 2: Step "release" names request "claim_run", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.'
+  );
+});
+
+test('validateJourneySteps accepts a release naming one of two holds on one request id', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim', endpoint: 'approve' } },
+        { hold: { requestId: 'claim', endpoint: 'reject' } },
+        { call: { endpoint: 'approve' } },
+        { call: { endpoint: 'reject' } },
+        { release: { requestId: 'claim', endpoint: 'reject' } },
+        { expect: { status: 200 } },
+        { release: 'claim' },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects a release whose endpoint or pageId no hold before it has', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim', endpoint: 'approve' } },
+        { call: { endpoint: 'approve' } },
+        { release: { requestId: 'claim', endpoint: 'reject' } },
+      ],
+    }).error
+  ).toBe(
+    'Step 2: Step "release" names request "claim" with an endpoint or pageId that no "hold" of that request before it has. A release lets go of the call a hold parked.'
+  );
+  expect(
+    validateJourneySteps({
+      steps: [
+        { hold: { requestId: 'claim', endpoint: 'approve' } },
+        { release: { requestId: 'claim' } },
+        { release: { requestId: 'claim', endpoint: 'approve' } },
+      ],
+    }).error
+  ).toBe(
+    'Step 2: Step "release" names request "claim", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.'
+  );
+});
+
+test('validateJourneySteps rejects an expect.status after a hold, which answers nothing', () => {
+  expect(
+    validateJourneySteps({ steps: [{ hold: { requestId: 'r' } }, { expect: { status: 200 } }] })
+      .error
+  ).toBe(
+    'Step 1: Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after a "hold" step.'
+  );
+});
+
+test('validateJourneySteps accepts a call as system and refuses a request as system', () => {
+  expect(
+    validateJourneySteps({
+      steps: [{ call: { endpoint: 'nightly_close', as: 'system' } }, { expect: { status: 200 } }],
+    })
+  ).toEqual({});
+  expect(
+    validateJourneySteps({
+      steps: [{ request: { pageId: 'orders', requestId: 'get_order', as: 'system' } }],
+    }).error.replace(EXAMPLES, '')
+  ).toBe(
+    'Step 0: Step "request" cannot run "as: system": a page request is always sent by a person on the page. Call the endpoint the request reaches with a "call" step "as: system" instead.'
+  );
+});
+
+test('validateJourneySteps accepts a call as the system bound to an organization and stand-in caller', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        {
+          call: {
+            endpoint: 'nightly_close',
+            as: { system: { organization: 'org_a', caller: { id: 'job', name: 'Nightly job' } } },
+          },
+        },
+        { call: { endpoint: 'nightly_close', as: { system: { organization: 'org_a' } } } },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test.each([
+  [
+    { system: true },
+    'Step 0: Step "call" requires "as.system" to be { system: { organization, caller? } }: the organization the call is bound to, and the stand-in caller { id, name }, as a CallApi step\'s "organization" and "caller" bind its target. Write "as: system" for a call bound to no organization. Received true.',
+  ],
+  [
+    { system: { organization: 'org_a' }, roles: ['admin'] },
+    'Step 0: Step "call" requires "as" with "system" to be { system: { organization, caller? } }: the organization the call is bound to, and the stand-in caller { id, name }, as a CallApi step\'s "organization" and "caller" bind its target, with no other keys. Received {"system":{"organization":"org_a"},"roles":["admin"]}.',
+  ],
+  [
+    { system: { organization: 'org_a', user: 'x' } },
+    'Step 0: Step "call" has unknown key "as.system.user". Keys are: organization, caller.',
+  ],
+  [
+    { system: { caller: { id: 'job', name: 'Nightly job' } } },
+    'Step 0: Step "call" requires "as.system.organization" to be a non-empty organization id string. Received undefined.',
+  ],
+  [
+    { system: { organization: 'org_a', caller: { id: 'job' } } },
+    'Step 0: Step "call" requires "as.system.caller" to be { id, name }, each a non-empty string, as a CallApi "caller" names the stand-in caller. Received {"id":"job"}.',
+  ],
+])('validateJourneySteps refuses a call as %j', (as, message) => {
+  expect(
+    validateJourneySteps({ steps: [{ call: { endpoint: 'nightly_close', as } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
+  ).toBe(message);
+});
+
+test('validateJourneySteps refuses a request as the system bound to an organization', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        {
+          request: {
+            pageId: 'orders',
+            requestId: 'get_order',
+            as: { system: { organization: 'org_a' } },
+          },
+        },
+      ],
+    }).error.replace(EXAMPLES, '')
+  ).toBe(
+    'Step 0: Step "request" cannot run "as: system": a page request is always sent by a person on the page. Call the endpoint the request reaches with a "call" step "as: system" instead.'
+  );
+});
+
+test('validateJourneySteps accepts a webhook, with expect steps reading its answer', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        {
+          webhook: {
+            endpoint: 'payment_events',
+            body: { id: 'evt_1' },
+            query: { attempt: '1' },
+            headers: { 'x-signature': 'abc' },
+          },
+        },
+        { expect: { status: 401 } },
+        { expect: { error: 'Webhook verification failed.' } },
+        { webhook: { endpoint: 'payment_events', body: 'id=evt_2' } },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed webhook steps', () => {
+  function error(step) {
+    return validateJourneySteps({ steps: [step] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ webhook: 'payment_events' })).toBe(
+    'Step 0: Step "webhook" requires { endpoint, body, query?, headers? }. Received "payment_events".'
+  );
+  expect(error({ webhook: { body: {} } })).toBe(
+    'Step 0: Step "webhook" requires "endpoint" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ webhook: { endpoint: 'payment_events' } })).toBe(
+    'Step 0: Step "webhook" requires "body": a string is sent as written, anything else as JSON.'
+  );
+  expect(error({ webhook: { endpoint: 'e', body: {}, headers: { 'x-attempt': 2 } } })).toBe(
+    'Step 0: Step "webhook" requires "headers" to be an object of strings. Received {"x-attempt":2}.'
+  );
+  expect(error({ webhook: { endpoint: 'e', body: {}, query: 'a=1' } })).toBe(
+    'Step 0: Step "webhook" requires "query" to be an object of strings. Received "a=1".'
+  );
+  expect(error({ webhook: { endpoint: 'e', body: {}, as: 'system' } })).toBe(
+    'Step 0: Step "webhook" has unknown key "as". Keys are: endpoint, body, query, headers.'
+  );
+  expect(validateJourneySteps({ steps: [{ webhook: 1 }] }).error).toMatch(
+    / Example: \{"webhook":\{"endpoint":"payments-events"/
+  );
+});
+
+test('validateJourneySteps accepts expect.calls with payload or response in place of count', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { calls: { request: 'save', payload: { status: 'Open' } } } },
+        { expect: { calls: { request: 'save', pageId: 'orders', response: { ok: true } } } },
+        { expect: { calls: { endpoint: 'sync', count: 1, payload: {}, response: null } } },
+      ],
+    })
+  ).toEqual({});
+  expect(
+    validateJourneySteps({ steps: [{ expect: { calls: { endpoint: 'sync' } } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
+  ).toBe(
+    'Step 0: Step "expect.calls" requires "count" to be a whole number of calls, 0 or more, or a "payload" or "response" to match. Received {"endpoint":"sync"}.'
+  );
+});
+
+test('validateJourneySteps accepts expect.db with count or equals', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { db: { collection: 'orders', match: {}, count: 0 } } },
+        {
+          expect: {
+            db: {
+              collection: 'orders',
+              connectionId: 'mongodb',
+              match: { status: 'Open' },
+              equals: [{ _id: 'ORD-1' }],
+            },
+          },
+        },
+        { expect: { db: { collection: 'orders', match: { _id: 'ORD-9' }, equals: [] } } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed expect.db', () => {
+  function error(db) {
+    return validateJourneySteps({ steps: [{ expect: { db } }] }).error.replace(EXAMPLES, '');
+  }
+  expect(error({ collection: 'orders', match: {}, count: 1, equals: [] })).toBe(
+    'Step 0: Step "expect.db" requires exactly one of "count" or "equals". Received {"collection":"orders","match":{},"count":1,"equals":[]}.'
+  );
+  expect(error({ collection: 'orders', match: {} })).toContain(
+    'requires exactly one of "count" or "equals"'
+  );
+  expect(error({ match: {}, count: 1 })).toBe(
+    'Step 0: Step "expect.db" requires "collection" to be a non-empty string. Received undefined.'
+  );
+  expect(error({ collection: 'orders', count: 1 })).toBe(
+    'Step 0: Step "expect.db" requires "match" to be a query object, {} for every document. Received undefined.'
+  );
+  expect(error({ collection: 'orders', match: {}, connectionId: '', count: 1 })).toContain(
+    'requires "connectionId" to be a non-empty string'
+  );
+  expect(error({ collection: 'orders', match: {}, count: -1 })).toBe(
+    'Step 0: Step "expect.db" requires "count" to be a whole number of documents, 0 or more. Received -1.'
+  );
+  expect(error({ collection: 'orders', match: {}, equals: { _id: 1 } })).toBe(
+    'Step 0: Step "expect.db" requires "equals" to be a list of documents. Received {"_id":1}.'
+  );
+  expect(error({ collection: 'orders', match: {}, count: 1, where: {} })).toBe(
+    'Step 0: Step "expect.db" has unknown key "where". Keys are: collection, connectionId, match, count, equals.'
+  );
+  expect(error('orders')).toContain(
+    'Step "expect.db" requires { collection, connectionId?, match, count }'
+  );
+});
+
+test('validateJourneySteps accepts expect.sunk narrowed by connection, request type and id', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { sunk: {} } },
+        { expect: { sunk: { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', count: 0 } } },
+        { expect: { sunk: { requestId: 'fetch_rate', count: 2, match: { params: {} } } } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test('validateJourneySteps rejects malformed expect.sunk', () => {
+  function error(sunk) {
+    return validateJourneySteps({ steps: [{ expect: { sunk } }] }).error.replace(EXAMPLES, '');
+  }
+  expect(error('AxiosHttp')).toBe(
+    'Step 0: Step "expect.sunk" requires { connectionType?, requestType?, requestId?, count?, match? }. Received "AxiosHttp".'
+  );
+  expect(error({ endpoint: 'price_run' })).toBe(
+    'Step 0: Step "expect.sunk" has unknown key "endpoint". Keys are: connectionType, requestType, requestId, count, match.'
+  );
+  expect(error({ requestType: '' })).toBe(
+    'Step 0: Step "expect.sunk" requires "requestType" to be a non-empty string. Received "".'
+  );
+  expect(error({ count: 1.5 })).toBe(
+    'Step 0: Step "expect.sunk" requires "count" to be a whole number of requests, 0 or more. Received 1.5.'
+  );
+  expect(error({ match: ['EUR'] })).toBe(
+    'Step 0: Step "expect.sunk" requires "match" to be an object of the request values to match. Received ["EUR"].'
+  );
+});
+
+test('validateJourneySteps accepts rowKey and control targets on click and rowKey on expectations', () => {
+  const steps = [
+    { click: { blockId: 'invoices', rowKey: 'inv-0042' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', control: 'void' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'actions', control: 'void' } },
+    { click: { blockId: 'delete_modal', control: 'ok' } },
+    { expect: { visible: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } } },
+    { expect: { hidden: { blockId: 'invoices', rowKey: 'inv-0042' } } },
+    { expect: { text: { blockId: 'invoices', rowKey: 'inv-0042', contains: 'Paid' } } },
+  ];
+  expect(validateJourneySteps({ steps })).toEqual({});
+});
+
+test.each([
+  [
+    { click: { rowKey: 'inv-0042' } },
+    'Step "click" requires a "blockId" (the block that draws the row or control) when "rowKey" or "control" is given.',
+  ],
+  [
+    { click: { control: 'ok' } },
+    'Step "click" requires a "blockId" (the block that draws the row or control) when "rowKey" or "control" is given.',
+  ],
+  [
+    { click: { blockId: 'invoices', rowKey: '' } },
+    'Step "click" requires "rowKey" to be a non-empty string, the row\'s key.',
+  ],
+  [
+    { click: { blockId: 'delete_modal', control: 3 } },
+    'Step "click" requires "control" to be a non-empty string, the control\'s key.',
+  ],
+  [
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', row: 0 } },
+    'Step "click" takes "rowKey" (the row\'s key) or "row" (the displayed row), not both.',
+  ],
+  [
+    { click: { blockId: 'delete_modal', control: 'ok', text: 'OK' } },
+    'Step "click" takes "control" (the control\'s key) or "text", not both.',
+  ],
+  [
+    { click: { blockId: 'delete_modal', control: 'ok', containing: 'OK' } },
+    'Step "click" takes "control" (the control\'s key) or "containing", not both.',
+  ],
+  [
+    { click: { blockId: 'delete_modal', control: 'ok', nth: 1 } },
+    'Step "click" takes "control" (the control\'s key) or "nth", not both.',
+  ],
+])('validateJourneySteps refuses the target %j', (step, message) => {
+  expect(validateJourneySteps({ steps: [step] }).error).toContain(`Step 0: ${message}`);
+});
+
+const ROW_KEY_REFUSAL =
+  'a row named by key is clicked or expected; reach an input in a grid row with "row" (the displayed row) and "column"';
+const CONTROL_REFUSAL =
+  'a control named by key is clicked, or expected visible or hidden; reach it with "text" (its exact text) instead, after a click or an open that shows it';
+
+test.each([
+  [{ fill: { blockId: 'invoices', rowKey: 'inv-0042', value: 'Ada' } }, 'fill', 'rowKey'],
+  [{ fill: { blockId: 'actions', control: 'name', value: 'Ada' } }, 'fill', 'control'],
+  [
+    { fill: { blockId: 'invoices', rowKey: 'inv-0042', fromEmail: { to: 'a@b.c', match: 'x' } } },
+    'fill',
+    'rowKey',
+  ],
+  [{ select: { blockId: 'invoices', rowKey: 'inv-0042', value: 'Open' } }, 'select', 'rowKey'],
+  [{ select: { blockId: 'actions', control: 'status', value: 'Open' } }, 'select', 'control'],
+  [{ open: { blockId: 'invoices', rowKey: 'inv-0042' } }, 'open', 'rowKey'],
+  [{ open: { blockId: 'actions_menu', control: 'archive' } }, 'open', 'control'],
+  [
+    { expect: { text: { blockId: 'actions_menu', control: 'x', contains: 'Archive' } } },
+    'expect.text',
+    'control',
+  ],
+])('validateJourneySteps refuses %j, naming the browser form', (step, key, refused) => {
+  const reason = refused === 'rowKey' ? ROW_KEY_REFUSAL : CONTROL_REFUSAL;
+  expect(validateJourneySteps({ steps: [step] }).error).toContain(
+    `Step 0: Step "${key}" takes no "${refused}": ${reason}.`
+  );
+});
+
+test('validateJourneySteps takes control, with or without rowKey, on expect.visible and expect.hidden', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        { expect: { visible: { blockId: 'delete_modal', control: 'ok' } } },
+        { expect: { visible: { blockId: 'issue_cards', control: 'onOpen', rowKey: 'issue-17' } } },
+        { expect: { hidden: { blockId: 'issue_cards', control: 'onOpen', rowKey: 'issue-17' } } },
+      ],
+    }).error
+  ).toBeUndefined();
+});
+
+test('validateJourneySteps leaves refused target keys out of the keys it lists', () => {
+  expect(
+    validateJourneySteps({ steps: [{ select: { blockId: 'a', value: 'b', colum: 'c' } }] }).error
+  ).toContain('Keys are: blockId, text, containing, row, column, nth, value, from.');
 });

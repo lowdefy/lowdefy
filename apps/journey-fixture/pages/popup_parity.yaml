@@ -1,0 +1,130 @@
+id: popup_parity
+type: Box
+# Popups whose headless stand-ins must do what the component does in the browser, for the parity
+# journeys in packages/servers/server-dev/test/journeyFixture/popupParity.test.mjs (LDF-1094).
+# reopen_modal unmounts its content when it closes (destroyOnHidden), and its content counts its
+# mounts in state `mounts`. profile_menu opens on a click, and its content (a button) is its
+# trigger: the button's onClick handles a click on it, so the engine skips profile_menu's
+# onOpenChange for that click. tools_menu opens on hover and holds a button and a colour picker.
+# Each dropdown writes its open state to state on onOpenChange. profile_menu comes last, so its
+# open menu covers no block a journey clicks.
+blocks:
+  - id: popup_parity_title
+    type: Title
+    properties:
+      content: Popup parity
+      level: 2
+  - id: open_reopen_modal_button
+    type: Button
+    properties:
+      title: Open reopen modal
+    events:
+      onClick:
+        - id: open_reopen_modal
+          type: CallMethod
+          params:
+            blockId: reopen_modal
+            method: setOpen
+            args:
+              - open: true
+  - id: reopen_modal
+    type: Modal
+    properties:
+      title: Mounted on each open
+      destroyOnHidden: true
+    blocks:
+      - id: reopen_modal_body
+        type: Paragraph
+        properties:
+          content: This content mounts again each time the modal opens.
+        events:
+          onMount:
+            - id: count_mount
+              type: SetState
+              params:
+                mounts:
+                  _sum:
+                    - _if_none:
+                        - _state: mounts
+                        - 0
+                    - 1
+  - id: elsewhere_button
+    type: Button
+    properties:
+      title: Elsewhere
+    events:
+      onClick:
+        - id: set_elsewhere
+          type: SetState
+          params:
+            last: elsewhere
+  - id: tools_menu
+    type: DropdownMenu
+    properties:
+      links:
+        - id: reset_tools
+          type: MenuLink
+          properties:
+            title: Reset
+    events:
+      onOpenChange:
+        - id: set_tools_open
+          type: SetState
+          params:
+            tools_open:
+              _event: open
+    blocks:
+      - id: tools_button
+        type: Button
+        properties:
+          title: Tools
+        events:
+          onClick:
+            - id: set_tools_clicked
+              type: SetState
+              params:
+                last: tools
+      - id: tools_color
+        type: ColorSelector
+        properties:
+          title: Tool colour
+  - id: profile_menu
+    type: DropdownMenu
+    properties:
+      trigger: click
+      links:
+        - id: edit_profile
+          type: MenuLink
+          properties:
+            title: Edit profile
+    events:
+      onOpenChange:
+        - id: set_profile_open
+          type: SetState
+          params:
+            profile_open:
+              _event: open
+      onClick:
+        - id: set_profile_item
+          type: SetState
+          params:
+            last:
+              _string.concat:
+                - 'profile-'
+                - _event: key
+    blocks:
+      - id: profile_menu_button
+        type: Button
+        properties:
+          title: Profile
+        events:
+          onClick:
+            - id: count_profile_click
+              type: SetState
+              params:
+                profile_clicks:
+                  _sum:
+                    - _if_none:
+                        - _state: profile_clicks
+                        - 0
+                    - 1

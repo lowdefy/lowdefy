@@ -1,0 +1,98 @@
+id: clickable_targets
+type: Box
+# A ClickableHtml list a journey names by key
+# ({ blockId, control: <data-event>, rowKey: <data-id> }), for the parity journeys in
+# tests/journeys/_parity/clickable_html.yaml
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1134). Each runs in
+# the browser and headless and must end with the same state. Every event appends { event, payload }
+# to state `log`, so a missing or extra event, or a different event object, shows in the end state.
+# onDismiss asks first (dataEvents confirm) and drops the card; onArchive sits in each card's
+# popover; onRefresh is one element with no data-id.
+events:
+  onInit:
+    - id: init_issues
+      type: SetState
+      params:
+        dismissed: []
+        issues:
+          - id: issue-1
+            title: micromatch 4.0.5
+            severity: moderate
+          - id: issue-2
+            title: lodash 4.17.20
+            severity: high
+blocks:
+  - id: clickable_targets_title
+    type: Title
+    properties:
+      content: Clickable targets
+      level: 2
+  - id: issue_cards
+    type: ClickableHtml
+    properties:
+      dataEvents:
+        - onOpen
+        - name: onDismiss
+          confirm: Dismiss this issue?
+        - onArchive
+        - onRefresh
+      html:
+        _nunjucks:
+          on:
+            issues:
+              _state: issues
+            dismissed:
+              _state: dismissed
+          template: |
+            <p><span data-event="onRefresh" style="cursor: pointer">Refresh</span></p>
+            {% for issue in issues %}{% if not (issue.id in dismissed) %}
+            <div style="display: flex; gap: 12px; padding: 4px 0">
+              <span data-event="onOpen" data-id="{{ issue.id }}" data-severity="{{ issue.severity }}" style="cursor: pointer">{{ issue.title }}</span>
+              <button data-event="onDismiss" data-id="{{ issue.id }}">Dismiss</button>
+              <span data-popover="more-{{ issue.id }}" style="cursor: pointer">More</span>
+              <div data-popover-content="more-{{ issue.id }}" hidden>
+                <p data-event="onArchive" data-id="{{ issue.id }}" style="cursor: pointer; margin: 0">Archive</p>
+              </div>
+            </div>
+            {% endif %}{% endfor %}
+    events:
+      onOpen:
+        - id: log_open
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: issue_cards.onOpen
+                    payload: { _event: true }
+      onDismiss:
+        - id: log_dismiss
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: issue_cards.onDismiss
+                    payload: { _event: true }
+            dismissed:
+              _array.concat:
+                - _state: dismissed
+                - - _event: id
+      onArchive:
+        - id: log_archive
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: issue_cards.onArchive
+                    payload: { _event: true }
+      onRefresh:
+        - id: log_refresh
+          type: SetState
+          params:
+            log:
+              _array.concat:
+                - _if_none: [{ _state: log }, []]
+                - - event: issue_cards.onRefresh
+                    payload: { _event: true }

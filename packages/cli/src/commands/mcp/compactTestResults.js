@@ -46,13 +46,17 @@ function withoutZeros(counts) {
 
 // Fits a run's results into an answer an agent can always read: each failing
 // or flaky journey in full while there is room, then by name and message, then
-// the PASS line of each passing journey and the line of each skipped one.
-// `omitted` counts what did not fit: failedDetail (failures named without
-// their report), failed, passed and skipped (left out). The summary and the
+// the line of each journey a headless run left to a browser, the PASS line of
+// each passing journey and the line of each skipped one. `browserOnly` is in
+// the answer only when the run had any, and `contended` (how many journeys
+// passed only when rerun alone after failing beside others, runJourneyPool)
+// only when it is above 0. `omitted` counts what did not fit:
+// failedDetail (failures named without their report), failed, browserOnly,
+// passed and skipped (left out). The summary and the
 // result file cover all of them.
-function compactTestResults({ results, skipped }) {
+function compactTestResults({ results, browserOnly = [], skipped }) {
   let used = 0;
-  const omitted = { failedDetail: 0, failed: 0, passed: 0, skipped: 0 };
+  const omitted = { failedDetail: 0, failed: 0, browserOnly: 0, passed: 0, skipped: 0 };
 
   const failed = [];
   results
@@ -94,6 +98,7 @@ function compactTestResults({ results, skipped }) {
     return lines;
   }
 
+  const browserOnlyLines = takeLines({ entries: browserOnly, count: 'browserOnly' });
   const passed = takeLines({
     entries: results.filter((result) => result.passed === true),
     count: 'passed',
@@ -101,9 +106,12 @@ function compactTestResults({ results, skipped }) {
   const skippedLines = takeLines({ entries: skipped, count: 'skipped' });
 
   const left = withoutZeros(omitted);
+  const contended = results.filter((result) => result.contended === true).length;
   return {
     failed,
+    ...(browserOnly.length === 0 ? {} : { browserOnly: browserOnlyLines }),
     passed,
+    ...(contended === 0 ? {} : { contended }),
     skipped: skippedLines,
     ...(Object.keys(left).length === 0 ? {} : { omitted: left }),
   };

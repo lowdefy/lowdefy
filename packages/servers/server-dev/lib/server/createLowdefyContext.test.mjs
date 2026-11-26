@@ -18,7 +18,9 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { vi, afterAll, afterEach, describe, expect, test } from 'vitest';
+import { Hono } from 'hono';
+import { vi, afterAll, afterEach, beforeEach, describe, expect, test } from 'vitest';
+import { isForcedFailure } from '@lowdefy/errors';
 import { projectCaughtError } from '@lowdefy/helpers';
 import { operatorsServer } from '@lowdefy/operators-js';
 
@@ -27,6 +29,9 @@ process.env.LOWDEFY_SECRET_TEST = secret;
 
 vi.doMock('@lowdefy/api', () => ({
   createApiContext: vi.fn(),
+  // getAuth is mocked to return no engine, so every context here is built by this one unless a
+  // test says otherwise.
+  createInjectedApiContext: vi.fn(),
   createRequestSignal: vi.fn(({ clientSignal, timeoutSignal }) =>
     timeoutSignal ? AbortSignal.any([clientSignal, timeoutSignal]) : clientSignal
   ),
@@ -95,9 +100,17 @@ fixtures.forEach(({ absolutePath, content }) => {
 // A checkout that has built an app already holds real artifacts here, which import plugins this
 // package does not depend on, so the stubs are also mocked over whatever is on disk.
 // The connection plugin map carries each type's meta.dataSet, which the data session gate reads.
+// The request resolvers stand for the real ones, so a test can see whether a request reached them.
+const mongoFind = vi.fn(async () => ['real row']);
+const knexRaw = vi.fn(async () => ['real']);
+const httpCall = vi.fn(async () => ({ real: true }));
 const connectionPlugins = {
-  MongoDBCollection: { meta: { tenant: true, dataSet: 'redirect' } },
-  Knex: {},
+  MongoDBCollection: {
+    meta: { tenant: true, dataSet: 'redirect' },
+    requests: { MongoDBFind: mongoFind },
+  },
+  Knex: { requests: { KnexRaw: knexRaw } },
+  AxiosHttp: { meta: { dataSet: 'external' }, requests: { AxiosHttp: httpCall } },
 };
 fixtures.forEach(({ absolutePath }) => {
   vi.doMock(absolutePath, () => ({
@@ -114,7 +127,8 @@ afterAll(() => {
 const { default: createLowdefyContext } = await import('./createLowdefyContext.js');
 const { default: createSystemContext } = await import('./auth/createSystemContext.js');
 const { journeyActorToken } = await import('./auth/journeyActor.js');
-const { createApiContext } = await import('@lowdefy/api');
+const { createApiContext, createInjectedApiContext } = await import('@lowdefy/api');
+const { default: authJson } = await import('../build/auth.js');
 const { openMutantRun } = await import('./mutants/mutantRuns.js');
 
 function createHonoContext({
@@ -162,6 +176,21 @@ test('createLowdefyContext scrubSecrets redacts a planted secret', async () => {
   expect(context.scrubSecrets(`token ${secret} end`)).toEqual('token [REDACTED] end');
 });
 
+// The headless journey host passes the stand-ins a production build's test run reads: the app's
+// real secrets are neither read nor scrubbed on such a call.
+test('createLowdefyContext runs on the testSecrets it is given in place of the real secrets', async () => {
+  const testSecrets = {
+    secrets: { TEST: 'test-secret-TEST' },
+    scrubSecrets: (value) => value.replaceAll('test-secret-TEST', '[TEST]'),
+  };
+  const context = await createLowdefyContext({ c: createHonoContext(), testSecrets });
+  expect(context.secrets).toEqual({ TEST: 'test-secret-TEST' });
+  expect(context.scrubSecrets(`${secret} test-secret-TEST`)).toEqual(`${secret} [TEST]`);
+  expect(createInjectedApiContext.mock.calls.at(-1)[0].secrets).toEqual({
+    TEST: 'test-secret-TEST',
+  });
+});
+
 // controlTry builds the value `_error` reads from context.scrubSecrets, so a dev context has to
 // scrub a caught message the same way the production server does.
 test('_error on a dev context reads a caught message with a planted secret scrubbed', async () => {
@@ -200,7 +229,7 @@ test('createLowdefyContext forwards no Cookie header when the request carries no
 
 test('createLowdefyContext serves the mutated artifact to a request whose cookie names an open mutant run', async () => {
   const artifact = { id: 'page:form', blocks: [] };
-  createApiContext.mockImplementationOnce((context) => {
+  createInjectedApiContext.mockImplementationOnce((context) => {
     context.readConfigFile = async () => artifact;
   });
   const opened = openMutantRun({
@@ -227,18 +256,39 @@ test('createLowdefyContext serves the mutated artifact to a request whose cookie
 
 test('createLowdefyContext leaves readConfigFile alone without a mutant cookie', async () => {
   const readConfigFile = async () => ({});
-  createApiContext.mockImplementationOnce((context) => {
+  createInjectedApiContext.mockImplementationOnce((context) => {
     context.readConfigFile = readConfigFile;
   });
   const context = await createLowdefyContext({ c: createHonoContext() });
   expect(context.readConfigFile).toBe(readConfigFile);
 });
 
-const { default: dataSessionRegistry } = await import('../docs/dataSets/dataSessionRegistry.js');
+const { dataSessionRegistry } = await import('@lowdefy/test-utils/dataSets');
 const { default: getAuth } = await import('./auth/getAuth.js');
 const { default: getHeadlessUser } = await import('./auth/getHeadlessUser.js');
 const { default: getMockUser } = await import('./auth/getMockUser.js');
 const { resolveAuthentication, resolveTenantPreflight } = await import('@lowdefy/api');
+
+function registerSession(state = 'open') {
+  const session = {
+    id: 'session1',
+    name: 'staging-sample',
+    state,
+    databaseUri: 'mongodb://memory/',
+    prefix: 'ld_aaaaaaaaaaaa',
+    databaseName: 'ld_aaaaaaaaaaaa_0',
+    databases: new Map([[JSON.stringify(['secret:MONGODB_URI', null]), 'ld_aaaaaaaaaaaa_0']]),
+    databaseCount: 1,
+    work: new Set(),
+    running: new Set(),
+    sunk: [],
+    stubs: [],
+    failGates: [],
+    pauseGates: [],
+  };
+  dataSessionRegistry.set(session.id, session);
+  return session;
+}
 
 describe('data sessions', () => {
   const realArtifact = {
@@ -246,25 +296,9 @@ describe('data sessions', () => {
     properties: { databaseUri: { _secret: 'MONGODB_URI' }, collection: 'tickets' },
   };
 
-  function registerSession(state = 'open') {
-    const session = {
-      id: 'session1',
-      name: 'staging-sample',
-      state,
-      databaseUri: 'mongodb://memory/',
-      prefix: 'ld_aaaaaaaaaaaa',
-      databaseName: 'ld_aaaaaaaaaaaa_0',
-      databases: new Map([[JSON.stringify(['secret:MONGODB_URI', null]), 'ld_aaaaaaaaaaaa_0']]),
-      databaseCount: 1,
-      work: new Set(),
-    };
-    dataSessionRegistry.set(session.id, session);
-    return session;
-  }
-
   function mockReadConfigFile() {
     const readConfigFile = vi.fn(async () => realArtifact);
-    createApiContext.mockImplementationOnce((context) => {
+    createInjectedApiContext.mockImplementationOnce((context) => {
       context.readConfigFile = readConfigFile;
     });
     return readConfigFile;
@@ -302,7 +336,7 @@ describe('data sessions', () => {
 
   test('a data-session request refuses a connection whose type declares no dataSet, naming it', async () => {
     registerSession();
-    createApiContext.mockImplementationOnce((context) => {
+    createInjectedApiContext.mockImplementationOnce((context) => {
       context.readConfigFile = async () => ({
         connectionId: 'warehouse',
         type: 'Knex',
@@ -317,6 +351,93 @@ describe('data sessions', () => {
     await expect(context.readConfigFile('connections/warehouse.json')).rejects.toThrow(
       'Connection "warehouse" (type Knex) cannot run under data set "staging-sample": its type does not say how to redirect it.'
     );
+  });
+
+  // The dev server builds its connection map with the build host's own function
+  // (createSessionConnections in @lowdefy/test-utils/dataSets), so a stub or a gate set on the
+  // data session answers here as it does in a test of a production build.
+  describe('stubs and gates on the data session', () => {
+    const dataCookie = { cookie: `lowdefy_journey_data=${journeyActorToken}.session1` };
+    const args = {
+      connectionId: 'payments',
+      endpointId: 'invoice-send',
+      request: { url: '/charge', token: secret },
+      requestId: 'charge',
+    };
+
+    test('a stubbed outside request answers the stub and is recorded in sunk, with secrets scrubbed', async () => {
+      const session = registerSession();
+      session.stubs.push(
+        {
+          connectionType: 'AxiosHttp',
+          requestType: 'AxiosHttp',
+          match: { url: '/refund' },
+          answer: { data: 'refunded' },
+        },
+        { connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { data: 'charged' } }
+      );
+      const context = await createLowdefyContext({ c: createHonoContext({ headers: dataCookie }) });
+      expect(await context.connections.AxiosHttp.requests.AxiosHttp(args)).toEqual({
+        data: 'charged',
+      });
+      expect(httpCall).not.toHaveBeenCalled();
+      expect(session.sunk).toEqual([
+        {
+          connectionId: 'payments',
+          connectionType: 'AxiosHttp',
+          requestId: 'charge',
+          pageId: null,
+          endpointId: 'invoice-send',
+          request: { url: '/charge', token: '[REDACTED]' },
+          requestType: 'AxiosHttp',
+        },
+      ]);
+    });
+
+    test('a stub on a type that declares nothing lets its connection through the gate', async () => {
+      const session = registerSession();
+      session.stubs.push({
+        connectionType: 'Knex',
+        requestType: 'KnexRaw',
+        answer: [{ total: 3 }],
+      });
+      createInjectedApiContext.mockImplementationOnce((context) => {
+        context.readConfigFile = async () => ({
+          connectionId: 'warehouse',
+          type: 'Knex',
+          properties: { client: 'pg' },
+        });
+      });
+      const context = await createLowdefyContext({ c: createHonoContext({ headers: dataCookie }) });
+      expect((await context.readConfigFile('connections/warehouse.json')).type).toEqual('Knex');
+      expect(await context.connections.Knex.requests.KnexRaw(args)).toEqual([{ total: 3 }]);
+      expect(knexRaw).not.toHaveBeenCalled();
+    });
+
+    test('a fail gate fails a MongoDB request with the forced message before it runs, once', async () => {
+      const session = registerSession();
+      session.failGates.push({
+        requestId: 'charge',
+        endpoint: 'invoice-send',
+        message: 'Write failed on purpose',
+        times: 1,
+        fired: 0,
+      });
+      const context = await createLowdefyContext({ c: createHonoContext({ headers: dataCookie }) });
+      const { MongoDBFind } = context.connections.MongoDBCollection.requests;
+      const error = await MongoDBFind(args).catch((caught) => caught);
+      expect(error.name).toEqual('ServiceError');
+      expect(error.message).toEqual('Write failed on purpose');
+      expect(isForcedFailure(error)).toBe(true);
+      expect(mongoFind).not.toHaveBeenCalled();
+      expect(await MongoDBFind(args)).toEqual(['real row']);
+      expect(session.failGates[0].fired).toEqual(1);
+    });
+
+    test('without a data session the connections are the plugin map, with no stub or gate', async () => {
+      const context = await createLowdefyContext({ c: createHonoContext() });
+      expect(context.connections).toBe(connectionPlugins);
+    });
   });
 
   test('a data session passed by a dev tool call redirects connections and rides the detached hop as a data cookie', async () => {
@@ -385,7 +506,7 @@ describe('data sessions', () => {
         message: `Data session ${id} has ended; this request outlived its journey.`,
       });
       expect(readConfigFile).not.toHaveBeenCalled();
-      createApiContext.mockReset();
+      createInjectedApiContext.mockReset();
     }
     expect(getAuth).not.toHaveBeenCalled();
   });
@@ -436,5 +557,214 @@ describe('who a headless caller is under a dev mock user', () => {
     });
     const context = await createLowdefyContext({ c: createHonoContext() });
     expect(context.user).toEqual({ id: 'lowdefy-headless', name: 'Lowdefy Headless', roles: [] });
+  });
+});
+
+describe('which function builds the context', () => {
+  afterEach(() => {
+    delete authJson.organizations;
+  });
+
+  test('a mock user in a tenant-policy app gets the tenant policy binding, so the wall engages', async () => {
+    const actual = await vi.importActual('@lowdefy/api');
+    createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+    authJson.organizations = { policy: 'tenant' };
+    getMockUser.mockReturnValueOnce({ id: 'mock', roles: ['admin'] });
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(context.auth).toBeNull();
+    expect(context.user).toEqual({ id: 'mock', roles: ['admin'] });
+    expect(context.organization).toEqual({ policy: 'tenant', pinned: null });
+    expect(createApiContext).not.toHaveBeenCalled();
+  });
+
+  test('a mock user in an app that declares no organizations gets no organization binding', async () => {
+    const actual = await vi.importActual('@lowdefy/api');
+    createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+    getMockUser.mockReturnValueOnce({ id: 'mock', roles: ['admin'] });
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(context.organization).toBeNull();
+  });
+
+  test('a caller no auth engine resolved is built from the built auth config', async () => {
+    getHeadlessUser.mockReturnValueOnce({ user: { id: 'u_1', roles: [] }, explicit: true });
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(createInjectedApiContext).toHaveBeenCalledTimes(1);
+    expect(createInjectedApiContext).toHaveBeenCalledWith(context, { authJson });
+    expect(createApiContext).not.toHaveBeenCalled();
+  });
+
+  test('a request the auth engine resolves is built by createApiContext, which reads the engine binding', async () => {
+    const auth = { api: {} };
+    getAuth.mockReturnValueOnce(auth);
+    authJson.organizations = { policy: 'tenant' };
+    const context = await createLowdefyContext({ c: createHonoContext() });
+    expect(context.auth).toBe(auth);
+    expect(createApiContext).toHaveBeenCalledTimes(1);
+    expect(createApiContext).toHaveBeenCalledWith(context);
+    expect(createInjectedApiContext).not.toHaveBeenCalled();
+    expect(context.organization).toBeUndefined();
+  });
+});
+
+const { default: apiContext } = await import('../../src/middleware/apiContext.js');
+const { default: createErrorHandler } = await import('../../src/middleware/errorHandler.js');
+
+// No auth engine is built for these callers, so the gate's enforcement facts come from the built
+// auth config (createInjectedApiContext). Each test sends a request through the server's own
+// apiContext middleware, runs the real @lowdefy/api function on the context it built, and is
+// answered by the server's own error handler.
+describe('the gate an injected caller meets', () => {
+  const artifacts = {
+    'routes.json': [{ pageId: 'reports', path: 'reports' }],
+    'pages/reports.json': {
+      id: 'page:reports',
+      pageId: 'reports',
+      blockId: 'reports',
+      type: 'Box',
+      auth: { public: false },
+    },
+    'api/nightly.json': {
+      endpointId: 'nightly',
+      type: 'InternalApi',
+      auth: { public: false },
+      routine: [],
+    },
+  };
+  const authConfigured = {
+    authPages: { signIn: '/login', twoFactorEnrol: '/two-factor-enrol' },
+    configured: true,
+    pagesProtectedByDefault: true,
+    twoFactor: { required: true },
+  };
+  // A data-session request with no headless user: the dev server's signed-out injected caller.
+  const signedOut = { cookie: `lowdefy_journey_data=${journeyActorToken}.session1` };
+  let actual;
+
+  async function send({ headers = {}, path: requestPath = '/api/gate', run }) {
+    const app = new Hono();
+    app.use('*', apiContext());
+    app.all('*', async (c) => {
+      const context = c.get('lowdefyContext');
+      context.readConfigFile = async (file) => artifacts[file] ?? null;
+      return c.json(await run(context));
+    });
+    app.onError(createErrorHandler({ logger: { error: vi.fn(), warn: vi.fn() } }));
+    const res = await app.request(requestPath, { method: 'POST', headers });
+    return { status: res.status, body: await res.json() };
+  }
+
+  beforeEach(async () => {
+    actual = await vi.importActual('@lowdefy/api');
+    createInjectedApiContext.mockImplementationOnce(actual.createInjectedApiContext);
+  });
+
+  afterEach(() => {
+    Object.keys(authConfigured).forEach((key) => {
+      delete authJson[key];
+    });
+    dataSessionRegistry.clear();
+  });
+
+  test('a signed-out caller asking for a missing request is told to authenticate with a 401, not that the request does not exist', async () => {
+    Object.assign(authJson, authConfigured);
+    registerSession();
+    const answer = await send({
+      headers: signedOut,
+      path: '/api/request/reports/missing',
+      run: (context) =>
+        actual.callRequest(context, { pageId: 'reports', payload: {}, requestId: 'missing' }),
+    });
+    expect(answer).toEqual({
+      status: 401,
+      body: {
+        name: 'AuthenticationError',
+        message: 'Authentication required for request "missing".',
+      },
+    });
+  });
+
+  test('a signed-out caller asking for a missing endpoint is told to authenticate with a 401, not that the endpoint does not exist', async () => {
+    Object.assign(authJson, authConfigured);
+    registerSession();
+    const answer = await send({
+      headers: signedOut,
+      path: '/api/endpoints/missing',
+      run: (context) => actual.callEndpoint(context, { endpointId: 'missing', payload: {} }),
+    });
+    expect(answer).toEqual({
+      status: 401,
+      body: {
+        name: 'AuthenticationError',
+        message: 'Authentication required for API endpoint "missing".',
+      },
+    });
+  });
+
+  test('a signed-out caller asking for an internal endpoint is told to authenticate with a 401, not that the endpoint does not exist', async () => {
+    Object.assign(authJson, authConfigured);
+    registerSession();
+    const answer = await send({
+      headers: signedOut,
+      path: '/api/endpoints/nightly',
+      run: (context) => actual.callEndpoint(context, { endpointId: 'nightly', payload: {} }),
+    });
+    expect(answer).toEqual({
+      status: 401,
+      body: {
+        name: 'AuthenticationError',
+        message: 'Authentication required for API endpoint "nightly".',
+      },
+    });
+  });
+
+  test('a signed-out caller on an unknown path is unauthenticated, not not_found, when pages are protected by default', async () => {
+    Object.assign(authJson, authConfigured);
+    registerSession();
+    const answer = await send({
+      headers: signedOut,
+      run: (context) => actual.getPageConfig(context, { path: 'no-such-page' }),
+    });
+    expect(answer).toEqual({ status: 200, body: { status: 'unauthenticated' } });
+  });
+
+  test('a mock user carrying two_factor_enrolled false is asked to enrol on a protected page when a second factor is required', async () => {
+    Object.assign(authJson, authConfigured);
+    getMockUser.mockReturnValueOnce({ id: 'mock', roles: [], two_factor_enrolled: false });
+    const answer = await send({
+      run: (context) => actual.getPageConfig(context, { path: 'reports' }),
+    });
+    expect(answer).toEqual({
+      status: 200,
+      body: { status: 'enrol_required', pageId: 'reports', pathParams: {} },
+    });
+  });
+
+  test('a mock user with no two_factor_enrolled key opens a protected page when a second factor is required', async () => {
+    Object.assign(authJson, authConfigured);
+    getMockUser.mockReturnValueOnce({ id: 'mock', roles: [] });
+    const answer = await send({
+      run: (context) => actual.getPageConfig(context, { path: 'reports' }),
+    });
+    expect(answer.body.status).toEqual('ok');
+    expect(answer.body.pageId).toEqual('reports');
+  });
+
+  test('an app with no auth configured gets no organization and no enforcement facts, and a signed-out caller is still told a missing request does not exist', async () => {
+    registerSession();
+    const answer = await send({
+      headers: signedOut,
+      run: async (context) => ({
+        authEnforcement: context.authEnforcement,
+        organization: context.organization,
+        missingRequest: await actual
+          .callRequest(context, { pageId: 'reports', payload: {}, requestId: 'missing' })
+          .catch((error) => ({ name: error.name, message: error.message })),
+      }),
+    });
+    expect(answer.body).toEqual({
+      authEnforcement: null,
+      organization: null,
+      missingRequest: { name: 'ConfigError', message: 'Request "missing" does not exist.' },
+    });
   });
 });

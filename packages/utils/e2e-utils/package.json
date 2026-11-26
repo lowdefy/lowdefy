@@ -24,9 +24,6 @@
     "url": "https://github.com/lowdefy/lowdefy.git"
   },
   "type": "module",
-  "bin": {
-    "lowdefy-e2e": "./dist/init/index.js"
-  },
   "exports": {
     ".": "./dist/index.js",
     "./config": "./dist/config.js",

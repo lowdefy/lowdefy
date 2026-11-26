@@ -229,7 +229,7 @@ fixtureTest(
     expect(output).toContain('uncommitted changes included');
     expect(output).toContain('scope_a (page)');
     expect(output).toMatch(
-      /scope_a: public; users explore\/member, .*personas\/admin, .*rails\/member/
+      /scope_a: public; users .*explore\/member, .*personas\/admin, .*rails\/member/
     );
     git(['checkout', '--', '.']);
   }

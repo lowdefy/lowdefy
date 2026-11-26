@@ -1,0 +1,19 @@
+# The companies whose name holds the search, for pages/search_targets.yaml's company picker,
+# which loads its options from its onSearch (LDF-1136). An empty search finds none, so the
+# options empty again when the picker clears its search.
+id: search_companies
+type: Api
+routine:
+  - ':return':
+      companies:
+        _if:
+          test:
+            _eq:
+              - _payload: search
+              - ''
+          then: []
+          else:
+            - label: Audit Avis
+              value: avis
+            - label: Audit Bravo
+              value: bravo

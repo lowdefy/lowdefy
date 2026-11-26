@@ -19,8 +19,8 @@ import empty from './empty.js';
 import interrupt from './interrupt.js';
 import negative from './negative.js';
 import roleGranted from './roleGranted.js';
-import roleRefused from './roleRefused.js';
 import tenant from './tenant.js';
+import tenantCalls from './tenantCalls.js';
 import volume from './volume.js';
 
 // The variant kinds, in the order they are written, each with its generators.
@@ -29,8 +29,8 @@ import volume from './volume.js';
 const KINDS = ['role', 'tenant', 'empty', 'volume', 'negative', 'interrupt', 'double-submit'];
 
 const generators = {
-  role: [roleGranted, roleRefused],
-  tenant: [tenant],
+  role: [roleGranted],
+  tenant: [tenant, tenantCalls],
   empty: [empty],
   volume: [volume],
   negative: [negative],
@@ -38,5 +38,18 @@ const generators = {
   'double-submit': [doubleSubmit],
 };
 
-export { KINDS };
+// The generators that read who the journey runs as (empty and volume look its user up by name in
+// their data set). On a case-table journey, whose user is a
+// `_case` placeholder, generateVariants runs them on each row's journey ('every'), or on the
+// first row's alone ('first'): tenantCalls replays the payloads of the measured run, which is the
+// first row's.
+const ROW_GENERATORS = new Map([
+  [empty, 'every'],
+  [volume, 'every'],
+  [roleGranted, 'every'],
+  [tenant, 'every'],
+  [tenantCalls, 'first'],
+]);
+
+export { KINDS, ROW_GENERATORS };
 export default generators;

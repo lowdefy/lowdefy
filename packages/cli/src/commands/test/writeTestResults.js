@@ -20,13 +20,13 @@ import path from 'path';
 // Writes .lowdefy/test/results.json: every journey of the newest
 // lowdefy_run_tests run with its report, for the agent to read when the tool's
 // answer had to leave some out. Returns the file's path.
-function writeTestResults({ directories, summary, results, skipped }) {
+function writeTestResults({ directories, summary, results, browserOnly, skipped }) {
   const filePath = path.join(directories.test, 'results.json');
   fs.mkdirSync(directories.test, { recursive: true });
   fs.writeFileSync(
     filePath,
     `${JSON.stringify(
-      { version: 1, at: new Date().toISOString(), summary, results, skipped },
+      { version: 1, at: new Date().toISOString(), summary, results, browserOnly, skipped },
       null,
       2
     )}\n`

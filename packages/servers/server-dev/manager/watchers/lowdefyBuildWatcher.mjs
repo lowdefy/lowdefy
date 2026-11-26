@@ -38,7 +38,9 @@ function findLocalModuleRoots(context) {
 // A change to a file that shapes the skeleton (lowdefy.yaml, a
 // module.lowdefy.yaml, or a file in skeletonSourceFiles.json) rebuilds the
 // config, as does a page file edit that changes the page's path, and any
-// change after a failed config build. After every batch,
+// change after a failed config build. A skeleton file only endpoints read
+// rebuilds just those endpoints (lowdefyEndpointBuild), unless the edit could
+// reach past them, which rebuilds the config. After every batch,
 // the dev server is told files changed (build/invalidatePages), and checks the
 // JIT-built pages against what they read.
 async function lowdefyBuildWatcher(context) {
@@ -84,25 +86,42 @@ async function lowdefyBuildWatcher(context) {
       const moduleYamlModified = changedFiles.some(
         (filePath) => path.basename(filePath) === 'module.lowdefy.yaml'
       );
-      const skeletonFileModified = changedFiles.some(
-        (filePath, index) =>
-          skeletonSourceFiles.has(filePath) || skeletonSourceFiles.has(relativeChangedFiles[index])
-      );
+      // Each skeleton file as the build names it: relative for the app's
+      // files, absolute for a module's.
+      const skeletonFiles = [];
+      const otherFiles = [];
+      changedFiles.forEach((filePath, index) => {
+        if (skeletonSourceFiles.has(filePath)) {
+          skeletonFiles.push(filePath);
+        } else if (skeletonSourceFiles.has(relativeChangedFiles[index])) {
+          skeletonFiles.push(relativeChangedFiles[index]);
+        } else {
+          otherFiles.push(relativeChangedFiles[index]);
+        }
+      });
 
       // skeletonSourceFiles.json comes from the last build that succeeded, so it
       // cannot list a file only the failed build read, such as a new endpoint
       // file whose error is being fixed. While the last build failed, any
       // change rebuilds the config.
-      if (
+      const configChanged =
         context.lastBuildFailed ||
         lowdefyYamlModified ||
         moduleYamlModified ||
-        skeletonFileModified ||
         (await pagePathChanged({
           changedFiles: [...changedFiles, ...relativeChangedFiles],
           context,
-        }))
+        }));
+
+      if (
+        !configChanged &&
+        skeletonFiles.length > 0 &&
+        (await context.lowdefyEndpointBuild({ files: skeletonFiles }))
       ) {
+        // Only endpoints read the skeleton files, and they are rebuilt; the
+        // other files are page files.
+        await updatePageTailwindCss({ changedFiles: otherFiles, context });
+      } else if (configChanged || skeletonFiles.length > 0) {
         await context.lowdefyBuild();
         // In this batch, so a build-status wait also waits for the restart
         // the build needs (a new connection type, a new plugin package).

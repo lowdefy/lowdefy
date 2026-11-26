@@ -627,7 +627,16 @@ export default {
 }
 ```
 
-**Custom plugin schemas:** Custom plugins can provide schemas via `typesMap.schemas` in the build context, which takes priority over package-exported schemas. Custom block metadata can be provided via `typesMap.blockMetas`.
+**Default plugin schemas ship with the build.** `generateDefaultTypes` (at `@lowdefy/build`'s package build, through `utils/createDefaultTypesMap.js`) writes into `dist/defaultTypesMap.js`, beside the default packages' types:
+
+- `schemas.{actions,blocks,operators}[typeName]`: `{ package, schema }`, read from each default package's `./schemas`, and for a block built with `buildBlockSchema` from its meta (`./metas`, else `./schemas`). A block's entry also carries its meta's `hazards`, the one field `writeBlockSchemaMap` reads from a block's own meta (the types map's `blockMetas` come from `extractBlockTypes`, which keeps none).
+- `hasChecks[packageName]`: whether the package exports `./checks`. Generating fails when a default package that exports `./checks` is not in `@lowdefy/build`'s `dependencies`, so a default package with rules is always installed where the build runs (today only `@lowdefy/operators-js`).
+
+`loadPluginTypeSchema` takes a type's schema from `typesMap.schemas` when the entry's `package` is the package the type's types map entry names, so a plugin that registers a default type name keeps its own schema; a block whose package does not import takes its hazards from the entry. `loadPluginChecks` loads a default package whose `hasChecks` is false as `none` without importing it. So a default package is schema-checked, and complete in the `plugins/*Schemas.json` maps, in the first build whether or not it is installed, and is never pending (see [build-pipeline.md](./build-pipeline.md)). `createContext` merges the custom types over the defaults with `mergeTypesMaps`, which adds the default schemas by reference rather than copying about 1 MB per build, and so keeps `@lowdefy/ajv`'s validator cache (keyed by schema object) across a dev server's rebuilds.
+
+The scope is `defaultPackages.js`. `@lowdefy/blocks-native`, the one package `defaultPackagesMobile.js` adds, is out: build cannot import it (dependency cycle, see `nativeBlockTypes.js`), and its types never enter the web types map that the schema checks and maps read.
+
+Tests can put entries in `typesMap.schemas` and `typesMap.hasChecks` through `customTypesMap`, to stand for a default package that is not installed.
 
 ## Key Files
 

@@ -106,6 +106,26 @@ test('formatSessionLog shows a click on a modal button and the event the modal r
   ]);
 });
 
+test('formatSessionLog shows a modal button and a grid row by their keys', () => {
+  const records = [
+    pageview({ at: 0, page: 'invoices' }),
+    traceRecord({
+      at: 1,
+      page: 'invoices',
+      block: 'grid',
+      row: 0,
+      rowKey: 'inv-1',
+      column: 'name',
+    }),
+    traceRecord({ at: 3, page: 'invoices', block: 'confirmPay', control: 'ok' }),
+  ];
+  expect(formatSessionLog({ records }).lines).toEqual([
+    'page invoices',
+    'click grid rowKey "inv-1" column name',
+    'click confirmPay control ok',
+  ]);
+});
+
 test('formatSessionLog names the endpoint a CallAPI called and whether it failed', () => {
   const records = [
     traceRecord({

@@ -15,8 +15,8 @@
 */
 
 import { type } from '@lowdefy/helpers';
+import { dataSessionRegistry } from '@lowdefy/test-utils/dataSets';
 
-import dataSessionRegistry from './dataSessionRegistry.js';
 import { JOURNEY_COOKIES, readJourneyCookie } from '../../server/journeyCookies.js';
 
 // The data session a request's lowdefy_journey_data cookie names:

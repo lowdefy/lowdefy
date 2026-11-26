@@ -1,0 +1,149 @@
+# Parity journeys for the searching selectors' stand-in (LDF-1136), on the search_targets page. A
+# fill types into a selector's search box: the block fires onSearch { value } and keeps its value.
+# Each runs in the browser and headless (packages/servers/server-dev/test/journeyFixture/
+# standInParity.test.mjs) and must end with the same state `log`. In a folder starting with "_" so
+# the suite's own runs, and harden, leave it out.
+- name: a fill searches a Selector, and a select picks an option its onSearch loaded
+  pageId: search_targets
+  steps:
+    - fill: { blockId: company_picker, value: Audit }
+    - select: { blockId: company_picker, value: Audit Avis }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_picker.onSearch
+              payload:
+                value: Audit
+            - event: company_picker.onChange
+              value: avis
+# The dropdown closes a task after the click's mousedown, so the click's event comes first.
+- name: a click elsewhere after a search closes a Selector, which clears its search
+  pageId: search_targets
+  steps:
+    - fill: { blockId: company_picker, value: Audit }
+    - click: done_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_picker.onSearch
+              payload:
+                value: Audit
+            - event: done_button.onClick
+            - event: company_picker.onSearch
+              payload:
+                value: ''
+- name: a fill searches a MultipleSelector, which clears its search with no event
+  pageId: search_targets
+  steps:
+    - fill: { blockId: tag_picker, value: Gr }
+    - select: { blockId: tag_picker, value: Green }
+    - click: done_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: tag_picker.onSearch
+              payload:
+                value: Gr
+            - event: tag_picker.onChange
+              value:
+                - Green
+            - event: done_button.onClick
+- name: a fill of another input blurs a Selector, which clears its search
+  pageId: search_targets
+  steps:
+    - fill: { blockId: company_picker, value: Audit }
+    - fill: { blockId: note_input, value: Call back }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: company_picker.onSearch
+              payload:
+                value: Audit
+            - event: company_picker.onSearch
+              payload:
+                value: ''
+- name: a select of an option the search hides is refused
+  pageId: search_targets
+  steps:
+    - fill: { blockId: tag_picker, value: Gr }
+    - select: { blockId: tag_picker, value: Red }
+# A single select closes a task after the mousedown, so the click's event comes first, with no
+# debounce too.
+- name: a TreeSelector clears its search with onSearch as a click elsewhere closes it
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_tree, value: No }
+    - click: done_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_tree.onSearch
+              payload:
+                value: 'No'
+            - event: done_button.onClick
+            - event: region_tree.onSearch
+              payload:
+                value: ''
+- name: a TreeMultipleSelector clears its search with onSearch as it loses the focus
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_trees, value: So }
+    - click: done_button
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_trees.onSearch
+              payload:
+                value: So
+            - event: region_trees.onSearch
+              payload:
+                value: ''
+            - event: done_button.onClick
+- name: a fill on a Selector with search off is refused
+  pageId: search_targets
+  steps:
+    - fill: { blockId: locked_picker, value: North }
+- name: a select on another Selector after a search closes a TreeSelector, which clears its search
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_tree, value: No }
+    - select: { blockId: locked_picker, value: North }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_tree.onSearch
+              payload:
+                value: 'No'
+            - event: region_tree.onSearch
+              payload:
+                value: ''
+            - event: locked_picker.onChange
+              payload:
+                value: North
+# A radio option is one click, with no open click first, so the pick's onChange starts before the
+# TreeSelector clears its search a task later.
+- name: a radio select after a search closes a TreeSelector, which clears its search after the pick
+  pageId: search_targets
+  steps:
+    - fill: { blockId: region_tree, value: No }
+    - select: { blockId: shade_radio, value: Dark }
+    - expect:
+        state:
+          path: log
+          equals:
+            - event: region_tree.onSearch
+              payload:
+                value: 'No'
+            - event: shade_radio.onChange
+              payload:
+                value: Dark
+            - event: region_tree.onSearch
+              payload:
+                value: ''

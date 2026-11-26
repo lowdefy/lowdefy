@@ -105,3 +105,30 @@ test('readBuildApiArtifacts ignores non-json files in the api directory', () => 
     fs.rmSync(buildDir, { recursive: true, force: true });
   }
 });
+
+test('readBuildApiArtifacts with a cache parses only the artifacts that changed, and drops removed ones', () => {
+  const buildDir = makeBuildDir();
+  try {
+    writeEndpoint(buildDir, { id: 'endpoint:a', endpointId: 'a', type: 'Api' });
+    writeEndpoint(buildDir, { id: 'endpoint:b', endpointId: 'b', type: 'Api' });
+    const cache = new Map();
+    const first = new Map(readBuildApiArtifacts(buildDir, cache).map((c) => [c.endpointId, c]));
+
+    // An atomic rewrite, as the dev server's endpoint build makes.
+    const aPath = path.join(buildDir, 'api', 'a.json');
+    fs.writeFileSync(
+      `${aPath}.tmp`,
+      serializer.serializeToString({ id: 'endpoint:a', endpointId: 'a', type: 'InternalApi' })
+    );
+    fs.renameSync(`${aPath}.tmp`, aPath);
+    const second = new Map(readBuildApiArtifacts(buildDir, cache).map((c) => [c.endpointId, c]));
+    expect(second.get('a').type).toBe('InternalApi');
+    expect(second.get('b')).toBe(first.get('b'));
+
+    fs.rmSync(path.join(buildDir, 'api', 'b.json'));
+    expect(readBuildApiArtifacts(buildDir, cache).map((c) => c.endpointId)).toEqual(['a']);
+    expect([...cache.keys()]).toEqual([aPath]);
+  } finally {
+    fs.rmSync(buildDir, { recursive: true, force: true });
+  }
+});

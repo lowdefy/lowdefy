@@ -470,46 +470,28 @@
       "path": "content/testing/journey-data-sets.md"
     },
     {
+      "slug": "testing/endpoint-tests",
+      "title": "Endpoint Tests",
+      "section": "Testing",
+      "path": "content/testing/endpoint-tests.md"
+    },
+    {
+      "slug": "testing/access-table",
+      "title": "Access Table",
+      "section": "Testing",
+      "path": "content/testing/access-table.md"
+    },
+    {
       "slug": "testing/explore-pull-request",
       "title": "Exploring a Pull Request",
       "section": "Testing",
       "path": "content/testing/explore-pull-request.md"
     },
     {
-      "slug": "testing/e2e-introduction",
-      "title": "E2E Testing",
+      "slug": "testing/e2e-utils-migration",
+      "title": "Moving from e2e-utils",
       "section": "Testing",
-      "path": "content/testing/e2e-introduction.md"
-    },
-    {
-      "slug": "testing/e2e-getting-started",
-      "title": "Getting Started",
-      "section": "Testing",
-      "path": "content/testing/e2e-getting-started.md"
-    },
-    {
-      "slug": "testing/e2e-writing-tests",
-      "title": "Writing Tests",
-      "section": "Testing",
-      "path": "content/testing/e2e-writing-tests.md"
-    },
-    {
-      "slug": "testing/e2e-mocking",
-      "title": "Mocking Requests",
-      "section": "Testing",
-      "path": "content/testing/e2e-mocking.md"
-    },
-    {
-      "slug": "testing/e2e-auth",
-      "title": "Testing Authentication",
-      "section": "Testing",
-      "path": "content/testing/e2e-auth.md"
-    },
-    {
-      "slug": "testing/e2e-configuration",
-      "title": "Configuration",
-      "section": "Testing",
-      "path": "content/testing/e2e-configuration.md"
+      "path": "content/testing/e2e-utils-migration.md"
     },
     {
       "slug": "input-blocks/inputgallery",
@@ -2200,6 +2182,14 @@
       "typeName": "_date"
     },
     {
+      "slug": "operators/_decimal",
+      "title": "_decimal",
+      "section": "Operators",
+      "path": "content/operators/_decimal.md",
+      "kind": "operator",
+      "typeName": "_decimal"
+    },
+    {
       "slug": "operators/_diff",
       "title": "_diff",
       "section": "Operators",
@@ -3107,13 +3097,13 @@
       "files": [
         "concepts/advanced/html-attributes.yaml"
       ],
-      "hash": "05ec5c7d8575e929eba0bc2796c87462ad1193d5b97af876d968050437cc343c"
+      "hash": "deb3c92bad80dbc1b3fbdfdd185c6ad368220f39dc5089611f75873713782390"
     },
     "reference/cli": {
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "2d8a2b03ae7b1a4d640223f23bebea31ef5d3c052652f566aa0b68adff4933da"
+      "hash": "503b78b913fcd83d96e7d8dc1e9177256c13676ebd5a8753729082ec05d62986"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3152,7 +3142,7 @@
         "concepts/advanced/ai-agent-docs.md",
         "concepts/advanced/ai-agent-docs.yaml"
       ],
-      "hash": "67982e5e01dfa11e4591ba3569a8bf5df6f97f7c0f6557dff3e3bca209600e69"
+      "hash": "224836808d2233706e6a32eb65d79e647f840a0f72ee02f65b88405d440e0be1"
     },
     "agents/agents-introduction": {
       "files": [
@@ -3258,13 +3248,13 @@
       "files": [
         "plugins/plugins-dev.yaml"
       ],
-      "hash": "c849265cbb2a25baaeb5a6d053e7dec13dede8ce549017edfec610eabd761569"
+      "hash": "6f149518427ba7ec65e164a968332b92b840e3d00228c9e612aa3a774c10fa57"
     },
     "plugins/plugins-actions": {
       "files": [
         "plugins/plugins-actions.yaml"
       ],
-      "hash": "439d52b09b29109750574822920287f6172bc2f603c9823ddb89b94737260f59"
+      "hash": "608d6ed6fceefc6d56658c749dc571db60ff298213379bdfa2ea8dbe19b2e6a4"
     },
     "plugins/plugins-connections": {
       "files": [
@@ -3289,7 +3279,7 @@
       "files": [
         "plugins/PostHog.yaml"
       ],
-      "hash": "54ef91d2b8cb0d977dda85e0f73fabdd399b489df3fbfbd4681d14dfce0f9d96"
+      "hash": "e5a1ddf5e10e59a440c3fe1098ab1690f084d94001976cca42e2096e1e134d45"
     },
     "user-authentication/users-introduction": {
       "files": [
@@ -3393,57 +3383,42 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "954e1aaacaf6abe246a4574fad5dee7e54b947b48652133da667e592e678f122"
+      "hash": "2e3d0bd61747176ee2a408635de7950687e4c7c0307d56ae27ec47ec16c81a7f"
     },
     "testing/journey-data-sets": {
       "files": [
         "testing/journey-data-sets.md",
         "testing/journey-data-sets.yaml"
       ],
-      "hash": "b88281aa53a6a388dff04045c3be230aec6e959d2455f13dd8338cf040963c75"
+      "hash": "1d46398a4745d85ab37b7b9beeb15cf94368578d4c554a71555d5dcebfbafa6e"
+    },
+    "testing/endpoint-tests": {
+      "files": [
+        "testing/endpoint-tests.md",
+        "testing/endpoint-tests.yaml"
+      ],
+      "hash": "243be845be4576ed35415a2d7bf309415c96341ec1979bb829ecc089f41b620c"
+    },
+    "testing/access-table": {
+      "files": [
+        "testing/access-table.md",
+        "testing/access-table.yaml"
+      ],
+      "hash": "613b085f5d7fd4fdbed00dbda6530dc597108687bbfe37b8fc3d93a424f2ff81"
     },
     "testing/explore-pull-request": {
       "files": [
         "testing/explore-pull-request.md",
         "testing/explore-pull-request.yaml"
       ],
-      "hash": "1a36582512bc2878bc3240bafe50405d42d79defc567015892a3452dc9bb02b8"
+      "hash": "c97ee14faeeafe1ef3bdf5cbffabccb15dc5a3b0040ed60feb48ccaf1c569502"
     },
-    "testing/e2e-introduction": {
+    "testing/e2e-utils-migration": {
       "files": [
-        "testing/e2e-introduction.yaml"
+        "testing/e2e-utils-migration.md",
+        "testing/e2e-utils-migration.yaml"
       ],
-      "hash": "4d490055b0153e2278d13fae8029966bc7b313c0cb17155411bcbf19ca252150"
-    },
-    "testing/e2e-getting-started": {
-      "files": [
-        "testing/e2e-getting-started.yaml"
-      ],
-      "hash": "e8edb96355d7cceb727a2720833273f1909b71958a7a86c4386219ab20f03248"
-    },
-    "testing/e2e-writing-tests": {
-      "files": [
-        "testing/e2e-writing-tests.yaml"
-      ],
-      "hash": "beb914d1029677e1c1124c1127f362a4defe3e10160668c9ac864d010da5cbc5"
-    },
-    "testing/e2e-mocking": {
-      "files": [
-        "testing/e2e-mocking.yaml"
-      ],
-      "hash": "0ec5cfa5672c4f704ef5cecc27c969205274e9af3944c0f806b53ebffe7540ad"
-    },
-    "testing/e2e-auth": {
-      "files": [
-        "testing/e2e-auth.yaml"
-      ],
-      "hash": "7e21e6e51df915d906d23cdb8abd0272359092eed5b2eeaf6dbf0f6223a6f884"
-    },
-    "testing/e2e-configuration": {
-      "files": [
-        "testing/e2e-configuration.yaml"
-      ],
-      "hash": "cf462dd44839dba1d6f856407b6bf10deff9ace9e1eea27fba6c32d565c94ec7"
+      "hash": "720fec52987efb81ddda383ba2db18796cdb254a64e0647275a088560b3315b8"
     },
     "input-blocks/inputgallery": {
       "files": [
@@ -4091,7 +4066,7 @@
         "blocks/display/ClickableHtml.yaml",
         "templates/blocks/gallery.yaml.njk"
       ],
-      "hash": "79c704011c4f5fbce7331c706d9fa0277856d188484f6efa9ebba6402e1c5fbf"
+      "hash": "541873f429cdf816930ef43ade1cffb7e9e92d0d23849301cb6a943b2665ae59"
     },
     "display-blocks/dangeroushtml": {
       "files": [
@@ -4938,7 +4913,7 @@
       "files": [
         "connections/MongoDB.yaml"
       ],
-      "hash": "bff7dfcc80cc378e03aa3a2f042b3a947356f61aaaab636611281da58238d4d0"
+      "hash": "c8f35443942045bc76cd22f6b0fd75e17751f7e7972e6780d863222cbee08a2a"
     },
     "connections/mssql": {
       "files": [
@@ -5171,7 +5146,7 @@
         "actions/PostHogInit.yaml",
         "templates/actions.yaml.njk"
       ],
-      "hash": "37c86efeee835191f973bef8a9a198034bb9d2605e1bdaae1b98ee26dfb77d80"
+      "hash": "c699ed52e64af1f3460bd41166cbeba802b6e2e9eaa67f44935c33fa04cae3be"
     },
     "actions/posthogoptin": {
       "files": [
@@ -5417,6 +5392,13 @@
         "templates/operators.yaml.njk"
       ],
       "hash": "be0c1763f3c9dc2512d53e9e57652bf6c4640d3eb54b31c74dfba99c1b80b9c9"
+    },
+    "operators/_decimal": {
+      "files": [
+        "operators/_decimal.yaml",
+        "templates/operators.yaml.njk"
+      ],
+      "hash": "ee3510d56b687fb0441cd7f9afb2db795e2b0d7bbf96992b7aa60328b5aa5271"
     },
     "operators/_diff": {
       "files": [

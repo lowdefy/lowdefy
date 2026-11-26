@@ -140,3 +140,212 @@ test('discoverJourneys reads sub-folders of tests/journeys and skips every folde
     'top',
   ]);
 });
+
+function writeConfigFile(relativePath, content) {
+  const filePath = path.join(configDirectory, relativePath);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content);
+  return filePath;
+}
+
+test('discoverJourneys resolves _ref from the config root in a step, a step list, cases and a stub', () => {
+  writeConfigFile('tests/shared/open.yaml', 'goto: form\n');
+  writeConfigFile('tests/shared/steps.yaml', '- click: submit\n- expect: { visible: done }\n');
+  writeConfigFile('tests/shared/cases.json', JSON.stringify([{ name: 'one', value: 1 }]));
+  writeConfigFile(
+    'tests/shared/stubs/pdf.yml',
+    'connectionType: AxiosHttp\nrequestType: AxiosHttp\nanswer: { data: pdf }\n'
+  );
+  const filePath = writeJourneyFile(
+    'refs.yaml',
+    `- name: one step
+  pageId: form
+  steps:
+    - _ref: tests/shared/open.yaml
+- name: step list
+  pageId: form
+  cases:
+    _ref: tests/shared/cases.json
+  stubs:
+    - _ref: { path: tests/shared/stubs/pdf.yml }
+  steps:
+    _ref: tests/shared/steps.yaml
+`
+  );
+  expect(discoverJourneys({ context })).toEqual([
+    {
+      filePath,
+      journeyIndex: 0,
+      journey: { name: 'one step', pageId: 'form', steps: [{ goto: 'form' }] },
+    },
+    {
+      filePath,
+      journeyIndex: 1,
+      journey: {
+        name: 'step list',
+        pageId: 'form',
+        cases: [{ name: 'one', value: 1 }],
+        stubs: [{ connectionType: 'AxiosHttp', requestType: 'AxiosHttp', answer: { data: 'pdf' } }],
+        steps: [{ click: 'submit' }, { expect: { visible: 'done' } }],
+      },
+    },
+  ]);
+});
+
+test('discoverJourneys resolves a _ref in a referred file from the config root too', () => {
+  writeConfigFile('tests/shared/steps.yaml', '- _ref: tests/shared/deeper/click.yaml\n');
+  writeConfigFile('tests/shared/deeper/click.yaml', 'click: submit\n');
+  writeJourneyFile(
+    'nested.yaml',
+    'name: nested\npageId: form\nsteps:\n  _ref: tests/shared/steps.yaml\n'
+  );
+  expect(discoverJourneys({ context })[0].journey.steps).toEqual([{ click: 'submit' }]);
+});
+
+test('discoverJourneys reads one shared file twice in a journey without calling it a loop', () => {
+  writeConfigFile('tests/shared/click.yaml', 'click: submit\n');
+  writeJourneyFile(
+    'twice.yaml',
+    'name: twice\npageId: form\nsteps:\n  - _ref: tests/shared/click.yaml\n  - _ref: tests/shared/click.yaml\n'
+  );
+  expect(discoverJourneys({ context })[0].journey.steps).toEqual([
+    { click: 'submit' },
+    { click: 'submit' },
+  ]);
+});
+
+test('discoverJourneys fails a file whose refs make a loop, naming the loop', () => {
+  writeConfigFile('tests/shared/a.yaml', '_ref: tests/shared/b.yaml\n');
+  writeConfigFile('tests/shared/b.yaml', '- _ref: tests/shared/a.yaml\n');
+  const filePath = writeJourneyFile(
+    'loop.yaml',
+    'name: loops\npageId: form\nsteps:\n  _ref: tests/shared/a.yaml\n'
+  );
+  expect(discoverJourneys({ context })).toEqual([
+    {
+      filePath,
+      journeyIndex: 0,
+      journey: undefined,
+      error:
+        '_ref "tests/shared/a.yaml" makes a loop: tests/journeys/loop.yaml -> tests/shared/a.yaml -> tests/shared/b.yaml -> tests/shared/a.yaml.',
+    },
+  ]);
+});
+
+test('discoverJourneys fails a loop through a symlink with the loop message, naming the real files', () => {
+  writeConfigFile('tests/shared/a.yaml', '_ref: tests/shared/link/a.yaml\n');
+  // A folder link back to its own folder: tests/shared/link/a.yaml is tests/shared/a.yaml.
+  fs.symlinkSync('.', path.join(configDirectory, 'tests', 'shared', 'link'));
+  const filePath = writeJourneyFile(
+    'linked.yaml',
+    'name: linked\npageId: form\nsteps:\n  _ref: tests/shared/a.yaml\n'
+  );
+  expect(discoverJourneys({ context })[0]).toMatchObject({
+    filePath,
+    journey: undefined,
+    error:
+      '_ref "tests/shared/link/a.yaml" makes a loop: tests/journeys/linked.yaml -> tests/shared/a.yaml -> tests/shared/a.yaml.',
+  });
+});
+
+test('discoverJourneys reads a _ref by an absolute path or one that leaves the config root', () => {
+  const outside = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-test-shared-'));
+  fs.writeFileSync(path.join(outside, 'click.yaml'), 'click: submit\n');
+  writeJourneyFile(
+    'paths.yaml',
+    `name: paths\npageId: form\nsteps:\n  - _ref: ${path.join(
+      outside,
+      'click.yaml'
+    )}\n  - _ref: ../${path.basename(outside)}/click.yaml\n`
+  );
+  try {
+    expect(discoverJourneys({ context })[0].journey.steps).toEqual([
+      { click: 'submit' },
+      { click: 'submit' },
+    ]);
+  } finally {
+    fs.rmSync(outside, { recursive: true, force: true });
+  }
+});
+
+test('discoverJourneys fails a file that refers back to itself', () => {
+  const filePath = writeJourneyFile(
+    'self.yaml',
+    'name: self\npageId: form\nsteps:\n  _ref: tests/journeys/self.yaml\n'
+  );
+  expect(discoverJourneys({ context })[0]).toMatchObject({
+    filePath,
+    journey: undefined,
+    error: expect.stringContaining(
+      'makes a loop: tests/journeys/self.yaml -> tests/journeys/self.yaml'
+    ),
+  });
+});
+
+test.each([
+  [
+    'vars',
+    '{ path: tests/shared/steps.yaml, vars: { a: 1 } }',
+    '_ref "tests/shared/steps.yaml" in a journey file takes only a path, not "vars"',
+  ],
+  [
+    'a resolver',
+    '{ path: tests/shared/steps.yaml, resolver: resolvers/steps.js }',
+    'not "resolver"',
+  ],
+  [
+    'a transformer',
+    '{ path: tests/shared/steps.yaml, transformer: transformers/steps.js }',
+    'not "transformer"',
+  ],
+  [
+    'a nunjucks template',
+    'tests/shared/steps.yaml.njk',
+    '_ref "tests/shared/steps.yaml.njk": a journey file refers only to .yaml, .yml or .json files',
+  ],
+  [
+    'a resolver with no path',
+    '{ resolver: resolvers/steps.js }',
+    'takes a path, as "_ref: <path>"',
+  ],
+  [
+    'a key beside the ref',
+    'tests/shared/steps.yaml\n  extra: 1',
+    'has other keys beside it (extra)',
+  ],
+])('discoverJourneys refuses a _ref with %s as an error item', (_, ref, message) => {
+  writeConfigFile('tests/shared/steps.yaml', '- click: submit\n');
+  writeConfigFile('tests/shared/steps.yaml.njk', '- click: submit\n');
+  const filePath = writeJourneyFile(
+    'refused.yaml',
+    `name: refused\npageId: form\nsteps:\n  _ref: ${ref}\n`
+  );
+  const [item] = discoverJourneys({ context });
+  expect(item).toMatchObject({ filePath, journeyIndex: 0, journey: undefined });
+  expect(item.error).toContain(message);
+});
+
+test('discoverJourneys makes a _ref to a missing file an error item naming the path', () => {
+  const filePath = writeJourneyFile(
+    'missing.yaml',
+    'name: missing\npageId: form\nsteps:\n  _ref: tests/shared/nothing.yaml\n'
+  );
+  const [item] = discoverJourneys({ context });
+  expect(item).toMatchObject({ filePath, journeyIndex: 0, journey: undefined });
+  expect(item.error).toBe(
+    `_ref "tests/shared/nothing.yaml": no file at ${path.join(
+      configDirectory,
+      'tests',
+      'shared',
+      'nothing.yaml'
+    )}. Paths in _ref are from the config root.`
+  );
+});
+
+test('discoverJourneys makes a referred file that does not parse an error item', () => {
+  writeConfigFile('tests/shared/bad.json', '{ nope');
+  writeJourneyFile('bad.yaml', 'name: bad\npageId: form\nsteps:\n  _ref: tests/shared/bad.json\n');
+  expect(discoverJourneys({ context })[0].error).toMatch(
+    /^_ref "tests\/shared\/bad.json" does not parse: /
+  );
+});

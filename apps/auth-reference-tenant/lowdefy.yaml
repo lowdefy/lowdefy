@@ -124,6 +124,7 @@ api:
   - _ref: api/org-info.yaml
   - _ref: api/list-members-no-org.yaml
   - _ref: api/caller.yaml
+  - _ref: api/stamp-note.yaml
 
 pages:
   - _ref: pages/home.yaml

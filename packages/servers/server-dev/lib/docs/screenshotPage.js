@@ -207,7 +207,7 @@ async function screenshotInBrowser({
 }) {
   let browser;
   try {
-    browser = await getBrowser();
+    browser = await getBrowser({ origin });
   } catch (error) {
     return { error: noBrowserError(error) };
   }

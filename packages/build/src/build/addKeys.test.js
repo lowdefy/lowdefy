@@ -47,72 +47,17 @@ pages:
 
   addKeys({ components, context });
   expect(context.keyMap).toEqual({
-    2: {
-      '~k_parent': '1',
-      '~r': '1',
-      '~l': 2,
-      key: 'root',
-    },
-    3: {
-      '~k_parent': '2',
-      '~r': '2',
-      '~l': 2,
-      key: 'root.pages',
-    },
-    4: {
-      '~k_parent': '3',
-      '~r': '3',
-      '~l': 3,
-      key: 'root.pages[0:A:Box]',
-    },
-    5: {
-      '~k_parent': '4',
-      '~r': '4',
-      '~l': 5,
-      key: 'root.pages[0:A:Box].blocks',
-    },
-    6: {
-      '~k_parent': '5',
-      '~r': '5',
-      '~l': 6,
-      key: 'root.pages[0:A:Box].blocks[0:A1:Button]',
-    },
-    7: {
-      '~k_parent': '5',
-      '~r': '6',
-      '~l': 8,
-      key: 'root.pages[0:A:Box].blocks[1:A2:Button]',
-    },
-    8: {
-      '~k_parent': '3',
-      '~r': '7',
-      '~l': 10,
-      key: 'root.pages[1:B:Box]',
-    },
-    9: {
-      '~k_parent': '8',
-      '~r': '8',
-      '~l': 12,
-      key: 'root.pages[1:B:Box].blocks',
-    },
-    a: {
-      '~k_parent': '9',
-      '~r': '9',
-      '~l': 13,
-      key: 'root.pages[1:B:Box].blocks[0:B1:Button]',
-    },
-    b: {
-      '~k_parent': '9',
-      '~r': '10',
-      '~l': 15,
-      key: 'root.pages[1:B:Box].blocks[1:B2:Button]',
-    },
-    c: {
-      '~k_parent': 'b',
-      '~r': '11',
-      '~l': 17,
-      key: 'root.pages[1:B:Box].blocks[1:B2:Button].properties',
-    },
+    2: { s: 'root', p: '1', r: '1', l: 2 },
+    3: { s: '.pages', p: '2', r: '2', l: 2 },
+    4: { s: '[0:A:Box]', p: '3', r: '3', l: 3 },
+    5: { s: '.blocks', p: '4', r: '4', l: 5 },
+    6: { s: '[0:A1:Button]', p: '5', r: '5', l: 6 },
+    7: { s: '[1:A2:Button]', p: '5', r: '6', l: 8 },
+    8: { s: '[1:B:Box]', p: '3', r: '7', l: 10 },
+    9: { s: '.blocks', p: '8', r: '8', l: 12 },
+    a: { s: '[0:B1:Button]', p: '9', r: '9', l: 13 },
+    b: { s: '[1:B2:Button]', p: '9', r: '10', l: 15 },
+    c: { s: '.properties', p: 'b', r: '11', l: 17 },
   });
   expect(JSON.parse(serializer.serializeToString(components))).toEqual({
     '~k': '2',
@@ -186,72 +131,17 @@ pages:
 
   addKeys({ components, context });
   expect(context.keyMap).toEqual({
-    2: {
-      key: 'root',
-      '~r': '1',
-      '~l': 2,
-      '~k_parent': '1',
-    },
-    3: {
-      key: 'root.pages',
-      '~r': '2',
-      '~l': 2,
-      '~k_parent': '2',
-    },
-    4: {
-      key: 'root.pages[0:A1:Selector]',
-      '~r': '3',
-      '~l': 3,
-      '~k_parent': '3',
-    },
-    5: {
-      key: 'root.pages[0:A1:Selector].properties',
-      '~r': '4',
-      '~l': 5,
-      '~k_parent': '4',
-    },
-    6: {
-      key: 'root.pages[0:A1:Selector].properties.options',
-      '~r': '5',
-      '~l': 6,
-      '~k_parent': '5',
-    },
-    7: {
-      key: 'root.pages[0:A1:Selector].properties.options[0]',
-      '~r': '6',
-      '~l': 7,
-      '~k_parent': '6',
-    },
-    8: {
-      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat',
-      '~r': '7',
-      '~l': 7,
-      '~k_parent': '7',
-    },
-    9: {
-      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[0]',
-      '~r': '8',
-      '~l': 8,
-      '~k_parent': '8',
-    },
-    a: {
-      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[0][0]',
-      '~r': '9',
-      '~l': 8,
-      '~k_parent': '9',
-    },
-    b: {
-      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[1]',
-      '~r': '10',
-      '~l': 9,
-      '~k_parent': '8',
-    },
-    c: {
-      key: 'root.pages[0:A1:Selector].properties.options[0]._array.concat[1][0]',
-      '~r': '11',
-      '~l': 9,
-      '~k_parent': 'b',
-    },
+    2: { s: 'root', p: '1', r: '1', l: 2 },
+    3: { s: '.pages', p: '2', r: '2', l: 2 },
+    4: { s: '[0:A1:Selector]', p: '3', r: '3', l: 3 },
+    5: { s: '.properties', p: '4', r: '4', l: 5 },
+    6: { s: '.options', p: '5', r: '5', l: 6 },
+    7: { s: '[0]', p: '6', r: '6', l: 7 },
+    8: { s: '._array.concat', p: '7', r: '7', l: 7 },
+    9: { s: '[0]', p: '8', r: '8', l: 8 },
+    a: { s: '[0]', p: '9', r: '9', l: 8 },
+    b: { s: '[1]', p: '8', r: '10', l: 9 },
+    c: { s: '[0]', p: 'b', r: '11', l: 9 },
   });
   expect(JSON.parse(serializer.serializeToString(components))).toEqual({
     pages: {

@@ -424,12 +424,18 @@ importers:
       '@lowdefy/helpers':
         specifier: 7.4.0
         version: link:../utils/helpers
+      '@lowdefy/journey-headless':
+        specifier: 7.4.0
+        version: link:../utils/journey-headless
       '@lowdefy/logger':
         specifier: 7.4.0
         version: link:../utils/logger
       '@lowdefy/node-utils':
         specifier: 7.4.0
         version: link:../utils/node-utils
+      '@lowdefy/test-utils':
+        specifier: 7.4.0
+        version: link:../utils/test-utils
       '@modelcontextprotocol/sdk':
         specifier: 1.32.2
         version: 1.32.2(zod@4.6.7)
@@ -2265,6 +2271,9 @@ importers:
       '@lowdefy/e2e-utils':
         specifier: 7.4.0
         version: link:../../../utils/e2e-utils
+      '@lowdefy/node-utils':
+        specifier: 7.4.0
+        version: link:../../../utils/node-utils
       '@playwright/test':
         specifier: 1.65.0
         version: 1.65.0
@@ -2401,6 +2410,9 @@ importers:
       '@lowdefy/websockets-core':
         specifier: 7.4.0
         version: link:../../plugins/websockets/websockets-core
+      '@modelcontextprotocol/sdk':
+        specifier: 1.32.2
+        version: 1.32.2(zod@4.6.7)
       '@sentry/browser':
         specifier: 10.78.0
         version: 10.78.0
@@ -2555,6 +2567,9 @@ importers:
       '@lowdefy/helpers':
         specifier: 7.4.0
         version: link:../../utils/helpers
+      '@lowdefy/journey-headless':
+        specifier: 7.4.0
+        version: link:../../utils/journey-headless
       '@lowdefy/layout':
         specifier: 7.4.0
         version: link:../../layout
@@ -2594,6 +2609,9 @@ importers:
       '@lowdefy/plugin-better-auth':
         specifier: 7.4.0
         version: link:../../plugins/plugins/plugin-better-auth
+      '@lowdefy/test-utils':
+        specifier: 7.4.0
+        version: link:../../utils/test-utils
       '@lowdefy/websockets-core':
         specifier: 7.4.0
         version: link:../../plugins/websockets/websockets-core
@@ -2627,9 +2645,6 @@ importers:
       mongodb:
         specifier: 7.8.0
         version: 7.8.0
-      mongodb-memory-server-core:
-        specifier: 11.3.0
-        version: 11.3.0(bare-buffer@3.7.1)
       opener:
         specifier: 1.5.2
         version: 1.5.2
@@ -2679,6 +2694,9 @@ importers:
       jsdom:
         specifier: 31.0.0
         version: 31.0.0(@noble/hashes@2.2.0)
+      mongodb-memory-server-core:
+        specifier: 11.3.0
+        version: 11.3.0(bare-buffer@3.7.1)
       nodemailer:
         specifier: 10.5.0
         version: 10.5.0
@@ -3283,6 +3301,73 @@ importers:
         specifier: 5.1.0
         version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
 
+  packages/utils/journey-headless:
+    dependencies:
+      '@lowdefy/block-utils':
+        specifier: 7.4.0
+        version: link:../block-utils
+      '@lowdefy/blocks-antd':
+        specifier: 7.4.0
+        version: link:../../plugins/blocks/blocks-antd
+      '@lowdefy/client':
+        specifier: 7.4.0
+        version: link:../../client
+      '@lowdefy/client-core':
+        specifier: 7.4.0
+        version: link:../../client-core
+      '@lowdefy/engine':
+        specifier: 7.4.0
+        version: link:../../engine
+      '@lowdefy/errors':
+        specifier: 7.4.0
+        version: link:../errors
+      '@lowdefy/helpers':
+        specifier: 7.4.0
+        version: link:../helpers
+      '@lowdefy/node-utils':
+        specifier: 7.4.0
+        version: link:../node-utils
+      '@lowdefy/nunjucks':
+        specifier: 7.4.0
+        version: link:../nunjucks
+      '@lowdefy/test-utils':
+        specifier: 7.4.0
+        version: link:../test-utils
+      dompurify:
+        specifier: 3.4.17
+        version: 3.4.17
+      jsdom:
+        specifier: 31.0.0
+        version: 31.0.0(@noble/hashes@2.2.0)
+      mdast-util-from-markdown:
+        specifier: 2.1.0
+        version: 2.1.0
+      mdast-util-gfm:
+        specifier: 3.1.0
+        version: 3.1.0
+      micromark-extension-gfm:
+        specifier: 3.0.0
+        version: 3.0.0
+      tinykeys:
+        specifier: 4.0.1
+        version: 4.0.1
+    devDependencies:
+      '@lowdefy/blocks-table':
+        specifier: 7.4.0
+        version: link:../../plugins/blocks/blocks-table
+      '@swc/cli':
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
+      '@swc/core':
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
+      vitest:
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+      yaml:
+        specifier: 2.9.1
+        version: 2.9.1
+
   packages/utils/logger:
     dependencies:
       '@lowdefy/errors':
@@ -3369,6 +3454,43 @@ importers:
 
   packages/utils/style-native:
     devDependencies:
+      '@swc/cli':
+        specifier: 0.8.2
+        version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)
+      '@swc/core':
+        specifier: 1.16.22
+        version: 1.16.22(@swc/helpers@0.5.23)
+      vitest:
+        specifier: 5.1.0
+        version: 5.1.0(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(jsdom@31.0.0(@noble/hashes@2.2.0))(vite@8.3.8(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.1))
+
+  packages/utils/test-utils:
+    dependencies:
+      '@lowdefy/errors':
+        specifier: 7.4.0
+        version: link:../errors
+      '@lowdefy/helpers':
+        specifier: 7.4.0
+        version: link:../helpers
+      '@lowdefy/node-utils':
+        specifier: 7.4.0
+        version: link:../node-utils
+      mongodb:
+        specifier: 7.8.0
+        version: 7.8.0
+      mongodb-memory-server-core:
+        specifier: 11.3.0
+        version: 11.3.0(bare-buffer@3.7.1)
+    devDependencies:
+      '@lowdefy/api':
+        specifier: 7.4.0
+        version: link:../../api
+      '@lowdefy/operators-js':
+        specifier: 7.4.0
+        version: link:../../plugins/operators/operators-js
+      '@lowdefy/server':
+        specifier: 7.4.0
+        version: link:../../servers/server
       '@swc/cli':
         specifier: 0.8.2
         version: 0.8.2(@swc/core@1.16.22(@swc/helpers@0.5.23))(chokidar@5.0.0)

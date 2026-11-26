@@ -18,10 +18,10 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { vi, expect, test } from 'vitest';
-import { ConfigError } from '@lowdefy/errors';
+import { ConfigError, createKeyPathResolver, resolveConfigLocation } from '@lowdefy/errors';
 import { serializer } from '@lowdefy/helpers';
 
-import buildPageIfNeeded, { getBuildContext } from './jitPageBuilder.js';
+import buildPageIfNeeded, { getBuildContext, syncBuildSignals } from './jitPageBuilder.js';
 import createHandleError from './log/createHandleError.js';
 import pageBuildRecords from './pageBuildRecords.js';
 import readMergedMaps from './readMergedMaps.js';
@@ -130,10 +130,65 @@ test('a JIT page build leaves keyMap.json and refMap.json as the config build wr
   expect(files).toHaveLength(1);
   expect(files[0]).toMatch(/^[0-9a-f]{6}-\d+-1\.json$/);
   const { keyMap } = await readMergedMaps({ buildDirectory });
-  const titleKey = Object.keys(keyMap).find((key) => keyMap[key].key?.includes('title'));
+  const resolveKeyPath = createKeyPathResolver({ keyMap });
+  const titleKey = Object.keys(keyMap).find((key) => resolveKeyPath(key).path.includes('title'));
   // Config build prefix, then this process's id: <cfg prefix><child id>_<counter>.
   expect(titleKey).toMatch(/^cfg1_[0-9a-f]{6}_[0-9a-z]+$/);
   fs.rmSync(root, { recursive: true, force: true });
+});
+
+test('a JIT page build writes short key map entries that readMergedMaps and findConfig resolve', async () => {
+  const { root, buildDirectory, configDirectory } = createApp({
+    pages: { home: 'id: home\ntype: Box\nblocks:\n  - id: title\n    type: Box\n' },
+  });
+  await buildPageIfNeeded({ pageId: 'home', buildDirectory, configDirectory });
+  const [jitMapsFile] = listJitMaps(buildDirectory);
+  const jitMaps = JSON.parse(
+    fs.readFileSync(path.join(buildDirectory, 'jitMaps', jitMapsFile), 'utf8')
+  );
+  const entries = Object.values(jitMaps.keyMap);
+  expect(entries.length).toBeGreaterThan(0);
+  entries.forEach((entry) => {
+    expect(entry).not.toHaveProperty('key');
+    expect(typeof entry.s).toBe('string');
+  });
+
+  const { keyMap, refMap } = await readMergedMaps({ buildDirectory });
+  const resolveKeyPath = createKeyPathResolver({ keyMap });
+  const titleKey = Object.keys(keyMap).find(
+    (key) => resolveKeyPath(key).path === 'root.blocks[0:title:Box]'
+  );
+  expect(resolveConfigLocation({ configKey: titleKey, keyMap, refMap })).toEqual({
+    source: 'pages/home.yaml:4',
+    config: 'root.blocks[0:title:Box]',
+  });
+
+  // findConfig reads the build from process.cwd().
+  const cwd = process.cwd();
+  const configEnv = process.env.LOWDEFY_DIRECTORY_CONFIG;
+  process.chdir(path.dirname(buildDirectory));
+  process.env.LOWDEFY_DIRECTORY_CONFIG = configDirectory;
+  try {
+    const { default: findConfig } = await import('../docs/findConfig.js');
+    const result = await findConfig({ id: 'title', pageId: 'home' });
+    expect(result.matches.map(({ keyPath, location }) => ({ keyPath, location }))).toEqual([
+      {
+        keyPath: 'root.blocks[0:title:Box]',
+        location: {
+          source: `${path.join(configDirectory, 'pages', 'home.yaml')}:4`,
+          config: 'root.blocks[0:title:Box]',
+        },
+      },
+    ]);
+  } finally {
+    process.chdir(cwd);
+    if (configEnv === undefined) {
+      delete process.env.LOWDEFY_DIRECTORY_CONFIG;
+    } else {
+      process.env.LOWDEFY_DIRECTORY_CONFIG = configEnv;
+    }
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test('an error a failing JIT page build throws after its keys were added resolves to its source line', async () => {
@@ -165,7 +220,7 @@ test('an error a failing JIT page build throws after its keys were added resolve
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-test('after two config publishes only the current and previous build contexts keep jitMaps files', async () => {
+test('after a config publish the next context keeps no jitMaps files of an earlier generation', async () => {
   const { root, buildDirectory, configDirectory } = createApp({
     pages: {
       a: 'id: a\ntype: Box\n',
@@ -175,17 +230,54 @@ test('after two config publishes only the current and previous build contexts ke
   });
 
   await buildPageIfNeeded({ pageId: 'a', buildDirectory, configDirectory });
-  const [first] = listJitMaps(buildDirectory);
   publishRegistry(buildDirectory);
   await buildPageIfNeeded({ pageId: 'b', buildDirectory, configDirectory });
+  const [second] = listJitMaps(buildDirectory);
   publishRegistry(buildDirectory);
   await buildPageIfNeeded({ pageId: 'c', buildDirectory, configDirectory });
 
+  // A config publish removes the files itself (publishBuildDirectory); the
+  // context made after it keeps none of the earlier generations' either.
   const files = listJitMaps(buildDirectory);
-  expect(files).toHaveLength(2);
-  expect(files).not.toContain(first);
-  const generations = files.map((file) => Number(file.split('-')[1]));
-  expect(generations[1] - generations[0]).toBe(1);
+  expect(files).toHaveLength(1);
+  expect(files).not.toContain(second);
+  expect(Number(files[0].split('-')[1])).toBe(Number(second.split('-')[1]) + 1);
+  fs.rmSync(root, { recursive: true, force: true });
+});
+
+// The manager rebuilds an endpoint alone by writing its artifact whole and
+// signalling a change, with no config publish.
+function rewriteEndpoint(buildDirectory, endpoint) {
+  const filePath = path.join(buildDirectory, 'api', `${endpoint.endpointId}.json`);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(`${filePath}.tmp`, serializer.serializeToString(endpoint));
+  fs.renameSync(`${filePath}.tmp`, filePath);
+}
+
+test('an endpoint rebuilt with no config publish reaches the kept context at the next change event', async () => {
+  const { root, buildDirectory, configDirectory } = createApp({
+    pages: { a: 'id: a\ntype: Box\n' },
+  });
+  rewriteEndpoint(buildDirectory, { id: 'endpoint:one', endpointId: 'one', type: 'Api' });
+  rewriteEndpoint(buildDirectory, { id: 'endpoint:two', endpointId: 'two', type: 'Api' });
+  await buildPageIfNeeded({ pageId: 'a', buildDirectory, configDirectory });
+  const context = getBuildContext(buildDirectory, configDirectory);
+  const two = context.components.api.find((config) => config.endpointId === 'two');
+
+  rewriteEndpoint(buildDirectory, {
+    id: 'endpoint:one',
+    endpointId: 'one',
+    type: 'Api',
+    link: true,
+  });
+  fs.writeFileSync(path.join(buildDirectory, 'invalidatePages'), String(Date.now()));
+  syncBuildSignals({ buildDirectory, configDirectory });
+
+  expect(getBuildContext(buildDirectory, configDirectory)).toBe(context);
+  const configs = new Map(context.components.api.map((config) => [config.endpointId, config]));
+  expect(configs.get('one').link).toBe(true);
+  // An artifact that did not change is not read again.
+  expect(configs.get('two')).toBe(two);
   fs.rmSync(root, { recursive: true, force: true });
 });
 

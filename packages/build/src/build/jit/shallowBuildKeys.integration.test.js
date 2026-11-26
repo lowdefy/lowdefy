@@ -85,6 +85,7 @@ pages:
       stage: 'dev',
     });
     return {
+      buildFiles: fs.readdirSync(buildDir),
       idCounter: readArtifact('idCounter.json'),
       keyMap: readArtifact('keyMap.json'),
       refMap: readArtifact('refMap.json'),
@@ -95,6 +96,10 @@ pages:
   const second = await build();
   fs.rmSync(root, { recursive: true, force: true });
 
+  // The dev server's build gzips no maps: only production server builds ship them.
+  expect(first.buildFiles).toContain('keyMap.json');
+  expect(first.buildFiles).not.toContain('keyMap.json.gz');
+  expect(first.buildFiles).not.toContain('refMap.json.gz');
   expect(first.idCounter.prefix).not.toEqual(second.idCounter.prefix);
   const firstKeys = Object.keys(first.keyMap);
   expect(firstKeys.every((key) => key.startsWith(first.idCounter.prefix))).toBe(true);

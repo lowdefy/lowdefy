@@ -88,3 +88,26 @@ fixtureTest('a full reload keeps the request call counts', async () => {
     { pageId: 'home', requestId: 'save_item', calls: 2, write: true },
   ]);
 });
+
+// Lint L8 suggests these as the steps' targets: a page-reading click on a ClickableHtml element
+// records the element's event and data-id, and one on its confirm's OK the confirm's ok.
+fixtureTest('a click by containing records the ClickableHtml control it landed on', async () => {
+  const result = await postJourney({
+    pageId: 'clickable_targets',
+    steps: [
+      { click: { blockId: 'issue_cards', containing: 'lodash 4.17.20' } },
+      { click: { blockId: 'issue_cards', text: 'Dismiss', nth: 0 } },
+      { click: { text: 'OK' } },
+      { click: { blockId: 'issue_cards', containing: 'Refresh' } },
+      { expect: { visible: { blockId: 'issue_cards', control: 'onOpen', rowKey: 'issue-2' } } },
+    ],
+    state: ['log'],
+  });
+  expect(result.failure).toBeUndefined();
+  expect(result.exercised.controls).toEqual([
+    { stepIndex: 0, blockId: 'issue_cards', control: 'onOpen', rowKey: 'issue-2' },
+    { stepIndex: 1, blockId: 'issue_cards', control: 'onDismiss', rowKey: 'issue-1' },
+    { stepIndex: 2, blockId: 'issue_cards', control: 'ok', rowKey: null },
+    { stepIndex: 3, blockId: 'issue_cards', control: 'onRefresh', rowKey: null },
+  ]);
+});

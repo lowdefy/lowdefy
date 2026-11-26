@@ -131,6 +131,8 @@ function createLocator({ selector, page }) {
       page.evaluatedAll.push(selector);
       return fn(page.elementsFor(selector), arg);
     }),
+    // The fake page draws no elements, so a clicked element carries no control marks.
+    evaluate: vi.fn(async () => null),
     allInnerTexts: vi.fn(async () => [page.texts[selector] ?? '']),
     page: vi.fn(() => page),
   };
@@ -231,7 +233,7 @@ test('runJourney returns an error naming an unknown step key before opening a br
     steps: [{ click: 'ok' }, { tap: 'ok' }],
   });
   expect(result.error).toEqual(
-    'Step 1: Unknown journey step "tap". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect.'
+    'Step 1: Unknown journey step "tap". Steps are: click, open, fill, select, press, back, goto, email, as, wait, screenshot, expect, call, request, hold, release, webhook.'
   );
   expect(mockGetBrowser).not.toHaveBeenCalled();
   expect(mockOpenPage).not.toHaveBeenCalled();
@@ -246,6 +248,38 @@ test('runJourney refuses a placeholder value (from: shape) before opening a brow
   expect(result).toEqual({
     error:
       'Step 1: fill on "title" has a placeholder value (from: shape). Fill it from the data set or the journey\'s user, then remove from.',
+    refused: true,
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
+test('runJourney refuses hold and release before opening a browser, pointing to a headless run', async () => {
+  const result = await runJourney({
+    origin,
+    steps: [
+      { hold: { requestId: 'claim_run' } },
+      { call: { endpoint: 'approve_run', payload: { id: 'BR-1' } } },
+      { release: 'claim_run' },
+    ],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 0: step "hold" needs the headless runner, which keeps a held call parked in its own process. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).',
+    refused: true,
+  });
+  expect(mockGetBrowser).not.toHaveBeenCalled();
+  expect(mockOpenPage).not.toHaveBeenCalled();
+});
+
+test('runJourney refuses a call as system before opening a browser, pointing to a headless run', async () => {
+  const result = await runJourney({
+    origin,
+    steps: [{ call: { endpoint: 'close_runs', as: 'system' } }, { expect: { status: 200 } }],
+  });
+  expect(result).toEqual({
+    error:
+      'Step 0: step "call" as system needs the headless runner, which runs the endpoint as the system in its own process; over HTTP that is the detached route, which needs CRON_SECRET. A browser run cannot take it: run the journey headless (lowdefy test --headless, or lowdefy_run_journey with headless: true).',
     refused: true,
   });
   expect(mockGetBrowser).not.toHaveBeenCalled();
@@ -1182,12 +1216,36 @@ const POPUPS = [
 
 const SHOWING_BEFORE = 'data-lowdefy-journey-showing-before';
 
-// A stand-in for a popup element: enough DOM for the open step's marking.
-function createPopup({ visible }) {
+// A popup antd is animating out carries its motion's `ant-<motion>-leave` class (LEAVING in the
+// runner), on the popup or on an ancestor (ColorPicker's popover).
+const LEAVING_MOTIONS = [
+  'zoom',
+  'zoom-big',
+  'fade',
+  'slide-up',
+  'slide-down',
+  'slide-left',
+  'slide-right',
+  'drawer-panel-motion-left',
+  'drawer-panel-motion-right',
+  'drawer-panel-motion-top',
+  'drawer-panel-motion-bottom',
+  'motion-collapse',
+];
+const LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave`).join(', ');
+const INSIDE_LEAVING = LEAVING_MOTIONS.map((motion) => `.ant-${motion}-leave *`).join(', ');
+
+// A stand-in for a popup element: enough DOM for the open step's marking. closest() reads a list
+// of class selectors, as LEAVING is, against the popup's classes and its ancestors'.
+function createPopup({ visible, classes = [], ancestorClasses = [] }) {
   const attributes = new Set();
+  const hasClass = (selector, list) =>
+    selector.split(', ').some((part) => list.includes(part.replace(/^\./, '')));
   return {
     attributes,
     checkVisibility: () => visible,
+    closest: (selector) =>
+      hasClass(selector, classes) || hasClass(selector, ancestorClasses) ? {} : null,
     setAttribute: (name) => attributes.add(name),
     removeAttribute: (name) => attributes.delete(name),
   };
@@ -1221,20 +1279,37 @@ test('runJourney open waits for a popup its own click opened, not one already sh
   openWith(page);
   const fading = createPopup({ visible: true });
   const closed = createPopup({ visible: false });
+  // Still fading out after it closed: not showing, so not marked, and found again if reopened.
+  const leaving = createPopup({ visible: true, classes: ['ant-dropdown', 'ant-slide-up-leave'] });
+  // Showing, with "leave" in its block's portal class: not taken as fading out.
+  const leaveNamed = createPopup({ visible: true, classes: ['ldf-portal-leave_menu'] });
+  // ColorPicker's panel, whose popover around it is fading out: not showing either.
+  const leavingPanel = createPopup({
+    visible: true,
+    classes: ['ant-color-picker-inner'],
+    ancestorClasses: ['ant-popover', 'ant-zoom-big-leave'],
+  });
+  const popups = [fading, closed, leaving, leaveNamed, leavingPanel];
   page.elementsFor = (selector) => {
     if (selector === POPUPS.join(', ')) {
-      return [fading, closed];
+      return popups;
     }
     if (selector === `[${SHOWING_BEFORE}]`) {
-      return [fading, closed].filter((popup) => popup.attributes.has(SHOWING_BEFORE));
+      return popups.filter((popup) => popup.attributes.has(SHOWING_BEFORE));
     }
     return [];
   };
   const markedWhenClicked = [];
+  const markedLeavingWhenClicked = [];
+  const markedLeaveNamedWhenClicked = [];
+  const markedLeavingPanelWhenClicked = [];
   page.locator.mockImplementation((selector) => {
     const locator = createLocator({ selector, page });
     locator.click.mockImplementation(async () => {
       markedWhenClicked.push(fading.attributes.has(SHOWING_BEFORE));
+      markedLeavingWhenClicked.push(leaving.attributes.has(SHOWING_BEFORE));
+      markedLeaveNamedWhenClicked.push(leaveNamed.attributes.has(SHOWING_BEFORE));
+      markedLeavingPanelWhenClicked.push(leavingPanel.attributes.has(SHOWING_BEFORE));
       page.clicks.push(selector);
     });
     return locator;
@@ -1244,9 +1319,14 @@ test('runJourney open waits for a popup its own click opened, not one already sh
 
   expect(result.passed).toBe(true);
   expect(markedWhenClicked).toEqual([true]);
+  expect(markedLeavingWhenClicked).toEqual([false]);
+  expect(markedLeaveNamedWhenClicked).toEqual([true]);
+  expect(markedLeavingPanelWhenClicked).toEqual([false]);
   expect(closed.attributes.has(SHOWING_BEFORE)).toBe(false);
   expect(page.waits).toContain(
-    POPUPS.map((selector) => `${selector}:not([${SHOWING_BEFORE}])`).join(', ')
+    POPUPS.map(
+      (selector) => `${selector}:not([${SHOWING_BEFORE}]):not(${LEAVING}):not(${INSIDE_LEAVING})`
+    ).join(', ')
   );
   // Unmarked once the step is done, so a later open of that input finds it.
   expect(fading.attributes.has(SHOWING_BEFORE)).toBe(false);
@@ -1314,7 +1394,7 @@ test('runJourney reports a radio option that is not in the block by its text', a
       const inner = createLocator({ selector: `${selector} >> ${child}`, page });
       if (child === 'label:has(input[type="radio"])') {
         inner.count.mockResolvedValue(3);
-        inner.click.mockRejectedValue(new Error('locator.click: Timeout 5000ms exceeded.'));
+        inner.waitFor.mockRejectedValue(new Error('locator.waitFor: Timeout 5000ms exceeded.'));
       }
       return inner;
     });
@@ -1331,7 +1411,7 @@ test('runJourney reports a radio option that is not in the block by its text', a
   expect(result.failure).toMatchObject({
     index: 0,
     expected: 'option "Decade" in block "period"',
-    actual: 'locator.click: Timeout 5000ms exceeded.',
+    actual: 'locator.waitFor: Timeout 5000ms exceeded.',
     message: 'No option with text "Decade" in block "period".',
   });
 });
@@ -1544,9 +1624,11 @@ test('runJourney goes back one page and settles it', async () => {
 
   expect(result.passed).toBe(true);
   expect(page.goBack).toHaveBeenCalledWith({ timeout: 5000 });
-  expect(page.waitForFunction).toHaveBeenLastCalledWith(expect.any(Function), undefined, {
-    timeout: 5000,
-  });
+  expect(page.waitForFunction).toHaveBeenLastCalledWith(
+    expect.any(Function),
+    { deadline: expect.any(Number) },
+    { timeout: 5000 }
+  );
 });
 
 test('runJourney fails back on the first page instead of leaving the app', async () => {
@@ -1720,16 +1802,23 @@ test('runJourney settles the page after an interaction before the next step', as
   const page = createPage();
   openWith(page);
 
+  const started = Date.now();
   await runJourney({
     origin,
     pageId: 'form',
     steps: [{ click: 'open' }, { expect: { visible: 'modal' } }],
   });
+  const ended = Date.now();
 
   // openPage owns the readiness wait; the runner waits for lazy blocks before
   // the click picks a control, and settles once after the click.
   expect(page.waitForFunction).toHaveBeenCalledTimes(2);
-  expect(page.waitForFunction.mock.calls[1][1]).toBeUndefined();
+  // The settle tells isPageReady when it gives up (SETTLE_TIMEOUT_MS after it
+  // starts), so an event sleeping in a Wait past that is not waited for.
+  const [, argument, options] = page.waitForFunction.mock.calls[1];
+  expect(options).toEqual({ timeout: 5000 });
+  expect(argument.deadline).toBeGreaterThanOrEqual(started + 5000);
+  expect(argument.deadline).toBeLessThanOrEqual(ended + 5000);
 });
 
 test('runJourney waits for lazy blocks to load before it picks the control a click lands on', async () => {
@@ -1880,6 +1969,35 @@ test('runJourney opens each actor the first time an as step names it and returns
   expect(inviteeContext.close).toHaveBeenCalledTimes(1);
 });
 
+test('runJourney reports its duration from the browser slot being taken and its wait for the slot', async () => {
+  const sharedHome = process.env.LOWDEFY_HOME;
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-timing-'));
+  process.env.LOWDEFY_HOME = home;
+  // Every browser slot is held elsewhere on the machine until one frees after 400 ms.
+  const others = [];
+  for (let index = 0; index < 3; index += 1) {
+    others.push(await acquireMachineSlot({ name: 'browser', limit: 3 }));
+  }
+  const freed = setTimeout(() => others.shift().release(), 400);
+  const page = createPage();
+  mockOpenPage.mockImplementationOnce(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return { context: { close: vi.fn(async () => {}) }, page, ready: true, leftOrigin: [] };
+  });
+  try {
+    const result = await runJourney({ origin, pageId: 'form', steps: [] });
+    expect(result.passed).toBe(true);
+    expect(result.waitedMs).toBeGreaterThanOrEqual(350);
+    expect(result.durationMs).toBeGreaterThanOrEqual(90);
+    expect(result.durationMs).toBeLessThan(result.waitedMs);
+  } finally {
+    clearTimeout(freed);
+    others.forEach((slot) => slot.release());
+    process.env.LOWDEFY_HOME = sharedHome;
+    fs.rmSync(home, { recursive: true, force: true });
+  }
+});
+
 test('runJourney with four actors takes one machine browser slot for the whole journey', async () => {
   const sharedHome = process.env.LOWDEFY_HOME;
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'lowdefy-journey-slot-'));
@@ -1958,9 +2076,12 @@ test('runJourney goto loads the page and settles on the page the app shows', asy
     ['http://localhost:3227/dashboard', { waitUntil: 'load', timeout: 15000 }],
     ['http://localhost:3227/invoice', { waitUntil: 'load', timeout: 15000 }],
   ]);
-  // No argument: isPageReady settles the page the app shows, which after a
-  // redirect is the sign-in page rather than the one asked for.
-  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([undefined, undefined]);
+  // No page id in the argument: isPageReady settles the page the app shows,
+  // which after a redirect is the sign-in page rather than the one asked for.
+  expect(page.waitForFunction.mock.calls.map((call) => call[1])).toEqual([
+    { deadline: expect.any(Number) },
+    { deadline: expect.any(Number) },
+  ]);
 });
 
 const ROUTES = { ticket: 'tickets/{space}/{ticket_id}' };
@@ -2265,6 +2386,7 @@ test('runJourney reports the exercised network path merged across actors, with n
     unfollowed: 0,
     events: [],
     rendered: {},
+    controls: [],
   });
 });
 

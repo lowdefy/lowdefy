@@ -94,6 +94,7 @@ class Actions {
     controls,
     counters,
     event,
+    eventDescription,
     parseScope,
     progress,
     responses,
@@ -107,6 +108,7 @@ class Actions {
           controls,
           counters,
           event,
+          eventDescription,
           parseScope,
           progress,
           responses,
@@ -123,7 +125,8 @@ class Actions {
         if (action.async === true) {
           // Fire and forget - the response is never awaited here, so an 'async: true'
           // action cannot end the chain even if it returns a stopChain marker. The
-          // following steps have already run by the time it resolves.
+          // following steps have already run by the time it resolves. It is not the step
+          // the event is on, so it is not given eventDescription (see createWait).
           this.callAsyncAction({
             action,
             arrayIndices,
@@ -140,6 +143,7 @@ class Actions {
             arrayIndices,
             block,
             event,
+            eventDescription,
             index,
             parseScope,
             progress,
@@ -175,6 +179,7 @@ class Actions {
     controls,
     counters,
     event,
+    eventDescription,
     parseScope,
     progress,
     responses,
@@ -214,6 +219,7 @@ class Actions {
           controls,
           counters,
           event,
+          eventDescription,
           parseScope,
           progress,
           responses,
@@ -230,6 +236,7 @@ class Actions {
         controls,
         counters,
         event,
+        eventDescription,
         parseScope,
         progress,
         responses,
@@ -260,6 +267,7 @@ class Actions {
             controls,
             counters,
             event,
+            eventDescription,
             parseScope,
             progress,
             responses,
@@ -281,6 +289,7 @@ class Actions {
       controls,
       counters,
       event,
+      eventDescription,
       parseScope,
       progress,
       responses,
@@ -332,7 +341,16 @@ class Actions {
     }
   }
 
-  async callActions({ actions, arrayIndices, block, catchActions, event, eventName, progress }) {
+  async callActions({
+    actions,
+    arrayIndices,
+    block,
+    catchActions,
+    event,
+    eventDescription,
+    eventName,
+    progress,
+  }) {
     const startTimestamp = new Date();
     const responses = {};
     // Only events with controls gain a 'controls' array - flat chains keep their result shape.
@@ -347,6 +365,7 @@ class Actions {
         controls,
         counters,
         event,
+        eventDescription,
         parseScope: { error: null },
         responses,
         progress,
@@ -373,6 +392,7 @@ class Actions {
           controls,
           counters,
           event,
+          eventDescription,
           parseScope: { error: caught },
           responses,
           progress,
@@ -419,7 +439,17 @@ class Actions {
     };
   }
 
-  async callAction({ action, arrayIndices, block, event, index, parseScope, progress, responses }) {
+  async callAction({
+    action,
+    arrayIndices,
+    block,
+    event,
+    eventDescription,
+    index,
+    parseScope,
+    progress,
+    responses,
+  }) {
     if (!this.actions[action.type]) {
       const error = new ConfigError(`Invalid action type "${action.type}" at "${block.blockId}".`, {
         configKey: action['~k'],
@@ -464,6 +494,7 @@ class Actions {
             blockId: block.blockId,
             context: this.context,
             event,
+            eventDescription,
           }),
         }),
         params: parsedAction.params,

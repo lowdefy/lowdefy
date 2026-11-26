@@ -16,8 +16,8 @@
 
 import { getStepKey } from '@lowdefy/node-utils';
 
-// An assertion step checks an outcome: any expect, or a wait for a request to
-// answer.
+// An assertion step checks an outcome: any expect (of the page, a call's answer,
+// the calls made or the database), or a wait for a request to answer.
 function isAssertionStep(step) {
   const key = getStepKey(step);
   if (key === 'expect') {

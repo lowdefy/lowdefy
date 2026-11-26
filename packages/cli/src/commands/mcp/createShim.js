@@ -32,6 +32,7 @@ import createCheckoutGuard from './createCheckoutGuard.js';
 import createHubConnection from './createHubConnection.js';
 import createInstanceConnections from './createInstanceConnections.js';
 import createProgressSender from './createProgressSender.js';
+import createShownWarnings from './createShownWarnings.js';
 import describeVersionMismatch from './describeVersionMismatch.js';
 import fetchBuildSummary from './fetchBuildSummary.js';
 import findApps from './findApps.js';
@@ -124,6 +125,13 @@ function describeForwardError({ label, name, url, error }) {
 
 function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
   const hub = createHubConnection();
+  const shownWarnings = createShownWarnings();
+  // The shim's own options go on each forwarded definition: directory on every
+  // tool, and all on build status, whose warnings the shim leaves out.
+  function withShimOptions(tool) {
+    const routed = withDirectory(tool);
+    return tool.name === 'lowdefy_build_status' ? shownWarnings.withAllOption(routed) : routed;
+  }
   const server = new Server(
     { name: 'lowdefy', version: cliVersion },
     {
@@ -137,7 +145,7 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
   devTools.tools
     .filter((tool) => !HIDDEN_DEV_TOOLS.has(tool.name))
     .forEach((tool) => {
-      forwarded.set(tool.name, { version: cliVersion, tool: withDirectory(tool) });
+      forwarded.set(tool.name, { version: cliVersion, tool: withShimOptions(tool) });
     });
 
   // The list a session starts with is this CLI's, which need not be the
@@ -176,7 +184,7 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
         known === undefined ||
         isNewerVersion({ candidate: serverVersion, held: known.version })
       ) {
-        forwarded.set(tool.name, { version: serverVersion, tool: withDirectory(tool) });
+        forwarded.set(tool.name, { version: serverVersion, tool: withShimOptions(tool) });
         changed = true;
       }
     });
@@ -262,11 +270,26 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
   // every build-status read. The dev server reports them on every read.
   const notedAgentFiles = new Set();
 
+  // The agentFiles notices this session has not passed on for the app yet;
+  // undefined when none is left.
+  function freshAgentFiles({ app, agentFiles }) {
+    const fresh = agentFiles.filter((notice) => {
+      const key = `${app.configDirectory}\n${notice?.message}`;
+      if (notedAgentFiles.has(key)) {
+        return false;
+      }
+      notedAgentFiles.add(key);
+      return true;
+    });
+    return fresh.length > 0 ? fresh : undefined;
+  }
+
   // Drops from a forwarded lowdefy_build_status result each agentFiles notice
   // this session has already passed on for the app, leaving the field out when
-  // none is left. The dev server's text is JSON.stringify(value, null, 2); a
-  // text that does not parse, or has no agentFiles, passes through untouched.
-  function dropNotedAgentFiles({ app, content }) {
+  // none is left, and the warnings it has already shown (createShownWarnings).
+  // The dev server's text is JSON.stringify(value, null, 2); a text that does
+  // not parse, or that neither changes, passes through untouched.
+  function trimBuildStatus({ all, app, content }) {
     return content.map((item) => {
       if (item?.type !== 'text' || typeof item.text !== 'string') {
         return item;
@@ -277,28 +300,27 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
       } catch {
         return item;
       }
-      if (!type.isObject(value) || !type.isArray(value.agentFiles)) {
+      if (!type.isObject(value)) {
         return item;
       }
-      const fresh = value.agentFiles.filter((notice) => {
-        const key = `${app.configDirectory}\n${notice?.message}`;
-        if (notedAgentFiles.has(key)) {
-          return false;
-        }
-        notedAgentFiles.add(key);
-        return true;
-      });
-      if (fresh.length > 0) {
-        value.agentFiles = fresh;
-      } else {
-        delete value.agentFiles;
+      let trimmed = shownWarnings.trimShownWarnings({ all, app, value });
+      if (type.isArray(value.agentFiles)) {
+        const { agentFiles, ...rest } = trimmed;
+        const fresh = freshAgentFiles({ app, agentFiles });
+        trimmed = fresh === undefined ? rest : { ...trimmed, agentFiles: fresh };
       }
-      return { ...item, text: JSON.stringify(value, null, 2) };
+      if (trimmed === value) {
+        return item;
+      }
+      return { ...item, text: JSON.stringify(trimmed, null, 2) };
     });
   }
 
   async function callDevTool({ name, args }) {
-    const { directory, ...toolArgs } = args;
+    const { directory, ...forwardedArgs } = args;
+    // all is the shim's own option on build status (see trimBuildStatus).
+    const { all, ...buildStatusArgs } = forwardedArgs;
+    const toolArgs = name === 'lowdefy_build_status' ? buildStatusArgs : forwardedArgs;
     const app = await resolve({ directory });
     const instance = await ensureRunning(app);
     const call = async () => {
@@ -328,7 +350,7 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
     }
     const forwardedContent =
       name === 'lowdefy_build_status'
-        ? dropNotedAgentFiles({ app, content: result.content ?? [] })
+        ? trimBuildStatus({ all, app, content: result.content ?? [] })
         : (result.content ?? []);
     const content = [{ type: 'text', text: `${app.label} · ${instance.url}` }, ...forwardedContent];
     // The handlers come from the dev server, whose version follows the app,
@@ -464,7 +486,19 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
   // A suite can run for many minutes, so each finished journey is reported as
   // progress: a client that sees none takes the call for dead and ends it.
   async function runTests(
-    { directory, filter, tags, paths, repeat, tier, usageWindow },
+    {
+      directory,
+      filter,
+      tags,
+      paths,
+      repeat,
+      tier,
+      usageWindow,
+      headless,
+      browser,
+      thorough,
+      concurrency,
+    },
     { sendProgress }
   ) {
     const app = await resolve({ directory });
@@ -478,6 +512,10 @@ function createShim({ cliVersion, cliDirectory, cwd, devTools }) {
       repeat,
       tier,
       usageWindow,
+      headless,
+      browser,
+      thorough,
+      concurrency,
       onProgress: ({ done, total, name, class: journeyClass }) =>
         sendProgress({ progress: done, total, message: `${journeyClass} ${name}` }),
     });

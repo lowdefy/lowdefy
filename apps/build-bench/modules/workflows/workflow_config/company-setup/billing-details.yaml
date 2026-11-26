@@ -1,0 +1,68 @@
+type: billing-details
+kind: form
+action_group: setup
+# Authored description (Part 64) — context the two form fields don't give:
+# *which* email, *when* a VAT number is needed, and what submitting does.
+description: |
+  Use the **accounts-payable** contact, not the sales contact — this address
+  receives every invoice. Capture the **VAT number** for EU-registered companies
+  (it drives reverse-charge handling); leave it blank otherwise.
+
+  On submit these write straight onto the company record and feed the invoice
+  run, so confirm them with the customer first.
+access:
+  demo:
+    view: true
+    edit: true
+form:
+  - key: form.billing_email
+    component: text_input
+    title: Billing email
+    required: true
+  - key: form.vat_number
+    component: text_input
+    title: VAT number
+hooks:
+  # Post-hook (fires after the commit lands): persist the captured billing
+  # details onto the company entity doc. The workflow's entity is the company
+  # (company-setup.entity.connection_id → companies/companies-collection), so the
+  # entity.id is the company _id (a string consecutive id — no ObjectId coercion).
+  # Form values arrive under the payload's form bag without the `form.` block-id
+  # prefix collapsing (_payload: form.billing_email). Idempotent by design (D6):
+  # a plain $set replays safely.
+  submit:
+    post:
+      routine:
+        - id: update_company_billing
+          type: MongoDBUpdateOne
+          connectionId:
+            _module.connectionId:
+              id: companies-collection
+              module: { _var: ids.companies }
+          properties:
+            filter:
+              _id:
+                _payload: context.workflow.entity.id
+            update:
+              $set:
+                billing.email:
+                  _payload: form.billing_email
+                billing.vat_number:
+                  _payload: form.vat_number
+                updated:
+                  _ref:
+                    module: events
+                    component: change_stamp
+        - :return:
+            company_id:
+              _payload: context.workflow.entity.id
+status_map:
+  action-required:
+    demo:
+      message: Capture the company's billing details.
+  in-progress:
+    demo:
+      message: Billing details in progress.
+  done:
+    demo:
+      message: Billing details captured.

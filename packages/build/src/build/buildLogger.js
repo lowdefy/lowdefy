@@ -42,6 +42,9 @@ function buildLogger({ components }) {
   }
   const sentry = {
     ...sentryDefaults,
+    // A new array for every build: addKeys marks each array it keys, and the dev server and
+    // tests build again in the same process, where a shared default would already be marked.
+    userFields: [...sentryDefaults.userFields],
     ...(components.logger.sentry ?? {}),
   };
   if (!type.isNone(current)) {

@@ -270,6 +270,7 @@ let buildDir;
 let configDir;
 let pageRegistry;
 let apiArtifacts;
+let keptModules;
 
 beforeAll(async () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'ldf-callapi-jit-'));
@@ -280,7 +281,7 @@ beforeAll(async () => {
 
   writeFixture(configDir);
 
-  await shallowBuild({
+  const result = await shallowBuild({
     customTypesMap: typesMap,
     directories: {
       config: configDir,
@@ -293,6 +294,7 @@ beforeAll(async () => {
 
   pageRegistry = readArtifact(buildDir, 'pageRegistry.json');
   apiArtifacts = readBuildApiArtifacts(buildDir);
+  keptModules = result.context.modules;
 });
 
 async function buildAndCollectWarnings(pageId) {
@@ -318,6 +320,23 @@ test('shallowBuild writes the notifications config artifact to build/notificatio
   expect(notification.notificationId).toBe('hello');
   expect(notification.type).toBe('NotificationEmail');
   expect(notification.properties.subject).toBe('Hello');
+});
+
+test('shallowBuild returns a context whose module manifests hold no pages or endpoints', () => {
+  // The dev server's manager keeps this context for as long as it runs. The
+  // pages and endpoints are in the build artifacts by then.
+  const manifest = keptModules.inviter.manifest;
+  expect(apiArtifacts.map((c) => c.endpointId)).toContain('inviter/send-invite');
+  expect(pageRegistry['inviter/invite']).toBeDefined();
+  expect(Object.keys(manifest)).not.toContain('pages');
+  expect(Object.keys(manifest)).not.toContain('api');
+});
+
+test('shallowBuild writes modules.json without the module pages and endpoints', () => {
+  // Every page build context reads modules.json whole.
+  const manifest = readArtifact(buildDir, 'modules.json').inviter.manifest;
+  expect(Object.keys(manifest)).not.toContain('pages');
+  expect(Object.keys(manifest)).not.toContain('api');
 });
 
 test('JIT build of a page calling a top-level endpoint emits no false non-existent warning', async () => {

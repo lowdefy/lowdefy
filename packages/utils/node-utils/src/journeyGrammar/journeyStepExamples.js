@@ -18,7 +18,13 @@
 // the examples for its step, so an agent that wrote a step wrong gets the
 // right form back; the journey step schema carries the same examples.
 const JOURNEY_STEP_EXAMPLES = {
-  click: [{ click: 'save_button' }, { click: { text: 'OK' } }],
+  click: [
+    { click: 'save_button' },
+    { click: { blockId: 'delete_modal', control: 'ok' } },
+    { click: { blockId: 'invoices', rowKey: 'inv-0042', column: 'number' } },
+    { click: { blockId: 'issue_cards', control: 'onOpenIssue', rowKey: 'issue-17' } },
+    { click: { text: 'OK' } },
+  ],
   open: [{ open: 'status_selector' }],
   fill: [
     { fill: { blockId: 'name_input', value: 'Ada' } },
@@ -36,18 +42,75 @@ const JOURNEY_STEP_EXAMPLES = {
   wait: [{ wait: { request: 'get_orders' } }, { wait: { state: 'orders' } }, { wait: { ms: 500 } }],
   screenshot: [{ screenshot: 'after_save' }],
   expect: [{ expect: { visible: 'save_button' } }, { expect: { url: { contains: '/orders' } } }],
+  call: [
+    { call: { endpoint: 'orders-cancel', payload: { order_id: 'ORD-1' } } },
+    { call: { endpoint: 'orders-cancel', payload: { order_id: 'ORD-2' }, as: 'other_customer' } },
+    { call: { endpoint: 'orders-nightly-close', as: 'system' } },
+    {
+      call: {
+        endpoint: 'orders-close-day',
+        as: { system: { organization: 'org_1', caller: { id: 'nightly', name: 'Nightly close' } } },
+      },
+    },
+  ],
+  request: [
+    { request: { pageId: 'orders', requestId: 'get_order', payload: { order_id: 'ORD-1' } } },
+  ],
+  hold: [
+    { hold: { requestId: 'claim_order' } },
+    { hold: { requestId: 'claim_order', endpoint: 'orders-approve' } },
+  ],
+  release: [
+    { release: 'claim_order' },
+    { release: { requestId: 'claim_order', endpoint: 'orders-approve' } },
+  ],
+  webhook: [
+    {
+      webhook: {
+        endpoint: 'payments-events',
+        body: { type: 'payment.succeeded', order_id: 'ORD-1' },
+        headers: {
+          'x-signature': '9f2c5e0b7d4a1c3e8b6f0a2d4c6e8f1a3b5d7c9e0f2a4b6c8d0e2f4a6b8c0d2e',
+        },
+      },
+    },
+    { webhook: { endpoint: 'mail-bounces', body: 'id=42&event=bounce', query: { token: 'abc' } } },
+  ],
   'expect.state': [{ expect: { state: { path: 'order.status', equals: 'Open' } } }],
   'expect.visible': [{ expect: { visible: 'save_button' } }],
-  'expect.hidden': [{ expect: { hidden: 'error_alert' } }],
+  'expect.hidden': [
+    { expect: { hidden: 'error_alert' } },
+    { expect: { hidden: { blockId: 'invoices', rowKey: 'inv-0042' } } },
+    { expect: { hidden: { blockId: 'issue_cards', control: 'onOpenIssue', rowKey: 'issue-17' } } },
+  ],
   'expect.text': [{ expect: { text: { blockId: 'title', contains: 'Orders' } } }],
   'expect.url': [{ expect: { url: { contains: '/orders' } } }],
   'expect.title': [{ expect: { title: { contains: 'Orders' } } }],
   'expect.calls': [
     { expect: { calls: { request: 'save_order', count: 1 } } },
     { expect: { calls: { endpoint: 'orders-sync', count: 1 } } },
+    { expect: { calls: { request: 'save_order', payload: { status: 'Open' } } } },
+    { expect: { calls: { endpoint: 'orders-sync', response: { synced: true } } } },
   ],
   'expect.error': [{ expect: { error: 'is required' } }],
   'expect.effect': [{ expect: { effect: true } }],
+  'expect.status': [{ expect: { status: 403 } }],
+  'expect.db': [
+    { expect: { db: { collection: 'orders', match: { status: 'Cancelled' }, count: 0 } } },
+    {
+      expect: {
+        db: { collection: 'orders', match: { _id: 'ORD-1' }, equals: [{ status: 'Open' }] },
+      },
+    },
+  ],
+  'expect.sunk': [
+    { expect: { sunk: { connectionType: 'SendGridMail', count: 1 } } },
+    {
+      expect: {
+        sunk: { requestId: 'fetch_rate', match: { params: { currency: 'EUR' } } },
+      },
+    },
+  ],
 };
 
 export default JOURNEY_STEP_EXAMPLES;

@@ -17,6 +17,8 @@
 import { type } from '@lowdefy/helpers';
 
 import JOURNEY_STEP_EXAMPLES from './journeyStepExamples.js';
+import readSystemCaller from './readSystemCaller.js';
+import validateJourneyUser from './validateJourneyUser.js';
 
 const STEP_KEYS = [
   'click',
@@ -31,10 +33,22 @@ const STEP_KEYS = [
   'wait',
   'screenshot',
   'expect',
+  'call',
+  'request',
+  'hold',
+  'release',
+  'webhook',
 ];
 // The steps a person does to the page. An app error one causes can be
 // asserted by an expect.error step straight after it.
 const INTERACTION_STEP_KEYS = ['click', 'open', 'fill', 'select', 'press', 'back'];
+// The steps that call the server directly, with a payload the page would never
+// send. Their answer is read by the expect.error and expect.status steps after
+// them.
+const CALL_STEP_KEYS = ['call', 'request'];
+// The steps whose answer the expect.error and expect.status steps after them read: a call or
+// request, a release, which answers with the call it let go, and a webhook.
+const ANSWER_STEP_KEYS = [...CALL_STEP_KEYS, 'release', 'webhook'];
 const EXPECT_KEYS = [
   'state',
   'visible',
@@ -45,6 +59,9 @@ const EXPECT_KEYS = [
   'calls',
   'error',
   'effect',
+  'status',
+  'db',
+  'sunk',
 ];
 const WAIT_KEYS = ['ms', 'request', 'state'];
 // `from` marks where a fill, select or expect.state value came from:
@@ -75,8 +92,25 @@ function getStepKey(step) {
 // `nth` picks among several matches. `text` alone, with no blockId, searches
 // the whole page — that is how portal-rendered controls (confirm dialog
 // buttons, modal footers, dropdown menu items) are reached, since they render
-// outside every block.
-const TARGET_KEYS = ['blockId', 'text', 'containing', 'row', 'column', 'nth'];
+// outside every block. `rowKey` names a grid row by its key and `control` a
+// control the block draws by its key (a modal's ok, a menu item); both need
+// the blockId, and both runners read them, where the others read the page.
+const TARGET_KEYS = ['blockId', 'text', 'containing', 'row', 'rowKey', 'column', 'control', 'nth'];
+
+// Why a step refuses a target key, naming the browser form to use instead. No
+// covered block has an input in a row, and a control is clicked or seen, never
+// typed into or read for its text, so only click and expect.visible and
+// expect.hidden take them.
+const REFUSED_TARGET_KEY_REASONS = {
+  rowKey:
+    'a row named by key is clicked or expected; reach an input in a grid row with "row" (the displayed row) and "column"',
+  control:
+    'a control named by key is clicked, or expected visible or hidden; reach it with "text" (its exact text) instead, after a click or an open that shows it',
+};
+
+function isNonEmptyString(value) {
+  return type.isString(value) && value !== '';
+}
 
 function isIndex(value) {
   return type.isInt(value) && value >= 0;
@@ -97,8 +131,23 @@ function findUnknownKeys({ key, params, allowed }) {
 // Validates the target keys of a step object; `extraKeys` are the step's own
 // keys (`value`, `contains`) that may sit beside them. Returns an error
 // message, or undefined when the target is well-formed.
-function validateTargetObject({ key, params, extraKeys = [], requireBlockId = false }) {
-  const unknownKeys = findUnknownKeys({ key, params, allowed: [...TARGET_KEYS, ...extraKeys] });
+// `refusedKeys` are target keys the step does not take, refused with the
+// browser form to use instead.
+function validateTargetObject({
+  key,
+  params,
+  extraKeys = [],
+  refusedKeys = [],
+  requireBlockId = false,
+}) {
+  const refusedKey = refusedKeys.find((refused) => Object.hasOwn(params, refused));
+  if (!type.isUndefined(refusedKey)) {
+    return `Step "${key}" takes no "${refusedKey}": ${
+      REFUSED_TARGET_KEY_REASONS[refusedKey]
+    }. Received ${describe(params)}.`;
+  }
+  const allowed = [...TARGET_KEYS.filter((target) => !refusedKeys.includes(target)), ...extraKeys];
+  const unknownKeys = findUnknownKeys({ key, params, allowed });
   if (!type.isUndefined(unknownKeys)) {
     return unknownKeys;
   }
@@ -118,6 +167,37 @@ function validateTargetObject({ key, params, extraKeys = [], requireBlockId = fa
   }
   if (!type.isUndefined(params.text) && !type.isUndefined(params.containing)) {
     return `Step "${key}" takes "text" (a control's exact text) or "containing" (text an element contains), not both. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.rowKey) && !isNonEmptyString(params.rowKey)) {
+    return `Step "${key}" requires "rowKey" to be a non-empty string, the row's key. Received ${describe(
+      params.rowKey
+    )}.`;
+  }
+  if (!type.isUndefined(params.control) && !isNonEmptyString(params.control)) {
+    return `Step "${key}" requires "control" to be a non-empty string, the control's key. Received ${describe(
+      params.control
+    )}.`;
+  }
+  if (
+    (!type.isUndefined(params.rowKey) || !type.isUndefined(params.control)) &&
+    type.isUndefined(params.blockId)
+  ) {
+    return `Step "${key}" requires a "blockId" (the block that draws the row or control) when "rowKey" or "control" is given. Received ${describe(
+      params
+    )}.`;
+  }
+  if (!type.isUndefined(params.rowKey) && !type.isUndefined(params.row)) {
+    return `Step "${key}" takes "rowKey" (the row's key) or "row" (the displayed row), not both. Received ${describe(
+      params
+    )}.`;
+  }
+  const controlWith = ['text', 'containing', 'nth'].find(
+    (other) => !type.isUndefined(params[other])
+  );
+  if (!type.isUndefined(params.control) && !type.isUndefined(controlWith)) {
+    return `Step "${key}" takes "control" (the control's key) or "${controlWith}", not both. Received ${describe(
       params
     )}.`;
   }
@@ -159,17 +239,19 @@ function validateTargetObject({ key, params, extraKeys = [], requireBlockId = fa
   return undefined;
 }
 
-// click and expect.visible take a blockId string or a target object.
-function validateTarget({ key, params }) {
+// open, expect.visible and expect.hidden take a blockId string or a target
+// object.
+function validateTarget({ key, params, refusedKeys = [] }) {
   if (type.isString(params)) {
     return undefined;
   }
   if (!type.isObject(params)) {
-    return `Step "${key}" requires a blockId string or a target object { blockId, text, containing, row, column, nth }. Received ${describe(
+    const keys = TARGET_KEYS.filter((target) => !refusedKeys.includes(target)).join(', ');
+    return `Step "${key}" requires a blockId string or a target object { ${keys} }. Received ${describe(
       params
     )}.`;
   }
-  return validateTargetObject({ key, params });
+  return validateTargetObject({ key, params, refusedKeys });
 }
 
 // click takes a target and an optional `count` of 1 to 3: that many clicks in
@@ -190,12 +272,13 @@ function validateClick(params) {
   return validateTargetObject({ key: 'click', params, extraKeys: ['count'] });
 }
 
-// expect.calls counts the calls the current actor has made to one request
+// expect.calls checks the calls the current actor has made to one request
 // (scoped to a page, which defaults to the page the actor is on) or one
-// endpoint since the journey started.
+// endpoint since the journey started: how many (`count`), and what the last
+// one sent (`payload`) and got back (`response`), each a partial match.
 function validateCalls(value) {
   if (!type.isObject(value)) {
-    return `Step "expect.calls" requires { request, pageId?, count } or { endpoint, count }. Received ${describe(
+    return `Step "expect.calls" requires { request, pageId?, count } or { endpoint, count }, where "payload" and "response" may join or replace "count". Received ${describe(
       value
     )}.`;
   }
@@ -209,7 +292,9 @@ function validateCalls(value) {
   const unknownKeys = findUnknownKeys({
     key: 'expect.calls',
     params: value,
-    allowed: isRequest ? ['request', 'pageId', 'count'] : ['endpoint', 'count'],
+    allowed: isRequest
+      ? ['request', 'pageId', 'count', 'payload', 'response']
+      : ['endpoint', 'count', 'payload', 'response'],
   });
   if (!type.isUndefined(unknownKeys)) {
     return unknownKeys;
@@ -225,9 +310,328 @@ function validateCalls(value) {
       value.pageId
     )}.`;
   }
+  if (type.isUndefined(value.count)) {
+    if (type.isUndefined(value.payload) && type.isUndefined(value.response)) {
+      return `Step "expect.calls" requires "count" to be a whole number of calls, 0 or more, or a "payload" or "response" to match. Received ${describe(
+        value
+      )}.`;
+    }
+    return undefined;
+  }
   if (!isIndex(value.count)) {
     return `Step "expect.calls" requires "count" to be a whole number of calls, 0 or more. Received ${describe(
       value.count
+    )}.`;
+  }
+  return undefined;
+}
+
+const SYSTEM_SHAPE =
+  '{ system: { organization, caller? } }: the organization the call is bound to, and the stand-in caller { id, name }, as a CallApi step\'s "organization" and "caller" bind its target';
+
+// as: { system: { organization, caller? } } binds a system call to an organization, and to a
+// stand-in caller, as a CallApi step's "organization" and "caller" do. "as: system" stays the
+// call bound to no organization.
+function validateSystemBinding({ user }) {
+  const otherKeys = Object.keys(user).filter((k) => k !== 'system');
+  if (otherKeys.length > 0) {
+    return `Step "call" requires "as" with "system" to be ${SYSTEM_SHAPE}, with no other keys. Received ${describe(
+      user
+    )}.`;
+  }
+  const binding = user.system;
+  if (!type.isObject(binding)) {
+    return `Step "call" requires "as.system" to be ${SYSTEM_SHAPE}. Write "as: system" for a call bound to no organization. Received ${describe(
+      binding
+    )}.`;
+  }
+  const unknownKeys = Object.keys(binding).filter((k) => !['organization', 'caller'].includes(k));
+  if (unknownKeys.length > 0) {
+    return `Step "call" has unknown key${unknownKeys.length > 1 ? 's' : ''} ${unknownKeys
+      .map((k) => `"as.system.${k}"`)
+      .join(', ')}. Keys are: organization, caller.`;
+  }
+  if (!isNonEmptyString(binding.organization)) {
+    return `Step "call" requires "as.system.organization" to be a non-empty organization id string. Received ${describe(
+      binding.organization
+    )}.`;
+  }
+  const { caller } = binding;
+  if (type.isUndefined(caller)) {
+    return undefined;
+  }
+  if (
+    !type.isObject(caller) ||
+    !isNonEmptyString(caller.id) ||
+    !isNonEmptyString(caller.name) ||
+    Object.keys(caller).some((k) => !['id', 'name'].includes(k))
+  ) {
+    return `Step "call" requires "as.system.caller" to be { id, name }, each a non-empty string, as a CallApi "caller" names the stand-in caller. Received ${describe(
+      caller
+    )}.`;
+  }
+  return undefined;
+}
+
+// call and request take `as`, who calls: a data set user's name, "none" for
+// signed out or an inline user object, as the journey's own `user` does. One
+// call has one caller, so a list is refused. A call also takes "system", which runs the endpoint
+// as a cron or internal run does, or { system: { organization, caller? } }, which binds that run
+// to an organization; a page request always has a caller, so a request refuses both.
+function validateCallUser({ key, user }) {
+  if (type.isUndefined(user)) {
+    return undefined;
+  }
+  if (readSystemCaller(user) !== null) {
+    if (key === 'request') {
+      return 'Step "request" cannot run "as: system": a page request is always sent by a person on the page. Call the endpoint the request reaches with a "call" step "as: system" instead.';
+    }
+    return user === 'system' ? undefined : validateSystemBinding({ user });
+  }
+  if (type.isArray(user) || !type.isUndefined(validateJourneyUser({ user }).error)) {
+    return `Step "${key}" requires "as" to be a data set user's name, "none" to call signed out, or an inline user object. Received ${describe(
+      user
+    )}.`;
+  }
+  return undefined;
+}
+
+// call: { endpoint, payload?, as? } calls an endpoint directly and request:
+// { pageId, requestId, payload?, as? } a page's request, as the journey's user
+// or the user named in `as`. They send what a page would never send (another
+// company's ids, operator objects, wrong types); a request the page sends is
+// reached through its own event instead.
+function validateCall({ key, params }) {
+  const idKeys = key === 'call' ? ['endpoint'] : ['pageId', 'requestId'];
+  if (!type.isObject(params)) {
+    return `Step "${key}" requires { ${idKeys.join(', ')}, payload?, as? }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key,
+    params,
+    allowed: [...idKeys, 'payload', 'as'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  const missing = idKeys.find((idKey) => !type.isString(params[idKey]) || params[idKey] === '');
+  if (!type.isUndefined(missing)) {
+    return `Step "${key}" requires "${missing}" to be a non-empty string. Received ${describe(
+      params[missing]
+    )}.`;
+  }
+  if (!type.isUndefined(params.payload) && !type.isObject(params.payload)) {
+    return `Step "${key}" requires "payload" to be an object. Received ${describe(
+      params.payload
+    )}.`;
+  }
+  return validateCallUser({ key, user: params.as });
+}
+
+// hold: { requestId, endpoint?, pageId? } sets a pause gate on the next routine to reach that
+// request; endpoint and pageId narrow it when two routines share a request id.
+function validateHold(params) {
+  if (!type.isObject(params)) {
+    return `Step "hold" requires { requestId, endpoint?, pageId? }. Received ${describe(params)}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'hold',
+    params,
+    allowed: ['requestId', 'endpoint', 'pageId'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.requestId) || params.requestId === '') {
+    return `Step "hold" requires "requestId" to be a non-empty string. Received ${describe(
+      params.requestId
+    )}.`;
+  }
+  const invalid = ['endpoint', 'pageId'].find(
+    (idKey) =>
+      !type.isUndefined(params[idKey]) && (!type.isString(params[idKey]) || params[idKey] === '')
+  );
+  if (!type.isUndefined(invalid)) {
+    return `Step "hold" requires "${invalid}" to be a non-empty string. Received ${describe(
+      params[invalid]
+    )}.`;
+  }
+  return undefined;
+}
+
+// release: <requestId>, or release: { requestId, endpoint?, pageId? } to name one of two holds
+// on one request id, as the hold named it.
+function validateRelease(params) {
+  if (type.isString(params) && params !== '') {
+    return undefined;
+  }
+  if (!type.isObject(params)) {
+    return `Step "release" requires the requestId of a "hold" step before it, or { requestId, endpoint?, pageId? }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'release',
+    params,
+    allowed: ['requestId', 'endpoint', 'pageId'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  const invalid = ['requestId', 'endpoint', 'pageId'].find(
+    (idKey) =>
+      (idKey === 'requestId' || !type.isUndefined(params[idKey])) &&
+      (!type.isString(params[idKey]) || params[idKey] === '')
+  );
+  if (!type.isUndefined(invalid)) {
+    return `Step "release" requires "${invalid}" to be a non-empty string. Received ${describe(
+      params[invalid]
+    )}.`;
+  }
+  return undefined;
+}
+
+function isStringMap(value) {
+  return type.isObject(value) && Object.values(value).every((entry) => type.isString(entry));
+}
+
+// webhook: { endpoint, body, query?, headers? } posts to a webhook endpoint as a third party
+// does: body is sent as raw text (a string as written, anything else as JSON), and query and
+// headers are strings, as they arrive over HTTP.
+function validateWebhook(params) {
+  if (!type.isObject(params)) {
+    return `Step "webhook" requires { endpoint, body, query?, headers? }. Received ${describe(
+      params
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'webhook',
+    params,
+    allowed: ['endpoint', 'body', 'query', 'headers'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(params.endpoint) || params.endpoint === '') {
+    return `Step "webhook" requires "endpoint" to be a non-empty string. Received ${describe(
+      params.endpoint
+    )}.`;
+  }
+  if (type.isUndefined(params.body)) {
+    return 'Step "webhook" requires "body": a string is sent as written, anything else as JSON.';
+  }
+  const invalid = ['query', 'headers'].find(
+    (mapKey) => !type.isUndefined(params[mapKey]) && !isStringMap(params[mapKey])
+  );
+  if (!type.isUndefined(invalid)) {
+    return `Step "webhook" requires "${invalid}" to be an object of strings. Received ${describe(
+      params[invalid]
+    )}.`;
+  }
+  return undefined;
+}
+
+// expect.status reads the HTTP status of the last call or request's answer.
+function validateStatus(value) {
+  if (!type.isInt(value) || value < 100 || value > 599) {
+    return `Step "expect.status" requires an HTTP status code, a whole number from 100 to 599, e.g. 403. Received ${describe(
+      value
+    )}.`;
+  }
+  return undefined;
+}
+
+// expect.db reads the journey's data set database: the documents in
+// `collection` (in the database of the connection `connectionId`, default the
+// session's one database) that `match` finds number `count`, or are the list
+// `equals` in _id order, each document holding at least the keys given.
+function validateDb(value) {
+  if (!type.isObject(value)) {
+    return `Step "expect.db" requires { collection, connectionId?, match, count } or { collection, connectionId?, match, equals }. Received ${describe(
+      value
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'expect.db',
+    params: value,
+    allowed: ['collection', 'connectionId', 'match', 'count', 'equals'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  if (!type.isString(value.collection) || value.collection === '') {
+    return `Step "expect.db" requires "collection" to be a non-empty string. Received ${describe(
+      value.collection
+    )}.`;
+  }
+  if (
+    !type.isUndefined(value.connectionId) &&
+    (!type.isString(value.connectionId) || value.connectionId === '')
+  ) {
+    return `Step "expect.db" requires "connectionId" to be a non-empty string. Received ${describe(
+      value.connectionId
+    )}.`;
+  }
+  if (!type.isObject(value.match)) {
+    return `Step "expect.db" requires "match" to be a query object, {} for every document. Received ${describe(
+      value.match
+    )}.`;
+  }
+  const hasCount = !type.isUndefined(value.count);
+  const hasEquals = !type.isUndefined(value.equals);
+  if (hasCount === hasEquals) {
+    return `Step "expect.db" requires exactly one of "count" or "equals". Received ${describe(
+      value
+    )}.`;
+  }
+  if (hasCount && !isIndex(value.count)) {
+    return `Step "expect.db" requires "count" to be a whole number of documents, 0 or more. Received ${describe(
+      value.count
+    )}.`;
+  }
+  if (hasEquals && (!type.isArray(value.equals) || !value.equals.every(type.isObject))) {
+    return `Step "expect.db" requires "equals" to be a list of documents. Received ${describe(
+      value.equals
+    )}.`;
+  }
+  return undefined;
+}
+
+// expect.sunk reads the requests the journey's data session recorded instead of sending to an
+// outside service, stubbed ones included: those of `connectionType`, `requestType` and
+// `requestId` number `count`, or the last of them holds `match`; with neither, there is one.
+function validateSunk(value) {
+  if (!type.isObject(value)) {
+    return `Step "expect.sunk" requires { connectionType?, requestType?, requestId?, count?, match? }. Received ${describe(
+      value
+    )}.`;
+  }
+  const unknownKeys = findUnknownKeys({
+    key: 'expect.sunk',
+    params: value,
+    allowed: ['connectionType', 'requestType', 'requestId', 'count', 'match'],
+  });
+  if (!type.isUndefined(unknownKeys)) {
+    return unknownKeys;
+  }
+  const textKey = ['connectionType', 'requestType', 'requestId'].find(
+    (key) => !type.isUndefined(value[key]) && (!type.isString(value[key]) || value[key] === '')
+  );
+  if (!type.isUndefined(textKey)) {
+    return `Step "expect.sunk" requires "${textKey}" to be a non-empty string. Received ${describe(
+      value[textKey]
+    )}.`;
+  }
+  if (!type.isUndefined(value.count) && !isIndex(value.count)) {
+    return `Step "expect.sunk" requires "count" to be a whole number of requests, 0 or more. Received ${describe(
+      value.count
+    )}.`;
+  }
+  if (!type.isUndefined(value.match) && !type.isObject(value.match)) {
+    return `Step "expect.sunk" requires "match" to be an object of the request values to match. Received ${describe(
+      value.match
     )}.`;
   }
   return undefined;
@@ -265,6 +669,7 @@ function validateBlockValue({ key, params }) {
     key,
     params,
     extraKeys: ['value', 'from'],
+    refusedKeys: ['rowKey', 'control'],
     requireBlockId: true,
   });
 }
@@ -350,6 +755,7 @@ function validateFill(params) {
     key: 'fill',
     params,
     extraKeys: ['fromEmail'],
+    refusedKeys: ['rowKey', 'control'],
     requireBlockId: true,
   });
 }
@@ -429,7 +835,7 @@ function validateExpectState(value) {
 
 function validateExpect(params) {
   if (!type.isObject(params)) {
-    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }, { error }, { effect }. Received ${describe(
+    return `Step "expect" requires one of { state }, { visible }, { hidden }, { text }, { url }, { title }, { calls }, { error }, { effect }, { status }, { db }, { sunk }. Received ${describe(
       params
     )}.`;
   }
@@ -457,6 +863,7 @@ function validateExpect(params) {
         key: 'expect.text',
         params: value,
         extraKeys: ['contains'],
+        refusedKeys: ['control'],
         requireBlockId: true,
       });
     case 'url':
@@ -487,6 +894,12 @@ function validateExpect(params) {
         )}.`;
       }
       return undefined;
+    case 'status':
+      return validateStatus(value);
+    case 'db':
+      return validateDb(value);
+    case 'sunk':
+      return validateSunk(value);
     default:
       return undefined;
   }
@@ -499,24 +912,88 @@ const FOLLOWS_INTERACTION = {
   effect: 'whose effect it checks',
 };
 
+// The call or request whose answer an expect.error or expect.status at `index`
+// reads: the last step before it that is not an expect, when that is a call or
+// request. Several expects may read one answer, since it does not change.
+function findAnsweredCall({ steps, index }) {
+  for (let before = index - 1; before >= 0; before -= 1) {
+    const key = getStepKey(steps[before]);
+    if (key !== 'expect') {
+      return ANSWER_STEP_KEYS.includes(key) ? key : undefined;
+    }
+  }
+  return undefined;
+}
+
+// A release is `release: <requestId>` or `release: { requestId, endpoint?, pageId? }`.
+function readReleaseKey(release) {
+  return type.isString(release) ? { requestId: release } : release;
+}
+
+// Whether a release could let go of the call a hold parked: the same request id, and no endpoint
+// or pageId that the two both give and give differently.
+function releaseFitsHold({ hold, key }) {
+  return ['requestId', 'endpoint', 'pageId'].every(
+    (field) => type.isNone(hold[field]) || type.isNone(key[field]) || hold[field] === key[field]
+  );
+}
+
+// A release lets go of a call a hold step before it parked, so a hold before it fits it, and the
+// holds before it on its request id outnumber the releases of that id before it. Which parked
+// call it lets go is matched when it runs (createJourneyRaces).
+function validateReleasePlacement({ steps, index }) {
+  const key = readReleaseKey(steps[index].release);
+  const { requestId } = key;
+  const before = steps.slice(0, index);
+  const holds = before.filter((step) => step.hold?.requestId === requestId);
+  const releases = before.filter(
+    (step) => readReleaseKey(step.release)?.requestId === requestId
+  ).length;
+  if (!holds.some((step) => releaseFitsHold({ hold: step.hold, key }))) {
+    return holds.length === 0
+      ? `Step "release" names request "${requestId}", which no "hold" step before it holds. A release lets go of the call a hold parked.`
+      : `Step "release" names request "${requestId}" with an endpoint or pageId that no "hold" of that request before it has. A release lets go of the call a hold parked.`;
+  }
+  if (holds.length > releases) {
+    return undefined;
+  }
+  return `Step "release" names request "${requestId}", whose every "hold" before it an earlier release already let go. Each release needs a hold of its own.`;
+}
+
+function describePrevious(previousKey) {
+  return type.isUndefined(previousKey) ? 'the start of the journey' : `a "${previousKey}" step`;
+}
+
 // expect.error claims the app errors of the interaction just before it, and
 // expect.effect checks that interaction did something, so each must follow
-// one.
-function validatePlacement({ step, previous }) {
+// one. expect.error may read a call or request's answer instead, and
+// expect.status only reads one.
+function validatePlacement({ steps, index }) {
+  const step = steps[index];
+  if (getStepKey(step) === 'release') {
+    return validateReleasePlacement({ steps, index });
+  }
   if (getStepKey(step) !== 'expect') {
     return undefined;
   }
   const expectKey = getStepKey(step.expect);
+  const previous = steps[index - 1];
+  const previousKey = type.isUndefined(previous) ? undefined : getStepKey(previous);
+  if (expectKey === 'status' && type.isUndefined(findAnsweredCall({ steps, index }))) {
+    return `Step "expect.status" must follow a "call", "request", "release" or "webhook" step, whose answer it reads; only expect steps may sit between them. Received it after ${describePrevious(
+      previousKey
+    )}.`;
+  }
   if (type.isUndefined(FOLLOWS_INTERACTION[expectKey])) {
     return undefined;
   }
-  const previousKey = type.isUndefined(previous) ? undefined : getStepKey(previous);
+  if (expectKey === 'error' && !type.isUndefined(findAnsweredCall({ steps, index }))) {
+    return undefined;
+  }
   if (!INTERACTION_STEP_KEYS.includes(previousKey)) {
     return `Step "expect.${expectKey}" must directly follow an interaction step (${INTERACTION_STEP_KEYS.join(
       ', '
-    )}), ${FOLLOWS_INTERACTION[expectKey]}. Received it after ${
-      type.isUndefined(previousKey) ? 'the start of the journey' : `a "${previousKey}" step`
-    }.`;
+    )}), ${FOLLOWS_INTERACTION[expectKey]}. Received it after ${describePrevious(previousKey)}.`;
   }
   return undefined;
 }
@@ -562,7 +1039,7 @@ function validateStepParams({ key, params }) {
     case 'click':
       return validateClick(params);
     case 'open':
-      return validateTarget({ key: 'open', params });
+      return validateTarget({ key: 'open', params, refusedKeys: ['rowKey', 'control'] });
     case 'fill':
       return validateFill(params);
     case 'select':
@@ -599,6 +1076,15 @@ function validateStepParams({ key, params }) {
       return undefined;
     case 'expect':
       return validateExpect(params);
+    case 'call':
+    case 'request':
+      return validateCall({ key, params });
+    case 'hold':
+      return validateHold(params);
+    case 'release':
+      return validateRelease(params);
+    case 'webhook':
+      return validateWebhook(params);
     default:
       return undefined;
   }
@@ -612,9 +1098,7 @@ function validateJourneySteps({ steps }) {
     return { error: `runJourney requires "steps" to be an array. Received ${describe(steps)}.` };
   }
   for (let index = 0; index < steps.length; index += 1) {
-    const message =
-      validateStep(steps[index]) ??
-      validatePlacement({ step: steps[index], previous: steps[index - 1] });
+    const message = validateStep(steps[index]) ?? validatePlacement({ steps, index });
     if (!type.isUndefined(message)) {
       return { error: `Step ${index}: ${message}` };
     }
@@ -622,5 +1106,12 @@ function validateJourneySteps({ steps }) {
   return {};
 }
 
-export { INTERACTION_STEP_KEYS, STEP_KEYS, TARGET_KEYS, getStepKey };
+export {
+  ANSWER_STEP_KEYS,
+  CALL_STEP_KEYS,
+  INTERACTION_STEP_KEYS,
+  STEP_KEYS,
+  TARGET_KEYS,
+  getStepKey,
+};
 export default validateJourneySteps;

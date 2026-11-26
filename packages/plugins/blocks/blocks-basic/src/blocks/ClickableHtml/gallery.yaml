@@ -49,7 +49,7 @@
       properties:
         dataEvents:
           - onRowClick
-        html: '<ul style="list-style: none; padding: 0; margin: 0;"><li data-event="onRowClick" data-record-id="rec_1" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">First record</li><li data-event="onRowClick" data-record-id="rec_2" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">Second record</li><li data-event="onRowClick" data-record-id="rec_3" style="padding: 8px; cursor: pointer;">Third record</li></ul>'
+        html: '<ul style="list-style: none; padding: 0; margin: 0;"><li data-event="onRowClick" data-id="rec_1" data-record-type="invoice" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">First record</li><li data-event="onRowClick" data-id="rec_2" data-record-type="invoice" style="padding: 8px; cursor: pointer; border-bottom: 1px solid var(--ant-color-border);">Second record</li><li data-event="onRowClick" data-id="rec_3" data-record-type="invoice" style="padding: 8px; cursor: pointer;">Third record</li></ul>'
       events:
         onRowClick:
           - id: set_clicked

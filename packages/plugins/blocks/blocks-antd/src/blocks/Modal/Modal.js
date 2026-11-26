@@ -72,7 +72,10 @@ const ModalBlock = ({
         afterOpenChange={(open) =>
           methods.triggerEvent({ name: 'afterOpenChange', event: { open } })
         }
-        cancelButtonProps={properties.cancelButtonProps}
+        cancelButtonProps={{
+          ...properties.cancelButtonProps,
+          ...journeyTargetSelectors.controlMarks({ blockId, control: 'cancel' }),
+        }}
         cancelText={properties.cancelText}
         centered={!!properties.centered}
         closable={properties.closable ?? true}
@@ -83,7 +86,10 @@ const ModalBlock = ({
         keyboard={properties.keyboard}
         loading={properties.loading}
         mask={getMask({ mask: properties.mask, maskClosable: properties.maskClosable })}
-        okButtonProps={properties.okButtonProps}
+        okButtonProps={{
+          ...properties.okButtonProps,
+          ...journeyTargetSelectors.controlMarks({ blockId, control: 'ok' }),
+        }}
         okText={properties.okText}
         okType={properties.okButtonType ?? 'primary'}
         scrollLock={properties.scrollLock}

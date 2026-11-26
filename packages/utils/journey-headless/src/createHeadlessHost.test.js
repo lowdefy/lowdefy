@@ -1,0 +1,82 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { expect, test } from 'vitest';
+
+import {
+  bindCredentialScrub,
+  markCredential,
+  runInCredentialScope,
+  scrubCredentials,
+} from '@lowdefy/node-utils';
+
+import createHeadlessHost from './createHeadlessHost.js';
+
+const host = {
+  call: () => undefined,
+  close: () => undefined,
+  connections: {},
+  credentialScope: { bindScrub: () => (value) => value, run: (fn) => fn() },
+  dataSession: {},
+  dataSetName: null,
+  errorSink: { errors: [], add: () => undefined },
+  findDocuments: () => undefined,
+  loadClientPlugins: () => undefined,
+  readArtifact: () => null,
+  readPageConfig: () => undefined,
+  resolveUser: () => null,
+  rootConfig: {},
+  system: () => undefined,
+  userNames: [],
+  webhook: () => undefined,
+};
+
+test('createHeadlessHost returns a host with every part', () => {
+  expect(Object.keys(createHeadlessHost(host)).sort()).toEqual(
+    [...Object.keys(host), 'scrubCredentials'].sort()
+  );
+});
+
+test('createHeadlessHost names the parts a host is missing', () => {
+  const { call, rootConfig, ...rest } = host;
+  expect(() => createHeadlessHost(rest)).toThrow('The headless host is missing call, rootConfig.');
+});
+
+test('createHeadlessHost refuses a host that is not an object', () => {
+  expect(() => createHeadlessHost(null)).toThrow('A headless host is an object. Received null.');
+});
+
+test('createHeadlessHost runs call, system and webhook each in a credential scope of its own', async () => {
+  const marking = async ({ value }) => {
+    markCredential(value);
+    return scrubCredentials(value);
+  };
+  const scoped = createHeadlessHost({
+    ...host,
+    call: marking,
+    credentialScope: { bindScrub: bindCredentialScrub, run: runInCredentialScope },
+    system: marking,
+    webhook: marking,
+  });
+  expect(await scoped.call({ value: 'call-marked-value' })).toEqual('[REDACTED]');
+  expect(await scoped.system({ value: 'system-marked-value' })).toEqual('[REDACTED]');
+  expect(await scoped.webhook({ value: 'webhook-marked-value' })).toEqual('[REDACTED]');
+  expect(
+    scoped.scrubCredentials({
+      message: 'call-marked-value, system-marked-value and webhook-marked-value',
+    })
+  ).toEqual({ message: '[REDACTED], [REDACTED] and [REDACTED]' });
+});

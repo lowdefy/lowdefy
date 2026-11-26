@@ -51,18 +51,15 @@ const { MongoDBAuthAdapter } = await import('@lowdefy/connection-mongodb/auth/ad
 const { default: getBetterAuthConfig } = await import('../getBetterAuthConfig.js');
 const { default: ensureAuthIndexes } = await import('../organizations/ensureAuthIndexes.js');
 const { registerOrganizationBinding } = await import('../organizations/getOrganizationBinding.js');
-const { default: resolveAuthentication } = await import(
-  '../../../context/resolveAuthentication.js'
-);
+const { default: resolveAuthentication } =
+  await import('../../../context/resolveAuthentication.js');
 const { default: mintViewSession } = await import('./mintViewSession.js');
 const { default: handleMobileSignIn } = await import('../mobile/handleMobileSignIn.js');
-const { default: createMobileSignInCsrfToken } = await import(
-  '../mobile/createMobileSignInCsrfToken.js'
-);
+const { default: createMobileSignInCsrfToken } =
+  await import('../mobile/createMobileSignInCsrfToken.js');
 const { default: getCallerFingerprint } = await import('../../websocket/getCallerFingerprint.js');
-const { default: resolveWebsocketCaller } = await import(
-  '../../websocket/resolveWebsocketCaller.js'
-);
+const { default: resolveWebsocketCaller } =
+  await import('../../websocket/resolveWebsocketCaller.js');
 
 const ORIGIN = 'http://localhost:3264';
 const MINUTE = 60 * 1000;

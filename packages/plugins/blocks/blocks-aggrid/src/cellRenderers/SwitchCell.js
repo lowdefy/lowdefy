@@ -16,7 +16,7 @@
 
 import React from 'react';
 import { ConfigProvider, Switch } from 'antd';
-import { serializer, type } from '@lowdefy/helpers';
+import { journeyTargetSelectors, serializer, type } from '@lowdefy/helpers';
 
 function normaliseIcon(icon) {
   const copy = serializer.copy(icon);
@@ -24,7 +24,7 @@ function normaliseIcon(icon) {
 }
 
 function SwitchCell(params) {
-  const { value, data, cellConfig, methods, components } = params;
+  const { blockId, value, data, cellConfig, methods, components } = params;
   const Icon = components?.Icon;
 
   function onChange(newValue) {
@@ -56,6 +56,11 @@ function SwitchCell(params) {
       checkedChildren={children(cellConfig.checkedText, checkedIcon, 'checked')}
       unCheckedChildren={children(cellConfig.uncheckedText, uncheckedIcon, 'unchecked')}
       onChange={onChange}
+      {...journeyTargetSelectors.controlMarks({
+        blockId,
+        control: cellConfig.eventName,
+        rowKey: params.node?.id,
+      })}
     />
   );
 

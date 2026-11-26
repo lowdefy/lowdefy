@@ -1,0 +1,319 @@
+# Collections catalog for the reporting demo — the data dictionary AND the
+# confidentiality/authorization boundary. Keyed by collection name: every
+# `collection` and every `$lookup.from` in an AI-authored pipeline must be a
+# key here, and the engine enforces the UNION of the touched collections'
+# `roles` (base plus all lookups, recursively).
+#
+# Roles semantics: an entry with no `roles` (absent or empty) is queryable by
+# ANY AUTHENTICATED USER. Role-gating is opt-in per collection — declaring a
+# collection here is itself the act of exposing it. No collection below sets
+# `roles`, so any authenticated user may query all of them; add a `roles`
+# string[] to a collection to restrict it. (This replaces the old dataset
+# dictionary's "No `roles` on any dataset means any authenticated user may
+# query it" note, now stated at the collection grain.)
+#
+# Display hints (`format`, `currency`, `locale`, `decimals`) and field
+# `values` are prompt material only: the agent copies them into its
+# presentation contracts so a field formats consistently across every chart,
+# KPI, table and report — they are never enforced by the engine.
+#
+# Two authoring styles are shown:
+#   1. Raw base collections (demo_orders, demo_companies, demo_contacts,
+#      demo_activities, demo_workflows, demo_actions) with `relationships`, so
+#      the agent can author `$lookup`s directly against the source data.
+#   2. Read-only MongoDB views (demo_activities_report and friends, created by
+#      apps/demo/scripts/seed-reporting-domain.mjs) that pre-bake the
+#      $lookup/$unwind and current-status extraction at a fixed grain so counts
+#      are always exact. Views remain first-class catalog citizens — now an
+#      optional convenience rather than the required join mechanism.
+
+# ── Raw base collections ─────────────────────────────────────────────────────
+
+demo_orders:
+  description: >
+    Synthetic customer orders — one document per order, with totals,
+    quantities, status and channel. A single flat collection (no joins needed),
+    seeded by the reporting-seed-orders API.
+  fields:
+    region:
+      type: string
+      description: Customer region
+      values: [North, South, East, West]
+    category:
+      type: string
+      description: Product category
+      values: [Electronics, Clothing, Home, Toys, Sports, Garden, Books, Beauty]
+    status:
+      type: string
+      description: Order status
+      values: [pending, paid, shipped, cancelled]
+    channel:
+      type: string
+      description: Sales channel
+      values: [online, retail, partner]
+    month:
+      type: string
+      description: Order month, "YYYY-MM" (use to group a time series)
+    order_date:
+      type: date
+      description: When the order was placed (use for date-range filters)
+    total:
+      type: number
+      description: Order total, money. Render with a currency symbol and two decimals.
+      format: currency
+      currency: USD
+      locale: en-US
+      decimals: 2
+    quantity:
+      type: number
+      description: Units ordered
+
+demo_companies:
+  description: >
+    Company records. Primarily a join target for activities, workflows and
+    contacts; `_id` is the foreign key those collections reference.
+  fields:
+    _id:
+      type: string
+      description: Company id (e.g. "C-0001") — join key
+    name:
+      type: string
+      description: Company name
+
+demo_contacts:
+  description: >
+    People. Each contact may belong to one or more companies via the scalar
+    foreign-key array `global_attributes.company_ids`. Unwind that array and
+    $lookup into demo_companies for a per-membership view.
+  fields:
+    _id:
+      type: string
+      description: Contact id (e.g. "U-0001")
+    profile.name:
+      type: string
+      description: Contact full name
+    profile.family_name:
+      type: string
+      description: Contact surname
+    global_attributes.company_ids:
+      type: array
+      description: Scalar array of demo_companies `_id`s the contact belongs to
+  relationships:
+    - field: global_attributes.company_ids
+      collection: demo_companies
+      foreignField: _id
+
+demo_activities:
+  description: >
+    Customer activities (calls, meetings, emails, notes). `status` is a
+    status-history array — the current stage is `status[0].stage`. Links to
+    demo_companies via the `company_ids` array.
+  fields:
+    _id:
+      type: string
+      description: Activity id (e.g. "A-0001")
+    type:
+      type: string
+      description: Activity type
+      values: [call, meeting, email, note]
+    source.channel:
+      type: string
+      description: How the activity was captured
+      values: [manual, email, import]
+    company_ids:
+      type: array
+      description: Scalar array of demo_companies `_id`s this activity relates to
+    created.timestamp:
+      type: date
+      description: When the activity was created (use for date-range filters / time series)
+    status:
+      type: array
+      description: Status-history array of `{ stage }`; current stage is `status[0].stage`
+  relationships:
+    - field: company_ids
+      collection: demo_companies
+      foreignField: _id
+
+demo_workflows:
+  description: >
+    Workflows (onboarding, renewal, support), each attached to a company via
+    `entity.id`. `status` is a status-history array; current stage is
+    `status[0].stage`.
+  fields:
+    _id:
+      type: string
+      description: Workflow id (e.g. "W-0001") — join key for demo_actions
+    workflow_type:
+      type: string
+      description: Workflow type
+      values: [onboarding, renewal, support]
+    entity.id:
+      type: string
+      description: demo_companies `_id` this workflow belongs to
+    created.timestamp:
+      type: date
+      description: When the workflow was created
+    status:
+      type: array
+      description: Status-history array of `{ stage }`; current stage is `status[0].stage`
+  relationships:
+    - field: entity.id
+      collection: demo_companies
+      foreignField: _id
+
+demo_actions:
+  description: >
+    Workflow actions (form / check / tracker), each belonging to a parent
+    workflow via `workflow_id`. `assignees` is an object-array — unwind it for a
+    per-assignment (workload) view. `status` is a status-history array; current
+    stage is `status[0].stage`.
+  fields:
+    _id:
+      type: string
+      description: Action id (e.g. "AC-0001")
+    workflow_id:
+      type: string
+      description: Parent demo_workflows `_id`
+    kind:
+      type: string
+      description: Action kind
+      values: [form, check, tracker]
+    assignees:
+      type: array
+      description: Object-array of `{ contact_id, name }` — the people assigned
+    created.timestamp:
+      type: date
+      description: When the action was created
+    status:
+      type: array
+      description: Status-history array of `{ stage }`; current stage is `status[0].stage`
+  relationships:
+    - field: workflow_id
+      collection: demo_workflows
+      foreignField: _id
+
+# ── View-backed collections (optional convenience — fixed grain, exact counts) ─
+
+# Grain: one row per activity. `current_stage` is the newest status stage,
+# extracted in the view.
+demo_activities_report:
+  description: >
+    Customer activities, one row per activity — counts are exact. A read-only
+    view over demo_activities with `current_stage` pre-extracted. Prefer this
+    over querying demo_activities directly when you only need activity-grain
+    counts.
+  fields:
+    type:
+      type: string
+      description: Activity type
+      values: [call, meeting, email, note]
+    current_stage:
+      type: string
+      description: Current status stage
+      values: [open, done, cancelled]
+    source.channel:
+      type: string
+      description: How the activity was captured
+      values: [manual, email, import]
+    created.timestamp:
+      type: date
+      description: When the activity was created (group by month for a time series)
+
+# Grain: one row per action, with its parent workflow joined many-to-one (no
+# fan-out), so `workflow.workflow_type` is available alongside action fields.
+demo_actions_report:
+  description: >
+    Workflow actions with their parent workflow's type joined in, one row per
+    action — counts are exact. A read-only view over demo_actions.
+  fields:
+    kind:
+      type: string
+      description: Action kind
+      values: [form, check, tracker]
+    current_stage:
+      type: string
+      description: Current status stage
+      values:
+        [
+          action-required,
+          in-progress,
+          in-review,
+          changes-required,
+          done,
+          not-required,
+        ]
+    workflow.workflow_type:
+      type: string
+      description: Parent workflow type
+      values: [onboarding, renewal, support]
+    created.timestamp:
+      type: date
+      description: When the action was created (group by month for a time series)
+
+# Grain: one row per (action, assignee) — the assignees object-array is unwound
+# in the view. A count here is a number of assignments, not distinct actions.
+demo_action_assignees:
+  description: >
+    Actions exploded to one row per assignee (workload view). A count is the
+    number of assignments. A read-only view over demo_actions.
+  fields:
+    assignees.name:
+      type: string
+      description: Assigned person
+    kind:
+      type: string
+      description: Action kind
+      values: [form, check, tracker]
+    current_stage:
+      type: string
+      description: Current status stage
+
+# Grain: one row per (contact, company) — the contact's company_ids scalar
+# array is unwound and the company joined in. A count here is a number of
+# memberships.
+demo_contact_companies:
+  description: >
+    People linked to companies, one row per membership. A count is the number
+    of contact-company links. A read-only view over demo_contacts.
+  fields:
+    company.name:
+      type: string
+      description: Company the contact belongs to
+    profile.family_name:
+      type: string
+      description: Contact surname
+
+# ── Role-gated collection (the demo's only one) ──────────────────────────────
+
+# The single demo entry that carries a non-empty `roles` list, so the report
+# surface exercises catalog role-gating. Every other collection above omits
+# `roles` and is therefore queryable by any authenticated user; this one is
+# reachable ONLY by a viewer whose roles include `report-confidential`.
+#
+# The engine enforces this on every resolve: a section over this collection
+# resolves normally for a role holder, and — for a viewer who lacks the role —
+# fails the per-section AnalyticsPipeline gate and renders as compileReport's
+# WITHHELD alert (no recovery affordances, and naming neither the collection nor
+# the role, so the access model never leaks). That is a different failure from a
+# section whose pipeline references a collection that is not cataloged at all,
+# which renders as the BROKEN alert with owner recoveries.
+#
+# Backed by a read-only view over demo_activities (created by
+# seed-reporting-domain.mjs), so a role holder sees real rows rather than an
+# empty gated collection.
+demo_activities_confidential:
+  description: >
+    Confidential customer activities — the same activity data as
+    demo_activities, but restricted: only holders of the `report-confidential`
+    role may query it. A read-only view over demo_activities.
+  roles:
+    - report-confidential
+  fields:
+    type:
+      type: string
+      description: Activity type
+      values: [call, meeting, email, note]
+    current_stage:
+      type: string
+      description: Current status stage
+      values: [open, done, cancelled]

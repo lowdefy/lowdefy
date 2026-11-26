@@ -1,0 +1,33 @@
+id: "404"
+type: Result
+style:
+  minHeight: 100vh
+events:
+  onMount:
+    - id: not_logged_in_redirect
+      type: Link
+      skip:
+        _ne:
+          - _user: id
+          - null
+      params:
+        home: true
+properties:
+  status: info
+  title: "404"
+  subTitle: Sorry, the page you are visiting does not exist.
+slots:
+  extra:
+    blocks:
+      - id: home
+        type: Button
+        properties:
+          title: Go to home page
+          type: Link
+          icon: home
+        events:
+          onClick:
+            - id: home
+              type: Link
+              params:
+                home: true

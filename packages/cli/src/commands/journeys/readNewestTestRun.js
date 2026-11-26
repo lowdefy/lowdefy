@@ -17,8 +17,9 @@
 import { listRecordingFiles, readRecordings } from '@lowdefy/node-utils';
 
 // The newest test run: the newest `journey` run recorded by `lowdefy test` or
-// lowdefy_run_tests (`run.by: test`, always a full-suite run), as its trace id
-// and those records. A newer lowdefy_run_journey experiment (`run.by: agent`)
+// lowdefy_run_tests (`run.by: test`, always a full-suite run, holding the
+// journeys that ran in the browser: all of them with --browser, the browser
+// part of a default run), as its trace id and those records. A newer lowdefy_run_journey experiment (`run.by: agent`)
 // never stands in for the suite. No such run: null.
 function readNewestTestRun({ configDirectory }) {
   const files = listRecordingFiles({ configDirectory, source: 'journey' }).reverse();

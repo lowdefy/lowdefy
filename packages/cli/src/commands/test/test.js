@@ -17,25 +17,40 @@
 import path from 'path';
 import { createTraceId, traceIdDate, type } from '@lowdefy/helpers';
 
-import collapsePersonas from './collapsePersonas.js';
+import collapseRuns from './collapseRuns.js';
+import formatDevServerAccessNote from './access/formatDevServerAccessNote.js';
 import fetchBuildId from './fetchBuildId.js';
+import formatBrowserOnly from './formatBrowserOnly.js';
 import formatNoTestsMatched from './formatNoTestsMatched.js';
 import formatSkippedJourney from './formatSkippedJourney.js';
+import formatBrowserOnlyNote from './formatBrowserOnlyNote.js';
+import devBuildHash from './devBuildHash.js';
 import hashBuild from './hashBuild.js';
+import hashConfigSources from './hashConfigSources.js';
 import isFullSuiteRun from './isFullSuiteRun.js';
 import lintJourneys from './lint/lintJourneys.js';
+import openBuildApp from './openBuildApp.js';
 import parseRepeat from './parseRepeat.js';
 import parseTestSelection from './parseTestSelection.js';
+import readCiBrowserOnlyFailure from './readCiBrowserOnlyFailure.js';
 import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
+import readAccessMode from './readAccessMode.js';
+import readHeadlessRun from './readHeadlessRun.js';
+import readJourneyConcurrency from './readJourneyConcurrency.js';
+import readTestMode from './readTestMode.js';
+import readTestSecrets from './readTestSecrets.js';
 import resolveJourneyPaths from './resolveJourneyPaths.js';
 import resolveServer from './resolveServer.js';
-import runRepeated from './runRepeated.js';
+import runAccessStep from './access/runAccessStep.js';
+import runDevJourneys from './runDevJourneys.js';
+import runHeadlessTests from './runHeadlessTests.js';
 import selectTests from './selectTests.js';
 import selectTier from './selectTier.js';
 import summariseResults from './summariseResults.js';
 import takeJourneyRunSlots from './takeJourneyRunSlots.js';
 import writeExercised from './writeExercised.js';
+import writeHeadlessRun from './writeHeadlessRun.js';
 import writeTestRun from './writeTestRun.js';
 
 const SIGNAL_EXIT_CODES = { SIGINT: 130, SIGTERM: 143, SIGHUP: 129 };
@@ -46,10 +61,75 @@ function refuse({ context, message }) {
   process.exitCode = 1;
 }
 
+// In CI, a run given no mode flag that skipped a browser journey fails (readCiBrowserOnlyFailure).
+function failInCiOnSkip({ context, browserOnly, inProcess, build }) {
+  const failure = readCiBrowserOnlyFailure({
+    env: process.env,
+    options: context.options,
+    browserOnly,
+    inProcess,
+    build,
+  });
+  if (!type.isUndefined(failure)) {
+    context.logger.error(failure);
+    process.exitCode = 1;
+  }
+}
+
+// `lowdefy test --access` and `--update-access`: the access step alone, on the production build.
+async function testAccessAlone({ context, updateAccess }) {
+  const opened = await openBuildApp({ context });
+  if (!type.isUndefined(opened.refused)) {
+    refuse({ context, message: opened.refused });
+    return;
+  }
+  let step;
+  try {
+    step = await runAccessStep({
+      app: opened.app,
+      context,
+      mode: updateAccess ? 'update' : 'access',
+    });
+  } finally {
+    await opened.app.close();
+  }
+  if (step.failed) {
+    process.exitCode = 1;
+  }
+  context.sendTelemetry();
+}
+
 async function test({ context }) {
+  const { access, updateAccess, error: accessError } = readAccessMode({ options: context.options });
+  if (accessError) {
+    refuse({ context, message: accessError });
+    return;
+  }
+  if (access || updateAccess) {
+    await testAccessAlone({ context, updateAccess });
+    return;
+  }
   const { repeat, error: repeatError } = parseRepeat(context.options.repeat);
   if (repeatError) {
     refuse({ context, message: repeatError });
+    return;
+  }
+  const { runner, build, error: modeError } = readTestMode({ options: context.options });
+  if (modeError) {
+    refuse({ context, message: modeError });
+    return;
+  }
+  const headless = runner === 'headless';
+  // Only browser runs go side by side; headless runs go one at a time.
+  const { readLimit, error: concurrencyError } = headless
+    ? { readLimit: () => 1 }
+    : readJourneyConcurrency({
+        concurrency: context.options.concurrency,
+        name: '--concurrency',
+        repeat,
+      });
+  if (concurrencyError) {
+    refuse({ context, message: concurrencyError });
     return;
   }
   const tier = parseTier(context.options.tier);
@@ -77,6 +157,74 @@ async function test({ context }) {
     }
     paths = resolved.files;
   }
+
+  const lint = context.options.lint === true;
+  const options = {
+    build,
+    filters,
+    givenPaths,
+    lint,
+    paths,
+    readLimit,
+    repeat,
+    runner,
+    tags,
+    tier,
+    usageWindow,
+  };
+  // --build runs headless only (readTestMode).
+  if (!build || lint) {
+    await testJourneys({ context, ...options });
+    return;
+  }
+  // A run on the production build opens it once: the access step and every headless journey use
+  // the one app, which is closed once, after the last journey, also when one throws.
+  const secrets = readTestSecrets({ env: process.env });
+  const opened = await openBuildApp({ context, secrets });
+  if (!type.isUndefined(opened.refused)) {
+    refuse({ context, message: opened.refused });
+    return;
+  }
+  try {
+    await testJourneys({ app: opened.app, context, ...options });
+  } finally {
+    await opened.app.close();
+  }
+}
+
+// Selects the run's journeys and runs them: headless on the production build's app (`app`, given
+// for --build), or on a dev server, each where `runner` sends it (runDevJourneys).
+async function testJourneys({
+  app,
+  build,
+  context,
+  filters,
+  givenPaths,
+  lint,
+  paths,
+  readLimit,
+  repeat,
+  runner,
+  tags,
+  tier,
+  usageWindow,
+}) {
+  // The access step runs on every run that reads the production build, before journeys are
+  // selected, so an app with no journeys is checked too, and it checks the whole table whatever
+  // the run selects. A difference fails the run, and the journeys still run.
+  if (!type.isUndefined(app)) {
+    const step = await runAccessStep({ app, context, mode: 'check' });
+    if (step.failed) {
+      process.exitCode = 1;
+    }
+  }
+  if (!build && !lint) {
+    const note = formatDevServerAccessNote({ configDirectory: context.directories.config });
+    if (!type.isUndefined(note)) {
+      context.logger.info(note);
+    }
+  }
+
   const selected = selectTests({ context, filter: filters, tags, paths });
 
   if (selected.length === 0) {
@@ -96,12 +244,12 @@ async function test({ context }) {
     return;
   }
 
-  if (context.options.lint === true) {
+  if (lint) {
     // Lints read a journey, not a run of it: a journey with a list of users
-    // is linted once.
+    // or a case table is linted once.
     const linted = await lintJourneys({
       context,
-      items: collapsePersonas({ items: selected.map(({ item }) => item) }),
+      items: collapseRuns({ items: selected.map(({ item }) => item) }),
     });
     if (linted.failed) {
       process.exitCode = 1;
@@ -128,9 +276,40 @@ async function test({ context }) {
     return;
   }
 
+  // Read once, before the server starts: the run routes, and skips, its journeys by these records,
+  // not by one another run writes meanwhile. A browser run reads none.
+  const records = runner === 'browser' ? {} : readHeadlessRun({ directories: context.directories });
+
+  if (build) {
+    const ran = await runHeadlessTests({
+      app,
+      context,
+      selected: tiered.selected,
+      skipped: tiered.skipped.length,
+      records,
+      repeat,
+    });
+    if (ran.failed > 0) {
+      process.exitCode = 1;
+    }
+    failInCiOnSkip({
+      context,
+      browserOnly: ran.browserOnly,
+      inProcess: ran.inProcess,
+      build: true,
+    });
+    context.sendTelemetry();
+    return;
+  }
+
   // The slots are held until the server stops, so a waiting run has nothing
-  // in memory yet.
-  const slots = await takeJourneyRunSlots({ context, command: 'lowdefy test' });
+  // in memory yet. A headless run starts no browser, so it takes only this
+  // worktree's slot: a second run here would use a server this one stops.
+  const slots = await takeJourneyRunSlots({
+    context,
+    command: 'lowdefy test',
+    browser: runner !== 'headless',
+  });
   if (slots === null) {
     return;
   }
@@ -163,45 +342,67 @@ async function test({ context }) {
   });
 
   // One run id per invocation names this run's trace file; only a full-suite
-  // run records (see runRepeated).
-  const recording = { run: createTraceId(), paths: givenPaths, filter: filters, tags, tier };
-  const recorded = isFullSuiteRun({
-    paths: givenPaths,
-    filter: filters,
-    tags,
-    tier,
-    repetition: 1,
-  });
+  // run records (see runRepeated). Only the browser part of a run records traces: the headless
+  // part leaves the browser run's trace and run.json alone.
+  const recording =
+    runner === 'headless'
+      ? undefined
+      : { run: createTraceId(), paths: givenPaths, filter: filters, tags, tier };
+  // In selection order, whatever order the journeys finished in.
   const results = [];
+  const browserOnly = [];
+  const inProcess = [];
   const seen = new Set();
   try {
-    for (const { suite, item, usage } of tiered.selected) {
-      const result = {
-        ...(await runRepeated({
-          suite,
-          context,
-          item,
-          url: server.url,
-          repeat,
-          recording,
-        })),
-        usage,
-      };
-      results.push(result);
-      const lines = suite.format({ result, seen });
-      if (result.passed) {
-        lines.forEach((line) => context.logger.info(line));
-      } else {
-        lines.forEach((line) => context.logger.error(line));
-      }
-    }
+    // The build as the server serves it before any journey opens a page, and the config source as
+    // the run starts, which the records of headless-run.json are taken against (devBuildHash).
+    const sourceHash = hashConfigSources({ configDirectory: context.directories.config });
+    const configHash = devBuildHash({ buildHash: hashBuild({ context }), sourceHash });
+    const ran = await runDevJourneys({
+      context,
+      entries: tiered.selected,
+      url: server.url,
+      runner,
+      readLimit,
+      records,
+      repeat,
+      recording,
+      configHash,
+      onReported: ({ entry, result, inBrowserNext }) => {
+        if (!type.isUndefined(result.browserOnly)) {
+          context.logger.info(formatBrowserOnly({ result, inBrowserNext }));
+          return;
+        }
+        const lines = entry.suite.format({ result, seen });
+        if (result.passed) {
+          lines.forEach((line) => context.logger.info(line));
+        } else {
+          lines.forEach((line) => context.logger.error(line));
+        }
+      },
+    });
+    results.push(...ran.results);
+    browserOnly.push(...ran.browserOnly);
+    inProcess.push(...ran.inProcess);
+    // The build once the run's pages were built, hashed once for both records.
+    const endBuildHash = hashBuild({ context });
     writeExercised({
       directories: context.directories,
       results,
       buildId: await fetchBuildId({ url: server.url }),
-      configHash: hashBuild({ context }),
+      configHash: endBuildHash,
     });
     writeTestRun({ directories: context.directories, results });
+    if (ran.headless.results.length + ran.headless.browserOnly.length + ran.remembered.length > 0) {
+      writeHeadlessRun({
+        directories: context.directories,
+        results: ran.headless.results,
+        browserOnly: ran.headless.browserOnly,
+        remembered: ran.remembered,
+        mode: 'dev',
+        configHashes: [configHash, devBuildHash({ buildHash: endBuildHash, sourceHash })],
+      });
+    }
   } finally {
     signalHandlers.forEach(([signal, onSignal]) => process.removeListener(signal, onSignal));
     if (!interrupted) {
@@ -213,6 +414,15 @@ async function test({ context }) {
     }
   }
 
+  const recorded =
+    results.some((result) => !type.isUndefined(result.recorded)) &&
+    isFullSuiteRun({
+      paths: givenPaths,
+      filter: filters,
+      tags,
+      tier,
+      repetition: 1,
+    });
   if (recorded) {
     context.logger.info(
       `Recorded this run to ${path.join(
@@ -223,13 +433,27 @@ async function test({ context }) {
       )}.`
     );
   }
-  const summary = summariseResults({ results, skipped: tiered.skipped.length });
+  const summary = summariseResults({
+    results,
+    skipped: tiered.skipped.length,
+    browserOnly: browserOnly.length,
+  });
   if (summary.failed > 0) {
     context.logger.error(summary.text);
     process.exitCode = 1;
   } else {
     context.logger.info(summary.text);
   }
+  const note = formatBrowserOnlyNote({
+    browserOnly,
+    inProcess,
+    base: process.cwd(),
+    configDirectory: context.directories.config,
+  });
+  if (!type.isUndefined(note)) {
+    context.logger.info(note);
+  }
+  failInCiOnSkip({ context, browserOnly, inProcess, build: false });
   context.sendTelemetry();
 }
 

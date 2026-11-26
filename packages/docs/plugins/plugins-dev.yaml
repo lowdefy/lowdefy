@@ -181,6 +181,43 @@ _ref:
             };
             ```
 
+            A headless journey (`lowdefy test`) loads no block component, so a `CallMethod` on one of your blocks needs the browser and the journey is listed browser-only there. A method that only fires one of the block's own events can say so in `meta.headlessMethods`, as `{ method: event }`. A headless journey then runs the event for it, with the method's first argument as `_event`, and `CallMethod` waits for its actions, as in the browser:
+
+            ```js
+            // src/blocks/ActionChain/meta.js: registers run, which fires onRun
+            export default {
+              category: 'display',
+              headlessMethods: { run: 'onRun' },
+              // ...events, properties
+            };
+            ```
+
+            A method that changes only what the block draws, sets no state and calls nothing, such as one that folds new rows into the block's own view, can be declared `null`. A headless `CallMethod` on it does nothing and resolves with no value, so the journey goes on; a check of what it drew, such as an `expect: { text }` on the block, still needs the browser:
+
+            ```js
+            // src/blocks/Timeline/meta.js: merge redraws the timeline, refresh fires onRefresh
+            export default {
+              category: 'display',
+              headlessMethods: { merge: null, refresh: 'onRefresh' },
+              // ...events, properties
+            };
+            ```
+
+            Declare `null` only for such a method: on one that sets state or calls a request, a headless run would do less than the browser, so a check could pass in one and fail in the other. A method left out of `headlessMethods`, or one called while the block is hidden, stays browser-only. Any value other than an event name or `null` fails the build, naming the block type and the method.
+
+            A headless journey reads an `expect: { text }` from the text each block draws from its properties. Lowdefy's own blocks have a text model; yours has one when its meta names, in `meta.headlessText`, the paths of the properties it draws as visible text, in order. A headless text check then reads those values: one with no markup as written, a number as its digits, and one with markup (`<`, `&`) as both html and text, so it never passes a check on its own. A check that may need the text of blocks inside your block, or of a block that declares no `headlessText`, goes to the browser when it runs:
+
+            ```js
+            // src/blocks/Banner/meta.js: draws its title and its body's text
+            export default {
+              category: 'display',
+              headlessText: ['title', 'body.text'],
+              // ...events, properties
+            };
+            ```
+
+            Declare it only for a block whose visible text is exactly those properties: text it adds of its own, text a method draws (a method declared `null` above), or a property it hides, would let a headless check fail where the browser passes. Any value other than a list of property paths fails the build, naming the block type.
+
             See the [default Lowdefy block packages](https://github.com/lowdefy/lowdefy/tree/main/packages/plugins/blocks) for full examples.
 
             ### Named export files

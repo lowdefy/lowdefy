@@ -23,6 +23,7 @@ import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 import collectPluginDefinitions from './collectPluginDefinitions.js';
 import compareProcessStartTimes from './compareProcessStartTimes.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
+import createArtifactReader from './createArtifactReader.js';
 import createConnectPublic from './createConnectPublic.js';
 import createDevAppLink from './devices/createDevAppLink.js';
 import createClientAddressResolver from './createClientAddressResolver.js';
@@ -30,6 +31,7 @@ import createLookupPublicAddress from './createLookupPublicAddress.js';
 import createSecretScrubber from './createSecretScrubber.js';
 import devPassiveHeader from './devPassiveHeader.js';
 import dataSetNamePattern from './dataSetNamePattern.js';
+import deepFreeze from './deepFreeze.js';
 import findAndroidDevice from './devices/findAndroidDevice.js';
 import findAndroidTool from './devices/findAndroidTool.js';
 import findAvailablePort from './findAvailablePort.js';
@@ -81,12 +83,22 @@ import writeFileIfChanged from './writeFileIfChanged.js';
 import compileSegments from './journeyCompiler/compileSegments.js';
 import countTextTokens from './journeyEvidence/countTextTokens.js';
 import normaliseClickText from './journeyText/normaliseClickText.js';
+import classifyJourney from './journeyGrammar/classifyJourney.js';
+import findJourneyPlaceholder from './journeyGrammar/findJourneyPlaceholder.js';
 import findPlaceholderStep from './journeyGrammar/findPlaceholderStep.js';
+import findStepNeedingPage from './journeyGrammar/findStepNeedingPage.js';
 import failurePathKey from './journeyEvidence/failurePathKey.js';
 import isBackedBy from './journeyEvidence/isBackedBy.js';
 import normaliseBlockId from './journeyGrammar/normaliseBlockId.js';
+import createDataSetRails from './journeyRails/createDataSetRails.js';
+import isRoutineStep from './journeyRails/isRoutineStep.js';
+import pageBlocks from './journeyRails/pageBlocks.js';
+import RAILED_STEPS from './journeyRails/railedSteps.js';
+import readRoutineSteps from './journeyRails/readRoutineSteps.js';
 import normaliseJourneySteps from './journeyGrammar/normaliseJourneySteps.js';
+import readSystemCaller from './journeyGrammar/readSystemCaller.js';
 import journeyStepSchema, { JOURNEY_STEP_SCHEMAS } from './journeyGrammar/journeyStepSchema.js';
+import journeyStubSchema from './journeyGrammar/journeyStubSchema.js';
 import hashSequence from './journeyCompiler/hashSequence.js';
 import journeySequence from './journeyCompiler/journeySequence.js';
 import listFailurePaths from './journeyCompiler/listFailurePaths.js';
@@ -97,19 +109,47 @@ import buildSessionReport from './sessionLog/buildSessionReport.js';
 import formatSessionLog from './sessionLog/formatSessionLog.js';
 import formatSessionReport from './sessionLog/formatSessionReport.js';
 import summariseSessions from './sessionLog/summariseSessions.js';
+import toWebhookBody from './toWebhookBody.js';
+import toWebhookHeaders from './toWebhookHeaders.js';
 import stepIdentity from './journeyCompiler/stepIdentity.js';
 import validateJourneySteps, {
+  ANSWER_STEP_KEYS,
+  CALL_STEP_KEYS,
   getStepKey,
   INTERACTION_STEP_KEYS,
   STEP_KEYS,
   TARGET_KEYS,
 } from './journeyGrammar/validateJourneySteps.js';
+import validateJourneyDataSession from './journeyGrammar/validateJourneyDataSession.js';
+import validateJourneyStub from './journeyGrammar/validateJourneyStub.js';
+import validateJourneyStubs from './journeyGrammar/validateJourneyStubs.js';
 import validateJourneyTags, { JOURNEY_TAG_PATTERN } from './journeyGrammar/validateJourneyTags.js';
 import validateJourneyUser from './journeyGrammar/validateJourneyUser.js';
 import validateTraceRecord from './journeyTrace/validateTraceRecord.js';
+import claimExpectedErrors from './journeyInvariants/claimExpectedErrors.js';
+import findActionErrors from './journeyInvariants/findActionErrors.js';
+import findErrorEntries from './journeyInvariants/findErrorEntries.js';
+import findingKey from './journeyInvariants/findingKey.js';
+import isAppErrorFinding from './journeyInvariants/isAppErrorFinding.js';
+import isClaimedLater from './journeyInvariants/isClaimedLater.js';
+import isExpectErrorStep from './journeyInvariants/isExpectErrorStep.js';
+import JOURNEY_FINDING_SEVERITY from './journeyInvariants/JOURNEY_FINDING_SEVERITY.js';
+import keyFindings from './journeyInvariants/keyFindings.js';
+import toAppErrorFailure from './journeyInvariants/toAppErrorFailure.js';
 
 export {
   acquireMachineSlot,
+  claimExpectedErrors,
+  classifyJourney,
+  findActionErrors,
+  findErrorEntries,
+  findingKey,
+  isAppErrorFinding,
+  isClaimedLater,
+  isExpectErrorStep,
+  JOURNEY_FINDING_SEVERITY,
+  keyFindings,
+  toAppErrorFailure,
   bindCredentialScrub,
   bootIosSimulator,
   buildSessionReport,
@@ -123,18 +163,22 @@ export {
   copyFileOrDirectory,
   countDataSetDocuments,
   countTextTokens,
+  createArtifactReader,
   createClientAddressResolver,
   createConnectPublic,
   createLookupPublicAddress,
   createSecretScrubber,
   devPassiveHeader,
   dataSetNamePattern,
+  deepFreeze,
   failurePathKey,
   findAndroidDevice,
   findAndroidTool,
   findAvailablePort,
+  findJourneyPlaceholder,
   findPlaceholderStep,
   findPnpmWorkspaceRoot,
+  findStepNeedingPage,
   formatSessionLog,
   formatSessionReport,
   findWorkspacePackages,
@@ -156,6 +200,7 @@ export {
   isPortAvailable,
   journeySequence,
   journeyStepSchema,
+  journeyStubSchema,
   linkDependenciesToWorkspace,
   linkWorkspaceDependencies,
   listDataSets,
@@ -166,6 +211,11 @@ export {
   markCredential,
   matchPagePath,
   normaliseBlockId,
+  createDataSetRails,
+  isRoutineStep,
+  pageBlocks,
+  RAILED_STEPS,
+  readRoutineSteps,
   normaliseJourneySteps,
   normaliseClickText,
   parseIpRange,
@@ -180,6 +230,7 @@ export {
   readDevInstanceRecord,
   readProcessStartTime,
   readServerRegistry,
+  readSystemCaller,
   registerServer,
   relativePosixPath,
   readRecordings,
@@ -190,17 +241,24 @@ export {
   spawnProcess,
   stepIdentity,
   summariseSessions,
+  toWebhookBody,
+  toWebhookHeaders,
   readFile,
   writeFile,
   writeFileAtomic,
   watchOwner,
   writeFileIfChanged,
+  ANSWER_STEP_KEYS,
+  CALL_STEP_KEYS,
   getStepKey,
   INTERACTION_STEP_KEYS,
   JOURNEY_STEP_SCHEMAS,
   STEP_KEYS,
   TARGET_KEYS,
   validateJourneySteps,
+  validateJourneyDataSession,
+  validateJourneyStub,
+  validateJourneyStubs,
   validateTraceRecord,
   JOURNEY_TAG_PATTERN,
   validateJourneyTags,

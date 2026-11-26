@@ -89,6 +89,7 @@ function row({
     lowdefy_block_type: null,
     lowdefy_row: null,
     lowdefy_column: null,
+    lowdefy_control: null,
     lowdefy_option: null,
     lowdefy_event_scope: null,
     lowdefy_event_name: null,
@@ -122,6 +123,21 @@ const chains = {
     entry('a', { attributes: { attr__href: '/tickets' }, text: 'Tickets' }),
     entry('li', { classes: ['ant-menu-item'], attributes: { attr__role: 'menuitem' } }),
     wrapper('main_menu')
+  ),
+  // A modal's OK button in its portal, as maskEventText sends it: the control
+  // marks stay, the row key and data text go.
+  modalOk: chain(
+    entry('span', { text: 'OK' }),
+    entry('button', {
+      classes: ['ant-btn'],
+      attributes: {
+        'attr__data-lf-block': 'delete_modal',
+        'attr__data-lf-control': 'ok',
+        attr__type: 'button',
+      },
+    }),
+    entry('div', { classes: ['ant-modal-footer'] }),
+    entry('div', { classes: ['ant-modal'], attributes: { attr__role: 'dialog' } })
   ),
   portalOption: chain(
     entry('div', { classes: ['ant-select-item-option-content'], text: 'Alice' }),

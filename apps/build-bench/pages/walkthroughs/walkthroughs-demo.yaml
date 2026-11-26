@@ -1,0 +1,121 @@
+_ref:
+  module: layout
+  component: page
+  vars:
+    id: walkthroughs-demo
+    title: Walkthroughs
+    breadcrumbs:
+      - home: true
+        icon: home
+      - label: Walkthroughs
+    requests:
+      - _ref: pages/walkthroughs/requests/list_walkthroughs.yaml
+    events:
+      onMount:
+        - id: fetch_walkthroughs
+          type: Request
+          params: list_walkthroughs
+    blocks:
+      - _ref:
+          module: layout
+          component: card
+          vars:
+            title: Library
+            blocks:
+              - id: walkthrough_choice
+                type: Selector
+                properties:
+                  label:
+                    title: Walkthrough
+                  options:
+                    _request: list_walkthroughs
+              - id: walkthrough_buttons
+                type: Box
+                layout:
+                  gap: 8
+                blocks:
+                  - id: play_walkthrough
+                    type: Button
+                    layout:
+                      flex: 0 1 auto
+                    properties:
+                      title: Play
+                      icon: CirclePlay
+                      # The player reads published content, so a walkthrough that has never been
+                      # published has nothing to show — New walkthrough makes one of those.
+                      disabled:
+                        _js:
+                          fn: |
+                            const { id, options } = args[0] || {};
+                            const chosen = (options || []).find((o) => o.value === id);
+                            return !chosen || !chosen.published;
+                          args:
+                            - id:
+                                _state: walkthrough_choice
+                              options:
+                                _request: list_walkthroughs
+                    events:
+                      onClick:
+                        - id: set_playing_id
+                          type: SetState
+                          params:
+                            walkthrough_id:
+                              _state: walkthrough_choice
+                        - id: show_player
+                          type: CallMethod
+                          params:
+                            blockId: walkthrough_player_modal
+                            method: toggleOpen
+                  - id: edit_walkthrough
+                    type: Button
+                    layout:
+                      flex: 0 1 auto
+                    properties:
+                      title: Edit
+                      icon: edit
+                      type: default
+                      disabled:
+                        _eq:
+                          - _state: walkthrough_choice
+                          - null
+                    events:
+                      onClick:
+                        - id: open_editor
+                          type: Link
+                          params:
+                            pageId: walkthrough-editor-demo
+                            urlQuery:
+                              id:
+                                _state: walkthrough_choice
+                  - id: new_walkthrough
+                    type: Button
+                    layout:
+                      flex: 0 1 auto
+                    properties:
+                      title: New walkthrough
+                      icon: add
+                      type: default
+                    events:
+                      onClick:
+                        - id: open_new_editor
+                          type: Link
+                          params:
+                            pageId: walkthrough-editor-demo
+
+      - id: walkthrough_player_modal
+        type: Modal
+        properties:
+          title: Walkthrough
+          footer: false
+          width: 900
+        events:
+          # The player's blocks mount with the page rather than with the modal, so opening is what
+          # loads them — and it reloads on every open, since one modal serves every walkthrough.
+          onOpen:
+            _ref:
+              module: walkthroughs
+              component: open
+        blocks:
+          - _ref:
+              module: walkthroughs
+              component: player

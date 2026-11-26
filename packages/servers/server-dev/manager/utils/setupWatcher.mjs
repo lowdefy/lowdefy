@@ -38,6 +38,12 @@ function withNativePath(ignore) {
 // watchFiles are single files watched from the start beside watchPaths. They
 // are passed to chokidar as they are, never read as globs, so a file name with
 // glob characters ([id].yaml) is still watched as that file.
+//
+// delay debounces a batch: every edit waits it out before its build starts. A
+// save of 200 files, written one after another or as atomic renames, reaches
+// the watcher with gaps short enough that 150 ms keeps it one batch, where
+// 100 ms split one save in 8 on a loaded machine. A save that splits builds
+// twice, and the second build has every file.
 function setupWatcher({
   callback,
   context,
@@ -45,7 +51,7 @@ function setupWatcher({
   ignorePaths = [],
   watchPaths,
   watchFiles = [],
-  delay = 500,
+  delay = 150,
   onBusy,
 }) {
   return new Promise((resolve) => {

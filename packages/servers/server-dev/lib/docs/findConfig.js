@@ -15,7 +15,7 @@
 */
 
 import path from 'node:path';
-import { UserError, resolveConfigLocation } from '@lowdefy/errors';
+import { UserError, createKeyPathResolver, resolveConfigLocation } from '@lowdefy/errors';
 import { type } from '@lowdefy/helpers';
 
 import buildPageIfNeeded from '../server/jitPageBuilder.js';
@@ -29,7 +29,7 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// Array segments in keyMap `key` paths look like `[0:home]` or
+// Array segments in key map config paths look like `[0:home]` or
 // `[2:my_button:Button]` (see packages/build/src/build/addKeys.js recArray) —
 // match an id at either position.
 function buildIdPattern(id) {
@@ -38,28 +38,28 @@ function buildIdPattern(id) {
 
 // The JIT page build runs addKeys on the page object itself (see
 // packages/build/src/build/jit/buildPageJit.js), so a built page's keyMap
-// subtree is keyed `root`, `root.blocks[...]` — the key path carries NO page
+// subtree is keyed `root`, `root.blocks[...]` — the config path carries NO page
 // segment, and every built page looks identical by prefix. The page a keyMap
-// entry belongs to is only recoverable structurally: walk ~k_parent up to the
-// subtree root and compare against the page's own root. The page's root is
+// entry belongs to is only recoverable structurally: walk the parent chain up
+// to the subtree root and compare against the page's own root. The page's root is
 // found from its build artifact — block objects in pages/<pageId>.json keep
 // their ~k, and any of them chains up to the page root. Skeleton-style keys
 // (`root.pages[N:pageId]...`) carry the page segment inline, so a containment
 // pattern covers those.
-function buildPageScope({ pageId, keyMap }) {
+function buildPageScope({ pageId, resolveKeyPath, keyMap }) {
   // A page built during the skeleton build (e.g. the default 404 page) has
   // no JIT root at all — its keys carry the page segment inline, so the
   // pattern branch identifies them instead.
   return {
-    rootKeyId: findPageRootKeyId({ pageId, keyMap }),
+    rootKeyId: findPageRootKeyId({ pageId, resolveKeyPath, keyMap }),
     pagePattern: new RegExp(`\\bpages\\[\\d+:${escapeRegExp(pageId)}(:[^\\]]*)?\\]`),
   };
 }
 
-function findGlobalRootId(keyMap) {
-  for (const [keyId, entry] of Object.entries(keyMap)) {
-    if (entry?.key === 'root.pages') {
-      return resolveChainRootId({ keyId, keyMap });
+function findGlobalRootId({ resolveKeyPath, keyMap }) {
+  for (const keyId of Object.keys(keyMap)) {
+    if (resolveKeyPath(keyId)?.path === 'root.pages') {
+      return resolveChainRootId({ keyId, resolveKeyPath });
     }
   }
   return null;
@@ -69,11 +69,11 @@ function findGlobalRootId(keyMap) {
 // the page stub (its `auth`, for one), chaining to the global config root,
 // while the JIT build keys the page content under its own root. Only the
 // JIT root discriminates pages, so skip keys that chain to the global root.
-function findPageRootKeyId({ pageId, keyMap }) {
+function findPageRootKeyId({ pageId, resolveKeyPath, keyMap }) {
   const artifact = readBuildArtifact({ name: `pages/${pageId}.json`, deserialize: true });
-  const globalRootId = findGlobalRootId(keyMap);
+  const globalRootId = findGlobalRootId({ resolveKeyPath, keyMap });
   for (const keyId of collectKeyIds(artifact)) {
-    const rootKeyId = resolveChainRootId({ keyId, keyMap });
+    const rootKeyId = resolveChainRootId({ keyId, resolveKeyPath });
     if (rootKeyId !== globalRootId) {
       return rootKeyId;
     }
@@ -93,16 +93,17 @@ function collectKeyIds(node, keyIds = []) {
   return keyIds;
 }
 
-// Walk ~k_parent to the top of the entry's subtree. addKeys assigns the tree
-// root a parent id that is never written to keyMap, so "parent not in keyMap"
-// is the root. The seen-set guards against a corrupt artifact cycling forever.
-function resolveChainRootId({ keyId, keyMap }) {
+// Walk the parent chain to the top of the entry's subtree. addKeys assigns the
+// tree root a parent id that is never written to keyMap, so "parent not in
+// keyMap" is the root. The seen-set guards against a corrupt artifact cycling
+// forever.
+function resolveChainRootId({ keyId, resolveKeyPath }) {
   let currentId = keyId;
   const seen = new Set();
   while (!seen.has(currentId)) {
     seen.add(currentId);
-    const parentId = keyMap[currentId]?.['~k_parent'];
-    if (type.isNone(parentId) || type.isUndefined(keyMap[parentId])) {
+    const parentId = resolveKeyPath(currentId)?.parentId;
+    if (type.isNone(parentId) || type.isNone(resolveKeyPath(parentId))) {
       return currentId;
     }
     currentId = parentId;
@@ -110,14 +111,14 @@ function resolveChainRootId({ keyId, keyMap }) {
   return currentId;
 }
 
-function belongsToPage({ keyId, entry, keyMap, pageScope }) {
-  if (pageScope.pagePattern.test(entry.key)) {
+function belongsToPage({ keyId, keyPath, resolveKeyPath, pageScope }) {
+  if (pageScope.pagePattern.test(keyPath)) {
     return true;
   }
   if (type.isNone(pageScope.rootKeyId)) {
     return false;
   }
-  return resolveChainRootId({ keyId, keyMap }) === pageScope.rootKeyId;
+  return resolveChainRootId({ keyId, resolveKeyPath }) === pageScope.rootKeyId;
 }
 
 // A key path ends in the matched node's own segment, `blocks[2:my_button:Button]`
@@ -159,26 +160,35 @@ function hazardsForMatch({ keyPath, requestPageIds }) {
   return getHazards({ kind, type: nodeType ?? null, connectionId });
 }
 
-function scanKeyMap({ id, keyMap, refMap, configDirectory, pageScope, requestPageIds }) {
+function scanKeyMap({
+  id,
+  keyMap,
+  refMap,
+  resolveKeyPath,
+  configDirectory,
+  pageScope,
+  requestPageIds,
+}) {
   const pattern = buildIdPattern(id);
   const matches = [];
-  for (const [keyId, entry] of Object.entries(keyMap)) {
+  for (const keyId of Object.keys(keyMap)) {
     if (matches.length >= MAX_MATCHES) {
       break;
     }
-    if (!type.isString(entry?.key)) {
+    const keyPath = resolveKeyPath(keyId)?.path;
+    if (!type.isString(keyPath)) {
       continue;
     }
-    if (!pattern.test(entry.key)) {
+    if (!pattern.test(keyPath)) {
       continue;
     }
-    if (pageScope && !belongsToPage({ keyId, entry, keyMap, pageScope })) {
+    if (pageScope && !belongsToPage({ keyId, keyPath, resolveKeyPath, pageScope })) {
       continue;
     }
     matches.push({
-      keyPath: entry.key,
+      keyPath,
       location: resolveConfigLocation({ configKey: keyId, keyMap, refMap, configDirectory }),
-      hazards: hazardsForMatch({ keyPath: entry.key, requestPageIds }),
+      hazards: hazardsForMatch({ keyPath, requestPageIds }),
     });
   }
   return matches;
@@ -194,8 +204,24 @@ function deIndexId(id) {
   return id.replace(/\.\d+(?=\.|$)/g, () => '.$');
 }
 
-function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory, pageScope, requestPageIds }) {
-  const matches = scanKeyMap({ id, keyMap, refMap, configDirectory, pageScope, requestPageIds });
+function scanKeyMapWithDeIndex({
+  id,
+  keyMap,
+  refMap,
+  resolveKeyPath,
+  configDirectory,
+  pageScope,
+  requestPageIds,
+}) {
+  const matches = scanKeyMap({
+    id,
+    keyMap,
+    refMap,
+    resolveKeyPath,
+    configDirectory,
+    pageScope,
+    requestPageIds,
+  });
   if (matches.length > 0) {
     return matches;
   }
@@ -207,6 +233,7 @@ function scanKeyMapWithDeIndex({ id, keyMap, refMap, configDirectory, pageScope,
     id: deIndexedId,
     keyMap,
     refMap,
+    resolveKeyPath,
     configDirectory,
     pageScope,
     requestPageIds,
@@ -267,12 +294,14 @@ async function findConfig({ id, pageId }) {
     }
 
     const { keyMap, refMap } = await readMergedMaps({ buildDirectory });
+    const resolveKeyPath = createKeyPathResolver({ keyMap });
     const matches = scanKeyMapWithDeIndex({
       id,
       keyMap,
       refMap,
+      resolveKeyPath,
       configDirectory,
-      pageScope: buildPageScope({ pageId, keyMap }),
+      pageScope: buildPageScope({ pageId, resolveKeyPath, keyMap }),
       requestPageIds: [pageId],
     });
     return matches.length > 0
@@ -290,6 +319,7 @@ async function findConfig({ id, pageId }) {
     id,
     keyMap,
     refMap,
+    resolveKeyPath: createKeyPathResolver({ keyMap }),
     configDirectory,
     requestPageIds: Object.keys(pageRegistry),
   });

@@ -15,6 +15,7 @@
 */
 
 import appFolder from './appFolder.js';
+import testLevel from './testLevel.js';
 
 // The journeys-harden skill: a thin workflow over the CLI that proves the
 // app's journeys are worth keeping. It replays and lints them, runs config
@@ -44,11 +45,14 @@ Two rules hold throughout:
 - **Write no step the compiler or the variants generator did not produce**, except an assertion
   the developer approved. Never add \`wait: { ms }\`: lint L3 refuses it.
 
+${testLevel()}
+
 ## 1. Replay
 
-Run \`lowdefy test --config-directory <app> --repeat 3\`, and \`lowdefy test --config-directory <app> --repeat 3 <app>/tests/journeys/_candidates/\`
+Run \`lowdefy test --config-directory <app> --thorough --repeat 3\`, and \`lowdefy test --config-directory <app> --thorough --repeat 3 <app>/tests/journeys/_candidates/\`
 when that directory has files. Replay first: each run records what the journey exercised in
-\`.lowdefy/test/exercised.json\`, which the lints read.
+\`.lowdefy/test/exercised.json\`, which the lints read. \`--thorough\` replays the journeys that
+need a browser too, since hardening mutates every journey of the suite.
 
 - **PASS** (three passes): good.
 - **FLAKY** (one or two failures): fix the cause, usually a missing \`wait: { request }\`, a data
@@ -115,8 +119,9 @@ When the developer keeps a variant:
   \`user\` list (\`user: member\` becomes \`user: [member, admin]\`; the variant's first comment
   names the list), and the variant file then goes, so the steps stay in one place. A journey with
   a list of users runs once as each, reported as \`<name> [<user>]\`.
-- Every other variant, a **role, refused** one included (it expects a different outcome: \`/404\`
-  or the feature hidden), moves into \`tests/journeys/\` as a journey of its own.
+- Every other variant moves into \`tests/journeys/\` as a journey of its own. No variant is
+  written for a role that is refused a page or endpoint: \`tests/access.yaml\` checks who reaches
+  what.
 
 ## 6. Evidence
 

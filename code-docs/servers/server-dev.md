@@ -65,7 +65,9 @@ Both `server` and `server-dev` have `antd` and `@ant-design/cssinjs` as direct d
 
 **Symptoms of duplicate instances:** Dark mode toggle only partially works — some antd components (like Menu) respond while the rest of the page stays in light mode. No errors in console.
 
-`resolve.dedupe` in `vite.config.js` handles the same problem for React itself — linked plugin packages must share one React instance — and for every `@lowdefy/*` package in the server's `package.json` dependencies. A linked workspace plugin pinned to another Lowdefy release otherwise brings its own `@lowdefy/helpers` and `@lowdefy/block-utils`: the dependency optimizer pre-bundles one copy per package for every importer (whichever its scan meets first), so the server's own client could load a plugin's older copy and fail on a missing export, and the client's HTML enhancements, registered in `@lowdefy/block-utils`, would not reach blocks that import another copy.
+`resolve.dedupe` in `vite.config.js` handles the same problem for React itself — linked plugin packages must share one React instance — and for every `@lowdefy/*` package in the server's `package.json` dependencies. A linked workspace plugin pinned to another Lowdefy release otherwise brings its own `@lowdefy/helpers` and `@lowdefy/block-utils`, and the client's HTML enhancements, registered in `@lowdefy/block-utils`, would not reach blocks that import another copy.
+
+**Every other package is per copy.** Vite's dependency optimizer keys a pre-bundle by the bare import id alone, so when two source packages it serves (Lowdefy's own blocks on a Lowdefy checkout, a linked plugin) install different versions of one package, every importer got whichever copy the parallel scan met first, and the winner changed from one start to the next (a plugin on `react-markdown` 8 could get the blocks' 10 and throw). `lib/vite/prebundlePerPackageCopy.js` keeps the plain id for the copy the id resolves to from the server directory and gives every other installed copy its own id, `<name>@<version>-<hash of its folder> > <id>`, so each importer gets its own version, as in a production build. It is two plugins: `scanPlugin` in `optimizeDeps.rolldownOptions.plugins` makes the scan (the dev server's and the `vite optimize` step's) record each copy under its own id, and `plugin` serves each importer that copy's pre-bundle. `resolve.dedupe` packages, imports from inside `node_modules`, linked packages and SSR are left alone. A package with one installed copy still has one pre-bundle.
 
 **React version.** `server` and `server-dev` pin `react` and `react-dom` exactly (19.3.1), and that copy is the only React an app runs: `resolve.dedupe` makes every block plugin, custom and local ones included, import the server's React whatever version the plugin installs itself. So block plugins declare `react` and `react-dom` `^19` as peer dependencies, never as dependencies, and a plugin release only has to support the React of the Lowdefy release it ships with. React 19 throws when `react` and `react-dom` versions differ, so the two pins always move together, in both servers, `server-e2e`, `client`, `layout` and `build`.
 
@@ -358,6 +360,15 @@ context.lowdefyBuild = async () => {
 `lastBuildFailed` tells the config watcher that `skeletonSourceFiles.json` belongs to an
 older, successful build (see the build watcher below).
 
+**What the manager keeps.** `pageRegistry` and `buildContext` are all of a build the manager
+holds: `resolvePagePath` reads them when a page file changes, and the build watcher reads the
+local module roots. The build's `components` are not kept. `lowdefyBuild`'s queue promise
+settles without the build's result, so it does not hold them, and the config build takes each
+module's pages and endpoints out of its manifest (`releaseMergedModuleEntities`), so
+`buildContext.modules` does not either. Measured on a large app that uses modules (105 module
+entries, 407 pages), the two together are about 370 MB less live heap in the manager. What is
+left is mostly the key map and `unresolvedRefVars`.
+
 ### JIT Page Build Flow
 
 **File:** `lib/server/jitPageBuilder.js`
@@ -369,19 +380,23 @@ rebuilds a page only when its next request needs it. When a page API request arr
 1. Calls `syncBuildSignals()`, which reads two signals by value:
    - `build/invalidatePages`: a value different from the last one seen is a **change event**.
      The event counter goes up, the kept context's read cache is replaced with a fresh one
-     (wrapped in read tracking again), and `seenSourceLines` is cleared so warnings log again.
+     (wrapped in read tracking again), and the generation's `seenSourceLines` is cleared so
+     warnings log again.
      Builds already running keep the cache they started with.
    - `build/pageRegistry.json`'s identity, `ino` plus `mtimeNs` from
      `fs.statSync(..., { bigint: true })`. Every publish renames a new file into place, so
      every publish has a new identity, even two in one clock tick. A new identity loads the
      registry and discards the context: the generation goes up and the next page build makes a
-     new context. A context whose maps passed the budget (below) is discarded the same way.
+     new context. A context whose maps passed the budget (below) is released instead: the next
+     page build makes a new context in the same generation.
 2. Serves the page when it is current (`reviewBuiltPage`):
    - compiled on an earlier **generation**: rebuilt without a check. Its content, `_js` and
-     icon enrichment belong to a context that is gone;
+     icon enrichment belong to a config build that is gone;
    - `checkedAt` (the event counter when its build started) equals the counter: current;
    - otherwise `checkPageRecord` decides: a build that ran app code is `changed`; else every
-     file the build read is re-read through the kept read cache and its sha256 compared.
+     file the build read is re-read through the kept read cache (or, while the budget has
+     released the context, a cache of the event over the same directories) and its sha256
+     compared.
      All match: `checkedAt` moves to the counter value the check started at. A mismatch, or a
      read that throws (EACCES, EBUSY on Windows mid-save), rebuilds the page; the rebuild
      reads through the same cache and reports the error as a build error.
@@ -397,7 +412,8 @@ next request checks it. A build still running when the context is discarded fini
 old context and carries the old generation, so its next request rebuilds it.
 
 `pageBuildRecords` (`lib/server/pageBuildRecords.js`) holds each page's last build record:
-`{ builtAt, checkedAt, generation, files: Map<absolutePath, sha256>, ranAppCode, errors }`.
+`{ builtAt, checkedAt, generation, files: Map<absolutePath, sha256>, mapsFiles, ranAppCode, errors }`,
+`mapsFiles` naming the `jitMaps/` file the build wrote.
 Reads are attributed to the build running them through `AsyncLocalStorage`. A file that does
 not exist is recorded as `missing`; a file read twice with different content, or whose read
 threw, as a value that never matches. `context.importAppCode` (the one entry point for
@@ -405,13 +421,21 @@ resolvers, transformers, `.js` refs, module resolvers and the global ref resolve
 build `ranAppCode`: app code can read anything, so such a page rebuilds after every change
 event.
 
-**Budget.** Every page build adds entries to the context's `keyMap` and `refMap`, released
-only with the context. When the entries added since the context was made (counted from
-`context.jitMaps`) pass `contextMapBudget` (`lib/server/contextMapBudget.js`, 48,000: about
-90 docs-app page builds at about 530 entries and 400-750 KB of retained heap each), the next
-`syncBuildSignals` discards the context and every page rebuilds, as after a config publish.
+**Key entries.** A page build's key entries are in the short shape (`{ s, p, r?, l?, i? }`, see [errors.md](../utils/errors.md#key-map-readers)) and chain within their own JIT tree: the page root's parent id is never written. `findConfig` and the mutants read them through `createKeyPathResolver`, so they rebuild each path once per scan.
 
-`getBuildContext` restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` with a prefix unique to the process (`continueJitKeys`: the counter only moves forward). It then calls `prepareJitContext`, which fills the fields build code otherwise fills on first use (auth projection, the icon set load, `jitMaps`, deferred records, unresolved ref vars, `websocketIds`), so no page build reloads them on its copy. Page builds do not rewrite `keyMap.json`/`refMap.json`: each writes the entries it added to a new `jitMaps/` file. A new context removes the `jitMaps/` files of every context but the previous one (`pruneJitMaps`). The context's `writeBuildArtifact` is wrapped with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild writes no maps over the new build (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
+**Budget.** Every page build adds entries to the context's `keyMap` and `refMap`, freed only
+with the context. When the entries added since the context was made (counted from
+`context.jitMaps`) pass `contextMapBudget` (`lib/server/contextMapBudget.js`, 480,000: about
+140 MB at about 290 bytes of retained heap an entry, or 900 docs-app page builds), the next
+`syncBuildSignals` releases the context, and the next page build makes a new one in the same
+generation. Pages built on the released context stay current, so a page whose own build
+passes the budget is built once, not on every request. Every context of a generation shares its `jsMap` (written whole to the JS map
+files), `dynamicIconData` and `seenSourceLines`, so a page built on a released context still
+serves its `_js` entries and icons (`getPageJitEnrichment` reads the shared state while no
+context is kept), and a warning logs once per change event. A new context costs a full read
+and parse of the build artifacts, 4-16 s on a large app, which is why the budget is high.
+
+`getBuildContext` restores `connectionIds`, `modules`, `installedPluginPackages` (for missing-package detection), API endpoint configs (for JIT `CallAPI` validation), and continues the skeleton build's `~k` keys from `idCounter.json` with a prefix unique to the process (`continueJitKeys`: the counter only moves forward). It then calls `prepareJitContext`, which fills the fields build code otherwise fills on first use (auth projection, the icon set load, `jitMaps`, deferred records, unresolved ref vars, `websocketIds`), so no page build reloads them on its copy. Page builds do not rewrite `keyMap.json`/`refMap.json`: each writes the entries it added to a new `jitMaps/` file. A new context removes every `jitMaps/` file but those the latest build of each of the current generation's pages wrote (`pruneJitMaps`). The context's `writeBuildArtifact` is wrapped with `skipStaleMapWrites`, so a page build that started before a skeleton rebuild writes no maps over the new build (see [Keys across dev rebuilds](../architecture/error-tracing.md#keys-across-dev-rebuilds)). Icon imports are snapshotted once per server process (`bundledIconImports`) — skeleton rebuilds may discover new icons, but those are only importable after the next server restart. The startup bundle holds the always-bundled icon names plus every name the config uses; there is no preset icon list. Icons found later reach the page as `_dynamicIcons` data (see below).
 
 ### PageCache
 
@@ -563,7 +587,17 @@ re-optimisation the child triggers mid-session keeps its memory until the next r
 
 **Agent browser** (`lib/docs/getBrowser.js`, `createBrowserLifecycle.js`, `launchBrowser.js`,
 `installHeadlessShell.js`). Screenshots, journeys, headless inspection and expression evaluation
-share one browser per child:
+share one browser per origin host and port in each child; callers on one URL get one browser:
+
+- `getBrowser({ origin })` keeps a `createBrowserLifecycle` per origin host and port
+  (`lifecycleForOrigin.js`, keyed by `originGuard.js`), because each browser is launched with
+  `--host-resolver-rules` (`hostResolverRules.js`) and explicit proxy switches
+  (`proxyLaunchArgs.js`) for its origin: the journey origin guard in `architecture/journeys.md`.
+  The browsers use a proxy only when the environment names one. A second origin, such as
+  `127.0.0.1` beside `localhost`, launches a second browser: about 140 MB more resident memory
+  on macOS while both are open. `openPage` takes only a browser `getBrowser` launched, counts
+  the context on that browser's lifecycle, and refuses a data cookie in a browser launched for
+  another origin.
 
 - `launchBrowser` imports `playwright-core` lazily and launches `chromium-headless-shell` first,
   system Chrome (`channel: 'chrome'`) as the fallback. A missing shell starts
@@ -576,7 +610,7 @@ share one browser per child:
   registry): a killed install can leave the executable without it, and the installer repairs
   such a directory.
   `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD` turns the download off.
-- `createBrowserLifecycle` closes the browser 90 s after the last `getBrowser()` call once no
+- `createBrowserLifecycle` closes the browser 45 s after the last `getBrowser()` call once no
   context is open and no launch is in flight. `openPage` counts contexts through their `close`
   event. The `getBrowser()` re-arm covers a caller between `getBrowser()` and its first
   `newContext`.
@@ -592,7 +626,7 @@ journeys take `pathParams` next to `pageId` and `urlQuery`.
 returns to the agent before a browser opens. `openPage` and `buildPageUrl` take the pattern as
 `path`; the tools read `lowdefy.contexts[instanceKey]` and `lowdefy.inputs[instanceKey]`.
 `isPageReady()` waits for the instance on screen, the last key in
-`lowdefy.pageInstances[lowdefy.pageId]`, so a redirect settles on the page the app shows. A request naming only a `pageId` reads a live tab
+`lowdefy.pageInstances[lowdefy.pageId]`, so a redirect settles on the page the app shows. Each caller passes the time it stops waiting as `deadline`, and an event that only sleeps in a `Wait` until after it is not counted as running (see "When a page counts as settled" in `architecture/journeys.md`). A request naming only a `pageId` reads a live tab
 through `findPageInstance`; headless it needs `pathParams` for a patterned page. `GET /lowdefy-docs/page-config` takes multi-segment page ids. `getAppMap` lists each page's `path`, and
 the overview lists the patterned pages.
 
@@ -675,7 +709,12 @@ restart kills. So the manager's proxy recognises them (`readBuildStatusWait`: th
 POST whose JSON-RPC body calls `lowdefy_build_status` with `wait: true`; the POST body is
 buffered and forwarded as read) and holds them in `buildActivity.waitForIdle()` (a 1 s grace
 for an edit the watchers have not seen yet, then until idle, at most two minutes) before
-forwarding them to whichever child is current. The result travels in the
+forwarding them to whichever child is current. When the manager is idle and its work settled
+less than the grace before the call, an edit saved before it settled has been seen and processed
+(an edit that reaches a watcher while the work runs keeps it busy), so the grace only covers an
+edit saved since: 200 ms (`seenGraceMs`), a few times the 57 ms a save took at most to reach the
+watcher on macOS. Watchers debounce a
+batch by 150 ms (`setupWatcher`'s `delay`), the shortest that kept a 200-file save one batch. The result travels in the
 `x-lowdefy-build-wait` header (`readProxyBuildWait`), so the child reports it and does not
 wait again. A request that reaches the child without the header (a direct call to the internal
 port) still waits on `building` itself.
@@ -1111,6 +1150,7 @@ Tailwind compiles through **Vite's PostCSS pipeline** (`postcss.config.cjs` → 
 export default defineConfig(({ mode }) => ({
   base: `${basePath}/`, // From build/config.json (best-effort — may not exist yet)
   plugins: [
+    packageCopies.plugin, // prebundlePerPackageCopy(): each importer its own copy of a dependency
     react(),
     devServer({
       entry: './src/app.js',
@@ -1131,7 +1171,10 @@ export default defineConfig(({ mode }) => ({
   define: createNodeEnvDefine({ mode }), // { 'process.env.NODE_ENV': '"development"' }
   optimizeDeps: {
     // The dependency optimiser ignores `define` and reads NODE_ENV from the shell.
-    rolldownOptions: { transform: { define: createNodeEnvDefine({ mode }) } },
+    rolldownOptions: {
+      transform: { define: createNodeEnvDefine({ mode }) },
+      plugins: [packageCopies.scanPlugin],
+    },
     // ...
   },
   resolve: {
@@ -1226,6 +1269,10 @@ auth:
 | `lib/server/auth/session.js`                 | Server-side integration (mock checked first, then `getAuthUser(c)` from `@hono/auth-js`) |
 
 Auth itself is Auth.js v5 (`@auth/core` via `@hono/auth-js`), wired the same way as production: `initAuthConfig` mounted app-wide when configured, `/api/auth/*` delegating to `authHandler()`, and `SessionProvider`/`useSession` from `@hono/auth-js/react` on the client. See [Auth System Architecture](../architecture/auth-system.md#mock-user-for-testing-dev-server-only) for full details.
+
+### The gate an injected caller meets
+
+No auth engine runs for a mock user, a headless user (a journey's or a dev tool call's `user`, a data set user) or a data-session request that carries no user. `lib/server/createLowdefyContext.js` builds those contexts with `createInjectedApiContext` (`@lowdefy/api`), which takes the organization policy and the gate's enforcement facts from the built `auth.json`, and every other context with `createApiContext`, which reads what the engine retained. In an app with auth configured an injected caller is therefore answered as a signed-in one is: a caller carrying `two_factor_enrolled: false` under `auth.twoFactor.required` gets `enrol_required` on a protected page (`/api/page` answers 403 with the enrolment redirect) and a 403 `TwoFactorEnrolmentRequiredError` on a protected request or endpoint, and one with no such key passes. A data-session request with no user is signed out: it gets a 401 `AuthenticationError` for a missing or internal request or endpoint, and `unauthenticated` for an unknown path when unlisted pages are protected. See [Injected callers](../packages/api.md#injected-callers).
 
 ## Mail Sink for Journeys
 

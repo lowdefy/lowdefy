@@ -1,0 +1,270 @@
+/*
+  Copyright 2020-2026 Lowdefy, Inc
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+*/
+
+import { get, type } from '@lowdefy/helpers';
+
+import findBlock from './findBlock.js';
+import waitForSettle from './waitForSettle.js';
+import waitUntil, { sleep } from './waitUntil.js';
+
+const STEPS = ['click', 'fill', 'select', 'press', 'wait'];
+const SETTLE_MS = 5000;
+
+function readOptionLabel(option) {
+  if (type.isObject(option)) {
+    return String(option.label ?? option.value);
+  }
+  return String(option);
+}
+
+function readPlainText({ label }) {
+  return label;
+}
+
+function readOptionValue(option) {
+  return type.isObject(option) ? option.value : option;
+}
+
+/**
+ * Runs the browser's journey steps on a host without a DOM, by block id: the phone shell's answer
+ * to a dev-tab step-request, and each step of a headless journey. A step acts through the engine,
+ * as the block's own view does when it is pressed or typed in, and waits for the page to settle
+ * (at most 5 s, never failing the step):
+ * - `{ click: target }`: the block's onClick.
+ * - `{ fill: { blockId, value } }`: sets the input's value, then its onChange with `{ value }`, as
+ *   a text, number or colour input's view fires it.
+ * - `{ select: { blockId, value } }`: the option whose label (or value) shows `value` as its text,
+ *   surrounding whitespace aside; a block whose value is a list ticks it.
+ * - `{ press: 'Enter' }`: the onPressEnter of the input filled last.
+ * - `{ wait: { ms } | { request } | { state } }`.
+ * - `{ screenshot: name? }`: the root view as a base64 PNG, on a host that passes `capture`.
+ * Resolves `{ ok: true, settled }` (and `image` for a screenshot); throws when the step cannot run.
+ * optionLabels({ block }) lists the label of each of a block's options as a string, and
+ * readOptionTexts({ block }) the text each shows, which a select matches; a host's stand-ins read
+ * options through them, so they find the option the select picks.
+ * lastInputBlockId() is the input filled or selected in last, which a press acts on, or null
+ * before any. setLastInputBlockId(blockId) records an input a host typed into itself, so a press
+ * after it acts on that input: a headless run types into a selector's search box (journey-headless'
+ * searchSelectorStandIn) without setting the selector's value.
+ *
+ * @param {Object} params
+ * @param {() => Promise<string>} [params.capture] Captures the root view as a base64 PNG. A host
+ *   without it refuses the screenshot step.
+ * @param {() => Object} params.getLowdefy The open app's lowdefy object.
+ * @param {({ lowdefy }) => { context, page } | { error }} params.getPageContext The engine context
+ *   of the page the host shows, with `page.pageId`, or an error saying why there is none.
+ * @param {string} params.hostName What runs the steps, as refusals name it: "phone", "headless run".
+ * @param {({ block, label }) => string | Promise<string>} [params.readLabelText] The text an option's
+ *   label shows on the host, for the block that draws it. A web block that draws its labels as html
+ *   shows the html's text, so a headless run of a web app reads it; without the hook a label is its
+ *   own text, as a native picker draws it.
+ * @param {number} [params.timeout] How long a step waits for its block or condition, in ms.
+ */
+function createStepRunner({
+  capture,
+  getLowdefy,
+  getPageContext,
+  hostName,
+  readLabelText = readPlainText,
+  timeout = 5000,
+}) {
+  if (!type.isFunction(getLowdefy)) {
+    throw new Error('createStepRunner needs a getLowdefy function.');
+  }
+  if (!type.isFunction(getPageContext)) {
+    throw new Error('createStepRunner needs a getPageContext function.');
+  }
+  if (!type.isString(hostName)) {
+    throw new Error(
+      `createStepRunner needs a hostName string. Received ${JSON.stringify(hostName)}.`
+    );
+  }
+  const steps = type.isFunction(capture) ? [...STEPS, 'screenshot'] : STEPS;
+  let lastInputBlockId = null;
+
+  function find({ lowdefy, target }) {
+    return findBlock({ getPageContext, hostName, lowdefy, target, timeout });
+  }
+
+  async function settle(lowdefy) {
+    const settled = await waitForSettle({ getPageContext, lowdefy, timeout: SETTLE_MS });
+    return { ok: true, settled };
+  }
+
+  // An event is started as the block's view starts it, without waiting on it: the step then waits
+  // for the page to settle, which is capped. So a trailing-edge debounce longer than the settle,
+  // or a chain that outlasts it, does not hold the step, as it does not hold a browser journey.
+  async function click({ lowdefy, target }) {
+    const { block } = await find({ lowdefy, target });
+    if (block.eval.properties?.disabled === true) {
+      throw new Error(`Block "${block.blockId}" is disabled.`);
+    }
+    block.triggerEvent({ name: 'onClick' });
+    return settle(lowdefy);
+  }
+
+  async function findInput({ lowdefy, target }) {
+    const found = await find({ lowdefy, target });
+    if (!type.isFunction(found.block.setValue)) {
+      throw new Error(`Block "${found.block.blockId}" is not an input.`);
+    }
+    return found.block;
+  }
+
+  async function setInputValue({ block, lowdefy, value }) {
+    block.setValue(value);
+    lastInputBlockId = block.blockId;
+    block.triggerEvent({ name: 'onChange', event: { value } });
+    return settle(lowdefy);
+  }
+
+  async function fill({ lowdefy, target }) {
+    if (!type.isObject(target) || !Object.hasOwn(target, 'value')) {
+      throw new Error(`A fill step needs { blockId, value }. Received ${JSON.stringify(target)}.`);
+    }
+    const block = await findInput({ lowdefy, target });
+    return setInputValue({ block, lowdefy, value: target.value });
+  }
+
+  function optionLabels({ block }) {
+    return (block.eval.properties?.options ?? []).map(readOptionLabel);
+  }
+
+  async function readOptionTexts({ block }) {
+    const texts = await Promise.all(
+      optionLabels({ block }).map((label) => readLabelText({ block, label }))
+    );
+    return texts.map((text) => text.trim());
+  }
+
+  async function select({ lowdefy, target }) {
+    if (!type.isObject(target) || !Object.hasOwn(target, 'value')) {
+      throw new Error(
+        `A select step needs { blockId, value }. Received ${JSON.stringify(target)}.`
+      );
+    }
+    const block = await findInput({ lowdefy, target });
+    const options = block.eval.properties?.options ?? [];
+    const texts = await readOptionTexts({ block });
+    const index = texts.indexOf(String(target.value));
+    if (index === -1) {
+      throw new Error(
+        `Block "${block.blockId}" has no option "${target.value}". Its options are ${JSON.stringify(
+          texts
+        )}.`
+      );
+    }
+    const value = readOptionValue(options[index]);
+    // A block whose value is a list (a checkbox group) ticks the option and never unticks it, as
+    // the browser's select does.
+    if (block.meta?.valueType === 'array') {
+      const ticked = type.isArray(block.value) ? block.value : [];
+      return setInputValue({
+        block,
+        lowdefy,
+        value: ticked.includes(value) ? ticked : [...ticked, value],
+      });
+    }
+    return setInputValue({ block, lowdefy, value });
+  }
+
+  async function press({ key, lowdefy }) {
+    if (key !== 'Enter') {
+      throw new Error(`A ${hostName} presses only "Enter". Received ${JSON.stringify(key)}.`);
+    }
+    if (lastInputBlockId === null) {
+      throw new Error('Press "Enter" needs an input filled before it.');
+    }
+    const { block } = await find({ lowdefy, target: lastInputBlockId });
+    block.triggerEvent({ name: 'onPressEnter' });
+    return settle(lowdefy);
+  }
+
+  async function waitFor({ lowdefy, until }) {
+    if (type.isObject(until) && type.isNumber(until.ms)) {
+      await sleep(until.ms);
+      return { ok: true };
+    }
+    if (!type.isObject(until) || !(type.isString(until.request) || type.isString(until.state))) {
+      throw new Error(
+        `A wait step needs { ms }, { request } or { state }. Received ${JSON.stringify(until)}.`
+      );
+    }
+    const done = await waitUntil({
+      timeout,
+      check: () => {
+        const { context } = getPageContext({ lowdefy });
+        if (context === undefined) return undefined;
+        if (type.isString(until.request)) {
+          const call = context.requests?.[until.request]?.[0];
+          return call !== undefined && call.loading !== true ? true : undefined;
+        }
+        return get(context.state, until.state) !== undefined ? true : undefined;
+      },
+    });
+    if (done === undefined) {
+      throw new Error(`Waited ${timeout} ms for ${JSON.stringify(until)}.`);
+    }
+    return { ok: true };
+  }
+
+  async function screenshot({ name }) {
+    if (!type.isFunction(capture)) {
+      throw new Error(`A ${hostName} takes no screenshots.`);
+    }
+    return { ok: true, name: name ?? null, image: await capture() };
+  }
+
+  async function run({ step }) {
+    if (!type.isObject(step) || Object.keys(step).length !== 1) {
+      throw new Error(`A step is an object with one key. Received ${JSON.stringify(step)}.`);
+    }
+    const [name] = Object.keys(step);
+    const lowdefy = getLowdefy();
+    switch (name) {
+      case 'click':
+        return click({ lowdefy, target: step.click });
+      case 'fill':
+        return fill({ lowdefy, target: step.fill });
+      case 'select':
+        return select({ lowdefy, target: step.select });
+      case 'press':
+        return press({ key: step.press, lowdefy });
+      case 'wait':
+        return waitFor({ lowdefy, until: step.wait });
+      case 'screenshot':
+        return screenshot({ name: step.screenshot });
+      default:
+        throw new Error(
+          `A ${hostName} runs the steps ${steps.join(', ')}. Received ${JSON.stringify(name)}.`
+        );
+    }
+  }
+
+  function setLastInputBlockId(blockId) {
+    lastInputBlockId = blockId;
+  }
+
+  return {
+    lastInputBlockId: () => lastInputBlockId,
+    optionLabels,
+    readOptionTexts,
+    run,
+    setLastInputBlockId,
+  };
+}
+
+export default createStepRunner;

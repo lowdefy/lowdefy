@@ -563,6 +563,10 @@ const typeManifest = {
       package: '@lowdefy/operators-js',
       version: 7,
     },
+    _decimal: {
+      package: '@lowdefy/operators-js',
+      version: 7,
+    },
     _divide: {
       package: '@lowdefy/operators-js',
       version: 7,

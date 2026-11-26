@@ -16,6 +16,7 @@
 
 import path from 'path';
 import { vi, beforeEach, expect, test } from 'vitest';
+import { createKeyPathResolver } from '@lowdefy/errors';
 
 const realNodeUtils = await import('@lowdefy/node-utils');
 const mockWriteFile = vi.fn();
@@ -796,13 +797,22 @@ blocks:
   const writes = jitMapsWrites();
   expect(writes).toHaveLength(1);
   expect(writes[0].filePath).toBe('jitMaps/jit-1.json');
-  // Find the entry for the UndefinedAction (line 9 in the YAML: "type: UndefinedAction")
-  const actionEntry = Object.values(writes[0].keyMap).find(
-    (entry) => entry.key && entry.key.includes('UndefinedAction')
+  // Find the entry for the UndefinedAction (line 9 in the YAML: "type: UndefinedAction").
+  // Entries are in the short shape and chain within the jitMaps file.
+  const jitKeyMap = writes[0].keyMap;
+  const resolveKeyPath = createKeyPathResolver({ keyMap: jitKeyMap });
+  const actionKey = Object.keys(jitKeyMap).find((keyId) =>
+    resolveKeyPath(keyId).path.includes('UndefinedAction')
   );
-  expect(actionEntry).toBeDefined();
-  expect(actionEntry['~l']).toBe(8);
-  expect(writes[0].refMap[actionEntry['~r']].path).toBe('page-with-action.yaml');
+  expect(actionKey).toBeDefined();
+  expect(jitKeyMap[actionKey].key).toBeUndefined();
+  expect(jitKeyMap[actionKey].s).toEqual('[0:my_action:UndefinedAction]');
+  const actionEntry = resolveKeyPath(actionKey);
+  expect(actionEntry.path).toEqual(
+    'root.blocks[0:btn1:Button].events.onClick[0:my_action:UndefinedAction]'
+  );
+  expect(actionEntry.line).toBe(8);
+  expect(writes[0].refMap[actionEntry.refId].path).toBe('page-with-action.yaml');
 });
 
 test("buildPageJit writes only the entries its build added, not the config build's", async () => {
@@ -822,6 +832,61 @@ test("buildPageJit writes only the entries its build added, not the config build
   expect(writes[0].refMap.skeleton_ref).toBeUndefined();
   expect(Object.keys(writes[0].keyMap).length).toBeGreaterThan(0);
   expect(Object.values(writes[0].refMap).map((entry) => entry.path)).toContain('home.yaml');
+});
+
+test("a page build's jitMaps file holds exactly the entries it added, vars and nested refs included", async () => {
+  const context = createTestContext();
+  context.keyMap.skeleton_key = { s: 'root', p: null };
+  context.refMap.skeleton_ref = { parent: null, path: 'lowdefy.yaml' };
+  mockFiles([
+    {
+      path: 'page.yaml',
+      content: `id: home
+type: PageHeaderMenu
+properties:
+  title:
+    _var: title
+blocks:
+  - _ref:
+      path: block.yaml
+      vars:
+        label:
+          _ref: label.yaml`,
+    },
+    {
+      path: 'block.yaml',
+      content: 'id: block_a\ntype: Button\nproperties:\n  title:\n    _var: label',
+    },
+    { path: 'label.yaml', content: 'Save' },
+  ]);
+  const pageRegistry = new Map([
+    [
+      'home',
+      {
+        pageId: 'home',
+        auth: { public: true },
+        refId: 'r-home',
+        refPath: 'page.yaml',
+        unresolvedVars: { title: 'Home' },
+      },
+    ],
+  ]);
+  const keysBefore = new Set(Object.keys(context.keyMap));
+  const refsBefore = new Set(Object.keys(context.refMap));
+
+  await buildPageJit({ pageId: 'home', pageRegistry, context });
+
+  const [write] = jitMapsWrites();
+  const addedKeys = Object.keys(context.keyMap).filter((id) => !keysBefore.has(id));
+  const addedRefs = Object.keys(context.refMap).filter((id) => !refsBefore.has(id));
+  expect(Object.keys(write.keyMap).sort()).toEqual(addedKeys.sort());
+  expect(Object.keys(write.refMap).sort()).toEqual(addedRefs.sort());
+  expect(
+    Object.values(write.refMap)
+      .map((entry) => entry.path)
+      .filter((refPath) => refPath)
+      .sort()
+  ).toEqual(['block.yaml', 'label.yaml', 'page.yaml']);
 });
 
 test('concurrent page builds on one context write every entry, each ref with its path', async () => {

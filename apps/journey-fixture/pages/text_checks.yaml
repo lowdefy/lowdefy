@@ -1,0 +1,111 @@
+id: text_checks
+type: Box
+# Blocks a journey checks the text of ({ expect: { text: { blockId, contains } } }), for the
+# parity journeys in tests/journeys/_parity/text_checks.yaml
+# (packages/servers/server-dev/test/journeyFixture/standInParity.test.mjs, LDF-1147). Each runs in
+# the browser and headless and must give the same answer. company_card nests its text a few
+# blocks deep, with an icon, inline html across two elements and a Descriptions item. The dialog
+# shows its content only once it opens, and antd draws it in a portal, outside dialog_holder.
+# found_companies shows the companies search_companies answers once the search button calls it.
+# plugin_area holds a plugin block whose meta declares its text (FixtureNote) and one whose meta
+# does not (FixtureBadge).
+blocks:
+  - id: text_checks_title
+    type: Title
+    properties:
+      content: Text checks
+      level: 2
+  - id: company_card
+    type: Card
+    properties:
+      title: Company
+    blocks:
+      - id: company_inner
+        type: Box
+        blocks:
+          - id: company_status
+            type: Icon
+            properties:
+              name: CircleCheckBig
+          - id: company_name
+            type: Html
+            properties:
+              html: |
+                <p>
+                  <b>Acme</b>   Ltd
+                </p>
+          - id: company_contacts
+            type: Paragraph
+            properties:
+              content: 3 contacts
+          - id: company_owner
+            type: Descriptions
+            properties:
+              items:
+                - label: Owner
+                  value: Jo Smith
+  - id: dialog_holder
+    type: Box
+    blocks:
+      - id: open_dialog_button
+        type: Button
+        properties:
+          title: Open dialog
+        events:
+          onClick:
+            - id: open_dialog
+              type: CallMethod
+              params:
+                blockId: dialog
+                method: setOpen
+                args:
+                  - open: true
+      - id: dialog
+        type: Modal
+        properties:
+          title: Edit company
+        blocks:
+          - id: dialog_body
+            type: Html
+            properties:
+              html: <p>Inside the dialog</p>
+  - id: search_button
+    type: Button
+    properties:
+      title: Find companies
+    events:
+      onClick:
+        - id: search_companies
+          type: CallAPI
+          params:
+            endpointId: search_companies
+            payload:
+              search: a
+        - id: set_found
+          type: SetState
+          params:
+            found:
+              _actions: search_companies.response.response.companies
+  - id: found_companies
+    type: Html
+    properties:
+      html:
+        _nunjucks:
+          on:
+            found:
+              _if_none:
+                - _state: found
+                - []
+          template: |
+            {% for company in found %}<div>{{ company.label }}</div>{% endfor %}
+  - id: plugin_area
+    type: Box
+    blocks:
+      - id: plugin_note
+        type: FixtureNote
+        properties:
+          content: Declared note
+      - id: plugin_badge
+        type: FixtureBadge
+        properties:
+          content: Plugin badge

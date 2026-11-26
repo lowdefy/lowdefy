@@ -49,10 +49,10 @@ function unchanged(previous, next) {
 // re-renders the mounted cells in place with the new definition. It passes
 // `newData: false`, so React keeps the instances, and with them whatever the cell
 // was holding.
-function useColDefs({ columnDefs, methods, components, gridRef }) {
+function useColDefs({ blockId, columnDefs, methods, components, gridRef }) {
   const cache = useRef(new Map());
   const previous = useRef();
-  const processed = processColDefs(columnDefs, methods, components, cache.current);
+  const processed = processColDefs(columnDefs, { blockId, methods, components }, cache.current);
   useEffect(() => {
     const next = fingerprint(columnDefs);
     const first = previous.current === undefined;
