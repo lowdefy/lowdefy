@@ -30,12 +30,13 @@ const mockPageBuilds = { build: vi.fn(), jsEntries: vi.fn() };
 vi.doMock('../../../lib/docs/createLocalPageBuilds.js', () => ({
   default: () => mockPageBuilds,
 }));
-// The journey pool, run in this thread: runHeadlessJob as a journey thread runs it (imported below,
-// once getBuildId is mocked).
-let runHeadlessJob;
-const mockRunPooledJourney = vi.fn(({ params, mutant, pageBuilds }) =>
-  runHeadlessJob({ params, mutant, pageBuilds })
-);
+// The journey pool, run in this thread: runHeadlessJob as a journey thread runs it, imported at the
+// first journey, once getBuildId is mocked.
+const mockRunPooledJourney = vi.fn(async ({ params, mutant, pageBuilds }) => {
+  const { default: runHeadlessJob } =
+    await import('../../../lib/docs/journeyPool/runHeadlessJob.js');
+  return runHeadlessJob({ params, mutant, pageBuilds });
+});
 vi.doMock('../../../lib/docs/journeyPool/runPooledJourney.js', () => ({
   default: mockRunPooledJourney,
 }));
@@ -46,7 +47,6 @@ const mockGetBuildId = vi.fn(() => 'build-1');
 vi.doMock('../../../lib/docs/getBuildId.js', () => ({
   default: mockGetBuildId,
 }));
-({ default: runHeadlessJob } = await import('../../../lib/docs/journeyPool/runHeadlessJob.js'));
 const { readMutantRun } = await import('../../../lib/server/mutants/mutantRuns.js');
 const { journeyActorToken } = await import('../../../lib/server/auth/journeyActor.js');
 
