@@ -78,8 +78,10 @@ function devServerHandler(req, res) {
   const pageId = req.url.slice(1);
   // The page loads its chunk, tries every other host of the dev server and a site on another
   // port through the proxy, then marks itself ready.
+  // The empty icon keeps Chromium from asking for /favicon.ico, which on Linux it does on every
+  // load, so the requests below are the page's own.
   res.writeHead(200, { 'content-type': 'text/html' });
-  res.end(`<!doctype html><html><head><script src="/chunk.js"></script></head><body><script>
+  res.end(`<!doctype html><html><head><link rel="icon" href="data:,"><script src="/chunk.js"></script></head><body><script>
     const others = ${JSON.stringify(pageTargets[pageId] ?? [])};
     Promise.allSettled(others.map((url) => fetch(url, { method: 'POST' })))
       .then(() => fetch('http://external.test:${externalPort}/', { method: 'POST' }))
