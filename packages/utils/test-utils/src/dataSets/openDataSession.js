@@ -74,12 +74,14 @@ function createClose({ session, client, logger }) {
 // databases. `logger` is the
 // caller's own: close() warns on it when that work outlives the wait.
 //
-// `store` is a test run's store (getRunDataStore), which the endpoint test harness passes; the
-// dev server passes none and gets its own (getDataStore). On a run's store the run's other test
-// files hold sessions too, in other processes or in other worker threads of this one, so the
-// prefix carries this process's pid and, in a worker thread, its thread id (ld_p<pid>_<hex>, or
-// ld_p<pid>t<threadId>_<hex>), and the orphan sweep leaves the databases of processes still
-// running and of other threads (sweepOrphanDatabases).
+// `store` is a test run's store (getRunDataStore), which the endpoint test harness passes, or the
+// dev server's, which its journey worker threads pass; the dev server's main thread passes none and
+// gets its own (getDataStore). On a run's store the run's other test files hold sessions too, in
+// other processes or in other worker threads of this one, so the prefix carries this process's pid
+// and, in a worker thread, its thread id (ld_p<pid>_<hex>, or ld_p<pid>t<threadId>_<hex>), and the
+// orphan sweep leaves the databases of processes still running and of other threads. On the dev
+// server's store a worker thread's prefix carries its thread the same way, and the main thread's is
+// ld_<hex>: each thread's sweep drops only its own (sweepOrphanDatabases).
 async function openDataSession({ dataSet, logger, store: runStore }) {
   const store = runStore ?? (await getDataStore({ logger }));
   const perRun = store.perRun === true;
@@ -87,7 +89,7 @@ async function openDataSession({ dataSet, logger, store: runStore }) {
   const id = crypto.randomBytes(16).toString('hex');
   const hex = crypto.randomBytes(6).toString('hex');
   const owner = threadId === 0 ? `p${process.pid}` : `p${process.pid}t${threadId}`;
-  const prefix = perRun ? `ld_${owner}_${hex}` : `ld_${hex}`;
+  const prefix = perRun || threadId !== 0 ? `ld_${owner}_${hex}` : `ld_${hex}`;
   const databaseTargets = dataSet.databaseTargets ?? [];
   const session = {
     id,

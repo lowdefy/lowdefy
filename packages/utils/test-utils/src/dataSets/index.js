@@ -22,12 +22,14 @@ import checkJourneyStubTargets from './checkJourneyStubTargets.js';
 import createDataSetRefusal from './createDataSetRefusal.js';
 import describeAnswerStub from './describeAnswerStub.js';
 import describeFailGate from './describeFailGate.js';
+import dropThreadDatabases from './dropThreadDatabases.js';
 import drainSessionWork from './drainSessionWork.js';
 import createSessionConnections from './createSessionConnections.js';
 import dataSessionRegistry from './dataSessionRegistry.js';
 import findSessionDocuments from './findSessionDocuments.js';
 import getDataStore from './getDataStore.js';
 import getRunDataStore from './getRunDataStore.js';
+import joinDataStore from './joinDataStore.js';
 import listUnansweredStubs from './listUnansweredStubs.js';
 import listUnfiredFailGates from './listUnfiredFailGates.js';
 import listUnreachedPauseGates from './listUnreachedPauseGates.js';
@@ -52,11 +54,13 @@ export {
   describeAnswerStub,
   describeFailGate,
   drainSessionWork,
+  dropThreadDatabases,
   createSessionConnections,
   dataSessionRegistry,
   findSessionDocuments,
   getDataStore,
   getRunDataStore,
+  joinDataStore,
   listUnansweredStubs,
   listUnfiredFailGates,
   listUnreachedPauseGates,

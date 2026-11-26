@@ -101,11 +101,21 @@ test('sweepOrphanDatabases on a per-run store drops the databases of a worker th
   expect(dropped).toEqual([left]);
 });
 
-test("sweepOrphanDatabases without perRun drops a database that carries another thread of this process, as the dev server's store has one thread", async () => {
-  const other = `ld_p${process.pid}t${threadId + 1}_aaaaaaaaaaaa_0`;
-  const { client, dropped } = createClient([other]);
-  await sweepOrphanDatabases({ client });
-  expect(dropped).toEqual([other]);
+test("sweepOrphanDatabases on the dev server's main thread leaves a journey worker thread's databases", async () => {
+  const worker = `ld_p${process.pid}t3_aaaaaaaaaaaa_0`;
+  const orphan = 'ld_bbbbbbbbbbbb_0';
+  const { client, dropped } = createClient([worker, orphan]);
+  await sweepOrphanDatabases({ client, thread: 0 });
+  expect(dropped).toEqual([orphan]);
+});
+
+test("sweepOrphanDatabases on a dev server's journey worker thread drops only its own, leaving the main thread's and another thread's", async () => {
+  const own = `ld_p${process.pid}t3_aaaaaaaaaaaa_0`;
+  const other = `ld_p${process.pid}t4_bbbbbbbbbbbb_0`;
+  const main = 'ld_cccccccccccc_0';
+  const { client, dropped } = createClient([own, other, main]);
+  await sweepOrphanDatabases({ client, thread: 3 });
+  expect(dropped).toEqual([own]);
 });
 
 test("sweepOrphanDatabases without perRun drops a database that carries a running process's pid, as the dev server's store has one process", async () => {
