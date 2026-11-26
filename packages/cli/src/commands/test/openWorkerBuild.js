@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 import openBuildApp from './openBuildApp.js';
 
 // Opens the production build in a worker thread of a --build run, as openBuildApp does. The run's
@@ -23,7 +25,7 @@ import openBuildApp from './openBuildApp.js';
 // { refused }.
 async function openWorkerBuild({ buildId, context, secrets }) {
   const opened = await openBuildApp({ context, secrets });
-  if (opened.refused !== undefined || opened.app.buildId === buildId) {
+  if (!type.isUndefined(opened.refused) || opened.app.buildId === buildId) {
     return opened;
   }
   await opened.app.close();

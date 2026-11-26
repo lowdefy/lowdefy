@@ -36,12 +36,12 @@ function toError({ message, stack, refused }) {
 
 // The worker threads of a --build run, up to `size` of them, each running one journey at a time
 // on a production build it opened itself (headlessWorker, given `workerData`: the run's
-// { directories, secrets }). A thread is started when a journey finds every thread busy and fewer
+// { buildId, directories, secrets }). A thread is started when a journey finds every thread busy and fewer
 // than `size` are running, so a run of a few journeys starts only as many as it keeps busy; once
 // started, it serves the rest of the run. run({ item, repeat }) runs one item on an idle thread
 // and answers its result, or throws what the run threw there: with `refused: true` when the thread
-// could not open the build (openBuildApp refused it, as a build rewritten since the run opened it
-// is). A job that cannot be sent to its thread, or whose answer cannot be read, fails that job and
+// could not open the build (openWorkerBuild refused it: no build, or one rebuilt since the run's own
+// thread opened it). A job that cannot be sent to its thread, or whose answer cannot be read, fails that job and
 // frees the thread. A thread that stops (it crashed, or
 // ran out of memory) fails the journey it was running, and the next journey starts a new one. A
 // journey that finds `size` threads busy waits for the first to be free; the caller's pool keeps
