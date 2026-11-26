@@ -31,7 +31,7 @@ Both paths are server-authoritative. The browser sends an id and a payload; the 
 
 ## What it costs
 
-Measured on Pelican in production on Vercel (cpt1), 9 to 13 October 2026, on a release that still flushed Sentry on every request and started full Sentry in the function. Source: Pelican task LDF-581 (Where a request's 430 ms goes).
+Measured on a production app on Vercel (cpt1), 9 to 13 October 2026, on a release that still flushed Sentry on every request and started full Sentry in the function. Source: task LDF-581 (Where a request's 430 ms goes).
 
 - **A warm request** was answered in about 46 ms at the edge (p50), of which the handler took about 8 ms. Vercel billed about 430 ms per request, about 400 ms of it after the response was sent, waiting on a Sentry flush.
 - **Cold starts were the real wait.** A page sends its requests at once, and Vercel routes some of them to new instances, which took about 5.5 to 6 s to boot. At least one request was cold in about 1 task view in 5. Starting Sentry in the function added about 1.6 s to each boot.
