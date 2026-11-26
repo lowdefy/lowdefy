@@ -23,12 +23,45 @@ import getBuildId from '../../../lib/docs/getBuildId.js';
 import lowdefyConfig from '../../../lib/build/config.js';
 import { openMutantRun } from '../../../lib/server/mutants/mutantRuns.js';
 import parseUserParam from './parseUserParam.js';
+import createLocalPageBuilds from '../../../lib/docs/createLocalPageBuilds.js';
 import runJourney from '../../../lib/docs/runJourney.js';
-import runJourneyHeadless from '../../../lib/docs/runJourneyHeadless.js';
+import runPooledJourney from '../../../lib/docs/journeyPool/runPooledJourney.js';
 import validateJourneyTimeout from '../../../lib/docs/validateJourneyTimeout.js';
 import validateMutantParam from '../../../lib/server/mutants/validateMutantParam.js';
 import validateRecordingParam from '../../../lib/docs/validateRecordingParam.js';
 import validateStateSelection from '../../../lib/docs/validateStateSelection.js';
+
+// headless: true runs the journey with no browser, on the client engine in a thread of the dev
+// server's journey pool, which builds its pages here (runPooledJourney). A thread that stopped
+// mid-journey answers its error, as a run that could not run at all.
+async function runHeadless({ params, mutant }) {
+  try {
+    return await runPooledJourney({ params, mutant, pageBuilds: createLocalPageBuilds() });
+  } catch (error) {
+    return { result: { error: error.message }, mutant: null };
+  }
+}
+
+// A browser journey runs here: its browser contexts carry the mutant run's cookie, and the
+// requests they send read the mutated artifact. The run closes once runJourney has closed every
+// actor, so no request still carries its cookie.
+async function runInBrowser({ params, mutant }) {
+  const mutantRun = mutant === null ? null : openMutantRun({ mutant });
+  try {
+    const result = await runJourney({
+      ...params,
+      basePath: lowdefyConfig.basePath ?? '',
+      mutantCookie: mutantRun?.cookiePayload,
+    });
+    if (mutantRun === null) {
+      return { result, mutant: null };
+    }
+    const { id, applied, misses } = mutantRun.run;
+    return { result, mutant: { id, applied, misses } };
+  } finally {
+    mutantRun?.close();
+  }
+}
 
 // A failed journey is a 200 with passed: false — it is the result the caller
 // asked for. Malformed input (pageId, pathParams, steps, user, data) is a 400 before any browser
@@ -199,52 +232,43 @@ async function docsJourneyHandler(c) {
   // just connected to), regardless of how the server is bound.
   const origin = new URL(c.req.url).origin;
 
-  const mutantRun = type.isNone(body.mutant)
+  const mutant = type.isNone(body.mutant)
     ? null
-    : openMutantRun({
-        mutant: {
-          buildId: body.mutant.buildId,
-          artifact: body.mutant.artifact,
-          key: body.mutant.key,
-          ...(type.isNone(body.mutant.pointer)
-            ? {}
-            : { pointer: body.mutant.pointer, nodeHash: body.mutant.nodeHash ?? null }),
-          arg: body.mutant.arg ?? null,
-          operator: body.mutant.operator,
+    : {
+        buildId: body.mutant.buildId,
+        artifact: body.mutant.artifact,
+        key: body.mutant.key,
+        ...(type.isNone(body.mutant.pointer)
+          ? {}
+          : { pointer: body.mutant.pointer, nodeHash: body.mutant.nodeHash ?? null }),
+        arg: body.mutant.arg ?? null,
+        operator: body.mutant.operator,
+      };
+  const params = {
+    origin,
+    pageId,
+    pathParams,
+    steps,
+    user,
+    urlQuery,
+    state,
+    stepTimeout: timeout,
+    data: body.data,
+    stubs: body.stubs,
+    secrets: body.secrets ?? undefined,
+    by: 'test',
+    // Journeys posted here come from `lowdefy test` and lowdefy_run_tests.
+    recording: type.isNone(body.recording)
+      ? undefined
+      : {
+          source: 'journey',
+          run: { id: body.recording.run, by: 'test', journey: body.recording.journey ?? null },
         },
-      });
-  let result;
-  try {
-    // headless: true runs the journey with no browser, on the client engine in this process.
-    const run = body.headless === true ? runJourneyHeadless : runJourney;
-    result = await run({
-      origin,
-      pageId,
-      pathParams,
-      steps,
-      user,
-      urlQuery,
-      state,
-      stepTimeout: timeout,
-      basePath: lowdefyConfig.basePath ?? '',
-      mutantCookie: mutantRun?.cookiePayload,
-      data: body.data,
-      stubs: body.stubs,
-      secrets: body.secrets ?? undefined,
-      by: 'test',
-      // Journeys posted here come from `lowdefy test` and lowdefy_run_tests.
-      recording: type.isNone(body.recording)
-        ? undefined
-        : {
-            source: 'journey',
-            run: { id: body.recording.run, by: 'test', journey: body.recording.journey ?? null },
-          },
-    });
-  } finally {
-    // runJourney has closed every actor by now, so no request still carries
-    // the run's cookie.
-    mutantRun?.close();
-  }
+  };
+  const { result, mutant: mutantResult } =
+    body.headless === true
+      ? await runHeadless({ params, mutant })
+      : await runInBrowser({ params, mutant });
   // A journey refused before any browser opened (its data set, or who it acts
   // as on one) is the caller's to fix: a 400, like the checks above.
   if (result.refused === true) {
@@ -253,9 +277,8 @@ async function docsJourneyHandler(c) {
   if (result.error) {
     return c.json({ error: result.error }, 502);
   }
-  if (mutantRun !== null) {
-    const { id, applied, misses } = mutantRun.run;
-    return c.json({ ...result, mutant: { id, applied, misses } });
+  if (mutantResult !== null) {
+    return c.json({ ...result, mutant: mutantResult });
   }
   return c.json(result);
 }

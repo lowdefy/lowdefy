@@ -25,8 +25,11 @@ vi.doMock('./dataSets/resolveJourneyDataSet.js', () => ({ default: mockResolveJo
 vi.doMock('./readDevAuthMode.js', () => ({
   default: () => ({ authConfigured: false, mockUserActive: false }),
 }));
-const mockBuildPageIfNeeded = vi.fn(async () => ({}));
-vi.doMock('../server/jitPageBuilder.js', () => ({ default: mockBuildPageIfNeeded }));
+// This thread's page builds, which a journey given none uses.
+const mockBuildPage = vi.fn(async () => ({ result: true, built: null }));
+vi.doMock('./createLocalPageBuilds.js', () => ({
+  default: () => ({ build: mockBuildPage, jsEntries: async () => undefined }),
+}));
 vi.doMock('./readBuildArtifact.js', () => ({
   default: ({ name }) =>
     name === 'routes.json' ? [{ pageId: 'form' }, { pageId: 'other' }] : null,
@@ -230,7 +233,7 @@ test('runJourneyHeadless answers a failure, and a browser-only step the runner r
 });
 
 test('runJourneyHeadless builds the pages the journey names before it runs, as the page route would', async () => {
-  mockBuildPageIfNeeded.mockClear();
+  mockBuildPage.mockClear();
   mockRunHeadlessJourney.mockResolvedValue({ pageId: 'form', passed: true, steps: [], state: {} });
   await runJourneyHeadless({
     origin,
@@ -242,7 +245,7 @@ test('runJourneyHeadless builds the pages the journey names before it runs, as t
     ],
     readConfigFile,
   });
-  expect(mockBuildPageIfNeeded.mock.calls.map(([args]) => args.pageId)).toEqual(['form', 'other']);
+  expect(mockBuildPage.mock.calls.map(([args]) => args.pageId)).toEqual(['form', 'other']);
 });
 
 test('runJourneyHeadless refuses an answer stub on a connection type the app does not have, before the data set loads', async () => {
@@ -313,4 +316,39 @@ test('runJourneyHeadless tells resolveJourneyDataSet whether the journey opens a
     false,
     true,
   ]);
+});
+
+test("runJourneyHeadless runs on the page builds and data store it is given, as a journey thread gives the main thread's", async () => {
+  mockBuildPage.mockClear();
+  mockResolveJourneyDataSet.mockResolvedValue({
+    dataSet: { name: 'explore', fixtures: {}, generated: {}, warnings: [] },
+    user: 'member',
+  });
+  const close = vi.fn(async () => {});
+  mockOpenDataSession.mockResolvedValue({ session: { stubs: [] }, sunk: [], close });
+  mockRunHeadlessJourney.mockResolvedValue({ pageId: 'form', passed: true, steps: [], state: {} });
+  const pageBuilds = {
+    build: vi.fn(async () => ({ result: true, built: 1 })),
+    jsEntries: vi.fn(async () => undefined),
+  };
+  const store = { client: {}, uri: 'mongodb://127.0.0.1:1/' };
+  const getStore = vi.fn(async () => store);
+  const result = await runJourneyHeadless({
+    origin,
+    pageId: 'form',
+    data: 'explore',
+    steps: [{ click: 'save' }],
+    readConfigFile,
+    pageBuilds,
+    getStore,
+  });
+  expect(result.passed).toBe(true);
+  expect(pageBuilds.build).toHaveBeenCalledWith({ pageId: 'form' });
+  expect(mockBuildPage).not.toHaveBeenCalled();
+  expect(getStore).toHaveBeenCalledTimes(1);
+  expect(mockOpenDataSession).toHaveBeenCalledWith(expect.objectContaining({ store }));
+  expect(mockCreateDevServerHost).toHaveBeenCalledWith(
+    expect.objectContaining({ pageBuilds, store })
+  );
+  expect(close).toHaveBeenCalledTimes(1);
 });

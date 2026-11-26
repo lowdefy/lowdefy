@@ -46,13 +46,28 @@ import resolveJourneyDataSet from './dataSets/resolveJourneyDataSet.js';
 import selectFinalState from './selectFinalState.js';
 import validateJourneyTimeout from './validateJourneyTimeout.js';
 import validateStateSelection from './validateStateSelection.js';
-import buildPageIfNeeded from '../server/jitPageBuilder.js';
 import createLogger from '../server/log/createLogger.js';
 
 const logger = createLogger();
 
 function defaultReadConfigFile(name) {
   return readBuildArtifact({ name, deserialize: true });
+}
+
+// This thread's own page builds, imported only when a journey runs here without being given any: a
+// journey worker thread is given the main thread's (createWorkerPageBuilds), and never loads the
+// JIT page builder or @lowdefy/build.
+let localPageBuilds;
+async function readLocalPageBuilds() {
+  if (type.isUndefined(localPageBuilds)) {
+    const { default: createLocalPageBuilds } = await import('./createLocalPageBuilds.js');
+    localPageBuilds = createLocalPageBuilds();
+  }
+  return localPageBuilds;
+}
+
+function defaultGetStore() {
+  return getDataStore({ logger });
 }
 
 // The requests and endpoint calls a headless journey made, as JSON: who made each, what it called
@@ -98,6 +113,8 @@ function toObservedEvent(payload) {
 // journey's answer stubs and fail gates (validated by the caller), are set on its data session.
 // `secrets` are the run's test values for the app's secrets, by name (validated by the caller):
 // the journey reads them over the stand-ins, never the app's real secrets (createHeadlessSecrets).
+// `pageBuilds` builds the journey's pages and `getStore` gives the data store its session opens on:
+// this thread's own by default, the main thread's for a journey worker thread (journeyWorker.js).
 async function runJourneyHeadless({
   origin,
   pageId,
@@ -114,6 +131,8 @@ async function runJourneyHeadless({
   by,
   secrets,
   readConfigFile = defaultReadConfigFile,
+  pageBuilds: givenPageBuilds,
+  getStore = defaultGetStore,
 }) {
   const { error: stepsError } = validateJourneySteps({ steps: inputSteps });
   if (!type.isUndefined(stepsError)) {
@@ -181,13 +200,13 @@ async function runJourneyHeadless({
       return { error: stubsError, refused: true };
     }
     try {
-      store = await getDataStore({ logger });
+      store = await getStore();
     } catch (error) {
       return { error: `Could not start the journey data store: ${error.message}` };
     }
     const loadStart = Date.now();
     try {
-      session = await openDataSession({ dataSet, logger });
+      session = await openDataSession({ dataSet, logger, store });
     } catch (error) {
       return { error: error.message, refused: true };
     }
@@ -196,15 +215,12 @@ async function runJourneyHeadless({
   }
   // The step checks read the pages' built artifacts; a page the route table does not know is left
   // to those checks, which name it.
+  const pageBuilds = givenPageBuilds ?? (await readLocalPageBuilds());
   const routes = readBuildArtifact({ name: 'routes.json' }) ?? [];
   const knownPageIds = new Set(routes.map((route) => route.pageId));
   for (const stepPageId of listStepPageIds({ pageId, steps })) {
     if (knownPageIds.has(stepPageId)) {
-      await buildPageIfNeeded({
-        pageId: stepPageId,
-        buildDirectory: path.join(process.cwd(), 'build'),
-        configDirectory,
-      });
+      await pageBuilds.build({ pageId: stepPageId });
     }
   }
   const counter = createNetworkCounter({ origin, basePath: '' });
@@ -215,6 +231,7 @@ async function runJourneyHeadless({
       dataSet,
       mutantCookie,
       origin,
+      pageBuilds,
       recording: journeyRunRecording({ recording, by }),
       secrets,
       session,

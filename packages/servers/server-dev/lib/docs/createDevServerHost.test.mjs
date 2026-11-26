@@ -69,11 +69,14 @@ vi.doMock('./readConnectionPlugins.js', () => ({ default: vi.fn(async () => ({})
 vi.doMock('../server/auth/resolveHeadlessUser.js', () => ({ default: vi.fn() }));
 
 const { default: createDevServerHost } = await import('./createDevServerHost.js');
+const { default: createLocalPageBuilds } = await import('./createLocalPageBuilds.js');
 
-function createHost({ secrets } = {}) {
+// The main thread's page builds, on the JIT page builder mocked above.
+function createHost({ secrets, pageBuilds = createLocalPageBuilds() } = {}) {
   return createDevServerHost({
     counter: { recordCall: vi.fn() },
     origin: 'http://localhost:3227',
+    pageBuilds,
     secrets,
   });
 }
@@ -175,6 +178,28 @@ test("the dev server host folds the built page's _js entries into its page confi
   );
   expect(mockGetPageJitEnrichment.mock.calls[0][0].buildContext).toBe(mockBuildContext);
   expect(page.pageConfig._jsEntries).toBe("export default { 'h_later': () => { return 1; } };");
+});
+
+// A journey thread's page builds answer a handle for the context, which it passes back for the _js.
+test("the dev server host reads a page's _js entries through the page builds it is given, with the build's handle", async () => {
+  mockGetPageConfig.mockResolvedValue({
+    status: 'ok',
+    pageConfig: { id: 'page:later', blocks: [] },
+    pageId: 'later',
+    pathParams: {},
+  });
+  const pageBuilds = {
+    build: vi.fn(async () => ({ result: { built: true, installing: false }, built: 7 })),
+    jsEntries: vi.fn(async () => 'export default {};'),
+  };
+  const host = await createHost({ pageBuilds });
+  const page = await host.readPageConfig({ pageId: 'later' });
+  expect(pageBuilds.build).toHaveBeenCalledWith({ pageId: 'later' });
+  const [{ pageConfig, built }] = pageBuilds.jsEntries.mock.calls[0];
+  expect(pageConfig.id).toBe('page:later');
+  expect(built).toBe(7);
+  expect(page.pageConfig._jsEntries).toBe('export default {};');
+  expect(mockBuildPageWithContext).not.toHaveBeenCalled();
 });
 
 test('the dev server host adds no _jsEntries to a page with no _js', async () => {

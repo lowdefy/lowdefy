@@ -31,7 +31,6 @@ import { createHeadlessHost, loadClientPlugins } from '@lowdefy/journey-headless
 import { bindCredentialScrub, matchPagePath, runInCredentialScope } from '@lowdefy/node-utils';
 import { findSessionDocuments } from '@lowdefy/test-utils/dataSets';
 
-import { buildPageWithContext, getPageJitEnrichment } from '../server/jitPageBuilder.js';
 import createHeadlessSecrets from './createHeadlessSecrets.js';
 import createInProcessRequest from './createInProcessRequest.js';
 import readBuildArtifact from './readBuildArtifact.js';
@@ -123,12 +122,16 @@ async function answer({ context, detached, faults, run }) {
  * - secrets: the run's test values for the app's secrets, by name. Every call runs on the
  *   stand-ins a production build's test run reads, with these over them, never on the app's real
  *   LOWDEFY_SECRET_* (createHeadlessSecrets).
+ * - pageBuilds: how the journey's pages are built ({ build, jsEntries }): on this thread's JIT
+ *   build context (createLocalPageBuilds), or by the main thread for a journey worker thread
+ *   (createWorkerPageBuilds).
  */
 async function createDevServerHost({
   counter,
   dataSet,
   mutantCookie,
   origin,
+  pageBuilds,
   recording,
   secrets,
   session,
@@ -136,7 +139,6 @@ async function createDevServerHost({
   user,
 }) {
   const buildDirectory = path.join(process.cwd(), 'build');
-  const configDirectory = process.env.LOWDEFY_DIRECTORY_CONFIG ?? process.cwd();
   // Deferred, as runEndpoint defers it: createLowdefyContext imports the dev build's plugin
   // artifacts, which exist only in a running dev server.
   const { default: createLowdefyContext } = await import('../server/createLowdefyContext.js');
@@ -160,7 +162,7 @@ async function createDevServerHost({
   let testSecrets = createHeadlessSecrets({ buildDirectory, secrets });
   const scannedPageIds = new Set();
   async function buildPage(pageId) {
-    const built = await buildPageWithContext({ pageId, buildDirectory, configDirectory });
+    const built = await pageBuilds.build({ pageId });
     if (built.result !== false && (built.result?.built === true || !scannedPageIds.has(pageId))) {
       scannedPageIds.add(pageId);
       testSecrets = createHeadlessSecrets({ buildDirectory, secrets });
@@ -243,9 +245,9 @@ async function createDevServerHost({
       routes: await context.readConfigFile('routes.json'),
       path: matchedPath,
     });
-    let buildContext = null;
+    let built = null;
     if (match !== null) {
-      ({ buildContext } = await buildPage(match.pageId));
+      ({ built } = await buildPage(match.pageId));
     }
     counter.recordCall({ url: `${origin}/api/page/${matchedPath}`, method: 'GET' });
     const page = await getPageConfig(context, { path: matchedPath, urlQuery: urlQuery ?? {} });
@@ -263,7 +265,7 @@ async function createDevServerHost({
     // As the page route folds them in: the page's _js, as module text the headless actor evaluates
     // over the client map it loaded at its first journey, which holds no _js a later page build
     // added (journey-headless's readPageJsMap).
-    const { jsEntries } = getPageJitEnrichment({ pageConfig, buildContext });
+    const jsEntries = await pageBuilds.jsEntries({ pageConfig, built });
     if (!type.isUndefined(jsEntries)) {
       pageConfig._jsEntries = jsEntries;
     }

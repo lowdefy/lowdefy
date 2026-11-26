@@ -25,6 +25,19 @@ const mockRunJourneyHeadless = vi.fn();
 vi.doMock('../../../lib/docs/runJourneyHeadless.js', () => ({
   default: mockRunJourneyHeadless,
 }));
+// The main thread's page builds, passed to every pooled journey.
+const mockPageBuilds = { build: vi.fn(), jsEntries: vi.fn() };
+vi.doMock('../../../lib/docs/createLocalPageBuilds.js', () => ({
+  default: () => mockPageBuilds,
+}));
+// The journey pool, run in this thread: runHeadlessJob as a journey thread runs it.
+const { default: runHeadlessJob } = await import('../../../lib/docs/journeyPool/runHeadlessJob.js');
+const mockRunPooledJourney = vi.fn(({ params, mutant, pageBuilds }) =>
+  runHeadlessJob({ params, mutant, pageBuilds })
+);
+vi.doMock('../../../lib/docs/journeyPool/runPooledJourney.js', () => ({
+  default: mockRunPooledJourney,
+}));
 vi.doMock('../../../lib/build/config.js', () => ({
   default: { basePath: '/app' },
 }));
@@ -549,11 +562,62 @@ test('docsJourneyHandler runs a headless journey with no browser runner, and ans
   const result = await docsJourneyHandler(c);
 
   expect(mockRunJourney).not.toHaveBeenCalled();
+  expect(mockRunPooledJourney).toHaveBeenCalledWith(
+    expect.objectContaining({ mutant: null, pageBuilds: mockPageBuilds })
+  );
   expect(mockRunJourneyHeadless).toHaveBeenCalledWith(
-    expect.objectContaining({ origin: 'http://localhost:3227', pageId: 'form', by: 'test' })
+    expect.objectContaining({
+      origin: 'http://localhost:3227',
+      pageId: 'form',
+      by: 'test',
+      pageBuilds: mockPageBuilds,
+    })
   );
   expect(result.status).toBe(200);
   expect(result.data.browserOnly.index).toBe(0);
+});
+
+// The journey's thread opens the mutant run in its own registry, where its API contexts read it,
+// and answers the run's applied and missed nodes with the result.
+test('docsJourneyHandler runs a headless mutant journey in the pool and answers its mutant run', async () => {
+  let runDuringJourney;
+  mockRunJourneyHeadless.mockImplementation(async ({ mutantCookie }) => {
+    runDuringJourney = readMutantRun(`lowdefy_journey_mutant=${journeyActorToken}.${mutantCookie}`);
+    runDuringJourney.applied = 3;
+    runDuringJourney.misses.push({ key: 'k1_5' });
+    return { pageId: 'form', passed: false, steps: [] };
+  });
+  const c = createContext({
+    pageId: 'form',
+    steps: [{ click: 'submit' }],
+    headless: true,
+    mutant,
+  });
+  const result = await docsJourneyHandler(c);
+  expect(mockRunJourney).not.toHaveBeenCalled();
+  expect(mockRunPooledJourney.mock.calls[0][0].mutant).toEqual(mutant);
+  expect(result.status).toBe(200);
+  expect(result.data.mutant).toEqual({
+    id: runDuringJourney.id,
+    applied: 3,
+    misses: [{ key: 'k1_5' }],
+  });
+  expect(
+    readMutantRun(`lowdefy_journey_mutant=${journeyActorToken}.${runDuringJourney.id}`)
+  ).toBeNull();
+});
+
+// A journey thread that stopped mid-journey (it crashed, or ran out of memory) fails that journey.
+test('docsJourneyHandler answers 502 when the thread running a headless journey stopped', async () => {
+  mockRunPooledJourney.mockRejectedValueOnce(
+    new Error('The journey thread running this journey stopped: it exited with code 1')
+  );
+  const c = createContext({ pageId: 'form', steps: [{ click: 'save' }], headless: true });
+  const result = await docsJourneyHandler(c);
+  expect(result.status).toBe(502);
+  expect(result.data.error).toBe(
+    'The journey thread running this journey stopped: it exited with code 1'
+  );
 });
 
 test('docsJourneyHandler returns 400 when headless is not a boolean', async () => {
