@@ -42,6 +42,8 @@ function readJourney(name, index = 0) {
 }
 
 const systemJourney = readJourney('system.yaml');
+const boundSystemJourney = readJourney('system.yaml', 1);
+const credentialJourney = readJourney('credential.yaml');
 const webhookJourney = readJourney('webhook.yaml');
 const failedWebhookJourney = readJourney('webhook.yaml', 1);
 const caughtWebhookJourney = readJourney('webhook.yaml', 2);
@@ -86,6 +88,68 @@ test('the system journey is refused without as: system and closes the runs with 
   ]);
 });
 
+test('a call bound to an organization runs as the stand-in caller a CallApi binds', async () => {
+  const result = await run({ steps: boundSystemJourney.steps, user: boundSystemJourney.user });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(boundSystemJourney.steps.map(() => 'ok'));
+  expect(result.calls.map(({ actor, endpointId }) => ({ actor, endpointId }))).toEqual([
+    { actor: 'system', endpointId: 'record_caller' },
+  ]);
+});
+
+test('a routine that marks a credential answers, in a credential scope of its own', async () => {
+  const result = await run({ steps: credentialJourney.steps, user: credentialJourney.user });
+  expect(result.failure).toBeUndefined();
+  expect(result.passed).toBe(true);
+  expect(result.steps.map((step) => step.status)).toEqual(credentialJourney.steps.map(() => 'ok'));
+});
+
+test('what a call marked with _credential stays out of the journey result, a failure included', async () => {
+  const marked = 'payload-credential-0042';
+  const result = await run({
+    steps: [
+      { call: { endpoint: 'mark_credential', payload: { value: marked } } },
+      { expect: { calls: { endpoint: 'mark_credential', response: { signature: 'another' } } } },
+    ],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(1);
+  expect(result.failure.actual).toEqual({
+    signature: '[REDACTED]',
+    token: '[REDACTED]',
+  });
+  expect(JSON.stringify(result)).not.toContain(marked);
+  // The payload the call sent is scrubbed too: the value was marked in the call's scope.
+  expect(result.calls[0].payload).toEqual({ value: '[REDACTED]' });
+});
+
+test('a system call bound to no organization whose routine fails says how to bind one', async () => {
+  const result = await run({
+    steps: [
+      // BR-1 is a run of the data set, so the routine's insert fails on its _id.
+      { call: { endpoint: 'record_caller', payload: { id: 'BR-1' }, as: 'system' } },
+      { expect: { error: 'never in the answer' } },
+    ],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.message).toContain(
+    'name them on the call, as: { system: { organization: <id>, caller: { id, name } } }.'
+  );
+});
+
+test('the app error of a faulted system call bound to no organization says how to bind one', async () => {
+  const result = await run({
+    steps: [{ call: { endpoint: 'record_caller', payload: { id: 'BR-1' }, as: 'system' } }],
+  });
+  expect(result.passed).toBe(false);
+  expect(result.failure.index).toBe(0);
+  expect(result.failure.message).toContain('Step 0 (call) caused an app error');
+  expect(result.failure.message).toContain(
+    'name them on the call, as: { system: { organization: <id>, caller: { id, name } } }.'
+  );
+});
+
 test('a signed-in caller cannot reach an InternalApi endpoint either: it answers as a missing one', async () => {
   const result = await run({
     steps: [{ call: { endpoint: 'close_runs' } }, { expect: { status: 200 } }],
@@ -100,6 +164,46 @@ test('a signed-in caller cannot reach an InternalApi endpoint either: it answers
   expect(
     await host.findDocuments({ collection: 'items', match: { kind: 'run', closed: true } })
   ).toEqual([]);
+});
+
+// Only a call step's `as: system` or `as: { system: { organization, caller } }` reaches the system
+// principal. A user object written into the journey that carries "system" never does: as the call's
+// caller it is refused before any call, and as the journey's user the server refuses it, so the
+// InternalApi endpoint never runs.
+test('an inline caller that carries "system" is refused before any call', async () => {
+  const result = await run({
+    steps: [
+      {
+        call: {
+          endpoint: 'record_caller',
+          payload: { id: 'inline' },
+          as: { id: 'u_1', roles: ['admin'], system: true },
+        },
+      },
+      { expect: { status: 200 } },
+    ],
+  });
+  expect(result.passed).toBeUndefined();
+  expect(result.error).toContain(
+    'Step 0: Step "call" requires "as" with "system" to be { system: { organization, caller? } }'
+  );
+  expect(await host.findDocuments({ collection: 'items', match: { kind: 'caller' } })).toEqual([]);
+});
+
+// The build host reads the app's root config as the journey's user when it is made, so it is refused
+// there, before any page opens or call runs; lowdefy test answers the journey refused.
+test('a journey user that carries "system" is refused before the journey runs', async () => {
+  await expect(
+    run({
+      steps: [
+        { call: { endpoint: 'record_caller', payload: { id: 'journey_user' } } },
+        { expect: { status: 200 } },
+      ],
+      user: { id: 'u_1', name: 'Nightly close', organization_id: 'org_a', system: true },
+    })
+  ).rejects.toThrow(
+    'An injected caller (dev mock user, headless or e2e user) can not carry "system".'
+  );
 });
 
 test('the webhook journey writes the signed events and refuses the wrong signature', async () => {

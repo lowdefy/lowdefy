@@ -537,6 +537,69 @@ test('a stamped write carries the tenant stamp, and another organization does no
   expect(other.response).toEqual([]);
 });
 
+test('a system call bound to an organization writes and reads through the wall as its stand-in caller', async () => {
+  const session = await tenant.openSession({ data: 'roles' });
+  await session
+    .as({ id: 'u_other', roles: [], organization_id: 'org_b' })
+    .request('notes', 'add_note', { text: 'theirs' });
+  const answer = await session
+    .system({ organization: 'org_a', caller: { id: 'nightly', name: 'Nightly job' } })
+    .call('stamp-note', { text: 'from the job' });
+  expect(answer.status).toEqual(200);
+  expect(answer.response.notes.map((note) => note.text)).toEqual(['from the job']);
+  // Exactly the _user a CallApi with organization and caller gives its target.
+  expect(answer.response.caller).toEqual({
+    id: 'nightly',
+    name: 'Nightly job',
+    organization_id: 'org_a',
+    system: true,
+  });
+  const stored = await readAll(session, 'notes');
+  expect(stored.map(({ text, organization_id }) => ({ text, organization_id }))).toEqual([
+    { text: 'theirs', organization_id: 'org_b' },
+    { text: 'from the job', organization_id: 'org_a' },
+  ]);
+});
+
+test('a system call bound to an organization with no caller runs with no user', async () => {
+  const session = await tenant.openSession({ data: 'roles' });
+  const answer = await session.system({ organization: 'org_a' }).call('stamp-note', { text: 'x' });
+  expect(answer.status).toEqual(200);
+  expect(answer.response.caller).toEqual({
+    id: null,
+    name: null,
+    organization_id: null,
+    system: null,
+  });
+  expect((await readAll(session, 'notes'))[0].organization_id).toEqual('org_a');
+});
+
+test('a system call bound to no organization is refused by the tenant wall', async () => {
+  const session = await tenant.openSession({ data: 'roles' });
+  const answer = await session.system().call('stamp-note', { text: 'no organization' });
+  expect(answer.success).toBe(false);
+  // A write bound to no organization is a data fault, logged as the server logs it.
+  expect(answer.faults.map((fault) => fault.name)).toEqual(['TenantIntegrityError']);
+  expect(answer.faults[0].message).toContain('in a system run bound to no organization');
+  expect(await readAll(session, 'notes')).toEqual([]);
+});
+
+test('system() refuses a binding that is not an object', async () => {
+  const session = await tenant.openSession({ data: 'roles' });
+  expect(() => session.system('org_a')).toThrow(
+    'system() takes { organization, caller }. Received "org_a".'
+  );
+});
+
+test('system() refuses a caller without an organization', async () => {
+  const session = await tenant.openSession({ data: 'roles' });
+  await expect(
+    session.system({ caller: { id: 'nightly', name: 'Nightly job' } }).call('stamp-note')
+  ).rejects.toThrow(
+    'system() names a "caller" without an "organization". A stand-in caller only runs inside an organization binding.'
+  );
+});
+
 test('page answers the gate of a protected app for each caller', async () => {
   const session = await tenant.openSession({ data: 'roles' });
   expect((await session.as('none').page('/notes')).status).toEqual('unauthenticated');

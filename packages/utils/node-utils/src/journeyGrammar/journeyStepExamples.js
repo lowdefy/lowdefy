@@ -46,6 +46,12 @@ const JOURNEY_STEP_EXAMPLES = {
     { call: { endpoint: 'orders-cancel', payload: { order_id: 'ORD-1' } } },
     { call: { endpoint: 'orders-cancel', payload: { order_id: 'ORD-2' }, as: 'other_customer' } },
     { call: { endpoint: 'orders-nightly-close', as: 'system' } },
+    {
+      call: {
+        endpoint: 'orders-close-day',
+        as: { system: { organization: 'org_1', caller: { id: 'nightly', name: 'Nightly close' } } },
+      },
+    },
   ],
   request: [
     { request: { pageId: 'orders', requestId: 'get_order', payload: { order_id: 'ORD-1' } } },

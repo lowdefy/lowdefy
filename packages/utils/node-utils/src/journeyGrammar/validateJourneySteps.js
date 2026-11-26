@@ -17,6 +17,7 @@
 import { type } from '@lowdefy/helpers';
 
 import JOURNEY_STEP_EXAMPLES from './journeyStepExamples.js';
+import readSystemCaller from './readSystemCaller.js';
 import validateJourneyUser from './validateJourneyUser.js';
 
 const STEP_KEYS = [
@@ -325,16 +326,67 @@ function validateCalls(value) {
   return undefined;
 }
 
+const SYSTEM_SHAPE =
+  '{ system: { organization, caller? } }: the organization the call is bound to, and the stand-in caller { id, name }, as a CallApi step\'s "organization" and "caller" bind its target';
+
+// as: { system: { organization, caller? } } binds a system call to an organization, and to a
+// stand-in caller, as a CallApi step's "organization" and "caller" do. "as: system" stays the
+// call bound to no organization.
+function validateSystemBinding({ user }) {
+  const otherKeys = Object.keys(user).filter((k) => k !== 'system');
+  if (otherKeys.length > 0) {
+    return `Step "call" requires "as" with "system" to be ${SYSTEM_SHAPE}, with no other keys. Received ${describe(
+      user
+    )}.`;
+  }
+  const binding = user.system;
+  if (!type.isObject(binding)) {
+    return `Step "call" requires "as.system" to be ${SYSTEM_SHAPE}. Write "as: system" for a call bound to no organization. Received ${describe(
+      binding
+    )}.`;
+  }
+  const unknownKeys = Object.keys(binding).filter((k) => !['organization', 'caller'].includes(k));
+  if (unknownKeys.length > 0) {
+    return `Step "call" has unknown key${unknownKeys.length > 1 ? 's' : ''} ${unknownKeys
+      .map((k) => `"as.system.${k}"`)
+      .join(', ')}. Keys are: organization, caller.`;
+  }
+  if (!isNonEmptyString(binding.organization)) {
+    return `Step "call" requires "as.system.organization" to be a non-empty organization id string. Received ${describe(
+      binding.organization
+    )}.`;
+  }
+  const { caller } = binding;
+  if (type.isUndefined(caller)) {
+    return undefined;
+  }
+  if (
+    !type.isObject(caller) ||
+    !isNonEmptyString(caller.id) ||
+    !isNonEmptyString(caller.name) ||
+    Object.keys(caller).some((k) => !['id', 'name'].includes(k))
+  ) {
+    return `Step "call" requires "as.system.caller" to be { id, name }, each a non-empty string, as a CallApi "caller" names the stand-in caller. Received ${describe(
+      caller
+    )}.`;
+  }
+  return undefined;
+}
+
 // call and request take `as`, who calls: a data set user's name, "none" for
 // signed out or an inline user object, as the journey's own `user` does. One
 // call has one caller, so a list is refused. A call also takes "system", which runs the endpoint
-// as a cron or internal run does; a page request always has a caller, so a request refuses it.
+// as a cron or internal run does, or { system: { organization, caller? } }, which binds that run
+// to an organization; a page request always has a caller, so a request refuses both.
 function validateCallUser({ key, user }) {
   if (type.isUndefined(user)) {
     return undefined;
   }
-  if (user === 'system' && key === 'request') {
-    return 'Step "request" cannot run "as: system": a page request is always sent by a person on the page. Call the endpoint the request reaches with a "call" step "as: system" instead.';
+  if (readSystemCaller(user) !== null) {
+    if (key === 'request') {
+      return 'Step "request" cannot run "as: system": a page request is always sent by a person on the page. Call the endpoint the request reaches with a "call" step "as: system" instead.';
+    }
+    return user === 'system' ? undefined : validateSystemBinding({ user });
   }
   if (type.isArray(user) || !type.isUndefined(validateJourneyUser({ user }).error)) {
     return `Step "${key}" requires "as" to be a data set user's name, "none" to call signed out, or an inline user object. Received ${describe(

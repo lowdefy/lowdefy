@@ -36,7 +36,8 @@ import writeHeadlessRun from './writeHeadlessRun.js';
 // a browser on this build (its buildId) is listed without running it up to that step again
 // (rememberedBrowserOnly); `records` is headless-run.json's journeys (readHeadlessRun). The
 // summary names each browser-only journey and the command that runs them in the browser
-// (formatBrowserOnlyNote). Returns { failed } once the run is reported.
+// (formatBrowserOnlyNote). Returns { failed, browserOnly, inProcess } once the run is reported,
+// the last two as runDevJourneys names them.
 async function runHeadlessTests({ app, context, selected, skipped, records, repeat }) {
   const headlessSuite = {
     name: 'journeys',
@@ -104,7 +105,7 @@ async function runHeadlessTests({ app, context, selected, skipped, records, repe
   if (!type.isUndefined(note)) {
     context.logger.info(note);
   }
-  return { failed: summary.failed };
+  return { failed: summary.failed, browserOnly, inProcess };
 }
 
 export default runHeadlessTests;

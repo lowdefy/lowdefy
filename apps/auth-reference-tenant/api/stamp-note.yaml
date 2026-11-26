@@ -1,0 +1,33 @@
+# The internal endpoint a scheduled job would reach through a CallApi with "organization" and
+# "caller": it adds a note behind the tenant wall, reads the notes back through it and answers who
+# it ran as. The test-utils session
+# suite calls it with session.system({ organization, caller })
+# (packages/utils/test-utils/test/fixtureApps/sessions.test.mjs): the wall stamps the note with
+# the bound organization and filters the read to it, and _user is the stand-in caller.
+id: stamp-note
+type: InternalApi
+routine:
+  - id: add_note
+    type: MongoDBInsertOne
+    connectionId: notes
+    properties:
+      doc:
+        text:
+          _payload: text
+  - id: read_notes
+    type: MongoDBFind
+    connectionId: notes
+    properties:
+      query: {}
+  - ':return':
+      notes:
+        _step: read_notes
+      caller:
+        id:
+          _user: id
+        name:
+          _user: name
+        organization_id:
+          _user: organization_id
+        system:
+          _user: system

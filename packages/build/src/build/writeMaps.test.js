@@ -145,10 +145,11 @@ test('writeMaps writes a columnar gzipped key map and a gzipped plain ref map wh
   context.refMap = { 1: { path: 'pages/a.yaml', parent: '0', lineNumber: 4 } };
   await writeMaps({ context });
   const artifacts = writtenArtifacts();
-  expect(Object.keys(artifacts)).toEqual([
+  // The two gzips run side by side on the threadpool, so either can finish first.
+  expect(Object.keys(artifacts).sort()).toEqual([
     'keyMap.json',
-    'refMap.json',
     'keyMap.json.gz',
+    'refMap.json',
     'refMap.json.gz',
   ]);
   expect(Buffer.isBuffer(artifacts['keyMap.json.gz'])).toBe(true);

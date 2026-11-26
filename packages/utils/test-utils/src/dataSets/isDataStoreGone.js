@@ -14,6 +14,8 @@
   limitations under the License.
 */
 
+import { type } from '@lowdefy/helpers';
+
 // The driver's errors for a replica set that is no longer there: mongod exited, or the client was
 // closed under it. The store that raised one is dead, so the next journey must start a new one.
 const STORE_GONE_ERRORS = new Set([
@@ -22,8 +24,18 @@ const STORE_GONE_ERRORS = new Set([
   'MongoNotConnectedError',
 ]);
 
+// A pooled connection to a mongod that exited can fail with a MongoNetworkError for a refused
+// connect (ECONNREFUSED) before server selection gives up, as on Linux CI runners. Nothing listens
+// on the store's port then, so the store is gone. Any other network error, a closed connection or
+// a timeout among them, may pass and leaves the store as it is.
+function isConnectionRefused(error) {
+  if (error?.name !== 'MongoNetworkError') return false;
+  if (error.cause?.code === 'ECONNREFUSED') return true;
+  return type.isString(error.message) && error.message.includes('ECONNREFUSED');
+}
+
 function isDataStoreGone(error) {
-  return STORE_GONE_ERRORS.has(error?.name);
+  return STORE_GONE_ERRORS.has(error?.name) || isConnectionRefused(error);
 }
 
 export default isDataStoreGone;

@@ -92,6 +92,7 @@ test('the page-less journeys section shows its journeys, case table files and st
     "a run is priced at the rate service's rate, after a failed write stores nothing",
     'two approvals race and only one claims the run',
     'only a system call closes the runs',
+    'a call bound to an organization runs as its stand-in caller',
     'a signed webhook writes its event and a wrong signature is refused',
   ]);
   expect(fileSamples.map(({ filePath }) => filePath)).toEqual([

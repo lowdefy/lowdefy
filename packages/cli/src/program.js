@@ -661,7 +661,7 @@ program
 program
   .command('test')
   .description(
-    'Run the app\'s config tests: every journey under tests/journeys/, sub-folders included, except folders starting with "_". Journeys run headless; those that need a browser are listed with the command that runs them there (--thorough).'
+    'Run the app\'s config tests: every journey under tests/journeys/, sub-folders included, except folders starting with "_". Journeys run headless; those that need a browser are listed with the command that runs them there (--thorough). In CI (CI set), a run given none of --headless, --thorough and --browser fails when it skips a browser journey.'
   )
   .usage('[options] [paths...]')
   .argument(
@@ -734,13 +734,13 @@ program
   .addOption(
     new Option(
       '--headless',
-      'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. The default; kept so scripts that pass it keep working.'
+      'Run only the journeys that need no browser, in Node on the client engine, and list the rest as browser-only with the step that needs a browser. The default; kept so scripts that pass it keep working. In CI, pass it to say on purpose that browser journeys do not run there.'
     )
   )
   .addOption(
     new Option(
       '--build',
-      'Run headless on the production build (lowdefy build) in this process, with no dev server and no browser. Pass --server-directory when the build is elsewhere.'
+      'Run headless on the production build (lowdefy build) in this process, with no dev server and no browser. Pass --server-directory when the build is elsewhere. In CI, pass --headless with it when the app has browser journeys.'
     )
   )
   .addOption(options.serverDirectory)

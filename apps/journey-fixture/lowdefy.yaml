@@ -78,6 +78,8 @@ auth:
       - caught_operator
       - rethrown_operator
       - search_companies
+      - record_caller
+      - mark_credential
     roles:
       auditor:
         - auditor_only
@@ -108,6 +110,8 @@ api:
   - _ref: api/caught_operator.yaml
   - _ref: api/rethrown_operator.yaml
   - _ref: api/search_companies.yaml
+  - _ref: api/record_caller.yaml
+  - _ref: api/mark_credential.yaml
 
 pages:
   - _ref: pages/home.yaml

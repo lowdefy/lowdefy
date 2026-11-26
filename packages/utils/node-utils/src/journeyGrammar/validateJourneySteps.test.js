@@ -840,6 +840,71 @@ test('validateJourneySteps accepts a call as system and refuses a request as sys
   );
 });
 
+test('validateJourneySteps accepts a call as the system bound to an organization and stand-in caller', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        {
+          call: {
+            endpoint: 'nightly_close',
+            as: { system: { organization: 'org_a', caller: { id: 'job', name: 'Nightly job' } } },
+          },
+        },
+        { call: { endpoint: 'nightly_close', as: { system: { organization: 'org_a' } } } },
+        { expect: { status: 200 } },
+      ],
+    })
+  ).toEqual({});
+});
+
+test.each([
+  [
+    { system: true },
+    'Step 0: Step "call" requires "as.system" to be { system: { organization, caller? } }: the organization the call is bound to, and the stand-in caller { id, name }, as a CallApi step\'s "organization" and "caller" bind its target. Write "as: system" for a call bound to no organization. Received true.',
+  ],
+  [
+    { system: { organization: 'org_a' }, roles: ['admin'] },
+    'Step 0: Step "call" requires "as" with "system" to be { system: { organization, caller? } }: the organization the call is bound to, and the stand-in caller { id, name }, as a CallApi step\'s "organization" and "caller" bind its target, with no other keys. Received {"system":{"organization":"org_a"},"roles":["admin"]}.',
+  ],
+  [
+    { system: { organization: 'org_a', user: 'x' } },
+    'Step 0: Step "call" has unknown key "as.system.user". Keys are: organization, caller.',
+  ],
+  [
+    { system: { caller: { id: 'job', name: 'Nightly job' } } },
+    'Step 0: Step "call" requires "as.system.organization" to be a non-empty organization id string. Received undefined.',
+  ],
+  [
+    { system: { organization: 'org_a', caller: { id: 'job' } } },
+    'Step 0: Step "call" requires "as.system.caller" to be { id, name }, each a non-empty string, as a CallApi "caller" names the stand-in caller. Received {"id":"job"}.',
+  ],
+])('validateJourneySteps refuses a call as %j', (as, message) => {
+  expect(
+    validateJourneySteps({ steps: [{ call: { endpoint: 'nightly_close', as } }] }).error.replace(
+      EXAMPLES,
+      ''
+    )
+  ).toBe(message);
+});
+
+test('validateJourneySteps refuses a request as the system bound to an organization', () => {
+  expect(
+    validateJourneySteps({
+      steps: [
+        {
+          request: {
+            pageId: 'orders',
+            requestId: 'get_order',
+            as: { system: { organization: 'org_a' } },
+          },
+        },
+      ],
+    }).error.replace(EXAMPLES, '')
+  ).toBe(
+    'Step 0: Step "request" cannot run "as: system": a page request is always sent by a person on the page. Call the endpoint the request reaches with a "call" step "as: system" instead.'
+  );
+});
+
 test('validateJourneySteps accepts a webhook, with expect steps reading its answer', () => {
   expect(
     validateJourneySteps({

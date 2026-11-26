@@ -30,3 +30,10 @@ test('expectAnswerError passes on an error containing the text, and fails on ano
     'Expected endpoint "log" to answer with an error containing "x" but it answered 200 with no error.'
   );
 });
+
+test('expectAnswerError adds the hint the answer carries to its failure', () => {
+  const answer = { ...refused, hint: 'Name the organization.' };
+  expect(() => expectAnswerError({ answer, text: 'missing' })).toThrow(
+    'Expected endpoint "auditor_only" to answer with an error containing "missing" but its error was "Not allowed.". Name the organization.'
+  );
+});

@@ -130,7 +130,7 @@ After a change to auth, roles, or the set of pages or endpoints, check the table
 lowdefy build --no-client-build && lowdefy test --access
 ```
 
-When the changed cells are the ones you meant, run `lowdefy test --update-access`, commit `tests/access.yaml`, and say in the pull request which cells changed and why. When the app is not the working directory, add `--config-directory <app>` to each command. In CI, `lowdefy test --build` checks the table with the journeys.
+When the changed cells are the ones you meant, run `lowdefy test --update-access`, commit `tests/access.yaml`, and say in the pull request which cells changed and why. When the app is not the working directory, add `--config-directory <app>` to each command. In CI, `lowdefy test --build --headless` checks the table with the journeys.
 
 ## One check, in one place
 

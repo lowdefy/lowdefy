@@ -18,18 +18,30 @@ import { type } from '@lowdefy/helpers';
 
 import answerCall from './answerCall.js';
 import checkSessionOpen from './checkSessionOpen.js';
+import checkSystemBinding from './checkSystemBinding.js';
 import toWirePayload from './toWirePayload.js';
 
 // Runs an endpoint as a trusted system context does: a cron run, or a detached run whose
 // dispatcher was one. It goes through runDetachedEndpoint, the entry POST /api/detached runs,
-// with a system principal: there is no user (_user is null), endpoint auth passes, and an
-// InternalApi endpoint is callable, which callEndpoint never allows. The route answers 202 and
-// runs the endpoint afterwards; here the call waits for the routine and answers its result.
-async function callSystemEndpoint({ endpointId, payload, testSession }) {
+// with a system principal: endpoint auth passes, and an InternalApi endpoint is callable, which
+// callEndpoint never allows. With no organization the run is bound to none and _user is null.
+// With one, it carries the binding a CallApi with "organization" and "caller" gives its target
+// (the principal a detached call from such a run carries): the tenant wall filters and stamps
+// with the organization, and _user is the stand-in caller { id, name, organization_id,
+// system: true }, or null with no caller. The route answers 202 and runs the endpoint afterwards;
+// here the call waits for the routine and answers its result.
+async function callSystemEndpoint({
+  caller = null,
+  endpointId,
+  organization = null,
+  payload,
+  testSession,
+}) {
   checkSessionOpen({ testSession });
   if (!type.isString(endpointId)) {
     throw new Error(`call requires an endpoint id. Received ${JSON.stringify(endpointId)}.`);
   }
+  checkSystemBinding({ caller, organization });
   const { testApp } = testSession;
   return answerCall({
     req: { url: `/api/detached/${endpointId}`, method: 'POST', hostname: 'localhost' },
@@ -37,7 +49,7 @@ async function callSystemEndpoint({ endpointId, payload, testSession }) {
       testApp.modules.api.runDetachedEndpoint(context, {
         endpointId,
         payload: toWirePayload({ payload, testApp }),
-        principal: { system: true },
+        principal: { system: true, organizationId: organization, user: caller },
       }),
     testSession,
     user: null,

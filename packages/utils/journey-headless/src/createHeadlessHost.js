@@ -16,6 +16,9 @@
 
 import { type } from '@lowdefy/helpers';
 
+import createScopedCall from './createScopedCall.js';
+import scrubMarkedValues from './scrubMarkedValues.js';
+
 /**
  * What a headless page runs on: the build, the server and the data, given by a host so the
  * runner never imports from a server. Two hosts give it: a production build through
@@ -33,10 +36,14 @@ import { type } from '@lowdefy/helpers';
  *   { actions, operators, jsMap, blockMetas }. No block components.
  * @property {(args: HostCall) => Promise<HostAnswer>} call Runs a page request or an endpoint as
  *   the server does, in process.
- * @property {(args: { endpointId: string, payload: * }) => Promise<HostAnswer>} system Runs an
+ * @property {(args: { endpointId: string, payload: *, organization: (string|null),
+ *   caller: ({ id: string, name: string }|null) }) => Promise<HostAnswer>} system Runs an
  *   endpoint as a cron or detached run does, in process: runDetachedEndpoint with a system
- *   principal, so there is no user and an InternalApi endpoint is callable. A `call` step
- *   `as: system` makes it.
+ *   principal, so an InternalApi endpoint is callable. With no organization there is no user;
+ *   with one the principal carries it and the stand-in caller, as a detached call from a CallApi
+ *   bound to them does, so `_user` is { id, name, organization_id, system: true } (null with no
+ *   caller) and the tenant wall uses the organization. A `call` step `as: system` or
+ *   `as: { system: { organization, caller } }` makes it.
  * @property {(args: { endpointId: string, rawBody: string, query?: Object, headers?: Object }) =>
  *   Promise<WebhookAnswer>} webhook Posts to a webhook endpoint as its sender does, in process:
  *   runWebhookEndpoint, as the endpoints route runs it, so its verify gate runs against rawBody.
@@ -62,6 +69,14 @@ import { type } from '@lowdefy/helpers';
  *   as calls take one, the host's user by default; null for a signed-out caller.
  * @property {string[]} userNames The data set's users by name, whom an `as` step can switch to.
  * @property {() => Promise<void>} close Releases what the host holds.
+ * @property {{ run: Function, bindScrub: Function }} credentialScope runInCredentialScope and
+ *   bindCredentialScrub from the @lowdefy/node-utils the host's @lowdefy/api imports. Each call,
+ *   system call and webhook runs in a credential scope of its own, as the server runs each
+ *   request (createScopedCall).
+ *
+ * createHeadlessHost adds scrubCredentials: (value) => value, a copy of a value with every string
+ * scrubbed of what the host's calls marked so far, which the runner applies to the journey's
+ * result.
  */
 
 /**
@@ -111,6 +126,7 @@ const HOST_KEYS = [
   'call',
   'close',
   'connections',
+  'credentialScope',
   'dataSession',
   'dataSetName',
   'errorSink',
@@ -125,8 +141,13 @@ const HOST_KEYS = [
   'webhook',
 ];
 
+// The parts that run a routine on the server, each in a credential scope of its own.
+const SCOPED_KEYS = ['call', 'system', 'webhook'];
+
 // Checks a host against the shape above, so a host that misses a part fails where it is made,
-// not in the middle of a journey.
+// not in the middle of a journey, and runs its calls each in a credential scope of its own, as
+// the server runs each request, so every host gives an endpoint the scope a real request gives it.
+// What the calls mark is kept out of the journey's result (scrubCredentials).
 function createHeadlessHost(host) {
   if (!type.isObject(host)) {
     throw new Error(`A headless host is an object. Received ${JSON.stringify(host)}.`);
@@ -135,7 +156,17 @@ function createHeadlessHost(host) {
   if (missing.length > 0) {
     throw new Error(`The headless host is missing ${missing.join(', ')}.`);
   }
-  return host;
+  const scrubs = [];
+  const scoped = { ...host };
+  SCOPED_KEYS.forEach((key) => {
+    scoped[key] = createScopedCall({
+      credentialScope: host.credentialScope,
+      onScope: (scrub) => scrubs.push(scrub),
+      run: host[key],
+    });
+  });
+  scoped.scrubCredentials = (value) => scrubMarkedValues({ scrubs, value });
+  return scoped;
 }
 
 export { HOST_KEYS };

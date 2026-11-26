@@ -32,6 +32,7 @@ import lintJourneys from './lint/lintJourneys.js';
 import openBuildApp from './openBuildApp.js';
 import parseRepeat from './parseRepeat.js';
 import parseTestSelection from './parseTestSelection.js';
+import readCiBrowserOnlyFailure from './readCiBrowserOnlyFailure.js';
 import parseTier from '../journeys/usage/parseTier.js';
 import parseUsageWindow from '../journeys/usage/parseUsageWindow.js';
 import readAccessMode from './readAccessMode.js';
@@ -58,6 +59,21 @@ function refuse({ context, message }) {
   context.logger.error(message);
   context.sendTelemetry();
   process.exitCode = 1;
+}
+
+// In CI, a run given no mode flag that skipped a browser journey fails (readCiBrowserOnlyFailure).
+function failInCiOnSkip({ context, browserOnly, inProcess, build }) {
+  const failure = readCiBrowserOnlyFailure({
+    env: process.env,
+    options: context.options,
+    browserOnly,
+    inProcess,
+    build,
+  });
+  if (!type.isUndefined(failure)) {
+    context.logger.error(failure);
+    process.exitCode = 1;
+  }
 }
 
 // `lowdefy test --access` and `--update-access`: the access step alone, on the production build.
@@ -276,6 +292,12 @@ async function testJourneys({
     if (ran.failed > 0) {
       process.exitCode = 1;
     }
+    failInCiOnSkip({
+      context,
+      browserOnly: ran.browserOnly,
+      inProcess: ran.inProcess,
+      build: true,
+    });
     context.sendTelemetry();
     return;
   }
@@ -431,6 +453,7 @@ async function testJourneys({
   if (!type.isUndefined(note)) {
     context.logger.info(note);
   }
+  failInCiOnSkip({ context, browserOnly, inProcess, build: false });
   context.sendTelemetry();
 }
 

@@ -36,11 +36,12 @@ const browserJourney = path.join(configDirectory, 'tests', 'journeys', '_browser
 const textJourney = path.join(configDirectory, 'tests', 'journeys', 'save.yaml');
 const headlessJourney = path.join(configDirectory, 'tests', 'journeys', '_headless', 'save.yaml');
 
-function runCli(args) {
+// Outside CI unless `env` sets CI, also when the suite runs in CI.
+function runCli(args, env = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [CLI, ...args], {
       cwd: configDirectory,
-      env: { ...process.env, LOWDEFY_DISABLE_TELEMETRY: 'true' },
+      env: { ...process.env, CI: '', LOWDEFY_DISABLE_TELEMETRY: 'true', ...env },
     });
     let output = '';
     child.stdout.on('data', (data) => {
@@ -64,19 +65,22 @@ function headlessRunPath() {
   return path.join(configDirectory, '.lowdefy', 'test', 'headless-run.json');
 }
 
-function runHeadless({ server = serverDirectory } = {}) {
-  return runCli([
-    'test',
-    '--headless',
-    '--build',
-    '--config-directory',
-    configDirectory,
-    '--server-directory',
-    server,
-    browserJourney,
-    textJourney,
-    headlessJourney,
-  ]);
+function runHeadless({ server = serverDirectory, mode = ['--headless'], env } = {}) {
+  return runCli(
+    [
+      'test',
+      ...mode,
+      '--build',
+      '--config-directory',
+      configDirectory,
+      '--server-directory',
+      server,
+      browserJourney,
+      textJourney,
+      headlessJourney,
+    ],
+    env
+  );
 }
 
 // A production build, as `lowdefy build --no-client-build` makes one (scripts/build.mjs). The
@@ -138,6 +142,21 @@ test('--headless --build runs the headless journeys and lists the browser journe
       'tests/journeys/save.yaml#saves an item and sees the message': { passed: true, ...hashes },
     },
   });
+});
+
+test('in CI --build with no mode flag fails on the browser journey, and --headless --build exits 0', async () => {
+  fs.rmSync(headlessRunPath(), { force: true });
+  const plain = await runHeadless({ mode: [], env: { CI: 'true' } });
+  expect(plain.output).toContain('2 passed, 0 failed of 2 journeys, 1 browser-only not run');
+  expect(plain.output).toContain(
+    "1 journey a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --headless to say on purpose that browser journeys don't run in this step, and run them in another step with lowdefy test --thorough on the dev server."
+  );
+  expect(plain.code).toBe(1);
+
+  const headless = await runHeadless({ env: { CI: 'true' } });
+  expect(headless.output).toContain('2 passed, 0 failed of 2 journeys, 1 browser-only not run');
+  expect(headless.output).not.toContain('In CI');
+  expect(headless.code).toBe(0);
 });
 
 // The case table the config tests docs page shows (its sample matches this file), with its rows

@@ -135,7 +135,7 @@ Blocks are addressed by their `blockId`. A step that does not complete within th
 | `expect: { url: { contains } }`           | The browser URL contains the string. It checks where the browser landed and never names a page: open a page with `pageId` or `goto`, with its `pathParams`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | `expect: { title: { equals } }`           | The document title (the browser tab's text) is exactly the string; `{ contains }` checks part of it.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 | `expect: { error: text }`                 | The interaction just before it raised an [app error](#app-errors) whose message contains `text`. Must directly follow a click, open, fill, select, press or back. After a `call`, `request`, `webhook` or `release`, the error of its answer contains `text`, or the message of a [forced failure](#stubs-and-forced-failures).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| `call: { endpoint, payload, as }`         | Call an endpoint directly, with `payload` as given, as the journey's user or the data set user `as` names (`none` for signed out, `system` for a [cron or internal endpoint](#system-calls-and-webhooks)). See [calls, requests and the database](#calls-requests-and-the-database).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `call: { endpoint, payload, as }`         | Call an endpoint directly, with `payload` as given, as the journey's user or the data set user `as` names (`none` for signed out, `system` for a [cron or internal endpoint](#system-calls-and-webhooks), `{ system: { organization, caller } }` for one that runs per organization). See [calls, requests and the database](#calls-requests-and-the-database).                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | `request: { pageId, requestId, payload }` | Call a page's request directly, with `payload` as given, as for `call`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | `webhook: { endpoint, body }`             | Post to a webhook endpoint as the service that sends it does, so its `verify` gate runs. `query` and `headers` are optional. See [system calls and webhooks](#system-calls-and-webhooks).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | `hold: { requestId }`                     | Hold the next routine that reaches the request, just before it runs, for a [race](#races). `endpoint` or `pageId` narrows it.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
@@ -261,7 +261,7 @@ A `Search` block keeps its input in a modal outside its own element. Open it wit
 
 ## Page-less journeys
 
-A journey with no `pageId` opens no page: it tests endpoint and server logic by calling the server directly. Its steps may only be `call`, `request`, `webhook`, `hold`, `release`, `as`, `wait: { ms }` and the checks that need no page: `expect` on `error`, `status`, `db`, `sunk` and `calls` (for a request, with its `pageId`). Run it headless: `lowdefy test --build` in CI, or `lowdefy test` and the `lowdefy_run_journey` tool with `headless: true` while you edit.
+A journey with no `pageId` opens no page: it tests endpoint and server logic by calling the server directly. Its steps may only be `call`, `request`, `webhook`, `hold`, `release`, `as`, `wait: { ms }` and the checks that need no page: `expect` on `error`, `status`, `db`, `sunk` and `calls` (for a request, with its `pageId`). Run it headless: `lowdefy test --build --headless` in CI, or `lowdefy test` and the `lowdefy_run_journey` tool with `headless: true` while you edit.
 
 Nothing in a journey is evaluated with operators while it runs. Payloads, headers, `match` and expected values are sent and compared as written, so a payload can carry an operator object a page never would. A value a check would compute, such as a price or a total, is written into the journey, or into a row of its [case table](#case-tables).
 
@@ -449,6 +449,33 @@ steps:
         match: { kind: run, closed: true }
         count: 2
 ```
+
+A scheduled run reaches an endpoint that runs per organization through a `CallApi` with `organization`, and often `caller`, which binds the target to that organization. `as: { system: { organization, caller } }` gives a call the same binding: the tenant wall filters and stamps with `organization`, and `_user` is the stand-in caller `{ id, name, organization_id, system: true }`, exactly what that `CallApi` gives its target. `caller` is optional, as on `CallApi`; without it `_user` is null. When a call `as: system` with no organization is refused or its routine fails, the failing step says how to name one.
+
+```yaml
+name: a call bound to an organization runs as its stand-in caller
+data: outside
+user: operator
+steps:
+  - call:
+      endpoint: record_caller
+      payload: { id: nightly }
+      as:
+        system:
+          organization: org_a
+          caller: { id: nightly_close, name: Nightly close }
+  - expect: { status: 200 }
+  - expect:
+      db:
+        collection: items
+        match: { _id: nightly }
+        equals:
+          - _id: nightly
+            kind: caller
+            caller: { id: nightly_close, name: Nightly close, organization_id: org_a, system: true }
+```
+
+An inline user object can not carry `system`: only the binding gives `_user.system`.
 
 `webhook` posts to an endpoint with a `webhook` gate, as the service that sends it does, so its `verify` step runs against the raw body. `body` is sent as raw text: a string as written, anything else as JSON. A signature header is a literal: compute it once with the secret the app's verifier reads. A headless run, on a build or on the dev server, reads `test-secret-<NAME>` for every secret ([Secrets](/endpoint-tests#secrets)), so sign with that. A browser run posts through the dev server's own route, which reads the app's secret: give the secret that value there too, so one signature holds on both.
 
@@ -652,13 +679,25 @@ Not run, needs a browser:
 Run them in the browser: lowdefy test --thorough tests/journeys/invites.yaml
 ```
 
-The exit code stays `0`: a browser-only journey is not a failure. A `--thorough` run ends each journey's line with where it ran, `[headless]` or `[browser]`.
+The exit code stays `0`: a browser-only journey is not a failure, except on a plain run in CI (see below). A `--thorough` run ends each journey's line with where it ran, `[headless]` or `[browser]`.
 
 `.lowdefy/test/headless-run.json` remembers each journey a headless run found needs a browser, with the journey and the build it was found on. While both are unchanged, the next `lowdefy test` lists the journey as browser-only without running its headless steps again, its line ending `found by an earlier run, not run again`, and `lowdefy test --thorough` sends it straight to the browser. On the development server, editing the journey or any file of the app's config (outside `tests/journeys/`) runs it headless again. With `--build`, so does each new `lowdefy build`. A Lowdefy upgrade that lets the headless runner take the step may leave the record standing: delete `headless-run.json` to run every journey headless again. A run of some journeys keeps the records of the others.
 
 A journey with a `hold`, `release` or `call` as `system` step never goes to the browser, which cannot take those steps. If it also needs a browser, every run leaves it browser-only: the note after the summary says so and leaves its file out of the command. `--browser` refuses it.
 
 A plain `lowdefy test` runs no journey in a browser. Run `lowdefy test --thorough` in CI, so the browser journeys run there.
+
+In CI, a plain run that skips a browser journey fails, so a CI job that ran its browser journeys with `lowdefy test` before v8 doesn't go green without them. When the `CI` environment variable is set (GitHub Actions, GitLab and most CI services set `CI=true`) and the run was given none of `--headless`, `--thorough` and `--browser`, a run that left a journey browser-only exits with code `1`:
+
+```
+1 passed, 0 failed of 1 journeys, 1 browser-only not run
+Not run, needs a browser:
+  copies the invite link (tests/journeys/invites.yaml)  step 2 (click "copy_link"): CopyToClipboard needs the browser.
+Run them in the browser: lowdefy test --thorough tests/journeys/invites.yaml
+1 journey a browser run would take did not run. In CI, lowdefy test without --headless, --thorough or --browser fails when it skips a browser journey. To fix this, pass --thorough to run them in the browser, or pass --headless to say on purpose that browser journeys don't run here.
+```
+
+Pass `--thorough` to run them, or `--headless` to say that browser journeys don't run in this job. `--build` with no mode flag counts as a plain run, so a CI job on the production build runs `lowdefy test --build --headless`. A journey that no run takes to the browser (one with a `hold`, `release` or `call` as `system` step) doesn't count, since no flag would run it. `CI` set to `false` or `0` counts as unset. Outside CI, and in the `lowdefy_run_tests` agent tool, a browser-only journey never fails the run.
 
 `--browser`, `--thorough` and `--headless` each pick where the journeys run: pass at most one.
 
@@ -674,7 +713,7 @@ A plain `lowdefy test` runs no journey in a browser. Run `lowdefy test --thoroug
 - `--lint`: Check the journeys for the [lint rules](#lint) and run nothing.
 - `--thorough`: Run each journey headless when it can and in the browser when it can't, and run each journey found to need a browser partway through in the browser too, from step 1, in the same run. Use it in CI. See [Where each journey runs](#where-each-journey-runs).
 - `--browser`: Run every journey in the browser.
-- `--headless`: Run only the journeys that need no browser, in Node, and list the rest as browser-only: the default. See [headless runs](#headless-runs).
+- `--headless`: Run only the journeys that need no browser, in Node, and list the rest as browser-only: the default. In CI, pass it to say on purpose that browser journeys don't run there. See [headless runs](#headless-runs) and [Where each journey runs](#where-each-journey-runs).
 - `--build`: Run headless on the production build in this process. A run that also takes its browser journeys on the production build is not supported yet, so `--thorough` and `--browser` refuse it.
 - `--server-directory <path>`: With `--build`, `--access` or `--update-access`, the built server to read, when it is not `.lowdefy/server`.
 - `--access`: Only check the [access table](/access-table), `tests/access.yaml`, against the production build, and run no journeys.
@@ -700,10 +739,10 @@ Every browser operation on the machine shares three browser slots: journeys, scr
 
 ### Exit codes
 
-| Exit code | Meaning                                                                                                                                                                                                                                                                                                                                                                                     |
-| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                                                                                                                                                                             |
-| `1`       | At least one journey failed, the [access table](/access-table) differs from the build, a journey file was invalid, a path, glob, `--tag` or `--filter` matched no journey, or a `--journeys-directory` held no journeys. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found; with `--tier`, the selection had too little production use to cut a tier. |
+| Exit code | Meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `0`       | Every journey passed, or `tests/journeys/` has no journeys (a note is printed).                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `1`       | At least one journey failed, the [access table](/access-table) differs from the build, a journey file was invalid, a path, glob, `--tag` or `--filter` matched no journey, or a `--journeys-directory` held no journeys. In CI, a run given none of `--headless`, `--thorough` and `--browser` left a journey browser-only. With `--repeat`, a journey was `FLAKY` or `FAIL`; with `--lint`, a lint error was found; with `--tier`, the selection had too little production use to cut a tier. |
 
 A journey file that is not valid YAML, or does not match the journey format (a missing `name`, a step with two keys, an unknown step key, a step the grammar refuses, named by its index) is reported as a failed journey with the validation message and the file path. It never aborts the run, so one broken file cannot hide the results of the others.
 
@@ -772,7 +811,7 @@ A `click`, `visible` or `hidden` by `text` or `containing` is decided when the s
 
 ```
 lowdefy build
-lowdefy test --build
+lowdefy test --build --headless
 ```
 
 `--build` runs on the production build in `.lowdefy/server` (or `--server-directory`), in the CLI's own process, with no dev server and no browser installed. A missing build, a build of another Lowdefy version and a build older than the config are refused with the command to run. Before any journey, the run checks the [access table](/access-table) against the build. Each journey gets a fresh in-memory database of its [data set](/journey-data-sets), as in a browser run. A `CallApi` with `detached: true` is recorded instead of sent, since it dispatches through the server's own route: the routine carries on as on a server, the endpoint it starts never runs, and `expect: { calls }` reads it as a call to that endpoint, with its payload. An auth step cannot run on a build, since no auth engine runs: it fails as a config error. A routine that handles the failure in the `:catch` of its `:try` still passes, see below. The results are written to `.lowdefy/test/headless-run.json`.
