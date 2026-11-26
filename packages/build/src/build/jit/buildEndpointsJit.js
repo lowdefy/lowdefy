@@ -444,8 +444,9 @@ async function buildEndpointsJit({
     endpointRegistry.builds += 1;
     const mapsFileName = `endpoints-${endpointRegistry.builds}-1.json`;
     // The dev server's error handler and tools read jitMaps/ with keyMap.json
-    // (readMergedMaps); the dev server keeps endpoints- files until the next
-    // config build publishes (pruneJitMaps).
+    // (readMergedMaps); the dev server keeps endpoints- files (pruneJitMaps)
+    // until every endpoint a file holds is rebuilt (pruneEndpointMaps) or the
+    // next config build publishes.
     await buildContext.writeBuildArtifact(
       `jitMaps/${mapsFileName}`,
       serializer.serializeToString({
