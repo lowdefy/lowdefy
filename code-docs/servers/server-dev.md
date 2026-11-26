@@ -709,7 +709,12 @@ restart kills. So the manager's proxy recognises them (`readBuildStatusWait`: th
 POST whose JSON-RPC body calls `lowdefy_build_status` with `wait: true`; the POST body is
 buffered and forwarded as read) and holds them in `buildActivity.waitForIdle()` (a 1 s grace
 for an edit the watchers have not seen yet, then until idle, at most two minutes) before
-forwarding them to whichever child is current. The result travels in the
+forwarding them to whichever child is current. When the manager is idle and its work settled
+less than the grace before the call, an edit saved before it settled has been seen and processed
+(an edit that reaches a watcher while the work runs keeps it busy), so the grace only covers an
+edit saved since: 200 ms (`seenGraceMs`), a few times the 57 ms a save took at most to reach the
+watcher on macOS. Watchers debounce a
+batch by 150 ms (`setupWatcher`'s `delay`), the shortest that kept a 200-file save one batch. The result travels in the
 `x-lowdefy-build-wait` header (`readProxyBuildWait`), so the child reports it and does not
 wait again. A request that reaches the child without the header (a direct call to the internal
 port) still waits on `building` itself.

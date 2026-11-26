@@ -14,22 +14,15 @@
   limitations under the License.
 */
 
-function scanIdLog({ map, log }) {
-  for (const id of Object.keys(map)) {
-    if (!log.seen.has(id)) {
-      log.seen.add(id);
-      log.added.push(id);
+// The module entry a page or endpoint id is scoped to (buildModules prefixes
+// module ids with their entry id), or null for the app's own.
+function getModuleEntryId(id, context) {
+  for (const entryId of Object.keys(context.modules ?? {})) {
+    if (id.startsWith(`${entryId}/`)) {
+      return entryId;
     }
   }
+  return null;
 }
 
-// Logs the ids added to the context's key and ref maps since the last scan, and
-// returns how many each log holds: a mark that later writes slice from.
-function scanJitMaps({ context }) {
-  const { jitMaps } = context;
-  scanIdLog({ map: context.keyMap, log: jitMaps.keys });
-  scanIdLog({ map: context.refMap, log: jitMaps.refs });
-  return { keys: jitMaps.keys.added.length, refs: jitMaps.refs.added.length };
-}
-
-export default scanJitMaps;
+export default getModuleEntryId;

@@ -16,7 +16,7 @@
 
 import { serializer } from '@lowdefy/helpers';
 
-import scanJitMaps from './scanJitMaps.js';
+import markJitMaps from './markJitMaps.js';
 
 function pickEntries({ map, ids }) {
   const entries = {};
@@ -38,7 +38,7 @@ function pickEntries({ map, ids }) {
 // complete entry wins. Each write is a new file, so no two builds write the
 // same file and no entry is lost.
 async function writeJitMaps({ context, since }) {
-  const mark = scanJitMaps({ context });
+  const mark = markJitMaps({ context });
   const keyIds = context.jitMaps.keys.added.slice(since.keys, mark.keys);
   const refIds = context.jitMaps.refs.added.slice(since.refs, mark.refs);
   if (keyIds.length === 0 && refIds.length === 0) {

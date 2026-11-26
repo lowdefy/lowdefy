@@ -44,9 +44,11 @@ async function listDevTools() {
 // lifecycle tools and the added directory property included. Growing it past
 // this is a deliberate change. The phone tools (lowdefy_device and the device
 // parameters) take about 2,000 of it, headless journeys and tests about 500,
-// lowdefy_run_journey's stubs about 400, lowdefy_run_tests' concurrency about 230, and its
-// browser and thorough runs (the mixed default) about 340.
-test('the shim tools/list for a current dev server stays at most 44,050 characters', async () => {
+// lowdefy_run_journey's stubs about 400, lowdefy_run_tests' concurrency about 230, its
+// browser and thorough runs (browser journeys only when asked) about 340, and
+// lowdefy_build_status's all option, which saves its answers the warnings already shown,
+// about 230.
+test('the shim tools/list for a current dev server stays at most 44,250 characters', async () => {
   const tools = await listDevTools();
   const shim = createShim({
     cliVersion: '7.0.0',
@@ -59,7 +61,7 @@ test('the shim tools/list for a current dev server stays at most 44,050 characte
   const client = new Client({ name: 'size-test', version: '1.0.0' });
   await client.connect(clientTransport);
   const { tools: shimTools } = await client.listTools();
-  expect(JSON.stringify(shimTools).length).toBeLessThanOrEqual(44050);
+  expect(JSON.stringify(shimTools).length).toBeLessThanOrEqual(44250);
   await client.close();
   await shim.close();
 });

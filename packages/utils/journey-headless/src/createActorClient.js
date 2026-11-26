@@ -68,6 +68,9 @@ function createActorClient({ actor, host, onBrowserOnly, onTrace, plugins, rootC
     },
   });
   const pageCalls = createPageCalls({ calls: actor.calls, host, user: actor.user });
+  // A plugin that writes into its block config fails the journey here rather than leaking into the
+  // other list rows and containers that share it in production (see the engine's freezeConfig).
+  lowdefy._internal.freezeConfig = true;
   lowdefy._internal.callAPI = pageCalls.callAPI;
   lowdefy._internal.callRequest = pageCalls.callRequest;
   lowdefy._internal.websocketClient = createInertWebSocketClient({ onBrowserOnly });

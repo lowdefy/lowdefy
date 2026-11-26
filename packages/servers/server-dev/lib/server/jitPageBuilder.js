@@ -86,6 +86,12 @@ let releasedReadConfigFile = null;
 // bundle until the server restarts. JIT delivers the rest as data.
 let bundledIcons = null;
 
+// The endpoint artifacts read so far, by file: the build context's endpoint
+// configs are read again after every change event, which parses only the files
+// that changed (an endpoint the manager rebuilt alone rewrites its artifact
+// with no config publish).
+const apiArtifactCache = new Map();
+
 // A missing artifact reads as null: a build writes some only when the app uses
 // them. An artifact that is there but unreadable is a fault, not an empty map: a
 // keyMap read as {} left every later error without its config location.
@@ -217,7 +223,7 @@ function createBuildContext(buildDirectory, configDirectory) {
   // Restore api endpoint configs so JIT CallAPI validation (validateCallApiRefs in
   // buildPageJit) can resolve endpointIds. Without this the dev context has no
   // components.api and every CallAPI action is flagged as a non-existent endpoint.
-  context.components = { api: readBuildApiArtifacts(buildDirectory) };
+  context.components = { api: readBuildApiArtifacts(buildDirectory, apiArtifactCache) };
 
   if (!bundledIcons) {
     bundledIcons = new Set(readJsonFile(path.join(buildDirectory, 'iconImports.json')) ?? []);
@@ -304,7 +310,7 @@ export function getBuildContext(buildDirectory, configDirectory) {
 // through a fresh read cache, so a check or build sees what is on disk now;
 // builds already running keep the cache they started with, and what they read
 // is checked on the page's next request. Warnings are logged again.
-function startChangeEvent(configDirectory) {
+function startChangeEvent({ buildDirectory, configDirectory }) {
   eventCounter += 1;
   releasedReadConfigFile = null;
   generationShared?.seenSourceLines.clear();
@@ -313,6 +319,9 @@ function startChangeEvent(configDirectory) {
     readConfigFile: createReadConfigFile({ directories: keptContext.directories }),
     configDirectory,
   });
+  // An edit that fed only endpoints rewrote their artifacts and published no
+  // config build, so this context stays: its endpoint configs are read again.
+  keptContext.components.api = readBuildApiArtifacts(buildDirectory, apiArtifactCache);
 }
 
 // Reads a page's inputs for the current change event: through the kept
@@ -333,7 +342,7 @@ export function syncBuildSignals({ buildDirectory, configDirectory }) {
   const changeSignal = readChangeSignal(buildDirectory);
   if (changeSignal !== lastChangeSignal) {
     lastChangeSignal = changeSignal;
-    startChangeEvent(configDirectory);
+    startChangeEvent({ buildDirectory, configDirectory });
   }
   const identity = readRegistryIdentity(buildDirectory);
   if (identity === null) {

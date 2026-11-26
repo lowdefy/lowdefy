@@ -21,7 +21,7 @@ import { createTestSecrets, readBuildSecretNames } from '@lowdefy/test-utils/sec
 // it changes, so a journey rereads only the pages built since the last one.
 const namesCache = new Map();
 
-// The secrets a headless journey on the dev server runs with, as `lowdefy test --headless --build`
+// The secrets a headless journey on the dev server runs with, as `lowdefy test --build`
 // runs one: test-secret-<NAME> for every secret the dev build names, with the run's test values
 // (`secrets`, by name, from the LOWDEFY_TEST_SECRET_* of the command that posted the journey)
 // over them. The app's real LOWDEFY_SECRET_* are never read: they stay with the dev server's own

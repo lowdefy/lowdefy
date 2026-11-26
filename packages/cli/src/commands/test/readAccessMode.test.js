@@ -62,13 +62,13 @@ test('readAccessMode refuses a journey option with --access, naming the command 
     })
   ).toEqual({
     error:
-      '--access checks the access table alone: drop --tag, or run "lowdefy test --headless --build --tag <tag>" to check the table and run those journeys.',
+      '--access checks the access table alone: drop --tag, or run "lowdefy test --build --tag <tag>" to check the table and run those journeys.',
   });
   expect(
     readAccessMode({ options: { ...defaults, updateAccess: true, paths: ['tests/journeys/a'] } })
   ).toEqual({
     error:
-      '--update-access rewrites tests/access.yaml alone: drop the journey paths, or run "lowdefy test --headless --build <paths>" to check the table and run those journeys.',
+      '--update-access rewrites tests/access.yaml alone: drop the journey paths, or run "lowdefy test --build <paths>" to check the table and run those journeys.',
   });
 });
 

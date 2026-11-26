@@ -22,17 +22,17 @@ import findBrowserOnlyRecord from './findBrowserOnlyRecord.js';
 import runsOnlyInProcess from './runsOnlyInProcess.js';
 
 // Where a journey of the run goes before any journey runs: "headless" or "browser". A browser or
-// headless run sends every journey there. A mixed run sends a journey the classifier marks
-// browser-only (classifyJourney) to the browser, and so one an earlier headless run found needs a
-// browser partway through (findBrowserOnlyRecord), while the dev server's build hash as this run
-// starts, `configHash` (hashBuild), is one that run recorded, so it doesn't repeat headless steps;
-// the rest go headless. A dev server builds each page as it is first opened, so its build hash
-// moves as journeys open pages: a run records the hash as it started and as it ended, which match
-// the next run's start on a fresh server and on one kept running, while nothing changed between
-// them. A journey no runner can take (checkJourneyItem) is refused the same either way, and
-// goes headless, which needs no browser slot. So does one with a step only the headless runner
-// takes (runsOnlyInProcess), which a browser run would refuse: headless, it passes, fails or is
-// reported browser-only.
+// headless run sends every journey there. A mixed run (--thorough) sends a journey the classifier
+// marks browser-only (classifyJourney) to the browser, and so one an earlier headless run found
+// needs a browser partway through (findBrowserOnlyRecord) on the build the dev server serves as
+// this run starts, `configHash` (hashBuild), so it doesn't repeat headless steps; the rest go
+// headless. A dev server builds each page as it is first opened, so its build hash moves as
+// journeys open pages: a run records the hash as it started and as it ended, which match the next
+// run's start on a fresh server and on one kept running, while nothing changed between them. A
+// journey no runner can take (checkJourneyItem) is refused the same either way, and goes headless,
+// which needs no browser slot. So does one with a step only the headless runner takes
+// (runsOnlyInProcess), which a browser run would refuse: headless, it passes, fails or is reported
+// browser-only.
 function routeJourney({ item, runner, records, configDirectory, configHash }) {
   if (runner !== 'mixed') {
     return runner;
@@ -43,12 +43,7 @@ function routeJourney({ item, runner, records, configDirectory, configHash }) {
   if (!classifyJourney({ journey: item.journey }).headless) {
     return 'browser';
   }
-  const record = findBrowserOnlyRecord({ records, configDirectory, item });
-  if (
-    !type.isUndefined(record) &&
-    !type.isNone(configHash) &&
-    (record.configHashes ?? []).includes(configHash)
-  ) {
+  if (!type.isUndefined(findBrowserOnlyRecord({ records, configDirectory, item, configHash }))) {
     return 'browser';
   }
   return 'headless';

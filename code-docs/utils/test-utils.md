@@ -64,6 +64,9 @@ Every refusal names `lowdefy build --no-client-build` (`buildCommand.js`). The h
 `build/` and the server's `node_modules`, so it takes a build of `@lowdefy/server` or
 `@lowdefy/server-e2e`.
 
+The app also carries `buildId`, `appMeta.buildId`, unique per build: `lowdefy test --build`
+remembers a journey found to need a browser against it (`rememberedBrowserOnly`).
+
 The plugin maps, built config and test secrets load at the first session (`loadSessionRuntime`),
 so an app opened only for the access table does not pay for them.
 

@@ -24,7 +24,7 @@ Each check has one home, so it is never written twice:
 
 - A page's logic, state and what it writes: one journey that targets blocks by \`blockId\` and
   asserts with \`expect.state\`, \`expect.calls\` or \`expect: { db }\`. Such a journey needs no
-  browser: \`lowdefy test --headless --build\` runs it on a build. A write journey ends with
+  browser: \`lowdefy test --build\` runs it on a build. A write journey ends with
   \`expect: { db }\` on what was stored; add \`expect.text\` only when what the page shows is the
   point.
 - Endpoint and server logic, and what a page would never send (another tenant's ids): a journey with
@@ -40,7 +40,14 @@ Each check has one home, so it is never written twice:
   role and page for it. After a change to auth, roles or the set of pages or endpoints, run
   \`lowdefy build --no-client-build && lowdefy test --access\` once. Update the file with
   \`lowdefy test --update-access\` when the changed cells are the ones meant, and say in the pull
-  request which cells changed and why.`;
+  request which cells changed and why.
+
+\`lowdefy test\` runs journeys headless. A journey that needs a browser is not run: it shows as
+\`BROWSER-ONLY\` with the step that needs one, never as PASS, and the summary prints the command
+that runs it in the browser. When a journey you write shows \`BROWSER-ONLY\`, rewrite that step so it
+needs no browser; when the step checks something only a browser shows, prove the journey with
+\`--thorough\` added to the same command. Add \`--thorough\` or \`--browser\` to other runs only
+when a person asks.`;
 }
 
 export default testLevel;

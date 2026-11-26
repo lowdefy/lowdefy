@@ -17,20 +17,7 @@
 import fs from 'fs';
 import path from 'path';
 
-// The artifacts compared one by one, keyed by id, and the app-wide artifacts
-// that can affect any page. Every other file the build writes is uncompared.
-const APP_WIDE = [
-  'events.json',
-  'menus.json',
-  'global.json',
-  'app.json',
-  'config.json',
-  'i18n.json',
-  'theme.json',
-  'auth.json',
-  'dynamicPolicies.json',
-  'tenantTargets.json',
-];
+import APP_WIDE_ARTIFACTS from './appWideArtifacts.js';
 
 // Build identity, not config: a fresh buildId every build, and the commit.
 const BUILD_IDENTITY = ['appMeta.json'];
@@ -66,7 +53,9 @@ function readJson({ buildDirectory, file }) {
   return JSON.parse(fs.readFileSync(path.join(buildDirectory, file), 'utf8'));
 }
 
-// One build directory, read into the groups the scope diff compares. Values
+// One build directory, read into the groups the scope diff compares: the
+// artifacts compared one by one, keyed by id, and the app-wide artifacts that
+// can affect any page (APP_WIDE_ARTIFACTS). Every other file is uncompared. Values
 // are the parsed artifacts with their markers, so a changed block can still
 // be located through keyMap.json; comparisons normalise them first.
 function readBuildArtifacts({ buildDirectory }) {
@@ -108,7 +97,7 @@ function readBuildArtifacts({ buildDirectory }) {
       build[group][idOf(file, `${folder}/`)] = readJson({ buildDirectory, file });
       return;
     }
-    if (APP_WIDE.includes(file)) {
+    if (APP_WIDE_ARTIFACTS.includes(file)) {
       build.appWide[file] = readJson({ buildDirectory, file });
       return;
     }

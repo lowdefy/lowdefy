@@ -18,19 +18,49 @@ import fs from 'fs';
 import path from 'path';
 import { serializer } from '@lowdefy/helpers';
 
+// What identifies a file's content without reading it: an atomic write
+// (an endpoint rebuilt alone) gives the file a new inode, and a config build's
+// write changes its mtime or size.
+function readIdentity(filePath) {
+  const stat = fs.statSync(filePath, { bigint: true });
+  return `${stat.ino}:${stat.mtimeNs}:${stat.size}`;
+}
+
+// A config publish removes the artifacts of endpoints that are gone while the
+// dev server reads the directory: a file listed and then removed is gone.
+function readApiConfig({ filePath, cache }) {
+  try {
+    const identity = readIdentity(filePath);
+    const cached = cache.get(filePath);
+    if (cached?.identity === identity) {
+      return cached.config;
+    }
+    const config = serializer.deserialize(JSON.parse(fs.readFileSync(filePath, 'utf8')));
+    cache.set(filePath, { identity, config });
+    return config;
+  } catch (error) {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  }
+}
+
 // Recursively collect every endpoint artifact under the api directory. Module
 // endpoints are written to build/api/<moduleId>/<endpointId>.json because their
 // scoped endpointId contains a "/" (buildModules prefixes ids with the module entry
 // id), so a flat read would miss them and flag every module CallAPI as non-existent.
-function readApiConfigs(directory) {
+function readApiConfigs({ directory, cache, seen }) {
   const configs = [];
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     const entryPath = path.join(directory, entry.name);
     if (entry.isDirectory()) {
-      configs.push(...readApiConfigs(entryPath));
-    } else if (entry.name.endsWith('.json')) {
-      configs.push(serializer.deserialize(JSON.parse(fs.readFileSync(entryPath, 'utf8'))));
+      configs.push(...readApiConfigs({ directory: entryPath, cache, seen }));
+      continue;
     }
+    if (!entry.name.endsWith('.json')) continue;
+    const config = readApiConfig({ filePath: entryPath, cache });
+    if (config === null) continue;
+    seen.add(entryPath);
+    configs.push(config);
   }
   return configs;
 }
@@ -39,15 +69,30 @@ function readApiConfigs(directory) {
 // The full build keeps endpoints in memory on components.api, but the dev context is
 // rebuilt from disk, so getBuildContext hydrates them here. validateCallApiRefs needs
 // each config's endpointId and type, both of which are present in the artifact.
-function readBuildApiArtifacts(buildDirectory) {
+// With a cache (a Map the caller keeps), a file is parsed again only when it
+// changed since the last read: the dev server reads them again after every
+// edit, since an endpoint rebuilt alone rewrites its artifact without a config
+// publish.
+function readBuildApiArtifacts(buildDirectory, cache = new Map()) {
   const apiDirectory = path.join(buildDirectory, 'api');
+  const seen = new Set();
+  let configs;
   try {
-    return readApiConfigs(apiDirectory);
+    configs = readApiConfigs({ directory: apiDirectory, cache, seen });
   } catch (error) {
     // writeApi only creates the directory when endpoints are defined — absent means none.
-    if (error.code === 'ENOENT') return [];
+    if (error.code === 'ENOENT') {
+      cache.clear();
+      return [];
+    }
     throw error;
   }
+  for (const filePath of cache.keys()) {
+    if (!seen.has(filePath)) {
+      cache.delete(filePath);
+    }
+  }
+  return configs;
 }
 
 export default readBuildApiArtifacts;

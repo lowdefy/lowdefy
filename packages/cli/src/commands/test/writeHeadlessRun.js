@@ -23,10 +23,10 @@ import { relativePosixPath } from '@lowdefy/node-utils';
 import hashJourney from './hashJourney.js';
 import readHeadlessRun from './readHeadlessRun.js';
 
-// The hashes that say which journey and config a journey's headless run was taken on: `hash`
+// The hashes that say which journey and build a journey's headless run was taken on: `hash`
 // (hashJourney; null for a file that did not parse) and `configHashes` (hashBuild of the dev
-// server's build as the run started and as it ended, once the run's pages were built; [] on the
-// production build, whose records a dev run never reads).
+// server's build as the run started and as it ended, once the run's pages were built; on the
+// production build, its buildId, which no dev server's hash matches).
 function describeJourney({ result, configHashes }) {
   return {
     hash: type.isObject(result.journey) ? hashJourney(result.journey) : null,
@@ -42,12 +42,13 @@ function knownHashes(configHashes) {
 // keyed `<file>#<name>`, as { passed } or { browserOnly: { index, step, reason } } ({ phase:
 // 'open', reason } when opening the page needed a browser), each with its hashes
 // (describeJourney), so CI and agents read which journeys this run could not take as well as
-// which passed, and a later mixed run sends a journey found to need a browser straight to the
-// browser (routeJourney). Records of journeys this run did not run headless are kept. A record
-// that sent a journey of this run to the browser (`remembered`, the items) still holds, and takes
-// this run's hashes, so a dev server kept running, whose build moves as pages are first opened,
-// keeps reading it. A headless run records no traces, so it leaves the browser run's run.json
-// alone. `mode` is "build" or "dev", where the newest run ran. The file is written to a temporary
+// which passed. A later run on the same journey and build doesn't run a journey found to need a
+// browser up to that step again: a headless run lists it (rememberedBrowserOnly) and a mixed run
+// sends it straight to the browser (routeJourney); either way it takes this run's hashes again.
+// Records of journeys this run did not run headless are kept. A record that sent a journey of this
+// run to the browser (`remembered`, the items) still holds, and takes this run's hashes, so a dev
+// server kept running, whose build moves as pages are first opened, keeps reading it. A headless
+// run records no traces, so it leaves the browser run's run.json alone. `mode` is "build" or "dev", where the newest run ran. The file is written to a temporary
 // name and renamed over the old one, so a run reading it never reads it half written.
 function writeHeadlessRun({
   directories,

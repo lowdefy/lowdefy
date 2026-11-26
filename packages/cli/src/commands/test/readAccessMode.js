@@ -26,19 +26,19 @@ const REFUSED_OPTIONS = [
   {
     key: 'paths',
     flag: 'the journey paths',
-    meant: 'lowdefy test --headless --build <paths>',
+    meant: 'lowdefy test --build <paths>',
     purpose: JOURNEYS_PURPOSE,
   },
   {
     key: 'headless',
     flag: '--headless',
-    meant: 'lowdefy test --headless --build',
+    meant: 'lowdefy test --build',
     purpose: 'to check the table and run the headless journeys',
   },
   {
     key: 'build',
     flag: '--build',
-    meant: 'lowdefy test --headless --build',
+    meant: 'lowdefy test --build',
     purpose: 'to check the table and run the headless journeys',
   },
   {
@@ -57,7 +57,7 @@ const REFUSED_OPTIONS = [
   {
     key: 'repeat',
     flag: '--repeat',
-    meant: 'lowdefy test --headless --build --repeat <n>',
+    meant: 'lowdefy test --build --repeat <n>',
     purpose: JOURNEYS_PURPOSE,
   },
   {
@@ -69,31 +69,31 @@ const REFUSED_OPTIONS = [
   {
     key: 'filter',
     flag: '--filter',
-    meant: 'lowdefy test --headless --build --filter <name>',
+    meant: 'lowdefy test --build --filter <name>',
     purpose: JOURNEYS_PURPOSE,
   },
   {
     key: 'tag',
     flag: '--tag',
-    meant: 'lowdefy test --headless --build --tag <tag>',
+    meant: 'lowdefy test --build --tag <tag>',
     purpose: JOURNEYS_PURPOSE,
   },
   {
     key: 'tier',
     flag: '--tier',
-    meant: 'lowdefy test --headless --build --tier <tier>',
+    meant: 'lowdefy test --build --tier <tier>',
     purpose: JOURNEYS_PURPOSE,
   },
   {
     key: 'usageWindow',
     flag: '--usage-window',
-    meant: 'lowdefy test --headless --build --tier <tier> --usage-window <months>',
+    meant: 'lowdefy test --build --tier <tier> --usage-window <months>',
     purpose: JOURNEYS_PURPOSE,
   },
   {
     key: 'journeysDirectory',
     flag: '--journeys-directory',
-    meant: 'lowdefy test --headless --build --journeys-directory <journeys-directory>',
+    meant: 'lowdefy test --build --journeys-directory <journeys-directory>',
     purpose: JOURNEYS_PURPOSE,
   },
   {

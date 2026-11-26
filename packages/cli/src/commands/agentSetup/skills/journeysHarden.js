@@ -49,9 +49,10 @@ ${testLevel()}
 
 ## 1. Replay
 
-Run \`lowdefy test --config-directory <app> --repeat 3\`, and \`lowdefy test --config-directory <app> --repeat 3 <app>/tests/journeys/_candidates/\`
+Run \`lowdefy test --config-directory <app> --thorough --repeat 3\`, and \`lowdefy test --config-directory <app> --thorough --repeat 3 <app>/tests/journeys/_candidates/\`
 when that directory has files. Replay first: each run records what the journey exercised in
-\`.lowdefy/test/exercised.json\`, which the lints read.
+\`.lowdefy/test/exercised.json\`, which the lints read. \`--thorough\` replays the journeys that
+need a browser too, since hardening mutates every journey of the suite.
 
 - **PASS** (three passes): good.
 - **FLAKY** (one or two failures): fix the cause, usually a missing \`wait: { request }\`, a data

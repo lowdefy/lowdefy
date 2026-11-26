@@ -62,7 +62,7 @@ you open pull requests and never merge, and how to run you unattended:
   a time. Start a dev server (\`lowdefy_dev_start({ directory })\`) only to look at a page, and stop
   it (\`lowdefy_dev_stop\`) before the cycle ends; \`lowdefy test\` starts and stops its own. Never
   run \`lowdefy dev\`, choose a port or kill a process by port or name. \`lowdefy test\` waits for a journey run
-  slot; exit code 75 means the machine stayed busy for 20 minutes and nothing ran, so wait a few minutes,
+  slot; exit code 75 means the slots stayed taken for 20 minutes and nothing ran, so wait a few minutes,
   retry once, then write \`blocked:\` and stop. Never loop. To rerun one journey while you fix it, run
   \`lowdefy hub start .\` in the app folder once, then \`lowdefy test\` as often as needed, then
   \`lowdefy hub stop .\` before the cycle ends. Run only your own worktree's
@@ -211,7 +211,8 @@ as Blocked.
    the reason "signed-out runs stay on the auth harness" (\`user: none\` on a data set journey that opens a
    page is refused while auth is configured, because signing in would write to the real auth database).
 5. **Journeys already in the suite** (the app has journeys but no ledger): they are the developer's.
-   Run them once with \`lowdefy test --config-directory <app>\` (the whole suite). Read each one's
+   Run them once with \`lowdefy test --config-directory <app> --thorough\` (the whole suite, the
+   journeys that need a browser included, since each item needs its verdict). Read each one's
    \`pageId\`, \`user\` and steps, and set every item it proves (each user in a \`user\` list, the
    page it opens, the write it asserts) \`covered\` with its file and \`note: developer's journey\`.
    Never rewrite, move, rename or duplicate one, and never write a second journey for an item one
@@ -292,7 +293,7 @@ For each finding, decide:
   origin/<default branch>\`, make the fix, and \`git mv tests/journeys/_findings/<file>
   tests/journeys/<area>/\`, so the pull request shows the journey turning green and leaves one copy.
   Before pushing, run \`lowdefy test --config-directory <app> --repeat 3 <file>\`, then the whole suite once
-  (\`lowdefy test --config-directory <app>\`: a fix can break a journey that asserted the old behaviour). Where the
+  (\`lowdefy test --config-directory <app> --thorough\`: a fix can break a journey, in a browser too, that asserted the old behaviour). Where the
   app has endpoint tests, run them once too, and name each changed cell of \`tests/access.yaml\` in the pull request. Open a pull
   request titled \`fix: ...\` that says what broke, where, and which journey proves it (with no \`gh\`, push the branch and put
   that title and body in the cycle report), then \`git switch journeys-autopilot/main\`. The item stays \`finding\`, with the fix pull request url (with no \`gh\`, the
@@ -303,7 +304,7 @@ For each finding, decide:
 ### 7. Harden (when no \`todo\` items remain)
 
 Follow the [journeys-harden skill](.claude/skills/journeys-harden/SKILL.md), unattended: replay
-(\`lowdefy test --config-directory <app> --repeat 3\`) the whole suite; run \`lowdefy journeys harden --config-directory <app> --list\` and, in
+(\`lowdefy test --config-directory <app> --thorough --repeat 3\`) the whole suite; run \`lowdefy journeys harden --config-directory <app> --list\` and, in
 budget, \`lowdefy journeys harden --config-directory <app> --workers 1\` on a few pages at a time (\`--page <pageId>\`),
 one worker so only one journey runs at a time; for each
 survivor add the assertion that would catch it, then confirm with \`harden --mutant <id>\` and
@@ -328,7 +329,7 @@ Blocked, never forced, apart from step 1's merged case) and open one pull reques
 branch, or update the open one: \`gh pr create\` / \`gh pr edit\`, and record its url in \`pr:\`.
 The body is plain language for someone who has never heard of journeys: what is now covered (pages
 and roles), the findings and fix pull requests, the quarantines with reasons, what the next cycle
-will do, and how to run the suite (\`lowdefy test --config-directory <app>\`). Add a changeset or release note only if
+will do, and how to run the suite (\`lowdefy test --config-directory <app>\`, and \`--thorough\` for the journeys that need a browser). Add a changeset or release note only if
 the repository's convention asks for one for test-only changes.
 
 There is never a second journeys branch. When the open pull request holds about 20 journeys

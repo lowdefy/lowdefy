@@ -36,8 +36,8 @@ test('journeys-harden renders a frontmatter with its name and the design descrip
 test('journeys-harden names the replay, lint, harden, variants and evidence commands in order', () => {
   const skill = journeysHarden();
   const commands = [
-    'lowdefy test --config-directory <app> --repeat 3',
-    'lowdefy test --config-directory <app> --repeat 3 <app>/tests/journeys/_candidates/',
+    'lowdefy test --config-directory <app> --thorough --repeat 3',
+    'lowdefy test --config-directory <app> --thorough --repeat 3 <app>/tests/journeys/_candidates/',
     'lowdefy test --config-directory <app> --lint',
     'lowdefy journeys harden --config-directory <app> --list',
     'lowdefy journeys harden --config-directory <app> --mutant <id>',

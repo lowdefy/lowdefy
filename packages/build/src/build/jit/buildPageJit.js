@@ -51,7 +51,7 @@ import resolvePageSource from './resolvePageSource.js';
 import runPluginChecks from '../runPluginChecks.js';
 import updateIconImportsJit from './updateIconImportsJit.js';
 import updateServerPackageJsonJit from './updateServerPackageJsonJit.js';
-import scanJitMaps from './scanJitMaps.js';
+import markJitMaps from './markJitMaps.js';
 import validatePageTypes from './validatePageTypes.js';
 import writeJitMaps from './writeJitMaps.js';
 import writePageJit from './writePageJit.js';
@@ -107,7 +107,7 @@ async function buildPageJit({ pageId, pageRegistry, context, directories, logger
   const buildContext = createPageBuildContext(keptContext);
   const buildErrors = buildContext.errors;
   const buildWarnings = buildContext.warnings;
-  const mapsMark = scanJitMaps({ context: buildContext });
+  const mapsMark = markJitMaps({ context: buildContext });
 
   try {
     // Pages without a source file (e.g., default 404) can only be served from

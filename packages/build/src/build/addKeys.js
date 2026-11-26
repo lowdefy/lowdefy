@@ -25,6 +25,7 @@ import {
 import collectExceptions from '../utils/collectExceptions.js';
 import makeId from '../utils/makeId.js';
 import isKebabCaseSlug from '../utils/isKebabCaseSlug.js';
+import logMapId from '../utils/logMapId.js';
 import setNonEnumerableProperty from '../utils/setNonEnumerableProperty.js';
 
 const builtInSlugs = Object.keys(VALID_CHECK_SLUGS);
@@ -111,6 +112,7 @@ function recArray({ array, segment, keyMap, parentKeyMapId, parentRef, context }
   } else {
     arrayKeyMapId = makeId.next();
     keyMap[arrayKeyMapId] = createEntry({ node: array, segment, parentKeyMapId, parentRef });
+    logMapId({ map: keyMap, id: arrayKeyMapId });
     arrayRef = ownRef(array);
     Object.defineProperty(array, '~k', {
       value: arrayKeyMapId,
@@ -161,6 +163,7 @@ function recAddKeys({ object, segment, keyMap, parentKeyMapId, parentRef, contex
 
     // Add entry to keyMap BEFORE validation so errors can resolve location
     keyMap[keyMapId] = entry;
+    logMapId({ map: keyMap, id: keyMapId });
 
     // Handle ~ignoreBuildChecks property
     if (object['~ignoreBuildChecks'] !== undefined) {
@@ -227,14 +230,17 @@ function recAddKeys({ object, segment, keyMap, parentKeyMapId, parentRef, contex
   });
 }
 
-function addKeys({ components, context }) {
-  const keyMapId = makeId.next();
+// parent ({ keyMapId, segment, ref }) keys the root as a child of a node keyed
+// before: the dev server's endpoint build keys a rebuilt endpoint under the api
+// array the config build keyed, with the segment it had there, so its errors
+// and warnings locate as they do in a full build.
+function addKeys({ components, context, parent }) {
   recAddKeys({
     object: components,
-    segment: 'root',
+    segment: parent?.segment ?? 'root',
     keyMap: context.keyMap,
-    parentKeyMapId: keyMapId,
-    parentRef: null,
+    parentKeyMapId: parent?.keyMapId ?? makeId.next(),
+    parentRef: parent?.ref ?? null,
     context,
   });
 }
