@@ -664,6 +664,7 @@ test('journeysHarden exits 75 without running anything when no journey run slot 
   expect(mockAcquireJourneyRunSlots).toHaveBeenCalledWith({
     context,
     command: 'lowdefy journeys harden',
+    browser: true,
   });
   expect(mockPost).not.toHaveBeenCalled();
   expect(mockStartDevServer).not.toHaveBeenCalled();

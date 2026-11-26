@@ -36,8 +36,14 @@ test('takeJourneyRunSlots returns the slots it took', async () => {
   const slots = { release: vi.fn() };
   const acquire = vi.fn(async () => slots);
   expect(await takeJourneyRunSlots({ context, command: 'lowdefy test', acquire })).toBe(slots);
-  expect(acquire).toHaveBeenCalledWith({ context, command: 'lowdefy test' });
+  expect(acquire).toHaveBeenCalledWith({ context, command: 'lowdefy test', browser: true });
   expect(process.exitCode).toBeUndefined();
+});
+
+test('takeJourneyRunSlots passes on that the run starts no browser', async () => {
+  const acquire = vi.fn(async () => ({ release: vi.fn() }));
+  await takeJourneyRunSlots({ context, command: 'lowdefy test', browser: false, acquire });
+  expect(acquire).toHaveBeenCalledWith({ context, command: 'lowdefy test', browser: false });
 });
 
 test('takeJourneyRunSlots says the machine is busy and sets exit code 75 when the machine wait runs out', async () => {

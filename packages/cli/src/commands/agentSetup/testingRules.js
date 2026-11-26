@@ -36,8 +36,8 @@ Run journeys with \`lowdefy_run_tests\`, or \`lowdefy test --config-directory <a
 Terminal runs (\`lowdefy test\`, \`lowdefy journeys harden\`, \`lowdefy journeys variants\`) share the machine with other agents:
 
 - Run journeys only through these commands. Never start \`lowdefy dev\` in a terminal just to run them.
-- A run that starts a browser (\`--thorough\`, \`--browser\`) waits for a journey run slot: 2 machine-wide (1 when memory is short), and 1 per worktree. While it waits it prints who is running. Run one journey runner per worktree and never run suites from parallel subagents; the slots only queue them.
-- Exit code 75 means the machine stayed busy for 20 minutes and nothing ran. Wait a few minutes and retry once, then report. Never loop and never start your own dev server. \`LOWDEFY_JOURNEY_RUN_SLOTS=<n>\` sets the machine limit.
+- Each run waits for its worktree's journey run slot, 1 per worktree; a run that starts a browser (\`--thorough\`, \`--browser\`) also waits for one of 2 machine-wide (1 when memory is short). While it waits it prints who is running. Run one journey runner per worktree and never run suites from parallel subagents; the slots only queue them.
+- Exit code 75 means the slots stayed taken for 20 minutes (the machine's, or another run in this worktree) and nothing ran. Wait a few minutes and retry once, then report. Never loop and never start your own dev server. \`LOWDEFY_JOURNEY_RUN_SLOTS=<n>\` sets the machine limit.
 - A run boots its own server and stops it at the end, then prints \`Resources (approximate): server peak 0.71 GB, CPU 94 s, including data store and browsers.\`
 - Rerunning journeys while you fix them? Run \`lowdefy hub start .\` in the app folder once, run \`lowdefy test\` as often as you need, then \`lowdefy hub stop .\`. The runs reuse that warm server, print \`Resources: not measured (shared dev server).\`, and ignore \`--ref-resolver\`, \`--port\`, \`--dev-directory\` and \`--server-directory\` with a warning. Stop it when you are done: a running server in a worktree blocks the developer's \`lowdefy dev\` there.`;
 

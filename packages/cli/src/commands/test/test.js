@@ -54,9 +54,6 @@ import writeTestRun from './writeTestRun.js';
 
 const SIGNAL_EXIT_CODES = { SIGINT: 130, SIGTERM: 143, SIGHUP: 129 };
 
-// A run that starts no browser takes no journey run slot (LDF-768's slots bound browsers).
-const NO_SLOTS = { release: () => {} };
-
 function refuse({ context, message }) {
   context.logger.error(message);
   context.sendTelemetry();
@@ -284,11 +281,13 @@ async function testJourneys({
   }
 
   // The slots are held until the server stops, so a waiting run has nothing
-  // in memory yet. A headless run starts no browser.
-  const slots =
-    runner === 'headless'
-      ? NO_SLOTS
-      : await takeJourneyRunSlots({ context, command: 'lowdefy test' });
+  // in memory yet. A headless run starts no browser, so it takes only this
+  // worktree's slot: a second run here would use a server this one stops.
+  const slots = await takeJourneyRunSlots({
+    context,
+    command: 'lowdefy test',
+    browser: runner !== 'headless',
+  });
   if (slots === null) {
     return;
   }
