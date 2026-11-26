@@ -3103,7 +3103,7 @@
       "files": [
         "concepts/advanced/cli.yaml"
       ],
-      "hash": "34531003ef5dd6a9679f544d5875df123792612b3664561939715f50eefcaf08"
+      "hash": "0d4498eed8926eed46b259c79d710d017951dc3d5b7e5970cf743122696581bb"
     },
     "concepts/lowdefy-api": {
       "files": [
@@ -3383,7 +3383,7 @@
         "testing/config-tests.md",
         "testing/config-tests.yaml"
       ],
-      "hash": "a289b201ce422244d952a366fbb65ecac82d426d5cbd181e8792b0429b1cf47e"
+      "hash": "c42bae32c707fd835ca4cac1582b4dd629fdcd5d214eb3c2115756d0bbe28f74"
     },
     "testing/journey-data-sets": {
       "files": [

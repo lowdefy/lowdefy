@@ -572,6 +572,16 @@ Both emit pino JSON with optional `color`/`spin`/`succeed` fields to stdout. The
 
 See [@lowdefy/logger](../utils/logger.md) for details.
 
+## Headless Journey Threads
+
+`POST /lowdefy-docs/journey` with `headless: true` (every headless journey `lowdefy test` and `lowdefy_run_tests` post) runs on the child's journey pool (`lib/docs/journeyPool/`, LDF-1183; design `dev-server-journey-workers` in the design repo). Browser journeys, `lowdefy_run_journey` and `runJourneyAsUsers` still run `runJourneyHeadless` on the main thread.
+
+- **What a thread runs.** `journeyWorker.js` imports the server code in plain Node, once (the server is unbundled ESM; Vite only loads it on the main thread), and runs one journey at a time (`runHeadlessJob`): `runJourneyHeadless` with the client engine and every request and endpoint call on API contexts of its own (`createLowdefyContext`), and the journey's mutant run opened in its own registry (`mutantRuns.js`), whose `applied` and `misses` it answers with the result.
+- **What the main thread answers.** Page builds keep one writer, the main thread's JIT build context, so a thread asks over its port (`createMainThreadCalls`): `buildPage` (`buildPageWithContext`, answered with a handle to the build context, kept for the journey) and `pageJsEntries` (`getPageJitEnrichment` on that context). `runJourneyHeadless` and `createDevServerHost` take these as `pageBuilds`: `createLocalPageBuilds` on the main thread, `createWorkerPageBuilds` in a thread, which never loads `@lowdefy/build`. The data store stays the main thread's (`getDataStore`): a thread asks for its URI each journey (`dataStoreUri`), joins it (`joinDataStore` in test-utils), and reports it gone (`dataStoreGone`) so the main thread stops it. `createJourneyHost` answers all four for one journey.
+- **Data isolation.** A thread's sessions are `ld_p<pid>t<threadId>_<hex>`, the main thread's `ld_<hex>`. Each thread's orphan sweep drops only its own (`sweepOrphanDatabases` without `perRun`); the pool drops a stopped thread's (`dropThreadDatabases`).
+- **The pool** (`createJourneyPool`, one per process on `globalThis`, `getJourneyPool`). At most `readHeadlessThreadLimit()` threads, the rule the CLI sizes runs by, since the pool serves every caller; a thread starts when a journey finds every thread busy, and a journey past the bound waits. A thread idle for 5 minutes stops (about 400 MB each on a large app). A thread that stops mid-journey fails that journey (the route answers 502).
+- **Staying current.** Artifacts are read from disk on every read, and the main thread rebuilds an edited page when a thread asks for it. Files the server imports at start restart the whole child (`createServerArtifactTracker`, `pluginSourceWatcher`), and the threads with it. The plugin files Vite reloads in place are covered by `readPluginSignature` (path, size and mtime of every file under `build/plugins/`): a thread started on another signature is stopped before it is given a journey.
+
 ## Memory: Dependency Optimiser and Agent Browser
 
 A dev server lives for hours, so what it holds after start-up matters when several run at once.

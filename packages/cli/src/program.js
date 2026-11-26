@@ -683,7 +683,7 @@ program
   .addOption(
     new Option(
       '--concurrency <n>',
-      'Run up to n journeys at once. With --build, headless journeys run in this process and in worker threads that each open the build once, by default as many as the machine has cores less one, and no more than one per 4 GiB of memory. On the dev server they run one at a time by default. With --thorough or --browser, n also sets the browser journeys at once (1 to 3; default 1, or LOWDEFY_JOURNEY_CONCURRENCY). Journeys with no data set, or marked serial, run alone after the rest. One at a time under --repeat or while memory is short. At 2 or more browser journeys, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
+      'Run up to n journeys at once. Headless journeys run in worker threads, by default as many as the machine has cores less one, and no more than one per 4 GiB of memory: with --build in this process and in threads that each open the build once, on the dev server in its own threads. With --thorough or --browser, n also sets the browser journeys at once (1 to 3; default 1, or LOWDEFY_JOURNEY_CONCURRENCY). Journeys with no data set, or marked serial, run alone after the rest. One at a time under --repeat or while memory is short. At 2 or more browser journeys, a screenshot or state inspection from another session can wait several journeys for a browser slot.'
     )
   )
   .addOption(options.configDirectory)

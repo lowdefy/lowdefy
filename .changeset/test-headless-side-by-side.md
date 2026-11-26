@@ -10,7 +10,6 @@ perf(cli): `lowdefy test --build` runs headless journeys side by side
 - The output is in run order whatever order the journeys finish in, and `results.json` and `headless-run.json` are in the order the journeys were selected. `headless-run.json` is written once per run.
 - As in browser runs, a journey with no data set, or marked `serial: true`, runs alone after the others, and a journey that fails beside another is run again alone before it is reported.
 - A run goes one at a time under `--repeat` above 1, while the operating system reports memory pressure, and on a machine with one or two cores. If a worker thread cannot open the build (it was rebuilt during the run), the run says so and goes on one at a time.
-- On the development server, headless journeys still run one at a time by default, since the server runs them in its one process; `--concurrency <n>` runs `n` at once there.
 - In a `--thorough` run, `--concurrency` sets both the headless part and the browser part (1 to 3). `LOWDEFY_JOURNEY_CONCURRENCY` and `lowdefy.yaml`'s `cli.concurrency` still set only browser journeys.
 
 A journey on a data set that depends on something outside its data session (the clock, a file, an outside service that is not stubbed) now runs beside others in a `--build` run. Mark it `serial: true`, or pass `--concurrency 1`.

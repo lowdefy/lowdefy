@@ -255,7 +255,8 @@ runs every journey in the browser; see "Where each journey runs" in
 `code-docs/architecture/journeys.md`). It runs one browser journey at a time by default. `--concurrency <n>` (1 to 3, or
 `LOWDEFY_JOURNEY_CONCURRENCY`; `concurrency` on `lowdefy_run_tests`) keeps up to n data-set
 journeys in flight through `runJourneyPool`, and runs journeys with no data set, or marked
-`serial: true`, alone after them. Headless runs always go one at a time. Every browser operation on
+`serial: true`, alone after them. Headless journeys run side by side by default, on the dev server
+in its journey threads and on `--build` in the run's worker threads (cores less one, one per 4 GiB). Every browser operation on
 the machine shares three browser slots, so at 2 or more another session's screenshot or state
 inspection can wait several journeys for a slot: in the large-app measurement with two runs at 2
 each, 7 of 13 screenshots waited over 60 s. When changing the pool, run the fixture's suite with
