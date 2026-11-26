@@ -40,10 +40,13 @@ function write(name, value) {
   return filePath;
 }
 
-// Sets a file's modified time well in the past, so its read lands outside the racy window.
+// Sets a file's modified time well in the past and moves the clock a minute on, so its read lands
+// outside the racy window: the window runs from the later of the modified and changed times, and
+// setting the modified time stamps the changed time with now.
 function age(filePath) {
   const past = new Date(Date.now() - 60000);
   fs.utimesSync(filePath, past, past);
+  vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 60000);
 }
 
 test('createArtifactReader reads and deserializes an artifact by its path in the build', () => {
@@ -208,4 +211,34 @@ test('createArtifactReader stops comparing a racy file once a read lands outside
   const readFileSync = vi.spyOn(fs, 'readFileSync');
   expect(readArtifact('pages/home.json')).toBe(first);
   expect(readFileSync).not.toHaveBeenCalled();
+});
+
+test('createArtifactReader compares a file copied with its old modified time', () => {
+  const filePath = write('pages/home.json', { title: 'one' });
+  // As cp -p or a restored cache leaves it: an old modified time, a changed time of now.
+  const past = new Date(Date.now() - 60000);
+  fs.utimesSync(filePath, past, past);
+  const readArtifact = createArtifactReader({ buildDirectory });
+  const stat = fs.statSync(filePath, { bigint: true });
+  expect(readArtifact('pages/home.json').title).toEqual('one');
+  write('pages/home.json', { title: 'two' });
+  vi.spyOn(fs, 'statSync').mockReturnValue(stat);
+  expect(readArtifact('pages/home.json').title).toEqual('two');
+});
+
+test('createArtifactReader with maxEntries drops the least recently read file', () => {
+  age(write('api/one.json', { id: 'one' }));
+  age(write('api/two.json', { id: 'two' }));
+  age(write('api/three.json', { id: 'three' }));
+  const readArtifact = createArtifactReader({ buildDirectory, maxEntries: 2 });
+  const one = readArtifact('api/one.json');
+  const two = readArtifact('api/two.json');
+  expect(readArtifact('api/one.json')).toBe(one);
+  readArtifact('api/three.json');
+  expect(readArtifact('api/one.json')).toBe(one);
+  const readFileSync = vi.spyOn(fs, 'readFileSync');
+  const twoAgain = readArtifact('api/two.json');
+  expect(twoAgain).toEqual(two);
+  expect(twoAgain).not.toBe(two);
+  expect(readFileSync).toHaveBeenCalledTimes(1);
 });

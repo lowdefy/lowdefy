@@ -18,6 +18,9 @@ import path from 'node:path';
 import { createArtifactReader } from '@lowdefy/node-utils';
 
 // One reader per build directory and form (raw or deserialized), kept for the life of the process.
+// A whole-app read (lowdefy_app_map) opens every page, request, endpoint and connection, so the cap
+// bounds what a long-running dev server holds: each reader keeps its most recently read artifacts.
+const MAX_ARTIFACTS_PER_READER = 2000;
 const readers = new Map();
 
 // A build artifact by its path in the dev build ("pages/home.json"): the parsed JSON, deserialized
@@ -30,7 +33,10 @@ function readBuildArtifact({ name, deserialize = false }) {
   const buildDirectory = path.join(process.cwd(), 'build');
   const key = `${deserialize ? 'deserialized' : 'raw'}:${buildDirectory}`;
   if (!readers.has(key)) {
-    readers.set(key, createArtifactReader({ buildDirectory, deserialize }));
+    readers.set(
+      key,
+      createArtifactReader({ buildDirectory, deserialize, maxEntries: MAX_ARTIFACTS_PER_READER })
+    );
   }
   return readers.get(key)(name);
 }
