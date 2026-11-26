@@ -20,11 +20,9 @@ import { type } from '@lowdefy/helpers';
 // write into that config would reach all of them. Dev servers and tests freeze the copy, so such a
 // write throws where it happens instead.
 function freezeConfig({ config }) {
-  if (!type.isObject(config) && !type.isArray(config)) return config;
-  if (Object.isFrozen(config)) return config;
+  if (!type.isObject(config) && !type.isArray(config)) return;
   Object.freeze(config);
   Object.values(config).forEach((value) => freezeConfig({ config: value }));
-  return config;
 }
 
 export default freezeConfig;
