@@ -17,11 +17,10 @@
 import fs from 'fs';
 import path from 'path';
 
-// The production server reads keyMap.json.gz and refMap.json.gz to name an
-// error's YAML file and line: a build with the client build writes them, and
-// deploy output writes them for a config-only build (ensureCompressedMaps). The
-// plain maps can be hundreds of MB on a large app, past Vercel's function size
-// limit, so deploy output leaves them out and ships only the gzipped copies.
+// Production builds also write keyMap.json.gz and refMap.json.gz, which the
+// server reads to name an error's YAML file and line. The plain maps can be
+// hundreds of MB on a large app, past Vercel's function size limit, so deploy
+// output leaves them out and ships only the gzipped copies.
 const PLAIN_MAPS = ['keyMap.json', 'refMap.json'];
 
 // A copy names each file by the path it was given, and the nft trace by its real path, which

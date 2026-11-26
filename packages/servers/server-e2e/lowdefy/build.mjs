@@ -56,10 +56,7 @@ async function run() {
     pluginInstallFollows: process.env.LOWDEFY_BUILD_PLUGIN_INSTALL_FOLLOWS === 'true',
     refResolver: argv.refResolver || process.env.LOWDEFY_BUILD_REF_RESOLVER,
     skipPluginChecks: process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS === 'true',
-    // lowdefy build --no-client-build sets it: a config-only build is never
-    // served as it is, and vercel-output and docker-output write the gzipped
-    // maps from the plain ones for a build that has none.
-    writeCompressedMaps: process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS !== 'true',
+    writeCompressedMaps: true,
   });
 }
 

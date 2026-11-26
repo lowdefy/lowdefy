@@ -17,7 +17,6 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import zlib from 'zlib';
 
 import { vi, afterEach, beforeEach, expect, test } from 'vitest';
 
@@ -37,7 +36,7 @@ afterEach(() => {
   fs.rmSync(root, { recursive: true, force: true });
 });
 
-function writeServer({ config, mcp, schedules, gzippedMaps = true }) {
+function writeServer({ config, mcp, schedules }) {
   const serverDirectory = path.join(root, 'server');
   const files = {
     'src/index.js': '',
@@ -48,11 +47,10 @@ function writeServer({ config, mcp, schedules, gzippedMaps = true }) {
     'dist/client/icon.svg': '<svg />',
     'dist/client/.vite/manifest.json': '{}',
     'build/config.json': JSON.stringify(config),
-    'build/keyMap.json': '{"1":{"s":"root","p":"0","r":"1"}}',
+    'build/keyMap.json': '{"1":{"s":"root"}}',
+    'build/keyMap.json.gz': 'gzipped key map',
     'build/refMap.json': '{"1":{"path":"lowdefy.yaml"}}',
-    ...(gzippedMaps
-      ? { 'build/keyMap.json.gz': 'gzipped key map', 'build/refMap.json.gz': 'gzipped ref map' }
-      : {}),
+    'build/refMap.json.gz': 'gzipped ref map',
     'build/pages/home/keyMap.json': 'not the root key map',
     ...(schedules ? { 'build/schedules.json': JSON.stringify(schedules) } : {}),
     // The Lowdefy build always writes mcp.json.
@@ -74,9 +72,9 @@ function writeServer({ config, mcp, schedules, gzippedMaps = true }) {
   return serverDirectory;
 }
 
-async function runVercelOutput({ config, mcp, schedules, gzippedMaps }) {
+async function runVercelOutput({ config, mcp, schedules }) {
   const { default: vercelOutput } = await import('./vercelOutput.js');
-  const serverDirectory = writeServer({ config, mcp, schedules, gzippedMaps });
+  const serverDirectory = writeServer({ config, mcp, schedules });
   await vercelOutput({
     context: {
       directories: { server: serverDirectory, build: path.join(serverDirectory, 'build') },
@@ -159,16 +157,6 @@ test('vercelOutput ships the gzipped error maps and leaves the plain maps out', 
     'pages/home/keyMap.json',
     'refMap.json.gz',
   ]);
-});
-
-test('vercelOutput writes the gzipped error maps for a config-only build that has none', async () => {
-  // vercel.install.sh runs lowdefy build --no-client-build, which writes no gzipped maps.
-  const { functionBuildDirectory } = await runVercelOutput({ config: {}, gzippedMaps: false });
-  const read = (file) => zlib.gunzipSync(fs.readFileSync(path.join(functionBuildDirectory, file)));
-  expect(read('refMap.json.gz').toString('utf8')).toBe('{"1":{"path":"lowdefy.yaml"}}');
-  expect(JSON.parse(read('keyMap.json.gz').toString('utf8')).segments).toEqual(['root']);
-  expect(fs.existsSync(path.join(functionBuildDirectory, 'keyMap.json'))).toBe(false);
-  expect(fs.existsSync(path.join(functionBuildDirectory, 'refMap.json'))).toBe(false);
 });
 
 // The hit phase as Vercel applies it: once the filesystem phase has routed a request, its routes

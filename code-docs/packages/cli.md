@@ -73,7 +73,7 @@ lowdefy build [options]
 |--------|-------------|---------|
 | `--config-directory` | Config directory path | Current directory |
 | `--server-directory` | Server output directory | `.lowdefy/server` |
-| `--no-client-build` | Skip the Vite client build, and the gzipped error maps (`LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS`), which vercel-output and docker-output then write | Builds the client (`--no-next-build` is a deprecated alias) |
+| `--no-client-build` | Skip the Vite client build | Builds the client (`--no-next-build` is a deprecated alias) |
 | `--ref-resolver` | Custom ref resolver path | - |
 | `--log-level` | Log level | info |
 

@@ -27,7 +27,6 @@ vi.doMock('@lowdefy/logger/cli', () => ({
 const { default: runLowdefyBuild } = await import('./runLowdefyBuild.js');
 
 const savedSkip = process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
-const savedSkipCompressedMaps = process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS;
 
 function createContext(options) {
   return {
@@ -40,17 +39,11 @@ function createContext(options) {
 
 beforeEach(() => {
   delete process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
-  delete process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS;
   mockSpawnProcess.mockReset();
   mockSpawnProcess.mockResolvedValue();
 });
 
 afterAll(() => {
-  if (savedSkipCompressedMaps === undefined) {
-    delete process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS;
-  } else {
-    process.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS = savedSkipCompressedMaps;
-  }
   if (savedSkip === undefined) {
     delete process.env.LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS;
   } else {
@@ -73,20 +66,4 @@ test('runLowdefyBuild leaves LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS out when skipPlugi
   const { processOptions } = mockSpawnProcess.mock.calls[0][0];
   expect('LOWDEFY_BUILD_SKIP_PLUGIN_CHECKS' in processOptions.env).toBe(false);
   expect(processOptions.env.LOWDEFY_BUILD_REF_RESOLVER).toEqual('resolver.js');
-});
-
-test('runLowdefyBuild sets LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS when skipCompressedMaps is set', async () => {
-  await runLowdefyBuild({
-    context: createContext({}),
-    directory: '/srv',
-    skipCompressedMaps: true,
-  });
-  const { processOptions } = mockSpawnProcess.mock.calls[0][0];
-  expect(processOptions.env.LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS).toEqual('true');
-});
-
-test('runLowdefyBuild leaves LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS out by default', async () => {
-  await runLowdefyBuild({ context: createContext({}), directory: '/srv' });
-  const { processOptions } = mockSpawnProcess.mock.calls[0][0];
-  expect('LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS' in processOptions.env).toBe(false);
 });

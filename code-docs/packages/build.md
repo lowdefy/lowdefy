@@ -235,8 +235,8 @@ Build artifacts go to `.lowdefy/build/`:
 ├── types.json         # Type definitions map
 ├── keyMap.json        # Config key → source location mapping (for error tracing)
 ├── refMap.json        # Ref ID → source file mapping (for error tracing)
-├── keyMap.json.gz     # The key map in columns, gzipped (production server builds with the client build: writeCompressedMaps)
-├── refMap.json.gz     # refMap.json gzipped (production server builds with the client build: writeCompressedMaps)
+├── keyMap.json.gz     # The key map in columns, gzipped (production server builds only: writeCompressedMaps)
+├── refMap.json.gz     # refMap.json gzipped (production server builds only: writeCompressedMaps)
 ├── api/               # API endpoint configs (one per endpoint)
 ├── connections/       # Connection configs (one per connection)
 ├── pages/             # Page configs (one per page)
@@ -258,7 +258,7 @@ Build artifacts go to `.lowdefy/build/`:
 
 ### Error Tracing Artifacts
 
-`keyMap.json` and `refMap.json` enable config-aware error tracing. With the `writeCompressedMaps` build option, which the production and e2e server build scripts set unless `LOWDEFY_BUILD_SKIP_COMPRESSED_MAPS` is `true` (`lowdefy build --no-client-build` sets it; deploy output then writes the gzipped maps from the plain ones), `writeMaps` also writes `keyMap.json.gz` and `refMap.json.gz` for deploys to ship: `refMap.json.gz` from the same string as `refMap.json`, and `keyMap.json.gz` from the key map encoded in columns (`encodeColumnarKeyMap`), which production servers hold in memory as a columnar key map (see [error-tracing.md](../architecture/error-tracing.md#columnar-key-map)):
+`keyMap.json` and `refMap.json` enable config-aware error tracing. With the `writeCompressedMaps` build option, which the production and e2e server build scripts set, `writeMaps` also writes `keyMap.json.gz` and `refMap.json.gz` for deploys to ship: `refMap.json.gz` from the same string as `refMap.json`, and `keyMap.json.gz` from the key map encoded in columns (`encodeColumnarKeyMap`), which production servers hold in memory as a columnar key map (see [error-tracing.md](../architecture/error-tracing.md#columnar-key-map)):
 
 ```javascript
 // keyMap.json - maps internal keys to config locations, one short entry per node

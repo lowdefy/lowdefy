@@ -22,7 +22,6 @@ import cleanDirectory from './cleanDirectory.js';
 import collectEnvironmentGuards from './collectEnvironmentGuards.js';
 import collectPluginDefinitions from './collectPluginDefinitions.js';
 import compareProcessStartTimes from './compareProcessStartTimes.js';
-import compressBuildMaps from './compressBuildMaps.js';
 import copyFileOrDirectory from './copyFileOrDirectory.js';
 import createConnectPublic from './createConnectPublic.js';
 import createDevAppLink from './devices/createDevAppLink.js';
@@ -157,7 +156,6 @@ export {
   collectEnvironmentGuards,
   collectPluginDefinitions,
   compareProcessStartTimes,
-  compressBuildMaps,
   compileSegments,
   copyFileOrDirectory,
   countDataSetDocuments,

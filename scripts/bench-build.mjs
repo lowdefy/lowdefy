@@ -25,7 +25,7 @@
     pnpm bench:build <app-dir> --skip-build           # this checkout is already built
     pnpm bench:build <app-dir> --server e2e           # @lowdefy/server-e2e instead of the server
     pnpm bench:build <app-dir> --self-check           # build the baseline twice and compare
-    pnpm bench:build <app-dir> --expect-added newArtifact.json # repeatable
+    pnpm bench:build <app-dir> --expect-added keyMap.json.gz   # repeatable
     pnpm bench:build <app-dir> --keymap               # key and ref ids by meaning, not value
     pnpm bench:build <app-dir> --runs 3               # timed runs per side (default 5)
     pnpm bench:build <app-dir> --no-compare           # skip the output comparison

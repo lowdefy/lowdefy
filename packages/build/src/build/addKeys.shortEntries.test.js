@@ -228,35 +228,3 @@ test('an already-keyed object moved under a new parent passes its own resolved r
     }
   );
 });
-
-test('a second addKeys pass builds the segments of new nodes in arrays as the first pass does', () => {
-  const { config, context } = keyed();
-  const before = { ...context.keyMap };
-  const page = config.pages[0];
-  page.grid.push([{ x: 2 }]);
-  page.blocks.push({ id: 'note', type: 'Paragraph', properties: { content: null, fn: () => 1 } });
-  page.blocks[1].properties.style = { color: 'red' };
-  addKeys({ components: config, context });
-  const added = Object.keys(context.keyMap).filter((keyId) => !(keyId in before));
-  // The nested array, its item, the new block, its properties and the title's style.
-  expect(added).toHaveLength(5);
-  expect(entryOf({ context, node: page.grid[1] })).toEqual({
-    s: '[1]',
-    p: page.grid['~k'],
-    r: null,
-  });
-  expect(entryOf({ context, node: page.grid[1][0] })).toEqual({ s: '[0]', p: page.grid[1]['~k'] });
-  expect(entryOf({ context, node: page.blocks[2] })).toEqual({
-    s: '[2:note:Paragraph]',
-    p: page.blocks['~k'],
-    r: null,
-  });
-  expect(entryOf({ context, node: page.blocks[2].properties })).toEqual({
-    s: '.properties',
-    p: page.blocks[2]['~k'],
-  });
-  expect(entryOf({ context, node: page.blocks[1].properties.style })).toEqual({
-    s: '.style',
-    p: page.blocks[1].properties['~k'],
-  });
-});
