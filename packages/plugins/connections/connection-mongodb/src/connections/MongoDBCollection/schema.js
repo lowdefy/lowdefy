@@ -60,6 +60,20 @@ export default {
             type: 'MongoDBCollection connection property "changeLog.meta" should be an object.',
           },
         },
+        exclude: {
+          type: 'array',
+          description:
+            'Fields, as dot paths, whose values change log records never hold, such as a credential hash the collection must store. Each copy a record makes of a document or a write (before, after, the inserted documents, each update operator or pipeline stage) has "[excluded]" in place of the field\'s value, so the record still shows that a write set it. A path through an array names the field in each element, and an update key under the path ("token.hash" for "token", "items.$.pin" for "items.pin") is excluded too. A pipeline expression other than $mergeObjects or $literal that sets a field above a path is excluded whole.',
+          items: {
+            type: 'string',
+            errorMessage: {
+              type: 'MongoDBCollection connection property "changeLog.exclude" should be an array of field paths.',
+            },
+          },
+          errorMessage: {
+            type: 'MongoDBCollection connection property "changeLog.exclude" should be an array of field paths.',
+          },
+        },
       },
       errorMessage: {
         type: 'MongoDBCollection connection property "changeLog" should be an object.',

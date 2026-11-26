@@ -17,7 +17,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { serializer } from '@lowdefy/helpers';
+import { serializer, type } from '@lowdefy/helpers';
 
 import deepFreeze from './deepFreeze.js';
 
@@ -45,8 +45,16 @@ function isSameFile(kept, stat) {
 // lands outside the window. A missing file costs one stat. A file that fails to parse (one the
 // build is still writing) throws and is not kept.
 //
+// The window is measured from the later of the modified and changed times: a copy that keeps its
+// modified time (cp -p, rsync -a, a restored cache) still gets a new changed time, which nobody can
+// set back.
+//
+// With maxEntries, the reader keeps that many files, dropping the least recently read first, so a
+// long-running process holds at most maxEntries parsed artifacts. A dropped file is parsed again on
+// its next read.
+//
 // The values are shared by every caller and frozen: a reader must not change one.
-function createArtifactReader({ buildDirectory, deserialize = true }) {
+function createArtifactReader({ buildDirectory, deserialize = true, maxEntries = Infinity }) {
   const kept = new Map();
 
   function parse(text) {
@@ -55,8 +63,14 @@ function createArtifactReader({ buildDirectory, deserialize = true }) {
   }
 
   function keep({ name, readAt, stat, text, value }) {
-    const racy = readAt - Number(stat.mtimeNs / 1000000n) < RACY_WINDOW_MS;
+    const changedNs = stat.ctimeNs > stat.mtimeNs ? stat.ctimeNs : stat.mtimeNs;
+    const racy = readAt - Number(changedNs / 1000000n) < RACY_WINDOW_MS;
+    // Deleting first moves the name to the end of the Map's order, which is most recently read.
+    kept.delete(name);
     kept.set(name, { stat, text: racy ? text : null, value });
+    while (kept.size > maxEntries) {
+      kept.delete(kept.keys().next().value);
+    }
     return value;
   }
 
@@ -64,16 +78,18 @@ function createArtifactReader({ buildDirectory, deserialize = true }) {
     const filePath = path.join(buildDirectory, name);
     const readAt = Date.now();
     const stat = fs.statSync(filePath, { bigint: true, throwIfNoEntry: false });
-    if (stat === undefined) {
+    if (type.isUndefined(stat)) {
       kept.delete(name);
       return null;
     }
     const entry = kept.get(name);
-    if (entry !== undefined && isSameFile(entry.stat, stat) && entry.text === null) {
+    if (!type.isUndefined(entry) && isSameFile(entry.stat, stat) && entry.text === null) {
+      kept.delete(name);
+      kept.set(name, entry);
       return entry.value;
     }
     const text = fs.readFileSync(filePath, 'utf8');
-    if (entry !== undefined && isSameFile(entry.stat, stat) && entry.text === text) {
+    if (!type.isUndefined(entry) && isSameFile(entry.stat, stat) && entry.text === text) {
       return keep({ name, readAt, stat, text, value: entry.value });
     }
     return keep({ name, readAt, stat, text, value: parse(text) });
