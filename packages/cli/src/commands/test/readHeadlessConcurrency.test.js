@@ -167,7 +167,7 @@ test('readHeadlessConcurrency gives 1 while memory pressure is warn or critical,
   expect(readPressure).toHaveBeenCalledTimes(4);
 });
 
-test('readRunConcurrency runs a dev server headless run one at a time unless it was given a concurrency', () => {
+test('readRunConcurrency gives an untyped headless run the machine default, on a dev server as on a build', () => {
   const untyped = readRunConcurrency({
     runner: 'headless',
     concurrency: 3,
@@ -178,17 +178,7 @@ test('readRunConcurrency runs a dev server headless run one at a time unless it 
     memory,
     readPressure: normal,
   });
-  expect(untyped.headless.size).toBe(1);
-  const built = readRunConcurrency({
-    runner: 'headless',
-    build: true,
-    name: '--concurrency',
-    repeat: 1,
-    cores: 8,
-    memory,
-    readPressure: normal,
-  });
-  expect(built.headless.size).toBe(7);
+  expect(untyped.headless.size).toBe(7);
 });
 
 test('readRunConcurrency sizes a headless run by its concurrency and runs no browser journeys', () => {
@@ -221,7 +211,7 @@ test('readRunConcurrency gives both parts of a mixed run a typed concurrency', (
   expect(read.headless.size).toBe(1);
 });
 
-test('readRunConcurrency runs an untyped mixed run headless one at a time, browser at the config', () => {
+test('readRunConcurrency runs an untyped mixed run headless at the machine default, browser at the config', () => {
   const read = readRunConcurrency({
     runner: 'mixed',
     concurrency: 2,
@@ -234,7 +224,7 @@ test('readRunConcurrency runs an untyped mixed run headless one at a time, brows
     readPressure: normal,
   });
   expect(read.browser.readLimit()).toBe(2);
-  expect(read.headless.size).toBe(1);
+  expect(read.headless.size).toBe(5);
 });
 
 test('readRunConcurrency runs a browser run no headless journeys side by side', () => {

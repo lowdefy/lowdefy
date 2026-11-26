@@ -1337,7 +1337,7 @@ test('test --headless runs a typed --concurrency of data set journeys side by si
   expect(process.exitCode).toBeUndefined();
 });
 
-test('test --headless on the dev server runs one at a time by default, also with a concurrency from lowdefy.yaml', async () => {
+test('test --headless on the dev server runs journeys side by side by default, and reads no concurrency from lowdefy.yaml', async () => {
   const { default: test } = await import('./test.js');
   const spies = [
     vi.spyOn(os, 'availableParallelism').mockReturnValue(8),
@@ -1349,13 +1349,14 @@ test('test --headless on the dev server runs one at a time by default, also with
   context.options = {
     ...context.options,
     headless: true,
-    concurrency: 2,
+    concurrency: 1,
     typedOptions: ['headless'],
   };
-  // A headless post names no journey: each answers after 30 ms, keyed on its one step.
+  // A headless post names no journey: each answers after 30 ms, keyed on its one step. The
+  // untyped concurrency (lowdefy.yaml's cli config) sizes browser journeys only, so both run at once.
   const flight = delayedPosts({ delays: { 1: 30 } });
   await test({ context });
-  expect(flight.max).toBe(1);
+  expect(flight.max).toBe(2);
   expect(process.exitCode).toBeUndefined();
 });
 

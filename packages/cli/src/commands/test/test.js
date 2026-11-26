@@ -103,12 +103,10 @@ async function test({ context }) {
     refuse({ context, message: modeError });
     return;
   }
-  // --concurrency sizes the headless and the browser journeys; untyped, a --build run's headless
-  // journeys run side by side in worker threads and a dev server's one at a time
-  // (readRunConcurrency).
+  // --concurrency sizes the headless and the browser journeys; untyped, headless journeys run side
+  // by side in worker threads, a --build run's and a dev server's alike (readRunConcurrency).
   const concurrency = readRunConcurrency({
     runner,
-    build,
     concurrency: context.options.concurrency,
     typed: (context.options.typedOptions ?? []).includes('concurrency'),
     name: '--concurrency',

@@ -94,6 +94,7 @@ import createDataSetRails from './journeyRails/createDataSetRails.js';
 import isRoutineStep from './journeyRails/isRoutineStep.js';
 import pageBlocks from './journeyRails/pageBlocks.js';
 import RAILED_STEPS from './journeyRails/railedSteps.js';
+import readHeadlessThreadLimit from './readHeadlessThreadLimit.js';
 import readRoutineSteps from './journeyRails/readRoutineSteps.js';
 import normaliseJourneySteps from './journeyGrammar/normaliseJourneySteps.js';
 import readSystemCaller from './journeyGrammar/readSystemCaller.js';
@@ -215,6 +216,7 @@ export {
   isRoutineStep,
   pageBlocks,
   RAILED_STEPS,
+  readHeadlessThreadLimit,
   readRoutineSteps,
   normaliseJourneySteps,
   normaliseClickText,
