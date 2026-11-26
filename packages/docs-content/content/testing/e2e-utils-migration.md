@@ -60,6 +60,6 @@ It targets blocks by `blockId` and reads state and the database, so `lowdefy tes
 2. Rewrite each spec as a journey in `tests/journeys/`. Check a page's logic, state and writes headless; keep `expect.text` for what only a browser shows. Rewrite each endpoint spec as a page-less journey, with a [case table](/config-tests#case-tables) where specs repeated one check over many inputs.
 3. Run the journeys with `lowdefy test`: it runs the ones that need no browser headless, and `lowdefy test --thorough` runs the rest in the browser too.
 4. Delete the specs, the `e2e/` folder with its `playwright.config.js`, `fixtures.js` and `mocks.yaml`, the `e2e` scripts in `package.json`, and the `@lowdefy/e2e-utils`, `@lowdefy/community-plugin-e2e-mdb` and `@playwright/test` dev dependencies.
-5. In CI, run `lowdefy build` and then `lowdefy test --build`, and `lowdefy test --thorough` for the journeys that need a browser.
+5. In CI, run `lowdefy build` and then `lowdefy test --build --headless`, and `lowdefy test --thorough` for the journeys that need a browser. In CI, `--build` without `--headless` fails when it skips a browser journey.
 
 A spec whose check is code against the page, such as `page.evaluate` or a locator of its own, has no journey form. Say what the person sees instead, with `expect: { text }` or `expect: { visible }`.
