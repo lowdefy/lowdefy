@@ -18,7 +18,7 @@ The attributes work on HTML from anywhere: page config, `_nunjucks` templates, r
 | `data-status="success"` | any element | A status dot before the text. |
 | `data-time="relative"` | `<time datetime>` | A date as relative, date, datetime, time or a dayjs format. |
 | `data-format="currency"` | any element | The element's number as number, currency, percent, compact or bytes. |
-| `data-avatar="Jane Doe"` | any element, `<img>` | Initials in a theme colour; a fallback for a broken image. |
+| `data-avatar="Jane Doe"` | any element, `<img>` | Initials in a theme colour; a fallback for a broken image. `data-avatar-seed` picks the colour from an id. |
 | `data-copy` | any element | A copy button for the element's text or the attribute's value. |
 | `data-truncate="2"` | block element | Clamps text to 1–6 lines, with the full text in a tooltip when it is cut off. |
 | `data-tone="secondary"` | any element | Text in a theme tone: secondary, tertiary, quaternary, success, warning, error or info. |
@@ -205,15 +205,18 @@ The date can be an ISO string, anything dayjs parses, or epoch milliseconds (12 
 
 ## Avatars
 
-`data-avatar` renders a person's initials in a theme colour picked from their name, the same initials and colour as the ag-grid block's `avatar` cells. No image service is called.
+`data-avatar` renders a person's initials in a theme colour picked from their name, the same initials and colour as an `avatar` cell in the ag-grid and Table blocks. No image service is called.
 
 ```html
 <span data-avatar="{{ name }}"></span> {{ name }}
 <img data-avatar="{{ name }}" src="{{ picture }}">
 <span data-avatar="{{ name }}" data-avatar-shape="square"></span>
+<span data-avatar="{{ name }}" data-avatar-seed="{{ _id }}"></span>
 ```
 
 On an `<img>`, the initials replace the image when it has no `src` or fails to load. The avatar is 24px by default; set `style="--lf-avatar-size: 40px; --lf-avatar-font-size: 16px"` to resize it. Next to the visible name the avatar is hidden from screen readers; on its own it is announced by the name.
+
+`data-avatar-seed` picks the colour from an id instead of the name, so a person keeps their colour when their name changes. Given the same id, the avatar has the same colour as an `avatar` cell whose `idField` resolves to it, so a table and the dialog beside it show a person in one colour. The initials and the name screen readers hear still come from `data-avatar`. An empty seed colours by the name. On an `<img>`, the initials that replace a broken image keep the seed.
 
 ## Copy to clipboard
 

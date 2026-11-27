@@ -101,3 +101,39 @@ test('an image avatar without a src shows initials straight away', () => {
   expect(image.getAttribute('alt')).toBe('');
   expect(image.nextElementSibling.textContent).toBe('JD');
 });
+
+test('data-avatar-seed picks the colour from the seed, as an avatar cell with idField does', () => {
+  // The seed and the name pick different colours, so the test tells them apart.
+  expect(avatarColor('c-42')).not.toBe(avatarColor('Jane Doe'));
+  const { container } = render(
+    <HtmlComponent html='<span data-avatar="Jane Doe" data-avatar-seed=" c-42 "></span>' />
+  );
+  const avatar = container.querySelector('[data-avatar]');
+  expect(avatar.style.getPropertyValue('--lf-avatar-color')).toBe(avatarColor('c-42'));
+  expect(avatar.textContent).toBe('JD');
+  expect(avatar.getAttribute('aria-label')).toBe('Jane Doe');
+});
+
+test('an empty data-avatar-seed colours by the name', () => {
+  const { container } = render(
+    <HtmlComponent html='<span id="a" data-avatar="Jane Doe" data-avatar-seed=""></span><span id="b" data-avatar="Jane Doe" data-avatar-seed="  "></span>' />
+  );
+  expect(container.querySelector('#a').style.getPropertyValue('--lf-avatar-color')).toBe(
+    avatarColor('Jane Doe')
+  );
+  expect(container.querySelector('#b').style.getPropertyValue('--lf-avatar-color')).toBe(
+    avatarColor('Jane Doe')
+  );
+});
+
+test('an image avatar that falls back to initials keeps its seed', () => {
+  const { container } = render(
+    <HtmlComponent html='<span><img data-avatar="Jane Doe" data-avatar-seed="c-42" src="https://example.com/jane.png"></span>' />
+  );
+  const image = container.querySelector('img');
+  fireEvent.error(image);
+  const fallback = image.nextElementSibling;
+  expect(fallback.getAttribute('data-avatar-seed')).toBe('c-42');
+  expect(fallback.style.getPropertyValue('--lf-avatar-color')).toBe(avatarColor('c-42'));
+  expect(fallback.textContent).toBe('JD');
+});
