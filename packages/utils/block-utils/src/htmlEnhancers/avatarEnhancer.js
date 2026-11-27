@@ -45,9 +45,16 @@ function labelInitials(element, name) {
   element.setAttribute('aria-label', name);
 }
 
+// data-avatar-seed="<id>" picks the colour from an id, as an avatar cell's
+// idField does, so a person keeps their colour when their name changes.
+function colorSeed(element, name) {
+  const seed = element.getAttribute('data-avatar-seed')?.trim();
+  return seed ? seed : name;
+}
+
 function renderInitials(element, name) {
   labelInitials(element, name);
-  element.style.setProperty('--lf-avatar-color', avatarColor(name));
+  element.style.setProperty('--lf-avatar-color', avatarColor(colorSeed(element, name)));
   replaceText(element, initials(name));
 }
 
@@ -55,10 +62,12 @@ function renderInitials(element, name) {
 function replaceImage(image, name) {
   const fallback = image.ownerDocument.createElement('span');
   fallback.setAttribute('data-avatar', name);
-  const shape = image.getAttribute('data-avatar-shape');
-  if (shape !== null) {
-    fallback.setAttribute('data-avatar-shape', shape);
-  }
+  ['data-avatar-shape', 'data-avatar-seed'].forEach((attribute) => {
+    const value = image.getAttribute(attribute);
+    if (value !== null) {
+      fallback.setAttribute(attribute, value);
+    }
+  });
   image.hidden = true;
   image.after(fallback);
   renderInitials(fallback, name);
